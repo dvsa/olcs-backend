@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,7 +28,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_irhp_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_irhp_application_irhp_permit_type_id", columns={"irhp_permit_type_id"}),
  *        @ORM\Index(name="ix_irhp_application_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_irhp_application_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_irhp_application_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_irhp_application_cancellation_date", columns={"cancellation_date"}),
+ *        @ORM\Index(name="ix_irhp_application_withdrawn_date", columns={"withdrawn_date"}),
+ *        @ORM\Index(name="ix_irhp_application_withdraw_reason", columns={"withdraw_reason"}),
+ *        @ORM\Index(name="fk_irhp_application_international_journeys",
+     *     columns={"international_journeys"}),
+ *        @ORM\Index(name="fk_irhp_application_sectors_id", columns={"sectors_id"})
  *    }
  * )
  */
@@ -33,6 +42,27 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
+
+    /**
+     * Cancellation date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="cancellation_date", nullable=true)
+     */
+    protected $cancellationDate;
+
+    /**
+     * Checked
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="checked", nullable=true)
+     */
+    protected $checked;
 
     /**
      * Checked answers
@@ -44,6 +74,27 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $checkedAnswers = 0;
 
     /**
+     * Country
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     inversedBy="irhpApplications",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="irhp_application_country_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $countrys;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -53,15 +104,6 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
 
     /**
      * Date received
@@ -82,6 +124,15 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $declaration = 0;
 
     /**
+     * Expiry date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="expiry_date", nullable=true)
+     */
+    protected $expiryDate;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -91,6 +142,25 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * In scope
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="in_scope", nullable=true, options={"default": 0})
+     */
+    protected $inScope = 0;
+
+    /**
+     * International journeys
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="international_journeys", referencedColumnName="id", nullable=true)
+     */
+    protected $internationalJourneys;
 
     /**
      * Irhp permit type
@@ -114,15 +184,6 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
      * Licence
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
@@ -135,6 +196,16 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
+
+    /**
+     * Sectors
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\Sectors
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\Sectors", fetch="LAZY")
+     * @ORM\JoinColumn(name="sectors_id", referencedColumnName="id", nullable=true)
+     */
+    protected $sectors;
 
     /**
      * Source
@@ -167,11 +238,34 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $version = 1;
 
     /**
+     * Withdraw reason
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="withdraw_reason", referencedColumnName="id", nullable=true)
+     */
+    protected $withdrawReason;
+
+    /**
+     * Withdrawn date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="withdrawn_date", nullable=true)
+     */
+    protected $withdrawnDate;
+
+    /**
      * Answer
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Generic\Answer", mappedBy="irhpApplication")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\Answer",
+     *     mappedBy="irhpApplication",
+     *     indexBy="question_text_id"
+     * )
      */
     protected $answers;
 
@@ -197,6 +291,15 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $irhpPermitApplications;
 
     /**
+     * Task
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Task\Task", mappedBy="irhpApplication")
+     */
+    protected $tasks;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -213,9 +316,65 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      */
     public function initCollections()
     {
+        $this->countrys = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->irhpPermitApplications = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
+    }
+
+    /**
+     * Set the cancellation date
+     *
+     * @param \DateTime $cancellationDate new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setCancellationDate($cancellationDate)
+    {
+        $this->cancellationDate = $cancellationDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancellation date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getCancellationDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->cancellationDate);
+        }
+
+        return $this->cancellationDate;
+    }
+
+    /**
+     * Set the checked
+     *
+     * @param boolean $checked new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setChecked($checked)
+    {
+        $this->checked = $checked;
+
+        return $this;
+    }
+
+    /**
+     * Get the checked
+     *
+     * @return boolean
+     */
+    public function getChecked()
+    {
+        return $this->checked;
     }
 
     /**
@@ -243,6 +402,69 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the country
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setCountrys($countrys)
+    {
+        $this->countrys = $countrys;
+
+        return $this;
+    }
+
+    /**
+     * Get the countrys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCountrys()
+    {
+        return $this->countrys;
+    }
+
+    /**
+     * Add a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     *
+     * @return IrhpApplication
+     */
+    public function addCountrys($countrys)
+    {
+        if ($countrys instanceof ArrayCollection) {
+            $this->countrys = new ArrayCollection(
+                array_merge(
+                    $this->countrys->toArray(),
+                    $countrys->toArray()
+                )
+            );
+        } elseif (!$this->countrys->contains($countrys)) {
+            $this->countrys->add($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
+     *
+     * @return IrhpApplication
+     */
+    public function removeCountrys($countrys)
+    {
+        if ($this->countrys->contains($countrys)) {
+            $this->countrys->removeElement($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
@@ -264,36 +486,6 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return IrhpApplication
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
     }
 
     /**
@@ -351,6 +543,36 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the expiry date
+     *
+     * @param \DateTime $expiryDate new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setExpiryDate($expiryDate)
+    {
+        $this->expiryDate = $expiryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the expiry date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getExpiryDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->expiryDate);
+        }
+
+        return $this->expiryDate;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -372,6 +594,54 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the in scope
+     *
+     * @param boolean $inScope new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setInScope($inScope)
+    {
+        $this->inScope = $inScope;
+
+        return $this;
+    }
+
+    /**
+     * Get the in scope
+     *
+     * @return boolean
+     */
+    public function getInScope()
+    {
+        return $this->inScope;
+    }
+
+    /**
+     * Set the international journeys
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $internationalJourneys entity being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setInternationalJourneys($internationalJourneys)
+    {
+        $this->internationalJourneys = $internationalJourneys;
+
+        return $this;
+    }
+
+    /**
+     * Get the international journeys
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getInternationalJourneys()
+    {
+        return $this->internationalJourneys;
     }
 
     /**
@@ -423,36 +693,6 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return IrhpApplication
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the licence
      *
      * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
@@ -474,6 +714,30 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the sectors
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\Sectors $sectors entity being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setSectors($sectors)
+    {
+        $this->sectors = $sectors;
+
+        return $this;
+    }
+
+    /**
+     * Get the sectors
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\Sectors
+     */
+    public function getSectors()
+    {
+        return $this->sectors;
     }
 
     /**
@@ -546,6 +810,60 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the withdraw reason
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawReason entity being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setWithdrawReason($withdrawReason)
+    {
+        $this->withdrawReason = $withdrawReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdraw reason
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getWithdrawReason()
+    {
+        return $this->withdrawReason;
+    }
+
+    /**
+     * Set the withdrawn date
+     *
+     * @param \DateTime $withdrawnDate new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setWithdrawnDate($withdrawnDate)
+    {
+        $this->withdrawnDate = $withdrawnDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdrawn date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getWithdrawnDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->withdrawnDate);
+        }
+
+        return $this->withdrawnDate;
     }
 
     /**
@@ -738,46 +1056,65 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the createdOn field on persist
+     * Set the task
      *
-     * @ORM\PrePersist
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being set as the value
      *
-     * @return void
+     * @return IrhpApplication
      */
-    public function setCreatedOnBeforePersist()
+    public function setTasks($tasks)
     {
-        $this->createdOn = new \DateTime();
+        $this->tasks = $tasks;
+
+        return $this;
     }
 
     /**
-     * Set the lastModifiedOn field on persist
+     * Get the tasks
      *
-     * @ORM\PreUpdate
-     *
-     * @return void
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function setLastModifiedOnBeforeUpdate()
+    public function getTasks()
     {
-        $this->lastModifiedOn = new \DateTime();
+        return $this->tasks;
     }
 
     /**
-     * Clear properties
+     * Add a tasks
      *
-     * @param array $properties array of properties
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being added
      *
-     * @return void
+     * @return IrhpApplication
      */
-    public function clearProperties($properties = array())
+    public function addTasks($tasks)
     {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
+        if ($tasks instanceof ArrayCollection) {
+            $this->tasks = new ArrayCollection(
+                array_merge(
+                    $this->tasks->toArray(),
+                    $tasks->toArray()
+                )
+            );
+        } elseif (!$this->tasks->contains($tasks)) {
+            $this->tasks->add($tasks);
         }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being removed
+     *
+     * @return IrhpApplication
+     */
+    public function removeTasks($tasks)
+    {
+        if ($this->tasks->contains($tasks)) {
+            $this->tasks->removeElement($tasks);
+        }
+
+        return $this;
     }
 }

@@ -17,7 +17,7 @@ class MaxStockPermitsByApplication extends AbstractQueryHandler implements Toggl
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpApplication';
 

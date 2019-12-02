@@ -7,11 +7,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\IrhpInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitApplicationCmd;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Command Handler to action the submission of an IrhpApplication
@@ -22,9 +24,28 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
 {
     use QueueAwareTrait, ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpApplication';
+
+    /** @var CreateTaskCommandGenerator */
+    private $createTaskCommandGenerator;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->createTaskCommandGenerator = $mainServiceLocator->get('PermitsCheckableCreateTaskCommandGenerator');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -35,18 +56,39 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
      */
     public function handleCommand(CommandInterface $command)
     {
+        /** @var IrhpApplication $irhpApplication */
         $irhpApplicationId = $command->getId();
         $irhpApplication = $this->getRepo()->fetchById($irhpApplicationId);
-        $irhpApplication->submit($this->refData(IrhpInterface::STATUS_ISSUING));
-        $this->getRepo()->save($irhpApplication);
 
-        $this->result->merge(
-            $this->handleSideEffect(
-                $this->createQueue($irhpApplicationId, Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE, [])
-            )
+        $irhpApplication->submit(
+            $this->refData($irhpApplication->getSubmissionStatus())
         );
 
-        $this->result->addMessage('IRHP application queued for issuing');
+        $this->getRepo()->save($irhpApplication);
+
+        $sideEffects = [];
+
+        if ($irhpApplication->shouldAllocatePermitsOnSubmission()) {
+            $sideEffects[] = $this->createQueue(
+                $irhpApplicationId,
+                Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE,
+                []
+            );
+        }
+
+        $sideEffects[] = $this->createTaskCommandGenerator->generate($irhpApplication);
+
+        $sideEffects[] = $this->createQueue(
+            $irhpApplicationId,
+            Queue::TYPE_PERMITS_POST_SUBMIT,
+            ['irhpPermitType' => $irhpApplication->getIrhpPermitType()->getId()]
+        );
+
+        $this->result->merge(
+            $this->handleSideEffects($sideEffects)
+        );
+
+        $this->result->addMessage('IRHP application submitted');
         $this->result->addId('irhpApplication', $irhpApplicationId);
 
         return $this->result;

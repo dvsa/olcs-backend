@@ -6,7 +6,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
  * Class CaseSummaryTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class CaseSummaryTest extends SubmissionSectionTest
+class CaseSummaryTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\CaseSummary';
 

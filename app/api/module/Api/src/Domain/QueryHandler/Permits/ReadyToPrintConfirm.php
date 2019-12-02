@@ -14,11 +14,12 @@ class ReadyToPrintConfirm extends AbstractListQueryHandler implements ToggleRequ
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpPermit';
 
     protected $bundle = [
         'irhpPermitApplication',
+        'irhpPermitRange' => ['emissionsCategory'],
     ];
 }

@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee;
+use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GrantGoods;
@@ -212,6 +213,16 @@ class GrantGoodsTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $this->expectedSideEffect(
+            UpdateFeeStatus::class,
+            [
+                'id' => $feeEntity->getId(),
+                'status' => Fee::STATUS_REFUND_PENDING
+            ],
+            new Result()
+        );
+
         $this->sut->handleCommand($command);
     }
 }

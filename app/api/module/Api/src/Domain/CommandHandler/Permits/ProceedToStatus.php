@@ -16,7 +16,7 @@ final class ProceedToStatus extends AbstractCommandHandler implements ToggleRequ
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermit';
 
     /**

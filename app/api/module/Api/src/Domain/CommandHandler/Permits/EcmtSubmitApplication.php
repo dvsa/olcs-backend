@@ -4,16 +4,17 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplicationCmd;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Submit the ECMT application
@@ -25,8 +26,27 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
     use QueueAwareTrait;
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
+
+    /** @var CreateTaskCommandGenerator */
+    private $createTaskCommandGenerator;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->createTaskCommandGenerator = $mainServiceLocator->get('PermitsCheckableCreateTaskCommandGenerator');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Submit the ECMT application
@@ -34,8 +54,6 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
      * @param CommandInterface $command
      *
      * @return Result
-     * @throws ForbiddenException
-     * @throws NotFoundException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -55,9 +73,16 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         $result->addId('ecmtPermitApplication', $id);
         $result->addMessage('Permit application updated');
 
-        $postSubmissionCmd = $this->createQueue($id, Queue::TYPE_ECMT_POST_SUBMISSION, []);
+        $postSubmissionCmd = $this->createQueue(
+            $id,
+            Queue::TYPE_PERMITS_POST_SUBMIT,
+            ['irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT]
+        );
+
+        $createTaskCommand = $this->createTaskCommandGenerator->generate($application);
+
         $result->merge(
-            $this->handleSideEffect($postSubmissionCmd)
+            $this->handleSideEffects([$postSubmissionCmd, $createTaskCommand])
         );
 
         return $result;

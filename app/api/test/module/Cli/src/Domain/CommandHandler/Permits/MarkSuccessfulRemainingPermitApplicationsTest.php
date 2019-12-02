@@ -3,14 +3,16 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidate as IrhpCandidatePermitRepo;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulRemainingPermitApplications
     as MarkSuccessfulRemainingPermitApplicationsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkSuccessfulRemainingPermitApplications
     as MarkSuccessfulRemainingPermitApplicationsHandler;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -23,43 +25,86 @@ class MarkSuccessfulRemainingPermitApplicationsTest extends CommandHandlerTestCa
     public function setUp()
     {
         $this->sut = new MarkSuccessfulRemainingPermitApplicationsHandler();
-        $this->mockRepo('IrhpCandidatePermit', IrhpCandidateRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermit::class);
         $this->mockRepo('IrhpPermitRange', IrhpPermit::class);
+
+        $this->mockedSmServices = [
+            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
+            'PermitsScoringSuccessfulCandidatePermitsFacade' => m::mock(SuccessfulCandidatePermitsFacade::class)
+        ];
 
         parent::setUp();
     }
 
-    /**
-     * @dataProvider scenariosProvider
-     */
-    public function testHandleCommand($permitCount, $successfulCount, $underConsiderationIds, $successfulIds)
+    public function testHandleCommand()
     {
+        $permitCount = 79;
+        $successfulCount = 67;
         $stockId = 8;
+        $combinedRangeSize = 150;
+
+        $underConsiderationCandidatePermits = [
+            ['id' => 13, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            ['id' => 17, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            ['id' => 41, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            ['id' => 46, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            ['id' => 55, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            ['id' => 61, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            ['id' => 80, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+        ];
+
+        $successfulCandidatePermits = [
+            ['id' => 13, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            ['id' => 17, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            ['id' => 46, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            ['id' => 55, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+        ];
 
         $this->repoMap['IrhpPermitRange']->shouldReceive('getCombinedRangeSize')
             ->with($stockId)
-            ->andReturn(150);
+            ->andReturn($combinedRangeSize);
 
         $this->repoMap['IrhpPermit']->shouldReceive('getPermitCount')
             ->with($stockId)
             ->andReturn($permitCount);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCountInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId)
             ->andReturn($successfulCount);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedIdsInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getUnsuccessfulScoreOrderedInScope')
             ->with($stockId)
-            ->andReturn($underConsiderationIds);
+            ->andReturn($underConsiderationCandidatePermits);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('markAsSuccessful')
-            ->with($successfulIds)
+        $this->mockedSmServices['PermitsScoringSuccessfulCandidatePermitsFacade']->shouldReceive('generate')
+            ->with($underConsiderationCandidatePermits, $stockId, 4)
+            ->once()
+            ->andReturn($successfulCandidatePermits);
+
+        $this->mockedSmServices['PermitsScoringSuccessfulCandidatePermitsFacade']->shouldReceive('write')
+            ->with($successfulCandidatePermits)
             ->once();
 
-        $this->sut->handleCommand(
+        $this->mockedSmServices['PermitsScoringSuccessfulCandidatePermitsFacade']->shouldReceive('log')
+            ->with($successfulCandidatePermits, m::type(Result::class))
+            ->once();
+
+        $expectedMessages = [
+            'STEP 2d:',
+            '  Derived values:',
+            '    - #availableStockCount: 150',
+            '    - #validPermitCount:    79',
+            '    - #allocationQuota:     71',
+            '    - #successfulPACount:   67',
+            '    - #remainingQuota:      4',
+            '  Unsuccessful remaining permits found in stock: 7'
+        ];
+
+        $result = $this->sut->handleCommand(
             MarkSuccessfulRemainingPermitApplicationsCommand::create(['stockId' => $stockId])
         );
+
+        $this->assertEquals($expectedMessages, $result->getMessages());
     }
 
     public function testHandleCommandZeroRemainingQuota()
@@ -74,30 +119,25 @@ class MarkSuccessfulRemainingPermitApplicationsTest extends CommandHandlerTestCa
             ->with($stockId)
             ->andReturn(75);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCountInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId)
             ->andReturn(75);
 
-        $this->sut->handleCommand(
+        $expectedMessages = [
+            'STEP 2d:',
+            '  Derived values:',
+            '    - #availableStockCount: 150',
+            '    - #validPermitCount:    75',
+            '    - #allocationQuota:     75',
+            '    - #successfulPACount:   75',
+            '    - #remainingQuota:      0',
+            '#remainingQuota < 1 - nothing to do'
+        ];
+
+        $result = $this->sut->handleCommand(
             MarkSuccessfulRemainingPermitApplicationsCommand::create(['stockId' => $stockId])
         );
-    }
 
-    public function scenariosProvider()
-    {
-        return [
-            [
-                79,
-                67,
-                [13, 17, 41, 46, 55, 61, 80],
-                [13, 17, 41, 46]
-            ],
-            [
-                79,
-                40,
-                [23, 27, 51, 56, 85, 81, 90],
-                [23, 27, 51, 56, 85, 81, 90]
-            ]
-        ];
+        $this->assertEquals($expectedMessages, $result->getMessages());
     }
 }

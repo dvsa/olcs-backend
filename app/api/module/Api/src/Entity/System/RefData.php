@@ -76,6 +76,25 @@ class RefData extends AbstractRefData
     // Report
     const REPORT_TYPE_COMM_LIC_BULK_REPRINT = 'rep_typ_comm_lic_bulk_reprint';
 
+    const EMISSIONS_CATEGORY_EURO6_REF = 'emissions_cat_euro6';
+    const EMISSIONS_CATEGORY_EURO5_REF = 'emissions_cat_euro5';
+    const EMISSIONS_CATEGORY_NA_REF = 'emissions_cat_na';
+
+    // Business process
+    const BUSINESS_PROCESS_APG = 'app_business_process_apg';
+    const BUSINESS_PROCESS_APGG = 'app_business_process_apgg';
+    const BUSINESS_PROCESS_APSG = 'app_business_process_apsg';
+
+    // International journeys
+    const INTER_JOURNEY_LESS_60 = 'inter_journey_less_60';
+    const INTER_JOURNEY_60_90 = 'inter_journey_60_90';
+    const INTER_JOURNEY_MORE_90 = 'inter_journey_more_90';
+
+    // user operating system
+    const USER_OS_TYPE_WINDOWS_7 = 'windows_7';
+    const USER_OS_TYPE_WINDOWS_10 = 'windows_10';
+
+
     /**
      * RefData constructor.
      *

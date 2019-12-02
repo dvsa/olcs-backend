@@ -48,4 +48,23 @@ class RefData extends AbstractRepository
     {
         $this->getQueryBuilder()->modifyQuery($qb)->with('parent', 'p');
     }
+
+    /**
+     * Fetch ref data by category id ordered by display order
+     *
+     * @param string $categoryId
+     *
+     * @return array
+     */
+    public function fetchByCategoryId($categoryId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('r')
+            ->from(Entity::class, 'r')
+            ->where('r.refDataCategoryId = ?1')
+            ->orderBy('r.displayOrder', 'ASC')
+            ->setParameter(1, $categoryId)
+            ->getQuery()
+            ->getResult();
+    }
 }

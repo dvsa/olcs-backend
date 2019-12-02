@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 return [
     QueryHandler\IrhpPermitWindow\ById::class => IsInternalAdmin::class,
     QueryHandler\IrhpPermitWindow\GetList::class => IsInternalAdmin::class,
+    QueryHandler\IrhpPermitWindow\OpenByType::class => IsInternalAdmin::class,
     CommandHandler\IrhpPermitWindow\Create::class => IsSystemAdmin::class,
     CommandHandler\IrhpPermitWindow\Update::class => IsSystemAdmin::class,
     CommandHandler\IrhpPermitWindow\Delete::class => IsSystemAdmin::class,

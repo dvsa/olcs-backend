@@ -4,7 +4,9 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service as ApiSrv;
+use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 
 return [
     'router' => [
@@ -24,6 +26,55 @@ return [
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
+            'QaCommonCurrentDateTimeFactory' =>
+                ApiSrv\Qa\Common\CurrentDateTimeFactory::class,
+            'QaCommonArrayCollectionFactory' =>
+                ApiSrv\Qa\Common\ArrayCollectionFactory::class,
+            'QaAnswerFactory' => ApiSrv\Qa\AnswerSaver\AnswerFactory::class,
+            'QaApplicationStepFactory' => ApiSrv\Qa\Structure\ApplicationStepFactory::class,
+            'QaCheckboxElementFactory' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxFactory::class,
+            'QaFilteredTranslateableTextFactory' => ApiSrv\Qa\Structure\FilteredTranslateableTextFactory::class,
+            'QaQuestionTextFactory' => ApiSrv\Qa\Structure\QuestionText\QuestionTextFactory::class,
+            'QaSelfservePageFactory' => ApiSrv\Qa\Structure\SelfservePageFactory::class,
+            'QaFormFragmentFactory' => ApiSrv\Qa\Structure\FormFragmentFactory::class,
+            'QaTextElementFactory' => ApiSrv\Qa\Structure\Element\Text\TextFactory::class,
+            'QaRadioElementFactory' => ApiSrv\Qa\Structure\Element\Radio\RadioFactory::class,
+            'QaTranslateableTextFactory' => ApiSrv\Qa\Structure\TranslateableTextFactory::class,
+            'QaTranslateableTextParameterFactory' => ApiSrv\Qa\Structure\TranslateableTextParameterFactory::class,
+            'QaValidatorFactory' => ApiSrv\Qa\Structure\ValidatorFactory::class,
+            'QaValidatorListFactory' => ApiSrv\Qa\Structure\ValidatorListFactory::class,
+            'QaElementGeneratorContextFactory' => ApiSrv\Qa\Structure\Element\ElementGeneratorContextFactory::class,
+            'QaNamedAnswerFetcher' => ApiSrv\Qa\Structure\Element\NamedAnswerFetcher::class,
+            'QaQuestionTextGeneratorContextFactory' =>
+                ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory::class,
+            'QaCommandCreator' => ApiSrv\Qa\Cqrs\CommandCreator::class,
+            'QaEcmtShortTermNoOfPermitsElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
+            'QaEcmtShortTermEmissionsCategoryFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryFactory::class,
+            'QaEcmtShortTermRestrictedCountriesElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesFactory::class,
+            'QaEcmtShortTermRestrictedCountryFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountryFactory::class,
+            'QaEcmtShortTermIntJourneysElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysFactory::class,
+            'QaEcmtShortTermAnnualTripsAbroadElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadFactory::class,
+            'QaSupplementedApplicationStepFactory' =>
+                ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
+            'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
+            'QaOptionFactory' => ApiSrv\Qa\Structure\Element\Options\OptionFactory::class,
+
+            'PermitsScoringSuccessfulCandidatePermitsLogger' =>
+                ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsLogger::class,
+            'PermitsScoringIrhpCandidatePermitFactory' =>
+                ApiSrv\Permits\Scoring\IrhpCandidatePermitFactory::class,
+            'PermitsApplyRangesForCpProviderFactory' =>
+                ApiSrv\Permits\ApplyRanges\ForCpProviderFactory::class,
+            'PermitsCandidatePermitsApggCandidatePermitFactory' =>
+                ApiSrv\Permits\CandidatePermits\ApggCandidatePermitFactory::class,
+
+            'PermitsCheckableCreateTaskCommandFactory' => ApiSrv\Permits\Checkable\CreateTaskCommandFactory::class,
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -50,8 +101,8 @@ return [
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
             Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
-            'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsV2HelperService::class,
+            ApiServiceFactory::class => ApiServiceFactory::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
             'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
             'CompaniesHouseService' => \Dvsa\Olcs\Api\Service\CompaniesHouseService::class,
@@ -112,13 +163,173 @@ return [
 
             ApiSrv\Document\PrintLetter::class => ApiSrv\Document\PrintLetter::class,
             \Dvsa\Olcs\Api\Service\Toggle\ToggleService::class =>
-                \Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory::class
+                \Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory::class,
+
+            'TemplateFetcher' => ApiSrv\Template\TemplateFetcher::class,
+            'TemplateDatabaseTwigLoader' => ApiSrv\Template\DatabaseTwigLoaderFactory::class,
+            'TemplateDatabaseTemplateFetcher' => ApiSrv\Template\DatabaseTemplateFetcherFactory::class,
+            'TemplateTwigRenderer' => ApiSrv\Template\TwigRendererFactory::class,
+            'TemplateTwigEnvironment' => ApiSrv\Template\TwigEnvironmentFactory::class,
+            'TemplateStrategySelectingViewRenderer' => ApiSrv\Template\StrategySelectingViewRendererFactory::class,
+
+            'QaGenericAnswerSaver' => ApiSrv\Qa\Structure\Element\GenericAnswerSaverFactory::class,
+            'QaBaseAnswerSaver' => ApiSrv\Qa\Structure\Element\BaseAnswerSaverFactory::class,
+            'QaGenericAnswerClearer' => ApiSrv\Qa\Structure\Element\GenericAnswerClearerFactory::class,
+            'QaCheckboxAnswerSaver' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxAnswerSaverFactory::class,
+            'QaGenericAnswerProvider' => ApiSrv\Qa\AnswerSaver\GenericAnswerProviderFactory::class,
+            'QaGenericAnswerWriter' => ApiSrv\Qa\AnswerSaver\GenericAnswerWriterFactory::class,
+            'QaGenericAnswerFetcher' => ApiSrv\Qa\Structure\Element\GenericAnswerFetcherFactory::class,
+            'QaApplicationAnswersClearer' => ApiSrv\Qa\AnswerSaver\ApplicationAnswersClearerFactory::class,
+            
+            'QaApplicationStepObjectsProvider' => ApiSrv\Qa\ApplicationStepObjectsProviderFactory::class,
+            'QaFormControlStrategyProvider' => ApiSrv\Qa\FormControlStrategyProviderFactory::class,
+            'QaCheckboxFormControlStrategy' => ApiSrv\Qa\Strategy\CheckboxFormControlStrategyFactory::class,
+            'QaTextFormControlStrategy' => ApiSrv\Qa\Strategy\TextFormControlStrategyFactory::class,
+            'QaRadioFormControlStrategy' => ApiSrv\Qa\Strategy\RadioFormControlStrategyFactory::class,
+            'QaEcmtRemovalNoOfPermitsFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtRemovalNoOfPermitsFormControlStrategyFactory::class,
+            'QaEcmtShortTermNoOfPermitsFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
+            'QaEcmtShortTermPermitUsageFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermPermitUsageFormControlStrategyFactory::class,
+            'QaEcmtShortTermIntJourneysFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermIntJourneysFormControlStrategyFactory::class,
+            'QaEcmtShortTermRestrictedCountriesFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermRestrictedCountriesFormControlStrategyFactory::class,
+            'QaEcmtShortTermAnnualTripsAbroadFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory::class,
+            'QaEcmtShortTermSectorsFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermSectorsFormControlStrategyFactory::class,
+            'QaCommonCertificatesFormControlStrategy'
+                => ApiSrv\Qa\Strategy\CommonCertificatesFormControlStrategyFactory::class,
+
+            'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
+            'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
+            'QaFilteredTranslateableTextGenerator' => ApiSrv\Qa\Structure\FilteredTranslateableTextGeneratorFactory::class,
+            'QaQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorFactory::class,
+            'QaEcmtRemovalNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtRemovalNoOfPermitsGeneratorFactory::class,
+            'QaEcmtShortTermNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
+            'QaEcmtShortTermRestrictedCountriesQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
+            'QaCommonCertificatesQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\Common\CertificatesGeneratorFactory::class,
+            'QaSelfservePageGenerator' => ApiSrv\Qa\Structure\SelfservePageGeneratorFactory::class,
+            'QaFormFragmentGenerator' => ApiSrv\Qa\Structure\FormFragmentGeneratorFactory::class,
+            'QaTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\TextGeneratorFactory::class,
+            'QaRadioElementGenerator' => ApiSrv\Qa\Structure\Element\Radio\RadioGeneratorFactory::class,
+            'QaTotAuthVehiclesTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\Custom\TotAuthVehiclesGeneratorFactory::class,
+            'QaTranslateableTextGenerator' => ApiSrv\Qa\Structure\TranslateableTextGeneratorFactory::class,
+            'QaTranslateableTextParameterGenerator' => ApiSrv\Qa\Structure\TranslateableTextParameterGeneratorFactory::class,
+            'QaJsonDecodingFilteredTranslateableTextGenerator'
+                => ApiSrv\Qa\Structure\JsonDecodingFilteredTranslateableTextGeneratorFactory::class,
+            'QaValidatorGenerator' => ApiSrv\Qa\Structure\ValidatorGeneratorFactory::class,
+            'QaValidatorListGenerator' => ApiSrv\Qa\Structure\ValidatorListGeneratorFactory::class,
+            'QaOptionsGenerator' => ApiSrv\Qa\Structure\Element\Options\OptionsGeneratorFactory::class,
+            'QaRefDataOptionsSource' => ApiSrv\Qa\Structure\Element\Options\RefDataSourceFactory::class,
+            'QaRepoQueryOptionsSource' => ApiSrv\Qa\Structure\Element\Options\RepoQuerySourceFactory::class,
+
+            'QaEcmtRemovalNoOfPermitsAnswerWriter' =>
+                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\AnswerWriterFactory::class,
+            'QaEcmtRemovalNoOfPermitsAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerSaverFactory::class,
+            'QaEcmtRemovalNoOfPermitsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerClearerFactory::class,
+            'QaEcmtRemovalNoOfPermitsFeeCreator' =>
+                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\FeeCreatorFactory::class,
+            'QaEcmtShortTermNoOfPermitsFormControlStrategy' => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
+            'QaEcmtShortTermNoOfPermitsAnswerFetcher' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerFetcherFactory::class,
+            'QaEcmtShortTermNoOfPermitsAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSaverFactory::class,
+            'QaEcmtShortTermNoOfPermitsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerClearerFactory::class,
+            'QaEcmtShortTermNoOfPermitsElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
+            'QaEcmtShortTermEmissionsCategoryConditionalAdder' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryConditionalAdderFactory::class,
+            'QaEcmtShortTermConditionalFeeUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdaterFactory::class,
+            'QaEcmtShortTermFeeUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\FeeUpdaterFactory::class,
+            'QaEcmtShortTermIntJourneysAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerSaverFactory::class,
+            'QaEcmtShortTermIntJourneysAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerClearerFactory::class,
+            'QaEcmtShortTermIntJourneysElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysGeneratorFactory::class,
+            'QaEcmtShortTermAnnualTripsAbroadElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadGeneratorFactory::class,
+            'QaEcmtShortTermRestrictedCountriesAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerSaverFactory::class,
+            'QaEcmtShortTermRestrictedCountriesAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerClearerFactory::class,
+            'QaEcmtShortTermRestrictedCountriesElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
+            'QaEcmtShortTermAnnualTripsAbroadAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadAnswerSaverFactory::class,
+            'QaEcmtShortTermSectorsAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerSaverFactory::class,
+            'QaEcmtShortTermSectorsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerClearerFactory::class,
+            'QaCommonCertificatesAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Common\CertificatesAnswerSaverFactory::class,
+
+            'QaSupplementedApplicationStepsProvider' =>
+                ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
+
+            'PermitsShortTermEcmtWindowAvailabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
+            'PermitsShortTermEcmtStockAvailabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\StockAvailabilityCheckerFactory::class,
+            'PermitsShortTermEcmtEmissionsCategoryAvailabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCheckerFactory::class,
+            'PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter' =>
+                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
+            'PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator' =>
+                ApiSrv\Permits\ShortTermEcmt\CandidatePermitsAvailableCountCalculatorFactory::class,
+            'PermitsShortTermEcmtCandidatePermitsGrantabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\CandidatePermitsGrantabilityCheckerFactory::class,
+            'PermitsShortTermEcmtEmissionsCategoriesGrantabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoriesGrantabilityCheckerFactory::class,
+
+            'PermitsGrantabilityChecker' =>
+                ApiSrv\Permits\GrantabilityCheckerFactory::class,
+            'PermitsScoringCandidatePermitsCreator'
+                => ApiSrv\Permits\Scoring\CandidatePermitsCreatorFactory::class,
+            'PermitsScoringScoringQueryProxy'
+                => ApiSrv\Permits\Scoring\ScoringQueryProxyFactory::class,
+            'PermitsScoringSuccessfulCandidatePermitsGenerator'
+                => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsGeneratorFactory::class,
+            'PermitsScoringSuccessfulCandidatePermitsWriter'
+                => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsWriterFactory::class,
+            'PermitsScoringEmissionsCategoryAvailabilityCounter'
+                => ApiSrv\Permits\Scoring\EmissionsCategoryAvailabilityCounterFactory::class,
+            'PermitsScoringSuccessfulCandidatePermitsFacade'
+                => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsFacadeFactory::class,
+            'PermitsApplyRangesStockBasedForCpProviderFactory'
+                => ApiSrv\Permits\ApplyRanges\StockBasedForCpProviderFactoryFactory::class,
+            'PermitsCommonStockBasedRestrictedCountryIdsProvider'
+                => ApiSrv\Permits\Common\StockBasedRestrictedCountryIdsProviderFactory::class,
+            'PermitsCommonRangeBasedRestrictedCountriesProvider'
+                => ApiSrv\Permits\Common\RangeBasedRestrictedCountriesProviderFactory::class,
+            'PermitsCommonTypeBasedRestrictedCountriesProvider'
+                => ApiSrv\Permits\Common\TypeBasedRestrictedCountriesProviderFactory::class,
+            'PermitsCandidatePermitsApggCandidatePermitsCreator'
+                => ApiSrv\Permits\CandidatePermits\ApggCandidatePermitsCreatorFactory::class,
+            'PermitsCandidatePermitsApggEmissionsCatCandidatePermitsCreator'
+                => ApiSrv\Permits\CandidatePermits\ApggEmissionsCatCandidatePermitsCreatorFactory::class,
+            'PermitsCandidatePermitsIrhpCandidatePermitsCreator'
+                => ApiSrv\Permits\CandidatePermits\IrhpCandidatePermitsCreatorFactory::class,
+
+            'PermitsCheckableCheckedValueUpdater'
+                => ApiSrv\Permits\Checkable\CheckedValueUpdaterFactory::class,
+            'PermitsCheckableCreateTaskCommandGenerator'
+                => ApiSrv\Permits\Checkable\CreateTaskCommandGeneratorFactory::class,
         ],
     ],
     'view_manager' => [
         'template_path_stack' => [
             'submission' => __DIR__ . '/../view/submission',
-            'permits' => __DIR__ . '/../view/permits',
         ]
     ],
     'file_uploader' => [
@@ -281,6 +492,7 @@ return [
             'ChangeOfEntity' => RepositoryFactory::class,
             'ApplicationOrganisationPerson' => RepositoryFactory::class,
             'DocumentSearchView' => RepositoryFactory::class,
+            'DocTemplateSearchView' => RepositoryFactory::class,
             'S4' => RepositoryFactory::class,
             'TaskSearchView' => RepositoryFactory::class,
             'PrivateHireLicence' => RepositoryFactory::class,
@@ -353,7 +565,10 @@ return [
             'IrhpPermitType' => RepositoryFactory::class,
             'IrhpPermitWindow' => RepositoryFactory::class,
             'IrhpPermitRange' => RepositoryFactory::class,
-            'IrhpApplication' => RepositoryFactory::class,
+            'Template' => RepositoryFactory::class,
+            'ApplicationStep' => RepositoryFactory::class,
+            'Answer' => RepositoryFactory::class,
+            'ApplicationPathGroup' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
@@ -418,6 +633,16 @@ return [
             'can-update-licence-licence-type' => \Dvsa\Olcs\Api\Assertion\Licence\UpdateLicenceType::class,
             'can-manage-user-selfserve' => \Dvsa\Olcs\Api\Assertion\User\ManageUserSelfserve::class,
             'can-read-user-selfserve' => \Dvsa\Olcs\Api\Assertion\User\ReadUserSelfserve::class,
+        ]
+    ],
+    'permits' => [
+        'types' => [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT => [
+                'restricted_countries' => ['AT', 'GR', 'HU', 'IT', 'RU'],
+            ],
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => [
+                'restricted_countries' => ['GR', 'HU', 'IT', 'RU'],
+            ],
         ]
     ],
     'publication_context' => [

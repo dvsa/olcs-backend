@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -22,8 +25,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_stock_id"}),
  *        @ORM\Index(name="fk_irhp_permit_window_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_window_last_modified_by_user_id",
-     *     columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irhp_permit_window_ref_data_id", columns={"emissions_category"})
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
@@ -31,6 +33,9 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Created by
@@ -44,15 +49,6 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     protected $createdBy;
 
     /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
      * Days for payment
      *
      * @var int
@@ -60,16 +56,6 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
      * @ORM\Column(type="integer", name="days_for_payment", nullable=true)
      */
     protected $daysForPayment;
-
-    /**
-     * Emissions category
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="emissions_category", referencedColumnName="id", nullable=false)
-     */
-    protected $emissionsCategory;
 
     /**
      * End date
@@ -117,15 +103,6 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
      * Start date
      *
      * @var \DateTime
@@ -169,36 +146,6 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     }
 
     /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return IrhpPermitWindow
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
      * Set the days for payment
      *
      * @param int $daysForPayment new value being set
@@ -220,30 +167,6 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     public function getDaysForPayment()
     {
         return $this->daysForPayment;
-    }
-
-    /**
-     * Set the emissions category
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $emissionsCategory entity being set as the value
-     *
-     * @return IrhpPermitWindow
-     */
-    public function setEmissionsCategory($emissionsCategory)
-    {
-        $this->emissionsCategory = $emissionsCategory;
-
-        return $this;
-    }
-
-    /**
-     * Get the emissions category
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getEmissionsCategory()
-    {
-        return $this->emissionsCategory;
     }
 
     /**
@@ -349,36 +272,6 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return IrhpPermitWindow
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the start date
      *
      * @param \DateTime $startDate new value being set
@@ -430,45 +323,5 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     public function getVersion()
     {
         return $this->version;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
     }
 }

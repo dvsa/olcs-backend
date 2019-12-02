@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,8 +30,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_country_id", columns={"country_id"}),
- *        @ORM\Index(name="fk_irhp_permit_stock_emissions_category_ref_data_id",
-     *     columns={"emissions_category"})
+ *        @ORM\Index(name="fk_irhp_permit_stock_application_path_group_id",
+     *     columns={"application_path_group_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_stock_business_process_ref_data_id",
+     *     columns={"business_process"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uniqueStock",
@@ -40,6 +45,29 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
+
+    /**
+     * Application path group
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup", fetch="LAZY")
+     * @ORM\JoinColumn(name="application_path_group_id", referencedColumnName="id", nullable=true)
+     */
+    protected $applicationPathGroup;
+
+    /**
+     * Business process
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="business_process", referencedColumnName="id", nullable=true)
+     */
+    protected $businessProcess;
 
     /**
      * Country
@@ -65,25 +93,6 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
-     * Emissions category
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="emissions_category", referencedColumnName="id", nullable=true)
-     */
-    protected $emissionsCategory;
 
     /**
      * Identifier - Id
@@ -131,13 +140,13 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
+     * Period name key
      *
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     * @ORM\Column(type="string", name="period_name_key", length=255, nullable=true)
      */
-    protected $lastModifiedOn;
+    protected $periodNameKey;
 
     /**
      * Status
@@ -249,6 +258,54 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the application path group
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup $applicationPathGroup entity being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setApplicationPathGroup($applicationPathGroup)
+    {
+        $this->applicationPathGroup = $applicationPathGroup;
+
+        return $this;
+    }
+
+    /**
+     * Get the application path group
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup
+     */
+    public function getApplicationPathGroup()
+    {
+        return $this->applicationPathGroup;
+    }
+
+    /**
+     * Set the business process
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $businessProcess entity being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setBusinessProcess($businessProcess)
+    {
+        $this->businessProcess = $businessProcess;
+
+        return $this;
+    }
+
+    /**
+     * Get the business process
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getBusinessProcess()
+    {
+        return $this->businessProcess;
+    }
+
+    /**
      * Set the country
      *
      * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $country entity being set as the value
@@ -294,60 +351,6 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return IrhpPermitStock
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
-     * Set the emissions category
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $emissionsCategory entity being set as the value
-     *
-     * @return IrhpPermitStock
-     */
-    public function setEmissionsCategory($emissionsCategory)
-    {
-        $this->emissionsCategory = $emissionsCategory;
-
-        return $this;
-    }
-
-    /**
-     * Get the emissions category
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getEmissionsCategory()
-    {
-        return $this->emissionsCategory;
     }
 
     /**
@@ -447,33 +450,27 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the last modified on
+     * Set the period name key
      *
-     * @param \DateTime $lastModifiedOn new value being set
+     * @param string $periodNameKey new value being set
      *
      * @return IrhpPermitStock
      */
-    public function setLastModifiedOn($lastModifiedOn)
+    public function setPeriodNameKey($periodNameKey)
     {
-        $this->lastModifiedOn = $lastModifiedOn;
+        $this->periodNameKey = $periodNameKey;
 
         return $this;
     }
 
     /**
-     * Get the last modified on
+     * Get the period name key
      *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
+     * @return string
      */
-    public function getLastModifiedOn($asDateTime = false)
+    public function getPeriodNameKey()
     {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
+        return $this->periodNameKey;
     }
 
     /**
@@ -834,49 +831,5 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

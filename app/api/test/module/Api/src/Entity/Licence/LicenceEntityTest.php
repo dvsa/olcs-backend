@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Continuation;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
@@ -20,7 +21,9 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Publication\Publication;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
@@ -2396,193 +2399,128 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestCanMakeIrhpApplication
+     * Return an entity eligible for permits (prevents having to retest eligibleForPermits method each time)
+     *
+     * @return Entity|m\mockInterface
      */
-    public function testCanMakeIrhpApplication(
-        $irhpPermitType,
-        $irhpApplications,
-        $exclude,
-        $isEligibleForPermits,
-        $expected
-    ) {
-        /** @var IrhpPermitType $type */
-        $type = m::mock(IrhpPermitType::class)->makePartial();
-        $type->shouldReceive('getId')->andReturn($irhpPermitType);
-
-        /** @var Entity $licence */
-        $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive('isEligibleForPermits')->andReturn($isEligibleForPermits);
-        $licence->shouldReceive('getIrhpApplications')->andReturn($irhpApplications);
-
-        $this->assertEquals($expected, $licence->canMakeIrhpApplication($type, $exclude));
-    }
-
-    public function dpTestCanMakeIrhpApplication()
+    private function createEligibleForPermits()
     {
-        $activeBilateralIrhpApp = m::mock(IrhpApplication::class);
-        $activeBilateralIrhpApp->shouldReceive('getId')
-            ->andReturn(10)
-            ->shouldReceive('isActive')
-            ->andReturn(true)
-            ->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setStatus(new RefData(Entity::LICENCE_STATUS_VALID));
+        $licence->setGoodsOrPsv(new RefData(Entity::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $licence->setLicenceType(new RefData(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL));
 
-        $inactiveBilateralIrhpApp = m::mock(IrhpApplication::class);
-        $inactiveBilateralIrhpApp->shouldReceive('getId')
-            ->andReturn(11)
-            ->shouldReceive('isActive')
-            ->andReturn(false)
-            ->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
-
-        $activeMultilateralIrhpApp = m::mock(IrhpApplication::class);
-        $activeMultilateralIrhpApp->shouldReceive('getId')
-            ->andReturn(20)
-            ->shouldReceive('isActive')
-            ->andReturn(true)
-            ->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
-
-        $inactiveMultilateralIrhpApp = m::mock(IrhpApplication::class);
-        $inactiveMultilateralIrhpApp->shouldReceive('getId')
-            ->andReturn(21)
-            ->shouldReceive('isActive')
-            ->andReturn(false)
-            ->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
-
-        return [
-            'no IRHP apps - not eligible for permits' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection(),
-                'exclude' => null,
-                'isEligibleForPermits' => false,
-                'expected' => false,
-            ],
-            'no IRHP apps - eligible for permits' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection(),
-                'exclude' => null,
-                'isEligibleForPermits' => true,
-                'expected' => true,
-            ],
-            'all inactive IRHP apps - eligible for permits' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection([$inactiveMultilateralIrhpApp, $inactiveBilateralIrhpApp]),
-                'exclude' => null,
-                'isEligibleForPermits' => true,
-                'expected' => true,
-            ],
-            'active IRHP app of different type - eligible for permits' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $inactiveBilateralIrhpApp]),
-                'exclude' => null,
-                'isEligibleForPermits' => true,
-                'expected' => true,
-            ],
-            'active IRHP app of the same type - eligible for permits' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $activeBilateralIrhpApp]),
-                'exclude' => null,
-                'isEligibleForPermits' => true,
-                'expected' => false,
-            ],
-            'active IRHP app of the same type but excluded - eligible for permits' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $activeBilateralIrhpApp]),
-                'exclude' => $activeBilateralIrhpApp,
-                'isEligibleForPermits' => true,
-                'expected' => true,
-            ],
-        ];
+        return $licence;
     }
 
     /**
-     * @dataProvider dpTestHasActiveIrhpApplication
+     * Bring back a list of Irhp applications, prove that non-matching apps  work as intended
+     * The non-matching apps are an excluded app (same app id) and an app where the stock id does not match
+     * The final (active) application is a match and therefor an application can't be made
      */
-    public function testHasActiveIrhpApplication(
-        $irhpPermitType,
-        $irhpApplications,
-        $exclude,
-        $expected
-    ) {
-        /** @var IrhpPermitType $type */
-        $type = m::mock(IrhpPermitType::class)->makePartial();
-        $type->shouldReceive('getId')->andReturn($irhpPermitType);
+    public function testCanMakeIrhpApplication()
+    {
+        $excludedAppId = 111;
+        $excludedApp = m::mock(IrhpApplication::class);
+        //id is checked once for each app
+        $excludedApp->shouldReceive('getId')->times(3)->withNoArgs()->andReturn($excludedAppId);
 
-        /** @var Entity $licence */
-        $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive('getIrhpApplications')->andReturn($irhpApplications);
+        $irhpPermitType = m::mock(IrhpPermitType::class);
 
-        $this->assertEquals($expected, $licence->hasActiveIrhpApplication($type, $exclude));
+        $stockId = 999;
+        $stock = m::mock(IrhpPermitStock::class);
+        $stock->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+        $stock->shouldReceive('getId')->once()->withNoArgs()->andReturn($stockId);
+
+        $licence = $this->createEligibleForPermits();
+        $licence->shouldReceive('getIrhpApplications->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) use ($irhpPermitType, $excludedAppId, $stockId) {
+                    $compositeExpression = $criteria->getWhereExpression();
+                    $expressions = $compositeExpression->getExpressionList();
+
+                    $this->assertEquals('status', $expressions[0]->getField());
+                    $this->assertEquals('IN', $expressions[0]->getOperator());
+                    $this->assertEquals(
+                        IrhpInterface::ACTIVE_STATUSES,
+                        $expressions[0]->getValue()->getValue()
+                    );
+
+                    $this->assertEquals('irhpPermitType', $expressions[1]->getField());
+                    $this->assertEquals('=', $expressions[1]->getOperator());
+                    $this->assertEquals($irhpPermitType, $expressions[1]->getValue()->getValue());
+
+                    $matchExcludedApp = m::mock(IrhpApplication::class);
+                    $matchExcludedApp->shouldReceive('getId')->withNoArgs()->andReturn($excludedAppId);
+                    $matchExcludedApp->shouldReceive('isMultiStock')->never();
+                    $matchExcludedApp->shouldReceive('getAssociatedStock->getId')->never();
+
+                    $nonMatchingStockApp = m::mock(IrhpApplication::class);
+                    $nonMatchingStockApp->shouldReceive('getId')->withNoArgs()->andReturn(1010);
+                    $nonMatchingStockApp->shouldReceive('isMultiStock')->once()->andReturn(false);
+                    $nonMatchingStockApp->shouldReceive('getAssociatedStock->getId')
+                        ->once()
+                        ->withNoArgs()
+                        ->andReturn(222);
+
+                    $activeApp = m::mock(IrhpApplication::class);
+                    $activeApp->shouldReceive('getId')->withNoArgs()->andReturn(2020);
+                    $activeApp->shouldReceive('isMultiStock')->once()->andReturn(false);
+                    $activeApp->shouldReceive('getAssociatedStock->getId')->once()->withNoArgs()->andReturn($stockId);
+
+                    $collection = new ArrayCollection(
+                        [$matchExcludedApp, $nonMatchingStockApp, $activeApp]
+                    );
+
+                    return $collection;
+                }
+            );
+
+        $this->assertFalse($licence->canMakeIrhpApplication($stock, $excludedApp));
     }
 
-    public function dpTestHasActiveIrhpApplication()
+    /**
+     * Bring back a single multi stock application, an application still cannot be made as we don't check the stock
+     * Tests the multi stock switch operates correctly
+     */
+    public function testCanMakeIrhpApplicationWithOneIgnoredApp()
     {
-        $activeBilateralIrhpApp = m::mock(IrhpApplication::class);
-        $activeBilateralIrhpApp->shouldReceive('getId')
-            ->andReturn(10)
-            ->shouldReceive('isActive')
-            ->andReturn(true)
-            ->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+        $irhpPermitType = m::mock(IrhpPermitType::class);
 
-        $inactiveBilateralIrhpApp = m::mock(IrhpApplication::class);
-        $inactiveBilateralIrhpApp->shouldReceive('getId')
-            ->andReturn(11)
-            ->shouldReceive('isActive')
-            ->andReturn(false)
-            ->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+        $stockId = 999;
+        $stock = m::mock(IrhpPermitStock::class);
+        $stock->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+        $stock->shouldReceive('getId')->once()->withNoArgs()->andReturn($stockId);
 
-        $activeMultilateralIrhpApp = m::mock(IrhpApplication::class);
-        $activeMultilateralIrhpApp->shouldReceive('getId')
-            ->andReturn(20)
-            ->shouldReceive('isActive')
-            ->andReturn(true)
-            ->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+        $nonMatchingStockApp = m::mock(IrhpApplication::class);
+        $nonMatchingStockApp->shouldReceive('getId')->never();
+        $nonMatchingStockApp->shouldReceive('isMultiStock')->once()->andReturn(true);
+        $nonMatchingStockApp->shouldReceive('getAssociatedStock->getId')->never();
 
-        $inactiveMultilateralIrhpApp = m::mock(IrhpApplication::class);
-        $inactiveMultilateralIrhpApp->shouldReceive('getId')
-            ->andReturn(21)
-            ->shouldReceive('isActive')
-            ->andReturn(false)
-            ->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+        $collection = new ArrayCollection([$nonMatchingStockApp]);
 
-        return [
-            'no IRHP apps' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection(),
-                'exclude' => null,
-                'expected' => false,
-            ],
-            'all inactive IRHP apps' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection([$inactiveMultilateralIrhpApp, $inactiveBilateralIrhpApp]),
-                'exclude' => null,
-                'expected' => false,
-            ],
-            'active IRHP app of different type' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $inactiveBilateralIrhpApp]),
-                'exclude' => null,
-                'expected' => false,
-            ],
-            'active IRHP app of the same type' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $activeBilateralIrhpApp]),
-                'exclude' => null,
-                'expected' => true,
-            ],
-            'active IRHP app of the same type but excluded' => [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $activeBilateralIrhpApp]),
-                'exclude' => $activeBilateralIrhpApp,
-                'expected' => false,
-            ],
-        ];
+        $licence = $this->createEligibleForPermits();
+        $licence->shouldReceive('getIrhpApplications->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturn($collection);
+
+        $this->assertFalse($licence->canMakeIrhpApplication($stock, null));
+    }
+
+    public function testCanMakeIrhpApplicationNoApplications()
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+
+        $stock = m::mock(IrhpPermitStock::class);
+        $stock->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+
+        $licence = $this->createEligibleForPermits();
+        $licence->shouldReceive('getIrhpApplications->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturn(new ArrayCollection());
+
+        $this->assertTrue($licence->canMakeIrhpApplication($stock, null));
     }
 
     /**
@@ -2619,6 +2557,111 @@ class LicenceEntityTest extends EntityTester
             [Licence::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, false],
             [Licence::LICENCE_STATUS_UNLICENSED, false],
             [Licence::LICENCE_STATUS_CANCELLED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestHasActiveEcmtApplicationForStock
+     */
+    public function testCanMakeEcmtApplication(
+        $irhpPermitStock,
+        $ecmtApplications,
+        $exclude,
+        $expected
+    ) {
+
+        /** @var Entity $licence */
+        $licence = $this->createEligibleForPermits();
+        $licence->shouldReceive('getEcmtApplications')->andReturn($ecmtApplications);
+
+        $this->assertEquals($expected, $licence->canMakeEcmtApplication($irhpPermitStock, $exclude));
+    }
+
+    public function dpTestHasActiveEcmtApplicationForStock()
+    {
+        $matchingStock = m::mock(IrhpPermitStock::class);
+        $wrongStock = m::mock(IrhpPermitStock::class);
+
+        $matchingStock->shouldReceive('getId')
+            ->andReturn(1);
+
+        $wrongStock->shouldReceive('getId')
+            ->andReturn(999);
+
+        $activeEcmtApp = m::mock(EcmtPermitApplication::class);
+        $activeEcmtApp->shouldReceive('getId')
+            ->andReturn(10)
+            ->shouldReceive('isActive')
+            ->andReturn(true)
+            ->shouldReceive('getAssociatedStock->getId')
+            ->andReturn(1);
+
+        $inactiveEcmtApp = m::mock(EcmtPermitApplication::class);
+        $inactiveEcmtApp->shouldReceive('getId')
+            ->andReturn(11)
+            ->shouldReceive('isActive')
+            ->andReturn(false)
+            ->shouldReceive('getAssociatedStock->getId')
+            ->andReturn(1);
+
+        return [
+            'no ECMT apps' => [
+                'irhpPermitStock' => $matchingStock,
+                'ecmtApplications' => new ArrayCollection(),
+                'exclude' => null,
+                'expected' => true,
+            ],
+            'all inactive ECMT apps' => [
+                'irhpPermitStock' => $matchingStock,
+                'ecmtApplications' => new ArrayCollection([$inactiveEcmtApp, $inactiveEcmtApp]),
+                'exclude' => null,
+                'expected' => true,
+            ],
+            'active ECMT app same stock' => [
+                'irhpPermitStock' => $matchingStock,
+                'ecmtApplications' => new ArrayCollection([$activeEcmtApp, $activeEcmtApp]),
+                'exclude' => null,
+                'expected' => false,
+            ],
+            'active ECMT app diff stock' => [
+                'irhpPermitStock' => $wrongStock,
+                'ecmtApplications' => new ArrayCollection([$activeEcmtApp, $activeEcmtApp]),
+                'exclude' => null,
+                'expected' => true,
+            ],
+            'active ECMT app excluded' => [
+                'irhpPermitStock' => $matchingStock,
+                'ecmtApplications' => new ArrayCollection([$activeEcmtApp, $activeEcmtApp]),
+                'exclude' => $activeEcmtApp,
+                'expected' => true,
+            ],
+        ];
+    }
+
+    /**
+     * No need to test all the code, each method has a test already, only a quick test the right method is being called
+     *
+     * @dataProvider dpTestActivePermitApplicationForStock
+     */
+    public function testActivePermitApplicationForStock($isEcmtAnnual, $method)
+    {
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtAnnual')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($isEcmtAnnual);
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive($method)->once()->with($irhpPermitStock, null);
+
+        $licence->getActivePermitApplicationForStock($irhpPermitStock, null);
+    }
+
+    public function dpTestActivePermitApplicationForStock()
+    {
+        return [
+            [true, 'getActiveEcmtApplicationForStock'],
+            [false, 'getActiveIrhpApplication'],
         ];
     }
 }

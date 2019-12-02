@@ -5,10 +5,13 @@ namespace Dvsa\OlcsTest\Api\Entity\Organisation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
@@ -384,7 +387,7 @@ class OrganisationEntityTest extends EntityTester
         $this->assertEquals(true, $organisation->hasActiveLicences(LicenceEntity::LICENCE_CATEGORY_PSV));
     }
 
-    public function testGetRelatedLicences()
+    public function testGetEligibleIrhpLicences()
     {
         /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
@@ -392,43 +395,125 @@ class OrganisationEntityTest extends EntityTester
             ->with(m::type(Criteria::class))
             ->andReturnUsing(
                 function (Criteria $criteria) {
+                    $compositeExpression = $criteria->getWhereExpression();
+                    $expressions = $compositeExpression->getExpressionList();
 
-                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
-                    $expr = $criteria->getWhereExpression();
+                    $this->assertEquals('goodsOrPsv', $expressions[0]->getField());
+                    $this->assertEquals('=', $expressions[0]->getOperator());
+                    $this->assertEquals(
+                        new RefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
+                        $expressions[0]->getValue()->getValue()
+                    );
 
-                    $this->assertEquals('status', $expr->getField());
-                    $this->assertEquals('IN', $expr->getOperator());
+                    $this->assertEquals('status', $expressions[1]->getField());
+                    $this->assertEquals('IN', $expressions[1]->getOperator());
                     $this->assertEquals(
                         [
-                            LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
-                            LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
-                            LicenceEntity::LICENCE_STATUS_GRANTED,
                             LicenceEntity::LICENCE_STATUS_VALID,
                             LicenceEntity::LICENCE_STATUS_SUSPENDED,
                             LicenceEntity::LICENCE_STATUS_CURTAILED,
                         ],
-                        $expr->getValue()->getValue()
+                        $expressions[1]->getValue()->getValue()
+                    );
+
+                    $this->assertEquals('licenceType', $expressions[2]->getField());
+                    $this->assertEquals('IN', $expressions[2]->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                            LicenceEntity::LICENCE_TYPE_RESTRICTED,
+                        ],
+                        $expressions[2]->getValue()->getValue()
                     );
 
                     $collection = m::mock();
                     $collection->shouldReceive('toArray')
-                        ->andReturn(['related licences']);
+                        ->andReturn(['eligible licences']);
 
                     return $collection;
                 }
             );
 
         $this->assertEquals(
-            ['related licences'],
-            $organisation->getRelatedLicences()->toArray()
+            ['eligible licences'],
+            $organisation->getEligibleIrhpLicences()->toArray()
         );
+    }
+
+    public function testGetEligibleIrhpLicencesForStock()
+    {
+        $permitAppId = 333;
+        $activePermitApp = m::mock(IrhpInterface::class);
+        $activePermitApp->shouldReceive('getId')->once()->withNoArgs()->andReturn($permitAppId);
+        $stock = m::mock(IrhpPermitStock::class);
+
+        $id1 = 111;
+        $licNo1 = 'OB1234567';
+        $trafficArea1 = 'traffic area 1';
+        $isRestricted1 = true;
+        $typeDesc1 = 'type description 1';
+
+        $licence1 = m::mock(LicenceEntity::class);
+        $licence1->shouldReceive('getId')->once()->withNoArgs()->andReturn($id1);
+        $licence1->shouldReceive('getActivePermitApplicationForStock')->with($stock)->andReturn($activePermitApp);
+        $licence1->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo1);
+        $licence1->shouldReceive('getTrafficArea->getName')->once()->withNoArgs()->andReturn($trafficArea1);
+        $licence1->shouldReceive('isRestricted')->once()->withNoArgs()->andReturn($isRestricted1);
+        $licence1->shouldReceive('getLicenceType->getDescription')->once()->withNoArgs()->andReturn($typeDesc1);
+
+        $id2 = 222;
+        $licNo2 = 'OB7654321';
+        $trafficArea2 = 'traffic area 2';
+        $isRestricted2 = false;
+        $typeDesc2 = 'type description 2';
+
+        $licence2 = m::mock(LicenceEntity::class);
+        $licence2->shouldReceive('getId')->once()->withNoArgs()->andReturn($id2);
+        $licence2->shouldReceive('getActivePermitApplicationForStock')->with($stock)->andReturnNull();
+        $licence2->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo2);
+        $licence2->shouldReceive('getTrafficArea->getName')->once()->withNoArgs()->andReturn($trafficArea2);
+        $licence2->shouldReceive('isRestricted')->once()->withNoArgs()->andReturn($isRestricted2);
+        $licence2->shouldReceive('getLicenceType->getDescription')->once()->withNoArgs()->andReturn($typeDesc2);
+
+        $licenceCollection = new ArrayCollection([$licence1, $licence2]);
+
+        $expectedData = [
+            $id1 => [
+                'id' => $id1,
+                'licNo' => $licNo1,
+                'trafficArea' => $trafficArea1,
+                'isRestricted' => $isRestricted1,
+                'licenceTypeDesc' => $typeDesc1,
+                'canMakeApplication' => false,
+                'activeApplicationId' => $permitAppId,
+            ],
+            $id2 => [
+                'id' => $id2,
+                'licNo' => $licNo2,
+                'trafficArea' => $trafficArea2,
+                'isRestricted' => $isRestricted2,
+                'licenceTypeDesc' => $typeDesc2,
+                'canMakeApplication' => true,
+                'activeApplicationId' => null,
+            ]
+        ];
+
+        /** @var Entity | m\MockInterface $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences->matching')
+            ->with(m::type(Criteria::class))
+            ->once()
+            ->andReturn($licenceCollection);
+
+        self::assertEquals($expectedData, $organisation->getEligibleIrhpLicencesForStock($stock));
     }
 
     public function testGetDisqualificationNull()
     {
         /* @var $organisation Entity */
         $organisation = $this->instantiate($this->entityClass);
-        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
+        $organisation->setDisqualifications(new ArrayCollection());
 
         $this->assertSame(null, $organisation->getDisqualification());
     }
@@ -439,7 +524,7 @@ class OrganisationEntityTest extends EntityTester
 
         /* @var $organisation Entity */
         $organisation = $this->instantiate($this->entityClass);
-        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
+        $organisation->setDisqualifications(new ArrayCollection([$disqualification]));
 
         $this->assertSame($disqualification, $organisation->getDisqualification());
     }
@@ -448,7 +533,7 @@ class OrganisationEntityTest extends EntityTester
     {
         /* @var $organisation Entity */
         $organisation = $this->instantiate($this->entityClass);
-        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection());
+        $organisation->setDisqualifications(new ArrayCollection());
 
         $this->assertSame(Disqualification::STATUS_NONE, $organisation->getDisqualificationStatus());
     }
@@ -461,7 +546,7 @@ class OrganisationEntityTest extends EntityTester
 
         /* @var $organisation Entity */
         $organisation = $this->instantiate($this->entityClass);
-        $organisation->setDisqualifications(new \Doctrine\Common\Collections\ArrayCollection([$disqualification]));
+        $organisation->setDisqualifications(new ArrayCollection([$disqualification]));
 
         $this->assertSame(Disqualification::STATUS_ACTIVE, $organisation->getDisqualificationStatus());
     }
@@ -797,65 +882,5 @@ class OrganisationEntityTest extends EntityTester
         $entity = $this->instantiate(Entity::class);
         $entity->setLicences($licences);
         $this->assertEquals(false, $entity->isEligibleForPermits());
-    }
-
-    /**
-     * @todo have marked this test as skipped, we need to fix it first, then make sure it asserts something meaningful
-     */
-    public function testGetStandardInternationalLicences()
-    {
-        $this->markTestSkipped();
-
-        /** @var Entity | m\MockInterface $organisation */
-        $organisation = m::mock(Entity::class)->makePartial();
-        $organisation->shouldReceive('getLicences->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturnUsing(
-                function (Criteria $criteria) {
-
-                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
-                    $expr = $criteria->getWhereExpression();
-
-                    $this->assertEquals('status', $expr->getExpressionList()[0]->getExpressionList()[0]->getField());
-                    $this->assertEquals('IN', $expr->getExpressionList()[0]->getExpressionList()[0]->getOperator());
-                    $this->assertEquals(
-                        [
-                            LicenceEntity::LICENCE_STATUS_VALID,
-                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                            LicenceEntity::LICENCE_STATUS_CURTAILED,
-                        ],
-                        $expr->getExpressionList()[0]->getExpressionList()[0]->getValue()->getValue()
-                    );
-
-                    $this->assertEquals('goodsOrPsv', $expr->getExpressionList()[0]->getExpressionList()[1]->getField());
-                    $this->assertEquals('IN', $expr->getExpressionList()[0]->getExpressionList()[1]->getOperator());
-                    $this->assertEquals(
-                        [
-                            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
-                        ],
-                        $expr->getExpressionList()[0]->getExpressionList()[1]->getValue()->getValue()
-                    );
-
-                    $this->assertEquals('licenceType', $expr->getExpressionList()[1]->getField());
-                    $this->assertEquals('IN', $expr->getExpressionList()[1]->getOperator());
-                    $this->assertEquals(
-                        [
-                            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-                            LicenceEntity::LICENCE_TYPE_RESTRICTED
-                        ],
-                        $expr->getExpressionList()[1]->getValue()->getValue()
-                    );
-
-                    $collection = m::mock();
-                    $licencesArr = array();
-                    $collection->shouldReceive('toArray')
-                        ->andReturn($licencesArr);
-
-                    return $collection;
-                }
-            );
-
-        $this->assertInternalType('array', $organisation->getStandardInternationalLicences());
     }
 }

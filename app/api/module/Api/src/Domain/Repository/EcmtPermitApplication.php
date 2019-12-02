@@ -5,16 +5,18 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use \Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireEcmtPermitApplications as ExpireEcmtPermitApplicationsQuery;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Permit Application
  */
-class EcmtPermitApplication extends AbstractRepository
+class EcmtPermitApplication extends AbstractScoringRepository
 {
     const VALID_APP_STATUS_IDS = [
         RefData::PERMIT_APP_STATUS_ISSUING,
@@ -33,6 +35,12 @@ class EcmtPermitApplication extends AbstractRepository
 
     protected $entity = Entity::class;
     protected $alias = 'epa';
+
+    protected $applicationTableName = 'ecmt_permit_application';
+    protected $applicationEntityName = 'ecmtPermitApplication';
+    protected $permitsRequiredEntityAlias = 'epa';
+    protected $linkTableName = 'ecmt_application_country_link';
+    protected $linkTableApplicationIdName = 'ecmt_application_id';
 
     /**
      * @param QueryBuilder $qb
@@ -125,141 +133,12 @@ class EcmtPermitApplication extends AbstractRepository
     }
 
     /**
-     * Fetch application ids within a stock that are awaiting scoring
+     * Mark all applications without valid permits as expired
      *
-     * @param int $stockId
-     *
-     * @return array
+     * @return void
      */
-    public function fetchApplicationIdsAwaitingScoring($stockId)
+    public function markAsExpired()
     {
-        $statement = $this->getEntityManager()->getConnection()->executeQuery(
-            'select e.id from ecmt_permit_application e ' .
-            'inner join licence as l on e.licence_id = l.id ' .
-            'where e.id in (' .
-            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
-            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
-            '    )' .
-            ') ' .
-            'and e.status = :status ' .
-            'and l.licence_type in (:licenceType1, :licenceType2, :licenceType3) ' .
-            'and l.status in (:licenceStatus1, :licenceStatus2, :licenceStatus3)',
-            [
-                'stockId' => $stockId,
-                'status' => Entity::STATUS_UNDER_CONSIDERATION,
-                'licenceType1' => LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                'licenceType2' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                'licenceType3' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-                'licenceStatus1' => LicenceEntity::LICENCE_STATUS_VALID,
-                'licenceStatus2' => LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                'licenceStatus3' => LicenceEntity::LICENCE_STATUS_CURTAILED
-            ]
-        );
-
-        return array_column($statement->fetchAll(), 'id');
-    }
-
-    /**
-     * Fetch application ids within a stock that are in scope
-     *
-     * @param int $stockId
-     *
-     * @return array
-     */
-    public function fetchInScopeApplicationIds($stockId)
-    {
-        $statement = $this->getEntityManager()->getConnection()->executeQuery(
-            'select e.id from ecmt_permit_application e ' .
-            'where e.id in (' .
-            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
-            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
-            '    )' .
-            ') ' .
-            'and e.in_scope = 1 ',
-            ['stockId' => $stockId]
-        );
-
-        return array_column($statement->fetchAll(), 'id');
-    }
-
-    /**
-     * Removes the existing scope from the specified stock id
-     *
-     * @param int $stockId
-     */
-    public function clearScope($stockId)
-    {
-        $statement = $this->getEntityManager()->getConnection()->executeQuery(
-            'update ecmt_permit_application e ' .
-            'set e.in_scope = 0 ' .
-            'where e.id in (' .
-            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
-            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
-            '    )' .
-            ')',
-            ['stockId' => $stockId]
-        );
-
-        $statement->execute();
-    }
-
-    /**
-     * Applies a new scope to the specified stock id, to include all applications that are under consideration and
-     * and have a licence type of restricted or standard international
-     *
-     * @param int $stockId
-     */
-    public function applyScope($stockId)
-    {
-        $statement = $this->getEntityManager()->getConnection()->executeQuery(
-            'update ecmt_permit_application as e ' .
-            'inner join licence as l on e.licence_id = l.id ' .
-            'set e.in_scope = 1 ' .
-            'where e.id in (' .
-            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
-            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
-            '    )' .
-            ') ' .
-            'and e.status = :status ' .
-            'and l.licence_type in (:licenceType1, :licenceType2, :licenceType3) ' .
-            'and l.status in (:licenceStatus1, :licenceStatus2, :licenceStatus3)',
-            [
-                'stockId' => $stockId,
-                'status' => Entity::STATUS_UNDER_CONSIDERATION,
-                'licenceType1' => LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                'licenceType2' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                'licenceType3' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-                'licenceStatus1' => LicenceEntity::LICENCE_STATUS_VALID,
-                'licenceStatus2' => LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                'licenceStatus3' => LicenceEntity::LICENCE_STATUS_CURTAILED
-            ]
-        );
-
-        $statement->execute();
-    }
-
-    /**
-     * Fetch a flat list of application to country associations within the specified stock
-     *
-     * @param int $stockId
-     *
-     * @return array
-     */
-    public function fetchApplicationIdToCountryIdAssociations($stockId)
-    {
-        $statement = $this->getEntityManager()->getConnection()->executeQuery(
-            'select e.id as ecmtApplicationId, eacl.country_id as countryId ' .
-            'from ecmt_application_country_link eacl ' .
-            'inner join ecmt_permit_application as e on e.id = eacl.ecmt_application_id ' .
-            'where e.id in (' .
-            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
-            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
-            '    )' .
-            ') ' .
-            'and e.in_scope = 1 ',
-            ['stockId' => $stockId]
-        );
-
-        return $statement->fetchAll();
+        $this->getDbQueryManager()->get(ExpireEcmtPermitApplicationsQuery::class)->execute([]);
     }
 }

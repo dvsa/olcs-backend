@@ -22,7 +22,7 @@ final class UpdateEcmtCabotage extends AbstractCommandHandler implements ToggleR
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     public function handleCommand(CommandInterface $command)

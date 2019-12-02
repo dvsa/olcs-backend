@@ -3,6 +3,9 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\DeletableInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * IrhpCandidatePermit Entity
@@ -20,19 +23,49 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
+class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements DeletableInterface
 {
+    /**
+     * Create IRHP Candidate Permit entity
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param RefData $requestedEmissionsCategory
+     * @param float $intensityOfUse
+     * @param float $applicationScore
+     *
+     * @return self
+     */
     public static function createNew(
         IrhpPermitApplication $irhpPermitApplication,
+        RefData $requestedEmissionsCategory,
         float $intensityOfUse = null,
         float $applicationScore = null
     ) {
         $irhpCandidatePermit = new self();
         $irhpCandidatePermit->irhpPermitApplication = $irhpPermitApplication;
+        $irhpCandidatePermit->requestedEmissionsCategory = $requestedEmissionsCategory;
         $irhpCandidatePermit->intensityOfUse = $intensityOfUse;
         $irhpCandidatePermit->applicationScore = $applicationScore;
         $irhpCandidatePermit->successful = 0;
-        $irhpCandidatePermit->inScope = 0;
+
+        return $irhpCandidatePermit;
+    }
+
+    /**
+     * Create an instance for use in an APGG context
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param IrhpPermitRange $irhpPermitRange
+     *
+     * @return self
+     */
+    public static function createForApgg(IrhpPermitApplication $irhpPermitApplication, IrhpPermitRange $irhpPermitRange)
+    {
+        $irhpCandidatePermit = new self();
+        $irhpCandidatePermit->irhpPermitApplication = $irhpPermitApplication;
+        $irhpCandidatePermit->irhpPermitRange = $irhpPermitRange;
+        $irhpCandidatePermit->assignedEmissionsCategory = $irhpPermitRange->getEmissionsCategory();
+        $irhpCandidatePermit->successful = 1;
 
         return $irhpCandidatePermit;
     }
@@ -43,6 +76,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     public function prepareForScoring()
     {
         $this->successful = 0;
+        $this->assignedEmissionsCategory = null;
         $this->irhpPermitRange = null;
     }
 
@@ -80,9 +114,68 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
      * Sets the range for this candidate permit
      *
      * @param IrhpPermitRange $range the range to be applied
+     *
+     * @throws ForbiddenException
      */
     public function applyRange(IrhpPermitRange $range)
     {
+        if ($this->assignedEmissionsCategory !== $range->getEmissionsCategory()) {
+            throw new ForbiddenException(
+                'A candidate permit can only be assigned to a range with a matching emissions category'
+            );
+        }
+
         $this->irhpPermitRange = $range;
+    }
+
+    /**
+     * Marks this candidate permit as successful and sets the assigned emissions category
+     *
+     * @param RefData $assignedEmissionsCategory
+     *
+     * @throws ForbiddenException
+     */
+    public function markAsSuccessful(RefData $assignedEmissionsCategory)
+    {
+        if ($this->successful == 1) {
+            throw new ForbiddenException('This candidate permit has already been marked as successful');
+        }
+
+        $this->successful = 1;
+        $this->assignedEmissionsCategory = $assignedEmissionsCategory;
+    }
+
+    /**
+     * Updates permit range against candidate permit
+     *
+     * @param IrhpPermitRange $irhpPermitRange
+     *
+     * @throws ForbiddenException
+     */
+    public function updateIrhpPermitRange(IrhpPermitRange $irhpPermitRange)
+    {
+        if (!$this->isApplicationUnderConsideration()) {
+            throw new ForbiddenException('IRHP Application status does not support changing IRHP Permit Range');
+        }
+        $this->irhpPermitRange = $irhpPermitRange;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canDelete()
+    {
+        return $this->isApplicationUnderConsideration();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isApplicationUnderConsideration()
+    {
+        return
+            $this->getIrhpPermitApplication()
+                ->getIrhpApplication()
+                ->isUnderConsideration();
     }
 }

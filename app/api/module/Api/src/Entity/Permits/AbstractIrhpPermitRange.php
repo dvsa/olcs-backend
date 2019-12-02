@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,7 +27,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_stock_id"}),
  *        @ORM\Index(name="fk_irhp_permit_range_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_range_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_range_emissions_category_ref_data_id",
+     *     columns={"emissions_category"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uniqueRange", columns={"irhp_permit_stock_id","from_no","to_no"})
@@ -35,6 +40,9 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Country
@@ -69,13 +77,14 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     protected $createdBy;
 
     /**
-     * Created on
+     * Emissions category
      *
-     * @var \DateTime
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="emissions_category", referencedColumnName="id", nullable=true)
      */
-    protected $createdOn;
+    protected $emissionsCategory;
 
     /**
      * From no
@@ -121,15 +130,6 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Lost replacement
@@ -311,33 +311,27 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the created on
+     * Set the emissions category
      *
-     * @param \DateTime $createdOn new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $emissionsCategory entity being set as the value
      *
      * @return IrhpPermitRange
      */
-    public function setCreatedOn($createdOn)
+    public function setEmissionsCategory($emissionsCategory)
     {
-        $this->createdOn = $createdOn;
+        $this->emissionsCategory = $emissionsCategory;
 
         return $this;
     }
 
     /**
-     * Get the created on
+     * Get the emissions category
      *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
-    public function getCreatedOn($asDateTime = false)
+    public function getEmissionsCategory()
     {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
+        return $this->emissionsCategory;
     }
 
     /**
@@ -434,36 +428,6 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
-    }
-
-    /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return IrhpPermitRange
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
     }
 
     /**
@@ -710,49 +674,5 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

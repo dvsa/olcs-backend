@@ -15,4 +15,5 @@ interface CancelableInterface
     public function cancel(RefData $cancelStatus);
     public function canBeCancelled();
     public function getOutstandingFees();
+    public function getCancellationDate();
 }

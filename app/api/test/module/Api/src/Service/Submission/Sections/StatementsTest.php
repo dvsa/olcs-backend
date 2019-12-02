@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class StatementsTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class StatementsTest extends SubmissionSectionTest
+class StatementsTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\Statements';
 

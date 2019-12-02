@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use DateTime;
 use Olcs\Logging\Log\Logger;
@@ -25,7 +26,7 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpPermitApplication';
 
@@ -49,7 +50,9 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
         $irhpPermitRanges = $irhpPermitApplication
             ->getIrhpPermitWindow()
             ->getIrhpPermitStock()
-            ->getNonReservedNonReplacementRangesOrderedByFromNo();
+            ->getNonReservedNonReplacementRangesOrderedByFromNo(
+                $command->getEmissionsCategory()
+            );
 
         foreach ($irhpPermitRanges as $irhpPermitRange) {
             $assignedPermitNumbers = $this->getRepo('IrhpPermit')->getAssignedPermitNumbersByRange(
@@ -57,7 +60,12 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
             );
 
             if (count($assignedPermitNumbers) < $irhpPermitRange->getSize()) {
-                $this->addIrhpPermit($irhpPermitApplication, $irhpPermitRange, $assignedPermitNumbers);
+                $this->addIrhpPermit(
+                    $irhpPermitApplication,
+                    $irhpPermitRange,
+                    $assignedPermitNumbers,
+                    $command->getExpiryDate()
+                );
                 return $this->result;
             }
         }
@@ -77,22 +85,23 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
      * @param IrhpPermitApplication $irhpPermitApplication
      * @param IrhpPermitRange $irhpPermitRange
      * @param array $assignedPermitNumbers
+     * @param DateTime|null $expiryDate
      */
     private function addIrhpPermit(
         IrhpPermitApplication $irhpPermitApplication,
         IrhpPermitRange $irhpPermitRange,
-        array $assignedPermitNumbers
+        array $assignedPermitNumbers,
+        ?DateTime $expiryDate
     ) {
-        $expiryDate = $irhpPermitRange->getIrhpPermitStock()->getValidTo(true);
         $permitNumber = $this->getNextPermitNumber($irhpPermitRange, $assignedPermitNumbers);
 
         $irhpPermit = IrhpPermit::createForIrhpApplication(
             $irhpPermitApplication,
             $irhpPermitRange,
             new DateTime(),
-            $expiryDate,
             $this->refData(IrhpPermit::STATUS_PENDING),
-            $permitNumber
+            $permitNumber,
+            $expiryDate
         );
 
         $this->getRepo('IrhpPermit')->save($irhpPermit);

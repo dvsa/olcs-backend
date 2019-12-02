@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as RangeEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Create as CreateRangeCmd;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -41,6 +42,12 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         }
 
         $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
+        $permitType = $permitStock->getIrhpPermitType();
+
+        if (($permitType->isEcmtShortTerm() || $permitType->isEcmtAnnual())
+            && $command->getEmissionsCategory() == RefData::EMISSIONS_CATEGORY_NA_REF) {
+            throw new ValidationException(['Emissions Category: N/A not valid for Short-term/Annual ECMT Stock']);
+        }
 
         $countrys = [];
         foreach ($command->getRestrictedCountries() as $country) {
@@ -52,6 +59,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
          */
         $range = RangeEntity::create(
             $permitStock,
+            $this->refData($command->getEmissionsCategory()),
             $command->getPrefix(),
             $command->getFromNo(),
             $command->getToNo(),

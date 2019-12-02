@@ -2,8 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\TransportManagerSnapshot;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -55,6 +59,11 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
             $this->sendSubmittedEmail($tma);
         } elseif ($tma->getTransportManager()->getTmType() === null) {
             $this->updateTmType($tma->getTransportManager(), $tma->getTmType());
+        }
+
+        if ($this->shouldCreateTask($tma->getApplication()->getStatus())) {
+            $taskResult = $this->createTask($tma->getApplication());
+            $this->result->addMessage($taskResult->getMessages()[0]);
         }
 
         $this->result->addMessage("Transport Manager Application ID {$tma->getId()} submitted");
@@ -149,5 +158,32 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
     private function shouldCreateSnapshot($status): bool
     {
         return ($status === TransportManagerApplication::STATUS_OPERATOR_SIGNED) || ($status === TransportManagerApplication::STATUS_RECEIVED);
+    }
+
+    /**
+     *
+     *
+     * @param Application $application
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    private function createTask(Application $application)
+    {
+        $taskData = [
+            'category' => Category::CATEGORY_APPLICATION,
+            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_TM1_DIGITAL,
+            'description' => 'Transport Manager form submitted',
+            'isClosed' => 'N',
+            'urgent' => 'N',
+            'application' => $application->getId(),
+            'licence' => $application->getLicence()->getId()
+        ];
+
+        return $this->handleSideEffect(CreateTask::create($taskData));
+    }
+
+    private function shouldCreateTask(RefData $status) : bool
+    {
+        return $status->getId() === Application::APPLICATION_STATUS_UNDER_CONSIDERATION;
     }
 }

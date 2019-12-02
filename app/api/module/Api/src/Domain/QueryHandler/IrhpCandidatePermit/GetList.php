@@ -25,7 +25,8 @@ class GetList extends AbstractQueryHandler implements ToggleRequiredInterface
         'irhpPermitRange' => [
             'countrys' => [
                 'country'
-            ]
+            ],
+            'emissionsCategory',
         ],
     ];
 

@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -29,15 +31,8 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
-
-    /**
-     * Deleted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
-     */
-    protected $deletedDate;
+    use ClearPropertiesTrait;
+    use SoftDeletableTrait;
 
     /**
      * Identifier - Id
@@ -107,36 +102,6 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
      * @ORM\Version
      */
     protected $version = 1;
-
-    /**
-     * Set the deleted date
-     *
-     * @param \DateTime $deletedDate new value being set
-     *
-     * @return TeamPrinter
-     */
-    public function setDeletedDate($deletedDate)
-    {
-        $this->deletedDate = $deletedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deleted date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDeletedDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->deletedDate);
-        }
-
-        return $this->deletedDate;
-    }
 
     /**
      * Set the id
@@ -280,23 +245,5 @@ abstract class AbstractTeamPrinter implements BundleSerializableInterface, JsonS
     public function getVersion()
     {
         return $this->version;
-    }
-
-
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
     }
 }

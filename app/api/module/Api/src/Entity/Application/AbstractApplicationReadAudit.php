@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,8 @@ abstract class AbstractApplicationReadAudit implements BundleSerializableInterfa
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesTrait;
+    use CreatedOnTrait;
 
     /**
      * Application
@@ -45,15 +49,6 @@ abstract class AbstractApplicationReadAudit implements BundleSerializableInterfa
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false)
      */
     protected $application;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=false)
-     */
-    protected $createdOn;
 
     /**
      * Identifier - Id
@@ -98,36 +93,6 @@ abstract class AbstractApplicationReadAudit implements BundleSerializableInterfa
     public function getApplication()
     {
         return $this->application;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return ApplicationReadAudit
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
     }
 
     /**
@@ -176,34 +141,5 @@ abstract class AbstractApplicationReadAudit implements BundleSerializableInterfa
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
     }
 }

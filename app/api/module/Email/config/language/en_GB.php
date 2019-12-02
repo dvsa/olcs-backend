@@ -15,6 +15,7 @@ return array(
     'email.ecmt.default.subject' => 'ECMT permit application reference %s',
     'email.ecmt.issued.subject' => 'ECMT permit %s has now been processed and issued',
     'email.ecmt.response.subject' => 'ECMT permit application response reference %s',
+    'email.ecmt.short.term.response.subject' => 'ECMT short term permit application response reference %s',
     'email.erru-errors.subject' => '(ON ERRU %s) INR notification of MSI submission negative acknowledgement [%s]',
     'email.send-publication' => '%s issue number %s for the %s traffic area',
     'email.send-publication-police' => '%s issue number %s for the %s traffic area - POLICE COPY',
@@ -35,4 +36,5 @@ return array(
     'email.digital-continuation.subject' => 'The licence %s is due to expire on %s',
     'email.last-tm-operator-notification.subject' => 'Urgent: Removal of last Transport Manager',
     'email.ecmt.automatically.withdrawn.subject' => 'ECMT permit application %s has been withdrawn',
+    'email.ecmt.short.term.automatically.withdrawn.subject' => 'Short Term ECMT permit application %s has been withdrawn',
 );

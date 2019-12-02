@@ -6,6 +6,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -47,6 +51,10 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
+    use SoftDeletableTrait;
 
     /**
      * Action
@@ -92,15 +100,6 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     protected $createdBy;
 
     /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
      * Declaration confirmation
      *
      * @var string
@@ -111,15 +110,6 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      *     options={"default": 0})
      */
     protected $declarationConfirmation = 0;
-
-    /**
-     * Deleted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
-     */
-    protected $deletedDate;
 
     /**
      * Has convictions
@@ -250,15 +240,6 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Olbs key
@@ -482,36 +463,6 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     }
 
     /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return TransportManagerApplication
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
      * Set the declaration confirmation
      *
      * @param string $declarationConfirmation new value being set
@@ -533,36 +484,6 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     public function getDeclarationConfirmation()
     {
         return $this->declarationConfirmation;
-    }
-
-    /**
-     * Set the deleted date
-     *
-     * @param \DateTime $deletedDate new value being set
-     *
-     * @return TransportManagerApplication
-     */
-    public function setDeletedDate($deletedDate)
-    {
-        $this->deletedDate = $deletedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deleted date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDeletedDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->deletedDate);
-        }
-
-        return $this->deletedDate;
     }
 
     /**
@@ -902,36 +823,6 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return TransportManagerApplication
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the olbs key
      *
      * @param int $olbsKey new value being set
@@ -1208,49 +1099,5 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

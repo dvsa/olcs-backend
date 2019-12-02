@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,6 +21,7 @@ abstract class AbstractLegacyCaseAction implements BundleSerializableInterface, 
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesTrait;
 
     /**
      * Description
@@ -120,23 +122,5 @@ abstract class AbstractLegacyCaseAction implements BundleSerializableInterface, 
     public function getIsDriver()
     {
         return $this->isDriver;
-    }
-
-
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
     }
 }

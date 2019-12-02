@@ -2,7 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service;
 
-use CpmsClient\Service\ApiService;
+use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
+use Dvsa\Olcs\Cpms\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
@@ -22,7 +23,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
- * @covers Dvsa\Olcs\Api\Service\CpmsV2HelperService
+ * @covers \Dvsa\Olcs\Api\Service\CpmsV2HelperService
  */
 class CpmsV2HelperServiceTest extends MockeryTestCase
 {
@@ -31,7 +32,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     /** @var CpmsV2HelperService */
     protected $sut;
 
-    /** @var \Mockery\MockInterface (CpmsClient\Service\ApiService) */
+    /** @var \Mockery\MockInterface (ApiService) */
     protected $cpmsClient;
 
     /** @var \Dvsa\Olcs\Api\Service\FeesHelperService | m\MockInterface */
@@ -60,10 +61,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $config = [
             'cpms_credentials' => [
-                'client_id_ni'     => 'client_id_ni',
+                'client_id_ni' => 'client_id_ni',
                 'client_secret_ni' => 'client_secret_ni',
-                'client_id'        => 'client_id',
-                'client_secret'    => 'client_secret'
+                'client_id' => 'client_id',
+                'client_secret' => 'client_secret'
             ],
             'cpms_api' => [
                 'identity_provider' => 'identity'
@@ -82,7 +83,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
         $sm
             ->shouldReceive('get')
-            ->with('cpms\service\api')
+            ->with(ApiServiceFactory::class)
             ->andReturn($api)
             ->shouldReceive('get')
             ->with('FeesHelperService')
@@ -121,37 +122,22 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getFeeType')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getIsNi')
-                ->andReturn('Y')
-                ->once()
-                ->getMock()
+                    ->shouldReceive('getIsNi')
+                    ->andReturn('Y')
+                    ->once()
+                    ->getMock()
             )
             ->once()
             ->getMock();
 
-        $this->options
-            ->shouldReceive('setClientId')
-            ->with('client_id_ni')
-            ->once()
-            ->shouldReceive('setClientSecret')
-            ->with('client_secret_ni')
-            ->once()
-            ->getMock();
-
-        $this->identity
-            ->shouldReceive('setClientId')
-            ->with('client_id_ni')
-            ->once()
-            ->shouldReceive('setClientSecret')
-            ->with('client_secret_ni')
-            ->once()
-            ->getMock();
+        $this->mockSchemaIdChange(true);
 
         $this->cpmsClient
             ->shouldReceive('put')
             ->once()
             ->with('/api/gateway/' . $ref . '/complete', ApiService::SCOPE_CARD, $data)
-            ->andReturn('EXPECTED');
+            ->andReturn('EXPECTED')
+            ->shouldReceive('getIdenity')->andReturn(4);
 
         static::assertEquals('EXPECTED', $this->sut->handleResponse($ref, $data, $mockFee));
     }
@@ -167,7 +153,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $sut = m::mock(CpmsV2HelperService::class . '[send]')
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('send')
-            ->with('get', '/api/payment/'.$ref, ApiService::SCOPE_QUERY_TXN, m::type('array'), 'fee')
+            ->with('get', '/api/payment/' . $ref, ApiService::SCOPE_QUERY_TXN, m::type('array'), 'fee')
             ->once()
             ->andReturn($response)
             ->getMock();
@@ -205,7 +191,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $sut = m::mock(CpmsV2HelperService::class . '[send]')
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('send')
-            ->with('get', '/api/payment/'.$ref, ApiService::SCOPE_QUERY_TXN, m::type('array'), 'fee')
+            ->with('get', '/api/payment/' . $ref, ApiService::SCOPE_QUERY_TXN, m::type('array'), 'fee')
             ->once()
             ->andReturn($response)
             ->getMock();
@@ -353,7 +339,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'customer_reference' => 99,
                     'customer_name' => 'some organisation',
                     'customer_manager_name' => 'some organisation',
-                    'customer_address' =>[
+                    'customer_address' => [
                         'line_1' => 'Foo',
                         'line_2' => null,
                         'line_3' => null,
@@ -485,54 +471,54 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $expectedParams = array_merge(
             $expectedCustomer,
             [
-            'payment_data' => [
-                array_merge(
-                    $expectedReceiver,
-                    [
-                        'line_identifier' => '1',
-                        'amount' => '525.25',
-                        'allocated_amount' => '525.25',
-                        'net_amount' => '525.25',
-                        'tax_amount' => '0.00',
-                        'tax_code' => 'Z',
-                        'tax_rate' => '0',
-                        'invoice_date' => '2015-08-29',
-                        'sales_reference' => '1',
-                        'product_reference' => 'fee type description',
-                        'product_description' => 'fee type description',
-                        'rule_start_date' => $now,
-                        'deferment_period' => '1',
-                        'country_code' => 'GB',
-                        'sales_person_reference' => 'Traffic Area Ref',
-                    ]
-                ),
-                array_merge(
-                    $expectedReceiver,
-                    [
-                        'line_identifier' => '2',
-                        'amount' => '125.25',
-                        'allocated_amount' => '125.25',
-                        'net_amount' => '125.25',
-                        'tax_amount' => '0.00',
-                        'tax_code' => 'Z',
-                        'tax_rate' => '0',
-                        'invoice_date' => '2015-08-30',
-                        'sales_reference' => '2',
-                        'product_reference' => 'fee type description',
-                        'product_description' => 'fee type description',
-                        'rule_start_date' => '2014-12-25',
-                        'deferment_period' => '60',
-                        'country_code' => 'GB',
-                        'sales_person_reference' => 'Traffic Area Ref',
-                    ]
-                )
-            ],
-            'total_amount' => '650.50',
-            'redirect_uri' => $redirectUrl,
-            'disable_redirection' => true,
-            'scope' => 'STORED_CARD',
-            'refund_overpayment' => false,
-            'country_code' => 'GB',
+                'payment_data' => [
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '1',
+                            'amount' => '525.25',
+                            'allocated_amount' => '525.25',
+                            'net_amount' => '525.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-29',
+                            'sales_reference' => '1',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => $now,
+                            'deferment_period' => '1',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    ),
+                    array_merge(
+                        $expectedReceiver,
+                        [
+                            'line_identifier' => '2',
+                            'amount' => '125.25',
+                            'allocated_amount' => '125.25',
+                            'net_amount' => '125.25',
+                            'tax_amount' => '0.00',
+                            'tax_code' => 'Z',
+                            'tax_rate' => '0',
+                            'invoice_date' => '2015-08-30',
+                            'sales_reference' => '2',
+                            'product_reference' => 'fee type description',
+                            'product_description' => 'fee type description',
+                            'rule_start_date' => '2014-12-25',
+                            'deferment_period' => '60',
+                            'country_code' => 'GB',
+                            'sales_person_reference' => 'Traffic Area Ref',
+                        ]
+                    )
+                ],
+                'total_amount' => '650.50',
+                'redirect_uri' => $redirectUrl,
+                'disable_redirection' => true,
+                'scope' => 'STORED_CARD',
+                'refund_overpayment' => false,
+                'country_code' => 'GB',
             ]
         );
 
@@ -591,8 +577,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         // user input data
         $receiptDate = '2015-09-10';
-        $slipNo      = '12345';
-        $amount      = '1000';  // doesn't need to match fee total
+        $slipNo = '12345';
+        $amount = '1000';  // doesn't need to match fee total
 
         $fees = [
             $this->getStubFee(1, 500.00, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
@@ -704,11 +690,11 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         // user input data
         $receiptDate = '2015-09-10';
-        $payer       = 'Owen Money';
-        $slipNo      = '12345';
-        $amount      = '1000';
-        $chequeNo    = '0098765';
-        $chequeDate  = '2015-09-01';
+        $payer = 'Owen Money';
+        $slipNo = '12345';
+        $amount = '1000';
+        $chequeNo = '0098765';
+        $chequeDate = '2015-09-01';
 
         $fees = [
             $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
@@ -822,9 +808,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         // user input data
         $receiptDate = '2015-09-10';
-        $slipNo      = '12345';
-        $amount      = '1000';
-        $poNo        = '00666666';
+        $slipNo = '12345';
+        $amount = '1000';
+        $poNo = '00666666';
 
         $fees = [
             $this->getStubFee(1, 525.25, FeeEntity::ACCRUAL_RULE_IMMEDIATE, null, $orgId, '2015-08-29'),
@@ -967,10 +953,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getFeeType')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getIsNi')
-                ->andReturn('Y')
-                ->once()
-                ->getMock()
+                    ->shouldReceive('getIsNi')
+                    ->andReturn('Y')
+                    ->once()
+                    ->getMock()
             )
             ->once()
             ->getMock();
@@ -986,7 +972,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
      * @param string $paymentMethod
      * @param string $expectedScope
      * @param string $expectedEndpointSuffix
-     * @param array $miscParams
+     * @param array  $miscParams
+     *
      * @dataProvider reversalProvider
      */
     public function testReversePayment($paymentMethod, $expectedScope, $expectedEndpointSuffix, $customer, $miscParams)
@@ -1009,7 +996,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $this->cpmsClient
             ->shouldReceive('post')
-            ->with('/api/payment/MY-REFERENCE/'.$expectedEndpointSuffix, $expectedScope, $expectedParams)
+            ->with('/api/payment/MY-REFERENCE/' . $expectedEndpointSuffix, $expectedScope, $expectedParams)
             ->once()
             ->andReturn($response);
 
@@ -1063,7 +1050,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'customer_reference' => 99,
                     'customer_name' => 'some organisation',
                     'customer_manager_name' => 'some organisation',
-                    'customer_address' =>[
+                    'customer_address' => [
                         'line_1' => 'Foo',
                         'line_2' => null,
                         'line_3' => null,
@@ -1082,7 +1069,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'customer_reference' => 99,
                     'customer_name' => 'some organisation',
                     'customer_manager_name' => 'some organisation',
-                    'customer_address' =>[
+                    'customer_address' => [
                         'line_1' => 'Foo',
                         'line_2' => null,
                         'line_3' => null,
@@ -1101,7 +1088,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'customer_reference' => 99,
                     'customer_name' => 'some organisation',
                     'customer_manager_name' => 'some organisation',
-                    'customer_address' =>[
+                    'customer_address' => [
                         'line_1' => 'Foo',
                         'line_2' => null,
                         'line_3' => null,
@@ -1120,7 +1107,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     'customer_reference' => 99,
                     'customer_name' => 'some organisation',
                     'customer_manager_name' => 'some organisation',
-                    'customer_address' =>[
+                    'customer_address' => [
                         'line_1' => 'Foo',
                         'line_2' => null,
                         'line_3' => null,
@@ -1137,10 +1124,11 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
     /**
      * Helper function to generate a stub fee entity
      *
-     * @param int $id
+     * @param int    $id
      * @param string $amount
      * @param string $accrualRule
      * @param string $licenceStartDate
+     *
      * @return FeeEntity
      */
     private function getStubFee(
@@ -1208,7 +1196,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $params = [
             'filters' => [
                 'scheme' => [
-                    'client_id', 'client_id_ni'
+                    'client_id',
+                    'client_id_ni'
                 ]
             ]
         ];
@@ -1231,13 +1220,14 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $start = new \DateTime('2015-10-07 08:57:00');
         $end = new \DateTime('2015-10-08 08:56:59');
 
-        $expectedParams =  [
+        $expectedParams = [
             'report_code' => $code,
             'filters' => [
                 'from' => '2015-10-07 08:57:00',
                 'to' => '2015-10-08 08:56:59',
                 'scheme' => [
-                    'client_id', 'client_id_ni'
+                    'client_id',
+                    'client_id_ni'
                 ]
             ],
         ];
@@ -1266,7 +1256,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $params = [
             'filters' => [
                 'scheme' => [
-                    'client_id', 'client_id_ni'
+                    'client_id',
+                    'client_id_ni'
                 ]
             ]
         ];
@@ -1293,7 +1284,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $params = [
             'filters' => [
                 'scheme' => [
-                    'client_id', 'client_id_ni'
+                    'client_id',
+                    'client_id_ni'
                 ]
             ]
         ];
@@ -1356,9 +1348,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getOrganisation')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(99)
-                ->getMock()
+                    ->shouldReceive('getId')
+                    ->andReturn(99)
+                    ->getMock()
             )
             ->shouldReceive('getId')
             ->andReturn(101)
@@ -1391,9 +1383,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getLicence')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getLicNo')
-                ->andReturn('OB1234567')
-                ->getMock()
+                    ->shouldReceive('getLicNo')
+                    ->andReturn('OB1234567')
+                    ->getMock()
             )
             ->shouldReceive('getCustomerReference')
             ->andReturn($customerReference);
@@ -1729,7 +1721,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $ft->shouldReceive('getFee')->andReturn($fee);
         $ft2->shouldReceive('getFee')->andReturn($fee);
 
-        $params =  array_merge(
+        $params = array_merge(
             $expectedCustomer,
             [
                 'scope' => 'REFUND',
@@ -1842,13 +1834,13 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getFeeType')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getCountryCode')
-                ->andReturn('GB')
-                ->once()
-                ->shouldReceive('getIsNi')
-                ->andReturn('N')
-                ->once()
-                ->getMock()
+                    ->shouldReceive('getCountryCode')
+                    ->andReturn('GB')
+                    ->once()
+                    ->shouldReceive('getIsNi')
+                    ->andReturn('N')
+                    ->once()
+                    ->getMock()
             )
             ->twice()
             ->getMock()
@@ -1884,9 +1876,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $txn2 = m::mock(TransactionEntity::class);
         $txn2->shouldReceive('getReference')
-             ->andReturn('payment_ref');
+            ->andReturn('payment_ref');
         $txn2->shouldReceive('getCpmsSchema')
-             ->andReturn('client_id_2');
+            ->andReturn('client_id_2');
 
         $ft = m::mock(FeeTransactionEntity::class);
         $ft
@@ -2067,10 +2059,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getFeeType')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('isMiscellaneous')
-                ->andReturn(true)
-                ->once()
-                ->getMock()
+                    ->shouldReceive('isMiscellaneous')
+                    ->andReturn(true)
+                    ->once()
+                    ->getMock()
             )
             ->shouldReceive('getOrganisation')
             ->andReturnNull()
@@ -2316,7 +2308,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     protected function mockSchemaIdChange($isNi = false, $times = 1)
     {
-        $this->options
+        $this->identity
             ->shouldReceive('setClientId')
             ->with('client_id' . ($isNi ? '_ni' : ''))
             ->times($times)
@@ -2325,13 +2317,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->times($times)
             ->getMock();
 
-        $this->identity
-            ->shouldReceive('setClientId')
-            ->with('client_id' . ($isNi ? '_ni' : ''))
-            ->times($times)
-            ->shouldReceive('setClientSecret')
-            ->with('client_secret' . ($isNi ? '_ni' : ''))
-            ->times($times)
+        $this->cpmsClient
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->identity)
             ->getMock();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -51,8 +52,12 @@ class FeeType extends AbstractFeeType
     const FEE_TYPE_ECMT_ISSUE = 'IRHPGVISSUE';
 
     const FEE_TYPE_ECMT_APP_PRODUCT_REF = 'IRHP_GV_APP_ECMT';
+    const FEE_TYPE_ECMT_REMOVAL_ISSUE_PRODUCT_REF = 'IRFO_GV_ECMT_COM_RM_PERM_FEE';
+    const FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF = 'IRHP_GV_ECMT_PERMIT_MONTHLY';
     const FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF = 'IRHP_GV_APP_BILATERAL_ANN';
+    const FEE_TYPE_IRHP_APP_MULTILATERAL_PRODUCT_REF = 'IRHP_GV_APP_MULTILAT_ANN';
     const FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF = 'IRHP_GV_PERMIT_BILATERAL_ANN';
+    const FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF = 'IRHP_GV_PERMIT_MULTILAT_ANN';
 
     const COST_CENTRE_REF_TYPE_LICENSING = 'TA';
     const COST_CENTRE_REF_TYPE_IRFO = 'IR';
@@ -65,6 +70,10 @@ class FeeType extends AbstractFeeType
     const FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF = 'IRHP_GV_ECMT_75_PERMIT_FEE';
     const FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF = 'IRHP_GV_ECMT_50_PERMIT_FEE';
     const FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF = 'IRHP_GV_ECMT_25_PERMIT_FEE';
+
+    const FEE_TYPE_IRHP_MULTI_ISSUE_75_PRODUCT_REF = 'IRHP_GV_MULTI_75_PERMIT_FEE';
+    const FEE_TYPE_IRHP_MULTI_ISSUE_50_PRODUCT_REF = 'IRHP_GV_MULTI_50_PERMIT_FEE';
+    const FEE_TYPE_IRHP_MULTI_ISSUE_25_PRODUCT_REF = 'IRHP_GV_MULTI_25_PERMIT_FEE';
 
     /**
      * Alias of getIsMiscellaneous
@@ -152,6 +161,43 @@ class FeeType extends AbstractFeeType
      */
     public function isIrhpApplicationIssue(): bool
     {
-        return in_array($this->feeType->getId(), [self::FEE_TYPE_IRHP_ISSUE, self::FEE_TYPE_IRHP_APP]);
+        return $this->feeType->getId() === self::FEE_TYPE_IRHP_ISSUE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIrhpApplication(): bool
+    {
+        return in_array($this->feeType->getId(), [self::FEE_TYPE_IRHP_ISSUE, self::FEE_TYPE_IRHP_APP, self::FEE_TYPE_IRFOGVPERMIT]);
+    }
+
+    /**
+     * @param string $effectiveFrom
+     * @param int $fixedValue
+     * @param int $annualValue
+     * @param int $fiveYearValue
+     * @param FeeType $existingFeeType
+     *
+     * @return FeeType
+     */
+    public function updateNewFeeType(string $effectiveFrom, int $fixedValue, int $annualValue, int $fiveYearValue, FeeType $existingFeeType)
+    {
+        // Clone existing object and null meta-data so Doctrine sets correct values on save
+        $newFeeType = clone $existingFeeType;
+        $newFeeType->setId(null);
+        $newFeeType->setVersion(1);
+        $newFeeType->setLastModifiedBy(null);
+        $newFeeType->setLastModifiedOn(null);
+        $newFeeType->setCreatedBy(null);
+        $newFeeType->setCreatedOn(null);
+
+        // Set values specified on Admin form
+        $newFeeType->effectiveFrom = new DateTime($effectiveFrom);
+        $newFeeType->fixedValue = $fixedValue;
+        $newFeeType->annualValue = $annualValue;
+        $newFeeType->fiveYearValue = $fiveYearValue;
+
+        return $newFeeType;
     }
 }

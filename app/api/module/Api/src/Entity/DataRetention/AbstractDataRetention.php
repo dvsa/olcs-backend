@@ -6,6 +6,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -35,6 +39,10 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
+    use SoftDeletableTrait;
 
     /**
      * Action confirmation
@@ -76,15 +84,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     protected $createdBy;
 
     /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
      * Data retention rule
      *
      * @var \Dvsa\Olcs\Api\Entity\DataRetentionRule
@@ -93,15 +92,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
      * @ORM\JoinColumn(name="data_retention_rule_id", referencedColumnName="id", nullable=false)
      */
     protected $dataRetentionRule;
-
-    /**
-     * Deleted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
-     */
-    protected $deletedDate;
 
     /**
      * Entity name
@@ -142,15 +132,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Lic no
@@ -300,36 +281,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     }
 
     /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return DataRetention
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
      * Set the data retention rule
      *
      * @param \Dvsa\Olcs\Api\Entity\DataRetentionRule $dataRetentionRule entity being set as the value
@@ -351,36 +302,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     public function getDataRetentionRule()
     {
         return $this->dataRetentionRule;
-    }
-
-    /**
-     * Set the deleted date
-     *
-     * @param \DateTime $deletedDate new value being set
-     *
-     * @return DataRetention
-     */
-    public function setDeletedDate($deletedDate)
-    {
-        $this->deletedDate = $deletedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deleted date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDeletedDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->deletedDate);
-        }
-
-        return $this->deletedDate;
     }
 
     /**
@@ -477,36 +398,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
-    }
-
-    /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return DataRetention
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
     }
 
     /**
@@ -633,45 +524,5 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     public function getOrganisationName()
     {
         return $this->organisationName;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
     }
 }

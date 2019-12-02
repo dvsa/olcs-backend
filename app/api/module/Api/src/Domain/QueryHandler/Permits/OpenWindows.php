@@ -22,10 +22,10 @@ class OpenWindows extends AbstractQueryHandler implements ToggleRequiredInterfac
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermitWindow';
     protected $extraRepos = ['IrhpPermitType', 'IrhpPermitStock'];
-    protected $bundle = ['emissionsCategory'];
+    protected $bundle = [];
 
     /**
      * Handle query
@@ -38,7 +38,7 @@ class OpenWindows extends AbstractQueryHandler implements ToggleRequiredInterfac
      */
     public function handleQuery(QueryInterface $query)
     {
-        $date = DateTime::createFromFormat('Y-m-d H:i:s', $query->getCurrentDateTime());
+        $date = new DateTime();
 
         /** @var IrhpPermitWindowRepo $irhpPermitWindowRepo */
         $irhpPermitWindowRepo = $this->getRepo();

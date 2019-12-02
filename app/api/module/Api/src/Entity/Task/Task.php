@@ -53,6 +53,7 @@ class Task extends AbstractTask
     const SUBCATEGORY_SUBMISSION_ASSIGNMENT = 114;
     const SUBCATEGORY_LICENSING_GENERAL_TASK = 77;
     const SUBCATEGORY_PERMITS_APPLICATION_OUTCOME = 199;
+    const SUBCATEGORY_APPLICATION = 93;
 
     /**
      * Ref data constants
@@ -69,6 +70,11 @@ class Task extends AbstractTask
     const TASK_DESCRIPTION_CHECK_WET_SIGNATURE = 'Check wet signature for licence continuation';
     const TASK_DESCRIPTION_LICENCE_EXPIRED = 'Licence expired';
     const TASK_DESCRIPTION_SEND_OUTCOME_LETTER = 'Send outcome letter';
+    const TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED = 'Short term application received';
+    const TASK_DESCRIPTION_ECMT_INTERNATIONAL_REMOVALS_RECEIVED = 'ECMT International Removals application received';
+    const TASK_DESCRIPTION_BILATERAL_RECEIVED = 'Bilateral application received';
+    const TASK_DESCRIPTION_MULTILATERAL_RECEIVED = 'Multilateral application received';
+    const TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED = 'Annual ECMT application received';
 
     const ACTION_DATE_FORMAT = 'Y-m-d';
 

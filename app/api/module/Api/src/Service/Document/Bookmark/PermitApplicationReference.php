@@ -24,11 +24,7 @@ class PermitApplicationReference extends DynamicBookmark
             [
                 'id' => $data['irhpPermit'],
                 'bundle' => [
-                    'irhpPermitApplication' => [
-                        'ecmtPermitApplication' => [
-                            'applicationRef'
-                        ]
-                    ]
+                    'irhpPermitApplication'
                 ]
             ]
         );
@@ -41,8 +37,8 @@ class PermitApplicationReference extends DynamicBookmark
      */
     public function render()
     {
-        if (isset($this->data['irhpPermitApplication']['ecmtPermitApplication']['applicationRef'])) {
-            return trim($this->data['irhpPermitApplication']['ecmtPermitApplication']['applicationRef']);
+        if (isset($this->data['irhpPermitApplication']['relatedApplication']['applicationRef'])) {
+            return trim($this->data['irhpPermitApplication']['relatedApplication']['applicationRef']);
         }
 
         return '';

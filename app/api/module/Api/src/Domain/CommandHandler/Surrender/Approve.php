@@ -12,10 +12,14 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\SurrenderLicence;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateSurrender;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 class Approve extends AbstractSurrenderCommandHandler
 {
-    protected $repoServiceName = 'Licence';
+    protected $extraRepos = ['Licence'];
+
+    /** @var $licenceEntity LicenceEntity */
+    protected $licenceEntity;
 
     /**
      * @param CommandInterface $command
@@ -26,6 +30,10 @@ class Approve extends AbstractSurrenderCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
+        $this->licenceEntity = $this->getRepo('Licence')->fetchById($command->getId());
+
+        $this->hasEcmsAndSignatureBeenChecked($command->getId());
+        
         $updateSurrenderResult = $this->handleSideEffect(UpdateSurrender::create(
             [
                 'id' => $command->getId(),
@@ -51,10 +59,7 @@ class Approve extends AbstractSurrenderCommandHandler
 
     private function generateDocumentAndSendNotificationEmail(int $licId): Result
     {
-        /** @var $licenceEntity \Dvsa\Olcs\Api\Entity\Licence\Licence */
-        $licenceEntity = $this->getRepo()->fetchById($licId);
-
-        [$template, $description] = $this->returnTemplateAndDescription($licenceEntity);
+        [$template, $description] = $this->returnTemplateAndDescription();
 
         $dtoData = [
             'template' => $template,
@@ -73,11 +78,11 @@ class Approve extends AbstractSurrenderCommandHandler
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 
-    private function returnTemplateAndDescription(Licence $licenceEntity): array
+    private function returnTemplateAndDescription(): array
     {
-        $goodsOrPsv = $licenceEntity->getGoodsOrPsv()->getId();
-        $licType = $licenceEntity->getLicenceType()->getId();
-        $isNi = $licenceEntity->isNi();
+        $goodsOrPsv = $this->licenceEntity->getGoodsOrPsv()->getId();
+        $licType = $this->licenceEntity->getLicenceType()->getId();
+        $isNi = $this->licenceEntity->isNi();
 
         if ($goodsOrPsv === Licence::LICENCE_CATEGORY_PSV && $this->isValidLicenceType($licType) && !$isNi) {
             return ['GB/SURRENDER_LETTER_TO_OPERATOR_PSV', 'PSV - Surrender actioned letter'];
@@ -103,5 +108,14 @@ class Approve extends AbstractSurrenderCommandHandler
         ];
 
         return in_array($licType, $validTypes);
+    }
+
+    private function hasEcmsAndSignatureBeenChecked(int $licId): void
+    {
+        /** @var Surrender $surrender */
+        $surrender = $this->getSurrender($licId);
+        if (($surrender->getEcmsChecked() && $surrender->getSignatureChecked()) === false) {
+            throw new Exception('The surrender has not been checked');
+        }
     }
 }

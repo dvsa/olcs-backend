@@ -295,7 +295,7 @@ return [
                 ],
                 'permits' => [
                     'options' => [
-                        'route' => 'permits (close-expired-windows) [--since=<date>] [--verbose|-v]',
+                        'route' => 'permits (close-expired-windows|mark-expired-permits) [--since=<date>] [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'permits',
@@ -393,8 +393,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
             Queue::TYPE_COMM_LIC_BULK_REPRINT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\ReportingBulkReprint::class,
-            Queue::TYPE_ECMT_POST_SUBMISSION
-            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\EcmtPostSubmitTasks::class,
+            Queue::TYPE_PERMITS_POST_SUBMIT
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\PostSubmitTasks::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
@@ -420,9 +420,11 @@ return [
             Command\CompaniesHouseVsOlcsDiffsExport::class => CommandHandler\CompaniesHouseVsOlcsDiffsExport::class,
             Command\Bus\Expire::class => CommandHandler\Bus\Expire::class,
             Command\Permits\WithdrawUnpaidEcmt::class => CommandHandler\Permits\WithdrawUnpaidEcmt::class,
+            Command\Permits\WithdrawUnpaidIrhp::class => CommandHandler\Permits\WithdrawUnpaidIrhp::class,
             Command\ImportUsersFromCsv::class => CommandHandler\ImportUsersFromCsv::class,
             Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,
             Command\Permits\CloseExpiredWindows::class => CommandHandler\Permits\CloseExpiredWindows::class,
+            Command\Permits\MarkExpiredPermits::class => CommandHandler\Permits\MarkExpiredPermits::class,
         ],
     ],
 

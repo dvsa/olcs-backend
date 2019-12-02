@@ -6,14 +6,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitJurisdiction\Create as CreateDevolvedQuotasCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateSectorQuotasCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as StockEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
@@ -39,20 +37,19 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     {
         // This shared method is defined in IrhpPermitStockTrait - and can throw a ValidationException
         $this->duplicateStockCheck($command);
-
-        $irhpPermitType = $this->getRepo('IrhpPermitStock')->getReference(IrhpPermitTypeEntity::class, $command->getIrhpPermitType());
-        $country = null;
-        if ($command->getIrhpPermitType() === IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
-            $country = $this->getRepo('IrhpPermitStock')->getReference(Country::class, $command->getCountry());
-        }
+        $this->validityPeriodValidation($command);
+        $references = $this->resolveReferences($command);
 
         $stock = StockEntity::create(
-            $irhpPermitType,
-            $country,
-            $command->getValidFrom(),
-            $command->getValidTo(),
+            $references['irhpPermitType'],
+            $references['country'],
             $command->getInitialStock(),
-            $this->getRepo()->getRefDataReference(StockEntity::STATUS_SCORING_NEVER_RUN)
+            $this->getRepo()->getRefDataReference(StockEntity::STATUS_SCORING_NEVER_RUN),
+            $references['applicationPathGroup'],
+            $this->getRepo()->getRefdataReference($command->getBusinessProcess()),
+            $command->getPeriodNameKey(),
+            $command->getValidFrom(),
+            $command->getValidTo()
         );
 
         try {

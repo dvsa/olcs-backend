@@ -9,7 +9,8 @@ use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
@@ -199,9 +200,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     {
         return [
             'hasInforceLicences' => $this->hasInforceLicences(),
-            'eligibleLicences' => $this->getEligibleLicences(),
-            'hasAvailableEcmtLicences' => $this->hasAvailableEcmtLicences(),
-            'hasAvailableBilateralLicences' => $this->hasAvailableBilateralLicences(),
         ];
     }
 
@@ -594,98 +592,77 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     }
 
     /**
-     * Get eligible licences
-     **
-     * @return array
+     * Get licences eligible for irhp permits
+     *
+     * @return ArrayCollection
      */
-    public function getEligibleLicences()
+    public function getEligibleIrhpLicences()
     {
         $criteria = Criteria::create();
+        $expr = Criteria::expr();
+
         $criteria->where(
-            $criteria->expr()->in(
-                'status',
-                [
-                    LicenceEntity::LICENCE_STATUS_VALID,
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                    LicenceEntity::LICENCE_STATUS_CURTAILED
-                ]
-            )
-        );
-        $criteria->andWhere(
-            $criteria->expr()->in(
-                'goodsOrPsv',
-                [
-                    LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
-                ]
-            )
-        );
-        $criteria->andWhere(
-            $criteria->expr()->in(
-                'licenceType',
-                [
-                    LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                    LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-                    LicenceEntity::LICENCE_TYPE_RESTRICTED
-                ]
+            $expr->andX(
+                $expr->eq('goodsOrPsv', new RefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)),
+                $expr->in(
+                    'status',
+                    [
+                        LicenceEntity::LICENCE_STATUS_VALID,
+                        LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                        LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    ]
+                ),
+                $expr->in(
+                    'licenceType',
+                    [
+                        LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                        LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                        LicenceEntity::LICENCE_TYPE_RESTRICTED,
+                    ]
+                )
             )
         );
 
-        $licences = $this->getLicences()->matching($criteria);
+        return $this->getLicences()->matching($criteria);
+    }
 
-        $irhpBilateralPermitType = new IrhpPermitType();
-
-        $irhpBilateralPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
-
-        $irhpMultilateralPermitType = new IrhpPermitType();
-        $irhpMultilateralPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
-
+    /**
+     * Get licences eligible to apply for the specified irhp permit type/stock indexed by licence id
+     *
+     * @param IrhpPermitStock $stock permit stock
+     *
+     * @return array
+     */
+    public function getEligibleIrhpLicencesForStock(IrhpPermitStock $stock): array
+    {
+        $licences = $this->getEligibleIrhpLicences();
         $licencesArr = [];
 
         /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
-            $licencesArr[] = [
-                'id' => $licence->getId(),
+            $activeApplication = $licence->getActivePermitApplicationForStock($stock);
+
+            $canMakeApplication = true;
+            $activeApplicationId = null;
+
+            if ($activeApplication !== null) {
+                $canMakeApplication = false;
+                $activeApplicationId = $activeApplication->getId();
+            }
+
+            $id = $licence->getId();
+
+            $licencesArr[$id] = [
+                'id' => $id,
                 'licNo' => $licence->getLicNo(),
                 'trafficArea' => $licence->getTrafficArea()->getName(),
-                'totAuthVehicles' => $licence->getTotAuthVehicles(),
-                'licenceType' => $licence->getLicenceType(),
-                'restricted' => $licence->getLicenceType() === LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                'canMakeEcmtApplication' => $licence->canMakeEcmtApplication(),
-                'canMakeBilateralApplication' => $licence->canMakeIrhpApplication($irhpBilateralPermitType),
-                'canMakeMultilateralApplication' => $licence->canMakeIrhpApplication($irhpMultilateralPermitType),
+                'isRestricted' => $licence->isRestricted(),
+                'licenceTypeDesc' => $licence->getLicenceType()->getDescription(),
+                'canMakeApplication' => $canMakeApplication,
+                'activeApplicationId' => $activeApplicationId,
             ];
         }
 
-        return [
-            'result' => $licencesArr
-        ];
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasAvailableEcmtLicences()
-    {
-        foreach ($this->getEligibleLicences()['result'] as $licence) {
-            if ($licence['canMakeEcmtApplication']) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasAvailableBilateralLicences()
-    {
-        foreach ($this->getEligibleLicences()['result'] as $licence) {
-            if ($licence['canMakeBilateralApplication']) {
-                return true;
-            }
-        }
-
-        return false;
+        return $licencesArr;
     }
 }

@@ -29,10 +29,10 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
     const LICENCE_INVALID_MSG = 'Licence ID %s with number %s is unable to make an ECMT application';
     const LICENCE_ORG_MSG = 'Licence does not belong to this organisation';
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['Licence'];
+    protected $extraRepos = ['Licence', 'IrhpPermitApplication'];
 
     /**
      * Handle command
@@ -46,9 +46,6 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
     {
         $result = new Result();
 
-        /** @var EcmtPermitApplication $application */
-        $application = $this->getRepo()->fetchById($command->getId());
-
         /** @var Licence $licence */
         $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
 
@@ -56,13 +53,18 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
             throw new ForbiddenException(self::LICENCE_ORG_MSG);
         }
 
-        if (!$licence->canMakeEcmtApplication($application)) {
+        /** @var EcmtPermitApplication $application */
+        $application = $this->getRepo()->fetchById($command->getId());
+
+        if (!$licence->canMakeEcmtApplication($application->getAssociatedStock(), $application)) {
             $message = sprintf(self::LICENCE_INVALID_MSG, $licence->getId(), $licence->getLicNo());
             throw new ForbiddenException($message);
         }
 
         // Update the licence but reset the previously answers questions to NULL
         $application->updateLicence($licence);
+        $irhpPermitApplication = $application->getFirstIrhpPermitApplication();
+        $irhpPermitApplication->updateLicence($licence);
         $fees = $application->getFees();
 
         /** @var Fee $fee */
@@ -73,6 +75,7 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
         }
 
         $this->getRepo()->save($application);
+        $this->getRepo('IrhpPermitApplication')->save($irhpPermitApplication);
         $result->addId('ecmtPermitApplication', $application->getId());
         $result->addMessage('EcmtPermitApplication Licence Updated successfully');
 

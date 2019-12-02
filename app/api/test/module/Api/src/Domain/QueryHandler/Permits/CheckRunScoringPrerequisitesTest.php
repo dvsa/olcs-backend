@@ -6,11 +6,11 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\CheckRunScoringPrerequisites;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckRunScoringPrerequisites as CheckRunScoringPrerequisitesQry;
-use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -20,9 +20,12 @@ class CheckRunScoringPrerequisitesTest extends QueryHandlerTestCase
     {
         $this->sut = new CheckRunScoringPrerequisites();
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
-        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
+
+        $this->mockedSmServices = [
+            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
+        ];
 
         parent::setUp();
     }
@@ -50,7 +53,7 @@ class CheckRunScoringPrerequisitesTest extends QueryHandlerTestCase
                 ->andReturn($lastOpenWindow);
         }
 
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchApplicationIdsAwaitingScoring')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchApplicationIdsAwaitingScoring')
             ->with($stockId)
             ->andReturn($applicationIds);
 

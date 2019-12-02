@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -21,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -129,82 +130,135 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Check whether the licence can make an ECMT application (in some cases excluding checks on the current app)
      *
-     * @param EcmtPermitApplication|null $exclude application to exclude
+     * @param IrhpPermitStock            $stock
+     * @param EcmtPermitApplication|null $exclude
      *
      * @return bool
      */
-    public function canMakeEcmtApplication(?EcmtPermitApplication $exclude = null)
+    public function canMakeEcmtApplication(IrhpPermitStock $stock, ?EcmtPermitApplication $exclude = null): bool
     {
-        return !$this->hasActiveEcmtApplication($exclude) && $this->isEligibleForPermits();
+        $activeApplication = $this->getActiveEcmtApplicationForStock($stock, $exclude);
+        return !$activeApplication instanceof EcmtPermitApplication && $this->isEligibleForPermits();
     }
 
     /**
-     * Check whether the licence has active ECMT applications (in some cases excluding checks on the current app)
+     * Get an active ECMT permit application for the stock (if it exists)
      *
-     * @param EcmtPermitApplication|null $exclude application to exclude
+     * @param IrhpPermitStock            $stock
+     * @param EcmtPermitApplication|null $exclude
      *
-     * @return bool
+     * @return EcmtPermitApplication|null
      */
-    public function hasActiveEcmtApplication(?EcmtPermitApplication $exclude = null)
-    {
-        if ($this->ecmtApplications === null) {
-            return false;
+    public function getActiveEcmtApplicationForStock(
+        IrhpPermitStock $stock,
+        ?EcmtPermitApplication $exclude = null
+    ): ?EcmtPermitApplication {
+        $emctApplications = $this->getEcmtApplications();
+        if ($emctApplications === null) {
+            return null;
         }
 
         /** @var EcmtPermitApplication $application */
-        foreach ($this->ecmtApplications as $application) {
+        foreach ($emctApplications as $application) {
             if ($exclude instanceof EcmtPermitApplication && $application->getId() === $exclude->getId()) {
-                continue;
+                return null;
             }
 
-            if ($application->isActive()) {
-                return true;
+            if ($stock instanceof IrhpPermitStock
+                && $application->getAssociatedStock()->getId() === $stock->getId()
+                && $application->isActive()
+            ) {
+                return $application;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
      * Check whether the licence can make an IRHP application of specific type
      *
-     * @param IrhpPermitType       $type    type to be checked
+     * @param IrhpPermitStock      $stock    type to be checked
      * @param IrhpApplication|null $exclude application to exclude
      *
      * @return bool
      */
-    public function canMakeIrhpApplication(IrhpPermitType $type, ?IrhpApplication $exclude = null)
+    public function canMakeIrhpApplication(IrhpPermitStock $stock, ?IrhpApplication $exclude = null): bool
     {
-        return !$this->hasActiveIrhpApplication($type, $exclude) && $this->isEligibleForPermits();
+        $activeApplication = $this->getActiveIrhpApplication($stock, $exclude);
+        return !$activeApplication instanceof IrhpApplication && $this->isEligibleForPermits();
     }
 
     /**
-     * Check whether the licence has active IRHP application of specific type
+     * If the licence has an active IRHP application we return it, else null is returned
      *
-     * @param IrhpPermitType       $type    type to be checked
-     * @param IrhpApplication|null $exclude application to exclude
+     * @param IrhpPermitStock       $stock    type to be checked
+     * @param IrhpApplication|null  $exclude  application to exclude
      *
-     * @return bool
+     * @return IrhpApplication|null
      */
-    public function hasActiveIrhpApplication(IrhpPermitType $type, ?IrhpApplication $exclude = null)
-    {
-        /** @var IrhpApplication $application */
-        foreach ($this->getIrhpApplications() as $application) {
-            if ($exclude instanceof IrhpApplication && $application->getId() === $exclude->getId()) {
-                continue;
-            }
+    public function getActiveIrhpApplication(
+        IrhpPermitStock $stock,
+        ?IrhpApplication $exclude = null
+    ): ?IrhpApplication {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            Criteria::expr()->in(
+                'status',
+                IrhpInterface::ACTIVE_STATUSES
+            )
+        );
 
-            if ($application->getIrhpPermitType()->getId() !== $type->getId()) {
-                // only consider the type requested
-                continue;
-            }
+        $criteria->andWhere(
+            Criteria::expr()->eq(
+                'irhpPermitType',
+                $stock->getIrhpPermitType()
+            )
+        );
 
-            if ($application->isActive()) {
-                return true;
-            }
+        $activeApplications = $this->getIrhpApplications()->matching($criteria);
+
+        if ($activeApplications->isEmpty()) {
+            return null;
         }
 
-        return false;
+        $stockId = $stock->getId();
+
+        /** @var IrhpApplication $application */
+        foreach ($activeApplications as $application) {
+            if ($exclude instanceof IrhpApplication && $exclude->getId() === $application->getId()) {
+                continue;
+            }
+
+            // for permit types other than multilateral and bilateral, we can do more specific checks
+            if (!$application->isMultiStock() && $application->getAssociatedStock()->getId() !== $stockId) {
+                // only consider the stock requested
+                continue;
+            }
+
+            return $application;
+        }
+
+        return null;
+    }
+
+    /**
+     * If this licence has an active permit application for a given stock, return it
+     *
+     * @param IrhpPermitStock    $stock   permit stock
+     * @param IrhpInterface|null $exclude excluded application
+     *
+     * @return IrhpInterface|null
+     */
+    public function getActivePermitApplicationForStock(
+        IrhpPermitStock $stock,
+        ?IrhpInterface $exclude = null
+    ): ?IrhpInterface {
+        if ($stock->getIrhpPermitType()->isEcmtAnnual()) {
+            return $this->getActiveEcmtApplicationForStock($stock, $exclude);
+        }
+
+        return $this->getActiveIrhpApplication($stock, $exclude);
     }
 
     /**

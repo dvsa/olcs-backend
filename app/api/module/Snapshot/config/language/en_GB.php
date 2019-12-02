@@ -372,5 +372,52 @@ return [
     'surrender-review-documentation-operator-licence' => 'Operator licence',
     'surrender-review-documentation-community-licence' => 'Community licence and all certified copies',
 
+    //permit snapshot translations
+    'permits.check-answers.page.question.licence' => 'Licence selected',
+    'permits.form.euro-emissions.label' => 'I confirm that I will only use my ECMT permits with vehicles that are environmentally compliant with the minimum Euro emissions standards that the permit allows.',
+    'permits.form.cabotage.label' => 'I confirm that I will not undertake any cabotage journeys using an ECMT permit.',
+    'permits.page.roadworthiness.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
+    'permits.page.restricted-countries.question' => 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?',
+    'permits.page.permits.required.question' => 'How many permits do you require for this licence?',
+    'permits.page.number-of-trips.question' => 'How many international trips did you make in the last 12 months using this licence?',
+    'permits.page.international.journey.question' => 'In the last 12 months, what percentage of international trips did you make using this licence?',
+    'permits.page.sectors.question' => 'Select one sector you mainly transport goods in using this licence',
+    'permits.snapshot.number.required' => 'Total number of permits required',
+    'permits.snapshot.title' => 'Application for %s permits',
+    'permits.snapshot.declaration' => 'I declare that the statements and information provided are true and that my application is correct. I understand that it is an offence to make a false declaration to obtain a permit.',
+    'permits.irhp.countries.transporting' => 'Countries transporting goods to',
+
+    'qanda.ecmt-removal.removal-eligibility.question' => 'Confirm you will only use removal permits for removal operations using specialised equipment and staff',
+    'qanda.ecmt-removal.cabotage.question' => 'Confirm you will not use removal permits to carry out cabotage',
+    'qanda.ecmt-removal.no-of-permits.question' => 'How many permits do you require for this licence?',
+
+    'section.name.application/licence' => 'Licence number',
+    'section.name.application/check-answers' => 'Check your answers',
+    'section.name.application/declaration' => 'Declaration',
+
+    'st_permit_usage_transit_only' => 'Transit only',
+    'st_permit_usage_cross_trade_only' => 'Cross-trade only',
+    'st_permit_usage_both' => 'Both transit and cross-trade',
+
+    'inter_journey_less_60' => 'Less than 60%',
+    'inter_journey_60_90' => '60% to 90%',
+    'inter_journey_more_90' => 'More than 90%',
+
+    'qanda.ecmt-short-term.permit-usage.question' => 'How will you use your Short-term ECMT permits?',
+    'qanda.ecmt-short-term.cabotage.question' => 'Short-term ECMT permits do not allow you to carry out cabotage',
+    'qanda.ecmt-short-term.emissions.question' => 'You must only use the appropriate Euro emission standards vehicles that the permit allows',
+    'qanda.ecmt-short-term.number-of-permits.question' => 'How many permits do you require for this licence?',
+    'qanda.ecmt-short-term.restricted-countries.question' => 'Will you be transporting goods to Greece, Hungary, Italy or Russia?',
+    'qanda.ecmt-short-term.annual-trips-abroad.question' => 'How many international trips did you make in the last 12 months using this licence?',
+    'qanda.ecmt-short-term.percentage-international-journeys.question' => 'In the last 12 months, what percentage of international trips did you make using this licence?',
+    'qanda.ecmt-short-term.sectors.question' => 'Select one sector you mainly transport goods in using this licence',
+
+    'qanda.common.certificates.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
+
+    'permits.page.stock.select.option.1' => 'Permits for journeys starting between 1 February and 31 March 2020',
+    'permits.page.stock.select.option.2' => 'Permits for journeys starting between 1 April and 31 May 2020',
+    'permits.page.stock.select.option.3' => 'Permits for journeys starting between 1 June and 31 July 2020',
+    'permits.page.stock.select.option.4' => 'Permits for journeys starting between 1 August and 31 December 2020',
+
     // Potentially unused translations
 ];

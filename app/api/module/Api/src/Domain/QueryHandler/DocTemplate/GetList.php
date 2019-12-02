@@ -15,11 +15,13 @@ class GetList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'DocTemplate';
 
+    protected $bundle = ['document'];
+
     public function handleQuery(QueryInterface $query)
     {
         $list = $this->getRepo()->fetchList($query, Query::HYDRATE_OBJECT);
         return [
-            'result' => $this->resultList($list),
+            'result' => $this->resultList($list, $this->bundle),
             'count' => count($list),
         ];
     }

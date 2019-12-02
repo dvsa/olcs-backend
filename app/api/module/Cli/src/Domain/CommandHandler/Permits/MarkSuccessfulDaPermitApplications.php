@@ -3,12 +3,15 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulDaPermitApplications as MarkSuccessfulDaPermitApplicationsCommand;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
+use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulDaPermitApplications as MarkSuccessfulDaPermitApplicationsCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Set successful permit applications for each devolved administration
@@ -20,11 +23,35 @@ class MarkSuccessfulDaPermitApplications extends ScoringCommandHandler implement
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
-    protected $repoServiceName = 'IrhpCandidatePermit';
+    protected $repoServiceName = 'IrhpPermitJurisdictionQuota';
 
-    protected $extraRepos = ['IrhpPermitJurisdictionQuota'];
+    /** @var ScoringQueryProxy */
+    private $scoringQueryProxy;
+
+    /** @var SuccessfulCandidatePermitsFacade */
+    private $successfulCandidatePermitsFacade;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
+
+        $this->successfulCandidatePermitsFacade = $mainServiceLocator->get(
+            'PermitsScoringSuccessfulCandidatePermitsFacade'
+        );
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -38,15 +65,15 @@ class MarkSuccessfulDaPermitApplications extends ScoringCommandHandler implement
         $this->profileMessage('mark successful da permit applications...');
 
         $stockId = $command->getStockId();
-        $candidatePermitIds = array();
-        $daQuotas = $this->getRepo('IrhpPermitJurisdictionQuota')->fetchByNonZeroQuota($stockId);
+        $daQuotas = $this->getRepo()->fetchByNonZeroQuota($stockId);
 
         $this->result->addMessage('STEP 2c:');
         $this->result->addMessage('  DAs associated with stock where quota > 0: ' . count($daQuotas));
 
-        $candidatePermitIds = [];
+        $totalSuccessfulCandidatePermits = 0;
+
         foreach ($daQuotas as $daQuota) {
-            $daSuccessCount = $this->getRepo()->getSuccessfulDaCountInScope(
+            $daSuccessCount = $this->scoringQueryProxy->getSuccessfulDaCountInScope(
                 $stockId,
                 $daQuota['jurisdictionId']
             );
@@ -60,31 +87,29 @@ class MarkSuccessfulDaPermitApplications extends ScoringCommandHandler implement
             $this->result->addMessage('      - #DARemainingQuota: ' . $daRemainingQuota);
 
             if ($daRemainingQuota > 0) {
-                $daCandidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIdsInScope(
+                $daCandidatePermits = $this->scoringQueryProxy->getUnsuccessfulScoreOrderedInScope(
                     $stockId,
                     $daQuota['jurisdictionId']
                 );
-                $truncatedDaCandidatePermitIds = array_slice($daCandidatePermitIds, 0, $daRemainingQuota);
 
-                $candidatePermitIds = array_merge(
-                    $candidatePermitIds,
-                    $truncatedDaCandidatePermitIds
+                $successfulCandidatePermits = $this->successfulCandidatePermitsFacade->generate(
+                    $daCandidatePermits,
+                    $command->getStockId(),
+                    $daRemainingQuota
                 );
 
-                $this->result->addMessage('      Permits requesting this DA: ' . count($daCandidatePermitIds));
-                $this->result->addMessage('      - adjusted for quota: ' . count($truncatedDaCandidatePermitIds));
-                $this->result->addMessage('      The following ' . count($truncatedDaCandidatePermitIds) . ' permits will be marked as successful:');
-                foreach ($truncatedDaCandidatePermitIds as $candidatePermitId) {
-                    $this->result->addMessage('        - id = ' . $candidatePermitId);
-                }
+                $this->result->addMessage('      Permits requesting this DA: ' . count($daCandidatePermits));
+                $this->result->addMessage('      - adjusted for quota: ' . count($successfulCandidatePermits));
+                $this->successfulCandidatePermitsFacade->log($successfulCandidatePermits, $this->result);
+
+                $this->successfulCandidatePermitsFacade->write($successfulCandidatePermits);
+                $totalSuccessfulCandidatePermits += count($successfulCandidatePermits);
             } else {
                 $this->result->addMessage('      #DARemainingQuota < 1 - nothing to do');
             }
         }
 
-        $this->getRepo()->markAsSuccessful($candidatePermitIds);
-
-        $this->result->addMessage('  ' . count($candidatePermitIds) . ' permits have been marked as successful');
+        $this->result->addMessage('  ' . $totalSuccessfulCandidatePermits . ' permits have been marked as successful');
         return $this->result;
     }
 }

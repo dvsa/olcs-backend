@@ -2,14 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetList;
+use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetListByIrhpApplication;
+use Dvsa\Olcs\Transfer\Query\Permits\UnpaidEcmtPermits;
 use Mockery as m;
 
 /**
@@ -24,83 +24,157 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $this->setUpSut(IrhpCandidatePermit::class);
     }
 
-    public function testGetScoreOrderedIdsBySectorInScope()
+    public function testFetchListForUnpaidEcmtPermits()
     {
-        $stockId = 6;
-        $sectorsId = 8;
+        $id = 10;
+        $status = RefData::PERMIT_APP_STATUS_AWAITING_FEE;
 
-        $nonNormalisedResult = [
-            ['id' => 18],
-            ['id' => 24],
-            ['id' => 25],
-            ['id' => 31],
-            ['id' => 34],
-        ];
+        $this->setUpSut(IrhpCandidatePermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
 
-        $normalisedResult = [18, 24, 25, 31, 34];
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
 
-        $queryBuilder = m::mock(QueryBuilder::class);
-        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.ecmtPermitApplication', 'epa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
 
-        $queryBuilder->shouldReceive('select')
-            ->with('icp.id')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('from')
-            ->with(IrhpCandidatePermitEntity::class, 'icp')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('icp.irhpPermitApplication', 'ipa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.irhpPermitWindow', 'ipw')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.ecmtPermitApplication', 'epa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('IDENTITY(epa.sectors) = ?2')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('epa.inScope = 1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('orderBy')
-            ->with('icp.randomizedScore', 'DESC')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(1, $stockId)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(2, $sectorsId)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('getQuery->getScalarResult')
-            ->once()
-            ->andReturn($nonNormalisedResult);
-
-        $this->assertEquals(
-            $normalisedResult,
-            $this->sut->getScoreOrderedIdsBySectorInScope($stockId, $sectorsId)
+        $query = UnpaidEcmtPermits::create(
+            [
+                'id' => $id,
+                'page' => 1,
+                'limit' => 25,
+                'status' => $status,
+            ]
         );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.successful = [[true]] '
+            . 'AND epa.status = [['.$status.']] '
+            . 'AND ipa.ecmtPermitApplication = [['.$id.']]';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testGetSuccessfulDaCountInScope()
+    public function testFetchListForGetListByIrhpApplication()
     {
-        $successfulDaCount = 35;
-        $stockId = 8;
-        $jurisdictionId = 12;
+        $irhpApplicationId = 10;
+
+        $this->setUpSut(IrhpCandidatePermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.ecmtPermitApplication', 'epa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf()
+            ->shouldReceive('order')->once()->andReturnSelf();
+
+        $query = GetListByIrhpApplication::create(
+            [
+                'irhpApplication' => $irhpApplicationId,
+                'page' => 1,
+                'limit' => 25,
+                'order' => 'id',
+                'sort' => 'ASC',
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.successful = [[true]] '
+            . 'AND ia.status = [['.RefData::PERMIT_APP_STATUS_AWAITING_FEE.']] '
+            . 'AND ipa.irhpApplication = [['.$irhpApplicationId.']]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListForGetListByIrhpApplicationPreGrant()
+    {
+        $irhpApplicationId = 10;
+
+        $this->setUpSut(IrhpCandidatePermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.ecmtPermitApplication', 'epa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf()
+            ->shouldReceive('order')->once()->andReturnSelf();
+
+        $query = GetListByIrhpApplication::create(
+            [
+                'irhpApplication' => $irhpApplicationId,
+                'page' => 1,
+                'limit' => 25,
+                'order' => 'id',
+                'sort' => 'ASC',
+                'isPreGrant' => true
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND ia.status IN [[["'.RefData::PERMIT_APP_STATUS_UNDER_CONSIDERATION.'"]]] '
+            . 'AND ipa.irhpApplication = [['.$irhpApplicationId.']]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListWithEcmtPermitApplication()
+    {
+        $ecmtPermitApplicationId = 10;
+
+        $this->setUpSut(IrhpCandidatePermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.ecmtPermitApplication', 'epa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf()
+            ->shouldReceive('order')->once()->andReturnSelf();
+
+        $query = GetList::create(
+            [
+                'ecmtPermitApplication' => $ecmtPermitApplicationId,
+                'page' => 1,
+                'limit' => 25,
+                'order' => 'id',
+                'sort' => 'ASC',
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND epa.id = [['.$ecmtPermitApplicationId.']]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    /**
+     * @dataProvider dpFetchCountInRangeWhereApplicationAwaitingFee
+     */
+    public function testFetchCountInRangeWhereApplicationAwaitingFee($countInRange, $expectedResult)
+    {
+        $rangeId = 22;
 
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
@@ -118,443 +192,55 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('innerJoin')
-            ->with('ipa.ecmtPermitApplication', 'epa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.irhpPermitWindow', 'ipw')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('epa.licence', 'l')
+            ->with('ipa.irhpApplication', 'ia')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('where')
-            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->with('IDENTITY(icp.irhpPermitRange) = ?1')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('andWhere')
-            ->with('icp.successful = 1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('IDENTITY(l.trafficArea) = ?2')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('epa.inScope = 1')
+            ->with('ia.status = ?2')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with(1, $stockId)
+            ->with(1, $rangeId)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with(2, $jurisdictionId)
+            ->with(2, IrhpInterface::STATUS_AWAITING_FEE)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('getQuery->getSingleScalarResult')
             ->once()
-            ->andReturn($successfulDaCount);
-
-        $this->assertEquals(
-            $successfulDaCount,
-            $this->sut->getSuccessfulDaCountInScope($stockId, $jurisdictionId)
-        );
-    }
-
-    public function testGetUnsuccessfulScoreOrderedIdsInScopeWithoutTrafficAreaId()
-    {
-        $nonNormalisedResult = [
-            ['id' => 35],
-            ['id' => 37],
-            ['id' => 41]
-        ];
-
-        $normalisedResult = [35, 37, 41];
-
-        $stockId = 3;
-
-        $queryBuilder = m::mock(QueryBuilder::class);
-        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
-
-        $queryBuilder->shouldReceive('select')
-            ->with('icp.id')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('from')
-            ->with(IrhpCandidatePermitEntity::class, 'icp')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('icp.irhpPermitApplication', 'ipa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.irhpPermitWindow', 'ipw')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.ecmtPermitApplication', 'epa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('icp.successful = 0')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('epa.inScope = 1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('orderBy')
-            ->with('icp.randomizedScore', 'DESC')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(1, $stockId)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('getQuery->getScalarResult')
-            ->once()
-            ->andReturn($nonNormalisedResult);
-
-        $this->assertEquals(
-            $normalisedResult,
-            $this->sut->getUnsuccessfulScoreOrderedIdsInScope($stockId)
-        );
-    }
-
-    public function testGetUnsuccessfulScoreOrderedIdsInScopeWithTrafficAreaId()
-    {
-        $nonNormalisedResult = [
-            ['id' => 35],
-            ['id' => 37],
-            ['id' => 41]
-        ];
-
-        $normalisedResult = [35, 37, 41];
-
-        $stockId = 3;
-        $trafficAreaId = 12;
-
-        $queryBuilder = m::mock(QueryBuilder::class);
-        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
-
-        $queryBuilder->shouldReceive('select')
-            ->with('icp.id')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('from')
-            ->with(IrhpCandidatePermitEntity::class, 'icp')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('icp.irhpPermitApplication', 'ipa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.irhpPermitWindow', 'ipw')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.ecmtPermitApplication', 'epa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('icp.successful = 0')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('epa.inScope = 1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('orderBy')
-            ->with('icp.randomizedScore', 'DESC')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(1, $stockId)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('epa.licence', 'l')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('IDENTITY(l.trafficArea) = ?2')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(2, $trafficAreaId)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('getQuery->getScalarResult')
-            ->once()
-            ->andReturn($nonNormalisedResult);
-
-        $this->assertEquals(
-            $normalisedResult,
-            $this->sut->getUnsuccessfulScoreOrderedIdsInScope($stockId, $trafficAreaId)
-        );
-    }
-
-    public function testGetSuccessfulCountInScope()
-    {
-        $stockId = 7;
-        $successfulCount = 15;
-
-        $queryBuilder = m::mock(QueryBuilder::class);
-        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
-
-        $queryBuilder->shouldReceive('select')
-            ->with('count(icp)')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('from')
-            ->with(IrhpCandidatePermitEntity::class, 'icp')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('icp.irhpPermitApplication', 'ipa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.irhpPermitWindow', 'ipw')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.ecmtPermitApplication', 'epa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('icp.successful = 1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('epa.inScope = 1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(1, $stockId)
-            ->andReturnSelf()
-            ->shouldReceive('getQuery->getSingleScalarResult')
-            ->once()
-            ->andReturn($successfulCount);
-
-        $this->assertEquals(
-            $successfulCount,
-            $this->sut->getSuccessfulCountInScope($stockId)
-        );
-    }
-
-    public function testMarkAsSuccessful()
-    {
-        $candidatePermitIds = [3, 8, 12, 16];
-
-        $queryBuilder = m::mock(QueryBuilder::class);
-        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
-
-        $query = m::mock(AbstractQuery::class);
-        $query->shouldReceive('execute')
-            ->withNoArgs()
-            ->once();
-
-        $queryBuilder->shouldReceive('update')
-            ->with(IrhpCandidatePermitEntity::class, 'icp')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('set')
-            ->with('icp.successful', 1)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->with('icp.id in (?1)')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(1, $candidatePermitIds)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('getQuery')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($query);
-
-        $this->sut->markAsSuccessful($candidatePermitIds);
-    }
-
-    public function testFetchDeviationSourceValues()
-    {
-        $deviationSourceValues = [
-            [
-                'candidatePermitId' => 102,
-                'licNo' => 'PD2737280',
-                'applicationId' => 202,
-                'permitsRequired' => 12
-            ],
-            [
-                'candidatePermitId' => 104,
-                'licNo' => 'OG4569803',
-                'applicationId' => 205,
-                'permitsRequired' => 6
-            ]
-        ];
-
-        $stockId = 3;
-
-        $queryBuilder = m::mock(QueryBuilder::class);
-        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
-
-        $queryBuilder->shouldReceive('select')
-            ->with('icp.id as candidatePermitId, l.licNo, epa.id as applicationId, epa.permitsRequired')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('from')
-            ->with(IrhpCandidatePermitEntity::class, 'icp')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('icp.irhpPermitApplication', 'ipa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.irhpPermitWindow', 'ipw')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.ecmtPermitApplication', 'epa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('epa.licence', 'l')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('epa.inScope = 1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(1, $stockId)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('getQuery->getScalarResult')
-            ->once()
-            ->andReturn($deviationSourceValues);
-
-        $this->assertEquals(
-            $deviationSourceValues,
-            $this->sut->fetchDeviationSourceValues($stockId)
-        );
-    }
-
-    public function testGetSuccessfulScoreOrderedInScope()
-    {
-        $stockId = 7;
-
-        $expectedResult = [
-            m::mock(IrhpCandidatePermitEntity::class),
-            m::mock(IrhpCandidatePermitEntity::class),
-            m::mock(IrhpCandidatePermitEntity::class),
-        ];
-
-        $queryBuilder = m::mock(QueryBuilder::class);
-        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
-
-        $queryBuilder->shouldReceive('select')
-            ->with('icp')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('from')
-            ->with(IrhpCandidatePermitEntity::class, 'icp')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('icp.irhpPermitApplication', 'ipa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.irhpPermitWindow', 'ipw')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('ipa.ecmtPermitApplication', 'epa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('icp.successful = 1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('epa.inScope = 1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('orderBy')
-            ->with('icp.randomizedScore', 'DESC')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(1, $stockId)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('getQuery->getResult')
-            ->once()
-            ->andReturn($expectedResult);
+            ->andReturn($countInRange);
 
         $this->assertEquals(
             $expectedResult,
-            $this->sut->getSuccessfulScoreOrderedInScope($stockId)
+            $this->sut->fetchCountInRangeWhereApplicationAwaitingFee($rangeId)
         );
     }
 
-    public function testFetchScoringReport()
+    public function dpFetchCountInRangeWhereApplicationAwaitingFee()
     {
-        $scoringReport = [
-            'row1' => 'rowContent1',
-            'row2' => 'rowContent2'
+        return [
+            [null, 0],
+            [42, 42]
         ];
+    }
 
-        $stockId = 3;
+    /**
+     * @dataProvider dpFetchCountInStockWhereApplicationAwaitingFee
+     */
+    public function testFetchCountInStockWhereApplicationAwaitingFee($emissionsCategoryId, $countInStock, $expectedResult)
+    {
+        $stockId = 22;
 
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
         $queryBuilder->shouldReceive('select')
-            ->with(
-                'icp.id as candidatePermitId, ' .
-                'epa.id as applicationId, ' .
-                'o.name as organisationName, ' .
-                'icp.applicationScore as candidatePermitApplicationScore, ' .
-                'icp.intensityOfUse as candidatePermitIntensityOfUse, ' .
-                'icp.randomFactor as candidatePermitRandomFactor, ' .
-                'icp.randomizedScore as candidatePermitRandomizedScore, ' .
-                'IDENTITY(epa.internationalJourneys) as applicationInternationalJourneys, ' .
-                's.name as applicationSectorName, ' .
-                'l.licNo as licenceNo, ' .
-                'ta.id as trafficAreaId, ' .
-                'ta.name as trafficAreaName, ' .
-                'icp.successful as candidatePermitSuccessful, ' .
-                'IDENTITY(icp.irhpPermitRange) as candidatePermitRangeId'
-            )
+            ->with('count(icp.id)')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('from')
@@ -566,48 +252,56 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('innerJoin')
-            ->with('ipa.irhpPermitWindow', 'ipw')
+            ->with('icp.irhpPermitRange', 'ipr')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('innerJoin')
-            ->with('ipa.ecmtPermitApplication', 'epa')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('epa.licence', 'l')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('epa.sectors', 's')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('l.trafficArea', 'ta')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('innerJoin')
-            ->with('l.organisation', 'o')
+            ->with('ipa.irhpApplication', 'ia')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('where')
-            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->with('IDENTITY(ipr.irhpPermitStock) = ?1')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('andWhere')
-            ->with('epa.inScope = 1')
+            ->with('ia.status = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('IDENTITY(ipr.emissionsCategory) = ?3')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
             ->with(1, $stockId)
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('getQuery->getScalarResult')
+            ->shouldReceive('setParameter')
+            ->with(2, IrhpInterface::STATUS_AWAITING_FEE)
             ->once()
-            ->andReturn($scoringReport);
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(3, $emissionsCategoryId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn($countInStock);
 
         $this->assertEquals(
-            $scoringReport,
-            $this->sut->fetchScoringReport($stockId)
+            $expectedResult,
+            $this->sut->fetchCountInStockWhereApplicationAwaitingFee($stockId, $emissionsCategoryId)
         );
+    }
+
+    public function dpFetchCountInStockWhereApplicationAwaitingFee()
+    {
+        return [
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, null, 0],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, null, 0],
+            [null, null, 0],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, 20, 20],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, 20, 20],
+            [null, 20, 20]
+        ];
     }
 }

@@ -27,7 +27,7 @@ final class AcceptEcmtPermits extends AbstractCommandHandler implements ToggleRe
     use QueueAwareTrait;
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     /**
@@ -82,7 +82,7 @@ final class AcceptEcmtPermits extends AbstractCommandHandler implements ToggleRe
      */
     protected function hasOutstandingIssueFees($fees)
     {
-        foreach ($fees as $key => $fee) {
+        foreach ($fees as $fee) {
             if ($fee->getFeeStatus()->getId() === Fee::STATUS_OUTSTANDING
                 && $fee->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_ECMT_ISSUE) {
                 return true;

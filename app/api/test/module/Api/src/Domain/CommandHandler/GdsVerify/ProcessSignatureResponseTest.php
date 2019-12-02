@@ -3,20 +3,22 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
+use Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify\ProcessSignatureResponse;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
-use Dvsa\Olcs\GdsVerify\Data\Attributes;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify\ProcessSignatureResponse;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\GdsVerify\ProcessSignatureResponse as Cmd;
-use Dvsa\Olcs\GdsVerify\Service;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\GdsVerify;
-use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\GdsVerify\Data\Attributes;
+use Dvsa\Olcs\GdsVerify\Service;
+use Dvsa\Olcs\Transfer\Command\GdsVerify\ProcessSignatureResponse as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * ProcessSignatureResponseTest
@@ -36,13 +38,18 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
         $this->mockRepo('Surrender', \Dvsa\Olcs\Api\Domain\Repository\Surrender::class);
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
+        $this->mockRepo('EventHistory', \Dvsa\Olcs\Api\Domain\Repository\EventHistory::class);
+        $this->mockRepo('EventHistoryType', \Dvsa\Olcs\Api\Domain\Repository\EventHistoryType::class);
         $this->mockRepo(
             'TransportManagerApplication',
             \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication::class
         );
         $this->refData = [];
 
-        $this->mockedSmServices[Service\GdsVerify::class] = m::mock(Service\GdsVerify::class);
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            Service\GdsVerify::class => m::mock(Service\GdsVerify::class)
+        ];
 
         parent::setUp();
     }
@@ -363,6 +370,26 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $this->repoMap['Licence']
             ->shouldReceive('save')
             ->with($licence)
+            ->once();
+
+        /** @var UserEntity $user */
+        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUserId = 1000;
+        $loggedInUser->setId($loggedInUserId);
+        
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->once()
+            ->andReturn($loggedInUser);
+
+        $eventHistoryType = new EventHistoryType();
+        $this->repoMap['EventHistoryType']
+            ->shouldReceive('fetchOneByEventCode')
+            ->with(EventHistoryType::EVENT_CODE_SURRENDER_UNDER_CONSIDERATION)
+            ->andReturn($eventHistoryType);
+
+        $this->repoMap['EventHistory']
+            ->shouldReceive('save')
             ->once();
 
         $this->sut->handleCommand($command);

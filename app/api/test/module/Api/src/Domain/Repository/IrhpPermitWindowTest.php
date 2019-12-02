@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Mockery as m;
+use Zend\Db\Sql\Predicate\Between;
 
 /**
  * IRHP Permit Window test
@@ -92,81 +93,6 @@ class IrhpPermitWindowTest extends RepositoryTestCase
         $this->assertEquals(
             $expectedResult,
             $this->sut->fetchOpenWindows($irhpPermitStock, $dateTime)
-        );
-    }
-
-    public function testFetchLastOpenWindow()
-    {
-        $expectedResult = m::mock(IrhpPermitWindowEntity::class);
-
-        $dateTime = m::mock(DateTime::class);
-
-        $irhpPermitStock = 1;
-
-        $queryBuilder = m::mock(QueryBuilder::class);
-        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
-
-        $andXFunc = m::mock(Func::class);
-        $eqFunc = m::mock(Func::class);
-        $gtFunc = m::mock(Func::class);
-
-        $expr = m::mock(Expr::class);
-
-        $queryBuilder->shouldReceive('expr')
-            ->andReturn($expr);
-
-        $expr->shouldReceive('andX')
-            ->with($eqFunc, $gtFunc)
-            ->once()
-            ->andReturn($andXFunc);
-
-        $expr->shouldReceive('eq')
-            ->with('?1', 'ipw.irhpPermitStock')
-            ->once()
-            ->andReturn($eqFunc)
-            ->shouldReceive('gt')
-            ->with('?2', 'ipw.endDate')
-            ->once()
-            ->andReturn($gtFunc);
-
-        $queryBuilder->shouldReceive('select')
-            ->with('ipw')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('from')
-            ->with(IrhpPermitWindowEntity::class, 'ipw')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->with($andXFunc)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('orderBy')
-            ->with('ipw.endDate', 'DESC')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(1, $irhpPermitStock)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with(2, $dateTime)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('setMaxResults')
-            ->with(1)
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('getQuery->getResult')
-            ->once()
-            ->andReturn($expectedResult);
-
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($queryBuilder)->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
-
-        $this->assertEquals(
-            $expectedResult,
-            $this->sut->fetchLastOpenWindow($irhpPermitStock, $dateTime)
         );
     }
 
@@ -353,6 +279,175 @@ class IrhpPermitWindowTest extends RepositoryTestCase
         $this->sut->fetchLastOpenWindowByIrhpPermitType(
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
             $now
+        );
+    }
+
+    public function testFetchLastOpenWindowByIrhpPermitTypeWithYear()
+    {
+        $now = new \DateTime('2018-10-25 13:21:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(
+            'RESULTS',
+            $this->sut->fetchLastOpenWindowByIrhpPermitType(
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                $now,
+                Query::HYDRATE_OBJECT,
+                3030
+            )
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ipw '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT.']] '
+            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
+            . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'ORDER BY ipw.endDate DESC '
+            . 'LIMIT 1 '
+            . 'AND ips.validTo BETWEEN [[3030-01-01T00:00:00+00:00]] AND [[3030-12-31T23:59:59+00:00]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchOpenWindowsByType()
+    {
+        $now = new DateTime('2019-04-08 09:51:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchOpenWindowsByType(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, $now)
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ipw '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
+            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchOpenWindowsByTypeYear()
+    {
+        $now = new DateTime('2019-04-08 09:51:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('expr->between')->once();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchOpenWindowsByTypeYear(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, $now, 3000)
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ipw, ipr, ips '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'INNER JOIN ips.irhpPermitRanges ipr '
+            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT.']] '
+            . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
+            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] AND ';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFindOverlappingWindowsByType()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->once()->andReturn($mockQb);
+        $mockWindow = m::mock(IrhpPermitWindowEntity::class);
+
+        $betweenFn = m::mock(Between::class);
+
+        $mockQb->shouldReceive('expr->between')
+            ->once()
+            ->with('ipw.startDate', ':proposedStartDate', ':proposedEndDate')
+            ->andReturn($betweenFn);
+
+        $mockQb->shouldReceive('expr->between')
+            ->once()
+            ->with('ipw.endDate', ':proposedStartDate', ':proposedEndDate')
+            ->andReturn($betweenFn);
+
+        $mockQb->shouldReceive('expr->between')
+            ->once()
+            ->with(':proposedStartDate', 'ipw.startDate', 'ipw.endDate')
+            ->andReturn($betweenFn);
+
+        $mockQb->shouldReceive('expr->eq')
+            ->once()
+            ->with('ipw.irhpPermitStock', ':irhpPermitStock')
+            ->andReturn('eqcond');
+
+        $mockQb->shouldReceive('expr->neq')
+            ->once()
+            ->with('ipw.id', ':irhpPermitWindow')
+            ->andReturn('neqcond');
+
+        $mockQb->shouldReceive('orWhere')
+            ->once()
+            ->with($betweenFn)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('orWhere')
+            ->once()
+            ->with($betweenFn)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('orWhere')
+            ->once()
+            ->with($betweenFn)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->times(4)
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['RESULTS']);
+
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->findOverlappingWindowsByType(11, '2029-01-01 11:11:11', '2029-01-02 12:12:12', $mockWindow)
         );
     }
 }

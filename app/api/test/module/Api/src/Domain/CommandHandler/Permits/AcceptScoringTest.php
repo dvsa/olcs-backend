@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
@@ -16,29 +16,51 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptScoring;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter as SystemParameterEntity;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 class AcceptScoringTest extends CommandHandlerTestCase
 {
+    private $applicationRepoName = 'EcmtPermitApplication';
+
+    private $applicationCamelCaseEntityName = 'ecmtPermitApplication';
+
+    private $issueFeeProductReference = 'ISSUE_FEE_PRODUCT_REFERENCE';
+
+    private $emailCommandLookup;
+
     public function setUp()
     {
-        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
         $this->mockRepo('FeeType', FeeType::class);
         $this->mockRepo('IrhpPermitStock', IrhpPermitStock::class);
         $this->mockRepo('SystemParameter', SystemParameter::class);
+        $this->mockRepo($this->applicationRepoName, EcmtPermitApplication::class);
+
+        $this->mockedSmServices = [
+            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
+        ];
 
         $this->sut = m::mock(AcceptScoring::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
+
+        $this->emailCommandLookup = [
+            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+        ];
 
         parent::setUp();
     }
@@ -46,8 +68,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            EcmtPermitApplicationEntity::STATUS_AWAITING_FEE,
-            EcmtPermitApplicationEntity::STATUS_UNSUCCESSFUL,
+            IrhpInterface::STATUS_AWAITING_FEE,
+            IrhpInterface::STATUS_UNSUCCESSFUL,
             IrhpPermitStockEntity::STATUS_ACCEPT_PREREQUISITE_FAIL,
             IrhpPermitStockEntity::STATUS_ACCEPT_IN_PROGRESS,
             IrhpPermitStockEntity::STATUS_ACCEPT_SUCCESSFUL,
@@ -84,10 +106,14 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->andReturn($feeTypeFixedValue);
 
         $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
-            ->with('IRHP_GV_ECMT_100_PERMIT_FEE')
+            ->with($this->issueFeeProductReference)
             ->andReturn($feeType);
 
         $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
+        $irhpPermitStock->shouldReceive('getApplicationRepoName')
+            ->andReturn($this->applicationRepoName);
+        $irhpPermitStock->shouldReceive('statusAllowsAcceptScoring')
+            ->andReturn(true);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
@@ -101,9 +127,6 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->once()
             ->ordered()
             ->globally();
-
-        $irhpPermitStock->shouldReceive('statusAllowsAcceptScoring')
-            ->andReturn(true);
 
         $irhpPermitStock->shouldReceive('proceedToAcceptInProgress')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_IN_PROGRESS])
@@ -120,35 +143,138 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $manualNotificationApplicationId = 1;
         $manualNotificationApplicationLicenceId = 2;
         $manualNotificationApplicationPermitsAwarded = 3;
-        $manualNotificationApplication = $this->getEcmtPermitApplicationMock(
+        $manualNotificationApplication = $this->getApplicationAcceptScoringMock(
             $manualNotificationApplicationId,
             $manualNotificationApplicationLicenceId,
             $manualNotificationApplicationPermitsAwarded,
-            EcmtPermitApplicationEntity::SUCCESS_LEVEL_PARTIAL,
-            EcmtPermitApplicationEntity::NOTIFICATION_TYPE_MANUAL
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL,
+            ApplicationAcceptConsts::NOTIFICATION_TYPE_MANUAL,
+            true
         );
 
         $manualNotificationApplication->shouldReceive('proceedToAwaitingFee')
-            ->with($this->refData[EcmtPermitApplicationEntity::STATUS_AWAITING_FEE])
+            ->with($this->refData[IrhpInterface::STATUS_AWAITING_FEE])
             ->once()
             ->ordered()
             ->globally();
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('save')
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('save')
             ->with($manualNotificationApplication)
             ->once()
             ->ordered()
             ->globally();
 
-        $successfulApplicationId = 2;
-        $successfulApplicationLicenceId = 30;
-        $successfulApplicationPermitsAwarded = 10;
-        $successfulApplication = $this->getEcmtPermitApplicationMock(
-            $successfulApplicationId,
-            $successfulApplicationLicenceId,
-            $successfulApplicationPermitsAwarded,
-            EcmtPermitApplicationEntity::SUCCESS_LEVEL_FULL,
-            EcmtPermitApplicationEntity::NOTIFICATION_TYPE_EMAIL
+        $checkedSuccessfulApplicationId = 2;
+        $checkedSuccessfulApplicationLicenceId = 30;
+        $checkedSuccessfulApplicationPermitsAwarded = 10;
+        $checkedSuccessfulApplication = $this->getApplicationAcceptScoringMock(
+            $checkedSuccessfulApplicationId,
+            $checkedSuccessfulApplicationLicenceId,
+            $checkedSuccessfulApplicationPermitsAwarded,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL,
+            ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL,
+            true
         );
+
+        $checkedSuccessfulApplication->shouldReceive('proceedToAwaitingFee')
+            ->with($this->refData[IrhpInterface::STATUS_AWAITING_FEE])
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('save')
+            ->with($checkedSuccessfulApplication)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $uncheckedSuccessfulApplicationId = 52;
+        $uncheckedSuccessfulApplicationLicenceId = 80;
+        $uncheckedSuccessfulApplicationPermitsAwarded = 11;
+        $uncheckedSuccessfulApplication = $this->getApplicationAcceptScoringMock(
+            $uncheckedSuccessfulApplicationId,
+            $uncheckedSuccessfulApplicationLicenceId,
+            $uncheckedSuccessfulApplicationPermitsAwarded,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL,
+            ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL,
+            false
+        );
+
+        $checkedPartSuccessfulApplicationId = 3;
+        $checkedPartSuccessfulApplicationLicenceId = 71;
+        $checkedPartSuccessfulApplicationPermitsAwarded = 5;
+        $checkedPartSuccessfulApplication = $this->getApplicationAcceptScoringMock(
+            $checkedPartSuccessfulApplicationId,
+            $checkedPartSuccessfulApplicationLicenceId,
+            $checkedPartSuccessfulApplicationPermitsAwarded,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL,
+            ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL,
+            true
+        );
+
+        $checkedPartSuccessfulApplication->shouldReceive('proceedToAwaitingFee')
+            ->with($this->refData[IrhpInterface::STATUS_AWAITING_FEE])
+            ->once()
+            ->ordered()
+            ->globally();
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('save')
+            ->with($checkedPartSuccessfulApplication)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $uncheckedPartSuccessfulApplicationId = 53;
+        $uncheckedPartSuccessfulApplicationLicenceId = 81;
+        $uncheckedPartSuccessfulApplicationPermitsAwarded = 7;
+        $uncheckedPartSuccessfulApplication = $this->getApplicationAcceptScoringMock(
+            $uncheckedPartSuccessfulApplicationId,
+            $uncheckedPartSuccessfulApplicationLicenceId,
+            $uncheckedPartSuccessfulApplicationPermitsAwarded,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL,
+            ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL,
+            false
+        );
+
+        $checkedUnsuccessfulApplicationId = 4;
+        $checkedUnsuccessfulApplication = $this->getApplicationAcceptScoringMock(
+            $checkedUnsuccessfulApplicationId,
+            46,
+            0,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE,
+            ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL,
+            true
+        );
+
+        $checkedUnsuccessfulApplication->shouldReceive('proceedToUnsuccessful')
+            ->with($this->refData[IrhpInterface::STATUS_UNSUCCESSFUL])
+            ->once()
+            ->ordered()
+            ->globally();
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('save')
+            ->with($checkedUnsuccessfulApplication)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $uncheckedUnsuccessfulApplicationId = 54;
+        $uncheckedUnsuccessfulApplication = $this->getApplicationAcceptScoringMock(
+            $uncheckedUnsuccessfulApplicationId,
+            76,
+            0,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE,
+            ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL,
+            false
+        );
+
+        $uncheckedUnsuccessfulApplication->shouldReceive('proceedToUnsuccessful')
+            ->with($this->refData[IrhpInterface::STATUS_UNSUCCESSFUL])
+            ->once()
+            ->ordered()
+            ->globally();
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('save')
+            ->with($uncheckedUnsuccessfulApplication)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $this->sut->shouldReceive('handleQuery')->once()
             ->with(m::type(CheckAcceptScoringPrerequisites::class))
@@ -171,61 +297,6 @@ class AcceptScoringTest extends CommandHandlerTestCase
                 ];
             });
 
-
-        $successfulApplication->shouldReceive('proceedToAwaitingFee')
-            ->with($this->refData[EcmtPermitApplicationEntity::STATUS_AWAITING_FEE])
-            ->once()
-            ->ordered()
-            ->globally();
-
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('save')
-            ->with($successfulApplication)
-            ->once()
-            ->ordered()
-            ->globally();
-
-        $partSuccessfulApplicationId = 3;
-        $partSuccessfulApplicationLicenceId = 71;
-        $partSuccessfulApplicationPermitsAwarded = 5;
-        $partSuccessfulApplication = $this->getEcmtPermitApplicationMock(
-            $partSuccessfulApplicationId,
-            $partSuccessfulApplicationLicenceId,
-            $partSuccessfulApplicationPermitsAwarded,
-            EcmtPermitApplicationEntity::SUCCESS_LEVEL_PARTIAL,
-            EcmtPermitApplicationEntity::NOTIFICATION_TYPE_EMAIL
-        );
-
-        $partSuccessfulApplication->shouldReceive('proceedToAwaitingFee')
-            ->with($this->refData[EcmtPermitApplicationEntity::STATUS_AWAITING_FEE])
-            ->once()
-            ->ordered()
-            ->globally();
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('save')
-            ->with($partSuccessfulApplication)
-            ->once()
-            ->ordered()
-            ->globally();
-
-        $unsuccessfulApplicationId = 4;
-        $unsuccessfulApplication = $this->getEcmtPermitApplicationMock(
-            $unsuccessfulApplicationId,
-            46,
-            7,
-            EcmtPermitApplicationEntity::SUCCESS_LEVEL_NONE,
-            EcmtPermitApplicationEntity::NOTIFICATION_TYPE_EMAIL
-        );
-
-        $unsuccessfulApplication->shouldReceive('proceedToUnsuccessful')
-            ->with($this->refData[EcmtPermitApplicationEntity::STATUS_UNSUCCESSFUL])
-            ->once()
-            ->ordered()
-            ->globally();
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('save')
-            ->with($unsuccessfulApplication)
-            ->once()
-            ->ordered()
-            ->globally();
-
         $irhpPermitStock->shouldReceive('proceedToAcceptSuccessful')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_SUCCESSFUL])
             ->once()
@@ -238,18 +309,27 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->ordered()
             ->globally();
 
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('fetchById')
             ->with($manualNotificationApplicationId)
             ->andReturn($manualNotificationApplication);
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
-            ->with($successfulApplicationId)
-            ->andReturn($successfulApplication);
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
-            ->with($partSuccessfulApplicationId)
-            ->andReturn($partSuccessfulApplication);
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
-            ->with($unsuccessfulApplicationId)
-            ->andReturn($unsuccessfulApplication);
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('fetchById')
+            ->with($checkedSuccessfulApplicationId)
+            ->andReturn($checkedSuccessfulApplication);
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('fetchById')
+            ->with($uncheckedSuccessfulApplicationId)
+            ->andReturn($uncheckedSuccessfulApplication);
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('fetchById')
+            ->with($checkedPartSuccessfulApplicationId)
+            ->andReturn($checkedPartSuccessfulApplication);
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('fetchById')
+            ->with($uncheckedPartSuccessfulApplicationId)
+            ->andReturn($uncheckedPartSuccessfulApplication);
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('fetchById')
+            ->with($checkedUnsuccessfulApplicationId)
+            ->andReturn($checkedUnsuccessfulApplication);
+        $this->repoMap[$this->applicationRepoName]->shouldReceive('fetchById')
+            ->with($uncheckedUnsuccessfulApplicationId)
+            ->andReturn($uncheckedUnsuccessfulApplication);
 
         $taskResult = new Result();
 
@@ -257,7 +337,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
             CreateFee::class,
             [
                 'licence' => $manualNotificationApplicationLicenceId,
-                'ecmtPermitApplication' => $manualNotificationApplicationId,
+                $this->applicationCamelCaseEntityName => $manualNotificationApplicationId,
                 'invoicedDate' => date('Y-m-d'),
                 'description' => 'Issue Fee - 3 permits',
                 'feeType' => $feeTypeId,
@@ -270,8 +350,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             CreateFee::class,
             [
-                'licence' => $successfulApplicationLicenceId,
-                'ecmtPermitApplication' => $successfulApplicationId,
+                'licence' => $checkedSuccessfulApplicationLicenceId,
+                $this->applicationCamelCaseEntityName => $checkedSuccessfulApplicationId,
                 'invoicedDate' => date('Y-m-d'),
                 'description' => 'Issue Fee - 10 permits',
                 'feeType' => $feeTypeId,
@@ -284,8 +364,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             CreateFee::class,
             [
-                'licence' => $partSuccessfulApplicationLicenceId,
-                'ecmtPermitApplication' => $partSuccessfulApplicationId,
+                'licence' => $checkedPartSuccessfulApplicationLicenceId,
+                $this->applicationCamelCaseEntityName => $checkedPartSuccessfulApplicationId,
                 'invoicedDate' => date('Y-m-d'),
                 'description' => 'Issue Fee - 5 permits',
                 'feeType' => $feeTypeId,
@@ -308,42 +388,52 @@ class AcceptScoringTest extends CommandHandlerTestCase
             'category' => TaskEntity::CATEGORY_PERMITS,
             'subCategory' => TaskEntity::SUBCATEGORY_PERMITS_APPLICATION_OUTCOME,
             'description' => 'Send outcome letter',
-            'ecmtPermitApplication' => $manualNotificationApplicationId,
+            $this->applicationCamelCaseEntityName => $manualNotificationApplicationId,
             'licence' => $manualNotificationApplicationLicenceId
         ];
         $this->expectedSideEffect(CreateTask::class, $taskParams, $taskResult);
 
         $this->expectedEmailQueueSideEffect(
             SendEcmtSuccessful::class,
-            ['id' => $successfulApplicationId],
-            $successfulApplicationId,
+            ['id' => $checkedSuccessfulApplicationId],
+            $checkedSuccessfulApplicationId,
             $taskResult
         );
 
         $this->expectedEmailQueueSideEffect(
             SendEcmtPartSuccessful::class,
-            ['id' => $partSuccessfulApplicationId],
-            $partSuccessfulApplicationId,
+            ['id' => $checkedPartSuccessfulApplicationId],
+            $checkedPartSuccessfulApplicationId,
             $taskResult
         );
 
         if (!$disableEcmtAllocEmailNone) {
             $this->expectedEmailQueueSideEffect(
                 SendEcmtUnsuccessful::class,
-                ['id' => $unsuccessfulApplicationId],
-                $unsuccessfulApplicationId,
+                ['id' => $checkedUnsuccessfulApplicationId],
+                $checkedUnsuccessfulApplicationId,
+                $taskResult
+            );
+
+            $this->expectedEmailQueueSideEffect(
+                SendEcmtUnsuccessful::class,
+                ['id' => $uncheckedUnsuccessfulApplicationId],
+                $uncheckedUnsuccessfulApplicationId,
                 $taskResult
             );
         }
 
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchInScopeApplicationIds')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchInScopeUnderConsiderationApplicationIds')
             ->with($stockId)
             ->andReturn(
                 [
                     $manualNotificationApplicationId,
-                    $successfulApplicationId,
-                    $partSuccessfulApplicationId,
-                    $unsuccessfulApplicationId
+                    $checkedSuccessfulApplicationId,
+                    $uncheckedSuccessfulApplicationId,
+                    $checkedPartSuccessfulApplicationId,
+                    $uncheckedPartSuccessfulApplicationId,
+                    $checkedUnsuccessfulApplicationId,
+                    $uncheckedUnsuccessfulApplicationId
                 ]
             );
 
@@ -360,16 +450,23 @@ class AcceptScoringTest extends CommandHandlerTestCase
                 'expected' => [
                     'id' => [],
                     'messages' => [
-                        '4 under consideration applications found',
-                        'processing ecmt application with id 1:',
+                        '7 under consideration applications found',
+                        'processing ecmtPermitApplication with id 1:',
                         '- create fee and set application to awaiting fee',
-                        'processing ecmt application with id 2:',
+                        'processing ecmtPermitApplication with id 2:',
                         '- sending email using command '.SendEcmtSuccessful::class,
                         '- create fee and set application to awaiting fee',
-                        'processing ecmt application with id 3:',
+                        'processing ecmtPermitApplication with id 52:',
+                        '- application has been awarded permits and has not been checked, skipping',
+                        'processing ecmtPermitApplication with id 3:',
                         '- sending email using command '.SendEcmtPartSuccessful::class,
                         '- create fee and set application to awaiting fee',
-                        'processing ecmt application with id 4:',
+                        'processing ecmtPermitApplication with id 53:',
+                        '- application has been awarded permits and has not been checked, skipping',
+                        'processing ecmtPermitApplication with id 4:',
+                        '- sending email using command '.SendEcmtUnsuccessful::class,
+                        '- no fee applicable, set application to unsuccessful',
+                        'processing ecmtPermitApplication with id 54:',
                         '- sending email using command '.SendEcmtUnsuccessful::class,
                         '- no fee applicable, set application to unsuccessful',
                         'Acceptance process completed successfully.',
@@ -381,17 +478,24 @@ class AcceptScoringTest extends CommandHandlerTestCase
                 'expected' => [
                     'id' => [],
                     'messages' => [
-                        '4 under consideration applications found',
-                        'processing ecmt application with id 1:',
+                        '7 under consideration applications found',
+                        'processing ecmtPermitApplication with id 1:',
                         '- create fee and set application to awaiting fee',
-                        'processing ecmt application with id 2:',
+                        'processing ecmtPermitApplication with id 2:',
                         '- sending email using command '.SendEcmtSuccessful::class,
                         '- create fee and set application to awaiting fee',
-                        'processing ecmt application with id 3:',
+                        'processing ecmtPermitApplication with id 52:',
+                        '- application has been awarded permits and has not been checked, skipping',
+                        'processing ecmtPermitApplication with id 3:',
                         '- sending email using command '.SendEcmtPartSuccessful::class,
                         '- create fee and set application to awaiting fee',
-                        'processing ecmt application with id 4:',
-                        '- email sending disabled for '.EcmtPermitApplicationEntity::SUCCESS_LEVEL_NONE,
+                        'processing ecmtPermitApplication with id 53:',
+                        '- application has been awarded permits and has not been checked, skipping',
+                        'processing ecmtPermitApplication with id 4:',
+                        '- email sending disabled for '.ApplicationAcceptConsts::SUCCESS_LEVEL_NONE,
+                        '- no fee applicable, set application to unsuccessful',
+                        'processing ecmtPermitApplication with id 54:',
+                        '- email sending disabled for '.ApplicationAcceptConsts::SUCCESS_LEVEL_NONE,
                         '- no fee applicable, set application to unsuccessful',
                         'Acceptance process completed successfully.',
                     ],
@@ -409,6 +513,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->andReturn($stockId);
 
         $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
+        $irhpPermitStock->shouldReceive('getApplicationRepoName')
+            ->andReturn($this->applicationRepoName);
         $irhpPermitStock->shouldReceive('statusAllowsAcceptScoring')
             ->andReturn(false);
         $irhpPermitStock->shouldReceive('getStatusDescription')
@@ -456,6 +562,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->andReturn($stockId);
 
         $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
+        $irhpPermitStock->shouldReceive('getApplicationRepoName')
+            ->andReturn($this->applicationRepoName);
         $irhpPermitStock->shouldReceive('statusAllowsAcceptScoring')
             ->andReturn(true);
 
@@ -503,31 +611,38 @@ class AcceptScoringTest extends CommandHandlerTestCase
         );
     }
 
-    private function getEcmtPermitApplicationMock(
+    private function getApplicationAcceptScoringMock(
         $id,
         $licenceId,
         $permitsAwarded,
         $successLevel,
-        $outcomeNotificationType
+        $outcomeNotificationType,
+        $checked
     ) {
         $licence = m::mock(LicenceEntity::class);
         $licence->shouldReceive('getId')
             ->andReturn($licenceId);
 
-        $ecmtPermitApplication = m::mock(EcmtPermitApplicationEntity::class);
-        $ecmtPermitApplication->shouldReceive('getId')
+        $applicationAcceptScoring = m::mock(ApplicationAcceptScoringInterface::class);
+        $applicationAcceptScoring->shouldReceive('getId')
             ->andReturn($id);
-        $ecmtPermitApplication->shouldReceive('getLicence')
+        $applicationAcceptScoring->shouldReceive('getLicence')
             ->andReturn($licence);
-        $ecmtPermitApplication->shouldReceive('getPermitsAwarded')
+        $applicationAcceptScoring->shouldReceive('getPermitsAwarded')
             ->andReturn($permitsAwarded);
-        $ecmtPermitApplication->shouldReceive('getProductReferenceForTier')
-            ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF);
-        $ecmtPermitApplication->shouldReceive('getSuccessLevel')
+        $applicationAcceptScoring->shouldReceive('getSuccessLevel')
             ->andReturn($successLevel);
-        $ecmtPermitApplication->shouldReceive('getOutcomeNotificationType')
+        $applicationAcceptScoring->shouldReceive('getOutcomeNotificationType')
             ->andReturn($outcomeNotificationType);
+        $applicationAcceptScoring->shouldReceive('getChecked')
+            ->andReturn($checked);
+        $applicationAcceptScoring->shouldReceive('getCamelCaseEntityName')
+            ->andReturn($this->applicationCamelCaseEntityName);
+        $applicationAcceptScoring->shouldReceive('getIssueFeeProductReference')
+            ->andReturn($this->issueFeeProductReference);
+        $applicationAcceptScoring->shouldReceive('getEmailCommandLookup')
+            ->andReturn($this->emailCommandLookup);
 
-        return $ecmtPermitApplication;
+        return $applicationAcceptScoring;
     }
 }

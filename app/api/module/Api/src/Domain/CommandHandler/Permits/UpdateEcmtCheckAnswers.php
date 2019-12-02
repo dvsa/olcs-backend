@@ -16,9 +16,8 @@ final class UpdateEcmtCheckAnswers extends AbstractUpdateDefinedValue implements
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $entityMethodName = 'setCheckedAnswers';
     protected $definedValue = true;
 }
-

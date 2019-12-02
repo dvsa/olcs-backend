@@ -4,13 +4,13 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use DateTime;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AllocateIrhpPermitApplicationPermit;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpPermitApplicationPermit as Cmd;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Mockery as m;
@@ -37,7 +37,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testAllocatePermitInFirstRange()
+    /**
+     * @dataProvider dpEmissionsCategoryId
+     */
+    public function testAllocatePermitInFirstRange($emissionsCategoryId, $expiryDate)
     {
         $irhpPermitApplicationId = 305;
 
@@ -58,6 +61,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $irhpPermitApplication->shouldReceive(
             'getIrhpPermitWindow->getIrhpPermitStock->getNonReservedNonReplacementRangesOrderedByFromNo'
         )
+        ->with($emissionsCategoryId)
         ->andReturn($irhpPermitRanges);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('fetchById')
@@ -66,10 +70,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1, $irhpPermitRange1StockValidTo) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1, $expiryDate) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange1, $irhpPermit->getIrhpPermitRange());
-                $this->assertSame($irhpPermitRange1StockValidTo, $irhpPermit->getExpiryDate());
+                $this->assertSame($expiryDate, $irhpPermit->getExpiryDate());
                 $this->assertEquals(502, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());
                 return true;
@@ -78,6 +82,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $command = m::mock(Cmd::class);
         $command->shouldReceive('getId')
             ->andReturn($irhpPermitApplicationId);
+        $command->shouldReceive('getEmissionsCategory')
+            ->andReturn($emissionsCategoryId);
+        $command->shouldReceive('getExpiryDate')
+            ->andReturn($expiryDate);
 
         $result = $this->sut->handleCommand($command);
 
@@ -87,7 +95,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         );
     }
 
-    public function testFirstRangeFullAllocatePermitInSecondRange()
+    /**
+     * @dataProvider dpEmissionsCategoryId
+     */
+    public function testFirstRangeFullAllocatePermitInSecondRange($emissionsCategoryId, $expiryDate)
     {
         $irhpPermitApplicationId = 400;
 
@@ -116,6 +127,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $irhpPermitApplication->shouldReceive(
             'getIrhpPermitWindow->getIrhpPermitStock->getNonReservedNonReplacementRangesOrderedByFromNo'
         )
+        ->with($emissionsCategoryId)
         ->andReturn($irhpPermitRanges);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('fetchById')
@@ -124,10 +136,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2, $irhpPermitRange2StockValidTo) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2, $expiryDate) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange2, $irhpPermit->getIrhpPermitRange());
-                $this->assertSame($irhpPermitRange2StockValidTo, $irhpPermit->getExpiryDate());
+                $this->assertSame($expiryDate, $irhpPermit->getExpiryDate());
                 $this->assertEquals(752, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());
                 return true;
@@ -136,6 +148,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $command = m::mock(Cmd::class);
         $command->shouldReceive('getId')
             ->andReturn($irhpPermitApplicationId);
+        $command->shouldReceive('getEmissionsCategory')
+            ->andReturn($emissionsCategoryId);
+        $command->shouldReceive('getExpiryDate')
+            ->andReturn($expiryDate);
 
         $result = $this->sut->handleCommand($command);
 
@@ -145,7 +161,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         );
     }
 
-    public function testExceptionOnAllRangesFull()
+    /**
+     * @dataProvider dpEmissionsCategoryId
+     */
+    public function testExceptionOnAllRangesFull($emissionsCategoryId)
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to find range with free permits for irhp permit application 400');
@@ -176,6 +195,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $irhpPermitApplication->shouldReceive(
             'getIrhpPermitWindow->getIrhpPermitStock->getNonReservedNonReplacementRangesOrderedByFromNo'
         )
+        ->with($emissionsCategoryId)
         ->andReturn($irhpPermitRanges);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('fetchById')
@@ -185,8 +205,20 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $command = m::mock(Cmd::class);
         $command->shouldReceive('getId')
             ->andReturn($irhpPermitApplicationId);
+        $command->shouldReceive('getEmissionsCategory')
+            ->andReturn($emissionsCategoryId);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function dpEmissionsCategoryId()
+    {
+        return [
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, null],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, null],
+            [null, null],
+            [null, new DateTime('2030-10-22')],
+        ];
     }
 
     private function createMockRange($id, $fromNo, $toNo, $size, DateTime $stockValidTo)
