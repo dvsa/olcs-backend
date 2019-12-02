@@ -41,6 +41,10 @@ class Question extends AbstractQuestion
     const QUESTION_TYPE_DATE = 'question_type_date';
     const QUESTION_TYPE_CUSTOM = 'question_type_custom';
 
+    // Question ids
+    const QUESTION_ID_SHORT_TERM_ANNUAL_TRIPS_ABROAD = 10;
+    const QUESTION_ID_REMOVAL_PERMIT_START_DATE = 13;
+
     /**
      * Is custom
      *

@@ -1740,18 +1740,18 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
        
     /**
-     * Get the answer value corresponding to the specified question slug
+     * Get the answer value corresponding to the specified question id
      *
-     * @param string slug
+     * @param int $id
      *
-     * @throws mixed|null
+     * @return mixed|null
      */
-    protected function getAnswerValueByQuestionSlug($slug)
+    public function getAnswerValueByQuestionId($id)
     {
         $applicationSteps = $this->getActiveApplicationPath()->getApplicationSteps();
 
         foreach ($applicationSteps as $applicationStep) {
-            if ($applicationStep->getQuestion()->getSlug() == $slug) {
+            if ($applicationStep->getQuestion()->getId() == $id) {
                 return $this->getAnswer($applicationStep, false);
             }
         }
@@ -1840,7 +1840,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         // question slug to derive the answer to the annual trips abroad question
 
         return $this->calculatePermitIntensityOfUse(
-            $this->getAnswerValueByQuestionSlug('st-annual-trips-abroad'),
+            $this->getAnswerValueByQuestionId(Question::QUESTION_ID_SHORT_TERM_ANNUAL_TRIPS_ABROAD),
             $numberOfPermits
         );
     }
