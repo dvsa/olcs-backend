@@ -18,8 +18,8 @@ class GetEventHistoryDetails extends AbstractRawQuery
 {
     protected $templateMap = null;
 
-    protected $queryTemplate = 'SELECT * FROM {historyTable} WHERE id = :id AND version IN (:version) ORDER BY version
-DESC LIMIT 2';
+    protected $queryTemplate = 'SELECT * FROM {historyTable} WHERE id = :id AND version IN (:version) ' .
+        'ORDER BY version DESC LIMIT 2';
 
     protected $historyTable = null;
 

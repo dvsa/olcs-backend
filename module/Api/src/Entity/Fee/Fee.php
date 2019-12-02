@@ -35,6 +35,9 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     const STATUS_OUTSTANDING       = 'lfs_ot';
     const STATUS_PAID              = 'lfs_pd';
     const STATUS_CANCELLED         = 'lfs_cn';
+    const STATUS_REFUND_PENDING    = 'lfs_refund_pending';
+    const STATUS_REFUND_FAILED     = 'lfs_refund_failed';
+    const STATUS_REFUNDED          = 'lfs_refunded';
 
     const ACCRUAL_RULE_LICENCE_START            = 'acr_licence_start';
     const ACCRUAL_RULE_CONTINUATION             = 'acr_continuation';
@@ -383,6 +386,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             'outstanding' => $this->getOutstandingAmount(),
             'receiptNo' => $this->getLatestPaymentRef(),
             'amount' => $this->getGrossAmount(),
+            'dueDate' => $this->getDueDate(),
             'ruleDateBeforeInvoice' => $this->isRuleBeforeInvoiceDate(),
             'isExpiredForLicence' => $this->isExpiredForLicence(),
             'isOutstanding' => $this->isOutstanding(),
@@ -590,6 +594,35 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
         return $this->getFeeType()->getAmount();
     }
 
+    /**
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return DateTime|string|null
+     */
+    public function getDueDate($asDateTime = false)
+    {
+        if (!$this->isOutstanding()) {
+            // don't need to calculate a due date for anything but outstanding
+            return null;
+        }
+
+        if ($this->isEcmtIssuingFee()) {
+            // for now we only need due date for ECMT issuing fee
+            $invoicedDate = $this->getInvoicedDate(true);
+
+            if (!isset($invoicedDate)) {
+                return null;
+            }
+
+            $date = clone $invoicedDate;
+            // TODO - OLCS-21979
+            $date->add(\DateInterval::createFromDateString('+10 weekdays'));
+
+            return ($asDateTime === true) ? $date : $date->format(DateTime::ISO8601);
+        }
+
+        return null;
+    }
 
     /**
      * @return bool

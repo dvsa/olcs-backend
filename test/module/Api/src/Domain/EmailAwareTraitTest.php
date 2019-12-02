@@ -22,12 +22,14 @@ class EmailAwareTraitTest extends m\Adapter\Phpunit\MockeryTestCase
     {
         $userEmail = 'user@test.com';
         $orgEmails = ['orgEmail1@test.com'];
+        $isInternal = false;
 
         $contactDetails = m::mock(ContactDetails::class);
         $contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($userEmail);
 
         $user = m::mock(User::class);
         $user->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($contactDetails);
+        $user->shouldReceive('isInternal')->once()->withNoArgs()->andReturn($isInternal);
 
         $organisation = m::mock(Organisation::class);
         $organisation->shouldReceive('getAdminEmailAddresses')->once()->withNoArgs()->andReturn($orgEmails);
@@ -72,12 +74,21 @@ class EmailAwareTraitTest extends m\Adapter\Phpunit\MockeryTestCase
 
     public function emptyUserProvider()
     {
-        $user = m::mock(User::class);
-        $user->shouldReceive('getContactDetails')->withNoArgs()->andReturnNull();
+        $userWithoutEmail = m::mock(User::class);
+        $userWithoutEmail->shouldReceive('isInternal')->withNoArgs()->andReturn(false);
+        $userWithoutEmail->shouldReceive('getContactDetails')->withNoArgs()->andReturnNull();
+
+        $contactDetails = m::mock(ContactDetails::class);
+        $contactDetails->shouldReceive('getEmailAddress')->withNoArgs()->andReturn('internal@test.com');
+
+        $userInternal = m::mock(User::class);
+        $userInternal->shouldReceive('isInternal')->withNoArgs()->andReturn(true);
+        $userInternal->shouldReceive('getContactDetails')->withNoArgs()->andReturn($contactDetails);
 
         return [
             [null],
-            [$user]
+            [$userWithoutEmail],
+            [$userInternal],
         ];
     }
 

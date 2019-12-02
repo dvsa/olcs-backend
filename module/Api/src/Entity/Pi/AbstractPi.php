@@ -6,6 +6,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -42,6 +46,10 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
+    use SoftDeletableTrait;
 
     /**
      * Agreed by tc
@@ -154,15 +162,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     protected $createdBy;
 
     /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
      * Decided by tc
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
@@ -227,15 +226,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     protected $decisions;
 
     /**
-     * Deleted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
-     */
-    protected $deletedDate;
-
-    /**
      * Ecms first received date
      *
      * @var \DateTime
@@ -283,15 +273,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Licence curtailed at pi
@@ -859,36 +840,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     }
 
     /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return Pi
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
      * Set the decided by tc
      *
      * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $decidedByTc entity being set as the value
@@ -1084,36 +1035,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     }
 
     /**
-     * Set the deleted date
-     *
-     * @param \DateTime $deletedDate new value being set
-     *
-     * @return Pi
-     */
-    public function setDeletedDate($deletedDate)
-    {
-        $this->deletedDate = $deletedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deleted date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDeletedDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->deletedDate);
-        }
-
-        return $this->deletedDate;
-    }
-
-    /**
      * Set the ecms first received date
      *
      * @param \DateTime $ecmsFirstReceivedDate new value being set
@@ -1237,36 +1158,6 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
-    }
-
-    /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return Pi
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
     }
 
     /**
@@ -2065,49 +1956,5 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

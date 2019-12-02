@@ -20,7 +20,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements ToggleRe
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     /**

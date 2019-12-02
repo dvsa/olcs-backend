@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,6 +34,9 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Created by
@@ -42,15 +48,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
 
     /**
      * Description
@@ -84,15 +81,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
      * Name
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -111,6 +99,18 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Application path
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationPath",
+     *     mappedBy="irhpPermitType"
+     * )
+     */
+    protected $applicationPaths;
 
     /**
      * Irhp permit stock
@@ -141,6 +141,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      */
     public function initCollections()
     {
+        $this->applicationPaths = new ArrayCollection();
         $this->irhpPermitStocks = new ArrayCollection();
     }
 
@@ -166,36 +167,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return IrhpPermitType
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
     }
 
     /**
@@ -271,36 +242,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return IrhpPermitType
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the name
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $name entity being set as the value
@@ -346,6 +287,69 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the application path
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being set as the value
+     *
+     * @return IrhpPermitType
+     */
+    public function setApplicationPaths($applicationPaths)
+    {
+        $this->applicationPaths = $applicationPaths;
+
+        return $this;
+    }
+
+    /**
+     * Get the application paths
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplicationPaths()
+    {
+        return $this->applicationPaths;
+    }
+
+    /**
+     * Add a application paths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being added
+     *
+     * @return IrhpPermitType
+     */
+    public function addApplicationPaths($applicationPaths)
+    {
+        if ($applicationPaths instanceof ArrayCollection) {
+            $this->applicationPaths = new ArrayCollection(
+                array_merge(
+                    $this->applicationPaths->toArray(),
+                    $applicationPaths->toArray()
+                )
+            );
+        } elseif (!$this->applicationPaths->contains($applicationPaths)) {
+            $this->applicationPaths->add($applicationPaths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a application paths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being removed
+     *
+     * @return IrhpPermitType
+     */
+    public function removeApplicationPaths($applicationPaths)
+    {
+        if ($this->applicationPaths->contains($applicationPaths)) {
+            $this->applicationPaths->removeElement($applicationPaths);
+        }
+
+        return $this;
     }
 
     /**
@@ -409,49 +413,5 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

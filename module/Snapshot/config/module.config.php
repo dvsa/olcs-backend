@@ -3,10 +3,14 @@
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section as Review;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section as TmReview;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section as ContinuationReview;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\EcmtAnnualGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGenerator;
 
 return [
     'service_manager' => [
         'invokables' => [
+            EcmtAnnualGenerator::class => EcmtAnnualGenerator::class,
+            IrhpGenerator::class => IrhpGenerator::class,
             'ReviewSnapshot' => \Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator::class,
             'Review\VariationTypeOfLicence' => Review\VariationTypeOfLicenceReviewService::class,
             'Review\VariationBusinessType' => Review\VariationBusinessTypeReviewService::class,
@@ -98,5 +102,10 @@ return [
             __DIR__ . '/../view',
             'translations' => __DIR__ . '/language/partials'
         ]
+    ],
+    'view_helpers' => [
+        'invokables' => [
+            'answerFormatter' => Dvsa\Olcs\Snapshot\View\Helper\AnswerFormatter::class,
+        ],
     ],
 ];

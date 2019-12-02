@@ -8,11 +8,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEcmtIssued as SendEcmtIssuedHa
 /**
  * Test the permit app issued email
  */
-class SendEcmtIssuedTest extends AbstractPermitTest
+class SendEcmtIssuedTest extends AbstractEcmtAnnualPermitTest
 {
-    protected $command = SendEcmtIssuedCmd::class;
-    protected $commandHandler = SendEcmtIssuedHandler::class;
+    protected $commandClass = SendEcmtIssuedCmd::class;
+    protected $commandHandlerClass = SendEcmtIssuedHandler::class;
     protected $template = 'ecmt-app-issued';
     protected $subject = 'email.ecmt.issued.subject';
-    protected $extraRepos = ['FeeType'];
+    protected $permitApplicationRepo = 'EcmtPermitApplication';
+    protected $applicationEntityClass = EcmtPermitApplication::class;
 }

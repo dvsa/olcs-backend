@@ -70,7 +70,8 @@ class GetListByEcmtIdTest extends QueryHandlerTestCase
             'irhpPermitRange' => [
                 'countrys' => [
                     'country'
-                ]
+                ],
+                'emissionsCategory',
             ]
         ];
 

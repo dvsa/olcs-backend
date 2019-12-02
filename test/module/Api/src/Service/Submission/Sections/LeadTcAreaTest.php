@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class LeadTcAreaTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class LeadTcAreaTest extends SubmissionSectionTest
+class LeadTcAreaTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\LeadTcArea';
 

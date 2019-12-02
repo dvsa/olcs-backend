@@ -2,13 +2,16 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\DeletableInterface;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use RuntimeException;
 
 /**
  * IrhpPermitStock Entity
@@ -35,18 +38,42 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     const STATUS_ACCEPT_PREREQUISITE_FAIL = 'stock_accept_prereq_fail';
     const STATUS_ACCEPT_UNEXPECTED_FAIL = 'stock_accept_unexpected_fail';
 
+    const ALLOCATION_MODE_STANDARD = 'allocation_mode_standard';
+    const ALLOCATION_MODE_EMISSIONS_CATEGORIES = 'allocation_mode_emissions_categories';
+    const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
+    const ALLOCATION_MODE_CANDIDATE_PERMITS = 'allocation_mode_candidate_permits';
+
+    const CANDIDATE_MODE_APSG = 'candidate_mode_apsg';
+    const CANDIDATE_MODE_APGG = 'candidate_mode_apgg';
+    const CANDIDATE_MODE_NONE = 'candidate_mode_none';
+    
+    const APGG_SHORT_TERM_NO_CANDIDATES_YEAR = 2019;
+
     /**
      * @param IrhpPermitType $type
      * @param Country $country
-     * @param string $validFrom
-     * @param string $validTo
      * @param int $quota
      * @param RefData $status
+     * @param ApplicationPathGroup|null $applicationPathGroup
+     * @param RefData|null $businessProcess
+     * @param string|null $periodNameKey
+     * @param mixed $validFrom
+     * @param mixed $validTo
+     *
      * @return IrhpPermitStock
      * @throws ValidationException
      */
-    public static function create($type, $country, $validFrom, $validTo, $quota, RefData $status)
-    {
+    public static function create(
+        $type,
+        $country,
+        $quota,
+        RefData $status,
+        ?ApplicationPathGroup $applicationPathGroup,
+        ?RefData $businessProcess,
+        ?string $periodNameKey = null,
+        $validFrom = null,
+        $validTo = null
+    ) {
         static::validateCountry($type, $country);
 
         $instance = new self;
@@ -57,6 +84,9 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         $instance->validTo = static::processDate($validTo, 'Y-m-d');
         $instance->initialStock = intval($quota) > 0 ? $quota : 0;
         $instance->status = $status;
+        $instance->applicationPathGroup = $applicationPathGroup;
+        $instance->businessProcess = $businessProcess;
+        $instance->periodNameKey = $periodNameKey;
 
         return $instance;
     }
@@ -64,13 +94,14 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * @param IrhpPermitType $type
      * @param Country $country
-     * @param string $validFrom
-     * @param string $validTo
      * @param int $quota
+     * @param string|null $periodNameKey
+     * @param mixed $validFrom
+     * @param mixed $validTo
      * @return $this
      * @throws ValidationException
      */
-    public function update($type, $country, $validFrom, $validTo, $quota)
+    public function update($type, $country, $quota, $periodNameKey = null, $validFrom = null, $validTo = null)
     {
         static::validateCountry($type, $country);
 
@@ -79,6 +110,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         $this->validFrom = static::processDate($validFrom, 'Y-m-d');
         $this->validTo = static::processDate($validTo, 'Y-m-d');
         $this->initialStock = intval($quota) > 0 ? $quota : 0;
+        $this->periodNameKey = $periodNameKey;
 
         return $this;
     }
@@ -136,7 +168,12 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      */
     public function getCalculatedBundleValues()
     {
-        return ['canDelete' => $this->canDelete()];
+        return [
+            'canDelete' => $this->canDelete(),
+            'hasEuro5Range' => $this->hasEuro5Range(),
+            'hasEuro6Range' => $this->hasEuro6Range(),
+            'validityYear' => $this->getValidityYear(),
+        ];
     }
 
     /**
@@ -195,6 +232,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
                 self::STATUS_SCORING_SUCCESSFUL,
                 self::STATUS_ACCEPT_PREREQUISITE_FAIL,
                 self::STATUS_ACCEPT_UNEXPECTED_FAIL,
+                self::STATUS_ACCEPT_SUCCESSFUL,
             ]
         );
     }
@@ -467,9 +505,11 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Get non-reserved, non-replacement ranges relating to this stock ordered by from no
      *
+     * @param string $emissionsCategoryId (optional)
+     *
      * @return array
      */
-    public function getNonReservedNonReplacementRangesOrderedByFromNo()
+    public function getNonReservedNonReplacementRangesOrderedByFromNo($emissionsCategoryId = null)
     {
         $criteria = Criteria::create();
 
@@ -477,6 +517,211 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
             ->andWhere($criteria->expr()->eq('lostReplacement', false))
             ->orderBy(['fromNo' => Criteria::ASC]);
 
-        return $this->getIrhpPermitRanges()->matching($criteria);
+        $ranges = $this->getIrhpPermitRanges()->matching($criteria);
+
+        if (is_null($emissionsCategoryId)) {
+            return $ranges;
+        }
+
+        $filteredRanges = new ArrayCollection();
+        foreach ($ranges as $range) {
+            if ($range->getEmissionsCategory()->getId() == $emissionsCategoryId) {
+                $filteredRanges->add($range);
+            }
+        }
+
+        return $filteredRanges;
+    }
+
+    /**
+     * Whether the stock has an open permit application window
+     *
+     * @return bool
+     */
+    public function hasOpenWindow(): bool
+    {
+        /** @var IrhpPermitWindow $window */
+        foreach ($this->irhpPermitWindows as $window) {
+            if ($window->isActive()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the validity year of this stock
+     *
+     * @return int
+     */
+    public function getValidityYear()
+    {
+        return is_null($this->getValidTo(true)) ? null : $this->getValidTo(true)->format('Y');
+    }
+
+    /**
+     * Does stock have a Euro5 Range?
+     *
+     * @return bool
+     */
+    public function hasEuro5Range()
+    {
+        return($this->hasRangeWithEmissionsCat(RefData::EMISSIONS_CATEGORY_EURO5_REF));
+    }
+
+    /**
+     * Does stock have a Euro6 Range?
+     *
+     * @return bool
+     */
+    public function hasEuro6Range()
+    {
+        return($this->hasRangeWithEmissionsCat(RefData::EMISSIONS_CATEGORY_EURO6_REF));
+    }
+
+    /**
+     * Does stock have a range with given emissions category ref data id?
+     *
+     * @param string $emissionsRef
+     * @return bool
+     */
+    protected function hasRangeWithEmissionsCat(string $emissionsRef)
+    {
+        $ranges = $this->getIrhpPermitRanges();
+        foreach ($ranges as $range) {
+            if ($range->getEmissionsCategory()->getId() == $emissionsRef) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the first available unreserved range with no countries matching the specified emissions category
+     *
+     * @param string $emissionsCategoryId
+     *
+     * @return IrhpPermitRange
+     *
+     * @throws RuntimeException
+     */
+    public function getFirstAvailableRangeWithNoCountries($emissionsCategoryId)
+    {
+        $ranges = $this->getNonReservedNonReplacementRangesOrderedByFromNo($emissionsCategoryId);
+
+        foreach ($ranges as $range) {
+            if (!$range->hasCountries()) {
+                return $range;
+            }
+        }
+
+        throw new RuntimeException('Unable to find range with no countries');
+    }
+
+    /**
+     * Get the permit allocation mode used by this stock
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    public function getAllocationMode()
+    {
+        $irhpPermitTypeId = $this->irhpPermitType->getId();
+        $businessProcessId = $this->businessProcess->getId();
+
+        $isEcmtShortTerm = ($irhpPermitTypeId == IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+        $isApgg = ($businessProcessId == RefData::BUSINESS_PROCESS_APGG);
+
+        if ($isEcmtShortTerm && $isApgg && $this->getValidityYear() == self::APGG_SHORT_TERM_NO_CANDIDATES_YEAR) {
+            return self::ALLOCATION_MODE_EMISSIONS_CATEGORIES;
+        }
+
+        $mappings = [
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'business_process' => RefData::BUSINESS_PROCESS_APG,
+                'allocation_mode' => self::ALLOCATION_MODE_STANDARD,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'business_process' => RefData::BUSINESS_PROCESS_APG,
+                'allocation_mode' => self::ALLOCATION_MODE_STANDARD,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'business_process' => RefData::BUSINESS_PROCESS_APGG,
+                'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'business_process' => RefData::BUSINESS_PROCESS_APSG,
+                'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'business_process' => RefData::BUSINESS_PROCESS_APG,
+                'allocation_mode' => self::ALLOCATION_MODE_STANDARD_WITH_EXPIRY,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                'business_process' => RefData::BUSINESS_PROCESS_APSG,
+                'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+        ];
+
+        foreach ($mappings as $mapping) {
+            if ($mapping['type'] == $irhpPermitTypeId && $mapping['business_process'] == $businessProcessId) {
+                return $mapping['allocation_mode'];
+            }
+        }
+
+        throw new RuntimeException(
+            sprintf(
+                'No allocation mode set for permit type %s and business process %s',
+                $irhpPermitTypeId,
+                $businessProcessId
+            )
+        );
+    }
+
+    /**
+     * Get the method to be used for candidate permit creation upon application submission
+     *
+     * @return string
+     */
+    public function getCandidatePermitCreationMode()
+    {
+        $businessProcessId = $this->businessProcess->getId();
+
+        switch ($businessProcessId) {
+            case RefData::BUSINESS_PROCESS_APGG:
+                $isShortTerm = $this->irhpPermitType->isEcmtShortTerm();
+                if ($isShortTerm && $this->getValidityYear() == self::APGG_SHORT_TERM_NO_CANDIDATES_YEAR) {
+                    return self::CANDIDATE_MODE_NONE;
+                }
+
+                return self::CANDIDATE_MODE_APGG;
+            case RefData::BUSINESS_PROCESS_APSG:
+                return self::CANDIDATE_MODE_APSG;
+        }
+
+        return self::CANDIDATE_MODE_NONE;
+    }
+
+    /**
+     * Return the repository name to be used for fetching applications within this stock
+     *
+     * @return string
+     */
+    public function getApplicationRepoName()
+    {
+        if ($this->irhpPermitType->isEcmtAnnual()) {
+            return 'EcmtPermitApplication';
+        }
+
+        return 'IrhpApplication';
     }
 }

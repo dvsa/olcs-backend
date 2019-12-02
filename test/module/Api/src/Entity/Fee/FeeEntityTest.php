@@ -422,6 +422,9 @@ class FeeEntityTest extends EntityTester
             [Entity::STATUS_PAID, false],
             [Entity::STATUS_CANCELLED, false],
             [Entity::STATUS_OUTSTANDING, true],
+            [Entity::STATUS_REFUND_PENDING, true],
+            [Entity::STATUS_REFUNDED, true],
+            [Entity::STATUS_REFUND_FAILED, true],
             ['invalid', true],
         ];
     }
@@ -735,6 +738,7 @@ class FeeEntityTest extends EntityTester
             ->shouldReceive('getOutstandingAmount')->once()->andReturn('unit_Outstanding')
             ->shouldReceive('getLatestPaymentRef')->once()->andReturn('unit_receiptNo')
             ->shouldReceive('getGrossAmount')->once()->andReturn('unit_Amount')
+            ->shouldReceive('getDueDate')->once()->andReturn('unit_dueDate')
             ->shouldReceive('isRuleBeforeInvoiceDate')->once()->andReturn('unit_RuleDateBeforeInvoice')
             ->shouldReceive('isExpiredForLicence')->once()->andReturn('unit_ExpiredForLicence')
             ->shouldReceive('isOutstanding')->once()->andReturn('unit_isOutstanding')
@@ -747,6 +751,7 @@ class FeeEntityTest extends EntityTester
                 'outstanding' => 'unit_Outstanding',
                 'receiptNo' => 'unit_receiptNo',
                 'amount' => 'unit_Amount',
+                'dueDate' => 'unit_dueDate',
                 'ruleDateBeforeInvoice' => 'unit_RuleDateBeforeInvoice',
                 'isExpiredForLicence' => 'unit_ExpiredForLicence',
                 'isOutstanding' => 'unit_isOutstanding',
@@ -1689,6 +1694,85 @@ class FeeEntityTest extends EntityTester
                 'sut' => $this->instantiate(Entity::class),
                 'expect' => null,
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetDueDate
+     */
+    public function testGetDueDate($status, $type, $invoicedDate, $expected)
+    {
+        $this->sut->setFeeStatus(new RefData($status));
+
+        $feeTypeType = new RefData($type);
+        $feeType = new FeeType();
+        $feeType->setFeeType($feeTypeType);
+        $this->sut->setFeeType($feeType);
+
+        $this->sut->setInvoicedDate($invoicedDate);
+
+        $this->assertEquals($expected, $this->sut->getDueDate(true));
+    }
+
+    public function dpGetDueDate()
+    {
+        $now = new DateTime();
+
+        $nowPlus10Weekdays = clone $now;
+        $nowPlus10Weekdays->add(\DateInterval::createFromDateString('+10 weekdays'));
+
+        return [
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_APP, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_VAR, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_GRANT, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_CONT, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_VEH, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_GRANTINT, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_INTVEH, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_DUP, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_ANN, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_GRANTVAR, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_BUSAPP, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_BUSVAR, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_GVANNVEH, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_INTUPGRADEVEH, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_INTAMENDED, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_IRFOPSVAPP, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_IRFOPSVANN, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_IRFOPSVCOPY, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_IRFOGVPERMIT, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_ADJUSTMENT, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_ECMT_APP, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_ECMT_ISSUE, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_IRHP_APP, null, null],
+            [Entity::STATUS_PAID, FeeType::FEE_TYPE_IRHP_ISSUE, null, null],
+
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_APP, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_VAR, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_GRANT, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_CONT, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_VEH, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_GRANTINT, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_INTVEH, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_DUP, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_ANN, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_GRANTVAR, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_BUSAPP, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_BUSVAR, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_GVANNVEH, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_INTUPGRADEVEH, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_INTAMENDED, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_IRFOPSVAPP, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_IRFOPSVANN, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_IRFOPSVCOPY, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_IRFOGVPERMIT, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_ADJUSTMENT, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_ECMT_APP, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_ECMT_ISSUE, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_ECMT_ISSUE, $now, $nowPlus10Weekdays],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_IRHP_APP, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_IRHP_ISSUE, null, null],
+            [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_IRHP_ISSUE, $now, $nowPlus10Weekdays],
         ];
     }
 }

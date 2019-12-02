@@ -93,6 +93,7 @@ return [
     TransferQuery\Application\UploadEvidence::class => QueryHandler\Application\UploadEvidence::class,
     Query\Application\NotTakenUpList::class => QueryHandler\Application\NotTakenUpList::class,
     TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
+    TransferQuery\Fee\InterimRefunds::class => QueryHandler\Fee\InterimRefunds::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
@@ -136,6 +137,7 @@ return [
     // Organisation
     TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
     TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
+    TransferQuery\Organisation\OrganisationAvailableLicences::class => QueryHandler\Organisation\OrganisationAvailableLicences::class,
     TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
     TransferQuery\Organisation\Dashboard::class => QueryHandler\Organisation\Dashboard::class,
     TransferQuery\Organisation\People::class => QueryHandler\Organisation\People::class,
@@ -384,6 +386,8 @@ return [
     TransferQuery\Fee\FeeType::class => QueryHandler\Fee\FeeType::class,
     TransferQuery\Fee\FeeTypeList::class => QueryHandler\Fee\FeeTypeList::class,
     TransferQuery\Fee\GetLatestFeeType::class => QueryHandler\Fee\GetLatestFeeType::class,
+    TransferQuery\FeeType\GetList::class => QueryHandler\FeeType\GetList::class,
+    TransferQuery\FeeType\GetDistinctList::class => QueryHandler\FeeType\GetDistinctList::class,
 
     // Operator
     TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
@@ -506,6 +510,8 @@ return [
     TransferQuery\SubCategory\GetList::class => QueryHandler\SubCategory\GetList::class,
     TransferQuery\SubCategoryDescription\GetList::class => QueryHandler\SubCategoryDescription\GetList::class,
     TransferQuery\DocTemplate\GetList::class => QueryHandler\DocTemplate\GetList::class,
+    TransferQuery\DocTemplate\FullList::class => QueryHandler\DocTemplate\FullList::class,
+    TransferQuery\DocTemplate\ById::class => QueryHandler\DocTemplate\ById::class,
 
     TransferQuery\ContactDetail\CountryList::class => QueryHandler\ContactDetail\CountryList::class,
     TransferQuery\ContactDetail\CountrySelectList::class => QueryHandler\ContactDetail\CountrySelectList::class,
@@ -542,6 +548,7 @@ return [
     TransferQuery\IrhpPermitWindow\ById::class => QueryHandler\IrhpPermitWindow\ById::class,
     TransferQuery\IrhpPermitWindow\GetList::class => QueryHandler\IrhpPermitWindow\GetList::class,
     TransferQuery\IrhpPermitWindow\OpenByCountry::class => QueryHandler\IrhpPermitWindow\OpenByCountry::class,
+    TransferQuery\IrhpPermitWindow\OpenByType::class => QueryHandler\IrhpPermitWindow\OpenByType::class,
 
     // IRHP Permit Range
     TransferQuery\IrhpPermitRange\ById::class => QueryHandler\IrhpPermitRange\ById::class,
@@ -568,7 +575,10 @@ return [
     TransferQuery\IrhpPermit\GetListByLicence::class => QueryHandler\IrhpPermit\GetListByLicence::class,
 
     // IRHP Candidate Permits
+    TransferQuery\IrhpCandidatePermit\ById::class => QueryHandler\IrhpCandidatePermit\ById::class,
     TransferQuery\IrhpCandidatePermit\GetList::class => QueryHandler\IrhpCandidatePermit\GetList::class,
+    TransferQuery\IrhpCandidatePermit\GetListByIrhpApplication::class
+        => QueryHandler\IrhpCandidatePermit\GetListByIrhpApplication::class,
 
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
@@ -620,15 +630,23 @@ return [
 
     // Permits
     TransferQuery\IrhpApplication\ById::class => QueryHandler\IrhpApplication\ById::class,
+    TransferQuery\IrhpApplication\AvailableLicences::class => QueryHandler\IrhpApplication\AvailableLicences::class,
     TransferQuery\IrhpApplication\GetList::class => QueryHandler\IrhpApplication\GetList::class,
     TransferQuery\IrhpApplication\GetAllByLicence::class => QueryHandler\IrhpApplication\GetAllByLicence::class,
     TransferQuery\IrhpApplication\GetAllByOrganisation::class
         => QueryHandler\IrhpApplication\GetAllByOrganisation::class,
-    TransferQuery\IrhpApplication\ActiveApplication::class => QueryHandler\IrhpApplication\ActiveApplication::class,
+    TransferQuery\IrhpApplication\QuestionAnswer::class => QueryHandler\IrhpApplication\QuestionAnswer::class,
     TransferQuery\IrhpApplication\MaxStockPermits::class => QueryHandler\IrhpApplication\MaxStockPermits::class,
     TransferQuery\IrhpApplication\MaxStockPermitsByApplication::class =>
         QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class,
+    TransferQuery\IrhpApplication\FeeBreakdown::class => QueryHandler\IrhpApplication\FeeBreakdown::class,
     TransferQuery\IrhpApplication\FeePerPermit::class => QueryHandler\IrhpApplication\FeePerPermit::class,
+    TransferQuery\IrhpApplication\ApplicationStep::class => QueryHandler\IrhpApplication\ApplicationStep::class,
+    TransferQuery\IrhpApplication\ApplicationPath::class => QueryHandler\IrhpApplication\ApplicationPath::class,
+    TransferQuery\IrhpApplication\ApplicationPathGroupList::class => QueryHandler\IrhpApplication\ApplicationPathGroupList::class,
+    TransferQuery\IrhpApplication\PermitsAvailable::class => QueryHandler\IrhpApplication\PermitsAvailable::class,
+    TransferQuery\IrhpApplication\RangesByIrhpApplication::class => QueryHandler\IrhpApplication\RangesByIrhpApplication::class,
+    TransferQuery\IrhpApplication\GetGrantability::class => QueryHandler\IrhpApplication\GetGrantability::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
@@ -638,10 +656,14 @@ return [
     TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,
     TransferQuery\Permits\ValidEcmtPermits::class => QueryHandler\Permits\ValidEcmtPermits::class,
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
+    TransferQuery\Permits\AvailableLicences::class => QueryHandler\Permits\AvailableLicences::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,
+    TransferQuery\Permits\AvailableYears::class => QueryHandler\Permits\AvailableYears::class,
+    TransferQuery\Permits\AvailableStocks::class => QueryHandler\Permits\AvailableStocks::class,
+    TransferQuery\Permits\EmissionsByYear::class => QueryHandler\Permits\EmissionsByYear::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
-    TransferQuery\Permits\LastOpenWindow::class => QueryHandler\Permits\LastOpenWindow::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
+    TransferQuery\Permits\EcmtApplicationIssueFeePerPermit::class => QueryHandler\Permits\EcmtApplicationIssueFeePerPermit::class,
 
     // Permits - internal
     Query\Permits\QueueRunScoringPermitted::class => QueryHandler\Permits\QueueRunScoringPermitted::class,
@@ -654,7 +676,6 @@ return [
     Query\Permits\DeviationData::class => QueryHandler\Permits\DeviationData::class,
 
     // IRHP Permit - internal
-
     Query\IrhpPermit\ByPermitNumber::class => QueryHandler\IrhpPermit\ByPermitNumber::class,
     Query\IrhpPermitRange\ByPermitNumber::class => QueryHandler\IrhpPermitRange\ByPermitNumber::class,
 
@@ -664,4 +685,13 @@ return [
     TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class,
     TransferQuery\Surrender\OpenCases::class => QueryHandler\Surrender\OpenCases::class,
     TransferQuery\Surrender\PreviousLicenceStatus::class => QueryHandler\Surrender\PreviousLicenceStatus::class,
+
+    //Document Internal
+    Query\Document\ByDocumentStoreId::class => QueryHandler\Document\ByDocumentStoreId::class,
+
+    // Templates
+    TransferQuery\Template\AvailableTemplates::class => QueryHandler\Template\AvailableTemplates::class,
+    TransferQuery\Template\PreviewTemplateSource::class => QueryHandler\Template\PreviewTemplateSource::class,
+    TransferQuery\Template\TemplateSource::class => QueryHandler\Template\TemplateSource::class,
+    TransferQuery\Template\TemplateCategories::class => QueryHandler\Template\TemplateCategories::class,
 ];

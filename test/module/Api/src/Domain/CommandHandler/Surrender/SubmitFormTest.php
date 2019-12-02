@@ -5,14 +5,19 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\SubmitForm as sut;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Surrender\SubmitForm as Cmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\SubmitForm as sut;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Transfer\Command\Surrender\SubmitForm as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 class SubmitFormTest extends CommandHandlerTestCase
 {
@@ -25,8 +30,10 @@ class SubmitFormTest extends CommandHandlerTestCase
         $this->refData = [];
         $this->mockRepo('Surrender', \Dvsa\Olcs\Api\Domain\Repository\Surrender::class);
         $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
+        $this->mockRepo('EventHistory', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
+        $this->mockRepo('EventHistoryType', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
         $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
         ];
         parent::setUp();
     }
@@ -76,8 +83,11 @@ class SubmitFormTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $actionDate = new DateTime();
+        $actionDate->add(new \DateInterval('P14D'));
+
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::class,
+            CreateTask::class,
             [
                 'category' => Category::CATEGORY_APPLICATION,
                 'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,
@@ -85,15 +95,37 @@ class SubmitFormTest extends CommandHandlerTestCase
                 'isClosed' => 'N',
                 'urgent' => 'N',
                 'licence' => $command->getId(),
-                'surrender' => 5
+                'surrender' => 5,
+                'actionDate' => $actionDate->format('Y-m-d')
             ],
             new Result()
         );
 
+        /** @var UserEntity $user */
+        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUserId = 1000;
+        $loggedInUser->setId($loggedInUserId);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->once()
+            ->andReturn($loggedInUser);
+
+        $eventHistoryType = new EventHistoryType();
+        $this->repoMap['EventHistoryType']
+            ->shouldReceive('fetchOneByEventCode')
+            ->with(EventHistoryType::EVENT_CODE_SURRENDER_UNDER_CONSIDERATION)
+            ->andReturn($eventHistoryType);
+
+        $this->repoMap['EventHistory']
+            ->shouldReceive('save')
+            ->once();
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('setStatus')
             ->once()
+            ->shouldReceive('getId')
+            ->andReturn(1)
             ->getMock();
 
 

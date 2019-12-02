@@ -32,7 +32,6 @@ class IrhpPermit extends AbstractIrhpPermit
     const STATUS_PRINTED            = 'irhp_permit_printed';
     const STATUS_ERROR              = 'irhp_permit_error';
     const STATUS_CEASED             = 'irhp_permit_ceased';
-    const STATUS_ISSUED             = 'irhp_permit_issued';
     const STATUS_TERMINATED         = 'irhp_permit_terminated';
     const STATUS_EXPIRED            = 'irhp_permit_expired';
 
@@ -43,10 +42,12 @@ class IrhpPermit extends AbstractIrhpPermit
         self::STATUS_ERROR,
     ];
 
-    public static $nonValidStatuses = [
-        self::STATUS_CEASED,
-        self::STATUS_TERMINATED,
-        self::STATUS_EXPIRED,
+    public static $validStatuses = [
+        self::STATUS_PENDING,
+        self::STATUS_AWAITING_PRINTING,
+        self::STATUS_ERROR,
+        self::STATUS_PRINTING,
+        self::STATUS_PRINTED,
     ];
 
     /**
@@ -92,13 +93,18 @@ class IrhpPermit extends AbstractIrhpPermit
         RefData $status,
         $permitNumber
     ) {
+        $expiryDate = $oldPermit
+            ->getExpiryDate()
+            ? $oldPermit->getExpiryDate()
+            : $oldPermit->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo();
+
         $irhpPermit = new self();
         $irhpPermit->replaces = $oldPermit;
         $irhpPermit->irhpCandidatePermit = $oldPermit->getIrhpCandidatePermit();
         $irhpPermit->irhpPermitApplication = $oldPermit->getIrhpPermitApplication();
         $irhpPermit->irhpPermitRange = $irhpPermitRange;
         $irhpPermit->issueDate = new DateTime();
-        $irhpPermit->expiryDate = $oldPermit->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo();
+        $irhpPermit->expiryDate = $expiryDate;
         $irhpPermit->status = $status;
         $irhpPermit->permitNumber = $permitNumber;
 
@@ -111,9 +117,9 @@ class IrhpPermit extends AbstractIrhpPermit
      * @param IrhpPermitApplication $irhpPermitApplication
      * @param IrhpPermitRange $irhpPermitRange
      * @param DateTime $issueDate
-     * @param DateTime $expiryDate
      * @param RefData $status
      * @param int $permitNumber
+     * @param DateTime|null $expiryDate
      *
      * @return IrhpPermit
      */
@@ -121,17 +127,17 @@ class IrhpPermit extends AbstractIrhpPermit
         IrhpPermitApplication $irhpPermitApplication,
         IrhpPermitRange $irhpPermitRange,
         DateTime $issueDate,
-        DateTime $expiryDate,
         RefData $status,
-        $permitNumber
+        $permitNumber,
+        ?DateTime $expiryDate
     ) {
         $irhpPermit = new self();
         $irhpPermit->irhpPermitApplication = $irhpPermitApplication;
         $irhpPermit->irhpPermitRange = $irhpPermitRange;
         $irhpPermit->issueDate = $issueDate;
-        $irhpPermit->expiryDate = $expiryDate;
         $irhpPermit->status = $status;
         $irhpPermit->permitNumber = $permitNumber;
+        $irhpPermit->expiryDate = $expiryDate;
 
         return $irhpPermit;
     }
@@ -168,8 +174,29 @@ class IrhpPermit extends AbstractIrhpPermit
     public function getCalculatedBundleValues()
     {
         return [
-            'permitNumberWithPrefix' => $this->getPermitNumberWithPrefix()
+            'permitNumberWithPrefix' => $this->getPermitNumberWithPrefix(),
+            'startDate' => $this->getStartDate(),
         ];
+    }
+
+    /**
+     * Get the permit start date
+     *
+     * @return DateTime
+     */
+    public function getStartDate()
+    {
+        // set to stock's valid from date by default
+        $startDate = $this->getIrhpPermitRange()->getIrhpPermitStock()->getValidFrom(true);
+
+        $issueDate = $this->getIssueDate(true);
+
+        if (isset($startDate) && isset($issueDate) && ($issueDate > $startDate)) {
+            // overwrite with the issue date
+            $startDate = $issueDate;
+        }
+
+        return $startDate;
     }
 
     /**
@@ -306,7 +333,7 @@ class IrhpPermit extends AbstractIrhpPermit
      */
     private function proceedToTerminated(RefData $status)
     {
-        if ($this->isCeased() || $this->isTerminated()) {
+        if ($this->isCeased() || $this->isTerminated() || $this->isExpired()) {
             throw new ForbiddenException(
                 sprintf(
                     'The permit is not in the correct state to be terminated (%s)',
@@ -359,16 +386,6 @@ class IrhpPermit extends AbstractIrhpPermit
     }
 
     /**
-     * Is not issued
-     *
-     * @return bool
-     */
-    public function isNotIssued()
-    {
-        return $this->status->getId() !== self::STATUS_ISSUED;
-    }
-
-    /**
      * Has error
      *
      * @return bool
@@ -415,6 +432,6 @@ class IrhpPermit extends AbstractIrhpPermit
      */
     public function isValid()
     {
-        return !in_array($this->status->getId(), self::$nonValidStatuses);
+        return in_array($this->status->getId(), self::$validStatuses);
     }
 }

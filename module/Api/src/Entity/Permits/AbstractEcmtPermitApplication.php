@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,7 +33,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"international_journeys"}),
  *        @ORM\Index(name="ix_withdraw_reason", columns={"withdraw_reason"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_source", columns={"source"}),
- *        @ORM\Index(name="ix_ecmt_permit_application_in_scope", columns={"in_scope"})
+ *        @ORM\Index(name="ix_ecmt_permit_application_in_scope", columns={"in_scope"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_cancellation_date",
+     *     columns={"cancellation_date"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_withdrawn_date", columns={"withdrawn_date"})
  *    }
  * )
  */
@@ -38,6 +44,9 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Cabotage
@@ -47,6 +56,24 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="boolean", name="cabotage", nullable=true)
      */
     protected $cabotage;
+
+    /**
+     * Cancellation date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="cancellation_date", nullable=true)
+     */
+    protected $cancellationDate;
+
+    /**
+     * Checked
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="checked", nullable=true)
+     */
+    protected $checked;
 
     /**
      * Checked answers
@@ -90,15 +117,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $createdBy;
 
     /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
      * Date received
      *
      * @var \DateTime
@@ -124,6 +142,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="boolean", name="emissions", nullable=true)
      */
     protected $emissions;
+
+    /**
+     * Expiry date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="expiry_date", nullable=true)
+     */
+    protected $expiryDate;
 
     /**
      * Has restricted countries
@@ -176,15 +203,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
      * Licence
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
@@ -197,15 +215,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
-
-    /**
-     * No of permits
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="no_of_permits", nullable=true)
-     */
-    protected $noOfPermits;
 
     /**
      * Permit type
@@ -225,6 +234,33 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="integer", name="permits_required", nullable=true)
      */
     protected $permitsRequired;
+
+    /**
+     * Required euro5
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_euro5", nullable=true)
+     */
+    protected $requiredEuro5;
+
+    /**
+     * Required euro6
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_euro6", nullable=true)
+     */
+    protected $requiredEuro6;
+
+    /**
+     * Roadworthiness
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="roadworthiness", nullable=true)
+     */
+    protected $roadworthiness;
 
     /**
      * Sectors
@@ -286,6 +322,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $withdrawReason;
 
     /**
+     * Withdrawn date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="withdrawn_date", nullable=true)
+     */
+    protected $withdrawnDate;
+
+    /**
      * Fee
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -307,6 +352,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $irhpPermitApplications;
 
     /**
+     * Task
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Task\Task", mappedBy="ecmtPermitApplication")
+     */
+    protected $tasks;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -326,6 +380,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
         $this->countrys = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->irhpPermitApplications = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     /**
@@ -350,6 +405,60 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getCabotage()
     {
         return $this->cabotage;
+    }
+
+    /**
+     * Set the cancellation date
+     *
+     * @param \DateTime $cancellationDate new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setCancellationDate($cancellationDate)
+    {
+        $this->cancellationDate = $cancellationDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancellation date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getCancellationDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->cancellationDate);
+        }
+
+        return $this->cancellationDate;
+    }
+
+    /**
+     * Set the checked
+     *
+     * @param boolean $checked new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setChecked($checked)
+    {
+        $this->checked = $checked;
+
+        return $this;
+    }
+
+    /**
+     * Get the checked
+     *
+     * @return boolean
+     */
+    public function getChecked()
+    {
+        return $this->checked;
     }
 
     /**
@@ -464,36 +573,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
      * Set the date received
      *
      * @param \DateTime $dateReceived new value being set
@@ -569,6 +648,36 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getEmissions()
     {
         return $this->emissions;
+    }
+
+    /**
+     * Set the expiry date
+     *
+     * @param \DateTime $expiryDate new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setExpiryDate($expiryDate)
+    {
+        $this->expiryDate = $expiryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the expiry date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getExpiryDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->expiryDate);
+        }
+
+        return $this->expiryDate;
     }
 
     /**
@@ -692,36 +801,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the licence
      *
      * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
@@ -743,30 +822,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getLicence()
     {
         return $this->licence;
-    }
-
-    /**
-     * Set the no of permits
-     *
-     * @param int $noOfPermits new value being set
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setNoOfPermits($noOfPermits)
-    {
-        $this->noOfPermits = $noOfPermits;
-
-        return $this;
-    }
-
-    /**
-     * Get the no of permits
-     *
-     * @return int
-     */
-    public function getNoOfPermits()
-    {
-        return $this->noOfPermits;
     }
 
     /**
@@ -815,6 +870,78 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getPermitsRequired()
     {
         return $this->permitsRequired;
+    }
+
+    /**
+     * Set the required euro5
+     *
+     * @param int $requiredEuro5 new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setRequiredEuro5($requiredEuro5)
+    {
+        $this->requiredEuro5 = $requiredEuro5;
+
+        return $this;
+    }
+
+    /**
+     * Get the required euro5
+     *
+     * @return int
+     */
+    public function getRequiredEuro5()
+    {
+        return $this->requiredEuro5;
+    }
+
+    /**
+     * Set the required euro6
+     *
+     * @param int $requiredEuro6 new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setRequiredEuro6($requiredEuro6)
+    {
+        $this->requiredEuro6 = $requiredEuro6;
+
+        return $this;
+    }
+
+    /**
+     * Get the required euro6
+     *
+     * @return int
+     */
+    public function getRequiredEuro6()
+    {
+        return $this->requiredEuro6;
+    }
+
+    /**
+     * Set the roadworthiness
+     *
+     * @param int $roadworthiness new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setRoadworthiness($roadworthiness)
+    {
+        $this->roadworthiness = $roadworthiness;
+
+        return $this;
+    }
+
+    /**
+     * Get the roadworthiness
+     *
+     * @return int
+     */
+    public function getRoadworthiness()
+    {
+        return $this->roadworthiness;
     }
 
     /**
@@ -962,6 +1089,36 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
+     * Set the withdrawn date
+     *
+     * @param \DateTime $withdrawnDate new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setWithdrawnDate($withdrawnDate)
+    {
+        $this->withdrawnDate = $withdrawnDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdrawn date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getWithdrawnDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->withdrawnDate);
+        }
+
+        return $this->withdrawnDate;
+    }
+
+    /**
      * Set the fee
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
@@ -1088,46 +1245,65 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
-     * Set the createdOn field on persist
+     * Set the task
      *
-     * @ORM\PrePersist
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being set as the value
      *
-     * @return void
+     * @return EcmtPermitApplication
      */
-    public function setCreatedOnBeforePersist()
+    public function setTasks($tasks)
     {
-        $this->createdOn = new \DateTime();
+        $this->tasks = $tasks;
+
+        return $this;
     }
 
     /**
-     * Set the lastModifiedOn field on persist
+     * Get the tasks
      *
-     * @ORM\PreUpdate
-     *
-     * @return void
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function setLastModifiedOnBeforeUpdate()
+    public function getTasks()
     {
-        $this->lastModifiedOn = new \DateTime();
+        return $this->tasks;
     }
 
     /**
-     * Clear properties
+     * Add a tasks
      *
-     * @param array $properties array of properties
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being added
      *
-     * @return void
+     * @return EcmtPermitApplication
      */
-    public function clearProperties($properties = array())
+    public function addTasks($tasks)
     {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
+        if ($tasks instanceof ArrayCollection) {
+            $this->tasks = new ArrayCollection(
+                array_merge(
+                    $this->tasks->toArray(),
+                    $tasks->toArray()
+                )
+            );
+        } elseif (!$this->tasks->contains($tasks)) {
+            $this->tasks->add($tasks);
         }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being removed
+     *
+     * @return EcmtPermitApplication
+     */
+    public function removeTasks($tasks)
+    {
+        if ($this->tasks->contains($tasks)) {
+            $this->tasks->removeElement($tasks);
+        }
+
+        return $this;
     }
 }

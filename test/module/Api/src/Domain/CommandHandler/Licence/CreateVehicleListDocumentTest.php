@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateVehicleListDocument;
@@ -108,10 +109,10 @@ class CreateVehicleListDocumentTest extends CommandHandlerTestCase
     {
         return [
             // is DP type, is NI, Expected description, Expected template ID,
-            [true, true, 1731, 'New disc notification'],
-            [true, false, 1730, 'New disc notification'],
-            [false, true, 1513, 'Goods Vehicle List'],
-            [false, false, 1258, 'Goods Vehicle List'],
+            [true, true, Document::GV_DISC_LETTER_NI, 'New disc notification'],
+            [true, false, Document::GV_DISC_LETTER_GB, 'New disc notification'],
+            [false, true, Document::GV_VEHICLE_LIST_NI, 'Goods Vehicle List'],
+            [false, false, Document::GV_VEHICLE_LIST_GB, 'Goods Vehicle List'],
         ];
     }
 }

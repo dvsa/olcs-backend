@@ -3,9 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\Query\Expr;
-use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
@@ -13,6 +13,7 @@ use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Mockery as m;
 use PDO;
 
@@ -28,7 +29,7 @@ class IrhpPermitTest extends RepositoryTestCase
         $this->setUpSut(IrhpPermit::class);
     }
 
-    public function testGetPermitCount()
+    public function testGetPermitCountWithoutEmissionsCategoryId()
     {
         $permitCount = 744;
         $stockId = 5;
@@ -72,6 +73,71 @@ class IrhpPermitTest extends RepositoryTestCase
             $permitCount,
             $this->sut->getPermitCount($stockId)
         );
+    }
+
+    /**
+     * @dataProvider dpTestGetPermitCountWithEmissionsCategoryId
+     */
+    public function testGetPermitCountWithEmissionsCategoryId($emissionsCategoryId)
+    {
+        $permitCount = 744;
+        $stockId = 5;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('count(ip.id)')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitEntity::class, 'ip')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ip.irhpPermitRange', 'ipr')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('IDENTITY(ipr.irhpPermitStock) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipr.ssReserve = false')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipr.lostReplacement = false')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $stockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('IDENTITY(ipr.emissionsCategory) = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $emissionsCategoryId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn($permitCount);
+
+        $this->assertEquals(
+            $permitCount,
+            $this->sut->getPermitCount($stockId, $emissionsCategoryId)
+        );
+    }
+
+    public function dpTestGetPermitCountWithEmissionsCategoryId()
+    {
+        return [
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF],
+        ];
     }
 
     public function testGetPermitCountByRange()
@@ -164,15 +230,18 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
-        $query = ValidEcmtPermits::create(['id' => 'ID']);
+        $query = ValidEcmtPermits::create(['licence' => 'LIC_ID']);
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
         $expectedQuery = 'BLAH '
-            . 'AND ipa.ecmtPermitApplication = [[ID]] '
-            . 'AND m.status NOT IN [[["'.
-            IrhpPermitEntity::STATUS_CEASED.'","'.
-            IrhpPermitEntity::STATUS_TERMINATED.'","'.
-            IrhpPermitEntity::STATUS_EXPIRED.'"]]]'
+            . 'INNER JOIN ipa.ecmtPermitApplication epa '
+            . 'AND epa.licence = [[LIC_ID]] '
+            . 'AND m.status IN [[["'.
+            IrhpPermitEntity::STATUS_PENDING.'","'.
+            IrhpPermitEntity::STATUS_AWAITING_PRINTING.'","'.
+            IrhpPermitEntity::STATUS_ERROR.'","'.
+            IrhpPermitEntity::STATUS_PRINTING.'","'.
+            IrhpPermitEntity::STATUS_PRINTED.'"]]]'
             . ' ORDER BY m.permitNumber DESC';
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -315,16 +384,26 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
-        $query = GetListByLicence::create(['licence' => 7, 'page' => 1, 'limit' => 10]);
+        $query = GetListByLicence::create(
+            [
+                'licence' => 7,
+                'irhpPermitType' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'page' => 1,
+                'limit' => 10
+            ]
+        );
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
         $expectedQuery = 'BLAH '
             . 'INNER JOIN ipa.irhpApplication ia '
-            . 'INNER JOIN ipa.irhpPermitWindow ipw '
-            . 'INNER JOIN ipw.irhpPermitStock ips '
-            . 'INNER JOIN ips.country ipc '
+            . 'INNER JOIN m.irhpPermitRange ipr '
+            . 'INNER JOIN ipr.irhpPermitStock ips '
+            . 'LEFT JOIN ips.country ipc '
             . 'AND ia.licence = [[7]] '
-            . 'AND ipa.irhpApplication IS NOT NULL '
+            . 'AND ips.irhpPermitType = [['.IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND m.status IN [[["'.IrhpPermitEntity::STATUS_PENDING.'","'
+            . IrhpPermitEntity::STATUS_AWAITING_PRINTING.'","'.IrhpPermitEntity::STATUS_ERROR.'","'
+            . IrhpPermitEntity::STATUS_PRINTING.'","'.IrhpPermitEntity::STATUS_PRINTED.'"]]] '
             . 'ORDER BY ipc.countryDesc ASC '
             . 'ORDER BY m.expiryDate ASC '
             . 'ORDER BY ipa.id ASC '
@@ -410,5 +489,11 @@ class IrhpPermitTest extends RepositoryTestCase
         $expectedQuery = 'BLAH '
             . 'AND ipa.irhpApplication = [[2]]';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testMarkAsExpired()
+    {
+        $this->expectQueryWithData(ExpireIrhpPermitsQuery::class, []);
+        $this->sut->markAsExpired();
     }
 }

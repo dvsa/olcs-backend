@@ -401,6 +401,15 @@ final class CreateTask extends AbstractCommandHandler
             );
         }
 
+        if ($command->getIrhpApplication() !== null) {
+            $task->setIrhpApplication(
+                $this->getRepo()->getReference(
+                    \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication::class,
+                    $command->getIrhpApplication()
+                )
+            );
+        }
+
         if ($command->getAssignedByUser() !== null) {
             $task->setAssignedByUser(
                 $this->getRepo()->getReference(

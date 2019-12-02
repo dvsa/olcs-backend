@@ -56,6 +56,9 @@ final class CreateUser extends AbstractUserCommandHandler implements
         // validate username
         $this->validateUsername($data['loginId']);
 
+        // validate roles
+        $this->validateRoles($data['roles']);
+
         if (($command->getUserType() === User::USER_TYPE_OPERATOR) && (!empty($data['licenceNumber']))) {
             // fetch licence by licence number
             $licence = $this->getRepo('Licence')->fetchByLicNo($data['licenceNumber']);

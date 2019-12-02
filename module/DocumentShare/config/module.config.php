@@ -6,11 +6,12 @@ return [
         'client' => [
             'baseuri' => '',
             'workspace' => '',
+            'username' => '',
+            'password' => '',
+            'webdav_baseuri' => '',
         ]
     ],
     'service_manager' => [
-        'factories' => [
-            Dvsa\Olcs\DocumentShare\Service\Client::class => Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
-        ]
+
     ]
 ];

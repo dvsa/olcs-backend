@@ -15,7 +15,9 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Fee\RefundFee as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -120,6 +122,7 @@ class RefundFeeTest extends CommandHandlerTestCase
         $fee->setFeeTransactions(new ArrayCollection([$ft1, $ft2, $ft3]));
         $fee->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn(new ArrayCollection([$ft1, $ft2, $ft3]));
+        $fee->shouldReceive('getFeetype->getFeeType')->andReturn(new RefData(FeeType::FEE_TYPE_GRANT));
 
         $command = Cmd::create($data);
 

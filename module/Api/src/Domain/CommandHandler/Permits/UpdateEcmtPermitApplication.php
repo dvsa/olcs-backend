@@ -16,9 +16,11 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
-
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtPermitApplication as UpdateEcmtPermitApplicationCmd;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update ECMT Permit Application
@@ -29,9 +31,28 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $extraRepos = ['Sectors', 'Country'];
+
+    /** @var CheckedValueUpdater */
+    private $checkedValueUpdater;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->checkedValueUpdater = $mainServiceLocator->get('PermitsCheckableCheckedValueUpdater');
+
+        return parent::createService($serviceLocator);
+    }
 
     public function handleCommand(CommandInterface $command)
     {
@@ -51,14 +72,22 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
         $applicationDate = new DateTime($ecmtPermitApplication->getDateReceived());
         $commandDate = new DateTime($command->getDateReceived());
 
-        if ((int)$ecmtPermitApplication->getPermitsRequired() !== (int)$command->getPermitsRequired()
+        $newTotalRequired = $command->getRequiredEuro5() + $command->getRequiredEuro6();
+
+        try {
+            $totalPermitsRequired = $ecmtPermitApplication->calculateTotalPermitsRequired();
+        } catch (RuntimeException $e) {
+            $totalPermitsRequired = 0;
+        }
+
+        if ($totalPermitsRequired !== $newTotalRequired
             || $applicationDate->format('Y-m-d') !== $commandDate->format('Y-m-d')
         ) {
             $this->result->merge($this->handleSideEffect(UpdatePermitFee::create(
                 [
                     'ecmtPermitApplicationId' => $ecmtPermitApplication->getId(),
                     'licenceId' => $ecmtPermitApplication->getLicence()->getId(),
-                    'permitsRequired' => $command->getPermitsRequired(),
+                    'permitsRequired' => $newTotalRequired,
                     'permitType' => $ecmtPermitApplication::PERMIT_TYPE,
                     'receivedDate' => $command->getDateReceived()
                 ]
@@ -73,12 +102,15 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
             $command->getCabotage(),
             $command->getDeclaration(),
             $command->getEmissions(),
-            $command->getPermitsRequired(),
+            $command->getRequiredEuro5(),
+            $command->getRequiredEuro6(),
             $command->getTrips(),
             $this->getRepo()->getRefdataReference($command->getInternationalJourneys()),
-            $command->getDateReceived()
+            $command->getDateReceived(),
+            $command->getRoadworthiness()
         );
 
+        $this->checkedValueUpdater->updateIfRequired($ecmtPermitApplication, $command->getChecked());
         $this->getRepo()->save($ecmtPermitApplication);
 
         $result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());

@@ -58,10 +58,23 @@ class Federation
         /** @var \SAML2\XML\md\KeyDescriptor $keyDescriptor */
         foreach ($roleDescriptor->KeyDescriptor as $keyDescriptor) {
             if ($keyDescriptor->use === 'signing') {
-                return $keyDescriptor->KeyInfo->info[1]->data[0]->certificate;
+                return $this->formatCertificate($keyDescriptor->KeyInfo->info[1]->data[0]->certificate);
             }
         }
 
         throw new Exception('Federation signing certificate not found');
+    }
+
+    /**
+     * Make sure certificate 64 character line length OLCS-24826
+     * @param string $certificateString
+     *
+     * @return string
+     */
+    private function formatCertificate(string $certificateString): string
+    {
+        return "-----BEGIN CERTIFICATE-----\n"
+            . trim(wordwrap(preg_replace("/\r|\n|\t|\s/", "", $certificateString), 64, PHP_EOL, true))
+            . "\n-----END CERTIFICATE-----";
     }
 }

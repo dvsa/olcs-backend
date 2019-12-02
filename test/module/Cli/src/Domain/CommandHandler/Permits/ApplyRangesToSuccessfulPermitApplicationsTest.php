@@ -4,13 +4,15 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
+use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\ForCpProvider;
+use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplications
     as ApplyRangesToSuccessfulPermitApplicationsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\ApplyRangesToSuccessfulPermitApplications
@@ -36,6 +38,11 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
 
+        $this->mockedSmServices = [
+           'PermitsApplyRangesStockBasedForCpProviderFactory' => m::mock(StockBasedForCpProviderFactory::class),
+           'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class)
+        ];
+
         parent::setUp();
     }
 
@@ -46,64 +53,30 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
     {
         $stockId = 8;
 
-        $this->sut->shouldReceive('handleQuery')
-            ->with(m::type(EcmtConstrainedCountriesList::class))
-            ->andReturnUsing(function ($query) {
-                $this->assertEquals(1, $query->hasEcmtConstraints());
-
-                return [
-                    'result' => [
-                        ['id' => 'AT'],
-                        ['id' => 'GR'],
-                        ['id' => 'HU'],
-                        ['id' => 'IT'],
-                        ['id' => 'RU']
-                    ]
-                ];
-            });
-
         $ranges = [
             [
                 'id' => 1,
-                'size' => 4,
+                'size' => 10,
                 'fromNo' => 100,
-                'permitCount' => 2,
-                'countryCodes' => []
+                'permitCount' => 5,
+                'countryCodes' => ['RU', 'IT'],
+                'emissionsCategory' => RefData::EMISSIONS_CATEGORY_EURO6_REF
             ],
             [
                 'id' => 2,
-                'size' => 5,
+                'size' => 15,
                 'fromNo' => 200,
-                'permitCount' => 4,
-                'countryCodes' => []
+                'permitCount' => 12,
+                'countryCodes' => [],
+                'emissionsCategory' => RefData::EMISSIONS_CATEGORY_EURO5_REF
             ],
             [
                 'id' => 3,
-                'size' => 2,
+                'size' => 5,
                 'fromNo' => 300,
-                'permitCount' => 0,
-                'countryCodes' => ['IT']
-            ],
-            [
-                'id' => 4,
-                'size' => 2,
-                'fromNo' => 400,
-                'permitCount' => 1,
-                'countryCodes' => ['IT', 'RU', 'GR', 'AT']
-            ],
-            [
-                'id' => 5,
-                'size' => 2,
-                'fromNo' => 500,
-                'permitCount' => 1,
-                'countryCodes' => ['IT', 'RU', 'HU']
-            ],
-            [
-                'id' => 6,
-                'size' => 4,
-                'fromNo' => 600,
-                'permitCount' => 3,
-                'countryCodes' => []
+                'permitCount' => 4,
+                'countryCodes' => ['IT'],
+                'emissionsCategory' => RefData::EMISSIONS_CATEGORY_EURO6_REF
             ],
         ];
 
@@ -115,7 +88,8 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
                 $range['id'],
                 $range['size'],
                 $range['fromNo'],
-                $range['countryCodes']
+                $range['countryCodes'],
+                $range['emissionsCategory']
             );
 
             $irhpPermitRanges[] = $irhpPermitRange;
@@ -131,47 +105,38 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             ->andReturn($irhpPermitRanges);
 
         $candidatePermits = [
-            [
-                'id' => 1,
-                'countryCodes' => [],
-                'expectedRange' => $irhpPermitRangesByRangeId[1]
-            ],
-            [
-                'id' => 2,
-                'countryCodes' => [],
-                'expectedRange' => $irhpPermitRangesByRangeId[1]
-            ],
-            [
-                'id' => 3,
-                'countryCodes' => [],
-                'expectedRange' => $irhpPermitRangesByRangeId[2]
-            ],
-            [
-                'id' => 4,
-                'countryCodes' => [],
-                'expectedRange' => $irhpPermitRangesByRangeId[6]
-            ],
-            [
-                'id' => 5,
-                'countryCodes' => ['IT', 'RU'],
-                'expectedRange' => $irhpPermitRangesByRangeId[5]
-            ],
-            [
-                'id' => 6,
-                'countryCodes' => ['RU', 'GR', 'AT'],
-                'expectedRange' => $irhpPermitRangesByRangeId[4]
-            ],
+            ['id' => 1, 'selectedRange' => 1, 'randomizedScore' => '0.99'],
+            ['id' => 2, 'selectedRange' => 2, 'randomizedScore' => '0.98'],
+            ['id' => 3, 'selectedRange' => 3, 'randomizedScore' => '0.97'],
+            ['id' => 4, 'selectedRange' => 1, 'randomizedScore' => '0.96'],
+            ['id' => 5, 'selectedRange' => 2, 'randomizedScore' => '0.95'],
+            ['id' => 6, 'selectedRange' => 1, 'randomizedScore' => '0.94'],
+            ['id' => 7, 'selectedRange' => 2, 'randomizedScore' => '0.93'],
+            ['id' => 8, 'selectedRange' => 1, 'randomizedScore' => '0.92'],
+            ['id' => 9, 'selectedRange' => 1, 'randomizedScore' => '0.91'],
         ];
+
+        $forCpProvider = m::mock(ForCpProvider::class);
+
+        $this->mockedSmServices['PermitsApplyRangesStockBasedForCpProviderFactory']->shouldReceive('create')
+            ->with($stockId)
+            ->andReturn($forCpProvider);
 
         $irhpCandidatePermits = [];
         foreach ($candidatePermits as $candidatePermit) {
             $irhpCandidatePermit = $this->createCandidatePermit(
                 $candidatePermit['id'],
-                $candidatePermit['countryCodes']
+                $candidatePermit['randomizedScore']
             );
 
+            $selectedIrhpPermitRange = $irhpPermitRangesByRangeId[$candidatePermit['selectedRange']];
+
+            $forCpProvider->shouldReceive('selectRange')
+                ->with(m::type(Result::class), $irhpCandidatePermit, m::type('array'))
+                ->andReturn($selectedIrhpPermitRange);
+
             $irhpCandidatePermit->shouldReceive('applyRange')
-                ->with($candidatePermit['expectedRange'])
+                ->with($selectedIrhpPermitRange)
                 ->once()
                 ->ordered()
                 ->globally();
@@ -185,7 +150,7 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             $irhpCandidatePermits[] = $irhpCandidatePermit;
         }
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulScoreOrderedInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulScoreOrderedInScope')
             ->with($stockId)
             ->andReturn($irhpCandidatePermits);
 
@@ -194,12 +159,50 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             ->ordered()
             ->globally();
 
-        $this->sut->handleCommand(
+        $expectedMessages = [
+            '  - processing candidate permit 1 with randomised score 0.99',
+            '    - assigned range id 1 to candidate permit 1',
+            '    - decrementing stock in range 1, stock is now 4',
+            '  - processing candidate permit 2 with randomised score 0.98',
+            '    - assigned range id 2 to candidate permit 2',
+            '    - decrementing stock in range 2, stock is now 2',
+            '  - processing candidate permit 3 with randomised score 0.97',
+            '    - assigned range id 3 to candidate permit 3',
+            '    - decrementing stock in range 3, stock is now 0',
+            '    - stock in range 3 is now exhausted',
+            '  - processing candidate permit 4 with randomised score 0.96',
+            '    - assigned range id 1 to candidate permit 4',
+            '    - decrementing stock in range 1, stock is now 3',
+            '  - processing candidate permit 5 with randomised score 0.95',
+            '    - assigned range id 2 to candidate permit 5',
+            '    - decrementing stock in range 2, stock is now 1',
+            '  - processing candidate permit 6 with randomised score 0.94',
+            '    - assigned range id 1 to candidate permit 6',
+            '    - decrementing stock in range 1, stock is now 2',
+            '  - processing candidate permit 7 with randomised score 0.93',
+            '    - assigned range id 2 to candidate permit 7',
+            '    - decrementing stock in range 2, stock is now 0',
+            '    - stock in range 2 is now exhausted',
+            '  - processing candidate permit 8 with randomised score 0.92',
+            '    - assigned range id 1 to candidate permit 8',
+            '    - decrementing stock in range 1, stock is now 1',
+            '  - processing candidate permit 9 with randomised score 0.91',
+            '    - assigned range id 1 to candidate permit 9',
+            '    - decrementing stock in range 1, stock is now 0',
+            '    - stock in range 1 is now exhausted',
+        ];
+
+        $result = $this->sut->handleCommand(
             ApplyRangesToSuccessfulPermitApplicationsCommand::create(['stockId' => $stockId])
+        );
+
+        $this->assertEquals(
+            $expectedMessages,
+            $result->getMessages()
         );
     }
 
-    private function createRange($id, $size, $fromNo, $countryCodes)
+    private function createRange($id, $size, $fromNo, $countryCodes, $emissionsCategoryId)
     {
         $persistentCollection = $this->createCountriesPersistentCollection($countryCodes);
 
@@ -212,29 +215,19 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             ->andReturn($fromNo);
         $range->shouldReceive('getCountrys')
             ->andReturn($persistentCollection);
+        $range->shouldReceive('getEmissionsCategory->getId')
+            ->andReturn($emissionsCategoryId);
 
         return $range;
     }
 
-    private function createCandidatePermit($id, $countryCodes)
+    private function createCandidatePermit($id, $randomizedScore)
     {
-        $persistentCollection = $this->createCountriesPersistentCollection($countryCodes);
-
-        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-        $ecmtPermitApplication->shouldReceive('getCountrys')
-            ->andReturn($persistentCollection);
-
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getEcmtPermitApplication')
-            ->andReturn($ecmtPermitApplication);
-
         $candidatePermit = m::mock(IrhpCandidatePermit::class);
         $candidatePermit->shouldReceive('getId')
             ->andReturn($id);
-        $candidatePermit->shouldReceive('getIrhpPermitApplication')
-            ->andReturn($irhpPermitApplication);
         $candidatePermit->shouldReceive('getRandomizedScore')
-            ->andReturn(0);
+            ->andReturn($randomizedScore);
 
         return $candidatePermit;
     }

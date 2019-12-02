@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -39,6 +42,9 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Created by
@@ -50,15 +56,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
 
     /**
      * Ecmt permit application
@@ -121,15 +118,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
      * Licence
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
@@ -156,6 +144,24 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="text", name="properties", nullable=true)
      */
     protected $properties;
+
+    /**
+     * Required euro5
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_euro5", nullable=true)
+     */
+    protected $requiredEuro5;
+
+    /**
+     * Required euro6
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_euro6", nullable=true)
+     */
+    protected $requiredEuro6;
 
     /**
      * Sectors
@@ -263,36 +269,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return IrhpPermitApplication
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
     }
 
     /**
@@ -416,36 +392,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return IrhpPermitApplication
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the licence
      *
      * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
@@ -515,6 +461,54 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    /**
+     * Set the required euro5
+     *
+     * @param int $requiredEuro5 new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setRequiredEuro5($requiredEuro5)
+    {
+        $this->requiredEuro5 = $requiredEuro5;
+
+        return $this;
+    }
+
+    /**
+     * Get the required euro5
+     *
+     * @return int
+     */
+    public function getRequiredEuro5()
+    {
+        return $this->requiredEuro5;
+    }
+
+    /**
+     * Set the required euro6
+     *
+     * @param int $requiredEuro6 new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setRequiredEuro6($requiredEuro6)
+    {
+        $this->requiredEuro6 = $requiredEuro6;
+
+        return $this;
+    }
+
+    /**
+     * Get the required euro6
+     *
+     * @return int
+     */
+    public function getRequiredEuro6()
+    {
+        return $this->requiredEuro6;
     }
 
     /**
@@ -743,49 +737,5 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

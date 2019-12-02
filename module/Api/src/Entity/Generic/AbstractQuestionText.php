@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -28,15 +31,27 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
-     * Additional guidance
+     * Additional guidance key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="additional_guidance", length=255, nullable=true)
+     * @ORM\Column(type="string", name="additional_guidance_key", length=1024, nullable=true)
      */
-    protected $additionalGuidance;
+    protected $additionalGuidanceKey;
+
+    /**
+     * Bullet list key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="bullet_list_key", length=255, nullable=true)
+     */
+    protected $bulletListKey;
 
     /**
      * Created by
@@ -50,22 +65,13 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $createdBy;
 
     /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
-     * Details
+     * Details key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="details", length=255, nullable=true)
+     * @ORM\Column(type="string", name="details_key", length=255, nullable=true)
      */
-    protected $details;
+    protected $detailsKey;
 
     /**
      * Effective from
@@ -77,49 +83,22 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $effectiveFrom;
 
     /**
-     * Error label
+     * Guidance key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="error_label", length=255, nullable=true)
+     * @ORM\Column(type="string", name="guidance_key", length=1024, nullable=true)
      */
-    protected $errorLabel;
+    protected $guidanceKey;
 
     /**
-     * Guidance
+     * Hint key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="guidance", length=255, nullable=true)
+     * @ORM\Column(type="string", name="hint_key", length=255, nullable=true)
      */
-    protected $guidance;
-
-    /**
-     * Heading
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="heading", length=255, nullable=true)
-     */
-    protected $heading;
-
-    /**
-     * Heading caption
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="heading_caption", length=255, nullable=true)
-     */
-    protected $headingCaption;
-
-    /**
-     * Hint
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="hint", length=255, nullable=true)
-     */
-    protected $hint;
+    protected $hintKey;
 
     /**
      * Identifier - Id
@@ -133,13 +112,13 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $id;
 
     /**
-     * Label
+     * Label key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="label", length=255, nullable=true)
+     * @ORM\Column(type="string", name="label_key", length=255, nullable=true)
      */
-    protected $label;
+    protected $labelKey;
 
     /**
      * Last modified by
@@ -151,15 +130,6 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Question
@@ -176,6 +146,24 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $question;
 
     /**
+     * Question key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="question_key", length=255, nullable=true)
+     */
+    protected $questionKey;
+
+    /**
+     * Question short key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="question_short_key", length=255, nullable=true)
+     */
+    protected $questionShortKey;
+
+    /**
      * Version
      *
      * @var int
@@ -186,36 +174,60 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $version = 1;
 
     /**
-     * Warning
+     * Warning key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="warning", length=255, nullable=true)
+     * @ORM\Column(type="string", name="warning_key", length=255, nullable=true)
      */
-    protected $warning;
+    protected $warningKey;
 
     /**
-     * Set the additional guidance
+     * Set the additional guidance key
      *
-     * @param string $additionalGuidance new value being set
+     * @param string $additionalGuidanceKey new value being set
      *
      * @return QuestionText
      */
-    public function setAdditionalGuidance($additionalGuidance)
+    public function setAdditionalGuidanceKey($additionalGuidanceKey)
     {
-        $this->additionalGuidance = $additionalGuidance;
+        $this->additionalGuidanceKey = $additionalGuidanceKey;
 
         return $this;
     }
 
     /**
-     * Get the additional guidance
+     * Get the additional guidance key
      *
      * @return string
      */
-    public function getAdditionalGuidance()
+    public function getAdditionalGuidanceKey()
     {
-        return $this->additionalGuidance;
+        return $this->additionalGuidanceKey;
+    }
+
+    /**
+     * Set the bullet list key
+     *
+     * @param string $bulletListKey new value being set
+     *
+     * @return QuestionText
+     */
+    public function setBulletListKey($bulletListKey)
+    {
+        $this->bulletListKey = $bulletListKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the bullet list key
+     *
+     * @return string
+     */
+    public function getBulletListKey()
+    {
+        return $this->bulletListKey;
     }
 
     /**
@@ -243,57 +255,27 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the created on
+     * Set the details key
      *
-     * @param \DateTime $createdOn new value being set
+     * @param string $detailsKey new value being set
      *
      * @return QuestionText
      */
-    public function setCreatedOn($createdOn)
+    public function setDetailsKey($detailsKey)
     {
-        $this->createdOn = $createdOn;
+        $this->detailsKey = $detailsKey;
 
         return $this;
     }
 
     /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
-     * Set the details
-     *
-     * @param string $details new value being set
-     *
-     * @return QuestionText
-     */
-    public function setDetails($details)
-    {
-        $this->details = $details;
-
-        return $this;
-    }
-
-    /**
-     * Get the details
+     * Get the details key
      *
      * @return string
      */
-    public function getDetails()
+    public function getDetailsKey()
     {
-        return $this->details;
+        return $this->detailsKey;
     }
 
     /**
@@ -327,123 +309,51 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the error label
+     * Set the guidance key
      *
-     * @param string $errorLabel new value being set
+     * @param string $guidanceKey new value being set
      *
      * @return QuestionText
      */
-    public function setErrorLabel($errorLabel)
+    public function setGuidanceKey($guidanceKey)
     {
-        $this->errorLabel = $errorLabel;
+        $this->guidanceKey = $guidanceKey;
 
         return $this;
     }
 
     /**
-     * Get the error label
+     * Get the guidance key
      *
      * @return string
      */
-    public function getErrorLabel()
+    public function getGuidanceKey()
     {
-        return $this->errorLabel;
+        return $this->guidanceKey;
     }
 
     /**
-     * Set the guidance
+     * Set the hint key
      *
-     * @param string $guidance new value being set
+     * @param string $hintKey new value being set
      *
      * @return QuestionText
      */
-    public function setGuidance($guidance)
+    public function setHintKey($hintKey)
     {
-        $this->guidance = $guidance;
+        $this->hintKey = $hintKey;
 
         return $this;
     }
 
     /**
-     * Get the guidance
+     * Get the hint key
      *
      * @return string
      */
-    public function getGuidance()
+    public function getHintKey()
     {
-        return $this->guidance;
-    }
-
-    /**
-     * Set the heading
-     *
-     * @param string $heading new value being set
-     *
-     * @return QuestionText
-     */
-    public function setHeading($heading)
-    {
-        $this->heading = $heading;
-
-        return $this;
-    }
-
-    /**
-     * Get the heading
-     *
-     * @return string
-     */
-    public function getHeading()
-    {
-        return $this->heading;
-    }
-
-    /**
-     * Set the heading caption
-     *
-     * @param string $headingCaption new value being set
-     *
-     * @return QuestionText
-     */
-    public function setHeadingCaption($headingCaption)
-    {
-        $this->headingCaption = $headingCaption;
-
-        return $this;
-    }
-
-    /**
-     * Get the heading caption
-     *
-     * @return string
-     */
-    public function getHeadingCaption()
-    {
-        return $this->headingCaption;
-    }
-
-    /**
-     * Set the hint
-     *
-     * @param string $hint new value being set
-     *
-     * @return QuestionText
-     */
-    public function setHint($hint)
-    {
-        $this->hint = $hint;
-
-        return $this;
-    }
-
-    /**
-     * Get the hint
-     *
-     * @return string
-     */
-    public function getHint()
-    {
-        return $this->hint;
+        return $this->hintKey;
     }
 
     /**
@@ -471,27 +381,27 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the label
+     * Set the label key
      *
-     * @param string $label new value being set
+     * @param string $labelKey new value being set
      *
      * @return QuestionText
      */
-    public function setLabel($label)
+    public function setLabelKey($labelKey)
     {
-        $this->label = $label;
+        $this->labelKey = $labelKey;
 
         return $this;
     }
 
     /**
-     * Get the label
+     * Get the label key
      *
      * @return string
      */
-    public function getLabel()
+    public function getLabelKey()
     {
-        return $this->label;
+        return $this->labelKey;
     }
 
     /**
@@ -519,36 +429,6 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return QuestionText
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the question
      *
      * @param \Dvsa\Olcs\Api\Entity\Generic\Question $question entity being set as the value
@@ -570,6 +450,54 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     public function getQuestion()
     {
         return $this->question;
+    }
+
+    /**
+     * Set the question key
+     *
+     * @param string $questionKey new value being set
+     *
+     * @return QuestionText
+     */
+    public function setQuestionKey($questionKey)
+    {
+        $this->questionKey = $questionKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the question key
+     *
+     * @return string
+     */
+    public function getQuestionKey()
+    {
+        return $this->questionKey;
+    }
+
+    /**
+     * Set the question short key
+     *
+     * @param string $questionShortKey new value being set
+     *
+     * @return QuestionText
+     */
+    public function setQuestionShortKey($questionShortKey)
+    {
+        $this->questionShortKey = $questionShortKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the question short key
+     *
+     * @return string
+     */
+    public function getQuestionShortKey()
+    {
+        return $this->questionShortKey;
     }
 
     /**
@@ -597,66 +525,26 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the warning
+     * Set the warning key
      *
-     * @param string $warning new value being set
+     * @param string $warningKey new value being set
      *
      * @return QuestionText
      */
-    public function setWarning($warning)
+    public function setWarningKey($warningKey)
     {
-        $this->warning = $warning;
+        $this->warningKey = $warningKey;
 
         return $this;
     }
 
     /**
-     * Get the warning
+     * Get the warning key
      *
      * @return string
      */
-    public function getWarning()
+    public function getWarningKey()
     {
-        return $this->warning;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
+        return $this->warningKey;
     }
 }

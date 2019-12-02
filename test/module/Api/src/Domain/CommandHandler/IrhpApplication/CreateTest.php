@@ -2,14 +2,23 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\CreateDefaultIrhpPermitApplications;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\Create as CreateHandler;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitType as IrhpPermitTypeRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as CreateCmd;
+use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -22,6 +31,10 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateHandler();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
+        $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
+        $this->mockRepo('IrhpPermitType', IrhpPermitTypeRepo::class);
+        $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
     }
@@ -29,12 +42,6 @@ class CreateTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->references = [
-            IrhpPermitType::class => [
-                1 => m::mock(IrhpPermitType::class)
-            ],
-            Licence::class => [
-                2 => m::mock(Licence::class),
-            ],
             IrhpApplication::class => [
                 4 => m::mock(IrhpApplication::class),
             ],
@@ -42,66 +49,247 @@ class CreateTest extends CommandHandlerTestCase
 
         $this->refData = [
             IrhpInterface::SOURCE_SELFSERVE,
+            IrhpInterface::SOURCE_INTERNAL,
             IrhpInterface::STATUS_NOT_YET_SUBMITTED,
         ];
 
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommandEcmt()
     {
-        $permitTypeId = 1;
-        $licenceId = 2;
+        $permitTypeId = 22;
+
+        $cmdData = ['irhpPermitType' => $permitTypeId];
+        $command = CreateCmd::create($cmdData);
+        $ecmtCommand = CreateEcmtPermitApplication::create($cmdData);
+
+        $permitType = m::mock(IrhpPermitType::class);
+        $permitType->shouldReceive('isEcmtAnnual')->once()->withNoArgs()->andReturnTrue();
+
+        $this->repoMap['IrhpPermitType']->shouldReceive('fetchById')
+            ->once()
+            ->with($permitTypeId)
+            ->andReturn($permitType);
+
+        $ecmtResult = new Result();
+        $ecmtResult->addId('ecmtPermitApplication', $permitTypeId);
+        $ecmtResult->addMessage('ecmtMessage');
+
+        $this->expectedSideEffect(
+            CreateEcmtPermitApplication::class,
+            $ecmtCommand->getArrayCopy(),
+            $ecmtResult
+        );
+
+        self::assertEquals($ecmtResult, $this->sut->handleCommand($command));
+    }
+
+    /**
+     * @dataProvider dpTestHandleCommand
+     */
+    public function testHandleCommand($fromInternal, $source, $withStockId)
+    {
+        $irhpAppId = 11;
+        $permitTypeId = 22;
+        $licenceId = 33;
+        $stockId = 44;
 
         $cmdData = [
-            'type' => $permitTypeId,
+            'irhpPermitStock' => $withStockId ? $stockId : null,
+            'irhpPermitType' => $permitTypeId,
             'licence' => $licenceId,
+            'fromInternal' => $fromInternal,
         ];
 
         $command = CreateCmd::create($cmdData);
 
-        $irhpApplication = null;
+        $permitType = m::mock(IrhpPermitType::class);
+        $permitType->shouldReceive('isEcmtAnnual')->once()->withNoArgs()->andReturnFalse();
+
+        $this->repoMap['IrhpPermitType']->shouldReceive('fetchById')
+            ->once()
+            ->with($permitTypeId)
+            ->andReturn($permitType);
+
+        $permitStock = m::mock(IrhpPermitStock::class);
+        $permitStock->shouldReceive('getId')->times($withStockId ? 0 : 1)->withNoArgs()->andReturn($stockId);
+
+        //no stock id then need to get the window
+        $permitWindow = m::mock(IrhpPermitWindow::class);
+        $permitWindow->shouldReceive('getIrhpPermitStock')
+            ->times($withStockId ? 0 : 1)
+            ->withNoArgs()
+            ->andReturn($permitStock);
+
+        //no stock id then need to get the window
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindowByIrhpPermitType')
+            ->times($withStockId ? 0 : 1)
+            ->with($permitTypeId, m::type(\DateTime::class))
+            ->andReturn($permitWindow);
+
+        //of there is already a stock id we get it directly
+        $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
+            ->times($withStockId ? 1 : 0)
+            ->with($stockId)
+            ->andReturn($permitStock);
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('canMakeIrhpApplication')->once()->with($permitStock)->andReturnTrue();
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->once()
+            ->with($licenceId)
+            ->andReturn($licence);
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
-            ->with(m::type(IrhpApplication::class))
             ->once()
+            ->with(m::type(IrhpApplication::class))
             ->andReturnUsing(
-                function (IrhpApplication $app) use (&$irhpApplication) {
-                    $irhpApplication = $app;
-                    $app->setId(4);
+                function ($irhpApplication) use ($source, $permitType, $licence, $irhpAppId) {
+                    $this->assertSame(
+                        $this->refData[$source],
+                        $irhpApplication->getSource()
+                    );
+
+                    $this->assertSame(
+                        $this->refData[IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+                        $irhpApplication->getStatus()
+                    );
+
+                    $this->assertSame(
+                        $permitType,
+                        $irhpApplication->getIrhpPermitType()
+                    );
+
+                    $this->assertSame(
+                        $licence,
+                        $irhpApplication->getLicence()
+                    );
+
+                    $this->assertEquals(
+                        date('Y-m-d'),
+                        $irhpApplication->getDateReceived(true)->format('Y-m-d')
+                    );
+
+                    $irhpApplication->setId($irhpAppId);
+
+                    return;
                 }
             );
 
-        $result = $this->sut->handleCommand($command);
+        $sideEffectMessage = 'Message from CreateDefaultIrhpPermitApplications';
 
-        $expected = [
+        $sideEffectResult = new Result();
+        $sideEffectResult->addMessage($sideEffectMessage);
+
+        $this->expectedSideEffect(
+            CreateDefaultIrhpPermitApplications::class,
+            [
+                'id' => $irhpAppId,
+                'irhpPermitStock' => $stockId,
+            ],
+            $sideEffectResult
+        );
+
+        $expectedResult = [
             'id' => [
-                'irhpApplication' => 4,
+                'irhpApplication' => $irhpAppId,
             ],
             'messages' => [
-                0 => 'IRHP Application created successfully',
+                $sideEffectMessage,
+                'IRHP Application created successfully'
             ]
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        self::assertEquals($expectedResult, $this->sut->handleCommand($command)->toArray());
     }
 
-    public function testHandleCommandNoPermitTypeFound()
+    public function dpTestHandleCommand()
     {
-        $permitTypeId = 2000;
-        $licenceId = 2;
+        return
+            [
+                [true, IrhpInterface::SOURCE_INTERNAL, false],
+                [true, IrhpInterface::SOURCE_INTERNAL, true],
+                [false, IrhpInterface::SOURCE_SELFSERVE, true],
+                [false, IrhpInterface::SOURCE_SELFSERVE, false],
+            ];
+    }
+
+    /**
+     * @dataProvider dpLicenceNotEligible
+     */
+    public function testHandleCommandLicenceNotEligible($withStockId)
+    {
+        $permitDescription = 'permit description';
+        $permitTypeId = 22;
+        $licenceId = 33;
+        $licNo = 'OB1234567';
+        $stockId = 44;
 
         $cmdData = [
-            'type' => $permitTypeId,
+            'irhpPermitStock' => $withStockId ? $stockId : null,
+            'irhpPermitType' => $permitTypeId,
             'licence' => $licenceId,
         ];
 
+        $permitType = m::mock(IrhpPermitType::class);
+        $permitType->shouldReceive('isEcmtAnnual')->once()->withNoArgs()->andReturnFalse();
+        $permitType->shouldReceive('getName->getDescription')->once()->withNoArgs()->andReturn($permitDescription);
+
+        $this->repoMap['IrhpPermitType']->shouldReceive('fetchById')
+            ->once()
+            ->with($permitTypeId)
+            ->andReturn($permitType);
+
+        $permitStock = m::mock(IrhpPermitStock::class);
+        $permitStock->shouldReceive('getId')->times($withStockId ? 0 : 1)->withNoArgs()->andReturn($stockId);
+
+        //no stock id then need to get the window
+        $permitWindow = m::mock(IrhpPermitWindow::class);
+        $permitWindow->shouldReceive('getIrhpPermitStock')
+            ->times($withStockId ? 0 : 1)
+            ->withNoArgs()
+            ->andReturn($permitStock);
+
+        //no stock id then need to get the window
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindowByIrhpPermitType')
+            ->times($withStockId ? 0 : 1)
+            ->with($permitTypeId, m::type(\DateTime::class))
+            ->andReturn($permitWindow);
+
+        //of there is already a stock id we get it directly
+        $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
+            ->times($withStockId ? 1 : 0)
+            ->with($stockId)
+            ->andReturn($permitStock);
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('canMakeIrhpApplication')->once()->with($permitStock)->andReturnFalse();
+        $licence->shouldReceive('getId')->once()->withNoArgs()->andReturn($licenceId);
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')
+            ->once()
+            ->with($licenceId)
+            ->andReturn($licence);
+
         $command = CreateCmd::create($cmdData);
 
-        $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Permit type not found');
+        $msg = sprintf(CreateHandler::LICENCE_INVALID_MSG, $licenceId, $licNo, $permitDescription, $stockId);
+
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage($msg);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function dpLicenceNotEligible()
+    {
+        return [
+            [true],
+            [false],
+        ];
     }
 }

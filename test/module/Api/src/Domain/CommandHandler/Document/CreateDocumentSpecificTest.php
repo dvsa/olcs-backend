@@ -7,17 +7,20 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Repository\Document;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocumentSpecific;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as Cmd;
-use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateSubmission as CreateEbsrSubmissionCmd;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocumentSpecific;
+use Dvsa\Olcs\Api\Domain\Repository\Document;
+use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create Document Test
@@ -30,6 +33,10 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateDocumentSpecific();
         $this->mockRepo('Document', Document::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -62,7 +69,8 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
             'application' => 123,
             'issuedDate' => '2015-01-01',
             'metadata' => 'foo',
-            'isEbsrPack' => 0
+            'isEbsrPack' => 0,
+            'isPostSubmissionUpload' => 1
         ];
 
         $command = Cmd::create($data);
@@ -72,7 +80,6 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (Entity $document) {
                     $document->setId(111);
-
                     $this->assertEquals('ABCDEF', $document->getIdentifier());
                     $this->assertNull($document->getIsExternal());
                     $this->assertEquals('foo.pdf', $document->getFilename());
@@ -83,8 +90,15 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertInstanceOf('\DateTime', $document->getIssuedDate());
                     $this->assertEquals('2015-01-01', $document->getIssuedDate()->format('Y-m-d'));
                     $this->assertEquals('foo', $document->getMetadata());
+                    $this->assertEquals(1, $document->getIsPostSubmissionUpload());
                 }
             );
+
+        $osType = new RefData('windows_7');
+        $currentUser = m::mock(UserEntity::class);
+        $currentUser->shouldReceive('getOsType')->andReturn($osType);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
@@ -117,7 +131,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
             'application' => 123,
             'issuedDate' => '2015-01-01',
             'metadata' => 'foo',
-            'isEbsrPack' => true
+            'isEbsrPack' => true,
         ];
 
         $command = Cmd::create($data);
@@ -138,8 +152,15 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertInstanceOf('\DateTime', $document->getIssuedDate());
                     $this->assertEquals('2015-01-01', $document->getIssuedDate()->format('Y-m-d'));
                     $this->assertEquals('foo', $document->getMetadata());
+                    $this->assertEquals(0, $document->getIsPostSubmissionUpload());
                 }
             );
+
+        $osType = new RefData('windows_7');
+        $currentUser = m::mock(UserEntity::class);
+        $currentUser->shouldReceive('getOsType')->andReturn($osType);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
@@ -168,7 +189,8 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
             'category' => 1,
             'subCategory' => 2,
             'application' => 123,
-            'isEbsrPack' => 0
+            'isEbsrPack' => 0,
+            'isPostSubmissionUpload' => 0
         ];
 
         $command = Cmd::create($data);
@@ -186,8 +208,15 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertSame($this->categoryReferences[1], $document->getCategory());
                     $this->assertSame($this->subCategoryReferences[2], $document->getSubCategory());
                     $this->assertNull($document->getLicence());
+                    $this->assertEquals(0, $document->getIsPostSubmissionUpload());
                 }
             );
+
+        $osType = new RefData('windows_7');
+        $currentUser = m::mock(UserEntity::class);
+        $currentUser->shouldReceive('getOsType')->andReturn($osType);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
@@ -236,6 +265,12 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertNull($document->getLicence());
                 }
             );
+
+        $osType = new RefData('windows_7');
+        $currentUser = m::mock(UserEntity::class);
+        $currentUser->shouldReceive('getOsType')->andReturn($osType);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
 
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);

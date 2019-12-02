@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -23,6 +26,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_answer_last_modified_by_user_id", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_answer_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_answer_irhp_application_id_question_text_id",
+     *     columns={"irhp_application_id","question_text_id"})
  *    }
  * )
  */
@@ -30,6 +37,9 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Ans array
@@ -77,15 +87,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     protected $ansDecimal;
 
     /**
-     * Ans filename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="ans_filename", length=255, nullable=true)
-     */
-    protected $ansFilename;
-
-    /**
      * Ans integer
      *
      * @var int
@@ -124,24 +125,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     protected $createdBy;
 
     /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
-     * Document id
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="document_id", nullable=true)
-     */
-    protected $documentId;
-
-    /**
      * Identifier - Id
      *
      * @var int
@@ -176,15 +159,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Question text
@@ -339,30 +313,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     }
 
     /**
-     * Set the ans filename
-     *
-     * @param string $ansFilename new value being set
-     *
-     * @return Answer
-     */
-    public function setAnsFilename($ansFilename)
-    {
-        $this->ansFilename = $ansFilename;
-
-        return $this;
-    }
-
-    /**
-     * Get the ans filename
-     *
-     * @return string
-     */
-    public function getAnsFilename()
-    {
-        return $this->ansFilename;
-    }
-
-    /**
      * Set the ans integer
      *
      * @param int $ansInteger new value being set
@@ -459,60 +409,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     }
 
     /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return Answer
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
-     * Set the document id
-     *
-     * @param int $documentId new value being set
-     *
-     * @return Answer
-     */
-    public function setDocumentId($documentId)
-    {
-        $this->documentId = $documentId;
-
-        return $this;
-    }
-
-    /**
-     * Get the document id
-     *
-     * @return int
-     */
-    public function getDocumentId()
-    {
-        return $this->documentId;
-    }
-
-    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -585,36 +481,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return Answer
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the question text
      *
      * @param \Dvsa\Olcs\Api\Entity\Generic\QuestionText $questionText entity being set as the value
@@ -660,45 +526,5 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     public function getVersion()
     {
         return $this->version;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
     }
 }

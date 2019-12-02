@@ -67,7 +67,7 @@ class RoleEntityTest extends EntityTester
                         ->setPermission(
                             (new Permission())
                                 ->setName('permissionOne')
-                    ),
+                        ),
                     (new RolePermission())
                         ->setPermission(
                             (new Permission())
@@ -86,5 +86,30 @@ class RoleEntityTest extends EntityTester
         $anon = $role->anon();
         $this->assertEquals($anon->getId(), Entity::ROLE_ANON);
         $this->assertEquals($anon->getRole(), Entity::ROLE_ANON);
+    }
+
+    /**
+     * @dataProvider dpGetAllowedRoles
+     */
+    public function testGetAllowedRoles($role, $emptyExpected)
+    {
+        $roleEntity = new Entity();
+        $roleEntity->setRole($role);
+
+        $result = $roleEntity->getAllowedRoles();
+
+        $this->assertIsArray($result);
+        $emptyExpected ? $this->assertEmpty($result) : $this->assertNotEmpty($result);
+    }
+
+    public function dpGetAllowedRoles()
+    {
+        return [
+            [Entity::ROLE_SYSTEM_ADMIN, false],
+            [Entity::ROLE_INTERNAL_ADMIN, false],
+            [Entity::ROLE_INTERNAL_CASE_WORKER, false],
+            [Entity::ROLE_INTERNAL_READ_ONLY, true],
+            [Entity::ROLE_INTERNAL_LIMITED_READ_ONLY, true],
+        ];
     }
 }

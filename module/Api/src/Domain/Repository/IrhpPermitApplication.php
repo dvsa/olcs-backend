@@ -5,12 +5,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
-use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use RuntimeException;
 
 class IrhpPermitApplication extends AbstractRepository
 {
@@ -29,5 +27,51 @@ class IrhpPermitApplication extends AbstractRepository
             ->setParameter(1, $irhpApplicationId)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Returns the sum of all euro5/euro6 permits required within the scope of the specified stock and applications
+     * that are in the awating fee status
+     *
+     * @param int $stockId
+     * @param string $emissionsCategoryId
+     *
+     * @return int
+     */
+    public function getRequiredPermitCountWhereApplicationAwaitingPayment($stockId, $emissionsCategoryId)
+    {
+        $mappings = [
+            RefData::EMISSIONS_CATEGORY_EURO5_REF => 'requiredEuro5',
+            RefData::EMISSIONS_CATEGORY_EURO6_REF => 'requiredEuro6'
+        ];
+
+        if (!isset($mappings[$emissionsCategoryId])) {
+            throw new RuntimeException(
+                sprintf(
+                    'Emissions category id %s is not supported',
+                    $emissionsCategoryId
+                )
+            );
+        }
+
+        $fieldName = $mappings[$emissionsCategoryId];
+
+        $requiredPermitCount = $this->getEntityManager()->createQueryBuilder()
+            ->select('sum(ipa.' . $fieldName .')')
+            ->from(Entity::class, 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipa.irhpApplication', 'ia')
+            ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->andWhere('ia.status = ?2')
+            ->setParameter(1, $stockId)
+            ->setParameter(2, IrhpInterface::STATUS_AWAITING_FEE)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if (is_null($requiredPermitCount)) {
+            $requiredPermitCount = 0;
+        }
+
+        return $requiredPermitCount;
     }
 }

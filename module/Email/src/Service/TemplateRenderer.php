@@ -3,21 +3,21 @@
 namespace Dvsa\Olcs\Email\Service;
 
 use Zend\View\Model\ViewModel;
+use Dvsa\Olcs\Api\Service\Template\StrategySelectingViewRenderer;
 use Dvsa\Olcs\Email\Data\Message;
-use Zend\View\Renderer\RendererInterface;
 
 /**
- * Class Client
+ * Class TemplateRenderer
  */
 class TemplateRenderer
 {
     /**
-     * RendererInterface
+     * StrategySelectingViewRenderer
      */
     protected $viewRenderer;
 
     /**
-     * @return RendererInterface
+     * @return StrategySelectingViewRenderer
      */
     public function getViewRenderer()
     {
@@ -25,11 +25,11 @@ class TemplateRenderer
     }
 
     /**
-     * @param RendererInterface $viewRenderer
+     * @param StrategySelectingViewRenderer $viewRenderer
      *
-     * @return \Dvsa\Olcs\Email\Service\TemplateRenderer
+     * @return StrategySelectingViewRenderer
      */
-    public function setViewRenderer(RendererInterface $viewRenderer)
+    public function setViewRenderer(StrategySelectingViewRenderer $viewRenderer)
     {
         $this->viewRenderer = $viewRenderer;
         return $this;
@@ -67,11 +67,7 @@ class TemplateRenderer
      */
     private function getLayoutView($locale, $layout, $format, $content)
     {
-        $layoutView = new ViewModel();
-        $layoutView->setTemplate($locale .'/'. $format .'/'. $layout);
-        $layoutView->setVariable('content', $content);
-
-        return $this->getViewRenderer()->render($layoutView);
+        return $this->viewRenderer->render($locale, $format, $layout, ['content' => $content]);
     }
 
     /**
@@ -105,10 +101,6 @@ class TemplateRenderer
      */
     private function getTemplateView($locale, $template, $format, array $variables = [])
     {
-        $templateView = new ViewModel();
-        $templateView->setTemplate($locale .'/'. $format .'/'. $template);
-        $templateView->setVariables($variables);
-
-        return $this->getViewRenderer()->render($templateView);
+        return $this->viewRenderer->render($locale, $format, $template, $variables);
     }
 }

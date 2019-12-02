@@ -3,20 +3,29 @@
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Question;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
 * EcmtPermitApplication Entity Unit Tests
@@ -69,9 +78,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $dateReceived = '2017-12-25';
         $sectors = m::mock(Sectors::class);
         $cabotage = 1;
+        $roadworthiness = 1;
         $declaration = 1;
         $emissions = 1;
-        $permitsRequired = 999;
+        $requiredEuro5 = 199;
+        $requiredEuro6 = 800;
         $trips = 666;
         $internationalJourneysRefData = m::mock(RefData::class);
 
@@ -84,17 +95,14 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $sectors,
             $countrys,
             $cabotage,
+            $roadworthiness,
             $declaration,
             $emissions,
-            $permitsRequired,
+            $requiredEuro5,
+            $requiredEuro6,
             $trips,
             $internationalJourneysRefData
         );
-
-        $ecmtPermitAppEntity = m::mock(Entity::class)->shouldAllowMockingProtectedMethods();
-        $ecmtPermitAppEntity->shouldReceive('getSectionCompletion')
-            ->with(Entity::SECTIONS)
-            ->andReturn(['allCompleted' => true]);
 
         $this->assertSame($sourceRefData, $application->getSource());
         $this->assertSame($statusRefData, $application->getStatus());
@@ -105,10 +113,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($countrys, $application->getCountrys());
         $this->assertEquals($expectedHasRestrictedCountries, $application->getHasRestrictedCountries());
         $this->assertEquals($cabotage, $application->getCabotage());
+        $this->assertEquals($roadworthiness, $application->getRoadworthiness());
         $this->assertEquals($declaration, $application->getCheckedAnswers()); //auto updated on internal updates
         $this->assertEquals($declaration, $application->getDeclaration());
         $this->assertEquals($emissions, $application->getEmissions());
-        $this->assertEquals($permitsRequired, $application->getPermitsRequired());
+        $this->assertEquals($requiredEuro5, $application->getRequiredEuro5());
+        $this->assertEquals($requiredEuro6, $application->getRequiredEuro6());
         $this->assertEquals($trips, $application->getTrips());
         $this->assertSame($internationalJourneysRefData, $application->getInternationalJourneys());
     }
@@ -126,9 +136,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $cabotage = 1;
         $declaration = 0;
         $emissions = 1;
-        $permitsRequired = 999;
+        $required_euro5 = 199;
+        $required_euro6 = 800;
         $trips = 666;
-        $internationalJourneys = Entity::INTER_JOURNEY_60_90;
+        $internationalJourneys = RefData::INTER_JOURNEY_60_90;
         $internationalJourneyRefData = new RefData($internationalJourneys);
         $dateReceived = '2017-12-25';
 
@@ -140,7 +151,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $cabotage,
             $declaration,
             $emissions,
-            $permitsRequired,
+            $required_euro5,
+            $required_euro6,
             $trips,
             $internationalJourneyRefData,
             $dateReceived
@@ -155,7 +167,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($declaration, $application->getCheckedAnswers()); //auto updated on internal updates
         $this->assertEquals($declaration, $application->getDeclaration());
         $this->assertEquals($emissions, $application->getEmissions());
-        $this->assertEquals($permitsRequired, $application->getPermitsRequired());
+        $this->assertEquals($required_euro5, $application->getRequiredEuro5());
+        $this->assertEquals($required_euro6, $application->getRequiredEuro6());
         $this->assertEquals($trips, $application->getTrips());
         $this->assertEquals($internationalJourneys, $application->getInternationalJourneys()->getId());
         $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
@@ -167,9 +180,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testWithdraw()
     {
         $entity = $this->createApplicationUnderConsideration();
-        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
-        $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
-        $this->assertEquals(Entity::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
+        $entity->withdraw(new RefData(IrhpInterface::STATUS_WITHDRAWN), new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER));
+        $this->assertEquals(IrhpInterface::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(WithdrawableInterface::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getWithdrawnDate()->format('Y-m-d'));
     }
 
     /**
@@ -179,7 +193,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testWithdrawException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
+        $entity->withdraw(new RefData(IrhpInterface::STATUS_WITHDRAWN), new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER));
     }
 
     /**
@@ -188,9 +202,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testDecline()
     {
         $entity = $this->createApplicationAwaitingFee();
-        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_DECLINED));
-        $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
-        $this->assertEquals(Entity::WITHDRAWN_REASON_DECLINED, $entity->getWithdrawReason()->getId());
+        $entity->decline(new RefData(IrhpInterface::STATUS_WITHDRAWN), new RefData(WithdrawableInterface::WITHDRAWN_REASON_DECLINED));
+        $this->assertEquals(IrhpInterface::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(WithdrawableInterface::WITHDRAWN_REASON_DECLINED, $entity->getWithdrawReason()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getWithdrawnDate()->format('Y-m-d'));
     }
 
     /**
@@ -200,7 +215,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testDeclineException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
+        $entity->decline(new RefData(IrhpInterface::STATUS_WITHDRAWN), new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER));
     }
 
     /**
@@ -209,9 +224,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testAccept()
     {
         $entity = $this->createApplicationAwaitingFee();
-        $entity->completeIssueFee(new RefData(Entity::STATUS_FEE_PAID));
-        $entity->accept(new RefData(Entity::STATUS_VALID));
-        $this->assertEquals(Entity::STATUS_VALID, $entity->getStatus()->getId());
+        $entity->completeIssueFee(new RefData(IrhpInterface::STATUS_FEE_PAID));
+        $entity->accept(new RefData(IrhpInterface::STATUS_VALID));
+        $this->assertEquals(IrhpInterface::STATUS_VALID, $entity->getStatus()->getId());
     }
 
     /**
@@ -221,7 +236,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testAcceptException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->accept(new RefData(Entity::STATUS_VALID));
+        $entity->accept(new RefData(IrhpInterface::STATUS_VALID));
     }
 
     /**
@@ -230,8 +245,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testCancel()
     {
         $entity = $this->createApplication();
-        $entity->cancel(new RefData(Entity::STATUS_CANCELLED));
-        $this->assertEquals(Entity::STATUS_CANCELLED, $entity->getStatus()->getId());
+        $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
+        $this->assertEquals(IrhpInterface::STATUS_CANCELLED, $entity->getStatus()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getCancellationDate()->format('Y-m-d'));
     }
 
     /**
@@ -241,7 +257,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testCancelException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->cancel(new RefData(Entity::STATUS_CANCELLED));
+        $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
     }
 
     /**
@@ -252,12 +268,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpWithdrawException()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_WITHDRAWN],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
         ];
     }
 
@@ -269,12 +285,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpDeclineAcceptException()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_UNDER_CONSIDERATION],
-            [Entity::STATUS_WITHDRAWN],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
         ];
     }
 
@@ -286,12 +302,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpCancelException()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_WITHDRAWN],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_UNDER_CONSIDERATION]
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION]
         ];
     }
 
@@ -305,6 +321,20 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity->updateCabotage($cabotage);
 
         $this->assertEquals($cabotage, $entity->getCabotage());
+        $this->assertFalse($entity->getCheckedAnswers());
+        $this->assertFalse($entity->getDeclaration());
+    }
+
+    /**
+    * @dataProvider trueFalseProvider
+    */
+    public function testUpdateRoadworthiness($roadworthiness)
+    {
+        $entity = $this->createApplicationWithCompletedDeclaration();
+
+        $entity->updateRoadworthiness($roadworthiness);
+
+        $this->assertEquals($roadworthiness, $entity->getRoadworthiness());
         $this->assertFalse($entity->getCheckedAnswers());
         $this->assertFalse($entity->getDeclaration());
     }
@@ -353,13 +383,36 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function testUpdatePermitsRequired()
     {
-        $permitsRequired = 7;
+        $requiredEuro5 = 10;
+        $requiredEuro6 = 20;
 
         $entity = $this->createApplicationWithCompletedDeclaration();
 
-        $entity->updatePermitsRequired($permitsRequired);
+        $entity->updatePermitsRequired($requiredEuro5, $requiredEuro6);
 
-        $this->assertEquals($permitsRequired, $entity->getPermitsRequired());
+        $this->assertEquals($requiredEuro5+$requiredEuro6, $entity->calculateTotalPermitsRequired());
+        $this->assertEquals($requiredEuro5, $entity->getRequiredEuro5());
+        $this->assertEquals($requiredEuro6, $entity->getRequiredEuro6());
+        $this->assertFalse($entity->getCheckedAnswers());
+        $this->assertFalse($entity->getDeclaration());
+    }
+
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    public function testUpdatePermitsRequiredNull()
+    {
+        $requiredEuro5 = null;
+        $requiredEuro6 = null;
+
+        $entity = $this->createApplicationWithCompletedDeclaration();
+
+        $entity->updatePermitsRequired($requiredEuro5, $requiredEuro6);
+
+        $entity->calculateTotalPermitsRequired();
+        $this->assertEquals($requiredEuro5, $entity->getRequiredEuro5());
+        $this->assertEquals($requiredEuro6, $entity->getRequiredEuro6());
         $this->assertFalse($entity->getCheckedAnswers());
         $this->assertFalse($entity->getDeclaration());
     }
@@ -379,13 +432,13 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function testUpdateInternationalJourneys()
     {
-        $internationalJourneys = new RefData(Entity::INTER_JOURNEY_60_90);
+        $internationalJourneys = new RefData(RefData::INTER_JOURNEY_60_90);
 
         $entity = $this->createApplicationWithCompletedDeclaration();
 
         $entity->updateInternationalJourneys($internationalJourneys);
 
-        $this->assertEquals(Entity::INTER_JOURNEY_60_90, $entity->getInternationalJourneys()->getId());
+        $this->assertEquals(RefData::INTER_JOURNEY_60_90, $entity->getInternationalJourneys()->getId());
         $this->assertFalse($entity->getCheckedAnswers());
         $this->assertFalse($entity->getDeclaration());
     }
@@ -403,42 +456,122 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertFalse($entity->getDeclaration());
     }
 
-    public function testCalculatePermitIntensityOfUse()
+    /**
+     * @dataProvider dpTestGetPermitIntensityOfUse
+     */
+    public function testGetPermitIntensityOfUse($emissionsCategoryId, $expectedIntensityOfUse)
     {
-        $entity = $this->createApplicationWithCompletedDeclaration();
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setTrips(35);
+        $entity->setRequiredEuro5(2);
+        $entity->setRequiredEuro6(5);
 
-        $entity->setTrips(10);
-        $entity->setPermitsRequired(4);
-
-        $intensity = $entity->getPermitIntensityOfUse();
-
-        $this->assertEquals($intensity, 2.5);
+        $this->assertEquals(
+            $expectedIntensityOfUse,
+            $entity->getPermitIntensityOfUse($emissionsCategoryId)
+        );
     }
 
-    public function testCalculatePermitApplicationScore()
+    /**
+     * @dataProvider dpTestGetPermitIntensityOfUse
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function testGetPermitIntensityOfUseZeroPermitsRequested($emissionsCategoryId, $expectedIntensityOfUse)
     {
-        $entity = $this->createApplicationWithCompletedDeclaration();
-        $internationalJourneys = new RefData(Entity::INTER_JOURNEY_60_90);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Permit intensity of use cannot be calculated with zero number of permits');
 
-        $entity->setTrips(10);
-        $entity->setPermitsRequired(4);
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setRequiredEuro5(0);
+        $entity->setRequiredEuro6(0);
 
+        $entity->getPermitIntensityOfUse($emissionsCategoryId);
+    }
+
+    public function testGetPermitIntensityOfUseBadEmissionsCategory()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unexpected emissionsCategoryId parameter for getPermitIntensityOfUse: xyz');
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->getPermitIntensityOfUse('xyz');
+    }
+
+    public function dpTestGetPermitIntensityOfUse()
+    {
+        return [
+            [null, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, 17.5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, 7],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetPermitApplicationScore
+     */
+    public function testGetPermitApplicationScore(
+        $emissionsCategoryId,
+        $internationalJourneys,
+        $expectedPermitApplicationScore
+    ) {
+        $intensityOfUse = 5;
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getPermitIntensityOfUse')
+            ->with($emissionsCategoryId)
+            ->andReturn($intensityOfUse);
+
+        $internationalJourneys = new RefData($internationalJourneys);
         $entity->updateInternationalJourneys($internationalJourneys);
 
-        $this->assertEquals($entity->getPermitApplicationScore(), 1.875);
+        $this->assertEquals(
+            $expectedPermitApplicationScore,
+            $entity->getPermitApplicationScore($emissionsCategoryId)
+        );
+    }
+
+    public function dpTestGetPermitApplicationScore()
+    {
+        return [
+            [null, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [null, RefData::INTER_JOURNEY_60_90, 3.75],
+            [null, RefData::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_MORE_90, 5],
+        ];
+    }
+
+    public function testGetAssociatedStock()
+    {
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+
+        $entity = $this->createApplication();
+        $entity->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $this->assertEquals($irhpPermitStock, $entity->getAssociatedStock());
     }
 
     private function createApplicationUnderConsideration()
     {
-        return $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        return $this->createApplication(IrhpInterface::STATUS_UNDER_CONSIDERATION);
     }
 
     private function createApplicationAwaitingFee()
     {
-        return $this->createApplication(Entity::STATUS_AWAITING_FEE);
+        return $this->createApplication(IrhpInterface::STATUS_AWAITING_FEE);
     }
 
-    private function createApplication($status = Entity::STATUS_NOT_YET_SUBMITTED)
+    private function createApplication($status = IrhpInterface::STATUS_NOT_YET_SUBMITTED)
     {
         $entity = Entity::createNew(
             m::mock(RefData::class),
@@ -450,7 +583,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         return $entity;
     }
 
-    private function createApplicationWithCompletedDeclaration($status = Entity::STATUS_NOT_YET_SUBMITTED)
+    private function createApplicationWithCompletedDeclaration($status = IrhpInterface::STATUS_NOT_YET_SUBMITTED)
     {
         $entity = $this->createApplication($status);
 
@@ -470,7 +603,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     private function createValidApplication()
     {
-        return $this->createApplication(Entity::STATUS_VALID);
+        return $this->createApplication(IrhpInterface::STATUS_VALID);
     }
 
     public function testIsValid()
@@ -491,12 +624,14 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $licence = m::mock(Licence::class);
         $sectors = m::mock(Sectors::class);
         $cabotage = 1;
+        $roadworthiness = 1;
         $declaration = 1;
         $checkedAnswers = 1;
         $emissions = 1;
-        $permitsRequired = 999;
+        $requiredEuro5 = 199;
+        $requiredEuro6 = 800;
         $trips = 666;
-        $internationalJourneys = Entity::INTER_JOURNEY_60_90;
+        $internationalJourneys = RefData::INTER_JOURNEY_60_90;
         $internationalJourneyRefData = new RefData($internationalJourneys);
         $dateReceived = '2017-12-25';
 
@@ -509,9 +644,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $sectors,
             $countrys,
             $cabotage,
+            $roadworthiness,
             $declaration,
             $emissions,
-            $permitsRequired,
+            $requiredEuro5,
+            $requiredEuro6,
             $trips,
             $internationalJourneyRefData
         );
@@ -524,6 +661,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
         $this->assertSame($application->getLicence(), $newLicence);
         $this->assertEquals($application->getCabotage(), null);
+        $this->assertNull($application->getRoadworthiness());
         $this->assertEquals($application->getEmissions(), null);
         $this->assertEquals($application->getTrips(), null);
         $this->assertEquals($application->getInternationalJourneys(), null);
@@ -537,7 +675,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testProceedToIssuing()
     {
         $refData = m::mock(RefData::class);
-        $entity = $this->createApplication(Entity::STATUS_FEE_PAID);
+        $entity = $this->createApplication(IrhpInterface::STATUS_FEE_PAID);
         $entity->proceedToIssuing($refData);
         $this->assertSame($refData, $entity->getStatus());
     }
@@ -555,7 +693,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testProceedToValid()
     {
         $refData = m::mock(RefData::class);
-        $entity = $this->createApplication(Entity::STATUS_ISSUING);
+        $entity = $this->createApplication(IrhpInterface::STATUS_ISSUING);
         $entity->proceedToValid($refData);
         $this->assertSame($refData, $entity->getStatus());
     }
@@ -572,7 +710,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function testIsReadyForIssuingSuccess()
     {
-        $entity = $this->createApplication(Entity::STATUS_FEE_PAID);
+        $entity = $this->createApplication(IrhpInterface::STATUS_FEE_PAID);
         $this->assertTrue($entity->isReadyForIssuing());
     }
 
@@ -593,22 +731,21 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpIsReadyForIssuingFail()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_UNDER_CONSIDERATION],
-            [Entity::STATUS_WITHDRAWN],
-            [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_ISSUING],
-            [Entity::STATUS_VALID],
-            [Entity::STATUS_DECLINED],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
         ];
     }
 
     public function testIsIssueInProgressSuccess()
     {
-        $entity = $this->createApplication(Entity::STATUS_ISSUING);
+        $entity = $this->createApplication(IrhpInterface::STATUS_ISSUING);
         $this->assertTrue($entity->isIssueInProgress());
     }
 
@@ -629,16 +766,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpIsIssueInProgressFail()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_UNDER_CONSIDERATION],
-            [Entity::STATUS_WITHDRAWN],
-            [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_FEE_PAID],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_VALID],
-            [Entity::STATUS_DECLINED],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_VALID],
         ];
     }
 
@@ -657,24 +793,103 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpIsFeePaid()
     {
         return [
-            [Entity::STATUS_CANCELLED, false],
-            [Entity::STATUS_NOT_YET_SUBMITTED, false],
-            [Entity::STATUS_UNDER_CONSIDERATION, false],
-            [Entity::STATUS_WITHDRAWN, false],
-            [Entity::STATUS_AWAITING_FEE, false],
-            [Entity::STATUS_FEE_PAID, true],
-            [Entity::STATUS_UNSUCCESSFUL, false],
-            [Entity::STATUS_ISSUED, false],
-            [Entity::STATUS_ISSUING, false],
-            [Entity::STATUS_VALID, false],
-            [Entity::STATUS_DECLINED, false],
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, true],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+        ];
+    }
+
+    /**
+     * Tests logic for finding overdue issue fees, and checks that the 4 fees over 10 days old are returned initially
+     *
+     * $fee1 isn't overdue, so is ignored
+     * $fee2 is overdue, but doesn't need to be checked because $fee5 is more recent and will match
+     * $fee3 is overdue, is outstanding, but isn't an issue fee
+     * $fee4 would be overdue, but is not outstanding, so the fee type is not checked
+     * $fee5 is overdue, outstanding and the correct fee type, causes the method to return true
+     */
+    public function testIssueFeeOverdue()
+    {
+        $entity = $this->createApplication();
+
+        $dateTimeMinus9 = (new \DateTime('-9 weekdays'))->format(\DateTime::ISO8601);
+        $dateTimeMinus10 = (new \DateTime('-10 weekdays'))->format(\DateTime::ISO8601);
+        $dateTimeMinus11 = (new \DateTime('-11 weekdays'))->format(\DateTime::ISO8601);
+
+        $fee1 = m::mock(Fee::class)->makePartial();
+        $fee1->shouldReceive('isOutstanding')->never();
+        $fee1->shouldReceive('getFeeType->isEcmtIssue')->never();
+        $fee1->setInvoicedDate($dateTimeMinus9);
+
+        $fee2 = m::mock(Fee::class)->makePartial();
+        $fee2->shouldReceive('isOutstanding')->never();
+        $fee2->shouldReceive('getFeeType->isEcmtIssue')->never();
+        $fee2->setInvoicedDate($dateTimeMinus11);
+
+        $fee3 = m::mock(Fee::class)->makePartial();
+        $fee3->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(true);
+        $fee3->shouldReceive('getFeeType->isEcmtIssue')->once()->withNoArgs()->andReturn(false);
+        $fee3->setInvoicedDate($dateTimeMinus10);
+
+        $fee4 = m::mock(Fee::class)->makePartial();
+        $fee4->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(false);
+        $fee4->shouldReceive('getFeeType->isEcmtIssue')->never();
+        $fee4->setInvoicedDate($dateTimeMinus10);
+
+        $fee5 = m::mock(Fee::class)->makePartial();
+        $fee5->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(true);
+        $fee5->shouldReceive('getFeeType->isEcmtIssue')->once()->withNoArgs()->andReturn(true);
+        $fee5->setInvoicedDate($dateTimeMinus10);
+
+        $feesCollection = new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5]);
+
+        $entity->setFees($feesCollection);
+
+        $this->assertEquals(4, $entity->getFeesByAge()->count());
+        $this->assertTrue($entity->issueFeeOverdue());
+    }
+
+    /**
+     * @dataProvider dpIssueFeeOverdueProvider
+     */
+    public function testIssueFeeOverdueBoundary($days, $expected)
+    {
+        $entity = $this->createApplication();
+        $invoiceDate = (new \DateTime('-' . $days . ' weekdays'))->format(\DateTime::ISO8601);
+
+        $fee = m::mock(Fee::class)->makePartial();
+        $fee->shouldReceive('isOutstanding')->times($expected)->andReturn(true);
+        $fee->shouldReceive('getFeeType->isEcmtIssue')->times($expected)->andReturn(true);
+        $fee->setInvoicedDate($invoiceDate);
+
+        $feesCollection = new ArrayCollection([$fee]);
+
+        $entity->setFees($feesCollection);
+
+        $this->assertEquals($expected, $entity->getFeesByAge()->count());
+        $this->assertEquals($expected, $entity->issueFeeOverdue());
+    }
+
+    public function dpIssueFeeOverdueProvider()
+    {
+        return [
+            [9, 0],
+            [10, 1],
+            [11, 1],
         ];
     }
 
     public function testProceedToAwaitingFee()
     {
         $refData = m::mock(RefData::class);
-        $entity = $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        $entity = $this->createApplication(IrhpInterface::STATUS_UNDER_CONSIDERATION);
         $entity->proceedToAwaitingFee($refData);
         $this->assertSame($refData, $entity->getStatus());
     }
@@ -692,7 +907,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testProceedToUnsuccessful()
     {
         $refData = m::mock(RefData::class);
-        $entity = $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        $entity = $this->createApplication(IrhpInterface::STATUS_UNDER_CONSIDERATION);
         $entity->proceedToUnsuccessful($refData);
         $this->assertSame($refData, $entity->getStatus());
     }
@@ -715,16 +930,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpIsApplicationUnderConsiderationFail()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_WITHDRAWN],
-            [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_FEE_PAID],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_ISSUING],
-            [Entity::STATUS_VALID],
-            [Entity::STATUS_DECLINED],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
         ];
     }
 
@@ -776,16 +990,27 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity->getFirstIrhpPermitApplication();
     }
 
-    public function testGetPermitsAwarded()
+    /**
+     * @dataProvider dpTestGetPermitsAwarded
+     */
+    public function testGetPermitsAwarded($status)
     {
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('countPermitsAwarded')
             ->andReturn(5);
 
-        $entity = $this->createApplicationUnderConsideration();
+        $entity = $this->createApplication($status);
         $entity->addIrhpPermitApplications($irhpPermitApplication);
 
         $this->assertEquals(5, $entity->getPermitsAwarded());
+    }
+
+    public function dpTestGetPermitsAwarded()
+    {
+        return [
+            [Entity::STATUS_UNDER_CONSIDERATION],
+            [Entity::STATUS_AWAITING_FEE],
+        ];
     }
 
     /**
@@ -793,7 +1018,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     */
     public function testGetPermitsAwardedException()
     {
-        $entity = $this->createApplicationAwaitingFee();
+        $entity = $this->createApplication();
 
         $entity->getPermitsAwarded();
     }
@@ -801,14 +1026,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpProvideSuccessLevel
      */
-    public function testGetSuccessLevel($permitsRequired, $permitsAwarded, $expectedSuccessLevel)
+    public function testGetSuccessLevel($status, $requiredEuro5, $requiredEuro6, $permitsAwarded, $expectedSuccessLevel)
     {
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('countPermitsAwarded')
             ->andReturn($permitsAwarded);
 
-        $entity = $this->createApplicationUnderConsideration();
-        $entity->setPermitsRequired($permitsRequired);
+        $entity = $this->createApplication($status);
+        $entity->setRequiredEuro5($requiredEuro5);
+        $entity->setRequiredEuro6($requiredEuro6);
         $entity->addIrhpPermitApplications($irhpPermitApplication);
 
         $this->assertEquals(
@@ -825,12 +1051,18 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpProvideSuccessLevel()
     {
         return [
-            [10, 1, Entity::SUCCESS_LEVEL_PARTIAL],
-            [10, 9, Entity::SUCCESS_LEVEL_PARTIAL],
-            [10, 0, Entity::SUCCESS_LEVEL_NONE],
-            [1, 0, Entity::SUCCESS_LEVEL_NONE],
-            [1, 1, Entity::SUCCESS_LEVEL_FULL],
-            [10, 10, Entity::SUCCESS_LEVEL_FULL]
+            [Entity::STATUS_UNDER_CONSIDERATION, 5, 5, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [Entity::STATUS_UNDER_CONSIDERATION, 5, 5, 9, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [Entity::STATUS_UNDER_CONSIDERATION, 5, 5, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [Entity::STATUS_UNDER_CONSIDERATION, 1, 0, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [Entity::STATUS_UNDER_CONSIDERATION, 0, 1, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
+            [Entity::STATUS_UNDER_CONSIDERATION, 5, 5, 10, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
+            [Entity::STATUS_AWAITING_FEE, 5, 5, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [Entity::STATUS_AWAITING_FEE, 5, 5, 9, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [Entity::STATUS_AWAITING_FEE, 5, 5, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [Entity::STATUS_AWAITING_FEE, 1, 0, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [Entity::STATUS_AWAITING_FEE, 0, 1, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
+            [Entity::STATUS_AWAITING_FEE, 5, 5, 10, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
         ];
     }
 
@@ -839,7 +1071,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     */
     public function testGetSuccessLevelException()
     {
-        $entity = $this->createApplicationAwaitingFee();
+        $entity = $this->createApplication();
 
         $entity->getSuccessLevel();
     }
@@ -874,8 +1106,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpProvideOutcomeNotificationType()
     {
         return [
-            [Entity::SOURCE_SELFSERVE, Entity::NOTIFICATION_TYPE_EMAIL],
-            [Entity::SOURCE_INTERNAL, Entity::NOTIFICATION_TYPE_MANUAL]
+            [IrhpInterface::SOURCE_SELFSERVE, ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL],
+            [IrhpInterface::SOURCE_INTERNAL, ApplicationAcceptConsts::NOTIFICATION_TYPE_MANUAL]
         ];
     }
 
@@ -898,16 +1130,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpCantBeSubmittedByStatus()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_UNDER_CONSIDERATION],
-            [Entity::STATUS_WITHDRAWN],
-            [Entity::STATUS_AWAITING_FEE ],
-            [Entity::STATUS_FEE_PAID],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_ISSUING],
-            [Entity::STATUS_VALID],
-            [Entity::STATUS_DECLINED],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
         ];
     }
 
@@ -920,15 +1151,17 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testCanBeSubmittedTrue($licenceCanMakeApplication)
     {
         $sourceRefData = m::mock(RefData::class);
-        $statusRefData = new RefData(Entity::STATUS_NOT_YET_SUBMITTED);
+        $statusRefData = new RefData(IrhpInterface::STATUS_NOT_YET_SUBMITTED);
         $permitTypeRefData = m::mock(RefData::class);
         $licence = m::mock(Licence::class);
         $dateReceived = '2017-12-25';
         $sectors = m::mock(Sectors::class);
         $cabotage = 1;
+        $roadworthiness = 1;
         $declaration = 1;
         $emissions = 1;
-        $permitsRequired = 999;
+        $requiredEuro5 = 199;
+        $requiredEuro6 = 800;
         $trips = 666;
         $internationalJourneysRefData = m::mock(RefData::class);
         $countrys = new ArrayCollection([m::mock(Country::class)]);
@@ -942,16 +1175,28 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $sectors,
             $countrys,
             $cabotage,
+            $roadworthiness,
             $declaration,
             $emissions,
-            $permitsRequired,
+            $requiredEuro5,
+            $requiredEuro6,
             $trips,
             $internationalJourneysRefData
         );
 
+        $stock = m::mock(IrhpPermitStock::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stock);
+
+        $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
         $licence->shouldReceive('canMakeEcmtApplication')
             ->once()
-            ->with($application)
+            ->with($stock, $application)
             ->andReturn($licenceCanMakeApplication);
 
         self::assertEquals($licenceCanMakeApplication, $application->canBeSubmitted());
@@ -965,68 +1210,102 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         ];
     }
 
+    public function dpGetQuestionAnswerData()
+    {
+        $country1 = m::mock(Country::class);
+        $country1->shouldReceive('getCountryDesc')->withNoArgs()->andReturn('Country 1');
+        $country2 = m::mock(Country::class);
+        $country2->shouldReceive('getCountryDesc')->withNoArgs()->andReturn('Country 2');
+
+        $restrictedCountries = [$country1, $country2];
+
+        return [
+            'euro 5 only with restricted countries' => [
+                4,
+                null,
+                ['4 permits for Euro 5 minimum emission standard'],
+                $restrictedCountries,
+                ['Yes', 'Country 1, Country 2'],
+            ],
+            'euro 5 only with no restricted countries' => [
+                4,
+                null,
+                ['4 permits for Euro 5 minimum emission standard'],
+                [],
+                ['No'],
+            ],
+            'euro 6 only with restricted countries' => [
+                null,
+                7,
+                ['7 permits for Euro 6 minimum emission standard'],
+                $restrictedCountries,
+                ['Yes', 'Country 1, Country 2'],
+            ],
+            'euro 6 only with no restricted countries' => [
+                null,
+                7,
+                ['7 permits for Euro 6 minimum emission standard'],
+                [],
+                ['No'],
+            ],
+            'both emission types with restricted countries' => [
+                4,
+                7,
+                [
+                    '4 permits for Euro 5 minimum emission standard',
+                    '7 permits for Euro 6 minimum emission standard',
+                ],
+                $restrictedCountries,
+                ['Yes', 'Country 1, Country 2'],
+            ],
+            'both emission types with no restricted countries' => [
+                4,
+                7,
+                [
+                    '4 permits for Euro 5 minimum emission standard',
+                    '7 permits for Euro 6 minimum emission standard',
+                ],
+                [],
+                ['No'],
+            ],
+        ];
+    }
+
     /**
-     * @dataProvider dpReturnSnapshotData
+     * @dataProvider dpGetQuestionAnswerData
      */
-    public function testReturnSnapshotData(
-        $cabotage,
-        $cabotageResult,
-        $emissions,
-        $emissionsResult,
+    public function testGetQuestionAnswerData(
+        $requiredEuro5,
+        $requiredEuro6,
+        $expectedPermitsRequired,
         $countries,
-        $countriesResult,
-        $countriesListResult,
-        $emissionsQuestion,
-        $emissionsCategory,
-        $emissionsDeclaration
+        $countriesAnswer
     ) {
         $licNo = 'OB1234567';
-        $id = 1111;
-        $applicationRef = $licNo . ' / ' . $id;
-        $orgName = 'org name';
-        $permitTypeDesc = 'permit type desc';
-        $internationalJourneysDesc = 'international journey desc';
+        $internationalJourneysRefDataId = 'international journey ref data id';
         $sectorName = 'sector name';
+        $dateReceived = '2017-12-25';
+        $emissionsValue = 1;
+        $roadworthinessValue = 0;
+        $cabotageValue = 1;
+        $declaration = 1;
+        $trips = 666;
+        $year = 2019;
+        $permitsRequiredAnswer = array_merge(['Permits for '  . $year], $expectedPermitsRequired);
 
         $sectors = m::mock(Sectors::class);
         $sectors->shouldReceive('getName')->once()->withNoArgs()->andReturn($sectorName);
         $sourceRefData = m::mock(RefData::class);
         $statusRefData = m::mock(RefData::class);
         $permitTypeRefData = m::mock(RefData::class);
-        $permitTypeRefData->shouldReceive('getDescription')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($permitTypeDesc);
         $internationalJourneysRefData = m::mock(RefData::class);
-        $internationalJourneysRefData->shouldReceive('getDescription')
+        $internationalJourneysRefData->shouldReceive('getId')
             ->once()
             ->withNoArgs()
-            ->andReturn($internationalJourneysDesc);
+            ->andReturn($internationalJourneysRefDataId);
 
         $licence = m::mock(Licence::class);
-        $licence->shouldReceive('getLicNo')->twice()->withNoArgs()->andReturn($licNo);
-        $licence->shouldReceive('getOrganisation->getName')->once()->withNoArgs()->andReturn($orgName);
-        $dateReceived = '2017-12-25';
-        $declaration = 1;
-        $permitsRequired = 999;
-        $trips = 666;
-
-        $expectedData = [
-            'permitType' => $permitTypeDesc,
-            'operator' => $orgName,
-            'ref' => $applicationRef,
-            'licence' => $licNo,
-            'emissions' => $emissionsResult,
-            'cabotage' => $cabotageResult,
-            'limitedCountries' => $countriesResult,
-            'limitedCountriesList' => $countriesListResult,
-            'permitsRequired' => $permitsRequired,
-            'trips' => $trips,
-            'internationalJourneys' => $internationalJourneysDesc,
-            'goods' => $sectorName,
-            'emissionsQuestion' => $emissionsQuestion,
-            'emissionsDeclaration' => $emissionsDeclaration
-        ];
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
 
         $application = Entity::createNewInternal(
             $sourceRefData,
@@ -1036,96 +1315,71 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $dateReceived,
             $sectors,
             new ArrayCollection($countries),
-            $cabotage,
+            $cabotageValue,
+            $roadworthinessValue,
             $declaration,
-            $emissions,
-            $permitsRequired,
+            $emissionsValue,
+            $requiredEuro5,
+            $requiredEuro6,
             $trips,
             $internationalJourneysRefData
         );
 
-        $application->setId($id);
-        $application->setHasRestrictedCountries(!empty($countries));
-
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getEmissionsCategory->getId')
-            ->andReturn($emissionsCategory);
-        $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getValidityYear')
+            ->once()
+            ->andReturn($year);
+        $application->addIrhpPermitApplications($irhpPermitApplication);
 
-        $this->assertSame($expectedData, $application->returnSnapshotData());
-    }
-
-    public function dpReturnSnapshotData()
-    {
-        $country1 = m::mock(Country::class);
-        $country1->shouldReceive('getCountryDesc')
-            ->andReturn('country 1');
-
-        $country2 = m::mock(Country::class);
-        $country2->shouldReceive('getCountryDesc')
-            ->andReturn('country 2');
-
-        return [
-            'Euro 5' => [
-                'cabotage' => 1,
-                'cabotageResult' => 'Yes',
-                'emissions' => 0,
-                'emissionsResult' => 'No',
-                'countries' => [$country1, $country2],
-                'countriesResult' => 'Yes',
-                'countriesListResult' => null,
-                'emissionsQuestion'
-                    => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally '
-                        . 'compliant with Euro 5 emissions standards as a minimum.',
-                'emissionsCategory' => IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF,
-                'emissionsDeclaration'
-                    => 'I confirm that I will not transport goods to, through and from Austria, Greece, Hungary, '
-                        . 'Italy or Russia using this ECMT permit.'
+        $expectedData = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $licNo,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
-            'Euro 6' => [
-                'cabotage' => 0,
-                'cabotageResult' => 'No',
-                'emissions' => 1,
-                'emissionsResult' => 'Yes',
-                'countries' => [$country1, $country2],
-                'countriesResult' => 'Yes',
-                'countriesListResult' => 'country 1, country 2',
-                'emissionsQuestion'
-                    => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally '
-                        . 'compliant with Euro 6 emissions standards.',
-                'emissionsCategory' => IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
-                'emissionsDeclaration'
-                    => 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?'
+            [
+                'question' => 'permits.form.cabotage.label',
+                'answer' =>  $cabotageValue,
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
             ],
-            'Euro 6 without countries' => [
-                'cabotage' => 0,
-                'cabotageResult' => 'No',
-                'emissions' => 1,
-                'emissionsResult' => 'Yes',
-                'countries' => [],
-                'countriesResult' => 'No',
-                'countriesListResult' => null,
-                'emissionsQuestion'
-                    => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally '
-                        . 'compliant with Euro 6 emissions standards.',
-                'emissionsCategory' => IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
-                'emissionsDeclaration'
-                    => 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?'
+            [
+                'question' => 'permits.page.roadworthiness.question',
+                'answer' =>  $roadworthinessValue,
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
+            ],
+            [
+                'question' => 'permits.page.restricted-countries.question',
+                'answer' => $countriesAnswer,
+                'questionType' => Question::QUESTION_TYPE_STRING,
+            ],
+            [
+                'question' => 'permits.form.euro-emissions.label',
+                'answer' =>  $emissionsValue,
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
+            ],
+            [
+                'question' => 'permits.page.permits.required.question',
+                'answer' => $permitsRequiredAnswer,
+                'questionType' => Question::QUESTION_TYPE_STRING,
+            ],
+            [
+                'question' => 'permits.page.number-of-trips.question',
+                'answer' => $trips,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
+            ],
+            [
+                'question' => 'permits.page.international.journey.question',
+                'answer' => $internationalJourneysRefDataId,
+                'questionType' => Question::QUESTION_TYPE_STRING,
+            ],
+            [
+                'question' => 'permits.page.sectors.question',
+                'answer' => $sectorName,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
         ];
-    }
 
-    public function testGetWindowEmissionsCategory()
-    {
-        $entity = $this->createApplication();
-
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getEmissionsCategory->getId')
-            ->andReturn(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF);
-
-        $entity->addIrhpPermitApplications($irhpPermitApplication);
-
-        $this->assertEquals(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF, $entity->getWindowEmissionsCategory());
+        $this->assertEquals($expectedData, $application->getQuestionAnswerData());
     }
 
     /**
@@ -1244,30 +1498,423 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpCanBeExpired()
     {
         return [
-            [Entity::STATUS_CANCELLED, true, false],
-            [Entity::STATUS_NOT_YET_SUBMITTED, true, false],
-            [Entity::STATUS_UNDER_CONSIDERATION, true, false],
-            [Entity::STATUS_WITHDRAWN, true, false],
-            [Entity::STATUS_AWAITING_FEE, true, false],
-            [Entity::STATUS_FEE_PAID, true, false],
-            [Entity::STATUS_UNSUCCESSFUL, true, false],
-            [Entity::STATUS_ISSUED, true, false],
-            [Entity::STATUS_ISSUING, true, false],
-            [Entity::STATUS_VALID, true, false],
-            [Entity::STATUS_DECLINED, true, false],
-            [Entity::STATUS_EXPIRED, true, false],
-            [Entity::STATUS_CANCELLED, false, false],
-            [Entity::STATUS_NOT_YET_SUBMITTED, false, false],
-            [Entity::STATUS_UNDER_CONSIDERATION, false, false],
-            [Entity::STATUS_WITHDRAWN, false, false],
-            [Entity::STATUS_AWAITING_FEE, false, false],
-            [Entity::STATUS_FEE_PAID, false, false],
-            [Entity::STATUS_UNSUCCESSFUL, false, false],
-            [Entity::STATUS_ISSUED, false, false],
-            [Entity::STATUS_ISSUING, false, false],
-            [Entity::STATUS_VALID, false, true],
-            [Entity::STATUS_DECLINED, false, false],
-            [Entity::STATUS_EXPIRED, false, false]
+            [IrhpInterface::STATUS_CANCELLED, true, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true, false],
+            [IrhpInterface::STATUS_WITHDRAWN, true, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, true, false],
+            [IrhpInterface::STATUS_FEE_PAID, true, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, true, false],
+            [IrhpInterface::STATUS_ISSUED, true, false],
+            [IrhpInterface::STATUS_ISSUING, true, false],
+            [IrhpInterface::STATUS_VALID, true, false],
+            [IrhpInterface::STATUS_EXPIRED, true, false],
+            [IrhpInterface::STATUS_CANCELLED, false, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false, false],
+            [IrhpInterface::STATUS_FEE_PAID, false, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false, false],
+            [IrhpInterface::STATUS_ISSUED, false, false],
+            [IrhpInterface::STATUS_ISSUING, false, false],
+            [IrhpInterface::STATUS_VALID, false, true],
+            [IrhpInterface::STATUS_EXPIRED, false, false]
         ];
+    }
+
+    /**
+     * @dataProvider dpTestIsActive
+     */
+    public function testIsActive($status, $expected)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertSame($expected, $entity->isActive());
+    }
+
+    public function dpTestIsActive()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, true],
+            [IrhpInterface::STATUS_FEE_PAID, true],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, true],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_EXPIRED, false],
+        ];
+    }
+
+    public function testCalculateTotalPermitsRequired()
+    {
+        $entity = $this->createApplicationWithCompletedDeclaration();
+
+        $entity->setRequiredEuro5(2);
+        $entity->setRequiredEuro6(2);
+
+        $total = $entity->calculateTotalPermitsRequired();
+
+        $this->assertEquals($total, 4);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    public function testCalculateTotalPermitsRequiredWhenNull()
+    {
+        $entity = $this->createApplicationWithCompletedDeclaration();
+        $entity->calculateTotalPermitsRequired();
+    }
+
+    public function testExpire()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeExpired')
+            ->andReturn(true);
+
+        $this->assertNull($entity->getExpiryDate());
+        $status = m::mock(RefData::class);
+
+        $entity->expire($status);
+        $this->assertSame($status, $entity->getStatus());
+        $this->assertInstanceOf(DateTime::class, $entity->getExpiryDate());
+    }
+
+    /**
+     * @dataProvider dpTestHasOutstandingFees
+     */
+    public function testHasOutstandingFees($feeArray, $expected)
+    {
+        $mockEntity = m::mock(Entity::class)->makePartial();
+        $mockEntity->shouldReceive('getLatestOutstandingEcmtApplicationFee')
+            ->andReturn($feeArray);
+        $this->assertEquals($expected, $mockEntity->hasOutstandingFees());
+    }
+
+    public function dpTestHasOutstandingFees()
+    {
+        return [
+            [null, false],
+            [[1], true]
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetLatestOutstandingEcmtApplicationFee
+     */
+    public function testGetLatestOutstandingEcmtApplicationFee($fees, $expectedFee)
+    {
+        $entity = $this->createApplicationAwaitingFee();
+        $entity->setFees($fees);
+        $this->assertSame($expectedFee, $entity->getLatestOutstandingEcmtApplicationFee());
+    }
+
+    public function dpTestGetLatestOutstandingEcmtApplicationFee()
+    {
+        $appFeeOutstanding = m::mock(Fee::class);
+        $appFeeOutstanding
+            ->shouldReceive('isOutstanding')
+            ->andReturn(true);
+        $appFeeOutstanding
+            ->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_ECMT_APP);
+        $appFeeOutstanding->allows('getInvoicedDate')
+            ->andReturn('2022-01-02 10:10:11');
+
+        $appFeePaid = m::mock(Fee::class);
+        $appFeePaid
+            ->shouldReceive('isOutstanding')
+            ->andReturn(false);
+        $appFeePaid->allows('getInvoicedDate')
+            ->andReturn('2022-01-02 10:10:11');
+
+        $issueFeeOutstanding = m::mock(Fee::class);
+        $issueFeeOutstanding
+            ->shouldReceive('isOutstanding')
+            ->andReturn(true);
+        $issueFeeOutstanding
+            ->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_ECMT_ISSUE);
+        $issueFeeOutstanding->allows('getInvoicedDate')
+            ->andReturn('2022-01-05 10:10:11');
+
+        $issueFeePaid = m::mock(Fee::class);
+        $issueFeePaid
+            ->shouldReceive('isOutstanding')
+            ->andReturn(false);
+        $issueFeePaid->allows('getInvoicedDate')
+            ->andReturn('2022-01-07 12:10:11');
+
+        $singleOutstanding = new ArrayCollection([$appFeeOutstanding]);
+        $noOutstanding = new ArrayCollection([$appFeePaid]);
+        $issueOutstanding = new ArrayCollection([$appFeePaid, $issueFeeOutstanding]);
+        $noFees = new ArrayCollection();
+        $allPaid = new ArrayCollection([$appFeePaid, $issueFeePaid]);
+
+        return [
+            [$singleOutstanding, $appFeeOutstanding],
+            [$noOutstanding, null],
+            [$issueOutstanding, $issueFeeOutstanding],
+            [$noFees, null],
+            [$allPaid, null]
+        ];
+    }
+
+    public function testGetCamelCaseEntityName()
+    {
+        $application = $this->createApplication();
+
+        $this->assertEquals(
+            'ecmtPermitApplication',
+            $application->getCamelCaseEntityName()
+        );
+    }
+
+    public function testGetEmailCommandLookup()
+    {
+        $expectedEmailCommandLookup = [
+            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+        ];
+
+        $application = $this->createApplication();
+
+        $this->assertEquals(
+            $expectedEmailCommandLookup,
+            $application->getEmailCommandLookup()
+        );
+    }
+
+    public function testGetIssueFeeProductReference()
+    {
+        $productReference = 'PRODUCT_REFERENCE_FOR_TIER';
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getProductReferenceForTier')
+            ->andReturn($productReference);
+
+        $this->assertSame(
+            $productReference,
+            $entity->getIssueFeeProductReference()
+        );
+    }
+
+    /**
+     * @dataProvider dpUpdateChecked
+     */
+    public function testUpdateChecked($checked)
+    {
+        $entity = $this->createApplication();
+
+        $entity->updateChecked($checked);
+        $this->assertEquals($checked, $entity->getChecked());
+    }
+
+    public function dpUpdateChecked()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    public function testGetSubmissionTaskDescription()
+    {
+        $entity = $this->createApplication();
+
+        $this->assertEquals(
+            Task::TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED,
+            $entity->getSubmissionTaskDescription()
+        );
+    }
+
+    public function testRequiresPreAllocationCheck()
+    {
+        $entity = $this->createApplication();
+
+        $this->assertTrue(
+            $entity->requiresPreAllocationCheck()
+        );
+    }
+
+    public function testFetchOpenSubmissionTask()
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getSubmissionTaskDescription')
+            ->withNoArgs()
+            ->andReturn('submission task');
+
+        $task1 = $this->createMockTask('description 1', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task2 = $this->createMockTask('submission task', 'Y', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task3 = $this->createMockTask('submission task', 'N', Task::CATEGORY_BUS, Task::SUBCATEGORY_APPLICATION);
+        $task4 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task5 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task6 = $this->createMockTask('description 2', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+
+        $application->setTasks(
+            new ArrayCollection([$task1, $task2, $task3, $task4, $task5, $task6])
+        );
+
+        $this->assertSame(
+            $task5,
+            $application->fetchOpenSubmissionTask()
+        );
+    }
+
+    public function testFetchOpenSubmissionTaskNull()
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getSubmissionTaskDescription')
+            ->withNoArgs()
+            ->andReturn('submission task');
+
+        $task1 = $this->createMockTask('description 1', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task2 = $this->createMockTask('submission task', 'Y', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task3 = $this->createMockTask('submission task', 'N', Task::CATEGORY_BUS, Task::SUBCATEGORY_APPLICATION);
+        $task4 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task5 = $this->createMockTask('description 2', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+
+        $application->setTasks(
+            new ArrayCollection([$task1, $task2, $task3, $task4, $task5])
+        );
+
+        $this->assertNull(
+            $application->fetchOpenSubmissionTask()
+        );
+    }
+
+    private function createMockTask($description, $isClosed, $categoryId, $subcategoryId)
+    {
+        $task = m::mock(Task::class);
+        $task->shouldReceive('getDescription')
+            ->withNoArgs()
+            ->andReturn($description);
+        $task->shouldReceive('getIsClosed')
+            ->withNoArgs()
+            ->andReturn($isClosed);
+        $task->shouldReceive('getCategory->getId')
+            ->withNoArgs()
+            ->andReturn($categoryId);
+        $task->shouldReceive('getSubcategory->getId')
+            ->withNoArgs()
+            ->andReturn($subcategoryId);
+
+        return $task;
+    }
+
+    /**
+     * @dataProvider dpCanBeRevivedFromWithdrawn
+     */
+    public function testCanBeRevivedFromWithdrawn($withdrawReason, $inScope, $expected)
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $withdrawReasonRefData = m::mock(RefData::class);
+        $withdrawReasonRefData->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($withdrawReason);
+
+        $application->setWithdrawReason($withdrawReasonRefData);
+
+        $application->shouldReceive('isWithdrawn')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $application->shouldReceive('getInScope')
+            ->withNoArgs()
+            ->andReturn($inScope);
+
+        $this->assertEquals(
+            $expected,
+            $application->canBeRevivedFromWithdrawn()
+        );
+    }
+
+    public function dpCanBeRevivedFromWithdrawn()
+    {
+        return [
+            [WithdrawableInterface::WITHDRAWN_REASON_UNPAID, true, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_DECLINED, true, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS, true, false],
+            [WithdrawableInterface::WITHDRAWN_REASON_DECLINED, false, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanBeRevivedFromWithdrawnNotWithdrawn
+     */
+    public function testCanBeRevivedFromWithdrawnNotWithdrawn($inScope, $expected)
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->setWithdrawReason(null);
+
+        $application->shouldReceive('isWithdrawn')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $application->shouldReceive('getInScope')
+            ->withNoArgs()
+            ->andReturn($inScope);
+
+        $this->assertEquals(
+            $expected,
+            $application->canBeRevivedFromWithdrawn()
+        );
+    }
+
+    public function dpCanBeRevivedFromWithdrawnNotWithdrawn()
+    {
+        return [
+            [true, false],
+            [false, false],
+        ];
+    }
+
+    public function testReviveFromWithdrawn()
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $withdrawnStatus = m::mock(RefData::class);
+        $withdrawnDate = m::mock(DateTime::class);
+
+        $underConsiderationStatus = m::mock(RefData::class);
+
+        $application->setStatus($withdrawnStatus);
+        $application->setWithdrawReason(WithdrawableInterface::WITHDRAWN_REASON_DECLINED);
+        $application->setWithdrawnDate = $withdrawnDate;
+
+        $application->shouldReceive('canBeRevivedFromWithdrawn')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $application->reviveFromWithdrawn($underConsiderationStatus);
+
+        $this->assertSame($underConsiderationStatus, $application->getStatus());
+        $this->assertNull($application->getWithdrawReason());
+        $this->assertNull($application->getWithdrawnDate());
+    }
+
+    public function testReviveFromWithdrawnException()
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Unable to revive this application from a withdrawn state');
+
+        $application->shouldReceive('canBeRevivedFromWithdrawn')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $application->reviveFromWithdrawn(
+            m::mock(RefData::class)
+        );
     }
 }

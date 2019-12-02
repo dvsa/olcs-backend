@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateIssueFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
@@ -31,16 +32,18 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testPermitCountChanged()
+    public function testBilateralFeesRequiredChanged()
     {
         $irhpApplicationId = 44;
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
         $irhpApplication->shouldReceive('getPermitsRequired')
             ->andReturn(17);
-        $irhpApplication->shouldReceive('storePermitsRequired')
+        $irhpApplication->shouldReceive('storeFeesRequired')
             ->once()
             ->ordered()
             ->globally();
@@ -105,7 +108,7 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
             ->ordered()
             ->globally();
 
-        $irhpApplication->shouldReceive('hasPermitsRequiredChanged')
+        $irhpApplication->shouldReceive('haveFeesRequiredChanged')
             ->once()
             ->ordered()
             ->globally()
@@ -193,16 +196,16 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         );
     }
 
-    public function testPermitCountNotChanged()
+    public function testBilateralFeesRequiredNotChanged()
     {
         $irhpApplicationId = 44;
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
-        $irhpApplication->shouldReceive('getPermitsRequired')
-            ->andReturn(17);
-        $irhpApplication->shouldReceive('storePermitsRequired')
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+        $irhpApplication->shouldReceive('storeFeesRequired')
             ->once()
             ->ordered()
             ->globally();
@@ -267,7 +270,7 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
             ->ordered()
             ->globally();
 
-        $irhpApplication->shouldReceive('hasPermitsRequiredChanged')
+        $irhpApplication->shouldReceive('haveFeesRequiredChanged')
             ->once()
             ->ordered()
             ->globally()
@@ -343,11 +346,11 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         );
     }
 
-    public function testPermitsRequiredOutOfRange()
+    public function testBilateralPermitsRequiredOutOfRange()
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Out of range data for country ES in year 2020 - expected range 0 to 4 but received 7'
+            'Out of range data for stock id 8 - expected range 0 to 4 but received 7'
         );
 
         $irhpApplicationId = 44;
@@ -355,9 +358,9 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
-        $irhpApplication->shouldReceive('getPermitsRequired')
-            ->andReturn(17);
-        $irhpApplication->shouldReceive('storePermitsRequired')
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+        $irhpApplication->shouldReceive('storeFeesRequired')
             ->once()
             ->ordered()
             ->globally();
@@ -406,7 +409,7 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitApplication']->shouldReceive('flushAll')
             ->never();
 
-        $irhpApplication->shouldReceive('hasPermitsRequiredChanged')
+        $irhpApplication->shouldReceive('haveFeesRequiredChanged')
             ->never();
 
         $this->sut->shouldReceive('handleQuery')
@@ -471,7 +474,7 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    public function testMissingPermitsRequiredData()
+    public function testBilateralMissingPermitsRequiredData()
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
@@ -483,9 +486,9 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
-        $irhpApplication->shouldReceive('getPermitsRequired')
-            ->andReturn(17);
-        $irhpApplication->shouldReceive('storePermitsRequired')
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+        $irhpApplication->shouldReceive('storeFeesRequired')
             ->once()
             ->ordered()
             ->globally();
@@ -534,7 +537,7 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitApplication']->shouldReceive('flushAll')
             ->never();
 
-        $irhpApplication->shouldReceive('hasPermitsRequiredChanged')
+        $irhpApplication->shouldReceive('haveFeesRequiredChanged')
             ->never();
 
         $this->sut->shouldReceive('handleQuery')
@@ -616,6 +619,462 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testMultilateralFeesRequiredChanged()
+    {
+        $irhpApplicationId = 44;
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+        $irhpApplication->shouldReceive('getPermitsRequired')
+            ->andReturn(17);
+        $irhpApplication->shouldReceive('storeFeesRequired')
+            ->once()
+            ->ordered()
+            ->globally();
+        $irhpApplication->shouldReceive('resetCheckAnswersAndDeclaration')
+            ->once()
+            ->ordered()
+            ->globally();
+        $irhpApplication->shouldReceive('isReadyForNoOfPermits')
+            ->andReturn(true);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpApplication)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpPermitApplication2019 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2019->shouldReceive('updatePermitsRequired')
+            ->with(2)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpPermitApplication2019)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpPermitApplication2020 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2020->shouldReceive('updatePermitsRequired')
+            ->with(4)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpPermitApplication2020)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('flushAll')
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpApplication->shouldReceive('haveFeesRequiredChanged')
+            ->once()
+            ->ordered()
+            ->globally()
+            ->andReturn(true);
+
+        $this->expectedSideEffect(
+            RegenerateApplicationFee::class,
+            ['id' => $irhpApplicationId],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            RegenerateIssueFee::class,
+            ['id' => $irhpApplicationId],
+            new Result()
+        );
+
+        $this->sut->shouldReceive('handleQuery')
+            ->andReturnUsing(function ($query) use ($irhpApplicationId) {
+                $this->assertInstanceOf(MaxStockPermitsByApplication::class, $query);
+                $this->assertEquals($irhpApplicationId, $query->getId());
+
+                return [
+                    'result' => [
+                        7 => 12,
+                        8 => 4,
+                    ]
+                ];
+            });
+
+        $irhpApplicationWithStockInfoResponse = [
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2019,
+                'validTo' => '2019-12-31',
+                'countryId' => null,
+                'stockId' => 7
+            ],
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2020,
+                'validTo' => '2020-12-31',
+                'countryId' => null,
+                'stockId' => 8
+            ],
+        ];
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('getByIrhpApplicationWithStockInfo')
+            ->andReturn($irhpApplicationWithStockInfoResponse);
+
+        $commandPermitsRequired = [
+            2019 => 2,
+            2020 => 4,
+        ];
+
+        $command = m::mock(CommandInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $command->shouldReceive('getPermitsRequired')
+            ->andReturn($commandPermitsRequired);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
+        $this->assertEquals(
+            [
+                'Updated 2 required permit counts for IRHP application'
+            ],
+            $result->getMessages()
+        );
+    }
+
+    public function testMultilateralFeesRequiredNotChanged()
+    {
+        $irhpApplicationId = 44;
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+        $irhpApplication->shouldReceive('storeFeesRequired')
+            ->once()
+            ->ordered()
+            ->globally();
+        $irhpApplication->shouldReceive('resetCheckAnswersAndDeclaration')
+            ->once()
+            ->ordered()
+            ->globally();
+        $irhpApplication->shouldReceive('isReadyForNoOfPermits')
+            ->andReturn(true);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpApplication)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpPermitApplication2019 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2019->shouldReceive('updatePermitsRequired')
+            ->with(2)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpPermitApplication2019)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpPermitApplication2020 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2020->shouldReceive('updatePermitsRequired')
+            ->with(4)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpPermitApplication2020)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('flushAll')
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpApplication->shouldReceive('haveFeesRequiredChanged')
+            ->once()
+            ->ordered()
+            ->globally()
+            ->andReturn(false);
+
+        $this->sut->shouldReceive('handleQuery')
+            ->andReturnUsing(function ($query) use ($irhpApplicationId) {
+                $this->assertInstanceOf(MaxStockPermitsByApplication::class, $query);
+                $this->assertEquals($irhpApplicationId, $query->getId());
+
+                return [
+                    'result' => [
+                        7 => 12,
+                        8 => 4,
+                    ]
+                ];
+            });
+
+        $irhpApplicationWithStockInfoResponse = [
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2019,
+                'validTo' => '2019-12-31',
+                'countryId' => null,
+                'stockId' => 7
+            ],
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2020,
+                'validTo' => '2020-12-31',
+                'countryId' => null,
+                'stockId' => 8
+            ],
+        ];
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('getByIrhpApplicationWithStockInfo')
+            ->andReturn($irhpApplicationWithStockInfoResponse);
+
+        $commandPermitsRequired = [
+            2019 => 2,
+            2020 => 4,
+        ];
+
+        $command = m::mock(CommandInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $command->shouldReceive('getPermitsRequired')
+            ->andReturn($commandPermitsRequired);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
+        $this->assertEquals(
+            [
+                'Updated 2 required permit counts for IRHP application'
+            ],
+            $result->getMessages()
+        );
+    }
+
+    public function testMultilateralPermitsRequiredOutOfRange()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Out of range data for stock id 8 - expected range 0 to 4 but received 7'
+        );
+
+        $irhpApplicationId = 44;
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+        $irhpApplication->shouldReceive('storeFeesRequired')
+            ->once()
+            ->ordered()
+            ->globally();
+        $irhpApplication->shouldReceive('resetCheckAnswersAndDeclaration')
+            ->never();
+        $irhpApplication->shouldReceive('isReadyForNoOfPermits')
+            ->andReturn(true);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpApplication)
+            ->never();
+
+        $irhpPermitApplication2019 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2019->shouldReceive('updatePermitsRequired')
+            ->with(2)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpPermitApplication2019)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpPermitApplication2020 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2020->shouldReceive('updatePermitsRequired')
+            ->never();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpPermitApplication2020)
+            ->never();
+
+        $irhpApplication->shouldReceive('haveFeesRequiredChanged')
+            ->never();
+
+        $this->sut->shouldReceive('handleQuery')
+            ->andReturnUsing(function ($query) use ($irhpApplicationId) {
+                $this->assertInstanceOf(MaxStockPermitsByApplication::class, $query);
+                $this->assertEquals($irhpApplicationId, $query->getId());
+
+                return [
+                    'result' => [
+                        7 => 12,
+                        8 => 4,
+                    ]
+                ];
+            });
+
+        $irhpApplicationWithStockInfoResponse = [
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2019,
+                'validTo' => '2019-12-31',
+                'countryId' => null,
+                'stockId' => 7
+            ],
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2020,
+                'validTo' => '2020-12-31',
+                'countryId' => null,
+                'stockId' => 8
+            ],
+        ];
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('getByIrhpApplicationWithStockInfo')
+            ->andReturn($irhpApplicationWithStockInfoResponse);
+
+        $commandPermitsRequired = [
+            2019 => 2,
+            2020 => 7,
+        ];
+
+        $command = m::mock(CommandInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $command->shouldReceive('getPermitsRequired')
+            ->andReturn($commandPermitsRequired);
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testMultilateralMissingPermitsRequiredData()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Missing data or incorrect type for year 2020'
+        );
+
+        $irhpApplicationId = 44;
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+        $irhpApplication->shouldReceive('storeFeesRequired')
+            ->once()
+            ->ordered()
+            ->globally();
+        $irhpApplication->shouldReceive('resetCheckAnswersAndDeclaration')
+            ->never();
+        $irhpApplication->shouldReceive('isReadyForNoOfPermits')
+            ->andReturn(true);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpApplication)
+            ->never();
+
+        $irhpPermitApplication2019 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2019->shouldReceive('updatePermitsRequired')
+            ->with(2)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpPermitApplication2019)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpPermitApplication2020 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2020->shouldReceive('updatePermitsRequired')
+            ->never();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
+            ->with($irhpPermitApplication2020)
+            ->never();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('flushAll')
+            ->never();
+
+        $irhpApplication->shouldReceive('haveFeesRequiredChanged')
+            ->never();
+
+        $this->sut->shouldReceive('handleQuery')
+            ->andReturnUsing(function ($query) use ($irhpApplicationId) {
+                $this->assertInstanceOf(MaxStockPermitsByApplication::class, $query);
+                $this->assertEquals($irhpApplicationId, $query->getId());
+
+                return [
+                    'result' => [
+                        7 => 12,
+                        8 => 4,
+                    ]
+                ];
+            });
+
+        $irhpApplicationWithStockInfoResponse = [
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2019,
+                'validTo' => '2019-12-31',
+                'countryId' => null,
+                'stockId' => 7
+            ],
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2020,
+                'validTo' => '2020-12-31',
+                'countryId' => null,
+                'stockId' => 8
+            ],
+        ];
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('getByIrhpApplicationWithStockInfo')
+            ->andReturn($irhpApplicationWithStockInfoResponse);
+
+        $commandPermitsRequired = [
+            2019 => 2,
+        ];
+
+        $command = m::mock(CommandInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $command->shouldReceive('getPermitsRequired')
+            ->andReturn($commandPermitsRequired);
 
         $this->sut->handleCommand($command);
     }

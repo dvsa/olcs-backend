@@ -18,7 +18,7 @@ class EcmtPermitFees extends AbstractQueryHandler implements ToggleRequiredInter
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'FeeType';
 
     public function handleQuery(QueryInterface $query)

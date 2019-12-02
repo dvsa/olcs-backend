@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByEcmtId;
@@ -26,23 +26,30 @@ class IrhpPermit extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * Returns the count of permits in the specified stock
+     * Returns the count of permits in the specified stock, filtered by emissions category if provided
      *
      * @param int $stockId
+     * @param string $emissionsCategoryId (optional)
      *
      * @return int
      */
-    public function getPermitCount($stockId)
+    public function getPermitCount($stockId, $emissionsCategoryId = null)
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('count(ip.id)')
             ->from(Entity::class, 'ip')
             ->innerJoin('ip.irhpPermitRange', 'ipr')
             ->where('IDENTITY(ipr.irhpPermitStock) = ?1')
             ->andWhere('ipr.ssReserve = false')
             ->andWhere('ipr.lostReplacement = false')
-            ->setParameter(1, $stockId)
-            ->getQuery()
+            ->setParameter(1, $stockId);
+
+        if (!is_null($emissionsCategoryId)) {
+            $qb->andWhere('IDENTITY(ipr.emissionsCategory) = ?2')
+                ->setParameter(2, $emissionsCategoryId);
+        }
+
+        return $qb->getQuery()
             ->getSingleScalarResult();
     }
 
@@ -95,10 +102,11 @@ class IrhpPermit extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query instanceof ValidEcmtPermits) {
-            $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
-                ->setParameter('ecmtId', $query->getId());
-            $qb->andWhere($qb->expr()->notIn($this->alias . '.status', ':statuses'))
-                ->setParameter('statuses', Entity::$nonValidStatuses);
+            $qb->innerJoin('ipa.ecmtPermitApplication', 'epa')
+                ->andWhere($qb->expr()->eq('epa.licence', ':licenceId'))
+                ->setParameter('licenceId', $query->getLicence());
+            $qb->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
+                ->setParameter('statuses', Entity::$validStatuses);
             $qb->orderBy($this->alias . '.permitNumber', 'DESC');
         } elseif ($query instanceof ReadyToPrint) {
             if ($query->getIrhpPermitStock() != null) {
@@ -132,14 +140,17 @@ class IrhpPermit extends AbstractRepository
                 ->setParameter('irhpId', $query->getIrhpApplication());
         }
 
-        if (($query instanceof GetListByLicence) && ($query->getLicence() !== null)) {
+        if ($query instanceof GetListByLicence) {
             $qb->innerJoin('ipa.irhpApplication', 'ia')
-                ->innerJoin('ipa.irhpPermitWindow', 'ipw')
-                ->innerJoin('ipw.irhpPermitStock', 'ips')
-                ->innerJoin('ips.country', 'ipc')
+                ->innerJoin($this->alias . '.irhpPermitRange', 'ipr')
+                ->innerJoin('ipr.irhpPermitStock', 'ips')
+                ->leftJoin('ips.country', 'ipc')
                 ->andWhere($qb->expr()->eq('ia.licence', ':licenceId'))
                 ->setParameter('licenceId', $query->getLicence())
-                ->andWhere($qb->expr()->isNotNull('ipa.irhpApplication'));
+                ->andWhere($qb->expr()->eq('ips.irhpPermitType', ':irhpPermitTypeId'))
+                ->setParameter('irhpPermitTypeId', $query->getIrhpPermitType())
+                ->andWhere($qb->expr()->in($this->alias . '.status', ':validStatuses'))
+                ->setParameter('validStatuses', Entity::$validStatuses);
 
             $qb->orderBy('ipc.countryDesc', 'ASC');
             $qb->addOrderBy($this->alias . '.expiryDate', 'ASC');
@@ -216,5 +227,15 @@ class IrhpPermit extends AbstractRepository
         );
 
         return $statement->fetchAll();
+    }
+
+    /**
+     * Mark all permits with validity date in the past as expired
+     *
+     * @return void
+     */
+    public function markAsExpired()
+    {
+        $this->getDbQueryManager()->get(ExpireIrhpPermitsQuery::class)->execute([]);
     }
 }

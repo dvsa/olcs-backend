@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\File;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
-use Dvsa\Olcs\DocumentShare\Service\Client as ContentStoreClient;
+use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 use Zend\Http\Response;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -18,7 +18,9 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
 {
     const ERR_UNABLE_UPLOAD = 'Unable to store uploaded file: %s';
 
-    /** @var ContentStoreClient */
+    /**
+     * @var DocumentStoreInterface
+     */
     private $contentStoreClient;
 
     /**
@@ -30,9 +32,8 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->contentStoreClient = $serviceLocator->get('ContentStore');
-
-        return $this;
+          $this->contentStoreClient = $serviceLocator->get('ContentStore');
+          return $this;
     }
 
     /**

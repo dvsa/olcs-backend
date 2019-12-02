@@ -30,8 +30,8 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $id = 1;
         $permitType = '1';
-        $validFrom = '2019-01-01';
-        $validTo = '2019-01-01';
+        $validFrom = '2119-01-01';
+        $validTo = '2119-01-01';
         $initialStock = '1500';
 
         $cmdData = [
@@ -66,7 +66,7 @@ class UpdateTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']
             ->shouldReceive('getPermitStockCountByTypeDate')
             ->once()
-            ->with($cmdData['irhpPermitType'], $cmdData['validFrom'], $cmdData['validTo'])
+            ->with($cmdData['irhpPermitType'], $cmdData['validFrom'], $cmdData['validTo'], 0)
             ->andReturn(0);
 
         $this->repoMap['IrhpPermitStock']

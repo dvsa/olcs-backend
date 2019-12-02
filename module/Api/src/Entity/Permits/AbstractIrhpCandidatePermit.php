@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,7 +29,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_range_id"}),
  *        @ORM\Index(name="fk_irhp_candidate_permit_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_candidate_permit_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irhp_candidate_permit_requested_emissions_cat_ref_data_id",
+     *     columns={"requested_emissions_category"}),
+ *        @ORM\Index(name="fk_irhp_candidate_permit_assigned_emissions_cat_ref_data_id",
+     *     columns={"assigned_emissions_category"})
  *    }
  * )
  */
@@ -34,6 +41,9 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Application score
@@ -45,6 +55,16 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     protected $applicationScore;
 
     /**
+     * Assigned emissions category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_emissions_category", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedEmissionsCategory;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -54,15 +74,6 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
 
     /**
      * Identifier - Id
@@ -124,15 +135,6 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
      * Random factor
      *
      * @var float
@@ -149,6 +151,16 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
      * @ORM\Column(type="decimal", name="randomized_score", precision=18, scale=9, nullable=true)
      */
     protected $randomizedScore;
+
+    /**
+     * Requested emissions category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="requested_emissions_category", referencedColumnName="id", nullable=true)
+     */
+    protected $requestedEmissionsCategory;
 
     /**
      * Successful
@@ -226,6 +238,30 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     }
 
     /**
+     * Set the assigned emissions category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $assignedEmissionsCategory entity being set as the value
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setAssignedEmissionsCategory($assignedEmissionsCategory)
+    {
+        $this->assignedEmissionsCategory = $assignedEmissionsCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned emissions category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getAssignedEmissionsCategory()
+    {
+        return $this->assignedEmissionsCategory;
+    }
+
+    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
@@ -247,36 +283,6 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return IrhpCandidatePermit
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
     }
 
     /**
@@ -400,36 +406,6 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return IrhpCandidatePermit
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the random factor
      *
      * @param float $randomFactor new value being set
@@ -475,6 +451,30 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     public function getRandomizedScore()
     {
         return $this->randomizedScore;
+    }
+
+    /**
+     * Set the requested emissions category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $requestedEmissionsCategory entity being set as the value
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setRequestedEmissionsCategory($requestedEmissionsCategory)
+    {
+        $this->requestedEmissionsCategory = $requestedEmissionsCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the requested emissions category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getRequestedEmissionsCategory()
+    {
+        return $this->requestedEmissionsCategory;
     }
 
     /**
@@ -586,49 +586,5 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

@@ -345,5 +345,14 @@ return [
     'continuations.people-empty-table-message.org_t_rc' => 'Ni chofnodir unrhyw gyfarwyddwyr ar eich trwydded',
     'continuations.people-empty-table-message.org_t_st' => 'Ni chofnodir unrhyw berchennog ar eich trwydded',
 
+    //permit snapshot translations
+    'section.name.application/licence' => 'Rhif trwydded',
+    'section.name.application/check-answers' => 'Gwiriwch eich atebion',
+    'section.name.application/declaration' => 'Datganiad',
+
+    'inter_journey_less_60' => 'Llai na 60%',
+    'inter_journey_60_90' => 'O 60% i 90%',
+    'inter_journey_more_90' => 'Mwy na 90%',
+
     // Potentially unused translations
 ];

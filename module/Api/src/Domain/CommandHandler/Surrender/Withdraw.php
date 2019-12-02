@@ -2,11 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Clear as ClearSurrender;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateSurrender;
 use Dvsa\Olcs\Transfer\Command\Task\CloseTasks;
@@ -14,6 +15,8 @@ use Dvsa\Olcs\Transfer\Query\Surrender\PreviousLicenceStatus;
 
 class Withdraw extends AbstractSurrenderCommandHandler
 {
+    use AuthAwareTrait;
+
     protected $extraRepos = ['Licence', 'Task'];
 
     protected $licenceId;
@@ -69,6 +72,9 @@ class Withdraw extends AbstractSurrenderCommandHandler
     {
         /** @var Licence $licence */
         $licence = $this->getRepo('Licence')->fetchById($this->licenceId);
+
+        $this->handleEventHistory($licence, EventHistoryType::EVENT_CODE_SURRENDER_APPLICATION_WITHDRAWN);
+
         $previousStatus = $this->handleQuery(PreviousLicenceStatus::create(['id' => $this->licenceId]));
         $status = $this->getRepo()->getRefdataReference($previousStatus['status']);
         $licence->setStatus($status);

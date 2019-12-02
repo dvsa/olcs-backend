@@ -212,6 +212,24 @@ class DocumentSearchView implements BundleSerializableInterface
     protected $irfoOrganisationId;
 
     /**
+     * IRHP Application ID
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="irhp_application_id")
+     */
+    protected $irhpApplicationId;
+
+    /**
+     * Ecmt Application ID
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="ecmt_permit_application_id")
+     */
+    protected $ecmtPermitApplicationId;
+
+    /**
      * Deleted date
      *
      * @var \DateTime
@@ -467,6 +485,26 @@ class DocumentSearchView implements BundleSerializableInterface
     }
 
     /**
+     * Get the IRHP Application ID (if applicable)
+     *
+     * @return int
+     */
+    public function getIrhpApplicationId()
+    {
+        return $this->irhpApplicationId;
+    }
+
+    /**
+     * Get the ECMT Permit Application ID (if applicable)
+     *
+     * @return int
+     */
+    public function getEcmtPermitApplicationId()
+    {
+        return $this->ecmtPermitApplicationId;
+    }
+
+    /**
      * Set the deleted date
      *
      * @param \DateTime $deletedDate deleted date
@@ -492,7 +530,7 @@ class DocumentSearchView implements BundleSerializableInterface
 
     /**
      * Is Deleted
-     * 
+     *
      * @return bool
      */
     public function isDeleted()

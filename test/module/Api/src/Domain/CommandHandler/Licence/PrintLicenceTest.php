@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\PrintLicence;
@@ -98,7 +99,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
                 'isSpecialRestricted' => false,
                 'niFlag' => 'N',
                 'expect' => [
-                    'docId' => 1254,
+                    'docId' => Document::GV_LICENCE_GB,
                     'desc' => 'GV Licence',
                 ],
             ],
@@ -108,7 +109,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
                 'isSpecialRestricted' => false,
                 'niFlag' => 'N',
                 'expect' => [
-                    'docId' => 1255,
+                    'docId' => Document::PSV_LICENCE_GB,
                     'desc' => 'PSV Licence',
                 ],
             ],
@@ -118,7 +119,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
                 'isSpecialRestricted' => true,
                 'niFlag' => 'N',
                 'expect' => [
-                    'docId' => 1254,
+                    'docId' => Document::GV_LICENCE_GB,
                     'desc' => 'GV Licence',
                 ],
             ],
@@ -128,7 +129,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
                 'isSpecialRestricted' => true,
                 'niFlag' => 'N',
                 'expect' => [
-                    'docId' => 1310,
+                    'docId' => Document::PSR_SR_LICENCE_GB,
                     'desc' => 'PSV-SR Licence',
                 ],
             ],
@@ -138,7 +139,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
                 'isSpecialRestricted' => false,
                 'niFlag' => 'Y',
                 'expect' => [
-                    'docId' => 1512,
+                    'docId' => Document::GV_LICENCE_NI,
                     'desc' => 'GV Licence',
                 ],
             ],
@@ -148,7 +149,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
                 'isSpecialRestricted' => false,
                 'niFlag' => 'Y',
                 'expect' => [
-                    'docId' => 1516,
+                    'docId' => Document::PSV_LICENCE_NI,
                     'desc' => 'PSV Licence',
                 ],
             ],
@@ -158,7 +159,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
                 'isSpecialRestricted' => true,
                 'niFlag' => 'Y',
                 'expect' => [
-                    'docId' => 1512,
+                    'docId' => Document::GV_LICENCE_NI,
                     'desc' => 'GV Licence',
                 ],
             ],
@@ -168,7 +169,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
                 'isSpecialRestricted' => true,
                 'niFlag' => 'Y',
                 'expect' => [
-                    'docId' => 1518,
+                    'docId' => Document::PSR_SR_LICENCE_NI,
                     'desc' => 'PSV-SR Licence',
                 ],
             ],
@@ -191,7 +192,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
             ->andReturn($licence);
 
         $data = [
-            'template' => 1518,
+            'template' => Document::PSR_SR_LICENCE_NI,
             'query' => ['licence' => 111],
             'description' => 'PSV-SR Licence',
             'licence' => 111,

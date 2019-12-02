@@ -16,17 +16,16 @@ final class ValidEcmtPermits extends AbstractListQueryHandler implements ToggleR
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermit';
     protected $bundle = [
-        'irhpPermitApplication' => [
-            'ecmtPermitApplication'
-        ],
+        'irhpPermitApplication',
         'irhpPermitRange' => [
             'countrys' => [
                 'country'
             ],
-            'irhpPermitStock' => ['irhpPermitRange' => 'countrys']
+            'emissionsCategory',
+            'irhpPermitStock',
         ],
     ];
 }

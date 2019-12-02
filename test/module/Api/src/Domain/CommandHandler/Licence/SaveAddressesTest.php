@@ -583,6 +583,7 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->with(null)
             ->getMock();
 
+
         $result = new Result();
 
         $result->setFlag('hasChanged', false);

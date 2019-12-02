@@ -213,4 +213,31 @@ class Cases extends AbstractRepository
         $results = $qb->getQuery()->getResult($hydrateMode);
         return $results;
     }
+
+    /**
+     * @param int $id
+     *
+     * @return mixed
+     * @throws Exception\NotFoundException
+     */
+    public function fetchOpenCasesForApplication(int $id)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('application', 'a');
+        $expr = $qb->expr();
+
+        $qb->Where($expr->eq(self::$aliasApp.'.id', ':byApplication'))
+            ->setParameter('byApplication', $id);
+        $qb->andWhere(
+            $expr->isNull($this->alias . '.closedDate')
+        );
+
+        $result = $qb->getQuery()->getResult();
+        if (!$result) {
+            throw new Exception\NotFoundException('Resource not found');
+        }
+        return $result[0];
+    }
 }

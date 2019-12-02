@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 /**
  * @covers \Dvsa\Olcs\Api\Service\Submission\Sections\OperatingCentres
  */
-class OperatingCentresTest extends SubmissionSectionTest
+class OperatingCentresTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\OperatingCentres::class;
 

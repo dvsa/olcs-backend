@@ -2,74 +2,39 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot as Sut;
 use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as Cmd;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication  as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\Licence;
-use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\EcmtAnnualGenerator;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCreateSnapshotHandlerTest;
 use Mockery as m;
 
 /**
  * StoreEcmtPermitApplicationSnapshotTest
  */
-class StoreEcmtPermitApplicationSnapshotTest extends CommandHandlerTestCase
+class StoreEcmtPermitApplicationSnapshotTest extends AbstractCreateSnapshotHandlerTest
 {
-    public function setUp()
+    protected $cmdClass = Cmd::class;
+    protected $sutClass = Sut::class;
+    protected $repoServiceName = 'EcmtPermitApplication';
+    protected $repoClass = EcmtPermitApplicationRepo::class;
+    protected $entityClass = EcmtPermitApplicationEntity::class;
+    protected $documentCategory = Category::CATEGORY_PERMITS;
+    protected $documentSubCategory = SubCategory::DOC_SUB_CATEGORY_PERMIT_APPLICATION;
+    protected $documentDescription = 'Permit Application OG9654321/3 Snapshot (app submitted)';
+    protected $documentLinkId = 'ecmtPermitApplication';
+    protected $documentLinkValue = 999;
+    protected $generatorClass = EcmtAnnualGenerator::class;
+
+    /**
+     * Override this method in case of needing specific entity assertions i.e. for a permit application reference
+     */
+    protected function extraEntityAssertions(m\MockInterface $entity)
     {
-        $this->sut = new StoreEcmtPermitApplicationSnapshot();
-        $this->mockRepo('EcmtPermitApplication', Repository\EcmtPermitApplication::class);
-
-        parent::setUp();
-    }
-
-    public function testHandleCommand()
-    {
-        $data = [
-            'id' => 3,
-            'html' => 'HTML',
-        ];
-        $command = Cmd::create($data);
-
-        /** @var EcmtPermitApplication $ecmtPermitApplication */
-        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-        $licence = m::mock(Licence::class);
-        $licence->shouldReceive('getId')->andReturn('703');
-
-        $ecmtPermitApplication->shouldReceive('getId')->andReturn('3');
-        $ecmtPermitApplication->shouldReceive('getApplicationRef')->andReturn('OG9654321 / 3');
-        $ecmtPermitApplication->shouldReceive('getLicence')->andReturn($licence);
-
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($ecmtPermitApplication);
-
-        $params = [
-            'content' => 'SFRNTA==', // 'HTML' base 64 encoded
-            'category' => Category::CATEGORY_PERMITS,
-            'subCategory' => SubCategory::DOC_SUB_CATEGORY_PERMIT_APPLICATION,
-            'isExternal' => false,
-            'isScan' => false,
-            'filename' => 'Permit Application OG9654321 / 3 Snapshot (app submitted).html',
-            'description' => 'Permit Application OG9654321 / 3 Snapshot (app submitted)',
-            'licence' => '703',
-            'ecmtApplication' => null,
-        ];
-        $this->expectedSideEffect(Upload::class, $params, new Result());
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'EcmtPermitApplication' => 3,
-            ],
-            'messages' => [
-                'ECMT Permit Application snapshot created',
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
+        $entity->shouldReceive('getApplicationRef')->once()->withNoArgs()->andReturn('OG9654321/3');
+        return $entity;
     }
 }

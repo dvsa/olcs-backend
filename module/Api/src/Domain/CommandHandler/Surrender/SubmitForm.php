@@ -3,19 +3,25 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
-use Doctrine\ORM\Query;
 
 class SubmitForm extends AbstractSurrenderCommandHandler
 {
 
+    use AuthAwareTrait;
+
     protected $extraRepos = ['Licence'];
+
     /**
      * @param CommandInterface $command
      *
@@ -32,10 +38,8 @@ class SubmitForm extends AbstractSurrenderCommandHandler
             ]
         ));
 
-        /**
-         * @var Entity\Licence\Licence $licence
-         */
         $licenceRepo = $this->getRepo('Licence');
+        /** @var Licence $licence */
         $licence = $licenceRepo->fetchById($command->getId());
         $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION));
         $licenceRepo->save($licence);
@@ -50,11 +54,16 @@ class SubmitForm extends AbstractSurrenderCommandHandler
 
         $this->result->merge($this->createSurrenderTask($command->getId(), $surrenderId));
 
+        $this->handleEventHistory($licence, EventHistoryType::EVENT_CODE_SURRENDER_UNDER_CONSIDERATION);
+
         return $this->result;
     }
 
     private function createSurrenderTask($licId, $surrenderId)
     {
+        $actionDate = new DateTime();
+        $actionDate->add(new \DateInterval('P14D'));
+
         $taskData = [
             'category' => Category::CATEGORY_APPLICATION,
             'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,
@@ -62,7 +71,8 @@ class SubmitForm extends AbstractSurrenderCommandHandler
             'isClosed' => 'N',
             'urgent' => 'N',
             'licence' => $licId,
-            'surrender' => $surrenderId
+            'surrender' => $surrenderId,
+            'actionDate' => $actionDate->format('Y-m-d')
         ];
 
         return $this->handleSideEffect(CreateTask::create($taskData));

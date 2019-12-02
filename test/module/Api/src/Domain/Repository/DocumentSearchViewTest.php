@@ -94,6 +94,8 @@ class DocumentSearchViewTest extends RepositoryTestCase
             'showDocs' => FilterOptions::SHOW_SELF_ONLY,
             'application' => 'unit_AppId',
             'busReg' => 'unit_BusReg',
+            'irhpApplication' => 'unit_IrhpApplication',
+            'ecmtPermitApplication' => 'unit_EcmtPermitApplication',
         ];
 
         $query = DocumentList::create($data);
@@ -112,6 +114,8 @@ class DocumentSearchViewTest extends RepositoryTestCase
             ' AND m.applicationId = [[unit_AppId]]' .
             ' AND m.caseId = [[unit_CaseId]]' .
             ' AND m.busRegId = [[unit_BusReg]]' .
+            ' AND m.irhpApplicationId = [[unit_IrhpApplication]]' .
+            ' AND m.ecmtPermitApplicationId = [[unit_EcmtPermitApplication]]'.
             ' AND ('.
                 'm.irfoOrganisationId = :irfoOrganisation' .
             ')';
@@ -143,6 +147,5 @@ class DocumentSearchViewTest extends RepositoryTestCase
 
         $expected = '{QUERY} SELECT DISTINCT m.extension AND (m.licenceId = :licence)';
         $this->assertEquals($expected, $this->query);
-
     }
 }

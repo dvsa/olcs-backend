@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateIssueFee as RegenerateIssueFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateApplicationFee as RegenerateApplicationFeeCmd;
@@ -27,7 +28,7 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpApplication';
 
@@ -50,41 +51,43 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
             throw new ForbiddenException('IRHP application is not ready for number of permits');
         }
 
-        $irhpApplication->storePermitsRequired();
+        $irhpApplication->storeFeesRequired();
 
         $irhpPermitApplicationRepo = $this->getRepo('IrhpPermitApplication');
         $rows = $irhpPermitApplicationRepo->getByIrhpApplicationWithStockInfo($command->getId());
-        $commandCountries = $command->getPermitsRequired();
+        $permitsRequiredData = $command->getPermitsRequired();
 
         $response = $this->handleQuery(
             MaxStockPermitsByApplication::create(['id' => $irhpApplicationId])
         );
         $maxStockPermits = $response['result'];
 
+        $irhpApplicationTypeId = $irhpApplication->getIrhpPermitType()->getId();
         foreach ($rows as $row) {
-            $countryId = $row['countryId'];
-            $validToTimestamp = strtotime($row['validTo']);
-            $year = date('Y', $validToTimestamp);
-            $maxPermits = $maxStockPermits[$row['stockId']];
-
+            $stockId = $row['stockId'];
             $permitsRequired = 0;
+            $maxPermits = $maxStockPermits[$stockId];
+
             if ($maxPermits > 0) {
-                if (isset($commandCountries[$countryId][$year]) && is_numeric($commandCountries[$countryId][$year])) {
-                    $permitsRequired = intval($commandCountries[$countryId][$year]);
-                    if (($permitsRequired < 0) || ($permitsRequired > $maxPermits)) {
-                        throw new RuntimeException(
-                            sprintf(
-                                'Out of range data for country %s in year %s - expected range 0 to %d but received %d',
-                                $countryId,
-                                $year,
-                                $maxPermits,
-                                $permitsRequired
-                            )
-                        );
-                    }
-                } else {
+                switch ($irhpApplicationTypeId) {
+                    case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
+                        $permitsRequired = $this->deriveBilateralPermitsRequired($row, $permitsRequiredData);
+                        break;
+                    case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
+                        $permitsRequired = $this->deriveMultilateralPermitsRequired($row, $permitsRequiredData);
+                        break;
+                    default:
+                        throw new RuntimeException('Unsupported permit type ' . $irhpApplicationTypeId);
+                }
+    
+                if (($permitsRequired < 0) || ($permitsRequired > $maxPermits)) {
                     throw new RuntimeException(
-                        sprintf('Missing data or incorrect type for country %s in year %s', $countryId, $year)
+                        sprintf(
+                            'Out of range data for stock id %s - expected range 0 to %d but received %d',
+                            $stockId,
+                            $maxPermits,
+                            $permitsRequired
+                        )
                     );
                 }
             }
@@ -94,12 +97,11 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
             $irhpPermitApplicationRepo->saveOnFlush($irhpPermitApplication);
         }
 
-
         $irhpApplication->resetCheckAnswersAndDeclaration();
         $irhpApplicationRepo->saveOnFlush($irhpApplication);
         $irhpPermitApplicationRepo->flushAll();
 
-        if ($irhpApplication->hasPermitsRequiredChanged()) {
+        if ($irhpApplication->haveFeesRequiredChanged()) {
             $this->result->merge(
                 $this->handleSideEffects(
                     [
@@ -119,5 +121,54 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
         );
 
         return $this->result;
+    }
+
+    /**
+     * Retrieve the number of permits required from the bilateral form data array
+     *
+     * @param array $row
+     * @param array $permitsRequiredData
+     *
+     * @return int
+     *
+     * @throws RuntimeException
+     */
+    private function deriveBilateralPermitsRequired(array $row, array $permitsRequiredData)
+    {
+        $validToTimestamp = strtotime($row['validTo']);
+        $countryId = $row['countryId'];
+        $year = date('Y', $validToTimestamp);
+
+        if (isset($permitsRequiredData[$countryId][$year]) && is_numeric($permitsRequiredData[$countryId][$year])) {
+            return intval($permitsRequiredData[$countryId][$year]);
+        }
+
+        throw new RuntimeException(
+            sprintf('Missing data or incorrect type for country %s in year %s', $countryId, $year)
+        );
+    }
+
+    /**
+     * Retrieve the number of permits required from the multilateral form data array
+     *
+     * @param array $row
+     * @param array $permitsRequiredData
+     *
+     * @return int
+     *
+     * @throws RuntimeException
+     */
+    private function deriveMultilateralPermitsRequired(array $row, array $permitsRequiredData)
+    {
+        $validToTimestamp = strtotime($row['validTo']);
+        $year = date('Y', $validToTimestamp);
+    
+        if (isset($permitsRequiredData[$year]) && is_numeric($permitsRequiredData[$year])) {
+            return intval($permitsRequiredData[$year]);
+        }
+
+        throw new RuntimeException(
+            sprintf('Missing data or incorrect type for year %s', $year)
+        );
     }
 }

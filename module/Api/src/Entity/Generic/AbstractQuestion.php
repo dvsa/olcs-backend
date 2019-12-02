@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,7 +25,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_question_question_type_ref_data_id", columns={"question_type"}),
  *        @ORM\Index(name="fk_question_created_by_user_id", columns={"created_by"}),
- *        @ORM\Index(name="fk_question_last_modified_by_user_id", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_question_last_modified_by_user_id", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_question_form_control_type_ref_data_id", columns={"form_control_type"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="question_slug_uindex", columns={"slug"})
  *    }
  * )
  */
@@ -30,6 +37,9 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Created by
@@ -43,15 +53,6 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     protected $createdBy;
 
     /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
      * Description
      *
      * @var string
@@ -59,6 +60,16 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      * @ORM\Column(type="string", name="description", length=255, nullable=true)
      */
     protected $description;
+
+    /**
+     * Form control type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="form_control_type", referencedColumnName="id", nullable=true)
+     */
+    protected $formControlType;
 
     /**
      * Identifier - Id
@@ -83,20 +94,11 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
      * Option source
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="option_source", length=255, nullable=true)
+     * @ORM\Column(type="string", name="option_source", length=4096, nullable=true)
      */
     protected $optionSource;
 
@@ -109,6 +111,15 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      * @ORM\JoinColumn(name="question_type", referencedColumnName="id", nullable=true)
      */
     protected $questionType;
+
+    /**
+     * Slug
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="slug", length=255, nullable=true)
+     */
+    protected $slug;
 
     /**
      * Title
@@ -138,6 +149,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationValidation",
      *     mappedBy="question"
      * )
+     * @ORM\OrderBy({"weight" = "ASC"})
      */
     protected $applicationValidations;
 
@@ -196,36 +208,6 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return Question
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
      * Set the description
      *
      * @param string $description new value being set
@@ -247,6 +229,30 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the form control type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $formControlType entity being set as the value
+     *
+     * @return Question
+     */
+    public function setFormControlType($formControlType)
+    {
+        $this->formControlType = $formControlType;
+
+        return $this;
+    }
+
+    /**
+     * Get the form control type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getFormControlType()
+    {
+        return $this->formControlType;
     }
 
     /**
@@ -298,36 +304,6 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return Question
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the option source
      *
      * @param string $optionSource new value being set
@@ -373,6 +349,30 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     public function getQuestionType()
     {
         return $this->questionType;
+    }
+
+    /**
+     * Set the slug
+     *
+     * @param string $slug new value being set
+     *
+     * @return Question
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get the slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**
@@ -547,49 +547,5 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

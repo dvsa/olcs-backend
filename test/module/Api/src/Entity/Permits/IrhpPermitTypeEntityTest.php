@@ -2,9 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use DateTime;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as Entity;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath as ApplicationPathEntity;
 use Mockery as m;
+use RuntimeException;
 
 /**
  * IrhpPermitType Entity Unit Tests
@@ -40,7 +43,19 @@ class IrhpPermitTypeEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('isEcmtRemoval')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('isBilateral')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
+            ->shouldReceive('isMultilateral')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
+            ->shouldReceive('isApplicationPathEnabled')
             ->once()
             ->withNoArgs()
             ->andReturn(false);
@@ -49,7 +64,10 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [
                 'isEcmtAnnual' => true,
                 'isEcmtShortTerm' => false,
+                'isEcmtRemoval' => false,
                 'isBilateral' => false,
+                'isMultilateral' => false,
+                'isApplicationPathEnabled' => false,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -70,6 +88,7 @@ class IrhpPermitTypeEntityTest extends EntityTester
         return [
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT, true],
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
         ];
@@ -90,6 +109,28 @@ class IrhpPermitTypeEntityTest extends EntityTester
         return [
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+        ];
+    }
+
+    /**
+    * @dataProvider dpIsEcmtRemoval
+    */
+    public function testIsEcmtRemoval($id, $expected)
+    {
+        $this->sut->setId($id);
+
+        $this->assertEquals($expected, $this->sut->isEcmtRemoval());
+    }
+
+    public function dpIsEcmtRemoval()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, true],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
         ];
@@ -110,8 +151,112 @@ class IrhpPermitTypeEntityTest extends EntityTester
         return [
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, true],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
         ];
+    }
+
+    /**
+    * @dataProvider dpIsMultilateral
+    */
+    public function testIsMultilateral($id, $expected)
+    {
+        $this->sut->setId($id);
+
+        $this->assertEquals($expected, $this->sut->isMultilateral());
+    }
+
+    public function dpIsMultilateral()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsMultiStock
+     */
+    public function testIsMultiStock($id, $expected)
+    {
+        $this->sut->setId($id);
+
+        $this->assertEquals($expected, $this->sut->isMultiStock());
+    }
+
+    public function dpIsMultiStock()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, true],
+        ];
+    }
+
+    /**
+    * @dataProvider dpIsApplicationPathEnabled
+    */
+    public function testIsApplicationPathEnabled($id, $expected)
+    {
+        $this->sut->setId($id);
+
+        $this->assertEquals($expected, $this->sut->isApplicationPathEnabled());
+    }
+
+    public function dpIsApplicationPathEnabled()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+        ];
+    }
+
+    /**
+    * @dataProvider dpGenerateExpiryDateEcmtRemoval
+    */
+    public function testGenerateExpiryDateEcmtRemoval($issueDateString, $expectedExpiryDateString)
+    {
+        $this->sut->shouldReceive('isEcmtRemoval')
+            ->andReturn(true);
+
+        $issueDate = new DateTime($issueDateString);
+        $expiryDate = $this->sut->generateExpiryDate($issueDate);
+
+        $this->assertNotSame($expiryDate, $issueDate);
+
+        $this->assertEquals(
+            $expectedExpiryDateString,
+            $expiryDate->format('Y-m-d')
+        );
+    }
+
+    public function dpGenerateExpiryDateEcmtRemoval()
+    {
+        return [
+            ['2019-04-15', '2020-04-14'],
+            ['2019-05-01', '2020-04-30'],
+            ['2019-01-01', '2019-12-31'],
+        ];
+    }
+
+    public function testApplyExpiryIntervalException()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to generate an expiry date for permit type 77');
+
+        $this->sut->shouldReceive('isEcmtRemoval')
+            ->andReturn(false);
+
+        $this->sut->setId(77);
+        $this->sut->generateExpiryDate(new DateTime());
     }
 }

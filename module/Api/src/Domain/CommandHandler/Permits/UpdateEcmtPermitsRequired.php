@@ -10,11 +10,11 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
- * Update ECMT Euro 6
+ * Update ECMT No Of Permits
  *
  * @author Andy Newton <andrew.newton@capgemini.com>
  */
@@ -22,7 +22,7 @@ final class UpdateEcmtPermitsRequired extends AbstractCommandHandler implements 
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     public function handleCommand(CommandInterface $command)
@@ -32,13 +32,21 @@ final class UpdateEcmtPermitsRequired extends AbstractCommandHandler implements 
 
         $licence = $ecmtApplication->getLicence();
 
-        if ((int)$ecmtApplication->getPermitsRequired() !== (int)$command->getPermitsRequired()) {
+        $newTotalRequired = $command->getRequiredEuro5() + $command->getRequiredEuro6();
+
+        try {
+            $totalPermitsRequired = $ecmtApplication->calculateTotalPermitsRequired();
+        } catch (RuntimeException $e) {
+            $totalPermitsRequired = 0;
+        }
+
+        if ($totalPermitsRequired !== $newTotalRequired) {
             $this->result->merge($this->handleSideEffect(
                 UpdatePermitFee::create(
                     [
                         'ecmtPermitApplicationId' => $ecmtApplication->getId(),
                         'licenceId' => $licence->getId(),
-                        'permitsRequired' => $command->getPermitsRequired(),
+                        'permitsRequired' => $newTotalRequired,
                         'permitType' => $ecmtApplication::PERMIT_TYPE,
                         'receivedDate' => $ecmtApplication->getDateReceived()
                     ]
@@ -46,7 +54,7 @@ final class UpdateEcmtPermitsRequired extends AbstractCommandHandler implements 
             ));
         }
 
-        $ecmtApplication->updatePermitsRequired($command->getPermitsRequired());
+        $ecmtApplication->updatePermitsRequired($command->getRequiredEuro5(), $command->getRequiredEuro6());
 
         $this->getRepo()->save($ecmtApplication);
 

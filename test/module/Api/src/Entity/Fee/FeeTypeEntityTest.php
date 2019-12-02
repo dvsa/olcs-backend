@@ -143,6 +143,36 @@ class FeeTypeEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpIsIrhpApplicationIssue
+     */
+    public function testIsIrhpApplicationIssue(string $feeType, bool $expectedResult)
+    {
+        $feeTypeRefData = new RefData($feeType);
+        $this->sut->setFeeType($feeTypeRefData);
+        $this->assertEquals($expectedResult, $this->sut->isIrhpApplicationIssue());
+    }
+
+    public function dpIsIrhpApplicationIssue(): array
+    {
+        return $this->listTypes([Entity::FEE_TYPE_IRHP_ISSUE]);
+    }
+
+    /**
+     * @dataProvider dpIsIrhpApplication
+     */
+    public function testIsIrhpApplication(string $feeType, bool $expectedResult)
+    {
+        $feeTypeRefData = new RefData($feeType);
+        $this->sut->setFeeType($feeTypeRefData);
+        $this->assertEquals($expectedResult, $this->sut->isIrhpApplication());
+    }
+
+    public function dpIsIrhpApplication(): array
+    {
+        return $this->listTypes([Entity::FEE_TYPE_IRHP_ISSUE, Entity::FEE_TYPE_IRHP_APP, Entity::FEE_TYPE_IRFOGVPERMIT]);
+    }
+
+    /**
      * Build a list of valid fee types, that can be fed into a method and return a true/false
      * Avoids duplication in data providers
      *
@@ -177,6 +207,8 @@ class FeeTypeEntityTest extends EntityTester
             Entity::FEE_TYPE_ADJUSTMENT,
             Entity::FEE_TYPE_ECMT_APP,
             Entity::FEE_TYPE_ECMT_ISSUE,
+            Entity::FEE_TYPE_IRHP_ISSUE,
+            Entity::FEE_TYPE_IRHP_APP,
         ];
 
         foreach ($types as $type) {
@@ -187,5 +219,30 @@ class FeeTypeEntityTest extends EntityTester
         }
 
         return $returnTypes;
+    }
+
+    public function testUpdateNewFeeType()
+    {
+        $this->sut->setEffectiveFrom(new \DateTime('2014-10-26T00:00:00+00:00'));
+        $this->sut->setAnnualValue(10);
+        $this->sut->setFiveYearValue(10);
+        $this->sut->setFixedValue(10);
+
+        $expectedNew = $this->instantiate($this->entityClass);
+        $expectedNew->setEffectiveFrom(new \DateTime('2020-10-10T00:00:00+00:00'));
+        $expectedNew->setAnnualValue(99);
+        $expectedNew->setFiveYearValue(99);
+        $expectedNew->setFixedValue(99);
+
+        $this->assertEquals(
+            $expectedNew,
+            $this->sut->updateNewFeeType(
+                '2020-10-10T00:00:00+00:00',
+                99,
+                99,
+                99,
+                $this->sut
+            )
+        );
     }
 }

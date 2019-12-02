@@ -976,6 +976,12 @@ class BatchControllerTest extends MockeryTestCase
             ->once()
             ->andReturn(new Command\Result());
 
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\Permits\WithdrawUnpaidIrhp::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
         $this->sut->withdrawUnpaidEcmtApplicationsAction();
     }
 
@@ -1137,6 +1143,15 @@ class BatchControllerTest extends MockeryTestCase
                 [
                     'command' => \Dvsa\Olcs\Cli\Domain\Command\Permits\CloseExpiredWindows::class,
                     'data' => ['since' => '-1 month'],
+                ]
+            ],
+            'mark expired permits' => [
+                [
+                    'mark-expired-permits' => true,
+                ],
+                [
+                    'command' => \Dvsa\Olcs\Cli\Domain\Command\Permits\MarkExpiredPermits::class,
+                    'data' => [],
                 ]
             ],
         ];

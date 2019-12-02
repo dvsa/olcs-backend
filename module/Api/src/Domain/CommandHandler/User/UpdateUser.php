@@ -81,6 +81,9 @@ final class UpdateUser extends AbstractUserCommandHandler implements
         // validate username
         $this->validateUsername($data['loginId'], $user->getLoginId());
 
+        // validate roles
+        $this->validateRoles($data['roles'], $user->getRoles()->toArray());
+
         $user->update(
             $this->getRepo()->populateRefDataReference($data)
         );

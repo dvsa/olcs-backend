@@ -48,24 +48,4 @@ class Correspondence extends AbstractRepository
             ->where($qb->expr()->eq('l.organisation', ':ORG_ID'))
             ->setParameter('ORG_ID', $query->getOrganisation());
     }
-
-    /**
-     * Get Unread Count
-     *
-     * @param int $organisationId Org Id
-     *
-     * @return int
-     */
-    public function getUnreadCountForOrganisation($organisationId)
-    {
-        $qb = $this->createQueryBuilder();
-
-        $qb->select('COUNT(co)');
-        $qb->join('co.licence', 'l', Join::WITH, $qb->expr()->eq('l.organisation', ':organisationId'));
-        $qb->andWhere($qb->expr()->eq('co.accessed', ':accessed'));
-        $qb->setParameter(':organisationId', $organisationId);
-        $qb->setParameter(':accessed', 'N');
-
-        return $qb->getQuery()->getSingleScalarResult();
-    }
 }
