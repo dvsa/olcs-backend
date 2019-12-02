@@ -1565,6 +1565,30 @@ class IrhpPermitStockEntityTest extends EntityTester
                 2020,
                 Entity::ALLOCATION_MODE_CANDIDATE_PERMITS,
             ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
+                RefData::BUSINESS_PROCESS_AG,
+                2019,
+                Entity::ALLOCATION_MODE_NONE,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
+                RefData::BUSINESS_PROCESS_AG,
+                2020,
+                Entity::ALLOCATION_MODE_NONE,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
+                RefData::BUSINESS_PROCESS_AG,
+                2019,
+                Entity::ALLOCATION_MODE_NONE,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
+                RefData::BUSINESS_PROCESS_AG,
+                2020,
+                Entity::ALLOCATION_MODE_NONE,
+            ],
         ];
     }
 
