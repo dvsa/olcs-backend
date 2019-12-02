@@ -40,13 +40,18 @@ class TextGenerator implements ElementGeneratorInterface
 
         $options = $context->getApplicationStepEntity()->getDecodedOptionSource();
 
+        $label = null;
+        if (isset($options['label'])) {
+            $label = $this->translateableTextGenerator->generate($options['label']);
+        }
+
         $hint = null;
         if (isset($options['hint'])) {
             $hint = $this->translateableTextGenerator->generate($options['hint']);
         }
 
         return $this->textFactory->create(
-            $this->translateableTextGenerator->generate($options['label']),
+            $label,
             $hint,
             $irhpApplicationEntity->getAnswer($applicationStepEntity)
         );

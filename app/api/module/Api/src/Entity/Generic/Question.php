@@ -32,6 +32,7 @@ class Question extends AbstractQuestion
     const FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES = 'form_control_ecmt_st_rest_count';
     const FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD = 'form_control_ecmt_st_ann_trips';
     const FORM_CONTROL_ECMT_SHORT_TERM_SECTORS = 'form_control_ecmt_st_sectors';
+    const FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE = 'form_control_cert_road_mot_exp';
     const FORM_CONTROL_COMMON_CERTIFICATES = 'form_control_common_certificates';
 
     // Question data types

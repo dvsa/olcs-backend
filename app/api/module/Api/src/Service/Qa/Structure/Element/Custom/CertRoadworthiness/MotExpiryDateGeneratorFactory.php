@@ -1,22 +1,22 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval;
+namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\CertRoadworthiness;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class PermitStartDateGeneratorFactory implements FactoryInterface
+class MotExpiryDateGeneratorFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return PermitStartDateGenerator
+     * @return MotExpiryDateGenerator
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new PermitStartDateGenerator(
+        return new MotExpiryDateGenerator(
             $serviceLocator->get('QaCommonDateWithThresholdElementGenerator')
         );
     }

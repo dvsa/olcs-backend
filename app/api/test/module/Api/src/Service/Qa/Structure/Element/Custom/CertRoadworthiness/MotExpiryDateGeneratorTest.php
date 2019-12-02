@@ -1,8 +1,8 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval;
+namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\CertRoadworthiness;
 
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\CertRoadworthiness\MotExpiryDateGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThreshold;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThresholdGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
@@ -10,11 +10,11 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * PermitStartDateGeneratorTest
+ * MotExpiryDateGeneratorTest
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class PermitStartDateGeneratorTest extends MockeryTestCase
+class MotExpiryDateGeneratorTest extends MockeryTestCase
 {
     public function testGenerate()
     {
@@ -24,15 +24,15 @@ class PermitStartDateGeneratorTest extends MockeryTestCase
 
         $dateWithThresholdGenerator = m::mock(DateWithThresholdGenerator::class);
         $dateWithThresholdGenerator->shouldReceive('generate')
-            ->with($elementGeneratorContext, 'P60D')
+            ->with($elementGeneratorContext, 'P13M')
             ->once()
             ->andReturn($dateWithThreshold);
 
-        $permitStartDateGenerator = new PermitStartDateGenerator($dateWithThresholdGenerator);
+        $motExpiryDateGenerator = new MotExpiryDateGenerator($dateWithThresholdGenerator);
 
         $this->assertSame(
             $dateWithThreshold,
-            $permitStartDateGenerator->generate($elementGeneratorContext)
+            $motExpiryDateGenerator->generate($elementGeneratorContext)
         );
     }
 }
