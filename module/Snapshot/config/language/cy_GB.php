@@ -353,6 +353,7 @@ return [
     'inter_journey_less_60' => 'Llai na 60%',
     'inter_journey_60_90' => 'O 60% i 90%',
     'inter_journey_more_90' => 'Mwy na 90%',
+    'permits.page.restricted-countries.question' => 'A fyddwch chi\'n cludo nwyddau i Awstria, Gwlad Groeg, Hwngari, yr Eidal neu Rwsia?',
 
     // Potentially unused translations
 ];
