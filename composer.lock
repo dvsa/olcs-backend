@@ -2337,12 +2337,12 @@
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "4.206.1",
+            "version": "4.206.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-xmltools/4.206.1/olcs-olcs-xmltools-4.206.1.zip",
-                "reference": "69369ab9da1b1e879e84aecfdc64f395360f8918",
-                "shasum": "69369ab9da1b1e879e84aecfdc64f395360f8918"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-xmltools/4.206.3/olcs-olcs-xmltools-4.206.3.zip",
+                "reference": "de344959c69f376642e6a633a5fbb3eb72f621ba",
+                "shasum": "de344959c69f376642e6a633a5fbb3eb72f621ba"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2399,7 +2399,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2019-11-27T18:29:07+00:00"
+            "time": "2019-12-04T22:41:13+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
