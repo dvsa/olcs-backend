@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\RedisAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
@@ -29,6 +30,7 @@ use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
+use Zend\Cache\Storage\Adapter\Redis;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -69,7 +71,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     private $commandHandler;
 
     /**
-     * @var Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface
+     * @var \Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface
      */
     private $queryHandler;
 
@@ -130,7 +132,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
-     * Zend ServiceManager masks exceptions beind a simple 'service not created'
+     * Zend ServiceManager masks exceptions behind a simple 'service not created'
      * message so here we inspect the 'previous exception' chain and log out
      * what the actual errors were, before rethrowing the original execption.
      *
@@ -232,6 +234,12 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof FileProcessorAwareInterface) {
             $this->setFileProcessor($mainServiceLocator->get(FileProcessorInterface::class));
+        }
+
+        if ($this instanceof RedisAwareInterface) {
+            /** @var Redis $redis */
+            $redis = $mainServiceLocator->get(Redis::class);
+            $this->setRedis($redis);
         }
     }
 

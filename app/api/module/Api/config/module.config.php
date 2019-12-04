@@ -83,6 +83,9 @@ return [
 
             'PermitsCheckableCreateTaskCommandFactory' => ApiSrv\Permits\Checkable\CreateTaskCommandFactory::class,
         ],
+        'abstract_factories' => [
+            \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
+        ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,

@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
+use Dvsa\Olcs\Api\Domain\RedisAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -19,6 +20,7 @@ use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\Audit as AuditCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Olcs\Logging\Log\Logger;
+use Zend\Cache\Storage\Adapter\Redis;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 
 /**
@@ -239,10 +241,16 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         if ($this instanceof OpenAmUserAwareInterface) {
             $this->setOpenAmUser($mainServiceLocator->get(UserInterface::class));
         }
+
+        if ($this instanceof RedisAwareInterface) {
+            /** @var Redis $redis */
+            $redis = $mainServiceLocator->get(Redis::class);
+            $this->setRedis($redis);
+        }
     }
 
     /**
-     * Zend ServiceManager masks exceptions beind a simple 'service not created'
+     * Zend ServiceManager masks exceptions behind a simple 'service not created'
      * message so here we inspect the 'previous exception' chain and log out
      * what the actual errors were, before rethrowing the original execption.
      *
