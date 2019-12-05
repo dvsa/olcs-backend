@@ -413,6 +413,19 @@ return [
     'qanda.ecmt-short-term.percentage-international-journeys.question' => 'In the last 12 months, what percentage of international trips did you make using this licence?',
     'qanda.ecmt-short-term.sectors.question' => 'Select one sector you mainly transport goods in using this licence',
 
+    'qanda.certificate-of-roadworthiness.vehicle.registration-number.question' => 'Enter the vehicle registration number',
+    'qanda.certificate-of-roadworthiness.trailer.registration-number.question' => 'Enter the trailer registration number',
+    'qanda.certificate-of-roadworthiness.vehicle.certificate-of-compliance-number.question' => 'Enter the vehicle Certificate of Compliance number (optional)',
+    'qanda.certificate-of-roadworthiness.trailer.certificate-of-compliance-number.question' => 'Enter the trailer Certificate of Compliance number (optional)',
+    'qanda.certificate-of-roadworthiness.vehicle.make-and-model.question' => 'Enter the vehicle make and model',
+    'qanda.certificate-of-roadworthiness.trailer.make-and-model.question' => 'Enter the trailer make and model',
+    'qanda.certificate-of-roadworthiness.vehicle.vehicle-identification-number.question' => 'Enter the vehicle identification number (VIN)',
+    'qanda.certificate-of-roadworthiness.trailer.vehicle-identification-number.question' => 'Enter the trailer\'s vehicle identification number (VIN)',
+    'qanda.certificate-of-roadworthiness.vehicle-engine-number.question' => 'Enter the vehicle engine number',
+    'qanda.certificate-of-roadworthiness.vehicle-engine-type.question' => 'Enter the vehicle engine type',
+    'qanda.certificate-of-roadworthiness.vehicle.mot-expiry-date.question' => 'Enter the vehicle\'s MOT expiry date',
+    'qanda.certificate-of-roadworthiness.trailer.mot-expiry-date.question' => 'Enter the trailer\'s MOT expiry date',
+
     'qanda.common.certificates.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
 
     'permits.page.stock.select.option.1' => 'Permits for journeys starting between 1 February and 31 March 2020',
