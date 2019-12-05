@@ -354,6 +354,8 @@ return [
     'inter_journey_60_90' => 'O 60% i 90%',
     'inter_journey_more_90' => 'Mwy na 90%',
     'permits.page.restricted-countries.question' => 'A fyddwch chi\'n cludo nwyddau i Awstria, Gwlad Groeg, Hwngari, yr Eidal neu Rwsia?',
-
+    'qanda.ecmt-removal.removal-eligibility.question' => 'Dim ond ar gyfer gweithrediadau symud y gellir defnyddio trwyddedau symud, gan ddefnyddio offer arbenigol a staff',
+    'qanda.ecmt-removal.cabotage.question' => 'Nid yw trwyddedau symud yn caniatáu ichi gynnal cabotage',
+    
     // Potentially unused translations
 ];
