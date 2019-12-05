@@ -50,7 +50,15 @@ trait IrhpPermitStockTrait
      */
     public function validityPeriodValidation($command)
     {
-        if ((int) $command->getIrhpPermitType() !== IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL) {
+        $exemptIrhpPermitTypes = [
+            IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+            IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
+            IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
+        ];
+
+        $irhpPermitType = (int)$command->getIrhpPermitType();
+
+        if (!in_array($irhpPermitType, $exemptIrhpPermitTypes)) {
             if (is_null($command->getValidFrom()) || is_null($command->getValidTo())) {
                 throw new ValidationException(['This permit type requires you specify a Validity start and end date']);
             }

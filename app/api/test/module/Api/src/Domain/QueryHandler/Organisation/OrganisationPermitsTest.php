@@ -89,8 +89,7 @@ class OrganisationPermitsTest extends QueryHandlerTestCase
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')->once()->withNoArgs()->andReturn($isShortTerm);
         $irhpPermitType->shouldReceive('isEcmtAnnual')->once()->withNoArgs()->andReturn($isEcmtAnnual);
-        $irhpPermitType->shouldReceive('isMultiStock')->never();
-        $irhpPermitType->shouldReceive('isEcmtRemoval')->never();
+        $irhpPermitType->shouldReceive('usesMultiStockLicenceBehaviour')->never();
 
         $this->repoMap['IrhpPermitType']
             ->shouldReceive('fetchById')
@@ -141,10 +140,7 @@ class OrganisationPermitsTest extends QueryHandlerTestCase
         ];
     }
 
-    /**
-     * @dataProvider dpMultiStockProvider
-     */
-    public function testHandleQueryMultiStockNoStockId($isMultiStock, $isEcmtRemoval)
+    public function testHandleQueryMultiStockNoStockId()
     {
         $permitTypeId = 22;
         $eligibleLicences = ['eligiblelicences'];
@@ -176,8 +172,10 @@ class OrganisationPermitsTest extends QueryHandlerTestCase
             ->andReturn($organisation);
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->shouldReceive('isMultiStock')->once()->andReturn($isMultiStock);
-        $irhpPermitType->shouldReceive('isEcmtRemoval')->times($isMultiStock ? 0 : 1)->andReturn($isEcmtRemoval);
+        $irhpPermitType->shouldReceive('usesMultiStockLicenceBehaviour')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true);
 
         $this->repoMap['IrhpPermitType']
             ->shouldReceive('fetchById')
@@ -198,10 +196,7 @@ class OrganisationPermitsTest extends QueryHandlerTestCase
         static::assertEquals($expected, $this->sut->handleQuery($query));
     }
 
-    /**
-     * @dataProvider dpMultiStockProvider
-     */
-    public function testHandleQueryMultiStockNoStockIdOrWindow($isMultiStock, $isEcmtRemoval)
+    public function testHandleQueryMultiStockNoStockIdOrWindow()
     {
         $permitTypeId = 22;
         $query = m::mock(Qry::class);
@@ -223,8 +218,10 @@ class OrganisationPermitsTest extends QueryHandlerTestCase
             ->andReturn($organisation);
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->shouldReceive('isMultiStock')->once()->andReturn($isMultiStock);
-        $irhpPermitType->shouldReceive('isEcmtRemoval')->times($isMultiStock ? 0 : 1)->andReturn($isEcmtRemoval);
+        $irhpPermitType->shouldReceive('usesMultiStockLicenceBehaviour')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true);
 
         $this->repoMap['IrhpPermitType']
             ->shouldReceive('fetchById')
@@ -243,13 +240,5 @@ class OrganisationPermitsTest extends QueryHandlerTestCase
         ];
 
         static::assertEquals($expected, $this->sut->handleQuery($query));
-    }
-
-    public function dpMultiStockProvider()
-    {
-        return[
-            [true, false],
-            [false, true],
-        ];
     }
 }
