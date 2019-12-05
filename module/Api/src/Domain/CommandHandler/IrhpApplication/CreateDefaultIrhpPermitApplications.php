@@ -49,6 +49,8 @@ class CreateDefaultIrhpPermitApplications extends AbstractCommandHandler impleme
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
             ]
         )) {
             $this->result->addMessage('No default irhp permit applications need to be created');
@@ -59,6 +61,8 @@ class CreateDefaultIrhpPermitApplications extends AbstractCommandHandler impleme
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER:
                 $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByType(
                     $permitTypeId,
                     new DateTime()

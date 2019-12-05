@@ -91,6 +91,8 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER, false],
         ];
     }
 
@@ -112,6 +114,8 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER, false],
         ];
     }
 
@@ -133,6 +137,8 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, true],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER, false],
         ];
     }
 
@@ -154,6 +160,8 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, true],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER, false],
         ];
     }
 
@@ -175,6 +183,8 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER, false],
         ];
     }
 
@@ -196,6 +206,8 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, true],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER, false],
         ];
     }
 
@@ -217,6 +229,8 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, true],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER, true],
         ];
     }
 
@@ -258,5 +272,69 @@ class IrhpPermitTypeEntityTest extends EntityTester
 
         $this->sut->setId(77);
         $this->sut->generateExpiryDate(new DateTime());
+    }
+
+    /**
+     * @dataProvider dpIsCertificateOfRoadworthiness
+     */
+    public function testIsCertificateOfRoadworthiness($id, $expected)
+    {
+        $this->sut->setId($id);
+
+        $this->assertEquals($expected, $this->sut->isCertificateOfRoadworthiness());
+    }
+
+    public function dpIsCertificateOfRoadworthiness()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpUsesMultiStockLicenceBehaviour
+     */
+    public function testUsesMultiStockLicenceBehaviour(
+        $isMultiStock,
+        $isEcmtRemoval,
+        $isCertificateOfRoadworthiness,
+        $expected
+    ) {
+        $this->sut->shouldReceive('isMultiStock')
+            ->withNoArgs()
+            ->andReturn($isMultiStock);
+
+        $this->sut->shouldReceive('isEcmtRemoval')
+            ->withNoArgs()
+            ->andReturn($isEcmtRemoval);
+
+        $this->sut->shouldReceive('isCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturn($isCertificateOfRoadworthiness);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->usesMultiStockLicenceBehaviour()
+        );
+    }
+
+    public function dpUsesMultiStockLicenceBehaviour()
+    {
+        return [
+            [false, false, false, false],
+            [false, false, true, true],
+            [false, true, false, true],
+            [false, true, true, true],
+            [true, false, false, true],
+            [true, false, true, true],
+            [true, true, false, true],
+            [true, true, true, true],
+        ];
     }
 }
