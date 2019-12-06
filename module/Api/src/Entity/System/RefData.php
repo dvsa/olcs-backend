@@ -84,6 +84,7 @@ class RefData extends AbstractRefData
     const BUSINESS_PROCESS_APG = 'app_business_process_apg';
     const BUSINESS_PROCESS_APGG = 'app_business_process_apgg';
     const BUSINESS_PROCESS_APSG = 'app_business_process_apsg';
+    const BUSINESS_PROCESS_AG = 'app_business_process_ag';
 
     // International journeys
     const INTER_JOURNEY_LESS_60 = 'inter_journey_less_60';
