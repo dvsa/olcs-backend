@@ -27,6 +27,8 @@ class IrhpPermitType extends AbstractIrhpPermitType
     const IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL = 3;
     const IRHP_PERMIT_TYPE_ID_BILATERAL = 4;
     const IRHP_PERMIT_TYPE_ID_MULTILATERAL = 5;
+    const IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE = 6;
+    const IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER = 7;
 
     const IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL = 'P1Y';
 
@@ -114,7 +116,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
      */
     public function isApplicationPathEnabled()
     {
-        return $this->isEcmtShortTerm() || $this->isEcmtRemoval();
+        return $this->isEcmtShortTerm() || $this->isEcmtRemoval() || $this->isCertificateOfRoadworthiness();
     }
 
     /**
@@ -135,5 +137,26 @@ class IrhpPermitType extends AbstractIrhpPermitType
         $expiryDateTime->sub(new DateInterval('P1D'));
 
         return $expiryDateTime;
+    }
+
+    /**
+     * Is this a certificate of roadworthiness
+     *
+     * @return bool
+     */
+    public function isCertificateOfRoadworthiness()
+    {
+        return $this->id === self::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE ||
+            $this->id == self::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER;
+    }
+
+    /**
+     * Whether this permit type needs the multi stock behaviour on licence selection
+     *
+     * @return bool
+     */
+    public function usesMultiStockLicenceBehaviour()
+    {
+        return $this->isMultiStock() || $this->isEcmtRemoval() || $this->isCertificateOfRoadworthiness();
     }
 }

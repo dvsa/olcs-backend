@@ -42,6 +42,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     const ALLOCATION_MODE_EMISSIONS_CATEGORIES = 'allocation_mode_emissions_categories';
     const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
     const ALLOCATION_MODE_CANDIDATE_PERMITS = 'allocation_mode_candidate_permits';
+    const ALLOCATION_MODE_NONE = 'allocation_mode_none';
 
     const CANDIDATE_MODE_APSG = 'candidate_mode_apsg';
     const CANDIDATE_MODE_APGG = 'candidate_mode_apgg';
@@ -669,6 +670,16 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
                 'business_process' => RefData::BUSINESS_PROCESS_APSG,
                 'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
+                'business_process' => RefData::BUSINESS_PROCESS_AG,
+                'allocation_mode' => self::ALLOCATION_MODE_NONE,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
+                'business_process' => RefData::BUSINESS_PROCESS_AG,
+                'allocation_mode' => self::ALLOCATION_MODE_NONE,
             ],
         ];
 
