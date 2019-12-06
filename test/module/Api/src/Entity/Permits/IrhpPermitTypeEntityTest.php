@@ -55,6 +55,10 @@ class IrhpPermitTypeEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('isCertificateOfRoadworthiness')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('isApplicationPathEnabled')
             ->once()
             ->withNoArgs()
@@ -67,6 +71,7 @@ class IrhpPermitTypeEntityTest extends EntityTester
                 'isEcmtRemoval' => false,
                 'isBilateral' => false,
                 'isMultilateral' => false,
+                'isCertificateOfRoadworthiness' => false,
                 'isApplicationPathEnabled' => false,
             ],
             $this->sut->getCalculatedBundleValues()
