@@ -1,19 +1,19 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval;
+namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Common;
 
 use DateTime;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDate;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThreshold;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\Date as DateElement;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * PermitStartDateTest
+ * DateWithThresholdTest
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class PermitStartDateTest extends MockeryTestCase
+class DateWithThresholdTest extends MockeryTestCase
 {
     public function testGetRepresentation()
     {
@@ -21,27 +21,27 @@ class PermitStartDateTest extends MockeryTestCase
             'value' => '2020-05-03',
         ];
 
-        $formattedDateMustBeBeforeDateTime = '2020-03-02';
+        $formattedDateThresholdDateTime = '2020-03-02';
 
         $date = m::mock(DateElement::class);
         $date->shouldReceive('getRepresentation')
             ->andReturn($dateRepresentation);
 
-        $dateMustBeBeforeDateTime = m::mock(DateTime::class);
-        $dateMustBeBeforeDateTime->shouldReceive('format')
+        $dateThresholdDateTime = m::mock(DateTime::class);
+        $dateThresholdDateTime->shouldReceive('format')
             ->with('Y-m-d')
-            ->andReturn($formattedDateMustBeBeforeDateTime);
+            ->andReturn($formattedDateThresholdDateTime);
 
-        $permitStartDate = new PermitStartDate($dateMustBeBeforeDateTime, $date);
+        $dateWithThreshold = new DateWithThreshold($dateThresholdDateTime, $date);
 
         $expectedRepresentation = [
-            'dateMustBeBefore' => $formattedDateMustBeBeforeDateTime,
+            'dateThreshold' => $formattedDateThresholdDateTime,
             'date' => $dateRepresentation,
         ];
 
         $this->assertEquals(
             $expectedRepresentation,
-            $permitStartDate->getRepresentation()
+            $dateWithThreshold->getRepresentation()
         );
     }
 }
