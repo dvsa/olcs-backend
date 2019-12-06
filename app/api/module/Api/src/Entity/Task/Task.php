@@ -75,6 +75,7 @@ class Task extends AbstractTask
     const TASK_DESCRIPTION_BILATERAL_RECEIVED = 'Bilateral application received';
     const TASK_DESCRIPTION_MULTILATERAL_RECEIVED = 'Multilateral application received';
     const TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED = 'Annual ECMT application received';
+    const TASK_DESCRIPTION_CERT_ROADWORTHINESS_RECEIVED = 'Certificate of Roadworthiness application received';
 
     const ACTION_DATE_FORMAT = 'Y-m-d';
 
