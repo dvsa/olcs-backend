@@ -45,6 +45,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
             'isEcmtRemoval' => $this->isEcmtRemoval(),
             'isBilateral' => $this->isBilateral(),
             'isMultilateral' => $this->isMultilateral(),
+            'isCertificateOfRoadworthiness' => $this->isCertificateOfRoadworthiness(),
             'isApplicationPathEnabled' => $this->isApplicationPathEnabled(),
         ];
     }
