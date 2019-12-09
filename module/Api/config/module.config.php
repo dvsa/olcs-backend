@@ -65,8 +65,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysFactory::class,
             'QaEcmtShortTermAnnualTripsAbroadElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadFactory::class,
-            'QaEcmtRemovalPermitStartDateElementFactory' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateFactory::class,
+            'QaCommonDateWithThresholdElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Common\DateWithThresholdFactory::class,
             'QaSupplementedApplicationStepFactory' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
             'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
@@ -213,6 +213,8 @@ return [
                 => ApiSrv\Qa\Strategy\EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory::class,
             'QaEcmtShortTermSectorsFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtShortTermSectorsFormControlStrategyFactory::class,
+            'QaCertRoadworthinessMotExpiryDateFormControlStrategy'
+                => ApiSrv\Qa\Strategy\CertRoadworthinessMotExpiryDateFormControlStrategyFactory::class,
             'QaCommonCertificatesFormControlStrategy'
                 => ApiSrv\Qa\Strategy\CommonCertificatesFormControlStrategyFactory::class,
 
@@ -226,6 +228,7 @@ return [
                 => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
             'QaCommonCertificatesQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\Common\CertificatesGeneratorFactory::class,
+
             'QaSelfservePageGenerator' => ApiSrv\Qa\Structure\SelfservePageGeneratorFactory::class,
             'QaFormFragmentGenerator' => ApiSrv\Qa\Structure\FormFragmentGeneratorFactory::class,
             'QaTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\TextGeneratorFactory::class,
@@ -287,8 +290,12 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerClearerFactory::class,
             'QaCommonCertificatesAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\Common\CertificatesAnswerSaverFactory::class,
+            'QaCommonDateWithThresholdElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Common\DateWithThresholdGeneratorFactory::class,
             'QaEcmtRemovalPermitStartDateElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateGeneratorFactory::class,
+            'QaCertRoadworthinessMotExpiryDateElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\CertRoadworthiness\MotExpiryDateGeneratorFactory::class,
 
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,

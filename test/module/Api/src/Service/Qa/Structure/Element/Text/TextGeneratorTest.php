@@ -22,6 +22,10 @@ class TextGeneratorTest extends MockeryTestCase
 {
     private $answerValue;
 
+    private $hintOption;
+
+    private $labelOption;
+
     private $applicationStepEntity;
 
     private $irhpApplicationEntity;
@@ -29,6 +33,8 @@ class TextGeneratorTest extends MockeryTestCase
     private $elementGeneratorContext;
 
     private $labelTranslateableText;
+
+    private $hintTranslateableText;
 
     private $text;
 
@@ -74,15 +80,18 @@ class TextGeneratorTest extends MockeryTestCase
             ->andReturn($this->irhpApplicationEntity);
 
         $this->labelTranslateableText = m::mock(TranslateableText::class);
+        $this->hintTranslateableText = m::mock(TranslateableText::class);
 
         $this->text = m::mock(Text::class);
-
         $this->textFactory = m::mock(TextFactory::class);
 
         $this->translateableTextGenerator = m::mock(TranslateableTextGenerator::class);
         $this->translateableTextGenerator->shouldReceive('generate')
             ->with($this->labelOption)
             ->andReturn($this->labelTranslateableText);
+        $this->translateableTextGenerator->shouldReceive('generate')
+            ->with($this->hintOption)
+            ->andReturn($this->hintTranslateableText);
 
         $this->textGenerator = new TextGenerator(
             $this->textFactory,
@@ -90,16 +99,10 @@ class TextGeneratorTest extends MockeryTestCase
         );
     }
 
-    public function testGenerateWithHint()
+    public function testGenerate()
     {
-        $hintTranslateableText = m::mock(TranslateableText::class);
-
-        $this->translateableTextGenerator->shouldReceive('generate')
-            ->with($this->hintOption)
-            ->andReturn($hintTranslateableText);
-
         $this->textFactory->shouldReceive('create')
-            ->with($this->labelTranslateableText, $hintTranslateableText, $this->answerValue)
+            ->with($this->labelTranslateableText, $this->hintTranslateableText, $this->answerValue)
             ->andReturn($this->text);
 
         $decodedOptionSource = [
@@ -116,7 +119,7 @@ class TextGeneratorTest extends MockeryTestCase
         );
     }
 
-    public function testGenerateWithNoHint()
+    public function testGenerateWithLabelOnly()
     {
         $this->textFactory->shouldReceive('create')
             ->with($this->labelTranslateableText, null, $this->answerValue)
@@ -124,6 +127,25 @@ class TextGeneratorTest extends MockeryTestCase
 
         $decodedOptionSource = [
             'label' => $this->labelOption
+        ];
+
+        $this->applicationStepEntity->shouldReceive('getDecodedOptionSource')
+            ->andReturn($decodedOptionSource);
+
+        $this->assertSame(
+            $this->text,
+            $this->textGenerator->generate($this->elementGeneratorContext)
+        );
+    }
+
+    public function testGenerateWithHintOnly()
+    {
+        $this->textFactory->shouldReceive('create')
+            ->with(null, $this->hintTranslateableText, $this->answerValue)
+            ->andReturn($this->text);
+
+        $decodedOptionSource = [
+            'hint' => $this->hintOption
         ];
 
         $this->applicationStepEntity->shouldReceive('getDecodedOptionSource')

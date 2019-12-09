@@ -26,7 +26,7 @@ class TextTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->hintTranslateableTextRepresentation = ['hintTranslatelableTextRepresentation'];
+        $this->hintTranslateableTextRepresentation = ['hintTranslateableTextRepresentation'];
 
         $this->labelTranslateableTextRepresentation = ['labelTranslateableTextRepresentation'];
 
@@ -41,7 +41,7 @@ class TextTest extends MockeryTestCase
             ->andReturn($this->labelTranslateableTextRepresentation);
     }
 
-    public function testGetRepresentationWithHint()
+    public function testGetRepresentation()
     {
         $text = new Text(
             $this->labelTranslateableText,
@@ -61,7 +61,7 @@ class TextTest extends MockeryTestCase
         );
     }
 
-    public function testGetRepresentationWithoutHint()
+    public function testGetRepresentationWithLabelOnly()
     {
         $text = new Text(
             $this->labelTranslateableText,
@@ -71,6 +71,25 @@ class TextTest extends MockeryTestCase
 
         $expectedRepresentation = [
             'label' => $this->labelTranslateableTextRepresentation,
+            'value' => $this->value
+        ];
+
+        $this->assertEquals(
+            $expectedRepresentation,
+            $text->getRepresentation()
+        );
+    }
+
+    public function testGetRepresentationWithHintOnly()
+    {
+        $text = new Text(
+            null,
+            $this->hintTranslateableText,
+            $this->value
+        );
+
+        $expectedRepresentation = [
+            'hint' => $this->hintTranslateableTextRepresentation,
             'value' => $this->value
         ];
 
