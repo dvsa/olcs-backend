@@ -1241,6 +1241,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
                 return $this->proceedToIssuing($submitStatus);
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER:
+                return $this->proceedToValid($submitStatus);
             default:
                 throw new ForbiddenException(self::ERR_CANT_SUBMIT);
         }
@@ -1550,8 +1553,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function proceedToValid(RefData $validStatus)
     {
-        if (!$this->isIssueInProgress()) {
-            throw new ForbiddenException('This application is not in the correct state to proceed to valid ('.$this->status->getId().')');
+        if (!$this->isIssueInProgress() && !$this->isCertificateOfRoadworthiness()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'This application is not in the correct state to proceed to valid (status: %s, irhpPermitType: %d)',
+                    $this->status->getId(),
+                    $this->irhpPermitType->getId()
+                )
+            );
         }
 
         $this->status = $validStatus;
@@ -1607,6 +1616,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $this->irhpPermitApplications->first();
+    }
+
+    /**
+     * Is this a Certificate of Roadworthiness application?
+     *
+     * @return bool
+     */
+    public function isCertificateOfRoadworthiness(): bool
+    {
+        return $this->irhpPermitType->isCertificateOfRoadworthiness();
     }
 
     /**
@@ -1974,6 +1993,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 => Task::TASK_DESCRIPTION_BILATERAL_RECEIVED,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL
                 => Task::TASK_DESCRIPTION_MULTILATERAL_RECEIVED,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE
+                => Task::TASK_DESCRIPTION_CERT_ROADWORTHINESS_RECEIVED,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER
+                => Task::TASK_DESCRIPTION_CERT_ROADWORTHINESS_RECEIVED,
         ];
 
         $irhpPermitTypeId = $this->irhpPermitType->getId();
@@ -1995,6 +2018,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getSubmissionStatus()
     {
         $mappings = [
+            RefData::BUSINESS_PROCESS_AG => IrhpInterface::STATUS_VALID,
             RefData::BUSINESS_PROCESS_APG => IrhpInterface::STATUS_ISSUING,
             RefData::BUSINESS_PROCESS_APGG => IrhpInterface::STATUS_UNDER_CONSIDERATION,
             RefData::BUSINESS_PROCESS_APSG => IrhpInterface::STATUS_UNDER_CONSIDERATION,
