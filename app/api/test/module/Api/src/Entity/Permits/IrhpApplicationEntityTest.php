@@ -720,6 +720,17 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider trueOrFalseProvider
      */
+    public function testIsCertificateOfRoadworthiness($isCertificateOfRoadworthiness)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isCertificateOfRoadworthiness')->once()->withNoArgs()->andReturn($isCertificateOfRoadworthiness);
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $this->assertEquals($isCertificateOfRoadworthiness, $entity->isCertificateOfRoadworthiness());
+    }
+
+    /**
+     * @dataProvider trueOrFalseProvider
+     */
     public function testIsMultiStock($isMultiStock)
     {
         $irhpPermitType = m::mock(IrhpPermitType::class);
@@ -3078,6 +3089,36 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->submit($status);
     }
 
+    /**
+     * @dataProvider dpSubmitCertOfRoadworthiness
+     */
+    public function testSubmitCertOfRoadworthiness($irhpPermitTypeId)
+    {
+        $status = m::mock(RefData::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeSubmitted')
+            ->andReturn(true);
+        $entity->shouldReceive('proceedToValid')
+            ->with($status)
+            ->once();
+
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($irhpPermitTypeId);
+
+        $entity->submit($status);
+    }
+
+    public function dpSubmitCertOfRoadworthiness()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER],
+        ];
+    }
+
     public function testSubmitException()
     {
         $this->expectException(ForbiddenException::class);
@@ -3132,16 +3173,27 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage(
-            'This application is not in the correct state to proceed to valid (permit_app_declined)'
+            sprintf(
+                'This application is not in the correct state to proceed to valid (status: %s, irhpPermitType: %d)',
+                IrhpInterface::STATUS_EXPIRED,
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE
+            )
         );
 
         $oldStatus = m::mock(RefData::class);
         $oldStatus->shouldReceive('getId')
-            ->andReturn('permit_app_declined');
+            ->andReturn(IrhpInterface::STATUS_EXPIRED);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')->withNoArgs()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE);
 
         $entity = m::mock(Entity::class)->makePartial();
         $entity->setStatus($oldStatus);
+        $entity->setIrhpPermitType($irhpPermitType);
         $entity->shouldReceive('isIssueInProgress')
+            ->andReturn(false)
+            ->shouldReceive('isCertificateOfRoadworthiness')
             ->andReturn(false);
 
         $entity->proceedToValid(m::mock(RefData::class));
@@ -4314,6 +4366,7 @@ class IrhpApplicationEntityTest extends EntityTester
             [false, null],
             [true, Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE],
             [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD],
+            [true, Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE],
             [true, Question::FORM_CONTROL_COMMON_CERTIFICATES],
         ];
     }
@@ -5354,6 +5407,14 @@ class IrhpApplicationEntityTest extends EntityTester
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                 Task::TASK_DESCRIPTION_MULTILATERAL_RECEIVED
             ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
+                Task::TASK_DESCRIPTION_CERT_ROADWORTHINESS_RECEIVED
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
+                Task::TASK_DESCRIPTION_CERT_ROADWORTHINESS_RECEIVED
+            ],
         ];
     }
 
@@ -5392,6 +5453,7 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpGetSubmissionStatus()
     {
         return [
+            [RefData::BUSINESS_PROCESS_AG, IrhpInterface::STATUS_VALID],
             [RefData::BUSINESS_PROCESS_APG, IrhpInterface::STATUS_ISSUING],
             [RefData::BUSINESS_PROCESS_APGG, IrhpInterface::STATUS_UNDER_CONSIDERATION],
             [RefData::BUSINESS_PROCESS_APSG, IrhpInterface::STATUS_UNDER_CONSIDERATION],

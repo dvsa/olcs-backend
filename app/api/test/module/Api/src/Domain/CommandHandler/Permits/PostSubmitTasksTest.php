@@ -142,6 +142,8 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER],
         ];
     }
 

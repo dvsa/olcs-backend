@@ -387,8 +387,8 @@ return [
     'permits.snapshot.declaration' => 'I declare that the statements and information provided are true and that my application is correct. I understand that it is an offence to make a false declaration to obtain a permit.',
     'permits.irhp.countries.transporting' => 'Countries transporting goods to',
 
-    'qanda.ecmt-removal.removal-eligibility.question' => 'Confirm you will only use removal permits for removal operations using specialised equipment and staff',
-    'qanda.ecmt-removal.cabotage.question' => 'Confirm you will not use removal permits to carry out cabotage',
+    'qanda.ecmt-removal.removal-eligibility.question' => 'Removal permits can only be used for removal operations using specialised equipment and staff',
+    'qanda.ecmt-removal.cabotage.question' => 'Removal permits do not allow you to carry out cabotage',
     'qanda.ecmt-removal.no-of-permits.question' => 'How many permits do you require for this licence?',
     'qanda.ecmt-removal.permit-start-date.question' => 'When do you need your permits to be valid from?',
 
@@ -412,6 +412,19 @@ return [
     'qanda.ecmt-short-term.annual-trips-abroad.question' => 'How many international trips did you make in the last 12 months using this licence?',
     'qanda.ecmt-short-term.percentage-international-journeys.question' => 'In the last 12 months, what percentage of international trips did you make using this licence?',
     'qanda.ecmt-short-term.sectors.question' => 'Select one sector you mainly transport goods in using this licence',
+
+    'qanda.certificate-of-roadworthiness.vehicle.registration-number.question' => 'Enter the vehicle registration number',
+    'qanda.certificate-of-roadworthiness.trailer.registration-number.question' => 'Enter the trailer registration number',
+    'qanda.certificate-of-roadworthiness.vehicle.certificate-of-compliance-number.question' => 'Enter the vehicle Certificate of Compliance number (optional)',
+    'qanda.certificate-of-roadworthiness.trailer.certificate-of-compliance-number.question' => 'Enter the trailer Certificate of Compliance number (optional)',
+    'qanda.certificate-of-roadworthiness.vehicle.make-and-model.question' => 'Enter the vehicle make and model',
+    'qanda.certificate-of-roadworthiness.trailer.make-and-model.question' => 'Enter the trailer make and model',
+    'qanda.certificate-of-roadworthiness.vehicle.vehicle-identification-number.question' => 'Enter the vehicle identification number (VIN)',
+    'qanda.certificate-of-roadworthiness.trailer.vehicle-identification-number.question' => 'Enter the trailer\'s vehicle identification number (VIN)',
+    'qanda.certificate-of-roadworthiness.vehicle-engine-number.question' => 'Enter the vehicle engine number',
+    'qanda.certificate-of-roadworthiness.vehicle-engine-type.question' => 'Enter the vehicle engine type',
+    'qanda.certificate-of-roadworthiness.vehicle.mot-expiry-date.question' => 'Enter the vehicle\'s MOT expiry date',
+    'qanda.certificate-of-roadworthiness.trailer.mot-expiry-date.question' => 'Enter the trailer\'s MOT expiry date',
 
     'qanda.common.certificates.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
 

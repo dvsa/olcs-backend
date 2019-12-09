@@ -77,6 +77,8 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER:
                 $this->handleIrhpApplication($command);
                 break;
             default:

@@ -48,18 +48,9 @@ class DateAnswerSaver implements AnswerSaverInterface
         IrhpApplicationEntity $irhpApplicationEntity,
         array $postData
     ) {
-        $dateString = $this->genericAnswerFetcher->fetch($applicationStepEntity, $postData);
-
-        if (is_array($dateString)) {
-            $dateString = sprintf(
-                '%s-%s-%s',
-                $dateString['year'],
-                $dateString['month'],
-                $dateString['day']
-            );
-        }
-
-        $answerValue = $this->dateTimeFactory->create($dateString);
+        $answerValue = $this->dateTimeFactory->create(
+            $this->genericAnswerFetcher->fetch($applicationStepEntity, $postData)
+        );
 
         $this->genericAnswerWriter->write(
             $applicationStepEntity,
