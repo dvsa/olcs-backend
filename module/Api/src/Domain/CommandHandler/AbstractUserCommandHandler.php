@@ -95,7 +95,7 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler impleme
                 ]
             );
 
-            throw new ValidationException([$this->roleErrorKey => [self::ERR_ROLES_PERMISSION]]);
+            throw new ValidationException([self::ERR_ROLES_PERMISSION]);
         }
 
         // check if ROLE_SYSTEM_ADMIN has been removed
