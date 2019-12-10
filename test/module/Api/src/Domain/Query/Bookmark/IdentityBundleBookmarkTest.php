@@ -37,6 +37,7 @@ class IdentityBundleBookmarkTest extends \PHPUnit\Framework\TestCase
             [Bookmark\GoodsDiscBundle::class],
             [Bookmark\ImpoundingBundle::class],
             [Bookmark\IrfoGvPermitBundle::class],
+            [Bookmark\IrhpApplicationBundle::class],
             [Bookmark\IrhpPermitBundle::class],
             [Bookmark\IrhpPermitStockBundle::class],
             [Bookmark\IrfoPsvAuthBundle::class],
