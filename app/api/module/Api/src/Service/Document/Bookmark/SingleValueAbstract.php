@@ -46,13 +46,23 @@ abstract class SingleValueAbstract extends DynamicBookmark
     }
 
     /**
+     * get value
+     *
+     * @return null|string
+     */
+    protected function getValue()
+    {
+        return isset($this->data[static::FIELD]) ? $this->data[static::FIELD] : null;
+    }
+
+    /**
      * Render the bookmark
      *
      * @return null|string
      */
     public function render()
     {
-        $value = isset($this->data[static::FIELD]) ? $this->data[static::FIELD] : null;
+        $value = $this->getValue();
 
         $formatter = static::FORMATTER;
 
