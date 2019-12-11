@@ -4366,6 +4366,7 @@ class IrhpApplicationEntityTest extends EntityTester
             [false, null],
             [true, Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE],
             [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD],
+            [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE],
             [true, Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE],
             [true, Question::FORM_CONTROL_COMMON_CERTIFICATES],
         ];
