@@ -5601,6 +5601,153 @@ class IrhpApplicationEntityTest extends EntityTester
         return $task;
     }
 
+    public function testExpireCertificateWrongPermitType()
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->expects()->isCertificateOfRoadworthiness()->withNoArgs()->andReturnFalse();
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(Entity::ERR_ROADWORTHINESS_ONLY);
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $entity->expireCertificate(m::mock(RefData::class));
+    }
+
+    /**
+     * @dataProvider dpExpireCertificateMotNotExpired
+     */
+    public function testExpireCertificateMotNotExpired($expiryDate)
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(Entity::ERR_ROADWORTHINESS_MOT_EXPIRY);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->expects()->isCertificateOfRoadworthiness()->withNoArgs()->andReturnTrue();
+
+        /**
+         * Make partial to avoid recreating all the mocks retrieving the expiry date
+         *
+         * @var Entity|m\mockInterface $entity
+         */
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->expects()->getMotExpiryDate()->withNoArgs()->andReturn($expiryDate);
+        $entity->setIrhpPermitType($irhpPermitType);
+        $entity->expireCertificate(m::mock(RefData::class));
+    }
+
+    public function dpExpireCertificateMotNotExpired()
+    {
+        return [
+            'no mot expiry date present' => [null],
+            'mot expires tomorrow' => [(new \DateTime('- 1 day'))->format('Y-m-d')],
+            'mot expires today' => [(new \DateTime())->format('Y-m-d')],
+        ];
+    }
+
+    public function testExpireCertificateMotHasExpired()
+    {
+        $validStatus = m::mock(RefData::class);
+        $validStatus->expects()->getId()->withNoArgs()->andReturn(IrhpInterface::STATUS_VALID);
+        $expiryDate = (new \DateTime('+ 1 day'))->format('Y-m-d');
+        $expiryStatus = m::mock(RefData::class);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->expects()->isCertificateOfRoadworthiness()->withNoArgs()->andReturnTrue();
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->expects()->hasValidPermits()->withNoArgs()->andReturnFalse();
+
+        /**
+         * Make partial to avoid recreating all the mocks retrieving the expiry date
+         *
+         * @var Entity|m\mockInterface $entity
+         */
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->expects()->getMotExpiryDate()->twice()->withNoArgs()->andReturn($expiryDate);
+        $entity->setIrhpPermitType($irhpPermitType);
+        $entity->setStatus($validStatus);
+        $entity->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $entity->expireCertificate($expiryStatus);
+        self::assertEquals($expiryStatus, $entity->getStatus());
+        self::assertEquals($expiryDate, $entity->getExpiryDate()->format('Y-m-d'));
+    }
+
+    /**
+     * @dataProvider dpTestGetMotExpiryDate
+     */
+    public function testGetMotExpiryDate($isTrailer, $questionId)
+    {
+        $expiryDate = date('Y-m-d');
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->expects()->isCertificateOfRoadworthiness()->withNoArgs()->andReturnTrue();
+        $irhpPermitType->expects()->isCertificateOfRoadworthinessTrailer()->withNoArgs()->andReturn($isTrailer);
+        $createdOn = '2018-12-25';
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $entity->setCreatedOn($createdOn);
+
+        $formControlType = new RefData(Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE);
+        $activeQuestionTextId = 1111;
+        $activeQuestionText = m::mock(QuestionText::class);
+        $activeQuestionText->expects('getId')->withNoArgs()->andReturn($activeQuestionTextId);
+
+        $answer = m::mock(Answer::class);
+        $answer->expects('getValue')->withNoArgs()->andReturn($expiryDate);
+        $answers = new ArrayCollection([$activeQuestionTextId => $answer]);
+
+        $question2 = m::mock(Question::class);
+        $question2->expects('getId')->andReturn($questionId);
+        $question2->expects('isCustom')->withNoArgs()->andReturnTrue();
+        $question2->expects('getFormControlType')->andReturn($formControlType);
+        $question2->expects('getActiveQuestionText')
+            ->with(m::type(DateTime::class))
+            ->andReturn($activeQuestionText);
+
+        $applicationStep1 = m::mock(ApplicationStep::class);
+        $applicationStep1->shouldReceive('getQuestion->getId')
+            ->withNoArgs()
+            ->andReturn(888888);
+
+        $applicationStep2 = m::mock(ApplicationStep::class);
+        $applicationStep2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
+        $applicationStep2->shouldReceive('getQuestion->getId')
+            ->withNoArgs()
+            ->andReturn($questionId);
+
+        $applicationStep3 = m::mock(ApplicationStep::class);
+        $applicationStep3->shouldReceive('getQuestion->getId')
+            ->withNoArgs()
+            ->andReturn(999999);
+
+        $applicationSteps = new ArrayCollection([$applicationStep1, $applicationStep2, $applicationStep3]);
+
+        $applicationPath = m::mock(ApplicationPath::class);
+        $applicationPath->expects('getApplicationSteps')->withNoArgs()->andReturn($applicationSteps);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->expects('getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath')
+            ->with(m::type(DateTime::class))
+            ->andReturn($applicationPath);
+
+        $entity->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+        $entity->setAnswers($answers);
+
+        self::assertEquals($expiryDate, $entity->getMotExpiryDate());
+    }
+
+    public function dpTestGetMotExpiryDate()
+    {
+        return [
+            'trailer' => [
+                true,
+                Question::QUESTION_ID_ROADWORTHINESS_TRAILER_MOT_EXPIRY,
+            ],
+            'vehicle' => [
+                false,
+                Question::QUESTION_ID_ROADWORTHINESS_VEHICLE_MOT_EXPIRY,
+            ],
+        ];
+    }
+
     /**
      * @dataProvider dpCanBeRevivedFromWithdrawn
      */

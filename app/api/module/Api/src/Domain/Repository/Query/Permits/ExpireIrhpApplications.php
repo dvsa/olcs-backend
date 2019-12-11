@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 
 /**
  * Expire IRHP applications
@@ -29,6 +30,7 @@ class ExpireIrhpApplications extends AbstractRawQuery
         {ia.lastModifiedBy} = :currentUserId,
         {ia.version} = {ia.version} + 1
       WHERE {ia.status} = :validStatus
+        AND {ia.irhpPermitType} NOT IN (:certificatePermitTypes)
         AND {ia.id} NOT IN (
           SELECT {ipa.irhpApplication}
           FROM {ipa}
@@ -45,6 +47,7 @@ class ExpireIrhpApplications extends AbstractRawQuery
             'expiredStatus' => IrhpInterface::STATUS_EXPIRED,
             'validStatus' => IrhpInterface::STATUS_VALID,
             'permitValidStatuses' => IrhpPermit::$validStatuses,
+            'certificatePermitTypes' => IrhpPermitType::CERTIFICATE_TYPES,
         ];
     }
 
@@ -55,6 +58,7 @@ class ExpireIrhpApplications extends AbstractRawQuery
     {
         return [
             'permitValidStatuses' => Connection::PARAM_STR_ARRAY,
+            'certificatePermitTypes' => Connection::PARAM_INT_ARRAY,
         ];
     }
 }
