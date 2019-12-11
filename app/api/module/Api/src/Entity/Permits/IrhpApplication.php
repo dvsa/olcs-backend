@@ -367,6 +367,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getEcmtShortTermSectorsAnswer($isSnapshot);
                 case Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE:
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD:
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE:
                 case Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE:
                 case Question::FORM_CONTROL_COMMON_CERTIFICATES:
                     return $this->getStandardQaAnswer($question);
