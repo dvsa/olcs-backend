@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
@@ -83,6 +84,28 @@ class IrhpApplicationTest extends RepositoryTestCase
             $irhpApplications,
             $this->sut->fetchAllAwaitingFee()
         );
+    }
+
+    public function testFetchAllValidRoadworthiness()
+    {
+        $queryBuilder = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($queryBuilder);
+
+        $queryBuilder->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        self::assertEquals(['RESULTS'], $this->sut->fetchAllValidRoadworthiness());
+
+        $expectedQuery = 'BLAH '
+            . 'AND ia.status = [[' . IrhpInterface::STATUS_VALID . ']] '
+            . 'AND ia.irhpPermitType IN [[[6,7]]]';
+
+        self::assertEquals($expectedQuery, $this->query);
     }
 
     public function testMarkAsExpired()

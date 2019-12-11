@@ -46,6 +46,8 @@ class Question extends AbstractQuestion
     // Question ids
     const QUESTION_ID_SHORT_TERM_ANNUAL_TRIPS_ABROAD = 10;
     const QUESTION_ID_REMOVAL_PERMIT_START_DATE = 13;
+    const QUESTION_ID_ROADWORTHINESS_VEHICLE_MOT_EXPIRY = 20;
+    const QUESTION_ID_ROADWORTHINESS_TRAILER_MOT_EXPIRY = 25;
 
     /**
      * Is custom

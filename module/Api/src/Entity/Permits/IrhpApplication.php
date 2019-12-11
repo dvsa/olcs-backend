@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
@@ -84,6 +85,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_CANT_SUBMIT = 'This application cannot be submitted';
     const ERR_CANT_ISSUE = 'This application cannot be issued';
     const ERR_CANT_GRANT = 'Unable to grant this application';
+
+    const ERR_ROADWORTHINESS_ONLY = 'This method is only for roadworthiness certificates';
+    const ERR_ROADWORTHINESS_MOT_EXPIRY = 'The MOT has not yet expired on this record';
 
     const SECTIONS = [
         IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => [
@@ -405,7 +409,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return null;
         }
 
-        // answers are indexed by question_text_id
+        /** @var Answer $answer answers are indexed by question_text_id */
         $answer = $this->getAnswers()->get($activeQuestionText->getId());
 
         if (!isset($answer)) {
@@ -1636,6 +1640,26 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Is this a Certificate of Roadworthiness vehicle application?
+     *
+     * @return bool
+     */
+    public function isCertificateOfRoadworthinessVehicle(): bool
+    {
+        return $this->irhpPermitType->isCertificateOfRoadworthinessVehicle();
+    }
+
+    /**
+     * Is this a Certificate of Roadworthiness trailer application?
+     *
+     * @return bool
+     */
+    public function isCertificateOfRoadworthinessTrailer(): bool
+    {
+        return $this->irhpPermitType->isCertificateOfRoadworthinessTrailer();
+    }
+
+    /**
      * Is this application a multi stock application?
      *
      * @return bool
@@ -1663,18 +1687,23 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Changes the status to expired
      *
-     * @param RefData $expireStatus
+     * @param RefData       $expireStatus
+     * @param DateTime|null $expiryDate
      *
      * @throws ForbiddenException
      */
-    public function expire(RefData $expireStatus)
+    public function expire(RefData $expireStatus, DateTime $expiryDate = null)
     {
         if (!$this->canBeExpired()) {
             throw new ForbiddenException('This application cannot be expired.');
         }
 
+        if ($expiryDate === null) {
+            $expiryDate = new DateTime();
+        }
+
         $this->status = $expireStatus;
-        $this->expiryDate = new DateTime();
+        $this->expiryDate = $expiryDate;
     }
 
     /**
@@ -1775,6 +1804,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         $applicationSteps = $this->getActiveApplicationPath()->getApplicationSteps();
 
+        /** @var ApplicationStep $applicationStep */
         foreach ($applicationSteps as $applicationStep) {
             if ($applicationStep->getQuestion()->getId() == $id) {
                 return $this->getAnswer($applicationStep, false);
@@ -2013,6 +2043,75 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $mappings[$irhpPermitTypeId];
+    }
+
+    /**
+     * Get the MOT expiry date for a certificate of roadworthiness
+     *
+     * @return string|null
+     */
+    public function getMotExpiryDate(): ?string
+    {
+        if (!$this->isCertificateOfRoadworthiness()) {
+            return null;
+        }
+
+        $questionId = Question::QUESTION_ID_ROADWORTHINESS_VEHICLE_MOT_EXPIRY;
+
+        if ($this->isCertificateOfRoadworthinessTrailer()) {
+            $questionId = Question::QUESTION_ID_ROADWORTHINESS_TRAILER_MOT_EXPIRY;
+        }
+
+        return $this->getAnswerValueByQuestionId($questionId);
+    }
+
+    /**
+     * Return whether the MOT has expired
+     *
+     * @return bool
+     */
+    private function motHasExpired(): bool
+    {
+        $motExpiryDate = $this->getMotExpiryDate();
+
+        //cover instances where expiry date not yet completed
+        if ($motExpiryDate === null) {
+            return false;
+        }
+
+        $currentDate = new \DateTime();
+
+        //if MOT expiry date (returned by Q&A as a Y-m-d string) is not after the current date then it is still valid
+        if ($motExpiryDate <= $currentDate->format('Y-m-d')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Expire certificate of roadworthiness
+     *
+     * @param RefData $expireStatus
+     *
+     * @throws \Exception
+     *
+     * @return void
+     */
+    public function expireCertificate(RefData $expireStatus): void
+    {
+        if (!$this->isCertificateOfRoadworthiness()) {
+            throw new \Exception(self::ERR_ROADWORTHINESS_ONLY);
+        }
+
+        if (!$this->motHasExpired()) {
+            throw new \Exception(self::ERR_ROADWORTHINESS_MOT_EXPIRY);
+        }
+
+        $this->expire(
+            $expireStatus,
+            DateTime::createFromFormat('Y-m-d', $this->getMotExpiryDate())
+        );
     }
 
     /**
