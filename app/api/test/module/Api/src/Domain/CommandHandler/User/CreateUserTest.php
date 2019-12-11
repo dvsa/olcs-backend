@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserCreated as SendUserCreatedDto;
@@ -267,10 +268,13 @@ class CreateUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
 
@@ -421,7 +425,9 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
 
@@ -543,7 +549,9 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->repoMap['User']
             ->shouldReceive('fetchById')
@@ -568,7 +576,9 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $command = Cmd::create($data);
 
@@ -601,7 +611,9 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->repoMap['User']
             ->shouldReceive('disableSoftDeleteable')
@@ -625,5 +637,18 @@ class CreateUserTest extends CommandHandlerTestCase
             [UserEntity::USER_TYPE_OPERATOR],
             [UserEntity::USER_TYPE_TRANSPORT_MANAGER]
         ];
+    }
+
+    private function getMockIdentity()
+    {
+        $mockUser = m::mock(UserEntity::class)
+            ->shouldReceive('isAllowedToPerformActionOnRoles')
+            ->andReturn(true)
+            ->getMock();
+
+        return m::mock(Identity::class)
+            ->shouldReceive('getUser')
+            ->andReturn($mockUser)
+            ->getMock();
     }
 }

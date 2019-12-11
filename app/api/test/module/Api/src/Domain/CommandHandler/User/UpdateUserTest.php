@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -126,7 +127,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
             ->once()
@@ -242,7 +245,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->mockedSmServices[UserInterface::class]
             ->shouldReceive('updateUser')
@@ -348,7 +353,13 @@ class UpdateUserTest extends CommandHandlerTestCase
         $loggedInUserId = 1000;
 
         /** @var UserEntity $user */
-        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser = m::mock(UserEntity::class)
+            ->makePartial()
+            ->shouldReceive('isAllowedToPerformActionOnRoles')
+            ->andReturn(true)
+            ->shouldReceive('setId')
+            ->getMock();
+
         $loggedInUser->setId($loggedInUserId);
 
         $this->mockedSmServices[AuthorizationService::class]
@@ -357,7 +368,6 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true)
             ->shouldReceive('getIdentity->getUser')
-            ->once()
             ->andReturn($loggedInUser);
 
         $this->mockedSmServices[UserInterface::class]
@@ -477,7 +487,13 @@ class UpdateUserTest extends CommandHandlerTestCase
         $loggedInUserId = 1000;
 
         /** @var UserEntity $user */
-        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser = m::mock(UserEntity::class)
+            ->makePartial()
+            ->shouldReceive('isAllowedToPerformActionOnRoles')
+            ->andReturn(true)
+            ->shouldReceive('setId')
+            ->getMock();
+
         $loggedInUser->setId($loggedInUserId);
 
         $this->mockedSmServices[AuthorizationService::class]
@@ -486,7 +502,6 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true)
             ->shouldReceive('getIdentity->getUser')
-            ->once()
             ->andReturn($loggedInUser);
 
         $this->mockedSmServices[UserInterface::class]
@@ -506,9 +521,13 @@ class UpdateUserTest extends CommandHandlerTestCase
             );
 
         /** @var ContactDetailsEntity $contactDetails */
-        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails = m::mock(ContactDetailsEntity::class)
+            ->makePartial()
+            ->shouldReceive('isAllowedToPerformActionOnRoles')
+            ->andReturn(true)
+            ->shouldReceive('setId');
+
         $contactDetails->shouldReceive('update')
-            ->once()
             ->with($data['contactDetails'])
             ->andReturnSelf();
 
@@ -669,7 +688,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->mockedSmServices[UserInterface::class]
             ->shouldReceive('updateUser')
@@ -771,7 +792,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->repoMap['User']
             ->shouldReceive('fetchById')
@@ -807,7 +830,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -945,5 +970,18 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->never();
 
         $this->sut->handleCommand($command);
+    }
+
+    private function getMockIdentity()
+    {
+        $mockUser = m::mock(UserEntity::class)
+            ->shouldReceive('isAllowedToPerformActionOnRoles')
+            ->andReturn(true)
+            ->getMock();
+
+        return m::mock(Identity::class)
+            ->shouldReceive('getUser')
+            ->andReturn($mockUser)
+            ->getMock();
     }
 }
