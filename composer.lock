@@ -2209,12 +2209,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.48",
+            "version": "4.206.50",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.48/olcs-olcs-transfer-4.206.48.zip",
-                "reference": "297bd91905ffb82303e8af270b2eb93fb81fc8f5",
-                "shasum": "297bd91905ffb82303e8af270b2eb93fb81fc8f5"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.50/olcs-olcs-transfer-4.206.50.zip",
+                "reference": "400f0c5272465310fc18129dd000235315eb60fd",
+                "shasum": "400f0c5272465310fc18129dd000235315eb60fd"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2270,7 +2270,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-11-26T12:09:12+00:00"
+            "time": "2019-12-12T12:16:31+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -2337,12 +2337,12 @@
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "4.206.1",
+            "version": "4.206.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-xmltools/4.206.1/olcs-olcs-xmltools-4.206.1.zip",
-                "reference": "69369ab9da1b1e879e84aecfdc64f395360f8918",
-                "shasum": "69369ab9da1b1e879e84aecfdc64f395360f8918"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-xmltools/4.206.3/olcs-olcs-xmltools-4.206.3.zip",
+                "reference": "de344959c69f376642e6a633a5fbb3eb72f621ba",
+                "shasum": "de344959c69f376642e6a633a5fbb3eb72f621ba"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2399,7 +2399,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2019-11-27T18:29:07+00:00"
+            "time": "2019-12-04T22:41:13+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -5958,6 +5958,7 @@
                 "MIT"
             ],
             "description": "PHPStan Phar distribution",
+            "abandoned": "phpstan/phpstan",
             "time": "2019-01-08T10:03:03+00:00"
         }
     ],
