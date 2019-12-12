@@ -31,6 +31,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\Traits\FetchPermitAppSubmissionTaskTrait;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
+use Dvsa\Olcs\Api\Entity\Traits\PermitAppReviveFromUnsuccessfulTrait;
 use Dvsa\Olcs\Api\Entity\Traits\PermitAppReviveFromWithdrawnTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
@@ -71,6 +72,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     use PermitAppReviveFromWithdrawnTrait {
         canBeRevivedFromWithdrawn as baseCanBeRevivedFromWithdrawn;
+    }
+
+    use PermitAppReviveFromUnsuccessfulTrait {
+        canBeRevivedFromUnsuccessful as baseCanBeRevivedFromUnsuccessful;
     }
 
     const ERR_CANT_CANCEL = 'Unable to cancel this application';
@@ -189,6 +194,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canBeDeclined' => $this->canBeDeclined(),
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeRevivedFromWithdrawn' => $this->canBeRevivedFromWithdrawn(),
+            'canBeRevivedFromUnsuccessful' => $this->canBeRevivedFromUnsuccessful(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
             'outstandingFeeAmount' => $this->getOutstandingFeeAmount(),
             'sectionCompletion' => $this->getSectionCompletion(),
@@ -2074,5 +2080,24 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $isApsg = $businessProcess->getId() == RefData::BUSINESS_PROCESS_APSG;
 
         return $canBeRevivedFromWithdrawn && $isApsg;
+    }
+
+    /**
+     * Whether the permit application can be revived from an unsuccessful state
+     *
+     * @return bool
+     */
+    public function canBeRevivedFromUnsuccessful()
+    {
+        $businessProcess = $this->getBusinessProcess();
+
+        if ($businessProcess === null) {
+            return false;
+        }
+
+        $canBeRevivedFromUnsuccessful = $this->baseCanBeRevivedFromUnsuccessful();
+        $isApsg = $businessProcess->getId() == RefData::BUSINESS_PROCESS_APSG;
+
+        return $canBeRevivedFromUnsuccessful && $isApsg;
     }
 }

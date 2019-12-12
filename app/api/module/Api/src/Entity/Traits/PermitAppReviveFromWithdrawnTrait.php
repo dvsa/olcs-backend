@@ -22,14 +22,14 @@ trait PermitAppReviveFromWithdrawnTrait
             return false;
         }
 
-        $permittedStatuses = [
+        $permittedReasons = [
             WithdrawableInterface::WITHDRAWN_REASON_UNPAID,
             WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
         ];
 
         return in_array(
             $this->withdrawReason->getId(),
-            $permittedStatuses
+            $permittedReasons
         );
     }
 
