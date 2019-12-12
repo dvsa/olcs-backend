@@ -1917,4 +1917,65 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             m::mock(RefData::class)
         );
     }
+
+    /**
+     * @dataProvider dpTestCanBeRevivedFromUnsuccessful
+     */
+    public function testCanBeRevivedFromUnsuccessful($status, $expected)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertSame($expected, $entity->canBeRevivedFromUnsuccessful());
+    }
+
+    public function dpTestCanBeRevivedFromUnsuccessful()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, true],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_EXPIRED, false],
+        ];
+    }
+
+    public function testReviveFromUnsuccessful()
+    {
+        $underConsiderationStatus = m::mock(RefData::class);
+
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->setStatus(m::mock(RefData::class));
+        $application->shouldReceive('canBeRevivedFromUnsuccessful')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $application->reviveFromUnsuccessful($underConsiderationStatus);
+
+        $this->assertSame(
+            $underConsiderationStatus,
+            $application->getStatus()
+        );
+    }
+
+    public function testReviveFromUnsuccessfulException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Unable to revive this application from an unsuccessful state');
+
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('canBeRevivedFromUnsuccessful')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $application->reviveFromUnsuccessful(
+            m::mock(RefData::class)
+        );
+    }
 }
