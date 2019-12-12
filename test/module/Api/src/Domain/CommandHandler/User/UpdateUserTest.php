@@ -913,6 +913,67 @@ class UpdateUserTest extends CommandHandlerTestCase
     /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
+    public function testHandleCommandThrowsRolesPermissionErrorWhenAttemptingToUpdateUserWithHigherRole()
+    {
+        $userId = 111;
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'loginId' => 'loginId',
+            'roles' => [RoleEntity::ROLE_INTERNAL_ADMIN],
+            'contactDetails' => [
+                'emailAddress' => 'changed-email@example.com'
+            ]
+        ];
+
+        $command = Cmd::create($data);
+
+        $loggedInUserId = 1000;
+
+        /** @var RoleEntity $loggedInUserRole */
+        $loggedInUserRole = m::mock(RoleEntity::class)->makePartial();
+        $loggedInUserRole->setRole(RoleEntity::ROLE_INTERNAL_CASE_WORKER);
+
+        /** @var UserEntity $loggedInUser */
+        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser->initCollections();
+        $loggedInUser->setId($loggedInUserId);
+        $loggedInUser->addRoles($loggedInUserRole);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true)
+            ->shouldReceive('getIdentity->getUser')
+            ->once()
+            ->andReturn($loggedInUser);
+
+        /** @var RoleEntity $userRole */
+        $userRole = m::mock(RoleEntity::class)->makePartial();
+        $userRole->setRole(RoleEntity::ROLE_INTERNAL_ADMIN);
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->initCollections();
+        $user->setId($userId);
+        $user->setLoginId('loginId');
+        $user->addRoles($userRole);
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->once()
+            ->with($userId, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($user)
+            ->shouldReceive('save')
+            ->never();
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
     public function testHandleCommandThrowsRolesPermissionLastUserException()
     {
         $userId = 111;
