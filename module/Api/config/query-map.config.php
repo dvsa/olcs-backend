@@ -34,6 +34,7 @@ return [
     BookmarkQuery\InterimUnlinkedTm::class => BookmarkQueryHandler\InterimUnlinkedTm::class,
     BookmarkQuery\InterimOperatingCentres::class => BookmarkQueryHandler\InterimOperatingCentres::class,
     BookmarkQuery\IrfoGvPermitBundle::class => BookmarkQueryHandler\IrfoGvPermitBundle::class,
+    BookmarkQuery\IrhpApplicationBundle::class => BookmarkQueryHandler\IrhpApplicationBundle::class,
     BookmarkQuery\IrhpPermitBundle::class => BookmarkQueryHandler\IrhpPermitBundle::class,
     BookmarkQuery\IrhpPermitStockBundle::class => BookmarkQueryHandler\IrhpPermitStockBundle::class,
     BookmarkQuery\IrfoPsvAuthBundle::class => BookmarkQueryHandler\IrfoPsvAuthBundle::class,
