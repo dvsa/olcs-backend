@@ -217,6 +217,8 @@ return [
                 => ApiSrv\Qa\Strategy\CertRoadworthinessMotExpiryDateFormControlStrategyFactory::class,
             'QaCommonCertificatesFormControlStrategy'
                 => ApiSrv\Qa\Strategy\CommonCertificatesFormControlStrategyFactory::class,
+            'QaEcmtShortTermEarliestPermitDateFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermEarliestPermitDateFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
