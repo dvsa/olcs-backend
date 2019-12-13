@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Qandidate\Toggle\ToggleManager;
 
 /**
@@ -67,6 +68,9 @@ class QueryHandlerTestCase extends MockeryTestCase
     /** @var bool  */
     private $initRefdata = false;
 
+    /** @var array  */
+    protected $commands = [];
+
     public function setUp()
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
@@ -113,6 +117,8 @@ class QueryHandlerTestCase extends MockeryTestCase
             ->andReturn($sm);
 
         $this->initReferences();
+
+        $this->commands = [];
 
         $this->sut = $this->sut->createService($this->queryHandler);
     }
@@ -175,6 +181,8 @@ class QueryHandlerTestCase extends MockeryTestCase
 
     public function tearDown()
     {
+        $this->assertCommandData();
+
         parent::tearDown();
 
         unset(
@@ -182,6 +190,7 @@ class QueryHandlerTestCase extends MockeryTestCase
             $this->queryHandler,
             $this->repoManager,
             $this->repoMap,
+            $this->commands,
             $this->refData,
             $this->references,
             $this->categoryReferences,
@@ -217,5 +226,39 @@ class QueryHandlerTestCase extends MockeryTestCase
         $this->repoMap[$name] = $class;
 
         return $class;
+    }
+
+    public function expectedSideEffect($class, $data, $result, $times = 1)
+    {
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->times($times)
+            ->with(m::type($class))
+            ->andReturnUsing(
+                function (CommandInterface $command) use ($class, $data, $result) {
+                    $this->commands[] = [$command, $data];
+                    return $result;
+                }
+            );
+    }
+
+    /**
+     * @NOTE must be called after the tested method has been executed
+     */
+    private function assertCommandData()
+    {
+        foreach ($this->commands as $command) {
+            /** @var CommandInterface $cmd */
+            list($cmd, $data) = $command;
+
+            $cmdData = $cmd->getArrayCopy();
+            $cmdDataToMatch = [];
+
+            foreach ($data as $key => $value) {
+                unset($value);
+                $cmdDataToMatch[$key] = isset($cmdData[$key]) ? $cmdData[$key] : null;
+            }
+
+            $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');
+        }
     }
 }
