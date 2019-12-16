@@ -5,9 +5,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Dvsa\Olcs\Api\Rbac\Identity;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
-use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
@@ -15,29 +12,34 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemp
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUser as Sut;
-use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistory;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistoryType;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
-use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Rbac\Identity;
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -523,8 +525,6 @@ class UpdateUserTest extends CommandHandlerTestCase
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)
             ->makePartial()
-            ->shouldReceive('isAllowedToPerformActionOnRoles')
-            ->andReturn(true)
             ->shouldReceive('setId');
 
         $contactDetails->shouldReceive('update')
@@ -779,9 +779,6 @@ class UpdateUserTest extends CommandHandlerTestCase
         );
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testHandleCommandThrowsIncorrectPermissionException()
     {
         $data = [
@@ -804,12 +801,11 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->expectException(ForbiddenException::class);
+
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsUsernameExistsException()
     {
         $userId = 111;
@@ -849,12 +845,11 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('enableSoftDeleteable')
             ->once();
 
+        $this->expectException(ValidationException::class);
+
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsRolesPermissionException()
     {
         $userId = 111;
@@ -907,12 +902,11 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->never();
 
+        $this->expectException(ValidationException::class);
+
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsRolesPermissionErrorWhenAttemptingToUpdateUserWithHigherRole()
     {
         $userId = 111;
@@ -968,12 +962,11 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->never();
 
+        $this->expectException(ValidationException::class);
+
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsRolesPermissionLastUserException()
     {
         $userId = 111;
@@ -1029,6 +1022,8 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->andReturn(1)
             ->shouldReceive('save')
             ->never();
+
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
