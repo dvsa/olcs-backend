@@ -22,7 +22,7 @@ class RangesByIrhpApplication extends AbstractQueryHandler implements ToggleRequ
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
-    protected $bundle = ['countrys'];
+    protected $bundle = ['countrys', 'emissionsCategory'];
 
     /** @var CandidatePermitsAvailableCountCalculator $candidatePermitsAvailableCountCalculator */
     protected $candidatePermitsAvailableCountCalculator;

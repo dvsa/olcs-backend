@@ -17,7 +17,7 @@ class ByIdTest extends AbstractQueryByIdHandlerTest
 {
     protected $sutClass = IrhpCandidatePermitByIdHandler::class;
     protected $sutRepo = 'IrhpCandidatePermit';
-    protected $bundle = ['irhpPermitRange' => ['countrys']];
+    protected $bundle = ['irhpPermitRange' => ['countrys'], 'irhpPermitApplication'];
     protected $qryClass = QryClass::class;
     protected $repoClass = IrhpCandidatePermitRepo::class;
     protected $entityClass = IrhpCandidatePermitEntity::class;
