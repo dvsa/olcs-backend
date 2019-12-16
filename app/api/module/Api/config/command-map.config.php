@@ -1122,6 +1122,7 @@ return [
     TransferCommand\IrhpApplication\CancelApplication::class => CommandHandler\IrhpApplication\Cancel::class,
     TransferCommand\IrhpApplication\Withdraw::class => CommandHandler\IrhpApplication\Withdraw::class,
     TransferCommand\IrhpApplication\ReviveFromWithdrawn::class => CommandHandler\IrhpApplication\ReviveFromWithdrawn::class,
+    TransferCommand\IrhpApplication\ReviveFromUnsuccessful::class => CommandHandler\IrhpApplication\ReviveFromUnsuccessful::class,
     TransferCommand\IrhpApplication\Grant::class => CommandHandler\IrhpApplication\Grant::class,
     TransferCommand\IrhpApplication\SubmitApplicationStep::class => CommandHandler\IrhpApplication\SubmitApplicationStep::class,
     TransferCommand\IrhpApplication\SubmitApplicationPath::class => CommandHandler\IrhpApplication\SubmitApplicationPath::class,
@@ -1149,6 +1150,7 @@ return [
     // Permits Withdraw
     TransferCommand\Permits\WithdrawEcmtPermitApplication::class => CommandHandler\Permits\WithdrawEcmtPermitApplication::class,
     TransferCommand\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class => CommandHandler\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class,
+    TransferCommand\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class => CommandHandler\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class,
 
     // Permits Decline
     TransferCommand\Permits\DeclineEcmtPermits::class => CommandHandler\Permits\DeclineEcmtPermits::class,

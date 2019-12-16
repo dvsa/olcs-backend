@@ -278,4 +278,22 @@ class IrhpCandidatePermitEntityTest extends EntityTester
             [true, true]
         ];
     }
+
+    public function testReviveFromUnsuccessful()
+    {
+        $candidatePermit = m::mock(Entity::class)->makePartial();
+        $candidatePermit->setSuccessful(1);
+        $candidatePermit->setAssignedEmissionsCategory(m::mock(RefData::class));
+        $candidatePermit->setIrhpPermitRange(m::mock(IrhpPermitRange::class));
+        $candidatePermit->setRandomizedScore(1.5);
+        $candidatePermit->setRandomFactor(0.25);
+
+        $candidatePermit->reviveFromUnsuccessful();
+
+        $this->assertEquals(0, $candidatePermit->getSuccessful());
+        $this->assertNull($candidatePermit->getAssignedEmissionsCategory());
+        $this->assertNull($candidatePermit->getIrhpPermitRange());
+        $this->assertNull($candidatePermit->getRandomizedScore());
+        $this->assertNull($candidatePermit->getRandomFactor());
+    }
 }

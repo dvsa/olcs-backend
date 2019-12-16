@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 return [
     QueryHandler\IrhpApplication\ById::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\QuestionAnswer::class => Permits\CanAccessIrhpApplicationWithId::class,
-    QueryHandler\IrhpApplication\GetList::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpApplication\MaxStockPermits::class => CanAccessLicenceWithLicence::class,
     QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\FeeBreakdown::class => Permits\CanAccessIrhpApplicationWithId::class,
@@ -61,6 +60,7 @@ return [
     CommandHandler\IrhpApplication\Withdraw::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Grant::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\ReviveFromWithdrawn::class => IsInternalUser::class,
+    CommandHandler\IrhpApplication\ReviveFromUnsuccessful::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\UpdateCountries::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\SubmitApplicationStep::class => Permits\CanEditIrhpApplicationWithId::class,
@@ -100,6 +100,7 @@ return [
     CommandHandler\Permits\ProceedToStatus::class => IsSideEffect::class,
     CommandHandler\Permits\ExpireEcmtPermitApplication::class => IsSideEffect::class,
     CommandHandler\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class => IsInternalUser::class,
+    CommandHandler\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class => IsInternalUser::class,
 
     CommandHandler\Permits\QueueRunScoring::class => IsSystemAdmin::class,
     CommandHandler\Permits\QueueAcceptScoring::class => IsSystemAdmin::class,

@@ -173,9 +173,18 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
      */
     public function isApplicationUnderConsideration()
     {
-        return
-            $this->getIrhpPermitApplication()
-                ->getIrhpApplication()
-                ->isUnderConsideration();
+        return $this->getIrhpPermitApplication()
+            ->getIrhpApplication()
+            ->isUnderConsideration();
+    }
+
+    /**
+     * Revive this candidate permit from an unsuccessful state
+     */
+    public function reviveFromUnsuccessful()
+    {
+        $this->randomizedScore = null;
+        $this->randomFactor = null;
+        $this->prepareForScoring();
     }
 }
