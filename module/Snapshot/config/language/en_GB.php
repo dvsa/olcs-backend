@@ -412,6 +412,7 @@ return [
     'qanda.ecmt-short-term.annual-trips-abroad.question' => 'How many international trips did you make in the last 12 months using this licence?',
     'qanda.ecmt-short-term.percentage-international-journeys.question' => 'In the last 12 months, what percentage of international trips did you make using this licence?',
     'qanda.ecmt-short-term.sectors.question' => 'Select one sector you mainly transport goods in using this licence',
+    'qanda.ecmt-short-term.earliest-permit-date.question' => 'How soon do you need a permit?',
 
     'qanda.certificate-of-roadworthiness.vehicle.registration-number.question' => 'Enter the vehicle registration number',
     'qanda.certificate-of-roadworthiness.trailer.registration-number.question' => 'Enter the trailer registration number',

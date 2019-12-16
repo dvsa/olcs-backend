@@ -89,6 +89,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('canBeRevivedFromUnsuccessful')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('hasOutstandingFees')
             ->once()
             ->withNoArgs()
@@ -187,6 +191,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canBeDeclined' => false,
                 'canBeSubmitted' => false,
                 'canBeRevivedFromWithdrawn' => false,
+                'canBeRevivedFromUnsuccessful' => false,
                 'hasOutstandingFees' => false,
                 'outstandingFeeAmount' => 0,
                 'sectionCompletion' => [],
@@ -4366,6 +4371,7 @@ class IrhpApplicationEntityTest extends EntityTester
             [false, null],
             [true, Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE],
             [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD],
+            [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE],
             [true, Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE],
             [true, Question::FORM_CONTROL_COMMON_CERTIFICATES],
         ];
@@ -5746,6 +5752,189 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false);
 
         $this->sut->reviveFromWithdrawn(
+            m::mock(RefData::class)
+        );
+    }
+
+    /**
+     * @dataProvider dpCanBeRevivedFromUnsuccessful
+     */
+    public function testCanBeRevivedFromUnsuccessful($businessProcessId, $statusId, $expected)
+    {
+        $statusRefData = m::mock(RefData::class);
+        $statusRefData->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($statusId);
+
+        $this->sut->setStatus($statusRefData);
+
+        $businessProcessRefData = m::mock(RefData::class);
+        $businessProcessRefData->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($businessProcessId);
+
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn($businessProcessRefData);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->canBeRevivedFromUnsuccessful()
+        );
+    }
+
+    public function dpCanBeRevivedFromUnsuccessful()
+    {
+        return [
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_CANCELLED,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_WITHDRAWN,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_AWAITING_FEE,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_FEE_PAID,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_UNSUCCESSFUL,
+                true
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_ISSUED,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_ISSUING,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_VALID,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                IrhpInterface::STATUS_EXPIRED,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_CANCELLED,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_WITHDRAWN,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_AWAITING_FEE,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_FEE_PAID,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_UNSUCCESSFUL,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_ISSUED,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_ISSUING,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_VALID,
+                false
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                IrhpInterface::STATUS_EXPIRED,
+                false
+            ],
+        ];
+    }
+
+    public function testReviveFromUnsuccessfulNoBusinessProcess()
+    {
+        $this->sut->expects()->getBusinessProcess()
+            ->withNoArgs()
+            ->andReturnNull();
+
+        self::assertFalse($this->sut->canBeRevivedFromUnsuccessful());
+    }
+
+    public function testReviveFromUnsuccessful()
+    {
+        $underConsiderationStatus = m::mock(RefData::class);
+
+        $this->sut->setStatus(m::mock(RefData::class));
+        $this->sut->shouldReceive('canBeRevivedFromUnsuccessful')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->reviveFromUnsuccessful($underConsiderationStatus);
+
+        $this->assertSame(
+            $underConsiderationStatus,
+            $this->sut->getStatus()
+        );
+    }
+
+    public function testReviveFromUnsuccessfulException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Unable to revive this application from an unsuccessful state');
+
+        $this->sut->shouldReceive('canBeRevivedFromUnsuccessful')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->reviveFromUnsuccessful(
             m::mock(RefData::class)
         );
     }

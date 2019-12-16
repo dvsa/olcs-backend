@@ -34,6 +34,7 @@ return [
     BookmarkQuery\InterimUnlinkedTm::class => BookmarkQueryHandler\InterimUnlinkedTm::class,
     BookmarkQuery\InterimOperatingCentres::class => BookmarkQueryHandler\InterimOperatingCentres::class,
     BookmarkQuery\IrfoGvPermitBundle::class => BookmarkQueryHandler\IrfoGvPermitBundle::class,
+    BookmarkQuery\IrhpApplicationBundle::class => BookmarkQueryHandler\IrhpApplicationBundle::class,
     BookmarkQuery\IrhpPermitBundle::class => BookmarkQueryHandler\IrhpPermitBundle::class,
     BookmarkQuery\IrhpPermitStockBundle::class => BookmarkQueryHandler\IrhpPermitStockBundle::class,
     BookmarkQuery\IrfoPsvAuthBundle::class => BookmarkQueryHandler\IrfoPsvAuthBundle::class,
@@ -631,7 +632,6 @@ return [
     // Permits
     TransferQuery\IrhpApplication\ById::class => QueryHandler\IrhpApplication\ById::class,
     TransferQuery\IrhpApplication\AvailableLicences::class => QueryHandler\IrhpApplication\AvailableLicences::class,
-    TransferQuery\IrhpApplication\GetList::class => QueryHandler\IrhpApplication\GetList::class,
     TransferQuery\IrhpApplication\GetAllByLicence::class => QueryHandler\IrhpApplication\GetAllByLicence::class,
     TransferQuery\IrhpApplication\GetAllByOrganisation::class
         => QueryHandler\IrhpApplication\GetAllByOrganisation::class,

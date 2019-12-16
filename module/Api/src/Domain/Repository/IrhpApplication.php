@@ -24,45 +24,6 @@ class IrhpApplication extends AbstractScoringRepository
     protected $linkTableApplicationIdName = 'irhp_application_id';
 
     /**
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
-     *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
-     */
-    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
-    {
-        if (method_exists($query, 'getStatusIds') && !empty($query->getStatusIds())) {
-            $qb->andWhere($qb->expr()->in($this->alias . '.status', $query->getStatusIds()));
-        }
-
-        if (method_exists($query, 'getOrganisation') && $query->getOrganisation() !== null) {
-            $licences = $this->fetchLicenceByOrganisation($query->getOrganisation());
-            $qb->andWhere($qb->expr()->in($this->alias . '.licence', $licences));
-        }
-    }
-
-    /**
-     * Fetch a list of licences for an organisation
-     *
-     * @param int $organisationId The ID of the Organisation
-     *
-     * @return array
-     */
-    public function fetchLicenceByOrganisation($organisationId)
-    {
-        $licenceRows = $this->getEntityManager()->createQueryBuilder()
-            ->select('l.id')
-            ->from(LicenceEntity::class, 'l')
-            ->where('l.organisation = ' . $organisationId)
-            ->getQuery()
-            ->execute();
-
-        return array_column($licenceRows, 'id');
-    }
-
-    /**
      * @param int $licence
      *
      * @return array
