@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 return [
     QueryHandler\IrhpApplication\ById::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\QuestionAnswer::class => Permits\CanAccessIrhpApplicationWithId::class,
-    QueryHandler\IrhpApplication\GetList::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpApplication\MaxStockPermits::class => CanAccessLicenceWithLicence::class,
     QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\FeeBreakdown::class => Permits\CanAccessIrhpApplicationWithId::class,
