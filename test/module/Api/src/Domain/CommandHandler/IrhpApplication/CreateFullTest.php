@@ -8,12 +8,14 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplicationWindow as IrhpPermitApplicationRepo;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\CreateFull as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
@@ -32,6 +34,10 @@ class CreateFullTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('IrhpPermitApplication', IrhpPermitApplicationRepo::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
+
+        $this->mockedSmServices = [
+            'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
+        ];
 
         parent::setUp();
     }
@@ -101,6 +107,10 @@ class CreateFullTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with(m::type(IrhpApplication::class), EventHistoryTypeEntity::IRHP_APPLICATION_CREATED)
+            ->once();
+
         $result1 = new Result();
         $result1->addMessage('section updated');
         $sideEffectData = [
@@ -169,6 +179,10 @@ class CreateFullTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with(m::type(IrhpApplication::class), EventHistoryTypeEntity::IRHP_APPLICATION_CREATED)
+            ->once();
+
         $this->repoMap['IrhpApplication']
             ->shouldReceive('refresh')
             ->twice()
@@ -196,7 +210,6 @@ class CreateFullTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('save')
             ->andReturn($irhpApplication);
-
 
         $result2 = new Result();
         $result2->addMessage('section updated');

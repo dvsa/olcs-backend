@@ -9,10 +9,12 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as Cmd;
@@ -34,6 +36,9 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
     /** @var CheckedValueUpdater */
     private $checkedValueUpdater;
 
+    /** @var EventHistoryCreator */
+    private $eventHistoryCreator;
+
     /**
      * Create service
      *
@@ -46,6 +51,7 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         $this->checkedValueUpdater = $mainServiceLocator->get('PermitsCheckableCheckedValueUpdater');
+        $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
 
         return parent::createService($serviceLocator);
     }
@@ -106,6 +112,9 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
 
         $irhpApplication->updateDateReceived($command->getDateReceived());
         $irhpApplicationRepo->save($irhpApplication);
+
+        // create Event History record
+        $this->eventHistoryCreator->create($irhpApplication, EventHistoryTypeEntity::IRHP_APPLICATION_UPDATED);
 
         $this->result->addId('irhpApplication', $irhpApplication->getId());
         $this->result->addMessage('IRHP Application updated successfully');
