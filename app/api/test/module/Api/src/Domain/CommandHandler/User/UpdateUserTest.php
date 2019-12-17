@@ -5,8 +5,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
-use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
@@ -14,29 +12,34 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemp
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUser as Sut;
-use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistory;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistoryType;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
-use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Rbac\Identity;
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -126,7 +129,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
             ->once()
@@ -242,7 +247,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->mockedSmServices[UserInterface::class]
             ->shouldReceive('updateUser')
@@ -348,7 +355,13 @@ class UpdateUserTest extends CommandHandlerTestCase
         $loggedInUserId = 1000;
 
         /** @var UserEntity $user */
-        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser = m::mock(UserEntity::class)
+            ->makePartial()
+            ->shouldReceive('isAllowedToPerformActionOnRoles')
+            ->andReturn(true)
+            ->shouldReceive('setId')
+            ->getMock();
+
         $loggedInUser->setId($loggedInUserId);
 
         $this->mockedSmServices[AuthorizationService::class]
@@ -357,7 +370,6 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true)
             ->shouldReceive('getIdentity->getUser')
-            ->once()
             ->andReturn($loggedInUser);
 
         $this->mockedSmServices[UserInterface::class]
@@ -477,7 +489,13 @@ class UpdateUserTest extends CommandHandlerTestCase
         $loggedInUserId = 1000;
 
         /** @var UserEntity $user */
-        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser = m::mock(UserEntity::class)
+            ->makePartial()
+            ->shouldReceive('isAllowedToPerformActionOnRoles')
+            ->andReturn(true)
+            ->shouldReceive('setId')
+            ->getMock();
+
         $loggedInUser->setId($loggedInUserId);
 
         $this->mockedSmServices[AuthorizationService::class]
@@ -486,7 +504,6 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true)
             ->shouldReceive('getIdentity->getUser')
-            ->once()
             ->andReturn($loggedInUser);
 
         $this->mockedSmServices[UserInterface::class]
@@ -506,9 +523,11 @@ class UpdateUserTest extends CommandHandlerTestCase
             );
 
         /** @var ContactDetailsEntity $contactDetails */
-        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails = m::mock(ContactDetailsEntity::class)
+            ->makePartial()
+            ->shouldReceive('setId');
+
         $contactDetails->shouldReceive('update')
-            ->once()
             ->with($data['contactDetails'])
             ->andReturnSelf();
 
@@ -669,7 +688,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->mockedSmServices[UserInterface::class]
             ->shouldReceive('updateUser')
@@ -758,9 +779,6 @@ class UpdateUserTest extends CommandHandlerTestCase
         );
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testHandleCommandThrowsIncorrectPermissionException()
     {
         $data = [
@@ -771,7 +789,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->repoMap['User']
             ->shouldReceive('fetchById')
@@ -781,12 +801,11 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $this->expectException(ForbiddenException::class);
+
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsUsernameExistsException()
     {
         $userId = 111;
@@ -807,7 +826,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getIdentity')
+            ->andReturn($this->getMockIdentity());
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -824,12 +845,11 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('enableSoftDeleteable')
             ->once();
 
+        $this->expectException(ValidationException::class);
+
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsRolesPermissionException()
     {
         $userId = 111;
@@ -882,12 +902,71 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->never();
 
+        $this->expectException(ValidationException::class);
+
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
+    public function testHandleCommandThrowsRolesPermissionErrorWhenAttemptingToUpdateUserWithHigherRole()
+    {
+        $userId = 111;
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'loginId' => 'loginId',
+            'roles' => [RoleEntity::ROLE_INTERNAL_ADMIN],
+            'contactDetails' => [
+                'emailAddress' => 'changed-email@example.com'
+            ]
+        ];
+
+        $command = Cmd::create($data);
+
+        $loggedInUserId = 1000;
+
+        /** @var RoleEntity $loggedInUserRole */
+        $loggedInUserRole = m::mock(RoleEntity::class)->makePartial();
+        $loggedInUserRole->setRole(RoleEntity::ROLE_INTERNAL_CASE_WORKER);
+
+        /** @var UserEntity $loggedInUser */
+        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser->initCollections();
+        $loggedInUser->setId($loggedInUserId);
+        $loggedInUser->addRoles($loggedInUserRole);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true)
+            ->shouldReceive('getIdentity->getUser')
+            ->once()
+            ->andReturn($loggedInUser);
+
+        /** @var RoleEntity $userRole */
+        $userRole = m::mock(RoleEntity::class)->makePartial();
+        $userRole->setRole(RoleEntity::ROLE_INTERNAL_ADMIN);
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->initCollections();
+        $user->setId($userId);
+        $user->setLoginId('loginId');
+        $user->addRoles($userRole);
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->once()
+            ->with($userId, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($user)
+            ->shouldReceive('save')
+            ->never();
+
+        $this->expectException(ValidationException::class);
+
+        $this->sut->handleCommand($command);
+    }
+
     public function testHandleCommandThrowsRolesPermissionLastUserException()
     {
         $userId = 111;
@@ -944,6 +1023,21 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->never();
 
+        $this->expectException(ValidationException::class);
+
         $this->sut->handleCommand($command);
+    }
+
+    private function getMockIdentity()
+    {
+        $mockUser = m::mock(UserEntity::class)
+            ->shouldReceive('isAllowedToPerformActionOnRoles')
+            ->andReturn(true)
+            ->getMock();
+
+        return m::mock(Identity::class)
+            ->shouldReceive('getUser')
+            ->andReturn($mockUser)
+            ->getMock();
     }
 }
