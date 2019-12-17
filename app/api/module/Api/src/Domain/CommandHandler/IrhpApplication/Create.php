@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
@@ -20,9 +21,11 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as CreateIrhpApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Irhp Permit Application
@@ -36,6 +39,25 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $extraRepos = ['Licence', 'IrhpPermitStock', 'IrhpPermitType', 'IrhpPermitWindow'];
+
+    /** @var EventHistoryCreator */
+    private $eventHistoryCreator;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -125,6 +147,9 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         /** @var IrhpApplicationRepo $irhpApplicationRepo */
         $irhpApplicationRepo = $this->getRepo();
         $irhpApplicationRepo->save($irhpApplication);
+
+        // create Event History record
+        $this->eventHistoryCreator->create($irhpApplication, EventHistoryTypeEntity::IRHP_APPLICATION_CREATED);
 
         $this->result->merge(
             $this->handleSideEffect(

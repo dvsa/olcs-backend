@@ -71,6 +71,11 @@ class EventHistory extends AbstractRepository
             $qb->setParameter('applicationId', $query->getApplication());
         }
 
+        if ($query->getIrhpApplication() !== null) {
+            $qb->orWhere($qb->expr()->eq($this->alias . '.irhpApplication', ':irhpApplicationId'));
+            $qb->setParameter('irhpApplicationId', $query->getIrhpApplication());
+        }
+
         $this->getQueryBuilder()->modifyQuery($qb)->with('eventHistoryType')->withUser();
     }
 
@@ -90,7 +95,8 @@ class EventHistory extends AbstractRepository
             ->with('application')
             ->with('organisation')
             ->with('transportManager')
-            ->with('busReg');
+            ->with('busReg')
+            ->with('irhpApplication');
     }
 
     /**

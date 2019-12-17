@@ -10,16 +10,19 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\CreateFull as Cmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Irhp Permit Application
@@ -31,6 +34,25 @@ final class CreateFull extends AbstractCommandHandler implements ToggleRequiredI
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitApplication'];
+
+    /** @var EventHistoryCreator */
+    private $eventHistoryCreator;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -60,6 +82,9 @@ final class CreateFull extends AbstractCommandHandler implements ToggleRequiredI
             $command->getDateReceived()
         );
         $irhpApplicationRepo->save($irhpApplication);
+
+        // create Event History record
+        $this->eventHistoryCreator->create($irhpApplication, EventHistoryTypeEntity::IRHP_APPLICATION_CREATED);
 
         $this->createIrhpPermitApplications($irhpApplication, $command->getIrhpPermitType());
         $this->updateCountries($irhpApplication, $permitType->getId(), $command);

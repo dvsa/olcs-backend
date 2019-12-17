@@ -4,8 +4,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateFull as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
@@ -27,6 +29,7 @@ class UpdateFullTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             'PermitsCheckableCheckedValueUpdater' => m::mock(CheckedValueUpdater::class),
+            'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
         ];
 
         parent::setUp();
@@ -100,6 +103,10 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->with($irhpApplicationEntity)
             ->once()
             ->andReturn($irhpApplicationEntity);
+
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with($irhpApplicationEntity, EventHistoryTypeEntity::IRHP_APPLICATION_UPDATED)
+            ->once();
 
         $result1 = new Result();
         $result1->addMessage('section updated');
@@ -198,6 +205,10 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($irhpApplicationEntity);
 
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with($irhpApplicationEntity, EventHistoryTypeEntity::IRHP_APPLICATION_UPDATED)
+            ->once();
+
         $this->repoMap['IrhpApplication']
             ->shouldReceive('refresh')
             ->twice()
@@ -277,6 +288,9 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($irhpApplicationEntity);
 
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with($irhpApplicationEntity, EventHistoryTypeEntity::IRHP_APPLICATION_UPDATED)
+            ->once();
 
         $result2 = new Result();
 

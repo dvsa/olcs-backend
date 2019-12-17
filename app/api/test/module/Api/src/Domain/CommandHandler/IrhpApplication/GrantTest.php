@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\Grant;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -14,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
@@ -28,6 +30,7 @@ class GrantTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             'PermitsGrantabilityChecker' => m::mock(GrantabilityChecker::class),
+            'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
         ];
 
         parent::setUp();
@@ -108,6 +111,10 @@ class GrantTest extends CommandHandlerTestCase
             ->once()
             ->ordered()
             ->globally();
+
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with($irhpApplication, EventHistoryTypeEntity::IRHP_APPLICATION_GRANTED)
+            ->once();
 
         $this->expectedSideEffect(
             CreateFee::class,

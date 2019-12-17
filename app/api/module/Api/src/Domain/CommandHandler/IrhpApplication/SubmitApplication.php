@@ -7,9 +7,11 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitApplicationCmd;
@@ -31,6 +33,9 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
     /** @var CreateTaskCommandGenerator */
     private $createTaskCommandGenerator;
 
+    /** @var EventHistoryCreator */
+    private $eventHistoryCreator;
+
     /**
      * Create service
      *
@@ -43,6 +48,7 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         $this->createTaskCommandGenerator = $mainServiceLocator->get('PermitsCheckableCreateTaskCommandGenerator');
+        $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
 
         return parent::createService($serviceLocator);
     }
@@ -65,6 +71,9 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
         );
 
         $this->getRepo()->save($irhpApplication);
+
+        // create Event History record
+        $this->eventHistoryCreator->create($irhpApplication, EventHistoryTypeEntity::IRHP_APPLICATION_SUBMITTED);
 
         $sideEffects = [];
 
