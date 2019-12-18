@@ -18,10 +18,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
-use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
-use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Transaction\CompleteTransaction as CompleteTransactionCmd;
@@ -80,9 +78,6 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
         if ($transaction->isPaid()) {
             /** @var Fee $fee */
             foreach ($fees as $fee) {
-                if (!empty($fee->getEcmtPermitApplication())) {
-                    $this->updateEcmtPermitApplication($fee);
-                }
                 if (!empty($fee->getIrhpApplication())) {
                     $this->updateIrhpApplication($fee);
                 }
@@ -122,28 +117,6 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
                 ]
             )
         );
-    }
-
-    /**
-     * Submit the Ecmt application
-     *
-     * @param Fee $fee Fee object
-     *
-     * @return void
-     */
-    protected function updateEcmtPermitApplication(Fee $fee)
-    {
-        if ($fee->getEcmtPermitApplication()->canBeSubmitted()) {
-            $this->result->merge($this->handleSideEffect(
-                SubmitEcmtPermitApplicationCmd::create(['id' => $fee->getEcmtPermitApplication()->getId()])
-            ));
-        }
-        if ($fee->getEcmtPermitApplication()->isAwaitingFee()) {
-            $this->result->merge($this->handleSideEffects([
-                CompleteIssuePayment::create(['id' => $fee->getEcmtPermitApplication()->getId()]),
-                AcceptEcmtPermits::create(['id' => $fee->getEcmtPermitApplication()->getId()])
-            ]));
-        }
     }
 
     /**

@@ -556,7 +556,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 self::ALLOWED_OPERATOR_LOCATION_NI : self::ALLOWED_OPERATOR_LOCATION_GB;
         } else {
             $licences = $this->getLicences();
-            $trafficAreaCode = null;
             /** @var LicenceEntity $licence */
             foreach ($licences as $licence) {
                 if ($licence->getStatus() &&

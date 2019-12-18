@@ -1149,11 +1149,7 @@ return [
     // Irhp Permit Application Delete
     Command\IrhpPermitApplication\Delete::class => CommandHandler\IrhpPermitApplication\Delete::class,
 
-    // Permits Cancel
-    TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
-
     // Permits Withdraw
-    TransferCommand\Permits\WithdrawEcmtPermitApplication::class => CommandHandler\Permits\WithdrawEcmtPermitApplication::class,
     TransferCommand\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class => CommandHandler\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class,
     TransferCommand\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class => CommandHandler\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class,
 
@@ -1163,18 +1159,6 @@ return [
     TransferCommand\Permits\AcceptIrhpPermits::class => CommandHandler\Permits\AcceptIrhpPermits::class,
 
     // Permits Update
-    TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
-    TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
-    TransferCommand\Permits\UpdateEcmtRoadworthiness::class => CommandHandler\Permits\UpdateEcmtRoadworthiness::class,
-    TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
-    TransferCommand\Permits\UpdateInternationalJourney::class => CommandHandler\Permits\UpdateInternationalJourney::class,
-    TransferCommand\Permits\UpdateSector::class => CommandHandler\Permits\UpdateSector::class,
-    TransferCommand\Permits\UpdateEcmtCountries::class => CommandHandler\Permits\UpdateEcmtCountries::class,
-    TransferCommand\Permits\UpdateEcmtTrips::class => CommandHandler\Permits\UpdateEcmtTrips::class,
-    TransferCommand\Permits\UpdateEcmtCheckAnswers::class => CommandHandler\Permits\UpdateEcmtCheckAnswers::class,
-    TransferCommand\Permits\UpdateDeclaration::class => CommandHandler\Permits\UpdateDeclaration::class,
-    TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
-    TransferCommand\Permits\EcmtSubmitApplication::class => CommandHandler\Permits\EcmtSubmitApplication::class,
     TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
     TransferCommand\Permits\CompleteIssuePayment::class => CommandHandler\Permits\CompleteIssuePayment::class,
 

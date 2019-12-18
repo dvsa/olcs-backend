@@ -2879,19 +2879,50 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $irhpApplication = m::mock(Entity::class)->makePartial();
         $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
             ->andReturn(7);
 
         $irhpApplication->getApplicationFeeProductReference();
     }
 
-    public function testGetIssueFeeProductReference()
+    public function testGetIssueFeeProductReferenceEcmtShortTerm()
     {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(true);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn(false);
+
         $irhpApplication = m::mock(Entity::class)->makePartial();
-        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+        $irhpApplication->setIrhpPermitType($irhpPermitType);
 
         $this->assertEquals(
             FeeType::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF,
+            $irhpApplication->getIssueFeeProductReference()
+        );
+    }
+
+    public function testGetIssueFeeProductReferenceEcmtAnnual()
+    {
+        $productReference = 'PRODUCT_REFERENCE_FOR_TIER';
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->setIrhpPermitType($irhpPermitType);
+
+        $irhpApplication->shouldReceive('getProductReferenceForTier')
+            ->withNoArgs()
+            ->andReturn($productReference);
+
+        $this->assertEquals(
+            $productReference,
             $irhpApplication->getIssueFeeProductReference()
         );
     }
@@ -2906,9 +2937,18 @@ class IrhpApplicationEntityTest extends EntityTester
             'No issue fee product reference available for permit type ' . $irhpPermitTypeId
         );
 
-        $irhpApplication = m::mock(Entity::class)->makePartial();
-        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('getId')
             ->andReturn($irhpPermitTypeId);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->setIrhpPermitType($irhpPermitType);
 
         $irhpApplication->getIssueFeeProductReference();
     }
@@ -2919,6 +2959,8 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER],
         ];
     }
 
@@ -4819,11 +4861,18 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetIntensityOfUseWarningThreshold
      */
-    public function testGetIntensityOfUseWarningThreshold($requiredEuro5, $requiredEuro6, $expectedThreshold)
-    {
+    public function testGetIntensityOfUseWarningThreshold(
+        $isEcmtShortTerm,
+        $isEcmtAnnual,
+        $requiredEuro5,
+        $requiredEuro6,
+        $expectedThreshold
+    ) {
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
-            ->andReturn(true);
+            ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('getRequiredEuro5')
@@ -4844,18 +4893,24 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpGetIntensityOfUseWarningThreshold()
     {
         return [
-            [5, 8, 800],
-            [4, 2, 400],
+            [true, false, 5, 8, 800],
+            [true, false, 4, 2, 400],
+            [false, true, 5, 8, 800],
+            [false, true, 4, 2, 400],
         ];
     }
 
     public function testGetIntensityOfUseWarningThresholdException()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('getIntensityOfUseWarningThreshold is only applicable to ECMT short term');
+        $this->expectExceptionMessage(
+            'getIntensityOfUseWarningThreshold is only applicable to ECMT short term and ECMT Annual'
+        );
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
             ->andReturn(false);
 
         $application = $this->createNewEntity();
@@ -5667,5 +5722,103 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->sut->reviveFromUnsuccessful(
             m::mock(RefData::class)
         );
+    }
+
+    /**
+     * @dataProvider productRefMonthProvider
+     */
+    public function testGetProductReferenceForTier($expected, $validFrom, $validTo, $now)
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $this->sut->addIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->andReturn($irhpPermitStock);
+
+        $irhpPermitStock->shouldReceive('getValidFrom')->andReturn($validFrom);
+        $irhpPermitStock->shouldReceive('getValidTo')->andReturn($validTo);
+        $this->assertEquals($expected, $this->sut->getProductReferenceForTier($now));
+    }
+
+    public function productRefMonthProvider()
+    {
+        $validFrom = new DateTime('first day of January next year');
+        $validTo = new DateTime('last day of December next year');
+
+        return [
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of January next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of February next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of March next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of April next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of May next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of June next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of July next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of August next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of September next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of October next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of November next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of December next year')
+            ],
+        ];
     }
 }
