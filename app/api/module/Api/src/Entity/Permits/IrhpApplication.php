@@ -38,6 +38,7 @@ use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
+use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckableApplicationInterface;
@@ -69,7 +70,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     ApplicationAcceptScoringInterface,
     CheckableApplicationInterface
 {
-    use SectionTrait, CandidatePermitCreationTrait, ApplicationAcceptScoringTrait, FetchPermitAppSubmissionTaskTrait;
+    use SectionTrait,
+        CandidatePermitCreationTrait,
+        ApplicationAcceptScoringTrait,
+        FetchPermitAppSubmissionTaskTrait,
+        TieredProductReference;
 
     use PermitAppReviveFromWithdrawnTrait {
         canBeRevivedFromWithdrawn as baseCanBeRevivedFromWithdrawn;
@@ -142,6 +147,40 @@ class IrhpApplication extends AbstractIrhpApplication implements
             ],
         ],
     ];
+
+    const ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
+        'Jan' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+        'Feb' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+        'Mar' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+        'Apr' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+        'May' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+        'Jun' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+        'Jul' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+        'Aug' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+        'Sep' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+        'Oct' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+        'Nov' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+        'Dec' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+    ];
+
+    /**
+     * Prepares data and calls TieredProductReference Trait method genericGetProdRefForTier
+     *
+     * @param DateTime $now
+     * @return string
+     */
+    public function getProductReferenceForTier(DateTime $now = null)
+    {
+        $now = is_null($now) ? new DateTime() : $now;
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+        $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
+        return $this->genericGetProdRefForTier(
+            $irhpPermitStock->getValidFrom(true),
+            $irhpPermitStock->getValidTo(true),
+            $now,
+            self::ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY
+        );
+    }
 
     /** @var array */
     private $storedFeesRequired;
@@ -1198,6 +1237,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getApplicationFeeProductReference()
     {
         $mappings = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT
+                => FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL
                 => FeeTypeEntity::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL
@@ -1232,7 +1273,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Gets the issue fee product reference for this application
-     * Applicable only to ecmt short term
      *
      * @return string
      *
@@ -1240,15 +1280,17 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getIssueFeeProductReference()
     {
-        $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
+        $irhpPermitType = $this->irhpPermitType;
 
-        if ($irhpPermitTypeId != IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM) {
-            throw new ForbiddenException(
-                'No issue fee product reference available for permit type ' . $irhpPermitTypeId
-            );
+        if ($irhpPermitType->isEcmtShortTerm()) {
+            return FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF;
+        } elseif ($irhpPermitType->isEcmtAnnual()) {
+            return $this->getProductReferenceForTier();
         }
 
-        return FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF;
+        throw new ForbiddenException(
+            'No issue fee product reference available for permit type ' . $irhpPermitType->getId()
+        );
     }
 
     /**
@@ -1779,8 +1821,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getIntensityOfUseWarningThreshold()
     {
-        if (!$this->irhpPermitType->isEcmtShortTerm()) {
-            throw new RuntimeException('getIntensityOfUseWarningThreshold is only applicable to ECMT short term');
+        if (!$this->irhpPermitType->isEcmtShortTerm() && !$this->irhpPermitType->isEcmtAnnual()) {
+            throw new RuntimeException('getIntensityOfUseWarningThreshold is only applicable to ECMT short term and ECMT Annual');
         }
 
         $irhpPermitApplication = $this->getFirstIrhpPermitApplication();

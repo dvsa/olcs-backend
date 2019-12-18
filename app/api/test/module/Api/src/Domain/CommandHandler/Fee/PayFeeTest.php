@@ -14,13 +14,10 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Task\Task;
-use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
-use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication;
 use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -58,96 +55,6 @@ class PayFeeTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandEcmtApplication()
-    {
-        $command = PayFeeCommand::create(['id' => 111]);
-
-        $ecmtId = 222;
-        $ecmtApp = m::mock(EcmtPermitApplication::class);
-        $ecmtApp->shouldReceive('canBeSubmitted')->once()->andReturn(true);
-        $ecmtApp->shouldReceive('getId')->once()->withNoArgs()->andReturn($ecmtId);
-
-        /** @var FeeEntity $fee */
-        $fee = m::mock(FeeEntity::class);
-        $fee->shouldReceive('getFeeType->getFeeType->getId'); //avoided breaking old code
-        $fee->shouldReceive('getFeeType->isEcmtApplication')->once()->withNoArgs()->andReturn(true);
-        $fee->shouldReceive('getFeeType->isEcmtIssue')->once()->withNoArgs()->andReturn(false);
-        $fee->shouldReceive('getEcmtPermitApplication')->twice()->withNoArgs()->andReturn($ecmtApp);
-        $fee->shouldReceive('getIrhpApplication')->withNoArgs()->andReturn(null);
-        $fee->shouldReceive('getApplication')->andReturnNull();
-        $fee->shouldReceive('getTask')->andReturnNull();
-
-        $this->repoMap['Fee']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($fee);
-
-        $result = new Result();
-        $result->addMessage('message');
-        $result->addId('returnedId', $ecmtId);
-
-        $this->expectedSideEffectAsSystemUser(EcmtSubmitApplication::class, ['id' => $ecmtId], $result);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => ['returnedId' => $ecmtId],
-            'messages' => [0 => 'message']
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandEcmtIssue()
-    {
-        $command = PayFeeCommand::create(['id' => 111]);
-
-        $ecmtId = 222;
-        $ecmtApp = m::mock(EcmtPermitApplication::class);
-        $ecmtApp->shouldReceive('isAwaitingFee')->once()->andReturn(true);
-        $ecmtApp->shouldReceive('getId')->twice()->withNoArgs()->andReturn($ecmtId);
-
-        /** @var FeeEntity $fee */
-        $fee = m::mock(FeeEntity::class);
-        $fee->shouldReceive('getFeeType->getFeeType->getId'); //avoided breaking old code
-        $fee->shouldReceive('getFeeType->isEcmtApplication')->once()->withNoArgs()->andReturn(false);
-        $fee->shouldReceive('getFeeType->isEcmtIssue')->once()->withNoArgs()->andReturn(true);
-        $fee->shouldReceive('getEcmtPermitApplication')->twice()->withNoArgs()->andReturn($ecmtApp);
-        $fee->shouldReceive('getIrhpApplication')->withNoArgs()->andReturn(null);
-        $fee->shouldReceive('getApplication')->andReturnNull();
-        $fee->shouldReceive('getTask')->andReturnNull();
-
-        $this->repoMap['Fee']->shouldReceive('fetchUsingId')
-            ->with($command)
-            ->andReturn($fee);
-
-        $issueResult = new Result();
-        $issueResult->addMessage('complete issue message');
-        $issueResult->addId('completeIssueId', $ecmtId);
-
-        $this->expectedSideEffectAsSystemUser(CompleteIssuePayment::class, ['id' => $ecmtId], $issueResult);
-
-        $acceptResult = new Result();
-        $acceptResult->addMessage('accept permit message');
-        $acceptResult->addId('acceptPermitsId', $ecmtId);
-
-        $this->expectedSideEffectAsSystemUser(AcceptEcmtPermits::class, ['id' => $ecmtId], $acceptResult);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'completeIssueId' => $ecmtId,
-                'acceptPermitsId' => $ecmtId
-            ],
-            'messages' => [
-                0 => 'complete issue message',
-                1 => 'accept permit message'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
     public function testHandleCommandIrhpApplicationFeeNoSideEffect()
     {
         $command = PayFeeCommand::create(['id' => 111]);
@@ -162,7 +69,6 @@ class PayFeeTest extends CommandHandlerTestCase
         /** @var FeeEntity $fee */
         $fee = m::mock(FeeEntity::class);
         $fee->shouldReceive('getFeeType->getFeeType->getId'); //avoided breaking old code
-        $fee->shouldReceive('getEcmtPermitApplication')->twice()->withNoArgs()->andReturnNull();
         $fee->shouldReceive('getFeeType->isIrhpApplication')->withNoArgs()->andReturn(true);
         $fee->shouldReceive('getFeeType->isIrhpApplicationIssue')->withNoArgs()->andReturn(false);
         $fee->shouldReceive('getIrhpApplication')->withNoArgs()->andReturn($irhpApplication);
@@ -203,7 +109,6 @@ class PayFeeTest extends CommandHandlerTestCase
         $fee->shouldReceive('getFeeType->getFeeType->getId')->times(3);
         $fee->shouldReceive('getFeeType->isIrhpApplication')->withNoArgs()->andReturn(true);
         $fee->shouldReceive('getFeeType->isIrhpApplicationIssue')->withNoArgs()->andReturn(false);
-        $fee->shouldReceive('getEcmtPermitApplication')->twice()->withNoArgs()->andReturnNull();
         $fee->shouldReceive('getIrhpApplication')->withNoArgs()->andReturn($irhpApplication);
         $fee->shouldReceive('getApplication')->andReturnNull();
         $fee->shouldReceive('getTask')->andReturnNull();
@@ -242,7 +147,6 @@ class PayFeeTest extends CommandHandlerTestCase
         $fee->shouldReceive('getFeeType->getFeeType->getId');
         $fee->shouldReceive('getFeeType->isIrhpApplication')->withNoArgs()->andReturn(false);
         $fee->shouldReceive('getFeeType->isIrhpApplicationIssue')->withNoArgs()->andReturn(true);
-        $fee->shouldReceive('getEcmtPermitApplication')->withNoArgs()->andReturnNull();
         $fee->shouldReceive('getIrhpApplication')->withNoArgs()->andReturn($irhpApplication);
         $fee->shouldReceive('getApplication')->withNoArgs()->andReturnNull();
         $fee->shouldReceive('getTask')->withNoArgs()->andReturnNull();
@@ -279,7 +183,6 @@ class PayFeeTest extends CommandHandlerTestCase
         $fee->shouldReceive('getFeeType->getFeeType->getId');
         $fee->shouldReceive('getFeeType->isIrhpApplication')->withNoArgs()->andReturn(false);
         $fee->shouldReceive('getFeeType->isIrhpApplicationIssue')->withNoArgs()->andReturn(true);
-        $fee->shouldReceive('getEcmtPermitApplication')->withNoArgs()->andReturnNull();
         $fee->shouldReceive('getIrhpApplication')->withNoArgs()->andReturn($irhpApplication);
         $fee->shouldReceive('getApplication')->withNoArgs()->andReturnNull();
         $fee->shouldReceive('getTask')->withNoArgs()->andReturnNull();

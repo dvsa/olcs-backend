@@ -16,11 +16,9 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplication;
-use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
@@ -59,8 +57,6 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $this->maybeProcessGrantInterimFee($fee);
         $this->maybeContinueLicence($fee);
         $this->maybeCancelApplicationTasks($fee);
-        $this->maybeProcessEcmtPermitApplicationFee($fee);
-        $this->maybeProcessEcmtPermitIssueFee($fee);
         $this->maybeProcessIrhpApplicationFee($fee);
         $this->maybeProcessIrhpIssueFee($fee);
         $this->maybeCloseFeeTask($fee);
@@ -118,64 +114,6 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         }
         $this->result->merge(
             $this->handleSideEffectAsSystemUser(ValidateApplication::create(['id' => $application->getId()]))
-        );
-    }
-
-    /**
-     * Process ecmt permit application fee
-     *
-     * @param Fee $fee fee
-     *
-     * @return void
-     */
-    protected function maybeProcessEcmtPermitApplicationFee(Fee $fee)
-    {
-        $ecmtPermitApplication = $fee->getEcmtPermitApplication();
-
-        if ($ecmtPermitApplication === null
-            || !$fee->getFeeType()->isEcmtApplication()
-            || !$ecmtPermitApplication->canBeSubmitted()
-        ) {
-            return;
-        }
-
-        $this->result->merge(
-            $this->handleSideEffectAsSystemUser(SubmitEcmtPermitApplicationCmd::create(
-                ['id' => $ecmtPermitApplication->getId()]
-            ))
-        );
-    }
-
-    /**
-     * Process ecmt permit issue fee
-     *
-     * @param Fee $fee fee
-     *
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     * @return void
-     */
-    protected function maybeProcessEcmtPermitIssueFee(Fee $fee)
-    {
-        $ecmtPermitApplication = $fee->getEcmtPermitApplication();
-
-
-        if ($ecmtPermitApplication === null
-            || !$fee->getFeeType()->isEcmtIssue()
-            || !$ecmtPermitApplication->isAwaitingFee()
-        ) {
-            return;
-        }
-
-        $this->result->merge(
-            $this->handleSideEffectAsSystemUser(CompleteIssuePayment::create(
-                ['id' => $ecmtPermitApplication->getId()]
-            ))
-        );
-
-        $this->result->merge(
-            $this->handleSideEffectAsSystemUser(AcceptEcmtPermits::create(
-                ['id' => $ecmtPermitApplication->getId()]
-            ))
         );
     }
 
