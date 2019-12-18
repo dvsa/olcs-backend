@@ -2039,7 +2039,7 @@ class IrhpApplicationEntityTest extends EntityTester
     public function testGetSectionCompletionForUndefinedIrhpPermitType()
     {
         // undefined IRHP Permit Type id
-        $irhpPermitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT;
+        $irhpPermitTypeId = 99999;
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(

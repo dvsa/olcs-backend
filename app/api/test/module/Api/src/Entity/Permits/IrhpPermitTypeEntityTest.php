@@ -229,7 +229,7 @@ class IrhpPermitTypeEntityTest extends EntityTester
     public function dpIsApplicationPathEnabled()
     {
         return [
-            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, true],
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, true],
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, true],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],

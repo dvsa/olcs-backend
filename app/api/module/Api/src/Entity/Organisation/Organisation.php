@@ -640,7 +640,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
-            $activeApplication = $licence->getActivePermitApplicationForStock($stock);
+            $activeApplication = $licence->getActiveIrhpApplication($stock);
 
             $canMakeApplication = true;
             $activeApplicationId = null;

@@ -2637,31 +2637,4 @@ class LicenceEntityTest extends EntityTester
             ],
         ];
     }
-
-    /**
-     * No need to test all the code, each method has a test already, only a quick test the right method is being called
-     *
-     * @dataProvider dpTestActivePermitApplicationForStock
-     */
-    public function testActivePermitApplicationForStock($isEcmtAnnual, $method)
-    {
-        $irhpPermitStock = m::mock(IrhpPermitStock::class);
-        $irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtAnnual')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($isEcmtAnnual);
-
-        $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive($method)->once()->with($irhpPermitStock, null);
-
-        $licence->getActivePermitApplicationForStock($irhpPermitStock, null);
-    }
-
-    public function dpTestActivePermitApplicationForStock()
-    {
-        return [
-            [true, 'getActiveEcmtApplicationForStock'],
-            [false, 'getActiveIrhpApplication'],
-        ];
-    }
 }

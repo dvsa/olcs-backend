@@ -663,7 +663,6 @@ return [
     TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,
     TransferQuery\Permits\ValidEcmtPermits::class => QueryHandler\Permits\ValidEcmtPermits::class,
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
-    TransferQuery\Permits\AvailableLicences::class => QueryHandler\Permits\AvailableLicences::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,
     TransferQuery\Permits\AvailableYears::class => QueryHandler\Permits\AvailableYears::class,
     TransferQuery\Permits\AvailableStocks::class => QueryHandler\Permits\AvailableStocks::class,

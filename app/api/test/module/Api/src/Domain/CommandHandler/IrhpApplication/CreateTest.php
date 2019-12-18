@@ -20,7 +20,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as CreateCmd;
-use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -62,35 +61,6 @@ class CreateTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandEcmt()
-    {
-        $permitTypeId = 22;
-
-        $cmdData = ['irhpPermitType' => $permitTypeId];
-        $command = CreateCmd::create($cmdData);
-        $ecmtCommand = CreateEcmtPermitApplication::create($cmdData);
-
-        $permitType = m::mock(IrhpPermitType::class);
-        $permitType->shouldReceive('isEcmtAnnual')->once()->withNoArgs()->andReturnTrue();
-
-        $this->repoMap['IrhpPermitType']->shouldReceive('fetchById')
-            ->once()
-            ->with($permitTypeId)
-            ->andReturn($permitType);
-
-        $ecmtResult = new Result();
-        $ecmtResult->addId('ecmtPermitApplication', $permitTypeId);
-        $ecmtResult->addMessage('ecmtMessage');
-
-        $this->expectedSideEffect(
-            CreateEcmtPermitApplication::class,
-            $ecmtCommand->getArrayCopy(),
-            $ecmtResult
-        );
-
-        self::assertEquals($ecmtResult, $this->sut->handleCommand($command));
-    }
-
     /**
      * @dataProvider dpTestHandleCommand
      */
@@ -111,7 +81,6 @@ class CreateTest extends CommandHandlerTestCase
         $command = CreateCmd::create($cmdData);
 
         $permitType = m::mock(IrhpPermitType::class);
-        $permitType->shouldReceive('isEcmtAnnual')->once()->withNoArgs()->andReturnFalse();
 
         $this->repoMap['IrhpPermitType']->shouldReceive('fetchById')
             ->once()
@@ -245,7 +214,6 @@ class CreateTest extends CommandHandlerTestCase
         ];
 
         $permitType = m::mock(IrhpPermitType::class);
-        $permitType->shouldReceive('isEcmtAnnual')->once()->withNoArgs()->andReturnFalse();
         $permitType->shouldReceive('getName->getDescription')->once()->withNoArgs()->andReturn($permitDescription);
 
         $this->repoMap['IrhpPermitType']->shouldReceive('fetchById')
