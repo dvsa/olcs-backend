@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Transfer\Query\Organisation\OrganisationAvailableLicences as Qry;
 use Mockery as m;
 
-class OrganisationPermitsTest extends QueryHandlerTestCase
+class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
 {
     public function setUp()
     {

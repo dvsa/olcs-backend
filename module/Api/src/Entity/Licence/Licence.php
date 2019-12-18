@@ -243,25 +243,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
-     * If this licence has an active permit application for a given stock, return it
-     *
-     * @param IrhpPermitStock    $stock   permit stock
-     * @param IrhpInterface|null $exclude excluded application
-     *
-     * @return IrhpInterface|null
-     */
-    public function getActivePermitApplicationForStock(
-        IrhpPermitStock $stock,
-        ?IrhpInterface $exclude = null
-    ): ?IrhpInterface {
-        if ($stock->getIrhpPermitType()->isEcmtAnnual()) {
-            return $this->getActiveEcmtApplicationForStock($stock, $exclude);
-        }
-
-        return $this->getActiveIrhpApplication($stock, $exclude);
-    }
-
-    /**
      * Gets the latest Bus Reg variation number, based on the supplied regNo
      *
      * @param string $regNo       bus registration number
