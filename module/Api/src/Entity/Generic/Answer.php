@@ -95,7 +95,7 @@ class Answer extends AbstractAnswer
     /**
      * Get the answer value
      *
-     * @return mix|null
+     * @return mixed|null
      */
     public function getValue()
     {

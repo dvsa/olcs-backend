@@ -32,6 +32,11 @@ class IrhpPermitType extends AbstractIrhpPermitType
 
     const IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL = 'P1Y';
 
+    const CERTIFICATE_TYPES = [
+        self::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
+        self::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
+    ];
+
     /**
      * Gets calculated values
      *
@@ -145,10 +150,29 @@ class IrhpPermitType extends AbstractIrhpPermitType
      *
      * @return bool
      */
-    public function isCertificateOfRoadworthiness()
+    public function isCertificateOfRoadworthiness(): bool
     {
-        return $this->id === self::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE ||
-            $this->id == self::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER;
+        return $this->isCertificateOfRoadworthinessVehicle() || $this->isCertificateOfRoadworthinessTrailer();
+    }
+
+    /**
+     * Is this a certificate of roadworthiness vehicle
+     *
+     * @return bool
+     */
+    public function isCertificateOfRoadworthinessVehicle(): bool
+    {
+        return $this->id === self::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE;
+    }
+
+    /**
+     * Is this a certificate of roadworthiness trailer
+     *
+     * @return bool
+     */
+    public function isCertificateOfRoadworthinessTrailer(): bool
+    {
+        return $this->id === self::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER;
     }
 
     /**
@@ -156,7 +180,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
      *
      * @return bool
      */
-    public function usesMultiStockLicenceBehaviour()
+    public function usesMultiStockLicenceBehaviour(): bool
     {
         return $this->isMultiStock() || $this->isEcmtRemoval() || $this->isCertificateOfRoadworthiness();
     }
