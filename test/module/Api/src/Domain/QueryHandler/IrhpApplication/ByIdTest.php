@@ -27,7 +27,7 @@ class ByIdTest extends QueryHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = new IrhpApplicationByIdHandler();
+        $this->sut = m::mock(IrhpApplicationByIdHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
         parent::setUp();
@@ -62,6 +62,10 @@ class ByIdTest extends QueryHandlerTestCase
         $this->repoMap['IrhpApplication']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($irhpApplication);
+
+        $this->sut->shouldReceive('auditRead')
+            ->once()
+            ->with($irhpApplication);
 
         $this->assertEquals(
             [
@@ -101,6 +105,10 @@ class ByIdTest extends QueryHandlerTestCase
         $this->repoMap['IrhpApplication']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($irhpApplication);
+
+        $this->sut->shouldReceive('auditRead')
+            ->once()
+            ->with($irhpApplication);
 
         $this->assertEquals(
             [

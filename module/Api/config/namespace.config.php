@@ -190,6 +190,7 @@ return [
     'IrhpPermitType' => 'Permits',
     'IrhpPermitWindow' => 'Permits',
     'IrhpApplication' => 'Permits',
+    'IrhpApplicationReadAudit' => 'Permits',
     'ApplicationStep' => 'Generic',
     'ApplicationValidation' => 'Generic',
     'ApplicationPath' => 'Generic',
