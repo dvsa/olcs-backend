@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpApplications as Expi
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class IrhpApplication extends AbstractScoringRepository
@@ -69,6 +70,23 @@ class IrhpApplication extends AbstractScoringRepository
             ->where('ia.status = :status')
             ->setParameter('status', IrhpInterface::STATUS_AWAITING_FEE)
             ->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch all valid roadworthiness applications
+     *
+     * @return array
+     */
+    public function fetchAllValidRoadworthiness()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->where($qb->expr()->eq($this->alias . '.status', ':status'))
+            ->andWhere($qb->expr()->in($this->alias . '.irhpPermitType', ':irhpPermitTypes'))
+            ->setParameter('status', IrhpInterface::STATUS_VALID)
+            ->setParameter('irhpPermitTypes', IrhpPermitType::CERTIFICATE_TYPES);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

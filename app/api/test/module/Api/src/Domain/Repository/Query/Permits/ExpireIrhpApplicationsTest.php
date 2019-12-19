@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
 
 /**
@@ -28,6 +29,9 @@ class ExpireIrhpApplicationsTest extends AbstractDbQueryTestCase
             ],
             'status' => [
                 'column' => 'status'
+            ],
+            'irhpPermitType' => [
+                'column' => 'irhp_permit_type_id'
             ],
             'lastModifiedOn' => [
                 'column' => 'last_modified_on'
@@ -73,10 +77,12 @@ class ExpireIrhpApplicationsTest extends AbstractDbQueryTestCase
                     'expiredStatus' => IrhpInterface::STATUS_EXPIRED,
                     'validStatus' => IrhpInterface::STATUS_VALID,
                     'permitValidStatuses' => IrhpPermit::$validStatuses,
+                    'certificatePermitTypes' => IrhpPermitType::CERTIFICATE_TYPES,
                     'currentUserId' => 1,
                 ],
                 [
                     'permitValidStatuses' => Connection::PARAM_STR_ARRAY,
+                    'certificatePermitTypes' => Connection::PARAM_INT_ARRAY,
                 ]
             ]
         ];
@@ -96,6 +102,7 @@ class ExpireIrhpApplicationsTest extends AbstractDbQueryTestCase
             . 'ia.last_modified_by = :currentUserId, '
             . 'ia.version = ia.version + 1 '
             . 'WHERE ia.status = :validStatus '
+            . 'AND ia.irhp_permit_type_id NOT IN (:certificatePermitTypes) '
             . 'AND ia.id NOT IN ( '
                 . 'SELECT ipa.irhp_application_id '
                 . 'FROM ipa_table ipa '
