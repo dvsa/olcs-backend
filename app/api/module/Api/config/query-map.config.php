@@ -18,6 +18,7 @@ return [
     TransferQuery\Audit\ReadCase::class => QueryHandler\Audit\ReadCase::class,
     TransferQuery\Audit\ReadTransportManager::class => QueryHandler\Audit\ReadTransportManager::class,
     TransferQuery\Audit\ReadBusReg::class => QueryHandler\Audit\ReadBusReg::class,
+    TransferQuery\Audit\ReadIrhpApplication::class => QueryHandler\Audit\ReadIrhpApplication::class,
 
     // Bookmarks
     BookmarkQuery\LicencePsvDiscCountNotCeased::class => BookmarkQueryHandler\LicencePsvDiscCountNotCeased::class,

@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\Audit as AuditCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Entity;
 use Olcs\Logging\Log\Logger;
 use Zend\Cache\Storage\Adapter\Redis;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
@@ -169,20 +170,34 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
             return;
         }
 
-        $entityToDtoMap = [
-            \Dvsa\Olcs\Api\Entity\Organisation\Organisation::class => AuditCommand\ReadOrganisation::class,
-            \Dvsa\Olcs\Api\Entity\Licence\Licence::class => AuditCommand\ReadLicence::class,
-            \Dvsa\Olcs\Api\Entity\Cases\Cases::class => AuditCommand\ReadCase::class,
-            \Dvsa\Olcs\Api\Entity\Application\Application::class => AuditCommand\ReadApplication::class,
-            \Dvsa\Olcs\Api\Entity\Bus\BusReg::class => AuditCommand\ReadBusReg::class,
-            \Dvsa\Olcs\Api\Entity\Tm\TransportManager::class => AuditCommand\ReadTransportManager::class,
-        ];
+        $data = ['id' => $entity->getId()];
 
-        if (!isset($entityToDtoMap[get_class($entity)])) {
-            throw new \RuntimeException('Cannot create audit read for entity, no DTO is defined');
+        // instanceof allows unit tests to mock
+        switch (true) {
+            case $entity instanceof Entity\Organisation\Organisation:
+                $dto = AuditCommand\ReadOrganisation::create($data);
+                break;
+            case $entity instanceof Entity\Licence\Licence:
+                $dto = AuditCommand\ReadLicence::create($data);
+                break;
+            case $entity instanceof Entity\Cases\Cases:
+                $dto = AuditCommand\ReadCase::create($data);
+                break;
+            case $entity instanceof Entity\Application\Application:
+                $dto = AuditCommand\ReadApplication::create($data);
+                break;
+            case $entity instanceof Entity\Bus\BusReg:
+                $dto = AuditCommand\ReadBusReg::create($data);
+                break;
+            case $entity instanceof Entity\Tm\TransportManager:
+                $dto = AuditCommand\ReadTransportManager::create($data);
+                break;
+            case $entity instanceof Entity\Permits\IrhpApplication:
+                $dto = AuditCommand\ReadIrhpApplication::create($data);
+                break;
+            default:
+                throw new \RuntimeException('Cannot create audit read for entity, no DTO is defined');
         }
-
-        $dto = $entityToDtoMap[get_class($entity)]::create(['id' => $entity->getId()]);
 
         $this->commandHandler->handleCommand($dto);
     }

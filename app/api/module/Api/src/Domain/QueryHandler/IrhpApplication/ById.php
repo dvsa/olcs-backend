@@ -13,7 +13,7 @@ use Exception;
 /**
  * Retrieve IRHP application by id
  */
-final class ById extends AbstractQueryHandler implements ToggleRequiredInterface
+class ById extends AbstractQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -38,6 +38,8 @@ final class ById extends AbstractQueryHandler implements ToggleRequiredInterface
     {
         /** @var IrhpApplication $irhpApplication */
         $irhpApplication = $this->getRepo()->fetchUsingId($query);
+
+        $this->auditRead($irhpApplication);
 
         try {
             $totalPermitsRequired = $irhpApplication->calculateTotalPermitsRequired();

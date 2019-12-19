@@ -18,6 +18,7 @@ return [
     TransferCommand\Audit\ReadTransportManager::class => CommandHandler\Audit\ReadTransportManager::class,
     TransferCommand\Audit\ReadBusReg::class => CommandHandler\Audit\ReadBusReg::class,
     TransferCommand\Audit\ReadCase::class => CommandHandler\Audit\ReadCase::class,
+    TransferCommand\Audit\ReadIrhpApplication::class => CommandHandler\Audit\ReadIrhpApplication::class,
 
     // Transfer - Application
     TransferCommand\Application\UpdateTypeOfLicence::class => CommandHandler\Application\UpdateTypeOfLicence::class,
