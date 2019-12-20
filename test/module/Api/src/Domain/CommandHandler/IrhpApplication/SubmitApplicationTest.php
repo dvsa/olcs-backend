@@ -6,11 +6,13 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplication;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
@@ -39,6 +41,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             'PermitsCheckableCreateTaskCommandGenerator' => m::mock(CreateTaskCommandGenerator::class),
+            'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
         ];
 
         $this->irhpApplication = m::mock(IrhpApplication::class);
@@ -117,6 +120,10 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->globally()
             ->ordered();
 
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with($this->irhpApplication, EventHistoryTypeEntity::IRHP_APPLICATION_SUBMITTED)
+            ->once();
+
         $this->expectedQueueSideEffect(
             self::IRHP_APPLICATION_ID,
             Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE,
@@ -166,6 +173,10 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->once()
             ->globally()
             ->ordered();
+
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with($this->irhpApplication, EventHistoryTypeEntity::IRHP_APPLICATION_SUBMITTED)
+            ->once();
 
         $this->expectedQueueSideEffect(
             self::IRHP_APPLICATION_ID,
