@@ -350,6 +350,9 @@ return [
                 => ApiSrv\Permits\Checkable\CheckedValueUpdaterFactory::class,
             'PermitsCheckableCreateTaskCommandGenerator'
                 => ApiSrv\Permits\Checkable\CreateTaskCommandGeneratorFactory::class,
+
+            'EventHistoryCreator' =>
+                ApiSrv\EventHistory\CreatorFactory::class,
         ],
     ],
     'view_manager' => [

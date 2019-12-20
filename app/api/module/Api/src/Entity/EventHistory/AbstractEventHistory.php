@@ -26,7 +26,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_event_history_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_event_history_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_event_history_account_id", columns={"account_id"}),
- *        @ORM\Index(name="ix_event_history_task_id", columns={"task_id"})
+ *        @ORM\Index(name="ix_event_history_task_id", columns={"task_id"}),
+ *        @ORM\Index(name="ix_event_history_irhp_application_id", columns={"irhp_application_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_event_history_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -153,6 +154,16 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Irhp application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irhpApplication;
 
     /**
      * Licence
@@ -523,6 +534,30 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the irhp application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication $irhpApplication entity being set as the value
+     *
+     * @return EventHistory
+     */
+    public function setIrhpApplication($irhpApplication)
+    {
+        $this->irhpApplication = $irhpApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     */
+    public function getIrhpApplication()
+    {
+        return $this->irhpApplication;
     }
 
     /**

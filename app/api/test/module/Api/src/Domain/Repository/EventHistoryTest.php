@@ -104,6 +104,7 @@ class EventHistoryTest extends RepositoryTestCase
         $transportManagerId = 4;
         $userId = 5;
         $applicationId = 6;
+        $irhpApplicationId = 7;
 
         $query = m::mock(QueryInterface::class);
         $query->shouldReceive('getLicence')
@@ -123,7 +124,11 @@ class EventHistoryTest extends RepositoryTestCase
             ->twice()
             ->shouldReceive('getApplication')
             ->andReturn($applicationId)
+            ->twice()
+            ->shouldReceive('getIrhpApplication')
+            ->andReturn($irhpApplicationId)
             ->twice();
+
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
@@ -153,6 +158,10 @@ class EventHistoryTest extends RepositoryTestCase
         $qb->shouldReceive('orWhere')->with('application')->once()->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('applicationId', $applicationId)->once()->andReturnSelf();
 
+        $qb->shouldReceive('expr->eq')->with('m.irhpApplication', ':irhpApplicationId')->once()->andReturn('irhpApplication');
+        $qb->shouldReceive('orWhere')->with('irhpApplication')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('irhpApplicationId', $irhpApplicationId)->once()->andReturnSelf();
+
         $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('eventHistoryType')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('withUser')->once()->andReturnSelf();
@@ -162,7 +171,6 @@ class EventHistoryTest extends RepositoryTestCase
 
     public function testFetchEventHistoryDetails()
     {
-
         $table = 'application_hist';
         $id = 1;
         $version = 2;
@@ -235,7 +243,8 @@ class EventHistoryTest extends RepositoryTestCase
             ->shouldReceive('with')->with('application')->once()->andReturnSelf()
             ->shouldReceive('with')->with('organisation')->once()->andReturnSelf()
             ->shouldReceive('with')->with('transportManager')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('busReg')->once()->andReturnSelf();
+            ->shouldReceive('with')->with('busReg')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpApplication')->once()->andReturnSelf();
 
         $this->assertNull($this->sut->applyListJoins($qb));
     }

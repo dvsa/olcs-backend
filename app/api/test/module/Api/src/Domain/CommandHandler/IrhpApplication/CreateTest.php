@@ -11,12 +11,14 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitType as IrhpPermitTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -35,6 +37,10 @@ class CreateTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpPermitType', IrhpPermitTypeRepo::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
+
+        $this->mockedSmServices = [
+            'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
+        ];
 
         parent::setUp();
     }
@@ -178,6 +184,10 @@ class CreateTest extends CommandHandlerTestCase
                     return;
                 }
             );
+
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with(m::type(IrhpApplication::class), EventHistoryTypeEntity::IRHP_APPLICATION_CREATED)
+            ->once();
 
         $sideEffectMessage = 'Message from CreateDefaultIrhpPermitApplications';
 

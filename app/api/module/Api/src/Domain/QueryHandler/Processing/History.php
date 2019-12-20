@@ -40,6 +40,7 @@ class History extends AbstractQueryHandler
                 [
                     'licence',
                     'application',
+                    'irhpApplication',
                     'organisation',
                     'transportManager',
                     'eventHistoryType',

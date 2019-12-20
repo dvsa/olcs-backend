@@ -11,10 +11,12 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitApplicationCmd;
@@ -41,6 +43,9 @@ final class Grant extends AbstractCommandHandler implements ToggleRequiredInterf
     /** @var GrantabilityChecker */
     private $grantabilityChecker;
 
+    /** @var EventHistoryCreator */
+    private $eventHistoryCreator;
+
     /**
      * Create service
      *
@@ -53,6 +58,7 @@ final class Grant extends AbstractCommandHandler implements ToggleRequiredInterf
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         $this->grantabilityChecker = $mainServiceLocator->get('PermitsGrantabilityChecker');
+        $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
 
         return parent::createService($serviceLocator);
     }
@@ -83,6 +89,9 @@ final class Grant extends AbstractCommandHandler implements ToggleRequiredInterf
         $irhpApplication->grant($this->refData(IrhpInterface::STATUS_AWAITING_FEE));
 
         $this->getRepo()->save($irhpApplication);
+
+        // create Event History record
+        $this->eventHistoryCreator->create($irhpApplication, EventHistoryTypeEntity::IRHP_APPLICATION_GRANTED);
 
         $this->result->merge(
             $this->handleSideEffects(
