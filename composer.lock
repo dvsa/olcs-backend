@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea45458ca356849d2fc7bbe53669913a",
+    "content-hash": "20d8a67c82fb64380b486326070da515",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -135,10 +135,10 @@
             "name": "behat/transliterator",
             "version": "v1.2.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/behat/transliterator/v1.2.0/behat-transliterator-v1.2.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/behat-transliterator-826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c-zip-9567ee.tar",
                 "reference": "826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c",
-                "shasum": ""
+                "shasum": "5a7073014e475df96867d213fed32f4333f19b85"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -158,6 +158,7 @@
                     "Behat\\Transliterator": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Artistic-1.0"
             ],
@@ -168,78 +169,6 @@
                 "transliterator"
             ],
             "time": "2017-04-04T11:38:05+00:00"
-        },
-        {
-            "name": "cpms/client",
-            "version": "4.206.0",
-            "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/cpms/client/4.206.0/cpms-client-4.206.0.zip",
-                "reference": "97ff1e00bb5844f4bc2f4e349bc12a4423033ebd",
-                "shasum": "97ff1e00bb5844f4bc2f4e349bc12a4423033ebd"
-            },
-            "require": {
-                "elendev/nexus-composer-push": "^0.1",
-                "olcs/olcs-devtools": "~4.206.0",
-                "zendframework/zendframework": "~2.4"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.2",
-                "phpunit/phpunit": "7.*"
-            },
-            "type": "project",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.1.x-dev"
-                },
-                "nexus-push": {
-                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/cpms-client",
-                    "ignore": [
-                        "build-scripts/",
-                        "storyplayer/",
-                        "build.xml",
-                        "storyplayer.json.dist"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "CpmsClient\\": "src/",
-                    "CpmsClientTest\\": "test/"
-                },
-                "classmap": [
-                    "./Module.php",
-                    "./test/CpmsClientTest/Module.php"
-                ]
-            },
-            "scripts": {
-                "ut": [
-                    "phpunit -c test/phpunit.xml --stop-on-failure"
-                ],
-                "review": [
-                    "review"
-                ],
-                "cs": [
-                    "phpcs --severity=1 --standard=vendor/olcs/coding-standards/Profiles/DVSA/CS/ruleset.xml"
-                ],
-                "coverage": [
-                    "phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html"
-                ],
-                "sonar": [
-                    "phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit"
-                ],
-                "update-syms": [
-                    "composer-update-syms"
-                ],
-                "release": [
-                    "release"
-                ]
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "CPMS Common Client Module",
-            "time": "2019-05-01T16:38:54+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -383,10 +312,10 @@
             "name": "doctrine/collections",
             "version": "v1.4.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/collections/v1.4.0/doctrine-collections-v1.4.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-collections-1a4fb7e902202c33cce8c55989b945612943c2ba-zip-cefe7d.tar",
                 "reference": "1a4fb7e902202c33cce8c55989b945612943c2ba",
-                "shasum": ""
+                "shasum": "a6c5c12edb42c64c2c719ca269b3bbd4ee2ca2d9"
             },
             "require": {
                 "php": "^5.6 || ^7.0"
@@ -406,6 +335,7 @@
                     "Doctrine\\Common\\Collections\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1118,10 +1048,10 @@
             "name": "doctrine/reflection",
             "version": "v1.0.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/reflection/v1.0.0/doctrine-reflection-v1.0.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-reflection-02538d3f95e88eb397a5f86274deb2c6175c2ab6-zip-5a5077.tar",
                 "reference": "02538d3f95e88eb397a5f86274deb2c6175c2ab6",
-                "shasum": ""
+                "shasum": "e51fd380ab385bbff0b7697a93bf1d30c5241332"
             },
             "require": {
                 "doctrine/annotations": "^1.0",
@@ -1147,6 +1077,7 @@
                     "Doctrine\\Common\\": "lib/Doctrine/Common"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1358,10 +1289,10 @@
             "name": "gedmo/doctrine-extensions",
             "version": "v2.3.12",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/gedmo/doctrine-extensions/v2.3.12/gedmo-doctrine-extensions-v2.3.12.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/gedmo-doctrine-extensions-c3ff3c73c95b01e107af33d4fe3abf80794e2df9-zip-f33f71.tar",
                 "reference": "c3ff3c73c95b01e107af33d4fe3abf80794e2df9",
-                "shasum": ""
+                "shasum": "6ccbf9114e07b874935166feb239f893ee510497"
             },
             "require": {
                 "behat/transliterator": "~1.0",
@@ -1390,6 +1321,7 @@
                     "Gedmo\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1428,11 +1360,11 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.4.1",
+            "version": "6.5.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/guzzlehttp/guzzle/6.4.1/guzzlehttp-guzzle-6.4.1.zip",
-                "reference": "0895c932405407fd3a7368b6910c09a24d26db11",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/guzzlehttp/guzzle/6.5.0/guzzlehttp-guzzle-6.5.0.zip",
+                "reference": "dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5",
                 "shasum": ""
             },
             "require": {
@@ -1447,12 +1379,13 @@
                 "psr/log": "^1.1"
             },
             "suggest": {
+                "ext-intl": "Required for Internationalized Domain Name (IDN) support",
                 "psr/log": "Required for using the Log middleware"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.3-dev"
+                    "dev-master": "6.5-dev"
                 }
             },
             "autoload": {
@@ -1484,7 +1417,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2019-10-23T15:58:00+00:00"
+            "time": "2019-12-07T18:20:45+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -1600,10 +1533,10 @@
             "name": "guzzlehttp/ringphp",
             "version": "1.1.1",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/guzzlehttp/ringphp/1.1.1/guzzlehttp-ringphp-1.1.1.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/guzzlehttp-ringphp-5e2a174052995663dd68e6b5ad838afd47dd615b-zip-fa45cf.tar",
                 "reference": "5e2a174052995663dd68e6b5ad838afd47dd615b",
-                "shasum": ""
+                "shasum": "ea5d2c4e9a7f195ece5dad0099c44f77e13f7af2"
             },
             "require": {
                 "guzzlehttp/streams": "~3.0",
@@ -1628,6 +1561,7 @@
                     "GuzzleHttp\\Ring\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1645,10 +1579,10 @@
             "name": "guzzlehttp/streams",
             "version": "3.0.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/guzzlehttp/streams/3.0.0/guzzlehttp-streams-3.0.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/guzzlehttp-streams-47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5-zip-c67b5d.tar",
                 "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
-                "shasum": ""
+                "shasum": "9bd375053aba20cde1d11bd85e987affb87776c9"
             },
             "require": {
                 "php": ">=5.4.0"
@@ -1667,6 +1601,7 @@
                     "GuzzleHttp\\Stream\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2454,10 +2389,10 @@
             "name": "paragonie/random_compat",
             "version": "v9.99.99",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/paragonie/random_compat/v9.99.99/paragonie-random_compat-v9.99.99.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/paragonie-random_compat-84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95-zip-afaf00.tar",
                 "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
-                "shasum": ""
+                "shasum": "c46e53fc78078be33a47404d120517caacbf0b25"
             },
             "require": {
                 "php": "^7"
@@ -2470,6 +2405,7 @@
                 "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
             },
             "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2527,10 +2463,10 @@
             "name": "phar-io/manifest",
             "version": "1.0.3",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phar-io/manifest/1.0.3/phar-io-manifest-1.0.3.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phar-io-manifest-7761fcacf03b4d4f16e7ccb606d4879ca431fcf4-zip-16fcd4.tar",
                 "reference": "7761fcacf03b4d4f16e7ccb606d4879ca431fcf4",
-                "shasum": ""
+                "shasum": "b04bb9f406aea7e628487de22097d6862ffdcff8"
             },
             "require": {
                 "ext-dom": "*",
@@ -2549,6 +2485,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2576,10 +2513,10 @@
             "name": "phar-io/version",
             "version": "2.0.1",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phar-io/version/2.0.1/phar-io-version-2.0.1.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phar-io-version-45a2ec53a73c70ce41d55cedef9063630abaf1b6-zip-8d9b61.tar",
                 "reference": "45a2ec53a73c70ce41d55cedef9063630abaf1b6",
-                "shasum": ""
+                "shasum": "26f48d68e5d2b26166805e7b5710067e4512b892"
             },
             "require": {
                 "php": "^5.6 || ^7.0"
@@ -2590,6 +2527,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2811,10 +2749,10 @@
             "name": "phprtflite/phprtflite",
             "version": "v1.3.3",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phprtflite/phprtflite/v1.3.3/phprtflite-phprtflite-v1.3.3.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phprtflite-phprtflite-eef76d965fc7a0cb4c7342f229f67ad4793c61c2-zip-4b883b.tar",
                 "reference": "eef76d965fc7a0cb4c7342f229f67ad4793c61c2",
-                "shasum": ""
+                "shasum": "c7d51a2ca4c0d901434b3f1d7430d2bf21347692"
             },
             "type": "library",
             "autoload": {
@@ -2822,6 +2760,7 @@
                     "PHPRtfLite": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0"
             ],
@@ -2981,10 +2920,10 @@
             "name": "phpunit/php-code-coverage",
             "version": "6.1.4",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/php-code-coverage/6.1.4/phpunit-php-code-coverage-6.1.4.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-php-code-coverage-807e6013b00af69b6c5d9ceb4282d0393dbb9d8d-zip-afe961.tar",
                 "reference": "807e6013b00af69b6c5d9ceb4282d0393dbb9d8d",
-                "shasum": ""
+                "shasum": "902289ccc668712eae1c1263953139e21be8c269"
             },
             "require": {
                 "ext-dom": "*",
@@ -3015,6 +2954,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -3038,10 +2978,10 @@
             "name": "phpunit/php-file-iterator",
             "version": "2.0.2",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/php-file-iterator/2.0.2/phpunit-php-file-iterator-2.0.2.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-php-file-iterator-050bedf145a257b1ff02746c31894800e5122946-zip-f3c112.tar",
                 "reference": "050bedf145a257b1ff02746c31894800e5122946",
-                "shasum": ""
+                "shasum": "052df4075c47af43df2040e5407b7439d420df6b"
             },
             "require": {
                 "php": "^7.1"
@@ -3060,6 +3000,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -3082,10 +3023,10 @@
             "name": "phpunit/php-text-template",
             "version": "1.2.1",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/php-text-template/1.2.1/phpunit-php-text-template-1.2.1.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-php-text-template-31f8b717e51d9a2afca6c9f046f5d69fc27c8686-zip-c6bcbd.tar",
                 "reference": "31f8b717e51d9a2afca6c9f046f5d69fc27c8686",
-                "shasum": ""
+                "shasum": "d2c6b195850427df82a2abb760dad89a8bfc7e88"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -3096,6 +3037,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -3203,10 +3145,10 @@
             "name": "phpunit/phpcov",
             "version": "5.0.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/phpcov/5.0.0/phpunit-phpcov-5.0.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-phpcov-72fb974e6fe9b39d7e0b0d44061d2ba4c49ee0b8-zip-9684c7.tar",
                 "reference": "72fb974e6fe9b39d7e0b0d44061d2ba4c49ee0b8",
-                "shasum": ""
+                "shasum": "9e9d18ebbe1fddfe4e2b759eeb0228f80a25a834"
             },
             "require": {
                 "php": "^7.1",
@@ -3231,6 +3173,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -3455,10 +3398,10 @@
             "name": "qandidate/toggle",
             "version": "1.1.1",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/qandidate/toggle/1.1.1/qandidate-toggle-1.1.1.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/qandidate-toggle-a7f7f4e478373622f945a6e9c163adb5b50b3265-zip-0ea32e.tar",
                 "reference": "a7f7f4e478373622f945a6e9c163adb5b50b3265",
-                "shasum": ""
+                "shasum": "2f65aa6a3abcbc9dbe135dba11b7a5fe2bd21c43"
             },
             "require": {
                 "php": ">=5.5.9"
@@ -3478,6 +3421,7 @@
                     "Qandidate\\Toggle\\": "lib/Qandidate/Toggle/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3622,10 +3566,10 @@
             "name": "react/promise",
             "version": "v2.7.1",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/react/promise/v2.7.1/react-promise-v2.7.1.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/react-promise-31ffa96f8d2ed0341a57848cbb84d88b89dd664d-zip-b23a21.tar",
                 "reference": "31ffa96f8d2ed0341a57848cbb84d88b89dd664d",
-                "shasum": ""
+                "shasum": "f98d48da8fdd3625d66eae31751f005e81b190f2"
             },
             "require": {
                 "php": ">=5.4.0"
@@ -3642,6 +3586,7 @@
                     "src/functions_include.php"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4113,10 +4058,10 @@
             "name": "sebastian/code-unit-reverse-lookup",
             "version": "1.0.1",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/code-unit-reverse-lookup/1.0.1/sebastian-code-unit-reverse-lookup-1.0.1.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-code-unit-reverse-lookup-4419fcdb5eabb9caa61a27c7a1db532a6b55dd18-zip-2b8d33.tar",
                 "reference": "4419fcdb5eabb9caa61a27c7a1db532a6b55dd18",
-                "shasum": ""
+                "shasum": "8f04e2a21f021b1d02b1300f7e5f36f82cf4912c"
             },
             "require": {
                 "php": "^5.6 || ^7.0"
@@ -4135,6 +4080,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4152,10 +4098,10 @@
             "name": "sebastian/comparator",
             "version": "3.0.2",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/comparator/3.0.2/sebastian-comparator-3.0.2.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-comparator-5de4fc177adf9bce8df98d8d141a7559d7ccf6da-zip-bbaa6e.tar",
                 "reference": "5de4fc177adf9bce8df98d8d141a7559d7ccf6da",
-                "shasum": ""
+                "shasum": "09aa0065bc298b5da9eb82e80494bd2679fb6be3"
             },
             "require": {
                 "php": "^7.1",
@@ -4176,6 +4122,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4210,10 +4157,10 @@
             "name": "sebastian/diff",
             "version": "3.0.2",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/diff/3.0.2/sebastian-diff-3.0.2.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-diff-720fcc7e9b5cf384ea68d9d930d480907a0c1a29-zip-e6ed91.tar",
                 "reference": "720fcc7e9b5cf384ea68d9d930d480907a0c1a29",
-                "shasum": ""
+                "shasum": "61a5a468d18477ecd105011abb24f4c6a79d1e02"
             },
             "require": {
                 "php": "^7.1"
@@ -4233,6 +4180,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4368,10 +4316,10 @@
             "name": "sebastian/finder-facade",
             "version": "1.2.2",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/finder-facade/1.2.2/sebastian-finder-facade-1.2.2.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-finder-facade-4a3174709c2dc565fe5fb26fcf827f6a1fc7b09f-zip-ba105e.tar",
                 "reference": "4a3174709c2dc565fe5fb26fcf827f6a1fc7b09f",
-                "shasum": ""
+                "shasum": "3acdd788b26d240344f79e5bc9088d875d1c6a68"
             },
             "require": {
                 "symfony/finder": "~2.3|~3.0|~4.0",
@@ -4383,6 +4331,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4401,10 +4350,10 @@
             "name": "sebastian/global-state",
             "version": "2.0.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/global-state/2.0.0/sebastian-global-state-2.0.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-global-state-e8ba02eed7bbbb9e59e43dedd3dddeff4a56b0c4-zip-51dbeb.tar",
                 "reference": "e8ba02eed7bbbb9e59e43dedd3dddeff4a56b0c4",
-                "shasum": ""
+                "shasum": "473a86a3da213c61a6d801c8f08d49d2e8b664de"
             },
             "require": {
                 "php": "^7.0"
@@ -4426,6 +4375,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4446,10 +4396,10 @@
             "name": "sebastian/object-enumerator",
             "version": "3.0.3",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/object-enumerator/3.0.3/sebastian-object-enumerator-3.0.3.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-object-enumerator-7cfd9e65d11ffb5af41198476395774d4c8a84c5-zip-360ba9.tar",
                 "reference": "7cfd9e65d11ffb5af41198476395774d4c8a84c5",
-                "shasum": ""
+                "shasum": "f8c6919af6a54475a4bc7f1319ddf5afec957962"
             },
             "require": {
                 "php": "^7.0",
@@ -4470,6 +4420,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4487,10 +4438,10 @@
             "name": "sebastian/object-reflector",
             "version": "1.1.1",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/object-reflector/1.1.1/sebastian-object-reflector-1.1.1.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-object-reflector-773f97c67f28de00d397be301821b06708fca0be-zip-56c4ab.tar",
                 "reference": "773f97c67f28de00d397be301821b06708fca0be",
-                "shasum": ""
+                "shasum": "81cbc529fd751fa894f1c5c64e284d2ffb56afd1"
             },
             "require": {
                 "php": "^7.0"
@@ -4509,6 +4460,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4526,10 +4478,10 @@
             "name": "sebastian/recursion-context",
             "version": "3.0.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/recursion-context/3.0.0/sebastian-recursion-context-3.0.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-recursion-context-5b0cd723502bac3b006cbf3dbf7a1e3fcefe4fa8-zip-ab6a2f.tar",
                 "reference": "5b0cd723502bac3b006cbf3dbf7a1e3fcefe4fa8",
-                "shasum": ""
+                "shasum": "e77f91f00a369888fabfb1994117c6075fb18222"
             },
             "require": {
                 "php": "^7.0"
@@ -4548,6 +4500,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4573,10 +4526,10 @@
             "name": "sebastian/resource-operations",
             "version": "2.0.1",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/resource-operations/2.0.1/sebastian-resource-operations-2.0.1.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-resource-operations-4d7a795d35b889bf80a0cc04e08d77cedfa917a9-zip-41a624.tar",
                 "reference": "4d7a795d35b889bf80a0cc04e08d77cedfa917a9",
-                "shasum": ""
+                "shasum": "47fb9286a6177b77703b69ced675bf286b034274"
             },
             "require": {
                 "php": "^7.1"
@@ -4592,6 +4545,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4609,10 +4563,10 @@
             "name": "sebastian/version",
             "version": "2.0.1",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/version/2.0.1/sebastian-version-2.0.1.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-version-99732be0ddb3361e16ad77b68ba41efc8e979019-zip-0eee83.tar",
                 "reference": "99732be0ddb3361e16ad77b68ba41efc8e979019",
-                "shasum": ""
+                "shasum": "7b1b82cade360200ab79aad08a846540f1db95cd"
             },
             "require": {
                 "php": ">=5.6"
@@ -4628,6 +4582,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -5221,10 +5176,10 @@
             "name": "theseer/fdomdocument",
             "version": "1.6.6",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/theseer/fdomdocument/1.6.6/theseer-fdomdocument-1.6.6.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/theseer-fdomdocument-6e8203e40a32a9c770bcb62fe37e68b948da6dca-zip-e35ff2.tar",
                 "reference": "6e8203e40a32a9c770bcb62fe37e68b948da6dca",
-                "shasum": ""
+                "shasum": "8065850cf7b237d920e53218957510bc4f542b23"
             },
             "require": {
                 "ext-dom": "*",
@@ -5237,6 +5192,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -5503,10 +5459,10 @@
             "name": "zendframework/zendxml",
             "version": "1.2.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/zendframework/zendxml/1.2.0/zendframework-zendxml-1.2.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zendframework-zendxml-eceab37a591c9e140772a1470338258857339e00-zip-020fc8.tar",
                 "reference": "eceab37a591c9e140772a1470338258857339e00",
-                "shasum": ""
+                "shasum": "565d5fa1244393a09481e72cd6cda9c6b173cecf"
             },
             "require": {
                 "php": "^5.6 || ^7.0"
@@ -5527,6 +5483,7 @@
                     "ZendXml\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -5543,10 +5500,10 @@
             "name": "zf-commons/zfc-rbac",
             "version": "v2.5.6",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/zf-commons/zfc-rbac/v2.5.6/zf-commons-zfc-rbac-v2.5.6.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zf-commons-zfc-rbac-62873668fe0c32aaed3f291dd21c2a7ba22248d7-zip-228e75.tar",
                 "reference": "62873668fe0c32aaed3f291dd21c2a7ba22248d7",
-                "shasum": ""
+                "shasum": "404f5661939edee0dd525acd2b74f97299d9a7d1"
             },
             "require": {
                 "php": ">=5.4",
@@ -5580,6 +5537,7 @@
                     "ZfcRbac\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5613,10 +5571,10 @@
             "name": "zfr/rbac",
             "version": "1.2.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/zfr/rbac/1.2.0/zfr-rbac-1.2.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zfr-rbac-493711bfc2a637fd7c6f23b71b7b55a621c35d9d-zip-85e76c.tar",
                 "reference": "493711bfc2a637fd7c6f23b71b7b55a621c35d9d",
-                "shasum": ""
+                "shasum": "95d923e0294efd055fdd8e381a9ea9d46e05e4f9"
             },
             "require": {
                 "php": ">=5.4"
@@ -5633,6 +5591,7 @@
                     "Rbac\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5659,10 +5618,10 @@
             "name": "hamcrest/hamcrest-php",
             "version": "v2.0.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/hamcrest/hamcrest-php/v2.0.0/hamcrest-hamcrest-php-v2.0.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/hamcrest-hamcrest-php-776503d3a8e85d4f9a1148614f95b7a608b046ad-zip-a48af8.tar",
                 "reference": "776503d3a8e85d4f9a1148614f95b7a608b046ad",
-                "shasum": ""
+                "shasum": "9532f8ec8017b20d8512b766a83782dcbbfbc5af"
             },
             "require": {
                 "php": "^5.3|^7.0"
@@ -5688,6 +5647,7 @@
                     "hamcrest"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD"
             ],
@@ -5701,10 +5661,10 @@
             "name": "johnkary/phpunit-speedtrap",
             "version": "v3.1.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/johnkary/phpunit-speedtrap/v3.1.0/johnkary-phpunit-speedtrap-v3.1.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/johnkary-phpunit-speedtrap-dac11b8640d4be7a70f336616947fa84f169835a-zip-e8a7e1.tar",
                 "reference": "dac11b8640d4be7a70f336616947fa84f169835a",
-                "shasum": ""
+                "shasum": "fc144f850549d3730dc35b96306aa65275500af3"
             },
             "require": {
                 "php": ">=7.1",
@@ -5721,6 +5681,7 @@
                     "JohnKary\\PHPUnit\\Listener\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5740,13 +5701,13 @@
             "time": "2019-02-24T02:40:12+00:00"
         },
         {
-            "name": "mikey179/vfsstream",
+            "name": "mikey179/vfsStream",
             "version": "v1.4.0",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/mikey179/vfsstream/v1.4.0/mikey179-vfsstream-v1.4.0.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/mikey179-vfsstream-61b12172292cf539685507aa65b076c1530e83c1-zip-f9c27d.tar",
                 "reference": "61b12172292cf539685507aa65b076c1530e83c1",
-                "shasum": ""
+                "shasum": "9d117e0b96e2610e12197d3bcd005114c821473e"
             },
             "require": {
                 "php": ">=5.3.0"
@@ -5765,6 +5726,7 @@
                     "org\\bovigo\\vfs\\": "src/main/php"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD"
             ],
@@ -5834,10 +5796,10 @@
             "name": "phpstan/phpstan-doctrine",
             "version": "0.10",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-doctrine/0.10/phpstan-phpstan-doctrine-0.10.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpstan-phpstan-doctrine-a0314b1fa5b4d76880e4e9542ee01f3df8471630-zip-4d6bbd.tar",
                 "reference": "a0314b1fa5b4d76880e4e9542ee01f3df8471630",
-                "shasum": ""
+                "shasum": "30aa322b53ca49d0f0125d15fe4ccd4a6e5f9d4a"
             },
             "require": {
                 "nikic/php-parser": "^4.0",
@@ -5873,6 +5835,7 @@
                     "PHPStan\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5883,10 +5846,10 @@
             "name": "phpstan/phpstan-mockery",
             "version": "0.10.2",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-mockery/0.10.2/phpstan-phpstan-mockery-0.10.2.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpstan-phpstan-mockery-14d568b6b56c957c9ae5330603303a367b21f0e9-zip-2bda4d.tar",
                 "reference": "14d568b6b56c957c9ae5330603303a367b21f0e9",
-                "shasum": ""
+                "shasum": "d7b547e34a20713202ea90edab4152f9f8c50e2a"
             },
             "require": {
                 "nikic/php-parser": "^4.0",
@@ -5916,6 +5879,7 @@
                     "PHPStan\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5926,10 +5890,10 @@
             "name": "phpstan/phpstan-shim",
             "version": "0.10.8",
             "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-shim/0.10.8/phpstan-phpstan-shim-0.10.8.zip",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpstan-phpstan-shim-7f433a1af3a3e27bea056552e42411c9d9af9c8e-zip-5dcf31.tar",
                 "reference": "7f433a1af3a3e27bea056552e42411c9d9af9c8e",
-                "shasum": ""
+                "shasum": "2b5185ba73461e13a766fb9d454cfa05b94c2dd2"
             },
             "require": {
                 "php": "~7.1"
@@ -5954,10 +5918,12 @@
                     "bootstrap.php"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "PHPStan Phar distribution",
+            "abandoned": "phpstan/phpstan",
             "time": "2019-01-08T10:03:03+00:00"
         }
     ],
