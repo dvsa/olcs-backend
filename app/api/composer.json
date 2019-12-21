@@ -22,7 +22,6 @@
         "php": ">=7.1",
         "aws/aws-sdk-php": "^3.99",
         "beberlei/doctrineextensions": "^1.0",
-        "cpms/client": "^4.203",
         "doctrine/annotations": "^1.2.3",
         "doctrine/collections": "~1.4.0",
         "doctrine/doctrine-orm-module": "~0.10.0",
