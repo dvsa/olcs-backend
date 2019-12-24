@@ -1792,7 +1792,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             // do nothing if getFirstIrhpPermitApplication() throws an exception
         }
     }
-       
+
     /**
      * Get the answer value corresponding to the specified question id
      *
@@ -1841,7 +1841,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         $this->countrys = $countries;
     }
-   
+
     /**
      * Get the total number of permits required by this application
      *
@@ -1854,7 +1854,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         if (!$this->getIrhpPermitType()->isEcmtShortTerm()) {
             throw new RuntimeException('calculateTotalPermitsRequired is only applicable to ECMT short term');
         }
-    
+
         $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
         $requiredEuro5 = $irhpPermitApplication->getRequiredEuro5();
         $requiredEuro6 = $irhpPermitApplication->getRequiredEuro6();
@@ -2081,8 +2081,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         $currentDate = new \DateTime();
 
-        //if MOT expiry date (returned by Q&A as a Y-m-d string) is not after the current date then it is still valid
-        if ($motExpiryDate <= $currentDate->format('Y-m-d')) {
+        //if MOT expiry date (returned by Q&A as a Y-m-d string) is after the current date then it is still valid.
+        if ($motExpiryDate >= $currentDate->format('Y-m-d')) {
             return false;
         }
 
@@ -2152,7 +2152,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         return $this->getAssociatedStock()->getCandidatePermitCreationMode();
     }
-   
+
     /**
      * Whether this application needs to be manually checked by a case worker before permits are allocated
      *
