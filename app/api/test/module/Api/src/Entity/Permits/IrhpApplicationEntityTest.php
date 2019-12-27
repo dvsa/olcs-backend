@@ -5637,7 +5637,7 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         return [
             'no mot expiry date present' => [null],
-            'mot expires tomorrow' => [(new \DateTime('- 1 day'))->format('Y-m-d')],
+            'mot expires tomorrow' => [(new \DateTime('+1 day'))->format('Y-m-d')],
             'mot expires today' => [(new \DateTime())->format('Y-m-d')],
         ];
     }
@@ -5646,7 +5646,7 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         $validStatus = m::mock(RefData::class);
         $validStatus->expects()->getId()->withNoArgs()->andReturn(IrhpInterface::STATUS_VALID);
-        $expiryDate = (new \DateTime('+ 1 day'))->format('Y-m-d');
+        $expiryDate = (new \DateTime('-1 day'))->format('Y-m-d');
         $expiryStatus = m::mock(RefData::class);
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
