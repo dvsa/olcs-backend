@@ -176,6 +176,7 @@ class IrhpPermit extends AbstractIrhpPermit
         return [
             'permitNumberWithPrefix' => $this->getPermitNumberWithPrefix(),
             'startDate' => $this->getStartDate(),
+            'ceasedDate' => $this->getCeasedDate()
         ];
     }
 
@@ -433,5 +434,13 @@ class IrhpPermit extends AbstractIrhpPermit
     public function isValid()
     {
         return in_array($this->status->getId(), self::$validStatuses);
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCeasedDate()
+    {
+        return $this->getExpiryDate() ?? $this->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo(true);
     }
 }
