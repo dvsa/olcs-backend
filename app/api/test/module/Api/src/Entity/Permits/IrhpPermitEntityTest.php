@@ -209,6 +209,7 @@ class IrhpPermitEntityTest extends EntityTester
         $prefix = 'UK';
 
         $now = new DateTime();
+        $then = new DateTime('+1 year');
         $this->sut->setIssueDate($now);
 
         $irhpPermitStock = m::mock(IrhpPermitStock::class);
@@ -221,10 +222,13 @@ class IrhpPermitEntityTest extends EntityTester
             ->shouldReceive('getIrhpPermitStock')
             ->andReturn($irhpPermitStock);
 
+        $this->sut->setExpiryDate($then);
+
         $this->assertEquals(
             [
                 'permitNumberWithPrefix' => 'UK00431',
                 'startDate' => $now,
+                'ceasedDate' => $then
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -682,5 +686,42 @@ class IrhpPermitEntityTest extends EntityTester
         $this->assertSame($stockValidTo, $replacedEntity->getExpiryDate());
         $this->assertSame($oldEntity->getStatus(), $replacedEntity->getStatus());
         $this->assertEquals(555, $replacedEntity->getPermitNumber());
+    }
+
+    /**
+     * @dataProvider dpGetCeasedDate
+     */
+    public function testGetCeasedDate($expiryDate, $validTo, $expected)
+    {
+        $this->sut->setExpiryDate($expiryDate);
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->allows('getValidTo')
+            ->with(true)
+            ->andReturn($validTo);
+
+        $this->irhpPermitRange->allows('getIrhpPermitStock')
+            ->andReturn($irhpPermitStock);
+
+        $this->assertEquals($expected, $this->sut->getCeasedDate());
+    }
+
+    public function dpGetCeasedDate()
+    {
+        $expAsDate = new DateTime('1st Jan 2200');
+        $validToDate = new DateTime('1st Jan 2300');
+
+        return [
+            'expiry is set' => [
+                'expiryDate' => $expAsDate,
+                'validTo' => null,
+                'expected' => $expAsDate,
+            ],
+            'expiry is null - valid to from stock expected' => [
+                'expiryDate' => null,
+                'validTo' => $validToDate,
+                'expected' => $validToDate,
+            ]
+        ];
     }
 }
