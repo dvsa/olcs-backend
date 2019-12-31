@@ -18,5 +18,5 @@ final class ById extends AbstractQueryByIdHandler implements ToggleRequiredInter
 
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpCandidatePermit';
-    protected $bundle = ['irhpPermitRange' => ['countrys']];
+    protected $bundle = ['irhpPermitRange' => ['countrys'], 'irhpPermitApplication'];
 }
