@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\OtherLicence;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as Entity;
 use Mockery as m;
@@ -133,11 +134,11 @@ class OtherLicenceEntityTest extends EntityTester
             // field is required
             [Entity::TYPE_DISQUALIFIED, '123', 'holderName', 'Y', '', 2, '2014-01-01'],
             // date is in future
-            [Entity::TYPE_DISQUALIFIED, '123', 'holderName', 'Y', '2020-01-01', 2, '2014-01-01'],
+            [Entity::TYPE_DISQUALIFIED, '123', 'holderName', 'Y', (new DateTime('now'))->modify('+1 day')->format('y-m-d') , 2, '2014-01-01'],
             // empty previous licence type
-            [null, '123', 'holderName', 'Y', '2020-01-01', 2, '2014-01-01'],
+            [null, '123', 'holderName', 'Y', '2019-12-31', 2, '2014-01-01'],
             // wrong previous licence type
-            ['foo', '123', 'holderName', 'Y', '2020-01-01', 2, '2014-01-01'],
+            ['foo', '123', 'holderName', 'Y', '2019-12-31', 2, '2014-01-01'],
         ];
     }
 
