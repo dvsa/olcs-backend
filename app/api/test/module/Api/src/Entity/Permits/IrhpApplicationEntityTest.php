@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
@@ -843,6 +844,16 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpIsSubmittedForConsideration()
     {
         return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_ISSUED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_ISSUING, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_VALID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_CANCELLED, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
@@ -3117,7 +3128,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->submit($status);
     }
 
-    public function testSubmitShortTerm()
+    /**
+     * @dataProvider dpSubmitShortTermAndAnnual
+     */
+    public function testSubmitShortTermAndAnnual($irhpPermitTypeId)
     {
         $status = m::mock(RefData::class);
 
@@ -3131,9 +3145,17 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->shouldReceive('getIrhpPermitType->getId')
             ->withNoArgs()
             ->once()
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+            ->andReturn($irhpPermitTypeId);
 
         $entity->submit($status);
+    }
+
+    public function dpSubmitShortTermAndAnnual()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
+        ];
     }
 
     /**
@@ -3781,6 +3803,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity = m::mock(Entity::class)->makePartial();
         $entity->shouldReceive('getFirstIrhpPermitApplication')
             ->andReturn($irhpPermitApplication);
+        $entity->shouldReceive('getIrhpPermitType->isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
 
         $this->assertSame(
             $expectedAnswer,
@@ -3792,41 +3816,49 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         return [
             [
+                'isEcmtAnnual' => true,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 0,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => null,
                 'requiredEuro6' => 5,
                 'expectedAnswer' => null,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 0,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => null,
                 'requiredEuro6' => 5,
                 'expectedAnswer' => null,
@@ -4969,11 +5001,17 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetAppSubmittedEmailCommand
      */
-    public function testGetAppSubmittedEmailCommand($isEcmtShortTerm, $businessProcessId, $expectedCommand)
-    {
+    public function testGetAppSubmittedEmailCommand(
+        $isEcmtShortTerm,
+        $isEcmtAnnual,
+        $businessProcessId,
+        $expectedCommand
+    ) {
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
             ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
 
         $application = m::mock(Entity::class)->makePartial();
         $application->shouldReceive('getBusinessProcess->getId')
@@ -4991,12 +5029,15 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpGetAppSubmittedEmailCommand()
     {
         return [
-            [true, RefData::BUSINESS_PROCESS_APG, null],
-            [true, RefData::BUSINESS_PROCESS_APGG, null],
-            [true, RefData::BUSINESS_PROCESS_APSG, SendEcmtShortTermAppSubmitted::class],
-            [false, RefData::BUSINESS_PROCESS_APG, null],
-            [false, RefData::BUSINESS_PROCESS_APGG, null],
-            [false, RefData::BUSINESS_PROCESS_APSG, null],
+            [true, false, RefData::BUSINESS_PROCESS_APG, null],
+            [true, false, RefData::BUSINESS_PROCESS_APGG, null],
+            [true, false, RefData::BUSINESS_PROCESS_APSG, SendEcmtShortTermAppSubmitted::class],
+            [false, true, RefData::BUSINESS_PROCESS_APG, null],
+            [false, true, RefData::BUSINESS_PROCESS_APGG, null],
+            [false, true, RefData::BUSINESS_PROCESS_APSG, SendEcmtAppSubmitted::class],
+            [false, false, RefData::BUSINESS_PROCESS_APG, null],
+            [false, false, RefData::BUSINESS_PROCESS_APGG, null],
+            [false, false, RefData::BUSINESS_PROCESS_APSG, null],
         ];
     }
 
@@ -5082,6 +5123,10 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpGetSubmissionTaskDescription()
     {
         return [
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                Task::TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED
+            ],
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 Task::TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED

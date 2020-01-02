@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
@@ -399,7 +400,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 case Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS:
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS:
-                    return $this->getEcmtShortTermNoOfPermitsAnswer();
+                    return $this->getEcmtNoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS:
                     return $this->getInternationalJourneysAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS:
@@ -466,7 +467,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return string|null
      */
-    private function getEcmtShortTermNoOfPermitsAnswer()
+    private function getEcmtNoOfPermitsAnswer()
     {
         $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
 
@@ -776,7 +777,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function isSubmittedForConsideration()
     {
-        return $this->getIrhpPermitType()->isEcmtShortTerm() && $this->isUnderConsideration();
+        $irhpPermitType = $this->getIrhpPermitType();
+
+        return ($irhpPermitType->isEcmtShortTerm() || $irhpPermitType->isEcmtAnnual())
+            && $this->isUnderConsideration();
     }
 
     /**
@@ -1240,6 +1244,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         switch ($this->getIrhpPermitType()->getId()) {
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
                 return $this->proceedToUnderConsideration($submitStatus);
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
@@ -1848,8 +1853,12 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function calculateTotalPermitsRequired()
     {
-        if (!$this->getIrhpPermitType()->isEcmtShortTerm()) {
-            throw new RuntimeException('calculateTotalPermitsRequired is only applicable to ECMT short term');
+        $irhpPermitType = $this->getIrhpPermitType();
+
+        if (!$irhpPermitType->isEcmtShortTerm() && !$irhpPermitType->isEcmtAnnual()) {
+            throw new RuntimeException(
+                'calculateTotalPermitsRequired is only applicable to ECMT short term and ECMT Annual'
+            );
         }
 
         $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
@@ -1969,10 +1978,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getAppSubmittedEmailCommand()
     {
-        $isEcmtShortTerm = $this->irhpPermitType->isEcmtShortTerm();
         $isApsg = $this->getBusinessProcess()->getId() == RefData::BUSINESS_PROCESS_APSG;
+        if (!$isApsg) {
+            return null;
+        }
 
-        if ($isEcmtShortTerm && $isApsg) {
+        if ($this->irhpPermitType->isEcmtAnnual()) {
+            return SendEcmtAppSubmitted::class;
+        }
+
+        if ($this->irhpPermitType->isEcmtShortTerm()) {
             return SendEcmtShortTermAppSubmitted::class;
         }
 
@@ -2019,6 +2034,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getSubmissionTaskDescription()
     {
         $mappings = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT
+                => Task::TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
                 => Task::TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL
