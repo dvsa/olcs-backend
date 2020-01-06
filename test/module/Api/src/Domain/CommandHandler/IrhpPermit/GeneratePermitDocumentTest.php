@@ -77,7 +77,7 @@ class GeneratePermitDocumentTest extends CommandHandlerTestCase
         $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
             ->andReturn($irhpPermitStock);
-        $irhpPermitApplication->shouldReceive('getRelatedApplication->getLicence')
+        $irhpPermitApplication->shouldReceive('getIrhpApplication->getLicence')
             ->andReturn($licence);
 
         $irhpPermit = m::mock(IrhpPermitEntity::class);

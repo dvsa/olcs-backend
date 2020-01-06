@@ -19,7 +19,6 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits;
-use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Transaction\CompleteTransaction as CompleteTransactionCmd;

@@ -120,7 +120,7 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
      */
     private function getDocumentQuery(IrhpPermitEntity $irhpPermit)
     {
-        $licence = $irhpPermit->getIrhpPermitApplication()->getRelatedApplication()->getLicence();
+        $licence = $irhpPermit->getIrhpPermitApplication()->getIrhpApplication()->getLicence();
 
         $documentQuery = [
             'licence' => $licence->getId(),

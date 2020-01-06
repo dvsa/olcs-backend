@@ -103,7 +103,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getPermitIntensityOfUse($emissionsCategoryId = null)
     {
-        return $this->getRelatedApplication()->getPermitIntensityOfUse($emissionsCategoryId);
+        return $this->irhpApplication->getPermitIntensityOfUse($emissionsCategoryId);
     }
 
     /**
@@ -115,7 +115,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getPermitApplicationScore($emissionsCategoryId = null)
     {
-        return $this->getRelatedApplication()->getPermitApplicationScore($emissionsCategoryId);
+        return $this->irhpApplication->getPermitApplicationScore($emissionsCategoryId);
     }
 
     /**
@@ -125,7 +125,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getCalculatedBundleValues()
     {
-        $relatedApplication = $this->getRelatedApplication();
+        $relatedApplication = $this->irhpApplication;
 
         return [
             'permitsAwarded' => $this->countPermitsAwarded(),
@@ -238,25 +238,9 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getRelatedOrganisation()
     {
-        $relatedApplication = $this->getRelatedApplication();
+        $relatedApplication = $this->irhpApplication;
 
         return isset($relatedApplication) ? $relatedApplication->getRelatedOrganisation() : null;
-    }
-
-    /**
-     * There are two possible types of parent application ECMT or IRHP
-     *
-     * @return EcmtPermitApplication|IrhpApplication|null
-     */
-    public function getRelatedApplication()
-    {
-        if ($this->ecmtPermitApplication instanceof EcmtPermitApplication) {
-            return $this->ecmtPermitApplication;
-        } elseif ($this->irhpApplication instanceof IrhpApplication) {
-            return $this->irhpApplication;
-        }
-
-        return null;
     }
 
     /**

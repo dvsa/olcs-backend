@@ -95,7 +95,7 @@ class TerminateTest extends CommandHandlerTestCase
             ->with($permit)
             ->once();
 
-        $permit->shouldReceive('getIrhpPermitApplication->getRelatedApplication->canBeExpired')
+        $permit->shouldReceive('getIrhpPermitApplication->getIrhpApplication->canBeExpired')
             ->andReturn(false);
 
         $command = Terminate::create(['id' => $permitId]);
@@ -140,7 +140,7 @@ class TerminateTest extends CommandHandlerTestCase
         $application->shouldReceive('canBeExpired')
             ->andReturn(true);
 
-        $permit->shouldReceive('getIrhpPermitApplication->getRelatedApplication')
+        $permit->shouldReceive('getIrhpPermitApplication->getIrhpApplication')
             ->andReturn($application);
 
         $this->expectedSideEffect(
@@ -191,7 +191,7 @@ class TerminateTest extends CommandHandlerTestCase
         $application->shouldReceive('canBeExpired')
             ->andReturn(true);
 
-        $permit->shouldReceive('getIrhpPermitApplication->getRelatedApplication')
+        $permit->shouldReceive('getIrhpPermitApplication->getIrhpApplication')
             ->andReturn($application);
 
         $this->expectedSideEffect(

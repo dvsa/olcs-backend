@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 /**
  * Permit Application
  */
-class EcmtPermitApplication extends AbstractScoringRepository
+class EcmtPermitApplication extends AbstractRepository
 {
     const VALID_APP_STATUS_IDS = [
         RefData::PERMIT_APP_STATUS_ISSUING,

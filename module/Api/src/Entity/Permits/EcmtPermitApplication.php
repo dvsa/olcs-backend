@@ -22,8 +22,6 @@ use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
-use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
-use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 use Dvsa\Olcs\Api\Entity\Traits\PermitAppReviveFromUnsuccessfulTrait;
 use Dvsa\Olcs\Api\Entity\Traits\PermitAppReviveFromWithdrawnTrait;
@@ -54,13 +52,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     CancelableInterface,
     WithdrawableInterface,
     LicenceProviderInterface,
-    ApplicationAcceptScoringInterface,
     IrhpInterface,
     CheckableApplicationInterface
 {
     use TieredProductReference,
         CandidatePermitCreationTrait,
-        ApplicationAcceptScoringTrait,
         FetchPermitAppSubmissionTaskTrait,
         PermitAppReviveFromWithdrawnTrait,
         PermitAppReviveFromUnsuccessfulTrait;

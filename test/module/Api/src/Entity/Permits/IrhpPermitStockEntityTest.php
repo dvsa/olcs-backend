@@ -1494,6 +1494,12 @@ class IrhpPermitStockEntityTest extends EntityTester
     {
         return [
             [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                RefData::BUSINESS_PROCESS_APSG,
+                2019,
+                Entity::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 RefData::BUSINESS_PROCESS_APG,
                 2019,
@@ -1679,32 +1685,6 @@ class IrhpPermitStockEntityTest extends EntityTester
                 2020,
                 Entity::CANDIDATE_MODE_NONE
             ],
-        ];
-    }
-
-    /**
-     * @dataProvider dpGetApplicationRepoName
-     */
-    public function testGetApplicationRepoName($isEcmtAnnual, $expectedRepoName)
-    {
-        $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->shouldReceive('isEcmtAnnual')
-            ->andReturn($isEcmtAnnual);
-
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->setIrhpPermitType($irhpPermitType);
-
-        $this->assertEquals(
-            $expectedRepoName,
-            $entity->getApplicationRepoName()
-        );
-    }
-
-    public function dpGetApplicationRepoName()
-    {
-        return [
-            [true, 'EcmtPermitApplication'],
-            [false, 'IrhpApplication'],
         ];
     }
 }
