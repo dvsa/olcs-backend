@@ -404,6 +404,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getInternationalJourneysAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS:
                     return $this->getEcmtShortTermSectorsAnswer();
+                case Question::FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS:
+                    return $this->getEcmtAnnual2018NoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES:
                 case Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE:
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD:
@@ -504,6 +506,130 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return null;
+    }
+
+    /**
+     * Get the number of permits answer value for a custom element of type ecmt annual 2018
+     *
+     * @return int|null
+     */
+    private function getEcmtAnnual2018NoOfPermitsAnswer()
+    {
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+
+        $requiredEuro5 = $irhpPermitApplication->getRequiredEuro5();
+        if ($requiredEuro5) {
+            return $requiredEuro5;
+        }
+
+        $requiredEuro6 = $irhpPermitApplication->getRequiredEuro6();
+        if ($requiredEuro6) {
+            return $requiredEuro6;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get question and answer data for a bilateral application
+     *
+     * @return array
+     */
+    private function getQuestionAnswerDataBilateral(): array
+    {
+        $numberOfPermits = [];
+        $countriesArray = [];
+
+        /** @var IrhpPermitApplication $irhpPermitApplication */
+        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
+            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
+
+            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
+            if ($permitsRequired === null) {
+                continue;
+            }
+
+            $stock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
+            $country = $stock->getCountry()->getCountryDesc();
+            $year = $stock->getValidTo(true)->format('Y');
+
+            $numberOfPermits[$country][$year] = $permitsRequired;
+            $countriesArray[$country] = $country;
+        }
+
+        $data = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $this->licence->getLicNo(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
+            ],
+            [
+                'question' => 'permits.irhp.countries.transporting',
+                'answer' =>  $countriesArray,
+                'questionType' => Question::QUESTION_TYPE_STRING,
+            ],
+            [
+                'question' => 'permits.snapshot.number.required',
+                'answer' =>  $this->getPermitsRequired(),
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
+            ],
+        ];
+
+        foreach ($numberOfPermits as $country => $years) {
+            foreach ($years as $year => $permitsRequired) {
+                $data[] = [
+                    'question' => sprintf('%s for %d', $country, $year),
+                    'answer' => $permitsRequired,
+                    'questionType' => Question::QUESTION_TYPE_INTEGER,
+                ];
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get question and answer data for a multilateral application
+     *
+     * @return array
+     */
+    private function getQuestionAnswerDataMultilateral(): array
+    {
+        $data = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $this->licence->getLicNo(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
+            ],
+            [
+                'question' => 'permits.snapshot.number.required',
+                'answer' =>  $this->getPermitsRequired(),
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
+            ],
+        ];
+
+        /** @var IrhpPermitApplication $irhpPermitApplication */
+        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
+            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
+
+            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
+            if ($permitsRequired === null) {
+                continue;
+            }
+
+            $year = $irhpPermitApplication->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getValidTo(true)
+                ->format('Y');
+
+            $data[] = [
+                'question' => sprintf('For %d', $year),
+                'answer' => $permitsRequired,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
+            ];
+        }
+
+        return $data;
     }
 
     /**
