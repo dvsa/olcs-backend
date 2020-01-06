@@ -15,12 +15,11 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
-use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Task\Task;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
 use Exception;
@@ -37,30 +36,9 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
-    protected $repoServiceName = 'EcmtPermitApplication';
+    protected $repoServiceName = 'IrhpApplication';
 
-    protected $extraRepos = ['IrhpPermitStock', 'FeeType', 'SystemParameter', 'IrhpApplication'];
-
-    protected $applicationRepoName;
-
-    /** @var ScoringQueryProxy */
-    private $scoringQueryProxy;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['IrhpPermitStock', 'FeeType', 'SystemParameter'];
 
     /**
      * Handle command
@@ -76,8 +54,6 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
         $stockRepo = $this->getRepo('IrhpPermitStock');
         $stock = $stockRepo->fetchById($stockId);
         $stockRepo->refresh($stock);
-
-        $this->applicationRepoName = $stock->getApplicationRepoName();
 
         if ($stock->statusAllowsAcceptScoring()) {
             $prerequisiteResult = $this->handleQuery(
@@ -118,7 +94,7 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
                 )
             );
 
-            $applicationIds = $this->scoringQueryProxy->fetchInScopeUnderConsiderationApplicationIds($stockId);
+            $applicationIds = $this->getRepo('IrhpApplication')->fetchInScopeUnderConsiderationApplicationIds($stockId);
 
             $this->result->addMessage(
                 sprintf('%d under consideration applications found', count($applicationIds))
@@ -126,7 +102,7 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
             foreach ($applicationIds as $applicationId) {
                 $this->processApplication(
-                    $this->getRepo($this->applicationRepoName)->fetchById($applicationId)
+                    $this->getRepo('IrhpApplication')->fetchById($applicationId)
                 );
             }
 
@@ -144,50 +120,50 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     /**
      * Send outcome notification and create fees as required for an application
      *
-     * @param ApplicationAcceptScoringInterface $application
+     * @param IrhpApplication $irhpApplication
      *
      * @throws Exception
      */
-    private function processApplication(ApplicationAcceptScoringInterface $application)
+    private function processApplication(IrhpApplication $irhpApplication)
     {
         $this->result->addMessage(
-            sprintf('processing %s with id %d:', $application->getCamelCaseEntityName(), $application->getId())
+            sprintf('processing application with id %d:', $irhpApplication->getId())
         );
 
-        $applicationAwardedPermits = $application->getSuccessLevel() != ApplicationAcceptConsts::SUCCESS_LEVEL_NONE;
-        $applicationChecked = $application->getChecked();
+        $applicationAwardedPermits = $irhpApplication->getSuccessLevel() != ApplicationAcceptConsts::SUCCESS_LEVEL_NONE;
+        $applicationChecked = $irhpApplication->getChecked();
 
         if ($applicationAwardedPermits && !$applicationChecked) {
             $this->result->addMessage('- application has been awarded permits and has not been checked, skipping');
             return;
         }
 
-        $outcomeNotificationType = $application->getOutcomeNotificationType();
+        $outcomeNotificationType = $irhpApplication->getOutcomeNotificationType();
         switch ($outcomeNotificationType) {
             case ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL:
-                $this->triggerEmailNotification($application);
+                $this->triggerEmailNotification($irhpApplication);
                 break;
             case ApplicationAcceptConsts::NOTIFICATION_TYPE_MANUAL:
-                $this->triggerManualNotification($application);
+                $this->triggerManualNotification($irhpApplication);
                 break;
             default:
                 throw new Exception('Unknown notification type: ' . $outcomeNotificationType);
         }
 
-        $this->createApplicationFeesAndUpdateStatus($application);
-        $this->getRepo($this->applicationRepoName)->save($application);
+        $this->createApplicationFeesAndUpdateStatus($irhpApplication);
+        $this->getRepo('IrhpApplication')->save($irhpApplication);
     }
 
     /**
      * Send the outcome notification for an application requiring manual notification
      *
-     * @param ApplicationAcceptScoringInterface $application
+     * @param IrhpApplication $irhpApplication
      */
-    private function triggerManualNotification(ApplicationAcceptScoringInterface $application)
+    private function triggerManualNotification(IrhpApplication $irhpApplication)
     {
         $this->result->merge(
             $this->handleSideEffect(
-                $this->getCreateTaskCommand($application)
+                $this->getCreateTaskCommand($irhpApplication)
             )
         );
     }
@@ -195,11 +171,11 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     /**
      * Send the outcome notification for an application requiring email notification
      *
-     * @param ApplicationAcceptScoringInterface $application
+     * @param IrhpApplication $irhpApplication
      */
-    private function triggerEmailNotification(ApplicationAcceptScoringInterface $application)
+    private function triggerEmailNotification(IrhpApplication $irhpApplication)
     {
-        $successLevel = $application->getSuccessLevel();
+        $successLevel = $irhpApplication->getSuccessLevel();
 
         if ($successLevel === ApplicationAcceptConsts::SUCCESS_LEVEL_NONE
             && $this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_ECMT_ALLOC_EMAIL_NONE)
@@ -208,21 +184,21 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
             return;
         }
 
-        $emailCommandLookup = $application->getEmailCommandLookup();
+        $emailCommandLookup = $irhpApplication->getEmailCommandLookup();
         $emailCommand = $emailCommandLookup[$successLevel];
 
         $this->result->addMessage(
             sprintf('- sending email using command %s', $emailCommand)
         );
 
-        $applicationId = $application->getId();
+        $irhpApplicationId = $irhpApplication->getId();
 
         $this->result->merge(
             $this->handleSideEffect(
                 $this->emailQueue(
                     $emailCommand,
-                    [ 'id' => $applicationId ],
-                    $applicationId
+                    [ 'id' => $irhpApplicationId ],
+                    $irhpApplicationId
                 )
             )
         );
@@ -231,14 +207,14 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     /**
      * Create any applicable fees for an application and update the status accordingly
      *
-     * @param ApplicationAcceptScoringInterface $application
+     * @param IrhpApplication $irhpApplication
      */
-    private function createApplicationFeesAndUpdateStatus(ApplicationAcceptScoringInterface $application)
+    private function createApplicationFeesAndUpdateStatus(IrhpApplication $irhpApplication)
     {
-        if ($application->getSuccessLevel() == ApplicationAcceptConsts::SUCCESS_LEVEL_NONE) {
+        if ($irhpApplication->getSuccessLevel() == ApplicationAcceptConsts::SUCCESS_LEVEL_NONE) {
             $this->result->addMessage('- no fee applicable, set application to unsuccessful');
 
-            $application->proceedToUnsuccessful(
+            $irhpApplication->proceedToUnsuccessful(
                 $this->refData(IrhpInterface::STATUS_UNSUCCESSFUL)
             );
 
@@ -247,13 +223,13 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
         $this->result->merge(
             $this->handleSideEffect(
-                $this->getCreateIssueFeeCommand($application)
+                $this->getCreateIssueFeeCommand($irhpApplication)
             )
         );
 
         $this->result->addMessage('- create fee and set application to awaiting fee');
 
-        $application->proceedToAwaitingFee(
+        $irhpApplication->proceedToAwaitingFee(
             $this->refData(IrhpInterface::STATUS_AWAITING_FEE)
         );
     }
@@ -261,16 +237,16 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     /**
      * Get issue fee creation command for an application
      *
-     * @param ApplicationAcceptScoringInterface $application
+     * @param IrhpApplication $irhpApplication
      *
      * @return CreateFee
      */
-    private function getCreateIssueFeeCommand(ApplicationAcceptScoringInterface $application)
+    private function getCreateIssueFeeCommand(IrhpApplication $irhpApplication)
     {
-        $productReference = $application->getIssueFeeProductReference();
+        $productReference = $irhpApplication->getIssueFeeProductReference();
 
         $feeType = $this->getRepo('FeeType')->getLatestByProductReference($productReference);
-        $permitsAwarded = $application->getPermitsAwarded();
+        $permitsAwarded = $irhpApplication->getPermitsAwarded();
 
         $feeDescription = sprintf(
             '%s - %d permits',
@@ -280,8 +256,8 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
         return CreateFee::create(
             [
-                'licence' => $application->getLicence()->getId(),
-                $application->getCamelCaseEntityName() => $application->getId(),
+                'licence' => $irhpApplication->getLicence()->getId(),
+                'irhpApplication' => $irhpApplication->getId(),
                 'invoicedDate' => date('Y-m-d'),
                 'description' => $feeDescription,
                 'feeType' => $feeType->getId(),
@@ -294,19 +270,19 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     /**
      * Get task creation command for an application
      *
-     * @param ApplicationAcceptScoringInterface $application
+     * @param IrhpApplication $irhpApplication
      *
      * @return CreateTask
      */
-    private function getCreateTaskCommand(ApplicationAcceptScoringInterface $application)
+    private function getCreateTaskCommand(IrhpApplication $irhpApplication)
     {
         return CreateTask::create(
             [
                 'category' => Task::CATEGORY_PERMITS,
                 'subCategory' => Task::SUBCATEGORY_PERMITS_APPLICATION_OUTCOME,
                 'description' => Task::TASK_DESCRIPTION_SEND_OUTCOME_LETTER,
-                $application->getCamelCaseEntityName() => $application->getId(),
-                'licence' => $application->getLicence()->getId()
+                'irhpApplication' => $irhpApplication->getId(),
+                'licence' => $irhpApplication->getLicence()->getId()
             ]
         );
     }

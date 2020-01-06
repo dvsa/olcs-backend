@@ -185,19 +185,19 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
         $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication1->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication1->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId1);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication2->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication2->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId1);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication3->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication3->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId2);
 
         $irhpPermit1 = m::mock(IrhpPermitEntity::class);
@@ -312,19 +312,19 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
         $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication1->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication1->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId1);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication2->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication2->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId1);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication3->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication3->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId2);
 
         $irhpPermit1 = m::mock(IrhpPermitEntity::class);
@@ -439,19 +439,19 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
         $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication1->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication1->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId1);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication2->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication2->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId1);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication3->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication3->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId2);
 
         $irhpPermit1 = m::mock(IrhpPermitEntity::class);
@@ -566,19 +566,19 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
         $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication1->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication1->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId1);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication2->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication2->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId1);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication3->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication3->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId2);
 
         $irhpPermit1 = m::mock(IrhpPermitEntity::class);

@@ -53,7 +53,7 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
         $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId);
 
         $irhpPermit = m::mock(IrhpPermitEntity::class);

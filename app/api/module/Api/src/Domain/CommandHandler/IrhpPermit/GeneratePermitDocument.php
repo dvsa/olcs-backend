@@ -165,7 +165,7 @@ final class GeneratePermitDocument extends AbstractCommandHandler implements Tog
     {
         $irhpPermitApplication = $irhpPermit->getIrhpPermitApplication();
         $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
-        $licence = $irhpPermitApplication->getRelatedApplication()->getLicence();
+        $licence = $irhpPermitApplication->getIrhpApplication()->getLicence();
 
         $documentQuery = [
             'licence' => $licence->getId(),

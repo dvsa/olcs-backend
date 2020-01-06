@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
@@ -31,26 +30,7 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
 
     protected $repoServiceName = 'Country';
 
-    protected $extraRepos = ['IrhpPermitRange'];
-
-    /** @var ScoringQueryProxy */
-    private $scoringQueryProxy;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['IrhpPermitRange', 'IrhpApplication'];
 
     /**
      * Return a list of scored irhp candidate permit records and associated data
@@ -68,7 +48,7 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
         $countryNamesById = $this->getCountryNamesByIdLookup();
         $internationalJourneysDecimalMap = $this->getInternationalJourneysDecimalMap();
 
-        $rows = $this->scoringQueryProxy->fetchScoringReport($stockId);
+        $rows = $this->getRepo('IrhpApplication')->fetchScoringReport($stockId);
 
         foreach ($rows as $row) {
             $permitReference = $row['licenceNo'] . ' / ' . $row['applicationId'] . ' / ' . $row['candidatePermitId'];
@@ -171,7 +151,7 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
     private function getCountryIdsByApplicationIdLookup($stockId)
     {
         return $this->getCountryIdLookup(
-            $this->scoringQueryProxy->fetchApplicationIdToCountryIdAssociations($stockId),
+            $this->getRepo('IrhpApplication')->fetchApplicationIdToCountryIdAssociations($stockId),
             'applicationId'
         );
     }

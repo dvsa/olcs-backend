@@ -7,12 +7,12 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\ForCpProvider;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplications
     as ApplyRangesToSuccessfulPermitApplicationsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\ApplyRangesToSuccessfulPermitApplications
@@ -34,13 +34,13 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
+        $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
 
         $this->mockedSmServices = [
-           'PermitsApplyRangesStockBasedForCpProviderFactory' => m::mock(StockBasedForCpProviderFactory::class),
-           'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class)
+           'PermitsApplyRangesStockBasedForCpProviderFactory' => m::mock(StockBasedForCpProviderFactory::class)
         ];
 
         parent::setUp();
@@ -150,7 +150,7 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             $irhpCandidatePermits[] = $irhpCandidatePermit;
         }
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulScoreOrderedInScope')
+        $this->repoMap['IrhpApplication']->shouldReceive('getSuccessfulScoreOrderedInScope')
             ->with($stockId)
             ->andReturn($irhpCandidatePermits);
 

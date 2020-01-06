@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -25,26 +24,7 @@ class CheckAcceptScoringPrerequisites extends AbstractQueryHandler implements To
 
     protected $repoServiceName = 'IrhpPermitRange';
 
-    protected $extraRepos = ['IrhpPermit'];
-
-    /** @var ScoringQueryProxy */
-    private $scoringQueryProxy;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['IrhpPermit', 'IrhpApplication'];
 
     /**
      * Handle query
@@ -62,12 +42,14 @@ class CheckAcceptScoringPrerequisites extends AbstractQueryHandler implements To
             RefData::EMISSIONS_CATEGORY_EURO5_REF => 'Euro 5'
         ];
 
-        if (!$this->scoringQueryProxy->hasInScopeUnderConsiderationApplications($stockId)) {
+        $irhpApplicationRepo = $this->getRepo('IrhpApplication');
+
+        if (!$irhpApplicationRepo->hasInScopeUnderConsiderationApplications($stockId)) {
             return $this->generateResponse(false, 'No under consideration applications currently in scope');
         }
 
         foreach ($emissionsCategories as $emissionsCategoryId => $emissionsCategoryCaption) {
-            $permitsRequired = $this->scoringQueryProxy->getSuccessfulCountInScope(
+            $permitsRequired = $irhpApplicationRepo->getSuccessfulCountInScope(
                 $stockId,
                 $emissionsCategoryId
             );

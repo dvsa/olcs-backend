@@ -8,6 +8,10 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
@@ -36,8 +40,6 @@ use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
 use Dvsa\Olcs\Api\Entity\Traits\PermitAppReviveFromUnsuccessfulTrait;
 use Dvsa\Olcs\Api\Entity\Traits\PermitAppReviveFromWithdrawnTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
-use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
-use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
@@ -68,14 +70,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
     CancelableInterface,
     WithdrawableInterface,
     ContextProviderInterface,
-    ApplicationAcceptScoringInterface,
     CheckableApplicationInterface
 {
-    use SectionTrait,
-        CandidatePermitCreationTrait,
-        ApplicationAcceptScoringTrait,
-        FetchPermitAppSubmissionTaskTrait,
-        TieredProductReference;
+    use SectionTrait, CandidatePermitCreationTrait, FetchPermitAppSubmissionTaskTrait, TieredProductReference;
 
     use PermitAppReviveFromWithdrawnTrait {
         canBeRevivedFromWithdrawn as baseCanBeRevivedFromWithdrawn;
@@ -1938,15 +1935,21 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getEmailCommandLookup()
     {
-        if (!$this->irhpPermitType->isEcmtShortTerm()) {
-            throw new RuntimeException('getEmailCommandLookup is only applicable to ECMT short term');
+        if ($this->irhpPermitType->isEcmtAnnual()) {
+            return [
+                ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
+                ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
+                ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+            ];
+        } elseif ($this->irhpPermitType->isEcmtShortTerm()) {
+            return [
+                ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtShortTermUnsuccessful::class,
+                ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtShortTermApsgPartSuccessful::class,
+                ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
+            ];
         }
 
-        return [
-            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtShortTermUnsuccessful::class,
-            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtShortTermApsgPartSuccessful::class,
-            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
-        ];
+        throw new RuntimeException('getEmailCommandLookup is only applicable to ECMT short term and ECMT Annual');
     }
 
     /**
@@ -1989,6 +1992,21 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         if ($this->irhpPermitType->isEcmtShortTerm()) {
             return SendEcmtShortTermAppSubmitted::class;
+        }
+
+        return null;
+    }
+
+    /**
+     * Return the command class name that represents the issued email for this application, or null if no email command
+     * is applicable
+     *
+     * @return string|null
+     */
+    public function getIssuedEmailCommand()
+    {
+        if ($this->irhpPermitType->isEcmtAnnual()) {
+            return SendEcmtIssued::class;
         }
 
         return null;
@@ -2174,7 +2192,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function requiresPreAllocationCheck()
     {
-        return $this->irhpPermitType->isEcmtShortTerm();
+        return $this->irhpPermitType->isEcmtShortTerm() || $this->irhpPermitType->isEcmtAnnual();
     }
 
     /**
@@ -2213,5 +2231,92 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $isApsg = $businessProcess->getId() == RefData::BUSINESS_PROCESS_APSG;
 
         return $canBeRevivedFromUnsuccessful && $isApsg;
+    }
+
+    /**
+     * Indicate the type of notification required upon completion of scoring acceptance, returning one of the
+     * NOTIFICATION_TYPE_* constants
+     *
+     * @return string
+     */
+    public function getOutcomeNotificationType()
+    {
+        $mappings = [
+            IrhpInterface::SOURCE_SELFSERVE => ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL,
+            IrhpInterface::SOURCE_INTERNAL => ApplicationAcceptConsts::NOTIFICATION_TYPE_MANUAL
+        ];
+
+        return $mappings[$this->source->getId()];
+    }
+
+    /**
+     * Indicate whether this application is either unsuccessful, partially successful or fully successful, returning
+     * one of the class constants SUCCESS_LEVEL_NONE, SUCCESS_LEVEL_PARTIAL or SUCCESS_LEVEL_FULL accordingly
+     *
+     * @return string
+     */
+    public function getSuccessLevel()
+    {
+        $permitsAwarded = $this->getPermitsAwarded();
+
+        $successLevel = ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL;
+        if ($permitsAwarded == 0) {
+            $successLevel = ApplicationAcceptConsts::SUCCESS_LEVEL_NONE;
+        } elseif ($this->calculateTotalPermitsRequired() == $permitsAwarded) {
+            $successLevel = ApplicationAcceptConsts::SUCCESS_LEVEL_FULL;
+        }
+
+        return $successLevel;
+    }
+
+    /**
+     * Proceeds the application from under consideration to unsuccessful during the accept scoring process
+     *
+     * @param RefData $unsuccessfulStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToUnsuccessful(RefData $unsuccessfulStatus)
+    {
+        if (!$this->isUnderConsideration()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to unsuccessful ('.$this->status->getId().')');
+        }
+
+        $this->status = $unsuccessfulStatus;
+    }
+
+    /**
+     * Proceeds the application from under consideration to awaiting fee during the accept scoring process
+     *
+     * @param RefData $awaitingFeeStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToAwaitingFee(RefData $awaitingFeeStatus)
+    {
+        if (!$this->isUnderConsideration()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to awaiting fee ('.$this->status->getId().')');
+        }
+
+        $this->status = $awaitingFeeStatus;
+    }
+
+    /**
+     * Return the number of permits awarded to this application. Only applicable to applications that are currently
+     * under consideration
+     *
+     * @return int
+     *
+     * @throws ForbiddenException
+     */
+    public function getPermitsAwarded()
+    {
+        if (!$this->isUnderConsideration() && !$this->isAwaitingFee()) {
+            throw new ForbiddenException(
+                'This application is not in the correct state to return permits awarded ('.$this->status->getId().')'
+            );
+        }
+
+        return $this->getFirstIrhpPermitApplication()->countPermitsAwarded();
     }
 }

@@ -350,8 +350,6 @@ return [
                 ApiSrv\Permits\GrantabilityCheckerFactory::class,
             'PermitsScoringCandidatePermitsCreator'
                 => ApiSrv\Permits\Scoring\CandidatePermitsCreatorFactory::class,
-            'PermitsScoringScoringQueryProxy'
-                => ApiSrv\Permits\Scoring\ScoringQueryProxyFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsGenerator'
                 => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsGeneratorFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsWriter'

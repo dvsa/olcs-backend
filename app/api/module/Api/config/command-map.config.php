@@ -1154,17 +1154,13 @@ return [
     TransferCommand\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class => CommandHandler\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class,
 
     // Permits Decline
-    TransferCommand\Permits\DeclineEcmtPermits::class => CommandHandler\Permits\DeclineEcmtPermits::class,
-    TransferCommand\Permits\AcceptEcmtPermits::class => CommandHandler\Permits\AcceptEcmtPermits::class,
     TransferCommand\Permits\AcceptIrhpPermits::class => CommandHandler\Permits\AcceptIrhpPermits::class,
 
     // Permits Update
     TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
-    TransferCommand\Permits\CompleteIssuePayment::class => CommandHandler\Permits\CompleteIssuePayment::class,
 
     // Permits - internal backend
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
-    Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
     Command\Permits\AllocateCandidatePermits::class => CommandHandler\Permits\AllocateCandidatePermits::class,
     Command\Permits\AllocateIrhpApplicationPermits::class => CommandHandler\Permits\AllocateIrhpApplicationPermits::class,
     Command\Permits\AllocateIrhpPermitApplicationPermit::class =>

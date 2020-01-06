@@ -10,6 +10,10 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
@@ -4728,17 +4732,16 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
-    public function testGetEmailCommandLookup()
+    /**
+     * @dataProvider dpGetEmailCommandLookup
+     */
+    public function testGetEmailCommandLookup($isEcmtShortTerm, $isEcmtAnnual, $expectedEmailCommandLookup)
     {
-        $expectedEmailCommandLookup = [
-            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtShortTermUnsuccessful::class,
-            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtShortTermApsgPartSuccessful::class,
-            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
-        ];
-
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
-            ->andReturn(true);
+            ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
 
         $application = $this->createNewEntity();
         $application->setIrhpPermitType($irhpPermitType);
@@ -4749,13 +4752,39 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
+    public function dpGetEmailCommandLookup()
+    {
+        return [
+            [
+                true,
+                false,
+                [
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtShortTermUnsuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtShortTermApsgPartSuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
+                ]
+            ],
+            [
+                false,
+                true,
+                [
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+                ]
+            ]
+        ];
+    }
+
     public function testGetEmailCommandLookupException()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('getEmailCommandLookup is only applicable to ECMT short term');
+        $this->expectExceptionMessage('getEmailCommandLookup is only applicable to ECMT short term and ECMT Annual');
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
             ->andReturn(false);
 
         $application = $this->createNewEntity();
@@ -5041,6 +5070,32 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
+    /**
+     * @dataProvider dpGetIssuedEmailCommand
+     */
+    public function testGetIssuedEmailCommand($isEcmtAnnual, $expectedCommand)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
+
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expectedCommand,
+            $application->getIssuedEmailCommand()
+        );
+    }
+
+    public function dpGetIssuedEmailCommand()
+    {
+        return [
+            [true, SendEcmtIssued::class],
+            [false, null],
+        ];
+    }
+
     public function testGetAllocationMode()
     {
         $allocationMode = 'ALLOCATION_MODE';
@@ -5245,12 +5300,15 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpRequiresPreAllocationCheck
      */
-    public function testRequiresPreAllocationCheck($isEcmtShortTerm, $expected)
+    public function testRequiresPreAllocationCheck($isEcmtShortTerm, $isEcmtAnnual, $expected)
     {
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
             ->withNoArgs()
             ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn($isEcmtAnnual);
 
         $this->sut->setIrhpPermitType($irhpPermitType);
 
@@ -5263,8 +5321,9 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpRequiresPreAllocationCheck()
     {
         return [
-            [true, true],
-            [false, false],
+            [true, false, true],
+            [false, true, true],
+            [false, false, false],
         ];
     }
 

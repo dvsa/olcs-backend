@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits as AcceptIrhpPermitsCmd;
-use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 
 /**
  * Accept a granted/awarded IRHP application

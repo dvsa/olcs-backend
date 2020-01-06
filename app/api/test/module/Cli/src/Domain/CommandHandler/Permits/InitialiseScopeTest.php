@@ -5,10 +5,9 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Query\Permits\DeviationData as DeviationDataQuery;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\InitialiseScope as InitialiseScopeCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\InitialiseScope as InitialiseScopeHandler;
 use Mockery as m;
@@ -26,11 +25,8 @@ class InitialiseScopeTest extends CommandHandlerTestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
+        $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
-
-        $this->mockedSmServices = [
-            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
-        ];
 
         parent::setUp();
     }
@@ -82,17 +78,17 @@ class InitialiseScopeTest extends CommandHandlerTestCase
                 return $deviationData;
             });
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('clearScope')
+        $this->repoMap['IrhpApplication']->shouldReceive('clearScope')
             ->once()
             ->globally()
             ->ordered();
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('applyScope')
+        $this->repoMap['IrhpApplication']->shouldReceive('applyScope')
             ->once()
             ->globally()
             ->ordered();
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchDeviationSourceValues')
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchDeviationSourceValues')
             ->with($stockId)
             ->andReturn($deviationSourceValues);
 
@@ -228,17 +224,17 @@ class InitialiseScopeTest extends CommandHandlerTestCase
                 return $deviationData;
             });
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('clearScope')
+        $this->repoMap['IrhpApplication']->shouldReceive('clearScope')
             ->once()
             ->globally()
             ->ordered();
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('applyScope')
+        $this->repoMap['IrhpApplication']->shouldReceive('applyScope')
             ->once()
             ->globally()
             ->ordered();
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchDeviationSourceValues')
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchDeviationSourceValues')
             ->with($stockId)
             ->andReturn($deviationSourceValues);
 
