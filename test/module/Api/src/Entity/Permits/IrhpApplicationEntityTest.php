@@ -3917,6 +3917,53 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
+    /**
+     * @dataProvider dpTestGetAnswerForCustomEcmtAnnual2018NoOfPermits
+     */
+    public function testGetAnswerForCustomEcmtAnnual2018NoOfPermits(
+        $isSnapshot,
+        $requiredEuro5,
+        $requiredEuro6,
+        $expectedAnswer
+    ) {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(
+            Question::FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS
+        );
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn($requiredEuro5);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn($requiredEuro6);
+
+        $entity = $this->createNewEntity();
+        $entity->setIrhpPermitApplications(
+            new ArrayCollection([$irhpPermitApplication])
+        );
+
+        $this->assertEquals(
+            $expectedAnswer,
+            $entity->getAnswer($step, $isSnapshot)
+        );
+    }
+
+    public function dpTestGetAnswerForCustomEcmtAnnual2018NoOfPermits()
+    {
+        return [
+            [true, null, null, null],
+            [true, 4, null, 4],
+            [true, null, 6, 6],
+            [false, null, null, null],
+            [false, 4, null, 4],
+            [false, null, 6, 6],
+        ];
+    }
+
     public function testGetAnswerForQuestionWithoutActiveQuestionText()
     {
         $createdOn = new DateTime();
