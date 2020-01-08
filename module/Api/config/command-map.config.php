@@ -1149,10 +1149,6 @@ return [
     // Irhp Permit Application Delete
     Command\IrhpPermitApplication\Delete::class => CommandHandler\IrhpPermitApplication\Delete::class,
 
-    // Permits Withdraw
-    TransferCommand\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class => CommandHandler\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class,
-    TransferCommand\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class => CommandHandler\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class,
-
     // Permits Decline
     TransferCommand\Permits\AcceptIrhpPermits::class => CommandHandler\Permits\AcceptIrhpPermits::class,
 

@@ -1255,4 +1255,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     {
         return true;
     }
+
+    /**
+     * This needs to be here for now to avoid compilation errors due to the addition of this method to the
+     * WithdrawableInterface
+     */
+    public function getAppWithdrawnEmailCommand($withdrawReason)
+    {
+        return null;
+    }
 }
