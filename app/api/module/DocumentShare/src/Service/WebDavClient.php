@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\DocumentShare\Service;
 
-use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
@@ -13,8 +12,6 @@ use League\Flysystem\FilesystemInterface;
  */
 class WebDavClient implements DocumentStoreInterface
 {
-    const ERR_RESP_FAIL = 'Document store returns invalid response';
-
     const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
 
     /**

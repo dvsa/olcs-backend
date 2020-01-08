@@ -505,4 +505,21 @@ class OrganisationTest extends RepositoryTestCase
 
         $this->assertSame(12, $result);
     }
+
+    public function testGetAllOrganisationsForCompaniesHouse()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
+
+        $this->sut->getAllOrganisationsForCompaniesHouse();
+
+        $expectedQuery = '[QUERY] SELECT o.companyOrLlpNo DISTINCT INNER JOIN Dvsa\Olcs\Api\Entity\Licence\Licence l ' .
+        'WITH l.organisation = o.id ' .
+        'AND l.status IN [[["lsts_consideration","lsts_suspended","lsts_valid","lsts_curtailed","lsts_granted"]]] ' .
+        'AND o.companyOrLlpNo IS NOT NULL AND o.type IN [[["org_t_rc","org_t_llp"]]] LIMIT 50';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

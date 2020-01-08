@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseInsolvencyPractitioner;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use \Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses as Cmd;
@@ -21,14 +23,15 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
 
     protected $repoServiceName = 'Document';
 
-    protected $extraRepos = ['Licence'];
+    protected $extraRepos = ['Licence', 'CompaniesHouseCompany'];
 
     protected $defaultSendToAddresses = [
-        'correspondenceAddress'         => true,
-        'establishmentAddress'          => true,
-        'transportConsultantAddress'    => true,
-        'registeredAddress'             => true,
-        'operatingCentresAddresses'     => true,
+        'correspondenceAddress'           => true,
+        'establishmentAddress'            => true,
+        'transportConsultantAddress'      => true,
+        'registeredAddress'               => true,
+        'operatingCentresAddresses'       => true,
+        'insolvencyPractitionerAddresses' => false
     ];
 
     /**
@@ -42,7 +45,7 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
     {
         $data = $command->getGenerateCommandData();
         $description = $data['description'];
-        $addressBookmark = (string) $command->getAddressBookmark();
+        $addressBookmark = (string)$command->getAddressBookmark();
         $bookmarkBundle = $command->getBookmarkBundle();
         /** @var Licence $licenceRepo */
         $licenceRepo = $this->getRepo('Licence');
@@ -62,7 +65,7 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
     }
 
     /**
-     * @param Cmd           $command
+     * @param Cmd $command
      * @param LicenceEntity $licence
      * @return array
      */
@@ -115,6 +118,24 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
             }
         }
 
+        if ($sendToAddresses['insolvencyPractitionerAddresses']) {
+            $companyOrLlpNo = $licence->getOrganisation()->getCompanyOrLlpNo();
+            $company = $this->getRepo('CompaniesHouseCompany')->getLatestByCompanyNumber($companyOrLlpNo);
+            $n = 1;
+            foreach ($company->getInsolvencyPractitioners() as $insolvencyPractitioner) {
+                $addresses['insolvencyPractitionerAddress' . $n] = [
+                    'addressLine1' => $insolvencyPractitioner->getName(),
+                    'addressLine2' => $insolvencyPractitioner->getAddressLine1(),
+                    'addressLine3' => $insolvencyPractitioner->getAddressLine2(),
+                    'addressLine4' => '',
+                    'town' => $insolvencyPractitioner->getLocality(),
+                    'postcode' => $insolvencyPractitioner->getPostalCode(),
+                    'countryCode' => ''
+                ];
+                $n++;
+            }
+        }
+
         $addresses = $this->validateAddresses($addresses);
 
         return $addresses;
@@ -123,9 +144,9 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
     private function isEmptyAddress($values)
     {
         return ($values['addressLine1'] === null || $values['addressLine1'] === "") &&
-        ($values['addressLine2'] === null || $values['addressLine2'] === "") &&
-        ($values['addressLine3'] === null || $values['addressLine3'] === "") &&
-        ($values['addressLine4'] === null || $values['addressLine4'] === "");
+            ($values['addressLine2'] === null || $values['addressLine2'] === "") &&
+            ($values['addressLine3'] === null || $values['addressLine3'] === "") &&
+            ($values['addressLine4'] === null || $values['addressLine4'] === "");
     }
 
     private function validateAddresses($addresses)
@@ -141,9 +162,9 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
                     $validatedAddressValues['addressLine2'] === $values['addressLine2'] &&
                     $validatedAddressValues['addressLine3'] === $values['addressLine3'] &&
                     $validatedAddressValues['addressLine4'] === $values['addressLine4'] &&
-                    $validatedAddressValues['town']         === $values['town'] &&
-                    $validatedAddressValues['postcode']     === $values['postcode'] &&
-                    $validatedAddressValues['countryCode']  === $values['countryCode']
+                    $validatedAddressValues['town'] === $values['town'] &&
+                    $validatedAddressValues['postcode'] === $values['postcode'] &&
+                    $validatedAddressValues['countryCode'] === $values['countryCode']
                 ) {
                     continue 2;
                 }

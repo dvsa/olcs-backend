@@ -385,81 +385,82 @@ class CompareTest extends CommandHandlerTestCase
 
     public function firstTimeProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 'companyNumber' => '03127414',
-                'stubResponse' => array(
-                    'registered_office_address' => array(
+                'stubResponse' => [
+                    'registered_office_address' => [
                         'address_line_1' => '120 Aldersgate Street',
                         'address_line_2' => 'London',
                         'postal_code' => 'EC1A 4JQ',
-                    ),
+                    ],
                     'company_name' => 'VALTECH LIMITED',
                     'company_number' => '03127414',
-                    'officer_summary' => array(
+                    'officer_summary' => [
                         'resigned_count' => 17,
-                        'officers' => array(
-                            0 => array(
+                        'officers' => [
+                            0 => [
                                 'officer_role' => 'director',
                                 'name' => 'DILLON, Andrew',
                                 'date_of_birth' => [
                                     'year' => '1979',
                                     'month' => '02',
                                 ],
-                            ),
-                            1 => array(
+                            ],
+                            1 => [
                                 'officer_role' => 'director',
                                 'name' => 'HALL, Philip',
                                 'date_of_birth' => [
                                     'year' => '1968',
                                     'month' => '12',
                                 ],
-                            ),
-                            2 => array(
+                            ],
+                            2 => [
                                 'officer_role' => 'director',
                                 'name' => 'SKINNER, Mark James',
                                 'date_of_birth' => [
                                     'year' => '1969',
                                     'month' => '06',
                                 ],
-                            ),
-                        ),
+                            ],
+                        ],
                         'active_count' => 3,
-                    ),
+                    ],
                     'company_status' => 'active',
-                ),
-                'expectedSaveData' => array(
+                ],
+                'expectedSaveData' => [
                     'companyName' => 'VALTECH LIMITED',
                     'companyNumber' => '03127414',
                     'companyStatus' => 'active',
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => 'London',
                     'postalCode' => 'EC1A 4JQ',
-                    'officers' => array(
-                        array(
+                    'officers' => [
+                        [
                           'name' => 'DILLON, Andrew',
                           'role' => 'director',
                           'dateOfBirth' => new \DateTime('1979-02-01'),
-                        ),
-                        array(
+                        ],
+                        [
                           'name' => 'HALL, Philip',
                           'role' => 'director',
                           'dateOfBirth' => new \DateTime('1968-12-01'),
-                        ),
-                        array(
+                        ],
+                        [
                           'name' => 'SKINNER, Mark James',
                           'role' => 'director',
                           'dateOfBirth' => new \DateTime('1969-06-01'),
-                        ),
-                    ),
+                        ],
+                    ],
                     'country' => null,
                     'locality' => null,
                     'poBox' => null,
                     'premises' => null,
                     'region' => null,
-                ),
-            ),
-        );
+                    'insolvencyProcessed' => null
+                ],
+            ],
+        ];
     }
 
     /**
@@ -467,40 +468,40 @@ class CompareTest extends CommandHandlerTestCase
      */
     public function changesProvider()
     {
-        return array(
-            'status change only' => array(
+        return [
+            'status change only' => [
                 'companyNumber' => '03127414',
-                'stubResponse' => array(
-                    'registered_office_address' => array(
+                'stubResponse' => [
+                    'registered_office_address' => [
                         'address_line_1' => '120 Aldersgate Street',
                         'address_line_2' => 'London',
                         'postal_code' => 'EC1A 4JQ',
-                    ),
+                    ],
                     'last_full_members_list_date' => '2014-11-17',
-                    'accounts' => array(
+                    'accounts' => [
                         'next_due' => '2015-09-30',
-                        'last_accounts' => array(
+                        'last_accounts' => [
                             'type' => 'full',
                             'made_up_to' => '2013-12-31',
-                        ),
-                        'accounting_reference_date' => array(
+                        ],
+                        'accounting_reference_date' => [
                             'day' => '31',
                             'month' => '12',
-                        ),
+                        ],
                         'next_made_up_to' => '2014-12-31',
                         'overdue' => false,
-                    ),
+                    ],
                     'date_of_creation' => '1995-11-17',
-                    'sic_codes' => array(
+                    'sic_codes' => [
                         0 => '62020',
-                    ),
+                    ],
                     'undeliverable_registered_office_address' => false,
-                    'annual_return' => array(
+                    'annual_return' => [
                         'next_due' => '2015-12-15',
                         'overdue' => false,
                         'next_made_up_to' => '2015-11-17',
                         'last_made_up_to' => '2014-11-17',
-                    ),
+                    ],
                     'company_name' => 'VALTECH LIMITED',
                     'jurisdiction' => 'england-wales',
                     'company_number' => '03127414',
@@ -508,40 +509,40 @@ class CompareTest extends CommandHandlerTestCase
                     'has_been_liquidated' => false,
                     'has_insolvency_history' => false,
                     'etag' => 'ec52ec76d16210d1133df1b4c9bb8f797a38d09c',
-                    'officer_summary' => array(
+                    'officer_summary' => [
                         'resigned_count' => 17,
-                        'officers' => array(
-                            0 => array(
+                        'officers' => [
+                            0 => [
                                 'officer_role' => 'director',
                                 'name' => 'DILLON, Andrew',
                                 'date_of_birth' => [
                                     'year' => '1979',
                                     'month' => '02',
                                 ],
-                            ),
-                            1 => array(
+                            ],
+                            1 => [
                                 'officer_role' => 'director',
                                 'name' => 'HALL, Philip',
                                 'date_of_birth' => [
                                     'year' => '1968',
                                     'month' => '12',
                                 ],
-                            ),
-                            2 => array(
+                            ],
+                            2 => [
                                 'officer_role' => 'director',
                                 'name' => 'SKINNER, Mark James',
                                 'date_of_birth' => [
                                     'year' => '1969',
                                     'month' => '06',
                                 ],
-                            ),
-                        ),
+                            ],
+                        ],
                         'active_count' => 3,
-                    ),
-                    'company_status' => 'liquidation',
+                    ],
+                    'company_status' => 'dissolved',
                     'can_file' => true,
-                ),
-                'stubSavedData' => array(
+                ],
+                'stubSavedData' => [
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => 'London',
                     'companyName' => 'VALTECH LIMITED',
@@ -553,96 +554,97 @@ class CompareTest extends CommandHandlerTestCase
                     'region' => null,
                     'id' => 2,
                     'version' => 1,
-                    'officers' => array(
-                        array(
+                    'officers' => [
+                        [
                             'dateOfBirth' => new \DateTime('1979-02-01'),
                             'name' => 'DILLON, Andrew',
                             'role' => 'director',
-                        ),
-                        array(
+                        ],
+                        [
                             'dateOfBirth' => new \DateTime('1968-12-01'),
                             'name' => 'HALL, Philip',
                             'role' => 'director',
-                        ),
-                        array (
+                        ],
+                        [
                             'dateOfBirth' => new \DateTime('1969-06-01'),
                             'name' => 'SKINNER, Mark James',
                             'role' => 'director',
-                        ),
-                    ),
+                        ],
+                    ],
                     'companyStatus' => 'active',
                     'country' => null,
-                ),
-                'expectedAlertData' => array(
+                ],
+                'expectedAlertData' => [
                     'companyNumber' => '03127414',
-                    'reasons' => array(
+                    'reasons' => [
                         AlertEntity::REASON_STATUS_CHANGE,
-                    ),
-                ),
-                'expectedSaveData' => array(
+                    ],
+                ],
+                'expectedSaveData' => [
                     'companyName' => 'VALTECH LIMITED',
                     'companyNumber' => '03127414',
-                    'companyStatus' => 'liquidation',
+                    'companyStatus' => 'dissolved',
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => 'London',
                     'postalCode' => 'EC1A 4JQ',
-                    'officers' => array(
-                        array(
+                    'officers' => [
+                        [
                             'name' => 'DILLON, Andrew',
                             'role' => 'director',
                             'dateOfBirth' => new \DateTime('1979-02-01'),
-                        ),
-                        array(
+                        ],
+                        [
                             'name' => 'HALL, Philip',
                             'role' => 'director',
                             'dateOfBirth' => new \DateTime('1968-12-01'),
-                        ),
-                        array (
+                        ],
+                        [
                             'name' => 'SKINNER, Mark James',
                             'role' => 'director',
                             'dateOfBirth' => new \DateTime('1969-06-01'),
-                        ),
-                    ),
+                        ],
+                    ],
                     'country' => null,
                     'locality' => null,
                     'poBox' => null,
                     'premises' => null,
                     'region' => null,
-                ),
-            ),
-            'name status address and people change' => array(
+                    'insolvencyProcessed' => 0
+                ],
+            ],
+            'name status address and people change' => [
                 'companyNumber' => '03127414',
-                'stubResponse' => array(
-                    'registered_office_address' => array(
+                'stubResponse' => [
+                    'registered_office_address' => [
                         'address_line_1' => '122 Aldersgate Street',
                         'address_line_2' => 'London',
                         'postal_code' => 'EC1A 4JQ',
-                    ),
+                    ],
                     'last_full_members_list_date' => '2014-11-17',
-                    'accounts' => array(
+                    'accounts' => [
                         'next_due' => '2015-09-30',
-                        'last_accounts' => array(
+                        'last_accounts' => [
                             'type' => 'full',
                             'made_up_to' => '2013-12-31',
-                        ),
-                        'accounting_reference_date' => array(
+                        ],
+                        'accounting_reference_date' => [
                             'day' => '31',
                             'month' => '12',
-                        ),
+                        ],
                         'next_made_up_to' => '2014-12-31',
                         'overdue' => false,
-                    ),
+                    ],
                     'date_of_creation' => '1995-11-17',
-                    'sic_codes' => array(
+                    'sic_codes' => [
                         0 => '62020',
-                    ),
+                    ],
                     'undeliverable_registered_office_address' => false,
-                    'annual_return' => array(
+                    'annual_return' => [
                         'next_due' => '2015-12-15',
                         'overdue' => false,
                         'next_made_up_to' => '2015-11-17',
                         'last_made_up_to' => '2014-11-17',
-                    ),
+                    ],
                     'company_name' => 'VALTECH 2 LIMITED',
                     'jurisdiction' => 'england-wales',
                     'company_number' => '03127414',
@@ -650,32 +652,32 @@ class CompareTest extends CommandHandlerTestCase
                     'has_been_liquidated' => false,
                     'has_insolvency_history' => false,
                     'etag' => 'ec52ec76d16210d1133df1b4c9bb8f797a38d09c',
-                    'officer_summary' => array(
+                    'officer_summary' => [
                         'resigned_count' => 18,
-                        'officers' => array(
-                            0 => array(
+                        'officers' => [
+                            0 => [
                                 'officer_role' => 'director',
                                 'name' => 'DILLON, Andrew',
                                 'date_of_birth' => [
                                     'year' => '1979',
                                     'month' => '02',
                                 ],
-                            ),
-                            1 => array(
+                            ],
+                            1 => [
                                 'officer_role' => 'director',
                                 'name' => 'SMITH, John',
                                 'date_of_birth' => [
                                     'year' => '1969',
                                     'month' => '06',
                                 ],
-                            ),
-                        ),
+                            ],
+                        ],
                         'active_count' => 2,
-                    ),
+                    ],
                     'company_status' => 'dissolved',
                     'can_file' => true,
-                ),
-                'stubSavedData' => array(
+                ],
+                'stubSavedData' => [
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => 'London',
                     'companyName' => 'VALTECH LIMITED',
@@ -687,75 +689,76 @@ class CompareTest extends CommandHandlerTestCase
                     'region' => null,
                     'id' => 2,
                     'version' => 1,
-                    'officers' => array(
-                        array(
+                    'officers' => [
+                        [
                             'dateOfBirth' => new \DateTime('1979-02-01'),
                             'name' => 'DILLON, Andrew',
                             'role' => 'director',
-                        ),
-                        array(
+                        ],
+                        [
                             'dateOfBirth' => new \DateTime('1968-12-01'),
                             'name' => 'HALL, Philip',
                             'role' => 'director',
-                        ),
-                        array (
+                        ],
+                        [
                             'dateOfBirth' => new \DateTime('1969-06-01'),
                             'name' => 'SKINNER, Mark James',
                             'role' => 'director',
-                        ),
-                    ),
+                        ],
+                    ],
                     'companyStatus' => 'active',
                     'country' => null,
-                ),
-                'expectedAlertData' => array(
+                ],
+                'expectedAlertData' => [
                     'companyNumber' => '03127414',
-                    'reasons' => array(
+                    'reasons' => [
                         AlertEntity::REASON_STATUS_CHANGE,
                         AlertEntity::REASON_NAME_CHANGE,
                         AlertEntity::REASON_ADDRESS_CHANGE,
                         AlertEntity::REASON_PEOPLE_CHANGE,
-                    ),
-                ),
-                'expectedSaveData' => array(
+                    ],
+                ],
+                'expectedSaveData' => [
                     'companyName' => 'VALTECH 2 LIMITED',
                     'companyNumber' => '03127414',
                     'companyStatus' => 'dissolved',
                     'addressLine1' => '122 Aldersgate Street',
                     'addressLine2' => 'London',
                     'postalCode' => 'EC1A 4JQ',
-                    'officers' => array(
-                        array(
+                    'officers' => [
+                        [
                             'name' => 'DILLON, Andrew',
                             'role' => 'director',
                             'dateOfBirth' => new \DateTime('1979-02-01'),
-                        ),
-                        array (
+                        ],
+                        [
                             'name' => 'SMITH, John',
                             'role' => 'director',
                             'dateOfBirth' => new \DateTime('1969-06-01'),
-                        ),
-                    ),
+                        ],
+                    ],
                     'country' => null,
                     'locality' => null,
                     'poBox' => null,
                     'premises' => null,
                     'region' => null,
-                ),
-            ),
+                    'insolvencyProcessed' => null
+                ],
+            ],
             // additional tests for various address changes
-            'address field removed' => array(
+            'address field removed' => [
                 'companyNumber' => '03127414',
-                'stubResponse' => array(
-                    'registered_office_address' => array(
+                'stubResponse' => [
+                    'registered_office_address' => [
                         'address_line_1' => '120 Aldersgate Street',
                         'postal_code' => 'EC1A 4JQ',
-                    ),
+                    ],
                     'company_name' => 'VALTECH LIMITED',
                     'company_number' => '03127414',
-                    'officer_summary' => array(),
+                    'officer_summary' => [],
                     'company_status' => 'active',
-                ),
-                'stubSavedData' => array(
+                ],
+                'stubSavedData' => [
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => 'London',
                     'companyName' => 'VALTECH LIMITED',
@@ -767,46 +770,47 @@ class CompareTest extends CommandHandlerTestCase
                     'region' => null,
                     'id' => 2,
                     'version' => 1,
-                    'officers' => array(),
+                    'officers' => [],
                     'companyStatus' => 'active',
                     'country' => null,
-                ),
-                'expectedAlertData' => array(
+                ],
+                'expectedAlertData' => [
                     'companyNumber' => '03127414',
-                    'reasons' => array(
+                    'reasons' => [
                         AlertEntity::REASON_ADDRESS_CHANGE,
-                    ),
-                ),
-                'expectedSaveData' => array(
+                    ],
+                ],
+                'expectedSaveData' => [
                     'companyName' => 'VALTECH LIMITED',
                     'companyNumber' => '03127414',
                     'companyStatus' => 'active',
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => null,
                     'postalCode' => 'EC1A 4JQ',
-                    'officers' => array(),
+                    'officers' => [],
                     'country' => null,
                     'locality' => null,
                     'poBox' => null,
                     'premises' => null,
                     'region' => null,
-                ),
-            ),
-            'address field added' => array(
+                    'insolvencyProcessed' => null
+                ],
+            ],
+            'address field added' => [
                 'companyNumber' => '03127414',
-                'stubResponse' => array(
-                    'registered_office_address' => array(
+                'stubResponse' => [
+                    'registered_office_address' => [
                         'address_line_1' => '120 Aldersgate Street',
                         'address_line_2' => 'London',
                         'locality' => 'Greater London',
                         'postal_code' => 'EC1A 4JQ',
-                    ),
+                    ],
                     'company_name' => 'VALTECH LIMITED',
                     'company_number' => '03127414',
-                    'officer_summary' => array(),
+                    'officer_summary' => [],
                     'company_status' => 'active',
-                ),
-                'stubSavedData' => array(
+                ],
+                'stubSavedData' => [
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => 'London',
                     'companyName' => 'VALTECH LIMITED',
@@ -818,17 +822,17 @@ class CompareTest extends CommandHandlerTestCase
                     'region' => null,
                     'id' => 2,
                     'version' => 1,
-                    'officers' => array(),
+                    'officers' => [],
                     'companyStatus' => 'active',
                     'country' => null,
-                ),
-                'expectedAlertData' => array(
+                ],
+                'expectedAlertData' => [
                     'companyNumber' => '03127414',
-                    'reasons' => array(
+                    'reasons' => [
                         AlertEntity::REASON_ADDRESS_CHANGE,
-                    ),
-                ),
-                'expectedSaveData' => array(
+                    ],
+                ],
+                'expectedSaveData' => [
                     'companyName' => 'VALTECH LIMITED',
                     'companyNumber' => '03127414',
                     'companyStatus' => 'active',
@@ -836,48 +840,49 @@ class CompareTest extends CommandHandlerTestCase
                     'addressLine2' => 'London',
                     'postalCode' => 'EC1A 4JQ',
                     'locality' => 'Greater London',
-                    'officers' => array(),
+                    'officers' => [],
                     'country' => null,
                     'poBox' => null,
                     'premises' => null,
                     'region' => null,
-                ),
-            ),
-            'people role change' => array(
+                    'insolvencyProcessed' => null
+                ],
+            ],
+            'people role change' => [
                 'companyNumber' => '03127414',
-                'stubResponse' => array(
-                    'registered_office_address' => array(
+                'stubResponse' => [
+                    'registered_office_address' => [
                         'address_line_1' => '120 Aldersgate Street',
                         'address_line_2' => 'London',
                         'postal_code' => 'EC1A 4JQ',
-                    ),
+                    ],
                     'company_name' => 'VALTECH LIMITED',
                     'company_number' => '03127414',
-                    'officer_summary' => array(
+                    'officer_summary' => [
                         'resigned_count' => 18,
-                        'officers' => array(
-                            0 => array(
+                        'officers' => [
+                            0 => [
                                 'officer_role' => 'director',
                                 'name' => 'DILLON, Andrew',
                                 'date_of_birth' => [
                                     'year' => '1979',
                                     'month' => '02',
                                 ],
-                            ),
-                            1 => array(
+                            ],
+                            1 => [
                                 'officer_role' => 'director',
                                 'name' => 'SMITH, John',
                                 'date_of_birth' => [
                                     'year' => '1969',
                                     'month' => '06',
                                 ],
-                            ),
-                        ),
+                            ],
+                        ],
                         'active_count' => 2,
-                    ),
+                    ],
                     'company_status' => 'active',
-                ),
-                'stubSavedData' => array(
+                ],
+                'stubSavedData' => [
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => 'London',
                     'companyName' => 'VALTECH LIMITED',
@@ -889,54 +894,55 @@ class CompareTest extends CommandHandlerTestCase
                     'region' => null,
                     'id' => 2,
                     'version' => 1,
-                    'officers' => array(
-                        array(
+                    'officers' => [
+                        [
                             'dateOfBirth' => new \DateTime('1979-02-01'),
                             'name' => 'DILLON, Andrew',
                             'role' => 'director',
-                        ),
-                        array(
+                        ],
+                        [
                             'dateOfBirth' => new \DateTime('1968-12-01'),
                             'name' => 'SMITH, John',
                             'role' => 'secretary',
-                        ),
-                    ),
+                        ],
+                    ],
                     'companyStatus' => 'active',
                     'country' => null,
-                ),
-                'expectedAlertData' => array(
+                ],
+                'expectedAlertData' => [
                     'companyNumber' => '03127414',
-                    'reasons' => array(
+                    'reasons' => [
                         AlertEntity::REASON_PEOPLE_CHANGE,
-                    ),
-                ),
-                'expectedSaveData' => array(
+                    ],
+                ],
+                'expectedSaveData' => [
                     'companyName' => 'VALTECH LIMITED',
                     'companyNumber' => '03127414',
                     'companyStatus' => 'active',
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => 'London',
                     'postalCode' => 'EC1A 4JQ',
-                    'officers' => array(
-                        array(
+                    'officers' => [
+                        [
                             'name' => 'DILLON, Andrew',
                             'role' => 'director',
                             'dateOfBirth' => new \DateTime('1979-02-01'),
-                        ),
-                        array(
+                        ],
+                        [
                             'name' => 'SMITH, John',
                             'role' => 'director',
                             'dateOfBirth' => new \DateTime('1969-06-01'),
-                        ),
-                    ),
+                        ],
+                    ],
                     'country' => null,
                     'locality' => null,
                     'poBox' => null,
                     'premises' => null,
                     'region' => null,
-                )
-            ),
-        );
+                    'insolvencyProcessed' => null
+                ]
+            ],
+        ];
     }
 
     public function testHandleCommandServiceError()

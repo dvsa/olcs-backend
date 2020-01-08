@@ -18,4 +18,13 @@ class CompaniesHouseOfficerEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    /**
+     * Any extra date properties to be tested.
+     *
+     * @var array
+     */
+    protected $extraDateProperties = [
+       'dateOfBirth'
+    ];
 }

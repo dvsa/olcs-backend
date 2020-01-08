@@ -779,6 +779,8 @@ return [
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
     Command\Email\SendInternationalGoods::class => CommandHandler\Email\SendInternationalGoods::class,
+    Command\Email\SendLiquidatedCompanyForRegisteredUser::class => CommandHandler\Email\SendLiquidatedCompanyForRegisteredUser::class,
+    Command\Email\SendLiquidatedCompanyForUnregisteredUser::class => CommandHandler\Email\SendLiquidatedCompanyForUnregisteredUser::class,
     Command\Email\SendEcmtAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtAutomaticallyWithdrawn::class,
     Command\Email\SendEcmtShortTermSuccessful::class => CommandHandler\Email\SendEcmtShortTermSuccessful::class,
     Command\Email\SendEcmtShortTermUnsuccessful::class => CommandHandler\Email\SendEcmtShortTermUnsuccessful::class,
@@ -816,6 +818,11 @@ return [
     TransferCommand\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class
         => CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle::class,
 
+    // Message Queue
+    CommandCli\MessageQueue\Enqueue::class => CommandHandlerCli\MessageQueue\Enqueue::class,
+    CommandCli\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class => CommandHandlerCli\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class,
+    CommandCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class => CommandHandlerCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class,
+
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
     TransferCommand\Vehicle\UpdateGoodsVehicle::class => CommandHandler\Vehicle\UpdateGoodsVehicle::class,
@@ -845,8 +852,6 @@ return [
         CommandHandler\ChangeOfEntity\DeleteChangeOfEntity::class,
 
     // OrganisationPerson
-    TransferCommand\OrganisationPerson\PopulateFromCompaniesHouse::class =>
-        CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class,
     TransferCommand\OrganisationPerson\Create::class => CommandHandler\OrganisationPerson\Create::class,
     TransferCommand\OrganisationPerson\Update::class => CommandHandler\OrganisationPerson\Update::class,
     TransferCommand\OrganisationPerson\DeleteList::class => CommandHandler\OrganisationPerson\DeleteList::class,
@@ -904,7 +909,6 @@ return [
         CommandHandler\TransportManagerLicence\DeleteForResponsibilities::class,
 
     // CompaniesHouse
-    Command\CompaniesHouse\EnqueueOrganisations::class => CommandHandler\CompaniesHouse\EnqueueOrganisations::class,
     Command\CompaniesHouse\InitialLoad::class => CommandHandler\CompaniesHouse\InitialLoad::class,
     Command\CompaniesHouse\Compare::class => CommandHandler\CompaniesHouse\Compare::class,
     Command\CompaniesHouse\CreateAlert::class => CommandHandler\CompaniesHouse\CreateAlert::class,

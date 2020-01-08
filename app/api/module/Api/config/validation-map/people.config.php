@@ -25,5 +25,5 @@ return [
     QueryHandler\OrganisationPerson\GetSingle::class    => Misc\CanAccessOrganisationPersonWithId::class,
     QueryHandler\Person\Person::class                   => Misc\IsInternalUser::class,
 
-    CommandHandler\OrganisationPerson\PopulateFromCompaniesHouse::class => Misc\CanAccessOrganisationWithId::class,
+
 ];

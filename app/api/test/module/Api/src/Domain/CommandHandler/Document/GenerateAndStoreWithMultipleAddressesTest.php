@@ -3,10 +3,14 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as CompaniesHouseCompanyRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompaniesHouseCompanyEntity;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseInsolvencyPractitioner;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
@@ -28,6 +32,7 @@ class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('Document', Document::class);
         $this->mockRepo('Licence', Licence::class);
+        $this->mockRepo('CompaniesHouseCompany', CompaniesHouseCompanyRepo::class);
 
         $this->mockedSmServices['DocumentNamingService'] = m::mock(NamingService::class);
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
@@ -79,6 +84,87 @@ class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
         return $addresses;
     }
 
+    public function testEmptyAddress()
+    {
+
+        $mockCommand = m::mock(Cmd::class);
+        $this->setUpMockCommand($mockCommand);
+        $mockLicence = m::mock(Licence::class);
+        $this->setUpMockLicence($mockLicence, true);
+        $result = new Result();
+        $addresses = $this->getAddresses();
+        /** @var Address $correspondenceAddress */
+        $correspondenceAddress = $addresses['correspondenceAddress']->getAddress();
+        $correspondenceAddress->setAddressLine1(null);
+        $correspondenceAddress->setAddressLine2(null);
+        $correspondenceAddress->setAddressLine3(null);
+        $correspondenceAddress->setAddressLine4(null);
+        $count = 0;
+        foreach ($addresses as $key => $address) {
+            if ($key != 'correspondenceAddress') {
+                $this->expectedSideEffect(GenerateAndStore::class, [], $result);
+            }
+            $count++;
+        }
+        $this->sut->handleCommand($mockCommand);
+    }
+
+    /**
+     * @dataProvider insolvencyPractitioners
+     */
+    public function testInsolvencyPractitioner($practitioners, $expected)
+    {
+        $mockCommand = m::mock(Cmd::class);
+        $mockCommand->shouldReceive('getGenerateCommandData')->andReturn(
+            [
+                'description' => ' REG 29 Standard',
+                'licence' => 1
+            ]
+        )->getMock()
+            ->shouldReceive('getAddressBookmark')->andReturn('licence_holder_address')
+            ->getMock()
+            ->shouldReceive('getBookmarkBundle')->andReturn([
+                'correspondenceCd' => ['address']
+            ])->getMock()
+            ->shouldReceive('getSendToAddresses')->andReturn([
+                'correspondenceAddress' => false,
+                'establishmentAddress' => false,
+                'transportConsultantAddress' => false,
+                'registeredAddress' => false,
+                'operatingCentresAddresses' => false,
+                'insolvencyPractitionerAddresses' => true
+            ]);
+        $mockLicence = m::mock(Licence::class);
+        $mockLicence->shouldReceive('getOrganisation->getCompanyOrLlpNo')->andReturn('1234567');
+        $this->setUpMockLicence($mockLicence, true);
+
+        $mockPractitioners = [];
+        foreach ($practitioners as $practitioner) {
+            $mockPractitioner = m::mock(CompaniesHouseInsolvencyPractitioner::class);
+            $mockPractitioner->shouldReceive('getName')->andReturn($practitioner['name']);
+            $mockPractitioner->shouldReceive('getAddressLine1')->andReturn($practitioner['addressLine1']);
+            $mockPractitioner->shouldReceive('getAddressLine2')->andReturn($practitioner['addressLine2']);
+            $mockPractitioner->shouldReceive('getAddressLine3')->andReturn($practitioner['addressLine3']);
+            $mockPractitioner->shouldReceive('getLocality')->andReturn($practitioner['locality']);
+            $mockPractitioner->shouldReceive('getPostalCode')->andReturn($practitioner['postalCode']);
+            $mockPractitioners[] = $mockPractitioner;
+        }
+
+        $mockCompany = m::mock(CompaniesHouseCompanyEntity::class);
+        $mockCompany->shouldReceive('getInsolvencyPractitioners')->andReturn(
+            new ArrayCollection($mockPractitioners)
+        );
+
+        $this->repoMap['CompaniesHouseCompany']
+            ->shouldReceive('getLatestByCompanyNumber')
+            ->with('1234567')
+            ->andReturn($mockCompany);
+
+        $this->expectedSideEffect(GenerateAndStore::class, [], new Result(), $expected);
+
+        $this->sut->handleCommand($mockCommand);
+    }
+
     protected function addressProvider($addressType, $skipCorrespondence = false)
     {
 
@@ -108,31 +194,6 @@ class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
         }
         $contactDetails->setAddress($address);
         return [$addressType => $contactDetails];
-    }
-
-    public function testEmptyAddress()
-    {
-
-        $mockCommand = m::mock(Cmd::class);
-        $this->setUpMockCommand($mockCommand);
-        $mockLicence = m::mock(Licence::class);
-        $this->setUpMockLicence($mockLicence, true);
-        $result = new Result();
-        $addresses = $this->getAddresses();
-        /** @var Address $correspondenceAddress */
-        $correspondenceAddress = $addresses['correspondenceAddress']->getAddress();
-        $correspondenceAddress->setAddressLine1(null);
-        $correspondenceAddress->setAddressLine2(null);
-        $correspondenceAddress->setAddressLine3(null);
-        $correspondenceAddress->setAddressLine4(null);
-        $count = 0;
-        foreach ($addresses as $key => $address) {
-            if ($key != 'correspondenceAddress') {
-                $this->expectedSideEffect(GenerateAndStore::class, [], $result);
-            }
-            $count++;
-        }
-        $this->sut->handleCommand($mockCommand);
     }
 
     /**
@@ -196,5 +257,75 @@ class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
                 'correspondenceCd' => ['address']
             ])->getMock()
             ->shouldReceive('getSendToAddresses')->andReturn($this->getAddresses());
+    }
+
+    public function insolvencyPractitioners(): array
+    {
+        return [
+            'One practitioner' => [
+                'practitioners' => [
+                    [
+                        'name' => 'Jim',
+                        'addressLine1' => 'Address Line 1',
+                        'addressLine2' => 'Address Line 2',
+                        'addressLine3' => 'Address Line 3',
+                        'locality' => 'Somewhere',
+                        'postalCode' => 'AB1 2CE',
+                    ]
+                ],
+                'expected' => 1
+
+            ],
+            'Two practitioners' => [
+                'practitioners' => [
+                    [
+                        'name' => 'Jim Carrey',
+                        'addressLine1' => 'Address Line 1',
+                        'addressLine2' => 'Address Line 2',
+                        'addressLine3' => 'Address Line 3',
+                        'locality' => 'Somewhere',
+                        'postalCode' => 'AB1 2CE',
+                    ],
+                    [
+                        'name' => 'Bob Hoskins',
+                        'addressLine1' => 'Address Line 1',
+                        'addressLine2' => 'Address Line 2',
+                        'addressLine3' => 'Address Line 3',
+                        'locality' => 'Somewhere',
+                        'postalCode' => 'AB1 2CE',
+                    ]
+                ],
+                'expected' => 2
+            ],
+            'Three practitioners with a same entry' => [
+                'practitioners' => [
+                    [
+                        'name' => 'Jim Carrey',
+                        'addressLine1' => 'Address Line 1',
+                        'addressLine2' => 'Address Line 2',
+                        'addressLine3' => 'Address Line 3',
+                        'locality' => 'Somewhere',
+                        'postalCode' => 'AB1 2CE',
+                    ],
+                    [
+                        'name' => 'Jim Carrey',
+                        'addressLine1' => 'Address Line 1',
+                        'addressLine2' => 'Address Line 2',
+                        'addressLine3' => 'Address Line 3',
+                        'locality' => 'Somewhere',
+                        'postalCode' => 'AB1 2CE',
+                    ],
+                    [
+                        'name' => 'Bob Hoskins',
+                        'addressLine1' => 'Address Line 1',
+                        'addressLine2' => 'Address Line 2',
+                        'addressLine3' => 'Address Line 3',
+                        'locality' => 'Somewhere',
+                        'postalCode' => 'AB1 2CE',
+                    ]
+                ],
+                'expected' => 2
+            ]
+        ];
     }
 }

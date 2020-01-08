@@ -46,7 +46,7 @@ final class Compare extends AbstractCommandHandler
             return $this->result;
         } catch (\Exception $e) {
             $exception = new NotReadyException(
-                'Error getting data from Companies House API : '. $e->getMessage(),
+                'Error getting data from Companies House API : ' . $e->getMessage(),
                 0,
                 $e
             );
@@ -71,7 +71,9 @@ final class Compare extends AbstractCommandHandler
 
         $reasons = $this->compare($stored->toArray(), $data);
 
-        if (empty($reasons)) {
+        $this->result->setFlag('isInsolvent', $this->isInsolvent($data));
+
+        if (empty($reasons) && !$this->result->getFlag('isInsolvent')) {
             // return early if no changes detected
             return $this->result->addMessage('No changes');
         }
@@ -98,7 +100,7 @@ final class Compare extends AbstractCommandHandler
     {
         $changes = [];
 
-        if ($this->statusHasChanged($old, $new)) {
+        if (!$this->isInsolvent($new) && $this->statusHasChanged($old, $new)) {
             $changes[] = AlertEntity::REASON_STATUS_CHANGE;
         }
 
@@ -174,7 +176,7 @@ final class Compare extends AbstractCommandHandler
      */
     protected function addressHasChanged($old, $new)
     {
-         $fields = [
+        $fields = [
             "addressLine1",
             "addressLine2",
             "locality",
@@ -280,5 +282,16 @@ final class Compare extends AbstractCommandHandler
     {
         $validator = new Alnum();
         return $validator->isValid($companyNumber);
+    }
+
+    private function isInsolvent(array $data)
+    {
+        $insolvencyStatuses = [
+            'liquidation',
+            'receivership',
+            'voluntary-arrangements',
+            'insolvency-proceedings'
+        ];
+        return in_array($data['companyStatus'], $insolvencyStatuses);
     }
 }
