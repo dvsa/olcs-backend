@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanEditBusRegWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
 
 return [
     QueryHandler\Application\EnforcementArea::class => IsInternalUser::class,
@@ -18,6 +19,7 @@ return [
     QueryHandler\Bus\ShortNoticeByBusReg::class => IsInternalUser::class,
     QueryHandler\ChangeOfEntity\ChangeOfEntity::class => IsInternalUser::class,
     QueryHandler\CompaniesHouse\AlertList::class => IsInternalUser::class,
+    QueryHandler\CompaniesHouse\InsolvencyPractitioner::class => IsSystemUser::class,
     QueryHandler\Complaint\Complaint::class => IsInternalUser::class,
     QueryHandler\Complaint\ComplaintList::class => IsInternalUser::class,
     QueryHandler\ContinuationDetail\ChecklistReminders::class => IsInternalUser::class,

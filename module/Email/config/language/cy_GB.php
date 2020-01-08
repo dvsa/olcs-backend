@@ -32,4 +32,5 @@ return array(
     'email.user-temporary-password.subject' => 'Eich cyfrinair dros dro',
     'email.ecmt.automatically.withdrawn.subject' => 'CY - ECMT permit application %s has been withdrawn',
     'email.digital-continuation.subject' => 'Bydd y drwydded %s yn ddirym ar %s',
+    'email.insolvent-company-notification.subject' => 'Important Operator Licensing Information'
 );

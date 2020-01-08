@@ -30,7 +30,7 @@
         "gedmo/doctrine-extensions": "~2.3.12",
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "2.0.0",
-        "olcs/companies-house": "~4.206.0",
+        "olcs/olcs-companies-house": "~4.206.0",
         "olcs/olcs-cpms": "~4.206.0",
         "olcs/olcs-logging": "~4.206.0",
         "olcs/olcs-transfer": "~4.206.0",
@@ -53,16 +53,15 @@
     "require-dev": {
         "olcs/olcs-devtools": "~4.206.0",
         "mikey179/vfsstream": "~1.4.0",
-        "phpstan/phpstan-shim": "^0.10.5",
-        "phpstan/phpstan-mockery": "^0.10.2",
-        "phpstan/phpstan-doctrine": "^0.10.0",
+        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan-mockery": "^0.12.0",
+        "phpstan/phpstan-doctrine": "^0.12.0",
         "mockery/mockery": "1.2.4",
         "johnkary/phpunit-speedtrap": "^3.0"
     },
     "autoload": {
         "classmap": [
-            "module/Olcs/Db/src",
-            "vendor/olcs/companies-house/lib"
+            "module/Olcs/Db/src"
         ],
         "psr-4": {
             "Olcs\\Db\\": "module/Olcs/Db/src",
@@ -71,11 +70,10 @@
             "Dvsa\\Olcs\\Cli\\": "module/Cli/src",
             "Dvsa\\Olcs\\Scanning\\": "module/Scanning/src",
             "Dvsa\\Olcs\\Email\\": "module/Email/src",
-            "Dvsa\\Olcs\\CompaniesHouse\\": "module/CompaniesHouse/src",
             "Dvsa\\Olcs\\Address\\": "module/Address/src",
             "Dvsa\\Olcs\\Snapshot\\": "module/Snapshot/src",
-            "CompaniesHouse\\": "vendor/olcs/companies-house/lib",
             "Dvsa\\Olcs\\GdsVerify\\": "module/GdsVerify/src",
+            "Dvsa\\Olcs\\Queue\\": "module/Queue/src",
             "Dvsa\\Olcs\\AwsSdk\\": "module/AwsSdk/src"
         }
     },

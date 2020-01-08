@@ -18,4 +18,3 @@ data/db/live-like-data.sql
 data/db/test-olcs-refdata.sql
 test/coverage/
 .scannerwork/
-composer.lock

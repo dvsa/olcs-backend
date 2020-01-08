@@ -1930,6 +1930,17 @@ return array(
             'type' => 'yesno'
         ),
     ),
+    'companies_house_insolvency_practitioner' => array(
+        'companies_house_company_id' => array(
+            'inversedBy' => array(
+                'entity' => 'CompaniesHouseCompany',
+                'property' => 'insolvencyPractitioner',
+                'cascade' => array(
+                    'persist',
+                ),
+            ),
+        ),
+    ),
     'grace_period' => array(
         'licence_id' => array(
             'inversedBy' => array(

@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Organisation\FixIsUnlicenced;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 
 /**
  * Organisation
@@ -146,7 +147,7 @@ class Organisation extends AbstractRepository
         }
 
         if (empty($finalResults)) {
-            throw new NotFoundException('Organisation not found for company number '.$companyNumber);
+            throw new NotFoundException('Organisation not found for company number ' . $companyNumber);
         }
 
         return $finalResults;
@@ -175,7 +176,8 @@ class Organisation extends AbstractRepository
                 $status = $this->getRefdataReference($query->getCpid());
                 $qb->where($qb->expr()->eq($this->alias . '.cpid', ':cpid'));
                 $qb->setParameter(
-                    'cpid', $status
+                    'cpid',
+                    $status
                 );
             }
         }
@@ -242,5 +244,37 @@ class Organisation extends AbstractRepository
         return $this->getDbQueryManager()->get(FixIsUnlicenced::class)
             ->execute()
             ->rowCount();
+    }
+
+    public function getAllOrganisationsForCompaniesHouse()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $licenceStatuses = [
+            LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+            LicenceEntity::LICENCE_STATUS_SUSPENDED,
+            LicenceEntity::LICENCE_STATUS_VALID,
+            LicenceEntity::LICENCE_STATUS_CURTAILED,
+            LicenceEntity::LICENCE_STATUS_GRANTED
+        ];
+
+        $orgTypes = [
+            OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY,
+            OrganisationEntity::ORG_TYPE_LLP
+        ];
+
+        $qb->select($this->alias . '.companyOrLlpNo')->distinct()
+            ->innerJoin(LicenceEntity::class, 'l', Query\Expr\Join::WITH, $qb->expr()->eq('l.organisation', $this->alias . '.id'))
+            ->where($qb->expr()->in('l.status', ':licenceStatuses'))
+            ->andWhere($qb->expr()->isNotNull($this->alias . '.companyOrLlpNo'))
+            ->andWhere($qb->expr()->in($this->alias . '.type', ':orgTypes'))
+
+            //todo REMOVE THIS
+            ->setMaxResults(50)
+
+            ->setParameter('licenceStatuses', $licenceStatuses)
+            ->setParameter('orgTypes', $orgTypes);
+
+        return $qb->getQuery()->getResult();
     }
 }

@@ -302,6 +302,15 @@ return [
                         ],
                     ],
                 ],
+                'poll-sqs' => [
+                    'options' => [
+                        'route' => 'poll-sqs <queue> [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\SQSController::class,
+                            'action' => 'index'
+                        ]
+                    ]
+                ]
             ]
         ]
     ],
@@ -311,6 +320,7 @@ return [
             Cli\Controller\QueueController::class => Cli\Controller\QueueController::class,
             Cli\Controller\DiagnosticController::class => Cli\Controller\DiagnosticController::class,
             Cli\Controller\UtilController::class => Cli\Controller\UtilController::class,
+            Cli\Controller\SQSController::class => Cli\Controller\SQSController::class,
         ]
     ],
     'cache' => [
@@ -333,8 +343,6 @@ return [
     ],
     'message_consumer_manager' => [
         'invokables' => [
-            Queue::TYPE_COMPANIES_HOUSE_INITIAL
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad::class,
             Queue::TYPE_COMPANIES_HOUSE_COMPARE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class,
             Queue::TYPE_CONT_CHECKLIST

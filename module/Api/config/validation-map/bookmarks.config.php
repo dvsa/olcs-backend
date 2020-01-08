@@ -47,4 +47,5 @@ return [
     QueryHandler\Bookmark\VenueBundle::class                        => NoValidationRequired::class,
     QueryHandler\Bookmark\HearingBundle::class                      => NoValidationRequired::class,
     QueryHandler\Bookmark\CaseBundle::class                         => NoValidationRequired::class,
+    QueryHandler\Bookmark\CompaniesHouseCompanyBundle::class        => NoValidationRequired::class
 ];

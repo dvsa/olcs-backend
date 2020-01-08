@@ -46,5 +46,4 @@ class WebDavResponse extends Response
             parent::setStatusCode(500);
         }
     }
-
 }
