@@ -21,9 +21,4 @@ final class Withdraw extends AbstractWithdrawApplicationHandler implements Toggl
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
-
-    protected $emails = [
-        WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS => SendEcmtShortTermUnsuccessful::class,
-        WithdrawableInterface::WITHDRAWN_REASON_UNPAID => SendEcmtShortTermAutomaticallyWithdrawn::class,
-    ];
 }

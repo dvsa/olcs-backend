@@ -8,10 +8,12 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
@@ -1992,6 +1994,33 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         if ($this->irhpPermitType->isEcmtShortTerm()) {
             return SendEcmtShortTermAppSubmitted::class;
+        }
+
+        return null;
+    }
+
+    /**
+     * Return the command class name that represents the application withdrawn email for this application, or null if
+     * no email command is applicable
+     *
+     * @return string|null
+     */
+    public function getAppWithdrawnEmailCommand($withdrawReason)
+    {
+        $irhpPermitTypeId = $this->irhpPermitType->getId();
+
+        $commandLookup = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT => [
+                WithdrawableInterface::WITHDRAWN_REASON_UNPAID => SendEcmtAutomaticallyWithdrawn::class
+            ],
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => [
+                WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS => SendEcmtShortTermUnsuccessful::class,
+                WithdrawableInterface::WITHDRAWN_REASON_UNPAID => SendEcmtShortTermAutomaticallyWithdrawn::class,
+            ]
+        ];
+
+        if (isset($commandLookup[$irhpPermitTypeId][$withdrawReason])) {
+            return $commandLookup[$irhpPermitTypeId][$withdrawReason];
         }
 
         return null;

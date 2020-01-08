@@ -669,7 +669,6 @@ return [
     TransferQuery\Permits\EmissionsByYear::class => QueryHandler\Permits\EmissionsByYear::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
-    TransferQuery\Permits\EcmtApplicationIssueFeePerPermit::class => QueryHandler\Permits\EcmtApplicationIssueFeePerPermit::class,
 
     // Permits - internal
     Query\Permits\QueueRunScoringPermitted::class => QueryHandler\Permits\QueueRunScoringPermitted::class,

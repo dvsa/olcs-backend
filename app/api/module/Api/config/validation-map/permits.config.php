@@ -53,7 +53,6 @@ return [
     QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintConfirm::class => IsInternalAdmin::class,
     QueryHandler\Permits\DeviationData::class => IsInternalOrSystemUser::class,
-    QueryHandler\Permits\EcmtApplicationIssueFeePerPermit::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitWindow\OpenByCountry::class => NotIsAnonymousUser::class,
     CommandHandler\IrhpApplication\UpdateCheckAnswers::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Cancel::class => Permits\CanEditIrhpApplicationWithId::class,
@@ -81,8 +80,6 @@ return [
     CommandHandler\Permits\PrintPermits::class => IsInternalAdmin::class,
     CommandHandler\Permits\ProceedToStatus::class => IsSideEffect::class,
     CommandHandler\Permits\ExpireEcmtPermitApplication::class => IsSideEffect::class,
-    CommandHandler\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class => IsInternalUser::class,
-    CommandHandler\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class => IsInternalUser::class,
 
     CommandHandler\Permits\QueueRunScoring::class => IsSystemAdmin::class,
     CommandHandler\Permits\QueueAcceptScoring::class => IsSystemAdmin::class,

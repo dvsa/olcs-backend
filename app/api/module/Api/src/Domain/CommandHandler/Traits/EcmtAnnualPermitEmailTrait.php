@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Traits;
 
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -16,7 +16,7 @@ trait EcmtAnnualPermitEmailTrait
     /**
      * Get template variables
      *
-     * @param EcmtPermitApplication $recordObject
+     * @param IrhpApplication $recordObject
      *
      * @return array
      */

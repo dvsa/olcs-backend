@@ -25,7 +25,6 @@ abstract class AbstractWithdrawApplicationHandler extends AbstractCommandHandler
     protected $withdrawStatus = IrhpInterface::STATUS_WITHDRAWN; //override for non-permits entities
     protected $confirmationMessage = 'Application withdrawn';
     protected $cancelFees = true;
-    protected $emails = []; //map a withdraw status to a confirmation email
     protected $sideEffects = [];
 
     /**
@@ -61,9 +60,9 @@ abstract class AbstractWithdrawApplicationHandler extends AbstractCommandHandler
             }
         }
 
-        //optional email based on the withdraw reason
-        if (isset($this->emails[$withdrawReason])) {
-            $this->sideEffects[] = $this->emailQueue($this->emails[$withdrawReason], ['id' => $id], $id);
+        $emailCommand = $application->getAppWithdrawnEmailCommand($withdrawReason);
+        if ($emailCommand) {
+            $this->sideEffects[] = $this->emailQueue($emailCommand, ['id' => $id], $id);
         }
 
         $this->handleSideEffects($this->sideEffects);

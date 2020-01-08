@@ -10,11 +10,13 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
@@ -5067,6 +5069,70 @@ class IrhpApplicationEntityTest extends EntityTester
             [false, false, RefData::BUSINESS_PROCESS_APG, null],
             [false, false, RefData::BUSINESS_PROCESS_APGG, null],
             [false, false, RefData::BUSINESS_PROCESS_APSG, null],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetAppWithdrawnEmailCommand
+     */
+    public function testGetAppWithdrawnEmailCommand($irhpPermitTypeId, $withdrawReason, $expectedCommand)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expectedCommand,
+            $application->getAppWithdrawnEmailCommand($withdrawReason)
+        );
+    }
+
+    public function dpGetAppWithdrawnEmailCommand()
+    {
+        return [
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS,
+                null,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                WithdrawableInterface::WITHDRAWN_REASON_UNPAID,
+                SendEcmtAutomaticallyWithdrawn::class,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                null,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                null,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS,
+                SendEcmtShortTermUnsuccessful::class,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                WithdrawableInterface::WITHDRAWN_REASON_UNPAID,
+                SendEcmtShortTermAutomaticallyWithdrawn::class,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                null,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                null,
+            ],
         ];
     }
 
