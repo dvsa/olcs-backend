@@ -23,7 +23,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ix_question_text_question_id", columns={"question_id"}),
  *        @ORM\Index(name="fk_question_text_created_by_user_id", columns={"created_by"}),
- *        @ORM\Index(name="fk_question_text_last_modified_by_user_id", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_question_text_last_modified_by_user_id", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_question_text_question_short_key_translation_key_id",
+     *     columns={"question_short_key"})
  *    }
  * )
  */
@@ -157,9 +159,10 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Question short key
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\System\TranslationKey
      *
-     * @ORM\Column(type="string", name="question_short_key", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKey", fetch="LAZY")
+     * @ORM\JoinColumn(name="question_short_key", referencedColumnName="id", nullable=true)
      */
     protected $questionShortKey;
 
@@ -479,7 +482,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Set the question short key
      *
-     * @param string $questionShortKey new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\TranslationKey $questionShortKey entity being set as the value
      *
      * @return QuestionText
      */
@@ -493,7 +496,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Get the question short key
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\System\TranslationKey
      */
     public function getQuestionShortKey()
     {

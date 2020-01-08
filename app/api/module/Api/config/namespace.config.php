@@ -201,4 +201,11 @@ return [
     'QuestionText' => 'Generic',
     'Template' => 'Template',
     'TemplateTestData' => 'Template',
+    'Language' => 'System',
+    'Tag' => 'System',
+    'TranslationKey' => 'System',
+    'TranslationKeyCategoryLink' => 'System',
+    'TranslationKeyLocation' => 'System',
+    'TranslationKeyTagLink' => 'System',
+    'TranslationKeyText' => 'System',
 ];
