@@ -37,4 +37,5 @@ return array(
     'email.last-tm-operator-notification.subject' => 'Urgent: Removal of last Transport Manager',
     'email.ecmt.automatically.withdrawn.subject' => 'ECMT permit application %s has been withdrawn',
     'email.ecmt.short.term.automatically.withdrawn.subject' => 'Short Term ECMT permit application %s has been withdrawn',
+    'email.insolvent-company-notification.subject' => 'Important Operator Licensing Information'
 );

@@ -33,6 +33,7 @@ return [
     'CompaniesHouseAlert' => 'CompaniesHouse',
     'CompaniesHouseAlertReason' => 'CompaniesHouse',
     'CompaniesHouseCompany' => 'CompaniesHouse',
+    'CompaniesHouseInsolvencyPractitioner' => 'CompaniesHouse',
     'CompaniesHouseOfficer' => 'CompaniesHouse',
     'Address' => 'ContactDetails',
     'ContactDetails' => 'ContactDetails',

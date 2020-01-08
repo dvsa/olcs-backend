@@ -47,6 +47,9 @@
         <testsuite name="AwsSDK">
             <directory>./module/AwsSdk</directory>
         </testsuite>
+        <testsuite name="Queue">
+            <directory>./module/Queue</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
@@ -63,6 +66,7 @@
                 <file>../module/Address/src/Module.php</file>
                 <file>../module/Scanning/src/Module.php</file>
                 <file>../module/GdsVerify/src/Module.php</file>
+                <file>../module/Queue/src/Module.php</file>
                 <directory>../module/GdsVerify/config</directory>
                 <directory>../module/Email/config</directory>
                 <directory>../module/Cli/config</directory>
@@ -74,6 +78,8 @@
                 <directory>../module/Olcs/Db/config</directory>
                 <directory>../module/Api/config</directory>
                 <directory>../module/Olcs/Db/src/Service/CHXmlGateway</directory>
+                <directory>../module/Queue/config</directory>
+
             </exclude>
         </whitelist>
     </filter>

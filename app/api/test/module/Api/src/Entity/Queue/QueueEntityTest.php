@@ -65,9 +65,9 @@ class QueueEntityTest extends EntityTester
     public function queueDataProvider()
     {
         return [
-            [Entity::TYPE_COMPANIES_HOUSE_INITIAL, 'foo', null],
+            [Entity::TYPE_ACCEPT_ECMT_SCORING, 'foo', null],
             ['bar', Entity::STATUS_QUEUED, ''],
-            [Entity::TYPE_COMPANIES_HOUSE_INITIAL, Entity::STATUS_QUEUED, 'date not valid']
+            [Entity::TYPE_ACCEPT_ECMT_SCORING, Entity::STATUS_QUEUED, 'date not valid']
         ];
     }
 }

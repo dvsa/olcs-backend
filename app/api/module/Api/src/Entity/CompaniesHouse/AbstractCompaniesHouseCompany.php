@@ -89,6 +89,15 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     protected $country;
 
     /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -98,6 +107,27 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Insolvency processed
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="insolvency_processed",
+     *     nullable=true,
+     *     options={"default": 0})
+     */
+    protected $insolvencyProcessed = 0;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
 
     /**
      * Locality
@@ -155,6 +185,19 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     protected $version = 1;
 
     /**
+     * Insolvency practitioner
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseInsolvencyPractitioner",
+     *     mappedBy="companiesHouseCompany",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $insolvencyPractitioners;
+
+    /**
      * Officer
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -184,6 +227,7 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
      */
     public function initCollections()
     {
+        $this->insolvencyPractitioners = new ArrayCollection();
         $this->officers = new ArrayCollection();
     }
 
@@ -332,6 +376,36 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     }
 
     /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn new value being set
+     *
+     * @return CompaniesHouseCompany
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
+        return $this->createdOn;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -353,6 +427,60 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the insolvency processed
+     *
+     * @param boolean $insolvencyProcessed new value being set
+     *
+     * @return CompaniesHouseCompany
+     */
+    public function setInsolvencyProcessed($insolvencyProcessed)
+    {
+        $this->insolvencyProcessed = $insolvencyProcessed;
+
+        return $this;
+    }
+
+    /**
+     * Get the insolvency processed
+     *
+     * @return boolean
+     */
+    public function getInsolvencyProcessed()
+    {
+        return $this->insolvencyProcessed;
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn new value being set
+     *
+     * @return CompaniesHouseCompany
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
+        return $this->lastModifiedOn;
     }
 
     /**
@@ -500,6 +628,69 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     }
 
     /**
+     * Set the insolvency practitioner
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $insolvencyPractitioners collection being set as the value
+     *
+     * @return CompaniesHouseCompany
+     */
+    public function setInsolvencyPractitioners($insolvencyPractitioners)
+    {
+        $this->insolvencyPractitioners = $insolvencyPractitioners;
+
+        return $this;
+    }
+
+    /**
+     * Get the insolvency practitioners
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getInsolvencyPractitioners()
+    {
+        return $this->insolvencyPractitioners;
+    }
+
+    /**
+     * Add a insolvency practitioners
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $insolvencyPractitioners collection being added
+     *
+     * @return CompaniesHouseCompany
+     */
+    public function addInsolvencyPractitioners($insolvencyPractitioners)
+    {
+        if ($insolvencyPractitioners instanceof ArrayCollection) {
+            $this->insolvencyPractitioners = new ArrayCollection(
+                array_merge(
+                    $this->insolvencyPractitioners->toArray(),
+                    $insolvencyPractitioners->toArray()
+                )
+            );
+        } elseif (!$this->insolvencyPractitioners->contains($insolvencyPractitioners)) {
+            $this->insolvencyPractitioners->add($insolvencyPractitioners);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a insolvency practitioners
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $insolvencyPractitioners collection being removed
+     *
+     * @return CompaniesHouseCompany
+     */
+    public function removeInsolvencyPractitioners($insolvencyPractitioners)
+    {
+        if ($this->insolvencyPractitioners->contains($insolvencyPractitioners)) {
+            $this->insolvencyPractitioners->removeElement($insolvencyPractitioners);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the officer
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $officers collection being set as the value
@@ -560,5 +751,29 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
         }
 
         return $this;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     *
+     * @return void
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->createdOn = new \DateTime();
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     *
+     * @return void
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->lastModifiedOn = new \DateTime();
     }
 }

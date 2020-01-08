@@ -42,7 +42,6 @@ return [
     CommandHandler\Vehicle\ProcessDuplicateVehicleRemoval::class => IsSystemUser::class,
     CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class => IsSystemUser::class,
     CommandHandler\LicenceStatusRule\ProcessToValid::class => IsSystemUser::class,
-    CommandHandler\CompaniesHouse\EnqueueOrganisations::class => IsSystemUser::class,
     QueryHandler\Licence\ContinuationNotSoughtList::class => IsSystemUser::class,
     CommandHandler\Licence\CreateSurrenderPsvLicenceTasks::class => IsSystemUser::class,
     QueryHandler\Licence\PsvLicenceSurrenderList::class => IsSystemUser::class,
@@ -88,6 +87,8 @@ return [
     CommandHandler\Email\SendEcmtShortTermUnsuccessful::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtShortTermApsgPartSuccessful::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtShortTermAppSubmitted::class => IsSystemUser::class,
+    CommandHandler\Email\SendLiquidatedCompanyForRegisteredUser::class =>IsSystemUser::class,
+    CommandHandler\Email\SendLiquidatedCompanyForUnRegisteredUser::class =>IsSystemUser::class,
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,
@@ -99,4 +100,9 @@ return [
     CommandHandler\Permits\RunScoring::class => IsSystemUser::class,
     CommandHandler\Permits\AcceptScoring::class => IsSystemUser::class,
     CommandHandler\CommunityLic\ReportingBulkReprint::class => IsSystemUser::class,
+    CliCommandHandler\MessageQueue\Enqueue::class => IsSystemUser::class,
+    CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class => IsSystemUser::class,
+    CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class => IsSystemUser::class,
+    CliQueryHandler\CompaniesHouse\Organisations::class => IsSystemUser::class,
+
 ];

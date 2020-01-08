@@ -55,7 +55,10 @@ class Module implements ConsoleUsageProviderInterface
             'last-tm-letter [--verbose|-v]' => 'Generate and send Last TM Letter',
             'get-db-value [--property-name=] [--entity-name=] [--filter-property=] [--filter-value=] [--verbose|-v]' => 'Return a value from DB given the specified parameters',
             ['--property-name', 'Name of the property to retrieve the value for (e.g. "licNo")'],
-            ['--entity-name', 'Full Name of the Entity (e.g. for Licence entity "Licence\Licence", for BusReg entity "Bus\BusReg")'],
+            [
+                '--entity-name',
+                'Full Name of the Entity (e.g. for Licence entity "Licence\Licence", for BusReg entity "Bus\BusReg")'
+            ],
             ['--filter-property', 'Name of the property to property to filter by (e.g. "id")'],
             ['--filter-value', 'Value to use for the filter-property'],
             'process-queue' => 'Process the queue',
@@ -68,22 +71,25 @@ class Module implements ConsoleUsageProviderInterface
             ['    ' . DataGovUkExport::BUS_REGISTERED_ONLY, 'Export bus registered only'],
             ['    ' . DataGovUkExport::BUS_VARIATION, 'Export bus variations'],
             ['    ' . DataGovUkExport::PSV_OPERATOR_LIST, 'Export psv operator list and send attachment in email'],
-            ['    ' . DataGovUkExport::INTERNATIONAL_GOODS, 'Export standard international goods licences report to '.
-                'CSV and send by email'],
+            [
+                '    ' . DataGovUkExport::INTERNATIONAL_GOODS,
+                'Export standard international goods licences report to ' .
+                'CSV and send by email'
+            ],
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
             //
             'data-dva-ni-export <report-name> [--verbose|-v] [--path=<exportPath>]' =>
-            'Export to csv for Northern Ireland',
+                'Export to csv for Northern Ireland',
             ['<report-name>', 'Export report name'],
             ['    ' . DataDvaNiExport::NI_OPERATOR_LICENCE, 'Export GV operator licences for NI'],
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
             //
             'ch-vs-olcs-diffs [--verbose|-v] [--path=<exportPath>]' =>
-            'Compare data at olcs vs companies house and export to csv',
+                'Compare data at olcs vs companies house and export to csv',
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
             //
             'import-users-from-csv <csv-path> [--result-csv-path=<result-csv-path>] [--verbose|-v]' =>
-            'Import user from csv file',
+                'Import user from csv file',
             ['<csv-path>', 'path to csv file with users for import'],
             [
                 '--result-csv-path=<result-csv-path>',
@@ -113,6 +119,7 @@ class Module implements ConsoleUsageProviderInterface
                 '<close-expired-window> [--since=<date>]',
                 'action to perform, ie \'close-expired-window\' to close all recently expired windows',
             ],
+            'poll-sqs <queue> [--verbose|-v]' => 'Poll an SQS queue to process a message'
         ];
     }
 
@@ -152,7 +159,7 @@ class Module implements ConsoleUsageProviderInterface
         return array(
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ ,
+                    __NAMESPACE__ => __DIR__,
                 ),
             ),
         );

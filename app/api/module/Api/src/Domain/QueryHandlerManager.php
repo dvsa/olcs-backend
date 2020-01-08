@@ -37,7 +37,7 @@ class QueryHandlerManager extends AbstractPluginManager
     {
         $start = microtime(true);
 
-        $queryFqcl = get_class($query);
+            $queryFqcl = get_class($query);
 
         /** @var QueryHandlerInterface $queryHandler */
         $queryHandler = $this->get($queryFqcl);

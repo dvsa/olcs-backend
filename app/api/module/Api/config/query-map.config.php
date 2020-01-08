@@ -64,6 +64,7 @@ return [
     BookmarkQuery\VehicleBundle::class => BookmarkQueryHandler\VehicleBundle::class,
     BookmarkQuery\VenueBundle::class => BookmarkQueryHandler\VenueBundle::class,
     BookmarkQuery\HearingBundle::class => BookmarkQueryHandler\HearingBundle::class,
+    BookmarkQuery\CompaniesHouseCompanyBundle::class => BookmarkQueryHandler\CompaniesHouseCompanyBundle::class,
 
     // Application
     TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
@@ -329,6 +330,8 @@ return [
     QueryCli\CommunityLic\CommunityLicencesForActivationList::class =>
         QueryHandlerCli\CommunityLic\CommunityLicencesForActivationList::class,
 
+
+
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
     TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
@@ -442,8 +445,10 @@ return [
         QueryHandler\TmResponsibilities\GetDocumentsForResponsibilities::class,
 
     // Companies House
+    QueryCli\CompaniesHouse\Organisations::class => QueryHandlerCli\CompaniesHouse\Organisations::class,
     TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
     TransferQuery\CompaniesHouse\GetList::class => QueryHandler\CompaniesHouse\GetList::class,
+    TransferQuery\CompaniesHouse\ByNumber::class => QueryHandler\CompaniesHouse\ByNumber::class,
 
     // Queue
     QueueQuery\NextItem::class => QueueQueryHandler\NextItem::class,
@@ -695,4 +700,6 @@ return [
     TransferQuery\Template\PreviewTemplateSource::class => QueryHandler\Template\PreviewTemplateSource::class,
     TransferQuery\Template\TemplateSource::class => QueryHandler\Template\TemplateSource::class,
     TransferQuery\Template\TemplateCategories::class => QueryHandler\Template\TemplateCategories::class,
+
+
 ];
