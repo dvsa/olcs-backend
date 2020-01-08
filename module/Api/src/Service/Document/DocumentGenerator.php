@@ -145,7 +145,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         $file = $this->getTemplate($possibleTemplatePaths);
 
         if ($file === null) {
-            throw new \Exception('Unable to get template file');
+            throw new \Exception('Unable to get template file: ' . implode(',', $possibleTemplatePaths));
         }
 
         try {

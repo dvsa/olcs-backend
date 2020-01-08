@@ -28,6 +28,7 @@ class CompaniesHouseCompany extends AbstractCompaniesHouseCompany
             'postalCode',
             'premises',
             'region',
+            'insolvencyProcessed'
         ];
 
         foreach ($fields as $field) {
@@ -42,6 +43,14 @@ class CompaniesHouseCompany extends AbstractCompaniesHouseCompany
                 $officer = new CompaniesHouseOfficer($officerData);
                 $officer->setCompaniesHouseCompany($this);
                 $this->getOfficers()->add($officer);
+            }
+        }
+
+        if (!empty($data['insolvencyPractitioners'])) {
+            foreach ($data['insolvencyPractitioners'] as $insolvencyPractitionerData) {
+                $insolvencyPractitioner = new CompaniesHouseInsolvencyPractitioner($insolvencyPractitionerData);
+                $insolvencyPractitioner->setCompaniesHouseCompany($this);
+                $this->getInsolvencyPractitioners()->add($insolvencyPractitioner);
             }
         }
     }
@@ -60,12 +69,19 @@ class CompaniesHouseCompany extends AbstractCompaniesHouseCompany
             'postalCode' => $this->getPostalCode(),
             'premises' => $this->getPremises(),
             'region' => $this->getRegion(),
+            'insolvencyProcessed' => $this->getInsolvencyProcessed(),
             'officers' => [],
         ];
 
         if (!empty($this->getOfficers())) {
             foreach ($this->getOfficers() as $officer) {
                 $arr['officers'][] = $officer->toArray();
+            }
+        }
+
+        if (!empty($this->getInsolvencyPractitioners())) {
+            foreach ($this->getInsolvencyPractitioners() as $insolvencyPractitioner) {
+                $arr['insolvencyPractitioners'][] = $insolvencyPractitioner->toArray();
             }
         }
 

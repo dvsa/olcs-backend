@@ -24,6 +24,12 @@ class CompaniesHouseCompany extends AbstractRepository
 
     protected $alias = 'cc';
 
+    /**
+     * @param $number
+     *
+     * @return mixed
+     * @throws NotFoundException
+     */
     public function getLatestByCompanyNumber($number)
     {
         $qb = $this->createQueryBuilder();

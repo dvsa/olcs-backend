@@ -149,6 +149,12 @@ return [
         ],
     ],
 
+    // message queue URL key must be the class name followed by '_URL' i.e. ClassName_URL
+    'message_queue' => [
+        'CompanyProfile_URL' => '__QUEUE-URL__',
+        'ProcessInsolvency_URL' => '__QUEUE-URL__',
+    ],
+
     // CPMS service
     'cpms_api' => [
         'rest_client' => [
@@ -210,6 +216,12 @@ return [
             'port' => 993,
             'ssl' => 'SSL',
         ],
+    ],
+
+    'awsOptions' =>[
+        'useEnvCredentials' => true,
+        'region' => 'eu-west-1',
+        'version'=> 'latest',
     ],
 
     // AUTH config

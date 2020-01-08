@@ -81,7 +81,7 @@ abstract class AbstractCompaniesHouseOfficer implements BundleSerializableInterf
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="role", length=32, nullable=true)
+     * @ORM\Column(type="string", name="role", length=64, nullable=true)
      */
     protected $role;
 

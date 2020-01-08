@@ -1,28 +1,28 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "20d8a67c82fb64380b486326070da515",
+    "content-hash": "72ec31b6ad95bc4c64fa70945027f789",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.130.2",
+            "version": "3.132.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.130.2/aws-aws-sdk-php-3.130.2.zip",
-                "reference": "35289d9dd5184dd1106e49f99ef5074a84635b5c",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.132.0/aws-aws-sdk-php-3.132.0.zip",
+                "reference": "d1ea3332539a07d122e5cf397c0eb3a1fb75eede",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-simplexml": "*",
-                "guzzlehttp/guzzle": "^5.3.3|^6.2.1",
-                "guzzlehttp/promises": "~1.0",
+                "guzzlehttp/guzzle": "^5.3.3|^6.2.1|^7.0",
+                "guzzlehttp/promises": "^1.0",
                 "guzzlehttp/psr7": "^1.4.1",
-                "mtdowling/jmespath.php": "~2.2",
+                "mtdowling/jmespath.php": "^2.5",
                 "php": ">=5.5"
             },
             "require-dev": {
@@ -82,7 +82,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-12-23T19:12:28+00:00"
+            "time": "2020-01-07T19:13:51+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -1658,11 +1658,11 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.62",
+            "version": "1.0.63",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/league/flysystem/1.0.62/league-flysystem-1.0.62.zip",
-                "reference": "14dd5d7dff5fbc29ca9a2a53ff109760e40d91a0",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/league/flysystem/1.0.63/league-flysystem-1.0.63.zip",
+                "reference": "8132daec326565036bc8e8d1876f77ec183a7bd6",
                 "shasum": ""
             },
             "require": {
@@ -1732,7 +1732,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2019-12-29T14:46:55+00:00"
+            "time": "2020-01-04T16:30:31+00:00"
         },
         {
             "name": "league/flysystem-webdav",
@@ -1971,37 +1971,74 @@
             "time": "2019-05-01T11:24:30+00:00"
         },
         {
-            "name": "olcs/companies-house",
-            "version": "4.206.2",
+            "name": "olcs/olcs-companies-house",
+            "version": "4.206.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/companies-house/4.206.2/olcs-companies-house-4.206.2.zip",
-                "reference": "3f3a18f5c23aa79a3507ca3f3639e9753cd01a50",
-                "shasum": "3f3a18f5c23aa79a3507ca3f3639e9753cd01a50"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-companies-house/4.206.0/olcs-olcs-companies-house-4.206.0.zip",
+                "reference": "43bf0512657d5b054cf9ba46e7b4b1393f814d08",
+                "shasum": "43bf0512657d5b054cf9ba46e7b4b1393f814d08"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
-                "olcs/olcs-devtools": "~4.206.0",
-                "php": ">=5.3.3"
+                "olcs/olcs-devtools": "^4.205",
+                "olcs/olcs-utils": "~4.206.0",
+                "zendframework/zendframework": "~2.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpstan/phpstan": "^0.11.5",
+                "phpunit/phpunit": "7.*"
             },
             "type": "library",
             "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                },
                 "nexus-push": {
-                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/companies-house"
+                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/olcs-companies-house",
+                    "ignore": [
+                        "tests"
+                    ]
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "CompaniesHouse\\": "lib/"
+                    "Dvsa\\Olcs\\CompaniesHouse\\": "src",
+                    "Dvsa\\Olcs\\CompaniesHouse\\Test\\": "test"
                 }
             },
             "scripts": {
+                "ut": [
+                    "phpunit test --stop-on-failure"
+                ],
+                "review": [
+                    "review"
+                ],
+                "cs": [
+                    "phpcs --severity=1 --standard=vendor/olcs/coding-standards/Profiles/DVSA/CS/ruleset.xml"
+                ],
+                "coverage": [
+                    "phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html"
+                ],
+                "sonar": [
+                    "phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit"
+                ],
+                "update-syms": [
+                    "composer-update-syms"
+                ],
                 "release": [
                     "release"
+                ],
+                "sa": [
+                    "phpstan analyse --level 7 src --ansi"
                 ]
             },
-            "description": "Companies house library",
-            "time": "2019-05-01T15:48:18+00:00"
+            "license": [
+                "proprietary"
+            ],
+            "description": "companies house api client",
+            "time": "2019-09-23T11:49:12+00:00"
         },
         {
             "name": "olcs/olcs-cpms",
@@ -2182,12 +2219,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.53",
+            "version": "4.206.54",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.53/olcs-olcs-transfer-4.206.53.zip",
-                "reference": "ead47461f1e3f11367c53be7ec1eb18ff70aa7ac",
-                "shasum": "ead47461f1e3f11367c53be7ec1eb18ff70aa7ac"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.54/olcs-olcs-transfer-4.206.54.zip",
+                "reference": "d3bdb7290149da740a3b4cbe3918d5d69059047b",
+                "shasum": "d3bdb7290149da740a3b4cbe3918d5d69059047b"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2243,7 +2280,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-12-20T15:45:06+00:00"
+            "time": "2020-01-08T13:47:12+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -3230,11 +3267,11 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.18",
+            "version": "7.5.19",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/phpunit/7.5.18/phpunit-phpunit-7.5.18.zip",
-                "reference": "fcf6c4bfafaadc07785528b06385cce88935474d",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/phpunit/7.5.19/phpunit-phpunit-7.5.19.zip",
+                "reference": "4263f76a3fc65385e242ef7357b99f3bed36707e",
                 "shasum": ""
             },
             "require": {
@@ -3304,7 +3341,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-12-06T05:14:37+00:00"
+            "time": "2020-01-06T16:53:05+00:00"
         },
         {
             "name": "psr/container",
@@ -5518,6 +5555,7 @@
                 "xml",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-xml",
             "time": "2019-01-22T19:42:14+00:00"
         },
         {
@@ -5812,22 +5850,55 @@
             "time": "2019-09-30T08:30:27+00:00"
         },
         {
-            "name": "phpstan/phpstan-doctrine",
-            "version": "0.10",
+            "name": "phpstan/phpstan",
+            "version": "0.12.4",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-doctrine/0.10/phpstan-phpstan-doctrine-0.10.zip",
-                "reference": "a0314b1fa5b4d76880e4e9542ee01f3df8471630",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan/0.12.4/phpstan-phpstan-0.12.4.zip",
+                "reference": "100a25ba8561223f6bf5a5ff4204f951c0ec007c",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "^4.0",
+                "php": "^7.1"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.12-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "time": "2020-01-06T06:38:17+00:00"
+        },
+        {
+            "name": "phpstan/phpstan-doctrine",
+            "version": "0.12.8",
+            "dist": {
+                "type": "zip",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-doctrine/0.12.8/phpstan-phpstan-doctrine-0.12.8.zip",
+                "reference": "116392a861fb6b4741606448d8d6b07c09fee1ee",
+                "shasum": ""
+            },
+            "require": {
                 "php": "~7.1",
-                "phpstan/phpstan": "^0.10"
+                "phpstan/phpstan": "^0.12.4"
             },
             "conflict": {
                 "doctrine/collections": "<1.0",
                 "doctrine/common": "<2.7",
+                "doctrine/mongodb-odm": "<1.2",
                 "doctrine/orm": "<2.5"
             },
             "require-dev": {
@@ -5835,18 +5906,27 @@
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
                 "doctrine/collections": "^1.0",
                 "doctrine/common": "^2.7",
+                "doctrine/mongodb-odm": "^1.2",
                 "doctrine/orm": "^2.5",
+                "ergebnis/composer-normalize": "^2.0.2",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "phing/phing": "^2.16.0",
-                "phpstan/phpstan-phpunit": "^0.10",
-                "phpstan/phpstan-strict-rules": "^0.10",
+                "phpstan/phpstan-phpunit": "^0.12",
+                "phpstan/phpstan-strict-rules": "^0.12",
                 "phpunit/phpunit": "^7.0",
+                "ramsey/uuid-doctrine": "^1.5.0",
                 "slevomat/coding-standard": "^4.5.2"
             },
-            "type": "library",
+            "type": "phpstan-extension",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.10-dev"
+                    "dev-master": "0.12-dev"
+                },
+                "phpstan": {
+                    "includes": [
+                        "extension.neon",
+                        "rules.neon"
+                    ]
                 }
             },
             "autoload": {
@@ -5858,38 +5938,43 @@
                 "MIT"
             ],
             "description": "Doctrine extensions for PHPStan",
-            "time": "2018-05-28T20:08:30+00:00"
+            "time": "2020-01-05T20:56:24+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
-            "version": "0.10.2",
+            "version": "0.12.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-mockery/0.10.2/phpstan-phpstan-mockery-0.10.2.zip",
-                "reference": "14d568b6b56c957c9ae5330603303a367b21f0e9",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-mockery/0.12.2/phpstan-phpstan-mockery-0.12.2.zip",
+                "reference": "56eaf9e94a5d93d25223ab1f3ac2dc615dfc2d31",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "^4.0",
                 "php": "~7.1",
-                "phpstan/phpdoc-parser": "^0.3",
-                "phpstan/phpstan": "^0.10.3"
+                "phpstan/phpstan": "^0.12"
             },
             "require-dev": {
-                "consistence/coding-standard": "^3.0.1",
+                "consistence/coding-standard": "^3.5",
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+                "ergebnis/composer-normalize": "^2.0.2",
                 "jakub-onderka/php-parallel-lint": "^1.0",
-                "mockery/mockery": "^1.1",
+                "mockery/mockery": "^1.2.4",
                 "phing/phing": "^2.16.0",
-                "phpstan/phpstan-phpunit": "^0.10",
-                "phpstan/phpstan-strict-rules": "^0.10",
+                "phpstan/phpstan-phpunit": "^0.12",
+                "phpstan/phpstan-strict-rules": "^0.12",
                 "phpunit/phpunit": "^7.2",
-                "slevomat/coding-standard": "^4.6.3"
+                "slevomat/coding-standard": "^4.7.2",
+                "squizlabs/php_codesniffer": "^3.3.2"
             },
-            "type": "library",
+            "type": "phpstan-extension",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.10-dev"
+                    "dev-master": "0.12-dev"
+                },
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
                 }
             },
             "autoload": {
@@ -5901,46 +5986,7 @@
                 "MIT"
             ],
             "description": "PHPStan Mockery extension",
-            "time": "2018-09-09T15:22:28+00:00"
-        },
-        {
-            "name": "phpstan/phpstan-shim",
-            "version": "0.10.8",
-            "dist": {
-                "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-shim/0.10.8/phpstan-phpstan-shim-0.10.8.zip",
-                "reference": "7f433a1af3a3e27bea056552e42411c9d9af9c8e",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~7.1"
-            },
-            "replace": {
-                "nikic/php-parser": "^4.0.2",
-                "phpstan/phpdoc-parser": "^0.3",
-                "phpstan/phpstan": "self.version"
-            },
-            "bin": [
-                "phpstan",
-                "phpstan.phar"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.10-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "PHPStan Phar distribution",
-            "abandoned": "phpstan/phpstan",
-            "time": "2019-01-08T10:03:03+00:00"
+            "time": "2020-01-01T17:33:44+00:00"
         }
     ],
     "aliases": [],

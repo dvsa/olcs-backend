@@ -27,6 +27,13 @@ abstract class EntityTester extends MockeryTestCase
      */
     protected $entityClass;
 
+    /**
+     * Any extra date properties to be tested.
+     *
+     * @var array
+     */
+    protected $extraDateProperties = [];
+
     public function getClassToTestName()
     {
         return $this->entityClass;
@@ -77,6 +84,42 @@ abstract class EntityTester extends MockeryTestCase
         if ($tested === false) {
             $this->assertTrue(true); // Mark the test as passed (None exist)
         }
+    }
+
+
+    /**
+     * @dataProvider dataProviderAsDateTime
+     */
+    public function testGetDates($expected, $dateTime)
+    {
+        $hasAssert = false;
+
+        $classToTestName = $this->getClassToTestName();
+
+        $dateProperties =  array_merge($this->extraDateProperties, ['createdOn', 'lastModifiedOn', 'deletedDate']);
+        foreach ($dateProperties as $property) {
+            if (property_exists($classToTestName, $property)) {
+                $entity = $this->instantiate($classToTestName);
+                $setMethod = 'set'. $property;
+                $getMethod = 'get'. $property;
+                $entity->$setMethod($dateTime);
+                $this->assertEquals($expected, $entity->$getMethod(true));
+                $hasAssert = true;
+            }
+        }
+
+        if (!$hasAssert) {
+            $this->markTestSkipped(vsprintf('Does not have any of the following properties: %s', $dateProperties));
+        }
+    }
+
+    public function dataProviderAsDateTime()
+    {
+        return [
+            [new \DateTime('2017-09-29'), '2017-09-29'],
+            [new \DateTime('2017-09-29'), new \DateTime('2017-09-29')],
+            [null, null],
+        ];
     }
 
     public function testGettersAndSetters()

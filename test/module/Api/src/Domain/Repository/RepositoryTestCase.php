@@ -165,6 +165,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('setMaxResults')
             ->andReturnUsing([$this, 'mockSetMaxResults']);
 
+        $this->qb->shouldReceive('distinct')
+            ->andReturnUsing([$this, 'mockDistinct']);
+
         return $this->qb;
     }
 

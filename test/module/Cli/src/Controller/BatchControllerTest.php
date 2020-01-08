@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Controller\BatchController;
 use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
+use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Enqueue;
 use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Dvsa\Olcs\Transfer\Command\Application\NotTakenUpApplication;
 use Mockery as m;
@@ -130,9 +131,14 @@ class BatchControllerTest extends MockeryTestCase
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
 
+        $this->mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(CliQuery\CompaniesHouse\Organisations::class))
+            ->once();
+
         $this->mockCommandHandler
             ->shouldReceive('handleCommand')
-            ->with(m::type(Command\CompaniesHouse\EnqueueOrganisations::class))
+            ->with(m::type(Enqueue::class))
             ->once()
             ->andReturn(new Command\Result());
 

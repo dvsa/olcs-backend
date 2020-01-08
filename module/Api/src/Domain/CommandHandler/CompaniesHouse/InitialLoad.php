@@ -4,8 +4,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
-use Dvsa\Olcs\CompaniesHouse\Service\Exception as ApiException;
+use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException as ApiException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -17,12 +18,12 @@ final class InitialLoad extends AbstractCommandHandler
 {
     /**
      * Command handler
-     * 
-     * @param \Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\InitialLoad $command Command
+     *
+     * @param CommandInterface $command Command
      *
      * @return Result
      * @throws DomainException
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {

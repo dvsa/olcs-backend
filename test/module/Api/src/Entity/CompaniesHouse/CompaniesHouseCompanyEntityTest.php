@@ -33,6 +33,7 @@ class CompaniesHouseCompanyEntityTest extends EntityTester
             'postalCode' => 'test_postalCode',
             'premises' => 'test_premises',
             'region' => 'test_region',
+            'insolvencyProcessed' => 0,
             'officers' => [
                 [
                     'name' => 'Bob',
@@ -41,6 +42,18 @@ class CompaniesHouseCompanyEntityTest extends EntityTester
                         'year' => '1990',
                         'month' => '02',
                     ],
+                ]
+            ],
+            'insolvencyPractitioners' => [
+                [
+                    'name' => 'Jim',
+                    'addressLine1' => 'test_addressLine1',
+                    'addressLine2' => 'test_addressLine2',
+                    'country' => 'test_country',
+                    'locality' => 'test_locality',
+                    'postalCode' => 'test_postalCode',
+                    'region' => 'test_region',
+                    'appointedOn' => new \DateTime('1990-02-01 00:00:00')
                 ]
             ]
         ];
@@ -58,6 +71,7 @@ class CompaniesHouseCompanyEntityTest extends EntityTester
         $this->assertEquals('test_postalCode', $sut->getPostalCode());
         $this->assertEquals('test_premises', $sut->getPremises());
         $this->assertEquals('test_region', $sut->getRegion());
+        $this->assertEquals(0, $sut->getInsolvencyProcessed());
 
         $expected = [
             'addressLine1' => 'test_addressLine1',
@@ -71,11 +85,24 @@ class CompaniesHouseCompanyEntityTest extends EntityTester
             'postalCode' => 'test_postalCode',
             'premises' => 'test_premises',
             'region' => 'test_region',
+            'insolvencyProcessed' => 0,
             'officers' => [
                 [
                     'name' => 'Bob',
                     'role' => 'Chief Ninja',
                     'dateOfBirth' => new \DateTime('1990-02-01 00:00:00'),
+                ]
+            ],
+            'insolvencyPractitioners' => [
+                [
+                    'name' => 'Jim',
+                    'addressLine1' => 'test_addressLine1',
+                    'addressLine2' => 'test_addressLine2',
+                    'country' => 'test_country',
+                    'locality' => 'test_locality',
+                    'postalCode' => 'test_postalCode',
+                    'region' => 'test_region',
+                    'appointedOn' => new \DateTime('1990-02-01 00:00:00')
                 ]
             ]
         ];

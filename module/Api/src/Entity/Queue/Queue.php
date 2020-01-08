@@ -35,7 +35,6 @@ class Queue extends AbstractQueue
     ];
 
     // Message types
-    const TYPE_COMPANIES_HOUSE_INITIAL = 'que_typ_ch_initial';
     const TYPE_COMPANIES_HOUSE_COMPARE = 'que_typ_ch_compare';
     const TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER = 'que_typ_cont_check_rem_gen_let';
     const TYPE_CPID_EXPORT_CSV = 'que_typ_cpid_export_csv';
@@ -70,7 +69,6 @@ class Queue extends AbstractQueue
     const TYPE_REFUND_INTERIM_FEES = 'que_typ_refund_interim_fees';
 
     protected $types = [
-        self::TYPE_COMPANIES_HOUSE_INITIAL,
         self::TYPE_COMPANIES_HOUSE_COMPARE,
         self::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER,
         self::TYPE_CPID_EXPORT_CSV,

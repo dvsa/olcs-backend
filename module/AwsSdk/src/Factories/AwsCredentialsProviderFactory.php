@@ -3,18 +3,17 @@
 namespace Dvsa\Olcs\AwsSdk\Factories;
 
 use Aws\Credentials\CredentialProvider;
-use Aws\Credentials\InstanceProfileProvider;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class AwsCredentailsProviderFactory
- * @author shaun.hare@dvsa.gov.uk
+ *
+ * @author  shaun.hare@dvsa.gov.uk
  * @package Dvsa\Olcs\AwsSdk
  */
 class AwsCredentialsProviderFactory implements FactoryInterface
 {
-
     /**
      * Create service
      *
@@ -24,8 +23,20 @@ class AwsCredentialsProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $credentialsProvider = CredentialProvider::instanceProfile();
+        $envCredentialsFlag = $serviceLocator->get('Config')['awsOptions']['useEnvCredentials'] ?? false;
+        $credentialsProvider = $envCredentialsFlag ? $this->getEnvCredentialProvider() : $this->getInstanceProfileCredentialProvider();
         $provider = CredentialProvider::memoize($credentialsProvider);
+
         return $provider;
+    }
+
+    protected function getEnvCredentialProvider()
+    {
+        return CredentialProvider::env();
+    }
+
+    protected function getInstanceProfileCredentialProvider()
+    {
+        return CredentialProvider::instanceProfile();
     }
 }
