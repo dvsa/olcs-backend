@@ -86,40 +86,33 @@ abstract class EntityTester extends MockeryTestCase
         }
     }
 
-
-    /**
-     * @dataProvider dataProviderAsDateTime
-     */
-    public function testGetDates($expected, $dateTime)
+    public function testGetDates()
     {
-        $hasAssert = false;
-
-        $classToTestName = $this->getClassToTestName();
-
-        $dateProperties =  array_merge($this->extraDateProperties, ['createdOn', 'lastModifiedOn', 'deletedDate']);
-        foreach ($dateProperties as $property) {
-            if (property_exists($classToTestName, $property)) {
-                $entity = $this->instantiate($classToTestName);
-                $setMethod = 'set'. $property;
-                $getMethod = 'get'. $property;
-                $entity->$setMethod($dateTime);
-                $this->assertEquals($expected, $entity->$getMethod(true));
-                $hasAssert = true;
-            }
+        if (empty($this->extraDateProperties)) {
+            $this->assertTrue(true); //nothing to test
+            return;
         }
 
-        if (!$hasAssert) {
-            $this->markTestSkipped(vsprintf('Does not have any of the following properties: %s', $dateProperties));
-        }
-    }
+        $date = '2017-09-29';
+        $dateTime = new \DateTime($date);
 
-    public function dataProviderAsDateTime()
-    {
-        return [
-            [new \DateTime('2017-09-29'), '2017-09-29'],
-            [new \DateTime('2017-09-29'), new \DateTime('2017-09-29')],
-            [null, null],
-        ];
+        foreach ($this->extraDateProperties as $property) {
+            $entity = $this->instantiate($this->entityClass);
+            $setMethod = 'set' . $property;
+            $getMethod = 'get' . $property;
+
+            //add as a date string
+            $entity->$setMethod($date);
+            $this->assertEquals($dateTime, $entity->$getMethod(true));
+
+            //add as a datetime
+            $entity->$setMethod($dateTime);
+            $this->assertEquals($dateTime, $entity->$getMethod(true));
+
+            //test when date is null
+            $entity->$setMethod(null);
+            $this->assertNull($entity->$getMethod());
+        }
     }
 
     public function testGettersAndSetters()
