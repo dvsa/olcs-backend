@@ -55,10 +55,11 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Identifier - Id
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\System\TranslationKey
      *
      * @ORM\Id
-     * @ORM\Column(type="string", name="id", length=32)
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKey", fetch="LAZY")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=false)
      */
     protected $id;
 
@@ -151,7 +152,7 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Set the id
      *
-     * @param string $id new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\TranslationKey $id entity being set as the value
      *
      * @return RefData
      */
@@ -165,7 +166,7 @@ abstract class AbstractRefData implements BundleSerializableInterface, JsonSeria
     /**
      * Get the id
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\System\TranslationKey
      */
     public function getId()
     {
