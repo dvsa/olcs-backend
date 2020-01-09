@@ -5515,6 +5515,7 @@
                 "framework",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-mvc-skeleton",
             "time": "2017-07-13T17:23:56+00:00"
         },
         {
