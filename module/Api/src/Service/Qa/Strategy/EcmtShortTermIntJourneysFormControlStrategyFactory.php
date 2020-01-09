@@ -21,7 +21,8 @@ class EcmtShortTermIntJourneysFormControlStrategyFactory implements FactoryInter
             $serviceLocator->get('QaEcmtShortTermIntJourneysElementGenerator'),
             $serviceLocator->get('QaEcmtShortTermIntJourneysAnswerSaver'),
             $serviceLocator->get('QaEcmtShortTermIntJourneysAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator')
+            $serviceLocator->get('QaQuestionTextGenerator'),
+            $serviceLocator->get('QaRadioAnswerSummaryProvider')
         );
     }
 }

@@ -21,7 +21,8 @@ class CertRoadworthinessMotExpiryDateFormControlStrategyFactory implements Facto
             $serviceLocator->get('QaCertRoadworthinessMotExpiryDateElementGenerator'),
             $serviceLocator->get('QaDateAnswerSaver'),
             $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator')
+            $serviceLocator->get('QaQuestionTextGenerator'),
+            $serviceLocator->get('QaDateAnswerSummaryProvider')
         );
     }
 }

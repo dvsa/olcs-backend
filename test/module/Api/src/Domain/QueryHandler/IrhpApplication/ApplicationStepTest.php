@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;

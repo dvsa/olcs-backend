@@ -4,13 +4,13 @@ namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerClearerInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorInterface;
-use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePage;
 
 class BaseFormControlStrategy implements FormControlStrategyInterface
 {
@@ -29,6 +29,9 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
     /** @var QuestionTextGeneratorInterface */
     private $questionTextGenerator;
 
+    /** @var AnswerSummaryProviderInterface */
+    private $answerSummaryProvider;
+
     /**
      * Create service instance
      *
@@ -37,6 +40,7 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
      * @param AnswerSaverInterface $answerSaver
      * @param AnswerClearerInterface $answerClearer
      * @param QuestionTextGeneratorInterface $questionTextGenerator
+     * @param AnswerSummaryProviderInterface $answerSummaryProvider
      *
      * @return BaseFormControlStrategy
      */
@@ -45,13 +49,15 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
         ElementGeneratorInterface $elementGenerator,
         AnswerSaverInterface $answerSaver,
         AnswerClearerInterface $answerClearer,
-        QuestionTextGeneratorInterface $questionTextGenerator
+        QuestionTextGeneratorInterface $questionTextGenerator,
+        AnswerSummaryProviderInterface $answerSummaryProvider
     ) {
         $this->frontendType = $frontendType;
         $this->elementGenerator = $elementGenerator;
         $this->answerSaver = $answerSaver;
         $this->answerClearer = $answerClearer;
         $this->questionTextGenerator = $questionTextGenerator;
+        $this->answerSummaryProvider = $answerSummaryProvider;
     }
 
     /**
@@ -92,5 +98,13 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
     public function getQuestionText(QuestionTextGeneratorContext $questionTextGeneratorContext)
     {
         return $this->questionTextGenerator->generate($questionTextGeneratorContext);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAnswerSummaryProvider()
+    {
+        return $this->answerSummaryProvider;
     }
 }

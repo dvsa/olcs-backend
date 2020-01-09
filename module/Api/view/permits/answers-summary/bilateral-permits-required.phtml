@@ -1,0 +1,17 @@
+<?php
+
+$lines = [];
+foreach ($rows as $row) {
+    $translatedCountryName = $this->translate($row['countryName'], 'snapshot');
+
+    $line = sprintf(
+        $this->translate('permits.check-your-answers.countries', 'snapshot'),
+        $row['permitsRequired'],
+        $translatedCountryName,
+        $row['year']
+    );
+
+    $lines[] = $this->escapeHtml($line);
+}
+
+echo implode('<br>', $lines);

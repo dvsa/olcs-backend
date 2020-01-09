@@ -21,7 +21,8 @@ class EcmtShortTermSectorsFormControlStrategyFactory implements FactoryInterface
             $serviceLocator->get('QaRadioElementGenerator'),
             $serviceLocator->get('QaEcmtShortTermSectorsAnswerSaver'),
             $serviceLocator->get('QaEcmtShortTermSectorsAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator')
+            $serviceLocator->get('QaQuestionTextGenerator'),
+            $serviceLocator->get('QaRadioAnswerSummaryProvider')
         );
     }
 }

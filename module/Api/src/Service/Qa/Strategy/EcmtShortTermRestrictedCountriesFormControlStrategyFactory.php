@@ -21,7 +21,8 @@ class EcmtShortTermRestrictedCountriesFormControlStrategyFactory implements Fact
             $serviceLocator->get('QaEcmtShortTermRestrictedCountriesElementGenerator'),
             $serviceLocator->get('QaEcmtShortTermRestrictedCountriesAnswerSaver'),
             $serviceLocator->get('QaEcmtShortTermRestrictedCountriesAnswerClearer'),
-            $serviceLocator->get('QaEcmtShortTermRestrictedCountriesQuestionTextGenerator')
+            $serviceLocator->get('QaEcmtShortTermRestrictedCountriesQuestionTextGenerator'),
+            $serviceLocator->get('QaEcmtShortTermRestrictedCountriesAnswerSummaryProvider')
         );
     }
 }
