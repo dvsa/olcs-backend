@@ -73,6 +73,19 @@ return [
             'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
             'QaOptionFactory' => ApiSrv\Qa\Structure\Element\Options\OptionFactory::class,
 
+            'PermitsAnswersSummaryFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryFactory::class,
+            'PermitsAnswersSummaryRowFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryRowFactory::class,
+            'QaGenericAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\GenericAnswerSummaryProvider::class,
+            'QaCheckboxAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Checkbox\CheckboxAnswerSummaryProvider::class,
+            'QaDateAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Date\DateAnswerSummaryProvider::class,
+            'QaEcmtShortTermNoOfPermitsAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSummaryProvider::class,
+            'QaEcmtShortTermRestrictedCountriesAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerSummaryProvider::class,
+
             'PermitsScoringSuccessfulCandidatePermitsLogger' =>
                 ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsLogger::class,
             'PermitsScoringIrhpCandidatePermitFactory' =>
@@ -303,6 +316,21 @@ return [
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
 
+            'PermitsAnswersSummaryGenerator' =>
+                ApiSrv\Permits\AnswersSummary\AnswersSummaryGeneratorFactory::class,
+            'PermitsHeaderAnswersSummaryRowsAdder' =>
+                ApiSrv\Permits\AnswersSummary\HeaderAnswersSummaryRowsAdderFactory::class,
+            'QaAnswersSummaryRowGenerator' =>
+                ApiSrv\Qa\AnswersSummary\AnswersSummaryRowGeneratorFactory::class,
+            'PermitsBilateralAnswersSummaryRowsAdder' =>
+                ApiSrv\Permits\AnswersSummary\BilateralAnswersSummaryRowsAdderFactory::class,
+            'PermitsMultilateralAnswersSummaryRowsAdder' =>
+                ApiSrv\Permits\AnswersSummary\MultilateralAnswersSummaryRowsAdderFactory::class,
+            'QaAnswersSummaryRowsAdder' =>
+                ApiSrv\Qa\AnswersSummary\AnswersSummaryRowsAdderFactory::class,
+            'QaRadioAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Radio\RadioAnswerSummaryProviderFactory::class,
+
             'PermitsShortTermEcmtWindowAvailabilityChecker' =>
                 ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
             'PermitsShortTermEcmtStockAvailabilityChecker' =>
@@ -359,6 +387,7 @@ return [
     'view_manager' => [
         'template_path_stack' => [
             'submission' => __DIR__ . '/../view/submission',
+            'answers-summary' => __DIR__ . '/../view/permits/',
         ]
     ],
     'file_uploader' => [

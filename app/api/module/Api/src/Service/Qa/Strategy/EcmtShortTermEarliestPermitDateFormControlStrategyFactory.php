@@ -21,7 +21,8 @@ class EcmtShortTermEarliestPermitDateFormControlStrategyFactory implements Facto
             $serviceLocator->get('QaDateElementGenerator'),
             $serviceLocator->get('QaDateAnswerSaver'),
             $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator')
+            $serviceLocator->get('QaQuestionTextGenerator'),
+            $serviceLocator->get('QaDateAnswerSummaryProvider')
         );
     }
 }

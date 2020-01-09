@@ -21,7 +21,8 @@ class EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory implements Factor
             $serviceLocator->get('QaEcmtShortTermAnnualTripsAbroadElementGenerator'),
             $serviceLocator->get('QaEcmtShortTermAnnualTripsAbroadAnswerSaver'),
             $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator')
+            $serviceLocator->get('QaQuestionTextGenerator'),
+            $serviceLocator->get('QaGenericAnswerSummaryProvider')
         );
     }
 }

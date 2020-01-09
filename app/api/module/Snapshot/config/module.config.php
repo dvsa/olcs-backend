@@ -5,12 +5,12 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section as 
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section as ContinuationReview;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\EcmtAnnualGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGeneratorFactory;
 
 return [
     'service_manager' => [
         'invokables' => [
             EcmtAnnualGenerator::class => EcmtAnnualGenerator::class,
-            IrhpGenerator::class => IrhpGenerator::class,
             'ReviewSnapshot' => \Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator::class,
             'Review\VariationTypeOfLicence' => Review\VariationTypeOfLicenceReviewService::class,
             'Review\VariationBusinessType' => Review\VariationBusinessTypeReviewService::class,
@@ -96,6 +96,9 @@ return [
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService::class,
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService::class=>\Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService::class,
         ],
+        'factories' => [
+            IrhpGenerator::class => IrhpGeneratorFactory::class,
+        ]
     ],
     'view_manager' => [
         'template_path_stack' => [

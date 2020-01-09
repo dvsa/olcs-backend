@@ -2,15 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 
-use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
-use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
-use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePage;
 
 interface FormControlStrategyInterface
 {
@@ -55,4 +53,11 @@ interface FormControlStrategyInterface
      * @return QuestionText
      */
     public function getQuestionText(QuestionTextGeneratorContext $context);
+
+    /**
+     * Get the appropriate instance of AnswerSummaryProviderInterface for this form control
+     *
+     * @return AnswerSummaryProviderInterface
+     */
+    public function getAnswerSummaryProvider();
 }

@@ -79,6 +79,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
         canBeRevivedFromUnsuccessful as baseCanBeRevivedFromUnsuccessful;
     }
 
+    const NON_SCALAR_ANSWER_PRESENT = 'Answer is present but has non-scalar representation';
+
     const ERR_CANT_CANCEL = 'Unable to cancel this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
     const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
@@ -230,17 +232,13 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get question and answer data
      *
-     * @param bool $isSnapshot whether this data is for a snapshot
-     *
      * @return array
      */
-    public function getQuestionAnswerData(bool $isSnapshot = false): array
+    public function getQuestionAnswerData(): array
     {
-        // kept for backward compatibility only
-        if ($this->isBilateral()) {
-            return $this->getQuestionAnswerDataBilateral();
-        } elseif ($this->isMultilateral()) {
-            return $this->getQuestionAnswerDataMultilateral();
+        // this method is now used only to build the overview page for q&a permit types
+        if ($this->isBilateral() || $this->isMultilateral()) {
+            return [];
         }
 
         // licence
@@ -248,7 +246,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $status = !empty($answer)
             ? SectionableInterface::SECTION_COMPLETION_COMPLETED
             : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
-        $question = $isSnapshot ? 'permits.check-answers.page.question.licence' : 'section.name.application/licence';
+        $question = 'section.name.application/licence';
 
         $data = [
             'custom-licence' => [
@@ -278,7 +276,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
 
                 if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
-                    $answer = $this->getAnswer($applicationStep, $isSnapshot);
+                    $answer = $this->getAnswer($applicationStep);
 
                     $status = isset($answer)
                         ? SectionableInterface::SECTION_COMPLETION_COMPLETED
@@ -287,8 +285,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
                 $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
 
-                $questionJson = json_decode($activeQuestionText->getQuestionKey(), true);
-                $questionKey = $questionJson['translateableText']['key'];
+                $questionKey = $activeQuestionText->getTranslationKeyFromQuestionKey();
                 $slug = $question->getSlug();
 
                 $data[$slug] = [
@@ -304,49 +301,46 @@ class IrhpApplication extends AbstractIrhpApplication implements
             }
         }
 
-        //we don't include check answers and declaration on html snapshots
-        if (!$isSnapshot) {
-            // checked answers
-            $answer = null;
-            $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+        // checked answers
+        $answer = null;
+        $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
 
-            if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
-                $answer = $this->getCheckedAnswers();
-                $status = !empty($answer)
-                    ? SectionableInterface::SECTION_COMPLETION_COMPLETED
-                    : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
-            }
-
-            $data['custom-check-answers'] = [
-                'section' => 'checkedAnswers',
-                'slug' => 'custom-check-answers',
-                'questionShort' => 'section.name.application/check-answers',
-                'question' => 'section.name.application/check-answers',
-                'answer' => $answer,
-                'status' => $status,
-            ];
-            $previousQuestionStatus = $status;
-
-            // declaration
-            $answer = null;
-            $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
-
-            if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
-                $answer = $this->getDeclaration();
-                $status = !empty($answer)
-                    ? SectionableInterface::SECTION_COMPLETION_COMPLETED
-                    : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
-            }
-
-            $data['custom-declaration'] = [
-                'section' => 'declaration',
-                'slug' => 'custom-declaration',
-                'questionShort' => 'section.name.application/declaration',
-                'question' => 'section.name.application/declaration',
-                'answer' => $answer,
-                'status' => $status,
-            ];
+        if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+            $answer = $this->getCheckedAnswers();
+            $status = !empty($answer)
+                ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+                : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
         }
+
+        $data['custom-check-answers'] = [
+            'section' => 'checkedAnswers',
+            'slug' => 'custom-check-answers',
+            'questionShort' => 'section.name.application/check-answers',
+            'question' => 'section.name.application/check-answers',
+            'answer' => $answer,
+            'status' => $status,
+        ];
+        $previousQuestionStatus = $status;
+
+        // declaration
+        $answer = null;
+        $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+
+        if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+            $answer = $this->getDeclaration();
+            $status = !empty($answer)
+                ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+                : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+        }
+
+        $data['custom-declaration'] = [
+            'section' => 'declaration',
+            'slug' => 'custom-declaration',
+            'questionShort' => 'section.name.application/declaration',
+            'question' => 'section.name.application/declaration',
+            'answer' => $answer,
+            'status' => $status,
+        ];
 
         return $data;
     }
@@ -354,11 +348,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get an answer to the given application step
      *
-     * @param bool $isSnapshot whether the answer should be returned in the context of a snapshot
-     *
      * @return mixed|null
      */
-    public function getAnswer(ApplicationStep $applicationStep, bool $isSnapshot = false)
+    public function getAnswer(ApplicationStep $applicationStep)
     {
         $question = $applicationStep->getQuestion();
 
@@ -368,13 +360,13 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 case Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS:
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS:
-                    return $this->getEcmtShortTermNoOfPermitsAnswer($isSnapshot);
+                    return $this->getEcmtShortTermNoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS:
                     return $this->getInternationalJourneysAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES:
                     return $this->getEcmtShortTermRestrictedCountriesAnswer($question);
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS:
-                    return $this->getEcmtShortTermSectorsAnswer($isSnapshot);
+                    return $this->getEcmtShortTermSectorsAnswer();
                 case Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE:
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD:
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE:
@@ -432,11 +424,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get the number of permits answer values for a custom element of type ecmt short term
      *
-     * @param bool $isSnapshot whether this answer is being produced in context of a snapshot
-     *
-     * @return array|null
+     * @return string|null
      */
-    private function getEcmtShortTermNoOfPermitsAnswer($isSnapshot = false)
+    private function getEcmtShortTermNoOfPermitsAnswer()
     {
         $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
 
@@ -447,32 +437,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return null;
         }
 
-        $answer = [];
-
-        //for snapshots we include a heading containing the validity year
-        if ($isSnapshot) {
-            $irhpPermitStock = $this->getFirstIrhpPermitApplication()
-                ->getIrhpPermitWindow()
-                ->getIrhpPermitStock();
-
-            $year = $irhpPermitStock->getValidityYear();
-            if ($year == 2019) {
-                $answer[] = 'Permits for '  . $year;
-            } else {
-                $answer[] = $irhpPermitStock->getPeriodNameKey();
-            }
-        }
-
-        if ($requiredEuro5) {
-            $answer[] = $requiredEuro5 . ' permits for Euro 5 minimum emission standard';
-        }
-
-        if ($requiredEuro6) {
-            $answer[] = $requiredEuro6 . ' permits for Euro 6 minimum emission standard';
-        }
-
-        // TODO: how should these values be returned to accommodate translation etc?
-        return $answer;
+        return self::NON_SCALAR_ANSWER_PRESENT;
     }
 
     /**
@@ -519,123 +484,15 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get the sectors answer value
      *
-     * @param bool $isSnapshot
-     *
      * @return int|null
      */
-    private function getEcmtShortTermSectorsAnswer($isSnapshot)
+    private function getEcmtShortTermSectorsAnswer()
     {
         if (!is_null($this->sectors)) {
-            if ($isSnapshot) {
-                return $this->sectors->getName();
-            }
-
             return $this->sectors->getId();
         }
 
         return null;
-    }
-
-    /**
-     * Get question and answer data for a bilateral application
-     *
-     * @return array
-     */
-    private function getQuestionAnswerDataBilateral(): array
-    {
-        $numberOfPermits = [];
-        $countriesArray = [];
-
-        /** @var IrhpPermitApplication $irhpPermitApplication */
-        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
-            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
-
-            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
-            if ($permitsRequired === null) {
-                continue;
-            }
-
-            $stock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
-            $country = $stock->getCountry()->getCountryDesc();
-            $year = $stock->getValidTo(true)->format('Y');
-
-            $numberOfPermits[$country][$year] = $permitsRequired;
-            $countriesArray[$country] = $country;
-        }
-
-        $data = [
-            [
-                'question' => 'permits.check-answers.page.question.licence',
-                'answer' =>  $this->licence->getLicNo(),
-                'questionType' => Question::QUESTION_TYPE_STRING,
-            ],
-            [
-                'question' => 'permits.irhp.countries.transporting',
-                'answer' =>  $countriesArray,
-                'questionType' => Question::QUESTION_TYPE_STRING,
-            ],
-            [
-                'question' => 'permits.snapshot.number.required',
-                'answer' =>  $this->getPermitsRequired(),
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-        ];
-
-        foreach ($numberOfPermits as $country => $years) {
-            foreach ($years as $year => $permitsRequired) {
-                $data[] = [
-                    'question' => sprintf('%s for %d', $country, $year),
-                    'answer' => $permitsRequired,
-                    'questionType' => Question::QUESTION_TYPE_INTEGER,
-                ];
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Get question and answer data for a multilateral application
-     *
-     * @return array
-     */
-    private function getQuestionAnswerDataMultilateral(): array
-    {
-        $data = [
-            [
-                'question' => 'permits.check-answers.page.question.licence',
-                'answer' =>  $this->licence->getLicNo(),
-                'questionType' => Question::QUESTION_TYPE_STRING,
-            ],
-            [
-                'question' => 'permits.snapshot.number.required',
-                'answer' =>  $this->getPermitsRequired(),
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-        ];
-
-        /** @var IrhpPermitApplication $irhpPermitApplication */
-        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
-            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
-
-            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
-            if ($permitsRequired === null) {
-                continue;
-            }
-
-            $year = $irhpPermitApplication->getIrhpPermitWindow()
-                ->getIrhpPermitStock()
-                ->getValidTo(true)
-                ->format('Y');
-
-            $data[] = [
-                'question' => sprintf('For %d', $year),
-                'answer' => $permitsRequired,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ];
-        }
-
-        return $data;
     }
 
     /**

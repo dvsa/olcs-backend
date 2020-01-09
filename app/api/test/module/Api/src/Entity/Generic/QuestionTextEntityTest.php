@@ -18,4 +18,24 @@ class QuestionTextEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testGetTranslationKeyFromQuestionKey()
+    {
+        $questionKey = '{
+            "filter": "htmlEscape",
+            "translateableText": {
+                "key": "qanda.certificate-of-roadworthiness.trailer.vehicle-identification-number.question"
+            }
+        }';
+
+        $questionText = new Entity();
+        $questionText->setQuestionKey($questionKey);
+
+        $expectedTranslationKey = 'qanda.certificate-of-roadworthiness.trailer.vehicle-identification-number.question';
+
+        $this->assertEquals(
+            $expectedTranslationKey,
+            $questionText->getTranslationKeyFromQuestionKey()
+        );
+    }
 }

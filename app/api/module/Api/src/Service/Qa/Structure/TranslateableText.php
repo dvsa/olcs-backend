@@ -55,6 +55,16 @@ class TranslateableText
     }
 
     /**
+     * Return the translation key to be used
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
      * Add a parameter to be used when substituting placeholders in the string derived from the translation key
      *
      * @param string $value

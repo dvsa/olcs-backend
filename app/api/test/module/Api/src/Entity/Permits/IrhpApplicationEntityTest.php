@@ -3206,234 +3206,26 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetQuestionAnswerBilateral()
     {
-        $licNo = 'OB1234567';
-
-        $country1 = 'country1';
-        $country2 = 'country2';
-        $countriesAnswer = [
-            $country1 => $country1,
-            $country2 => $country2,
-        ];
-
         $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(true);
-
-        $stock1ValidityDate = new DateTime('2019-12-31');
-        $stock2ValidityDate = new DateTime('2019-12-31');
-        $stock3ValidityDate = new DateTime('2020-12-31');
-
-        $stock1ValidityYear = 2019;
-        $stock2ValidityYear = 2019;
-        $stock3ValidityYear = 2020;
-
-        $stock1RequiredPermits = 6;
-        $stock2RequiredPermits = 4;
-        $stock3RequiredPermits = 0;
-
-        $stock1 = m::mock(IrhpPermitStock::class);
-        $stock1->shouldReceive('getCountry->getCountryDesc')->once()->withNoArgs()->andReturn($country1);
-        $stock1->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock1ValidityDate);
-
-        $stock2 = m::mock(IrhpPermitStock::class);
-        $stock2->shouldReceive('getCountry->getCountryDesc')->once()->withNoArgs()->andReturn($country2);
-        $stock2->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock2ValidityDate);
-
-        $stock3 = m::mock(IrhpPermitStock::class);
-        $stock3->shouldReceive('getCountry->getCountryDesc')->once()->withNoArgs()->andReturn($country2);
-        $stock3->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock3ValidityDate);
-
-        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
-            ->twice()
-            ->withNoArgs()
-            ->andReturn($stock1RequiredPermits);
-        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($stock1);
-
-        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
-            ->twice()
-            ->withNoArgs()
-            ->andReturn($stock2RequiredPermits);
-        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($stock2);
-
-        //this permit application entry has a zero for number of permits, but is included
-        $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication3->shouldReceive('getPermitsRequired')
-            ->twice()
-            ->withNoArgs()
-            ->andReturn($stock3RequiredPermits);
-        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($stock3);
-
-        //this permit application entry has a null entry for number of permits, so is ignored
-        $irhpPermitApplication4 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication4->shouldReceive('getPermitsRequired')->twice()->withNoArgs()->andReturn(null);
-        $irhpPermitApplication4->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')->never();
-
-        $permitApplications = [
-            $irhpPermitApplication1,
-            $irhpPermitApplication2,
-            $irhpPermitApplication3,
-            $irhpPermitApplication4,
-        ];
+        $irhpPermitType->shouldReceive('isBilateral')->withNoArgs()->andReturn(true);
+        $irhpPermitType->shouldReceive('isMultilateral')->withNoArgs()->andReturn(false);
 
         $licence = m::mock(Licence::class);
-        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
-
         $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
-        $entity->setIrhpPermitApplications(new ArrayCollection($permitApplications));
 
-        $data = [
-            [
-                'question' => 'permits.check-answers.page.question.licence',
-                'answer' =>  $licNo,
-                'questionType' => Question::QUESTION_TYPE_STRING,
-            ],
-            [
-                'question' => 'permits.irhp.countries.transporting',
-                'answer' =>  $countriesAnswer,
-                'questionType' => Question::QUESTION_TYPE_STRING,
-            ],
-            [
-                'question' => 'permits.snapshot.number.required',
-                'answer' =>  10,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-            [
-                'question' => $country1 . ' for ' . $stock1ValidityYear,
-                'answer' =>  $stock1RequiredPermits,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-            [
-                'question' => $country2 . ' for ' . $stock2ValidityYear,
-                'answer' =>  $stock2RequiredPermits,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-            [
-                'question' => $country2 . ' for ' . $stock3ValidityYear,
-                'answer' =>  $stock3RequiredPermits,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-        ];
-
-        $this->assertEquals($data, $entity->getQuestionAnswerData());
+        $this->assertEquals([], $entity->getQuestionAnswerData());
     }
 
     public function testGetQuestionAnswerMultilateral()
     {
-        $licNo = 'OB1234567';
-
         $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
-        $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(true);
-
-        $stock1ValidityDate = new DateTime('2019-12-31');
-        $stock2ValidityDate = new DateTime('2020-12-31');
-        $stock3ValidityDate = new DateTime('2021-12-31');
-
-        $stock1ValidityYear = 2019;
-        $stock2ValidityYear = 2020;
-        $stock3ValidityYear = 2021;
-
-        $stock1RequiredPermits = 6;
-        $stock2RequiredPermits = 4;
-        $stock3RequiredPermits = 0;
-
-        $stock1 = m::mock(IrhpPermitStock::class);
-        $stock1->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock1ValidityDate);
-
-        $stock2 = m::mock(IrhpPermitStock::class);
-        $stock2->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock2ValidityDate);
-
-        $stock3 = m::mock(IrhpPermitStock::class);
-        $stock3->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock3ValidityDate);
-
-        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
-            ->twice()
-            ->withNoArgs()
-            ->andReturn($stock1RequiredPermits);
-        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($stock1);
-
-        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
-            ->twice()
-            ->withNoArgs()
-            ->andReturn($stock2RequiredPermits);
-        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($stock2);
-
-        //this permit application entry has a zero for number of permits, but is included
-        $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication3->shouldReceive('getPermitsRequired')
-            ->twice()
-            ->withNoArgs()
-            ->andReturn($stock3RequiredPermits);
-        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($stock3);
-
-        //this permit application entry has a null entry for number of permits, so is ignored
-        $irhpPermitApplication4 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication4->shouldReceive('getPermitsRequired')->twice()->withNoArgs()->andReturn(null);
-        $irhpPermitApplication4->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')->never();
-
-        $permitApplications = [
-            $irhpPermitApplication1,
-            $irhpPermitApplication2,
-            $irhpPermitApplication3,
-            $irhpPermitApplication4,
-        ];
+        $irhpPermitType->shouldReceive('isBilateral')->withNoArgs()->andReturn(false);
+        $irhpPermitType->shouldReceive('isMultilateral')->withNoArgs()->andReturn(true);
 
         $licence = m::mock(Licence::class);
-        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
-
         $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
-        $entity->setIrhpPermitApplications(new ArrayCollection($permitApplications));
 
-        $data = [
-            [
-                'question' => 'permits.check-answers.page.question.licence',
-                'answer' =>  $licNo,
-                'questionType' => Question::QUESTION_TYPE_STRING,
-            ],
-            [
-                'question' => 'permits.snapshot.number.required',
-                'answer' =>  10,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-            [
-                'question' => 'For ' . $stock1ValidityYear,
-                'answer' =>  $stock1RequiredPermits,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-            [
-                'question' => 'For ' . $stock2ValidityYear,
-                'answer' =>  $stock2RequiredPermits,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-            [
-                'question' => 'For ' . $stock3ValidityYear,
-                'answer' =>  $stock3RequiredPermits,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-        ];
-
-        $this->assertEquals($data, $entity->getQuestionAnswerData());
+        $this->assertEquals([], $entity->getQuestionAnswerData());
     }
 
     public function testGetQuestionAnswerDataWithoutActiveApplicationPath()
@@ -3492,7 +3284,7 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetQuestionAnswerDataWithActiveApplicationPath
      */
-    public function testGetQuestionAnswerDataWithActiveApplicationPath($data, $applicationSteps, $expected, $isSnapshot)
+    public function testGetQuestionAnswerDataWithActiveApplicationPath($data, $applicationSteps, $expected)
     {
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($data['licNo']);
@@ -3516,7 +3308,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->setCheckedAnswers($data['checkedAnswers']);
         $entity->setDeclaration($data['declaration']);
 
-        $this->assertEquals($expected, $entity->getQuestionAnswerData($isSnapshot));
+        $this->assertEquals($expected, $entity->getQuestionAnswerData());
     }
 
     public function dpGetQuestionAnswerDataWithActiveApplicationPath()
@@ -3528,7 +3320,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question1Text = m::mock(QuestionText::class);
         $question1Text->shouldReceive('getId')->withNoArgs()->andReturn($question1TextId);
         $question1Text->shouldReceive('getQuestionShortKey')->withNoArgs()->andReturn('q1-short-key');
-        $question1Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('{"translateableText": {"key": "q1-key"}}');
+        $question1Text->shouldReceive('getTranslationKeyFromQuestionKey')->withNoArgs()->andReturn('q1-key');
         $question1Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q1-type');
 
         $question1 = m::mock(Question::class);
@@ -3548,7 +3340,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question2Text = m::mock(QuestionText::class);
         $question2Text->shouldReceive('getId')->withNoArgs()->andReturn($question2TextId);
         $question2Text->shouldReceive('getQuestionShortKey')->withNoArgs()->andReturn('q2-short-key');
-        $question2Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('{"translateableText": {"key": "q2-key"}}');
+        $question2Text->shouldReceive('getTranslationKeyFromQuestionKey')->withNoArgs()->andReturn('q2-key');
         $question2Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q2-type');
 
         $question2 = m::mock(Question::class);
@@ -3788,46 +3580,6 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 false
             ],
-            'q2 answered snapshot version' => [
-                'data' => [
-                    'licNo' => 'OB1234567',
-                    'answers' => new ArrayCollection([$question1TextId => $answer1, $question2TextId => $answer2]),
-                    'checkedAnswers' => 0,
-                    'declaration' => 0,
-                    'createdOn' => $createdOn,
-                ],
-                'applicationSteps' => new ArrayCollection([$step1, $step2]),
-                'expected' => [
-                    'custom-licence' => [
-                        'section' => 'licence',
-                        'slug' => 'custom-licence',
-                        'questionShort' => 'section.name.application/licence',
-                        'question' => 'permits.check-answers.page.question.licence',
-                        'questionType' => Question::QUESTION_TYPE_STRING,
-                        'answer' => 'OB1234567',
-                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    ],
-                    'q1-slug' => [
-                        'section' => 'q1-slug',
-                        'slug' => 'q1-slug',
-                        'questionShort' => 'q1-short-key',
-                        'question' => 'q1-key',
-                        'questionType' => 'q1-type',
-                        'answer' => 'q1-answer',
-                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    ],
-                    'q2-slug' => [
-                        'section' => 'q2-slug',
-                        'slug' => 'q2-slug',
-                        'questionShort' => 'q2-short-key',
-                        'question' => 'q2-key',
-                        'questionType' => 'q2-type',
-                        'answer' => 'q2-answer',
-                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    ],
-                ],
-                true
-            ],
             'answers checked' => [
                 'data' => [
                     'licNo' => 'OB1234567',
@@ -3967,14 +3719,8 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetAnswerForCustomEcmtShortTermNoOfPermits
      */
-    public function testGetAnswerForCustomEcmtShortTermNoOfPermits(
-        $requiredEuro5,
-        $requiredEuro6,
-        $isSnapshot,
-        $validityYear,
-        $periodNameKey,
-        $expectedAnswer
-    ) {
+    public function testGetAnswerForCustomEcmtShortTermNoOfPermits($requiredEuro5, $requiredEuro6, $expectedAnswer)
+    {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
         $question->shouldReceive('getFormControlType')->andReturn(
@@ -3984,15 +3730,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $step = m::mock(ApplicationStep::class);
         $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
 
-        $irhpPermitStock = m::mock(IrhpPermitStock::class);
-        $irhpPermitStock->shouldReceive('getValidityYear')
-            ->andReturn($validityYear);
-        $irhpPermitStock->shouldReceive('getPeriodNameKey')
-            ->andReturn($periodNameKey);
-
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
-            ->andReturn($irhpPermitStock);
         $irhpPermitApplication->shouldReceive('getRequiredEuro5')
             ->andReturn($requiredEuro5);
         $irhpPermitApplication->shouldReceive('getRequiredEuro6')
@@ -4004,7 +3742,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->assertSame(
             $expectedAnswer,
-            $entity->getAnswer($step, $isSnapshot)
+            $entity->getAnswer($step)
         );
     }
 
@@ -4014,84 +3752,41 @@ class IrhpApplicationEntityTest extends EntityTester
             [
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
-                'isSnapshot' => true,
-                'validityYear' => 2019,
-                'periodNameKey' => null,
-                'expectedAnswer' => [
-                    'Permits for 2019',
-                    '5 permits for Euro 5 minimum emission standard',
-                    '7 permits for Euro 6 minimum emission standard',
-                ],
+                'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
-                'isSnapshot' => true,
-                'validityYear' => 2020,
-                'periodNameKey' => 'period.name.key',
-                'expectedAnswer' => [
-                    'period.name.key',
-                    '5 permits for Euro 5 minimum emission standard',
-                    '7 permits for Euro 6 minimum emission standard',
-                ],
+                'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 0,
-                'isSnapshot' => true,
-                'validityYear' => 2020,
-                'periodNameKey' => 'period.name.key',
-                'expectedAnswer' => [
-                    'period.name.key',
-                    '5 permits for Euro 5 minimum emission standard',
-                ],
+                'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
                 'requiredEuro5' => null,
                 'requiredEuro6' => 5,
-                'isSnapshot' => true,
-                'validityYear' => 2020,
-                'periodNameKey' => 'period.name.key',
                 'expectedAnswer' => null,
             ],
             [
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
-                'isSnapshot' => false,
-                'validityYear' => 2019,
-                'periodNameKey' => null,
-                'expectedAnswer' => [
-                    '5 permits for Euro 5 minimum emission standard',
-                    '7 permits for Euro 6 minimum emission standard',
-                ],
+                'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
-                'isSnapshot' => false,
-                'validityYear' => 2020,
-                'periodNameKey' => 'period.name.key',
-                'expectedAnswer' => [
-                    '5 permits for Euro 5 minimum emission standard',
-                    '7 permits for Euro 6 minimum emission standard',
-                ],
+                'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 0,
-                'isSnapshot' => false,
-                'validityYear' => 2020,
-                'periodNameKey' => 'period.name.key',
-                'expectedAnswer' => [
-                    '5 permits for Euro 5 minimum emission standard',
-                ],
+                'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
                 'requiredEuro5' => null,
                 'requiredEuro6' => 5,
-                'isSnapshot' => false,
-                'validityYear' => 2020,
-                'periodNameKey' => 'period.name.key',
                 'expectedAnswer' => null,
             ],
         ];
@@ -4254,7 +3949,7 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpTestGetAnswerForCustomEcmtShortTermSectors
      */
-    public function testGetAnswerForCustomEcmtShortTermSectors($sectorsEntity, $isSnapshot, $expectedAnswer)
+    public function testGetAnswerForCustomEcmtShortTermSectors($sectorsEntity, $expectedAnswer)
     {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
@@ -4270,26 +3965,21 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->assertEquals(
             $expectedAnswer,
-            $entity->getAnswer($step, $isSnapshot)
+            $entity->getAnswer($step)
         );
     }
 
     public function dpTestGetAnswerForCustomEcmtShortTermSectors()
     {
         $sectorId = 7;
-        $sectorName = 'Wood';
 
         $sectors = m::mock(Sectors::class);
         $sectors->shouldReceive('getId')
             ->andReturn($sectorId);
-        $sectors->shouldReceive('getName')
-            ->andReturn($sectorName);
 
         return [
-            [$sectors, false, $sectorId],
-            [$sectors, true, $sectorName],
-            [null, false, null],
-            [null, true, null],
+            [$sectors, $sectorId],
+            [null, null],
         ];
     }
 

@@ -2,12 +2,14 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Permits;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGenerator;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use OlcsTest\Bootstrap;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummary;
+use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use OlcsTest\Bootstrap;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -28,9 +30,16 @@ class IrhpGeneratorTest extends MockeryTestCase
      */
     protected $viewRenderer;
 
+    /**
+     * @var AnswersSummaryGenerator
+     */
+    protected $answersSummaryGenerator;
+
     protected function setUp()
     {
-        $this->sut = new IrhpGenerator();
+        $this->answersSummaryGenerator = m::mock(AnswersSummaryGenerator::class);
+
+        $this->sut = new IrhpGenerator($this->answersSummaryGenerator);
         $this->viewRenderer = m::mock(PhpRenderer::class);
 
         $sm = Bootstrap::getServiceManager();
@@ -53,9 +62,14 @@ class IrhpGeneratorTest extends MockeryTestCase
         $permitTypeDescription = 'permit type';
         $permitTypeId = 111;
         $applicationRef = 'ref';
+
         $questionAnswerData = [
             'slug' => 'data1',
             'slug2' => 'data2',
+        ];
+
+        $answersSummaryRepresentation = [
+            'rows' => $questionAnswerData
         ];
 
         $html = '<html>';
@@ -80,16 +94,20 @@ class IrhpGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($applicationRef);
 
-        $irhpApplication
-            ->shouldReceive('getQuestionAnswerData')
+        $answersSummary = m::mock(AnswersSummary::class);
+        $answersSummary->shouldReceive('getRepresentation')
+            ->andReturn($answersSummaryRepresentation);
+
+        $this->answersSummaryGenerator->shouldReceive('generate')
+            ->with($irhpApplication, true)
             ->once()
-            ->with(true)
-            ->andReturn($questionAnswerData);
+            ->andReturn($answersSummary);
 
         $config = [
             'permitType' => $permitTypeDescription,
             'operator' => $operatorName,
             'ref' => $applicationRef,
+            'questionAnswerPartialName' => 'question-answer-section-qa',
             'questionAnswerData' => $questionAnswerData,
             'guidanceDeclaration' => [
                 'bullets' => 'markup-irhp-declaration-' . $permitTypeId,
