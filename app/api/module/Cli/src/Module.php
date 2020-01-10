@@ -28,7 +28,6 @@ class Module implements ConsoleUsageProviderInterface
         return [
             // Describe available commands
             'expire-bus-registration [--verbose|-v]' => 'Expire bus registrations past their end date',
-            'ecmt-withdraw-unpaid [--verbose|-v]' => 'withdraw applications and handle unpaid fees once payment deadline has passed',
             'flag-urgent-tasks [--verbose|-v]' => 'Flag applicable tasks as urgent',
             'licence-status-rules [--verbose|-v]' => 'Process licence status change rules',
             'enqueue-ch-compare [--verbose|-v]' => 'Enqueue Companies House lookups for all Organisations',
@@ -111,13 +110,15 @@ class Module implements ConsoleUsageProviderInterface
                 'Create tasks to surrender PSV licences that have expired',
             'database-maintenance [--verbose|-v]' => 'Perform database management tasks, eg changing is_irfo flags',
             'identify-successful-permit-applications <stock-id> [--verbose|-v]' => 'Identify successful permit applications',
-            'permits (mark-expired-permits) [--verbose|-v]' =>
+            'permits mark-expired-permits [--verbose|-v]' =>
                 'Expire permits, permits applications, roadworthiness certificates',
-            'permits (close-expired-window) [--since=<date>] [--verbose|-v]' =>
+            'permits close-expired-windows [--since=<date>] [--verbose|-v]' =>
                 'Run permit action',
+            'permits withdraw-unpaid [--verbose|-v]' =>
+                'Withdraw applications and handle unpaid fees once payment deadline has passed',
             [
-                '<close-expired-window> [--since=<date>]',
-                'action to perform, ie \'close-expired-window\' to close all recently expired windows',
+                '<close-expired-windows> [--since=<date>]',
+                'action to perform, ie \'close-expired-windows\' to close all recently expired windows',
             ],
             'poll-sqs <queue> [--queue-duration=<seconds>] [--verbose|-v]' => 'Poll an SQS queue to process a message',
             [

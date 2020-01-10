@@ -64,6 +64,9 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
     const GV_UK_COMMUNITY_LICENCE_NI_COVER_LETTER = 'UK_licence_for_the_Community_Cover_Letter_GV_NI';
     const GV_UK_COMMUNITY_LICENCE_PSV = 'PSV_certified_copy';
 
+    const IRHP_PERMIT_ECMT = 'IRHP_PERMIT_ECMT';
+    const IRHP_PERMIT_ECMT_COVER_LETTER = 'IRHP_PERMIT_ECMT_COVERING_LETTER';
+
     const IRHP_PERMIT_SHORT_TERM_ECMT = 'IRHP_PERMIT_SHORT_TERM_ECMT';
     const IRHP_PERMIT_SHORT_TERM_ECMT_COVER_LETTER = 'IRHP_PERMIT_SHORT_TERM_ECMT_COVER_LETTER';
 

@@ -6,7 +6,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireEcmtPermitApplications as ExpireEcmtPermitApplicationsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -47,11 +46,5 @@ class EcmtPermitApplicationTest extends RepositoryTestCase
             . 'AND epa.status IN [[["S1","S2"]]]';
 
         $this->assertEquals($expectedQuery, $this->query);
-    }
-
-    public function testMarkAsExpired()
-    {
-        $this->expectQueryWithData(ExpireEcmtPermitApplicationsQuery::class, []);
-        $this->sut->markAsExpired();
     }
 }
