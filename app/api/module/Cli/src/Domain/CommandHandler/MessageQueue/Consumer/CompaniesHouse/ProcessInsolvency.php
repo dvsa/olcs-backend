@@ -204,9 +204,6 @@ class ProcessInsolvency extends AbstractConsumer
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_REG_29_31_SECTION_57,
                 'isExternal' => false,
                 'description' => $template['description'],
-                'knownValues' => [
-                    'company_status' => $this->company->getCompanyStatus()
-                ]
             ],
             'addressBookmark' => 'licence_holder_address',
             'bookmarkBundle' => [
