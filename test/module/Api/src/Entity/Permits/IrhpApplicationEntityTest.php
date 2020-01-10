@@ -3787,7 +3787,7 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetAnswerForCustomEcmtShortTermNoOfPermits
      */
-    public function testGetAnswerForCustomEcmtShortTermNoOfPermits($requiredEuro5, $requiredEuro6, $expectedAnswer)
+    public function testGetAnswerForCustomEcmtShortTermNoOfPermits($isEcmtAnnual, $requiredEuro5, $requiredEuro6, $expectedAnswer)
     {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);

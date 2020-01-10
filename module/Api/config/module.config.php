@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service as ApiSrv;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 
-
 return [
     'router' => [
         'routes' => include(__DIR__ . '/../../../vendor/olcs/olcs-transfer/config/backend-routes.config.php')
