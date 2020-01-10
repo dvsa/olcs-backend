@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
@@ -33,7 +32,7 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
      */
     private $templates = [
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT
-            => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
+            => DocumentEntity::IRHP_PERMIT_ECMT_COVER_LETTER,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
             => DocumentEntity::IRHP_PERMIT_SHORT_TERM_ECMT_COVER_LETTER,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL

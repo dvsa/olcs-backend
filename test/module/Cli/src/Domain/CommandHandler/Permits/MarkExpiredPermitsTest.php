@@ -9,7 +9,6 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkExpiredPermits as MarkExpiredPermit
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkExpiredPermits;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -23,7 +22,6 @@ class MarkExpiredPermitsTest extends CommandHandlerTestCase
         $this->sut = new MarkExpiredPermits();
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
-        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
 
         $this->refData[IrhpInterface::STATUS_EXPIRED] = m::mock(RefData::class);
 
@@ -69,8 +67,6 @@ class MarkExpiredPermitsTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->andReturn([$irhpApplication1, $irhpApplication2, $irhpApplication3]);
         $this->repoMap['IrhpApplication']->shouldReceive('save')->twice()->with(m::type(IrhpApplication::class));
-
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('markAsExpired')->withNoArgs()->once();
 
         $result = $this->sut->handleCommand(MarkExpiredPermitsCommand::create([]));
 
