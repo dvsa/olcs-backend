@@ -159,10 +159,9 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Question short key
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\TranslationKey
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKey", fetch="LAZY")
-     * @ORM\JoinColumn(name="question_short_key", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="question_short_key", length=255, nullable=true)
      */
     protected $questionShortKey;
 
@@ -482,7 +481,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Set the question short key
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\TranslationKey $questionShortKey entity being set as the value
+     * @param string $questionShortKey new value being set
      *
      * @return QuestionText
      */
@@ -496,7 +495,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Get the question short key
      *
-     * @return \Dvsa\Olcs\Api\Entity\System\TranslationKey
+     * @return string
      */
     public function getQuestionShortKey()
     {
