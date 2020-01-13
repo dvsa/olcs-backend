@@ -365,9 +365,6 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('filterByApplication')
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('filterByPermitApplication')
-            ->once()
-            ->andReturnSelf()
             ->shouldReceive('filterByIds')
             ->once()
             ->andReturnSelf();
@@ -1018,52 +1015,5 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn(['foo']);
 
         $this->assertSame('foo', $this->sut->fetchLatestPaidContinuationFee($licenceId));
-    }
-
-    public function testFetchFeeByEcmtPermitApplicationId()
-    {
-        $ecmtApplicationId = 2;
-
-        /** @var QueryBuilder $qb */
-        $mockQb = m::mock(QueryBuilder::class);
-
-        $this->em
-            ->shouldReceive('getRepository->createQueryBuilder')
-            ->with('f')
-            ->once()
-            ->andReturn($mockQb);
-
-        $this->mockWhereOutstandingFee($mockQb);
-
-        $mockQb
-            ->shouldReceive('expr->eq')
-            ->with('f.ecmtPermitApplication', ':ecmtPermitApplication')
-            ->andReturnSelf();
-        $mockQb
-            ->shouldReceive('expr->eq')
-            ->with('f.feeStatus', ':feeStatus')
-            ->andReturnSelf();
-        $mockQb
-            ->shouldReceive('andWhere')
-            ->andReturnSelf();
-        $mockQb
-            ->shouldReceive('andWhere')
-            ->andReturnSelf();
-        $mockQb
-            ->shouldReceive('setParameter')
-            ->with('ecmtPermitApplication', $ecmtApplicationId)
-            ->andReturnSelf();
-        $mockQb
-            ->shouldReceive('setParameter')
-            ->with('feeStatus', FeeEntity::STATUS_OUTSTANDING)
-            ->andReturnSelf();
-
-
-        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
-
-        $this->assertSame(
-            'result',
-            $this->sut->fetchFeeByEcmtPermitApplicationId($ecmtApplicationId)
-        );
     }
 }

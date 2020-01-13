@@ -1140,7 +1140,6 @@ return [
     Command\IrhpApplication\Expire::class => CommandHandler\IrhpApplication\Expire::class,
 
     // Permits Create
-    TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
     TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,
 
     // Irhp Permit Create
@@ -1152,11 +1151,7 @@ return [
     // Permits Decline
     TransferCommand\Permits\AcceptIrhpPermits::class => CommandHandler\Permits\AcceptIrhpPermits::class,
 
-    // Permits Update
-    TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
-
     // Permits - internal backend
-    Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
     Command\Permits\AllocateCandidatePermits::class => CommandHandler\Permits\AllocateCandidatePermits::class,
     Command\Permits\AllocateIrhpApplicationPermits::class => CommandHandler\Permits\AllocateIrhpApplicationPermits::class,
     Command\Permits\AllocateIrhpPermitApplicationPermit::class =>
