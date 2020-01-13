@@ -24,7 +24,6 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as CreateIrhpApplicationCmd;
-use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
