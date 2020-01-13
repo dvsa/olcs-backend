@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72ec31b6ad95bc4c64fa70945027f789",
+    "content-hash": "27886cd71f532d4b3795a58c760661f1",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.132.0",
+            "version": "3.132.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.132.0/aws-aws-sdk-php-3.132.0.zip",
-                "reference": "d1ea3332539a07d122e5cf397c0eb3a1fb75eede",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.132.3/aws-aws-sdk-php-3.132.3.zip",
+                "reference": "f814995664d4ad616f674e664ae069b9f4e340bf",
                 "shasum": ""
             },
             "require": {
@@ -82,7 +82,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-01-07T19:13:51+00:00"
+            "time": "2020-01-10T19:14:49+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -409,11 +409,11 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.11.0",
+            "version": "2.12.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/common/v2.11.0/doctrine-common-v2.11.0.zip",
-                "reference": "b8ca1dcf6b0dc8a2af7a09baac8d0c48345df4ff",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/common/2.12.0/doctrine-common-2.12.0.zip",
+                "reference": "2053eafdf60c2172ee1373d1b9289ba1db7f1fc6",
                 "shasum": ""
             },
             "require": {
@@ -482,7 +482,7 @@
                 "doctrine",
                 "php"
             ],
-            "time": "2019-09-10T10:10:14+00:00"
+            "time": "2020-01-10T15:49:25+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -1007,11 +1007,11 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "1.3.3",
+            "version": "1.3.4",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/persistence/1.3.3/doctrine-persistence-1.3.3.zip",
-                "reference": "99b196bbd4715a94fa100fac664a351ffa46d6a5",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/persistence/1.3.4/doctrine-persistence-1.3.4.zip",
+                "reference": "ff7e08b0f814be2cd20c52dc3c8a262579376b94",
                 "shasum": ""
             },
             "require": {
@@ -1080,15 +1080,15 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2019-12-13T10:43:02+00:00"
+            "time": "2020-01-09T19:49:17+00:00"
         },
         {
             "name": "doctrine/reflection",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/reflection/v1.0.0/doctrine-reflection-v1.0.0.zip",
-                "reference": "02538d3f95e88eb397a5f86274deb2c6175c2ab6",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/reflection/v1.1.0/doctrine-reflection-v1.1.0.zip",
+                "reference": "bc420ead87fdfe08c03ecc3549db603a45b06d4c",
                 "shasum": ""
             },
             "require": {
@@ -1096,13 +1096,15 @@
                 "ext-tokenizer": "*",
                 "php": "^7.1"
             },
+            "conflict": {
+                "doctrine/common": "<2.9"
+            },
             "require-dev": {
-                "doctrine/coding-standard": "^4.0",
-                "doctrine/common": "^2.8",
-                "phpstan/phpstan": "^0.9.2",
-                "phpstan/phpstan-phpunit": "^0.9.4",
-                "phpunit/phpunit": "^7.0",
-                "squizlabs/php_codesniffer": "^3.0"
+                "doctrine/coding-standard": "^5.0",
+                "doctrine/common": "^2.10",
+                "phpstan/phpstan": "^0.11.0",
+                "phpstan/phpstan-phpunit": "^0.11.0",
+                "phpunit/phpunit": "^7.0"
             },
             "type": "library",
             "extra": {
@@ -1120,16 +1122,16 @@
             ],
             "authors": [
                 {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
                     "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
                     "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
                 },
                 {
                     "name": "Jonathan Wage",
@@ -1144,12 +1146,13 @@
                     "email": "ocramius@gmail.com"
                 }
             ],
-            "description": "Doctrine Reflection component",
+            "description": "The Doctrine Reflection project is a simple library used by the various Doctrine projects which adds some additional functionality on top of the reflection functionality that comes with PHP. It allows you to get the reflection information about classes, methods and properties statically.",
             "homepage": "https://www.doctrine-project.org/projects/reflection.html",
             "keywords": [
-                "reflection"
+                "reflection",
+                "static"
             ],
-            "time": "2018-06-14T14:45:07+00:00"
+            "time": "2020-01-08T19:53:19+00:00"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -2219,12 +2222,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.54",
+            "version": "4.206.55",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.54/olcs-olcs-transfer-4.206.54.zip",
-                "reference": "d3bdb7290149da740a3b4cbe3918d5d69059047b",
-                "shasum": "d3bdb7290149da740a3b4cbe3918d5d69059047b"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.55/olcs-olcs-transfer-4.206.55.zip",
+                "reference": "866d85f286f182078f1e6ff9be5c9de24302799e",
+                "shasum": "866d85f286f182078f1e6ff9be5c9de24302799e"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2280,7 +2283,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2020-01-08T13:47:12+00:00"
+            "time": "2020-01-10T09:45:35+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -3267,11 +3270,11 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.19",
+            "version": "7.5.20",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/phpunit/7.5.19/phpunit-phpunit-7.5.19.zip",
-                "reference": "4263f76a3fc65385e242ef7357b99f3bed36707e",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/phpunit/7.5.20/phpunit-phpunit-7.5.20.zip",
+                "reference": "9467db479d1b0487c99733bb1e7944d32deded2c",
                 "shasum": ""
             },
             "require": {
@@ -3341,7 +3344,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2020-01-06T16:53:05+00:00"
+            "time": "2020-01-08T08:45:45+00:00"
         },
         {
             "name": "psr/container",
@@ -3764,11 +3767,11 @@
         },
         {
             "name": "sabre/dav",
-            "version": "4.0.2",
+            "version": "4.0.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sabre/dav/4.0.2/sabre-dav-4.0.2.zip",
-                "reference": "fd0234d46c045fc9b35ec06bd2e7b490240e6ade",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sabre/dav/4.0.3/sabre-dav-4.0.3.zip",
+                "reference": "b793fb4ce27cf0f981b540ad771281c430ffe818",
                 "shasum": ""
             },
             "require": {
@@ -3833,7 +3836,7 @@
                 "framework",
                 "iCalendar"
             ],
-            "time": "2019-10-19T07:17:49+00:00"
+            "time": "2020-01-10T07:52:45+00:00"
         },
         {
             "name": "sabre/event",
@@ -5515,6 +5518,7 @@
                 "framework",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-mvc-skeleton",
             "time": "2017-07-13T17:23:56+00:00"
         },
         {
@@ -5851,11 +5855,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.4",
+            "version": "0.12.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan/0.12.4/phpstan-phpstan-0.12.4.zip",
-                "reference": "100a25ba8561223f6bf5a5ff4204f951c0ec007c",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan/0.12.5/phpstan-phpstan-0.12.5.zip",
+                "reference": "71a20c18f06c53605251a00a8efe443fa85225d1",
                 "shasum": ""
             },
             "require": {
@@ -5880,20 +5884,20 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2020-01-06T06:38:17+00:00"
+            "time": "2020-01-12T14:31:21+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
-            "version": "0.12.8",
+            "version": "0.12.9",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-doctrine/0.12.8/phpstan-phpstan-doctrine-0.12.8.zip",
-                "reference": "116392a861fb6b4741606448d8d6b07c09fee1ee",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-doctrine/0.12.9/phpstan-phpstan-doctrine-0.12.9.zip",
+                "reference": "af14feb2ed259f9eb16d3107e63d85ed516e30af",
                 "shasum": ""
             },
             "require": {
                 "php": "~7.1",
-                "phpstan/phpstan": "^0.12.4"
+                "phpstan/phpstan": "^0.12.3"
             },
             "conflict": {
                 "doctrine/collections": "<1.0",
@@ -5938,15 +5942,15 @@
                 "MIT"
             ],
             "description": "Doctrine extensions for PHPStan",
-            "time": "2020-01-05T20:56:24+00:00"
+            "time": "2020-01-10T12:31:37+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
-            "version": "0.12.2",
+            "version": "0.12.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-mockery/0.12.2/phpstan-phpstan-mockery-0.12.2.zip",
-                "reference": "56eaf9e94a5d93d25223ab1f3ac2dc615dfc2d31",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan-mockery/0.12.3/phpstan-phpstan-mockery-0.12.3.zip",
+                "reference": "c2cdbe2dc06dbd03d090c2036f1355f43f5286a4",
                 "shasum": ""
             },
             "require": {
@@ -5986,7 +5990,7 @@
                 "MIT"
             ],
             "description": "PHPStan Mockery extension",
-            "time": "2020-01-01T17:33:44+00:00"
+            "time": "2020-01-10T12:08:26+00:00"
         }
     ],
     "aliases": [],
