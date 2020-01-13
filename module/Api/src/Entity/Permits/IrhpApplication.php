@@ -363,10 +363,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getEcmtShortTermNoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS:
                     return $this->getInternationalJourneysAnswer();
-                case Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES:
-                    return $this->getEcmtShortTermRestrictedCountriesAnswer($question);
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS:
                     return $this->getEcmtShortTermSectorsAnswer();
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES:
                 case Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE:
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD:
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE:
@@ -452,33 +451,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return null;
-    }
-
-    /**
-     * Get the number of permits answer values for a custom element of type ecmt short term
-     *
-     * @return array|null
-     */
-    private function getEcmtShortTermRestrictedCountriesAnswer($question)
-    {
-        $answer = $this->getStandardQaAnswer($question);
-        if (is_null($answer)) {
-            return $answer;
-        }
-
-        if ($answer) {
-            $countryNames = [];
-            foreach ($this->countrys as $country) {
-                $countryNames[] = $country->getCountryDesc();
-            }
-
-            return [
-                'Yes',
-                implode(', ', $countryNames)
-            ];
-        }
-
-        return ['No'];
     }
 
     /**
