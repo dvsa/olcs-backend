@@ -3839,114 +3839,6 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestGetAnswerForCustomEcmtShortTermRestrictedCountries
-     */
-    public function testGetAnswerForCustomEcmtShortTermRestrictedCountries($answerValue, $expectedAnswer)
-    {
-        $createdOn = new DateTime();
-        $questionTextId = 1;
-
-        $questionText = m::mock(QuestionText::class);
-        $questionText->shouldReceive('getId')
-            ->withNoArgs()
-            ->andReturn($questionTextId);
-
-        $question = m::mock(Question::class);
-        $question->shouldReceive('isCustom')
-            ->withNoArgs()
-            ->andReturn(true);
-        $question->shouldReceive('getFormControlType')
-            ->andReturn(Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES);
-        $question->shouldReceive('getActiveQuestionText')
-            ->with($createdOn)
-            ->once()
-            ->andReturn($questionText);
-
-        $applicationStep = m::mock(ApplicationStep::class);
-        $applicationStep->shouldReceive('getQuestion')
-            ->withNoArgs()
-            ->andReturn($question);
-
-        $answer = m::mock(Answer::class);
-        $answer->shouldReceive('getValue')
-            ->withNoArgs()
-            ->andReturn($answerValue);
-
-        $country1 = m::mock(Country::class);
-        $country1->shouldReceive('getCountryDesc')
-            ->andReturn('Belgium');
-
-        $country2 = m::mock(Country::class);
-        $country2->shouldReceive('getCountryDesc')
-            ->andReturn('France');
-
-        $entity = $this->createNewEntity();
-        $entity->setCreatedOn($createdOn);
-        $entity->setAnswers(new ArrayCollection([$questionTextId => $answer]));
-        $entity->setCountrys(new ArrayCollection([$country1, $country2]));
-
-        $this->assertEquals(
-            $expectedAnswer,
-            $entity->getAnswer($applicationStep)
-        );
-    }
-
-    public function dpTestGetAnswerForCustomEcmtShortTermRestrictedCountries()
-    {
-        return [
-            [
-                true,
-                ['Yes', 'Belgium, France']
-            ],
-            [
-                false,
-                ['No']
-            ],
-        ];
-    }
-
-    public function testGetAnswerNullForCustomEcmtShortTermRestrictedCountries()
-    {
-        $createdOn = new DateTime();
-        $answerValue = null;
-        $questionTextId = 1;
-
-        $questionText = m::mock(QuestionText::class);
-        $questionText->shouldReceive('getId')
-            ->withNoArgs()
-            ->andReturn($questionTextId);
-
-        $question = m::mock(Question::class);
-        $question->shouldReceive('isCustom')
-            ->withNoArgs()
-            ->andReturn(true);
-        $question->shouldReceive('getFormControlType')
-            ->andReturn(Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES);
-        $question->shouldReceive('getActiveQuestionText')
-            ->with($createdOn)
-            ->once()
-            ->andReturn($questionText);
-
-        $applicationStep = m::mock(ApplicationStep::class);
-        $applicationStep->shouldReceive('getQuestion')
-            ->withNoArgs()
-            ->andReturn($question);
-
-        $answer = m::mock(Answer::class);
-        $answer->shouldReceive('getValue')
-            ->withNoArgs()
-            ->andReturn($answerValue);
-
-        $entity = $this->createNewEntity();
-        $entity->setCreatedOn($createdOn);
-        $entity->setAnswers(new ArrayCollection([$questionTextId => $answer]));
-
-        $this->assertNull(
-            $entity->getAnswer($applicationStep)
-        );
-    }
-
-    /**
      * @dataProvider dpTestGetAnswerForCustomEcmtShortTermSectors
      */
     public function testGetAnswerForCustomEcmtShortTermSectors($sectorsEntity, $expectedAnswer)
@@ -4062,6 +3954,7 @@ class IrhpApplicationEntityTest extends EntityTester
             [true, Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE],
             [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD],
             [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE],
+            [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES],
             [true, Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE],
             [true, Question::FORM_CONTROL_COMMON_CERTIFICATES],
         ];
