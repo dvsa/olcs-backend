@@ -1170,8 +1170,6 @@ return [
     Command\Permits\PostSubmitTasks::class => CommandHandler\Permits\PostSubmitTasks::class,
 
     // Create HTML Snapshot
-    Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
-        CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
     Command\IrhpApplication\StoreSnapshot::class =>
         CommandHandler\IrhpApplication\StoreSnapshot::class,
 

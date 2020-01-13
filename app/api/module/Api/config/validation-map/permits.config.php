@@ -83,6 +83,4 @@ return [
 
     CommandHandler\Permits\QueueRunScoring::class => IsSystemAdmin::class,
     CommandHandler\Permits\QueueAcceptScoring::class => IsSystemAdmin::class,
-
-    CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class => Permits\CanEditPermitAppWithId::class,
 ];
