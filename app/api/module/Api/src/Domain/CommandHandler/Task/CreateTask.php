@@ -392,15 +392,6 @@ final class CreateTask extends AbstractCommandHandler
             );
         }
 
-        if ($command->getEcmtPermitApplication() !== null) {
-            $task->setEcmtPermitApplication(
-                $this->getRepo()->getReference(
-                    \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication::class,
-                    $command->getEcmtPermitApplication()
-                )
-            );
-        }
-
         if ($command->getIrhpApplication() !== null) {
             $task->setIrhpApplication(
                 $this->getRepo()->getReference(
