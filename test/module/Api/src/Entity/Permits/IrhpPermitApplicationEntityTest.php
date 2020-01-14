@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
@@ -76,7 +75,6 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->assertSame($irhpApplication, $irhpPermitApplication->getIrhpApplication());
         $this->assertSame($irhpPermitWindow, $irhpPermitApplication->getIrhpPermitWindow());
-        $this->assertNull($irhpPermitApplication->getEcmtPermitApplication());
         $this->assertNull($irhpPermitApplication->getLicence());
     }
 
@@ -396,7 +394,6 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $irhpPermitApplication = Entity::createNew(
             m::mock(IrhpPermitWindow::class),
             m::mock(Licence::class),
-            m::mock(EcmtPermitApplication::class),
             $irhpApplication
         );
 
@@ -416,7 +413,6 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $irhpPermitApplication = Entity::createNew(
             m::mock(IrhpPermitWindow::class),
             m::mock(Licence::class),
-            m::mock(EcmtPermitApplication::class),
             $irhpApplication
         );
 
