@@ -72,6 +72,8 @@ class ResetIrhpPermitApplications extends AbstractCommandHandler implements Togg
                 break;
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER:
                 $this->applicationAnswersClearer->clear($irhpApplication);
                 break;
             default:
