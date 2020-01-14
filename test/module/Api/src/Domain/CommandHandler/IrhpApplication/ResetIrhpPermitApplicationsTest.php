@@ -174,6 +174,8 @@ class ResetIrhpPermitApplicationsTest extends CommandHandlerTestCase
         return [
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER],
         ];
     }
 
