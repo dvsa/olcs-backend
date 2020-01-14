@@ -30,8 +30,6 @@ return [
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\Permits\ById::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\EcmtPermitFees::class => NotIsAnonymousUser::class,
-    QueryHandler\Permits\ValidEcmtPermits::class => CanAccessLicenceWithLicence::class,
-    QueryHandler\Permits\UnpaidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitStock\AvailableCountries::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableYears::class => NotIsAnonymousUser::class,
