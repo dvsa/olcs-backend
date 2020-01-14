@@ -4,13 +4,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermit;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\Expire as ExpireIrhpApplication;
-use Dvsa\Olcs\Api\Domain\Command\Permits\ExpireEcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -58,9 +56,7 @@ class Terminate extends AbstractCommandHandler implements ToggleRequiredInterfac
                 'id' => $application->getId()
             ];
 
-            $command = ($application instanceof EcmtPermitApplication)
-                ? ExpireEcmtPermitApplication::create($data)
-                : ExpireIrhpApplication::create($data);
+            $command = ExpireIrhpApplication::create($data);
 
             $this->result->merge($this->handleSideEffect($command));
         }
