@@ -37,7 +37,27 @@ class CompanyStatusTest extends TestCase
             [
                 [
                     'status' => 'liquidation',
-                    'expected' => 'liquidation'
+                    'expected' => 'Liquidation'
+                ],
+                [
+                    'status' => 'insolvency-proceedings',
+                    'expected' => 'Insolvency Proceedings'
+                ],
+                [
+                    'status' => 'administration',
+                    'expected' => 'Administration'
+                ],
+                [
+                    'status' => 'liquidation',
+                    'expected' => 'Liquidation'
+                ],
+                [
+                    'status' => 'receivership',
+                    'expected' => 'Receivership'
+                ],
+                [
+                    'status' => 'voluntary-arrangement',
+                    'expected' => 'Voluntary Arrangement'
                 ],
                 [
                     'status' => null,
