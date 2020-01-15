@@ -21,6 +21,19 @@ class CompanyStatus extends DynamicBookmark
      */
     public function render(): ?string
     {
-        return $this->data['companyStatus'];
+        return $this->formatCompanyStatus($this->data['companyStatus']);
+    }
+
+    private function formatCompanyStatus($companyStatus): ?string
+    {
+        $statuses = [
+            'administration' => 'Administration',
+            'insolvency-proceedings' => 'Insolvency Proceedings',
+            'liquidation' => 'Liquidation',
+            'receivership' => 'Receivership',
+            'voluntary-arrangement' => 'Voluntary Arrangement',
+        ];
+
+        return strtr($companyStatus, $statuses);
     }
 }
