@@ -434,7 +434,6 @@ return [
             'order' => QueryPartial\Order::class,
             'filterByLicence' => QueryPartial\Filter\ByLicence::class,
             'filterByApplication' => QueryPartial\Filter\ByApplication::class,
-            'filterByPermitApplication' => QueryPartial\Filter\ByPermitApplication::class,
             'filterByBusReg' => QueryPartial\Filter\ByBusReg::class,
             'filterByIds' => QueryPartial\Filter\ByIds::class,
         ]
@@ -609,7 +608,6 @@ return [
             'Surrender' => RepositoryFactory::class,
             'Sectors' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
-            'EcmtPermitApplication' => RepositoryFactory::class,
             'IrhpPermitApplication' => RepositoryFactory::class,
             'IrhpApplication' => RepositoryFactory::class,
             'IrhpApplicationReadAudit' => RepositoryFactory::class,

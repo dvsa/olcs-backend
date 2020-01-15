@@ -38,8 +38,6 @@ class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
 
         $this->setIsValid('canAccessOrganisation', [34], $isValid);
 
-        $this->setIsValid('canAccessEcmtPermitApplication', [2], $isValid);
-
         $this->assertSame($expected, $this->sut->isValid($dto));
     }
 
@@ -73,7 +71,6 @@ class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getOrganisationId')->andReturn(null);
         $dto->shouldReceive('getApplicationId')->andReturn(null);
-        $dto->shouldReceive('getEcmtPermitApplicationId')->andReturn(null);
         $dto->shouldReceive('getIrhpApplication')->andReturn(2);
 
         $this->setIsValid('canAccessIrhpApplicationWithId', [2], $isValid);
@@ -93,7 +90,6 @@ class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getOrganisationId')->andReturn(null);
         $dto->shouldReceive('getApplicationId')->andReturn(null);
-        $dto->shouldReceive('getEcmtPermitApplicationId')->andReturn(null);
         $dto->shouldReceive('getIrhpApplication')->andReturn(null);
         $dto->shouldReceive('getFeeIds')->andReturn([34, 56]);
 
@@ -109,7 +105,6 @@ class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getOrganisationId')->andReturn(null);
         $dto->shouldReceive('getApplicationId')->andReturn(null);
-        $dto->shouldReceive('getEcmtPermitApplicationId')->andReturn(null);
         $dto->shouldReceive('getIrhpApplication')->andReturn(null);
         $dto->shouldReceive('getFeeIds')->andReturn([34, 56, 76]);
 
@@ -126,7 +121,6 @@ class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getOrganisationId')->andReturn(null);
         $dto->shouldReceive('getApplicationId')->andReturn(null);
-        $dto->shouldReceive('getEcmtPermitApplicationId')->andReturn(null);
         $dto->shouldReceive('getIrhpApplication')->andReturn(null);
         $dto->shouldReceive('getFeeIds')->andReturn(null);
 

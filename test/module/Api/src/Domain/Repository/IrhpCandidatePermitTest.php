@@ -37,7 +37,6 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('ipa.ecmtPermitApplication', 'epa')->once()->andReturnSelf()
             ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf()
             ->shouldReceive('order')->once()->andReturnSelf();
@@ -74,7 +73,6 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('ipa.ecmtPermitApplication', 'epa')->once()->andReturnSelf()
             ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf()
             ->shouldReceive('order')->once()->andReturnSelf();
@@ -94,41 +92,6 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $expectedQuery = 'BLAH '
             . 'AND ia.status IN [[["'.RefData::PERMIT_APP_STATUS_UNDER_CONSIDERATION.'"]]] '
             . 'AND ipa.irhpApplication = [['.$irhpApplicationId.']]';
-        $this->assertEquals($expectedQuery, $this->query);
-    }
-
-    public function testFetchListWithEcmtPermitApplication()
-    {
-        $ecmtPermitApplicationId = 10;
-
-        $this->setUpSut(IrhpCandidatePermit::class, true);
-        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
-
-        $qb = $this->createMockQb('BLAH');
-        $this->mockCreateQueryBuilder($qb);
-
-        $this->queryBuilder
-            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
-            ->shouldReceive('withRefdata')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('ipa.ecmtPermitApplication', 'epa')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
-            ->shouldReceive('paginate')->once()->andReturnSelf()
-            ->shouldReceive('order')->once()->andReturnSelf();
-
-        $query = GetList::create(
-            [
-                'ecmtPermitApplication' => $ecmtPermitApplicationId,
-                'page' => 1,
-                'limit' => 25,
-                'order' => 'id',
-                'sort' => 'ASC',
-            ]
-        );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
-
-        $expectedQuery = 'BLAH '
-            . 'AND epa.id = [['.$ecmtPermitApplicationId.']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 

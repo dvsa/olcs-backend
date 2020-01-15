@@ -1139,9 +1139,6 @@ return [
     Command\IrhpApplication\ResetIrhpPermitApplications::class => CommandHandler\IrhpApplication\ResetIrhpPermitApplications::class,
     Command\IrhpApplication\Expire::class => CommandHandler\IrhpApplication\Expire::class,
 
-    // Permits Create
-    TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,
-
     // Irhp Permit Application Delete
     Command\IrhpPermitApplication\Delete::class => CommandHandler\IrhpPermitApplication\Delete::class,
 
@@ -1158,7 +1155,6 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
-    Command\Permits\ExpireEcmtPermitApplication::class => CommandHandler\Permits\ExpireEcmtPermitApplication::class,
     Command\Permits\PostSubmitTasks::class => CommandHandler\Permits\PostSubmitTasks::class,
 
     // Create HTML Snapshot

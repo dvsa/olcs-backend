@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;

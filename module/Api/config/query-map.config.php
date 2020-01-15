@@ -540,9 +540,6 @@ return [
     TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
     TransferQuery\FeatureToggle\IsEnabled::class => QueryHandler\FeatureToggle\IsEnabled::class,
 
-    // IRHP Permit Application
-    TransferQuery\IrhpPermitApplication\GetList::class => QueryHandler\IrhpPermitApplication\GetList::class,
-
     // IRHP Permit Stock
     TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
@@ -576,7 +573,6 @@ return [
 
     // IRHP Permits
     TransferQuery\IrhpPermit\GetListByIrhpId::class => QueryHandler\IrhpPermit\GetListByIrhpId::class,
-    TransferQuery\IrhpPermit\GetList::class => QueryHandler\IrhpPermit\GetList::class,
     TransferQuery\IrhpPermit\ById::class => QueryHandler\IrhpPermit\ById::class,
     TransferQuery\IrhpPermit\GetListByLicence::class => QueryHandler\IrhpPermit\GetListByLicence::class,
 
@@ -654,9 +650,6 @@ return [
     TransferQuery\IrhpApplication\RangesByIrhpApplication::class => QueryHandler\IrhpApplication\RangesByIrhpApplication::class,
     TransferQuery\IrhpApplication\GetGrantability::class => QueryHandler\IrhpApplication\GetGrantability::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
-    TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
-    TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
-    TransferQuery\Permits\ById::class => QueryHandler\Permits\ById::class,
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
     TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,

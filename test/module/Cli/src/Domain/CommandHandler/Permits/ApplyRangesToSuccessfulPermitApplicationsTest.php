@@ -17,7 +17,6 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplicatio
     as ApplyRangesToSuccessfulPermitApplicationsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\ApplyRangesToSuccessfulPermitApplications
     as ApplyRangesToSuccessfulPermitApplicationsHandler;
-use Dvsa\Olcs\Transfer\Query\Permits\EcmtConstrainedCountriesList;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 

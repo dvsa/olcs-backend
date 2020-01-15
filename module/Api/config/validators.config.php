@@ -15,7 +15,6 @@ return [
 
         'canAccessLicence' => Validators\CanAccessLicence::class,
         'canAccessApplication' => Validators\CanAccessApplication::class,
-        'canAccessEcmtPermitApplication' => Validators\CanAccessEcmtPermitApplication::class,
         'canAccessCompanySubsidiary' => Validators\CanAccessCompanySubsidiary::class,
         'canAccessOrganisation' => Validators\CanAccessOrganisation::class,
         'canAccessOrganisationPerson' => Validators\CanAccessOrganisationPerson::class,
@@ -51,8 +50,6 @@ return [
         'canEditApplication' => Validators\CanEditApplication::class,
         'canEditBusReg' => Validators\CanEditBusReg::class,
         'canAccessContinuationDetail' => Validators\CanAccessContinuationDetail::class,
-        'canAccessPermitApp' => Validators\CanAccessPermitApp::class,
-        'canEditPermitApp' => Validators\CanEditPermitApp::class,
         'isLicenceSurrenderable' => Validators\IsLicenceSurrenderable::class,
         'canAccessIrhpApplicationWithId' => Validators\CanAccessIrhpApplicationWithId::class,
         'canAccessIrhpApplicationWithIrhpApplication' => Validators\CanAccessIrhpApplicationWithIrhpApplication::class,
