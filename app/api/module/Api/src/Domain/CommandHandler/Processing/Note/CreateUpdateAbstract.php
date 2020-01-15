@@ -113,7 +113,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER));
         }
 
-        if (method_exists($command, 'getEcmtPermitApplication') && $command->getEcmtPermitApplication() !== null) {
+        if (method_exists($command, 'getIrhpApplication') && $command->getIrhpApplication() !== null) {
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_PERMIT));
         }
 
