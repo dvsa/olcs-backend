@@ -268,10 +268,6 @@ class Organisation extends AbstractRepository
             ->where($qb->expr()->in('l.status', ':licenceStatuses'))
             ->andWhere($qb->expr()->isNotNull($this->alias . '.companyOrLlpNo'))
             ->andWhere($qb->expr()->in($this->alias . '.type', ':orgTypes'))
-
-            //todo REMOVE THIS
-            ->setMaxResults(50)
-
             ->setParameter('licenceStatuses', $licenceStatuses)
             ->setParameter('orgTypes', $orgTypes);
 
