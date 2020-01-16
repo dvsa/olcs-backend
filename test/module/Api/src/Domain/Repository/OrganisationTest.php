@@ -518,7 +518,7 @@ class OrganisationTest extends RepositoryTestCase
         $expectedQuery = '[QUERY] SELECT o.companyOrLlpNo DISTINCT INNER JOIN Dvsa\Olcs\Api\Entity\Licence\Licence l ' .
         'WITH l.organisation = o.id ' .
         'AND l.status IN [[["lsts_consideration","lsts_suspended","lsts_valid","lsts_curtailed","lsts_granted"]]] ' .
-        'AND o.companyOrLlpNo IS NOT NULL AND o.type IN [[["org_t_rc","org_t_llp"]]] LIMIT 50';
+        'AND o.companyOrLlpNo IS NOT NULL AND o.type IN [[["org_t_rc","org_t_llp"]]]';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
