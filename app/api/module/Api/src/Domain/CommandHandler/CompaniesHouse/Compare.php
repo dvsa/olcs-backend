@@ -73,7 +73,7 @@ final class Compare extends AbstractCommandHandler
 
         $this->result->setFlag('isInsolvent', $this->isInsolvent($data));
 
-        if (empty($reasons) && !$this->result->getFlag('isInsolvent')) {
+        if (empty($reasons)) {
             // return early if no changes detected
             return $this->result->addMessage('No changes');
         }
@@ -100,7 +100,7 @@ final class Compare extends AbstractCommandHandler
     {
         $changes = [];
 
-        if (!$this->isInsolvent($new) && $this->statusHasChanged($old, $new)) {
+        if ($this->statusHasChanged($old, $new)) {
             $changes[] = AlertEntity::REASON_STATUS_CHANGE;
         }
 
