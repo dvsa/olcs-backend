@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 abstract class CompaniesHouseConsumerTestCase extends CommandHandlerTestCase
 {
