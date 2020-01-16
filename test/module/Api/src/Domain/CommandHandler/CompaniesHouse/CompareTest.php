@@ -215,10 +215,10 @@ class CompareTest extends CommandHandlerTestCase
      * @dataProvider changesProvider
      *
      * @param string $companyNumber
-     * @param array $stubResponse api response
-     * @param array $stubSavedData last saved company data
-     * @param array $expectedAlertData
-     * @param array $expectedSaveData new company data to save
+     * @param array  $stubResponse     api response
+     * @param array  $stubSavedData    last saved company data
+     * @param array  $expectedAlertData
+     * @param array  $expectedSaveData new company data to save
      */
     public function testHandleCommandChanges(
         $companyNumber,
@@ -328,7 +328,7 @@ class CompareTest extends CommandHandlerTestCase
                             1 => array(
                                 'officer_role' => 'director',
                                 'name' => 'HALL, Philip',
-                                'date_of_birth' =>  [
+                                'date_of_birth' => [
                                     'year' => '1968',
                                     'month' => '12',
                                 ],
@@ -336,7 +336,7 @@ class CompareTest extends CommandHandlerTestCase
                             2 => array(
                                 'officer_role' => 'director',
                                 'name' => 'SKINNER, Mark James',
-                                'date_of_birth' =>  [
+                                'date_of_birth' => [
                                     'year' => '1969',
                                     'month' => '06',
                                 ],
@@ -370,7 +370,7 @@ class CompareTest extends CommandHandlerTestCase
                             'name' => 'HALL, Philip',
                             'role' => 'director',
                         ),
-                        array (
+                        array(
                             'dateOfBirth' => new \DateTime('1969-06-01'),
                             'name' => 'SKINNER, Mark James',
                             'role' => 'director',
@@ -437,19 +437,19 @@ class CompareTest extends CommandHandlerTestCase
                     'postalCode' => 'EC1A 4JQ',
                     'officers' => [
                         [
-                          'name' => 'DILLON, Andrew',
-                          'role' => 'director',
-                          'dateOfBirth' => new \DateTime('1979-02-01'),
+                            'name' => 'DILLON, Andrew',
+                            'role' => 'director',
+                            'dateOfBirth' => new \DateTime('1979-02-01'),
                         ],
                         [
-                          'name' => 'HALL, Philip',
-                          'role' => 'director',
-                          'dateOfBirth' => new \DateTime('1968-12-01'),
+                            'name' => 'HALL, Philip',
+                            'role' => 'director',
+                            'dateOfBirth' => new \DateTime('1968-12-01'),
                         ],
                         [
-                          'name' => 'SKINNER, Mark James',
-                          'role' => 'director',
-                          'dateOfBirth' => new \DateTime('1969-06-01'),
+                            'name' => 'SKINNER, Mark James',
+                            'role' => 'director',
+                            'dateOfBirth' => new \DateTime('1969-06-01'),
                         ],
                     ],
                     'country' => null,
@@ -469,7 +469,7 @@ class CompareTest extends CommandHandlerTestCase
     public function changesProvider()
     {
         return [
-            'status change only' => [
+            'non_insolvent_status_change' => [
                 'companyNumber' => '03127414',
                 'stubResponse' => [
                     'registered_office_address' => [
@@ -941,6 +941,149 @@ class CompareTest extends CommandHandlerTestCase
                     'region' => null,
                     'insolvencyProcessed' => null
                 ]
+            ],
+            'insolvent_status_change' => [
+                'companyNumber' => '03127414',
+                'stubResponse' => [
+                    'registered_office_address' => [
+                        'address_line_1' => '120 Aldersgate Street',
+                        'address_line_2' => 'London',
+                        'postal_code' => 'EC1A 4JQ',
+                    ],
+                    'last_full_members_list_date' => '2014-11-17',
+                    'accounts' => [
+                        'next_due' => '2015-09-30',
+                        'last_accounts' => [
+                            'type' => 'full',
+                            'made_up_to' => '2013-12-31',
+                        ],
+                        'accounting_reference_date' => [
+                            'day' => '31',
+                            'month' => '12',
+                        ],
+                        'next_made_up_to' => '2014-12-31',
+                        'overdue' => false,
+                    ],
+                    'date_of_creation' => '1995-11-17',
+                    'sic_codes' => [
+                        0 => '62020',
+                    ],
+                    'undeliverable_registered_office_address' => false,
+                    'annual_return' => [
+                        'next_due' => '2015-12-15',
+                        'overdue' => false,
+                        'next_made_up_to' => '2015-11-17',
+                        'last_made_up_to' => '2014-11-17',
+                    ],
+                    'company_name' => 'VALTECH LIMITED',
+                    'jurisdiction' => 'england-wales',
+                    'company_number' => '03127414',
+                    'type' => 'ltd',
+                    'has_been_liquidated' => false,
+                    'has_insolvency_history' => false,
+                    'etag' => 'ec52ec76d16210d1133df1b4c9bb8f797a38d09c',
+                    'officer_summary' => [
+                        'resigned_count' => 17,
+                        'officers' => [
+                            0 => [
+                                'officer_role' => 'director',
+                                'name' => 'DILLON, Andrew',
+                                'date_of_birth' => [
+                                    'year' => '1979',
+                                    'month' => '02',
+                                ],
+                            ],
+                            1 => [
+                                'officer_role' => 'director',
+                                'name' => 'HALL, Philip',
+                                'date_of_birth' => [
+                                    'year' => '1968',
+                                    'month' => '12',
+                                ],
+                            ],
+                            2 => [
+                                'officer_role' => 'director',
+                                'name' => 'SKINNER, Mark James',
+                                'date_of_birth' => [
+                                    'year' => '1969',
+                                    'month' => '06',
+                                ],
+                            ],
+                        ],
+                        'active_count' => 3,
+                    ],
+                    'company_status' => 'administration',
+                    'can_file' => true,
+                ],
+                'stubSavedData' => [
+                    'addressLine1' => '120 Aldersgate Street',
+                    'addressLine2' => 'London',
+                    'companyName' => 'VALTECH LIMITED',
+                    'companyNumber' => '03127414',
+                    'locality' => null,
+                    'poBox' => null,
+                    'postalCode' => 'EC1A 4JQ',
+                    'premises' => null,
+                    'region' => null,
+                    'id' => 2,
+                    'version' => 1,
+                    'officers' => [
+                        [
+                            'dateOfBirth' => new \DateTime('1979-02-01'),
+                            'name' => 'DILLON, Andrew',
+                            'role' => 'director',
+                        ],
+                        [
+                            'dateOfBirth' => new \DateTime('1968-12-01'),
+                            'name' => 'HALL, Philip',
+                            'role' => 'director',
+                        ],
+                        [
+                            'dateOfBirth' => new \DateTime('1969-06-01'),
+                            'name' => 'SKINNER, Mark James',
+                            'role' => 'director',
+                        ],
+                    ],
+                    'companyStatus' => 'active',
+                    'country' => null,
+                ],
+                'expectedAlertData' => [
+                    'companyNumber' => '03127414',
+                    'reasons' => [
+                        AlertEntity::REASON_STATUS_CHANGE,
+                    ],
+                ],
+                'expectedSaveData' => [
+                    'companyName' => 'VALTECH LIMITED',
+                    'companyNumber' => '03127414',
+                    'companyStatus' => 'administration',
+                    'addressLine1' => '120 Aldersgate Street',
+                    'addressLine2' => 'London',
+                    'postalCode' => 'EC1A 4JQ',
+                    'officers' => [
+                        [
+                            'name' => 'DILLON, Andrew',
+                            'role' => 'director',
+                            'dateOfBirth' => new \DateTime('1979-02-01'),
+                        ],
+                        [
+                            'name' => 'HALL, Philip',
+                            'role' => 'director',
+                            'dateOfBirth' => new \DateTime('1968-12-01'),
+                        ],
+                        [
+                            'name' => 'SKINNER, Mark James',
+                            'role' => 'director',
+                            'dateOfBirth' => new \DateTime('1969-06-01'),
+                        ],
+                    ],
+                    'country' => null,
+                    'locality' => null,
+                    'poBox' => null,
+                    'premises' => null,
+                    'region' => null,
+                    'insolvencyProcessed' => 0
+                ],
             ],
         ];
     }
