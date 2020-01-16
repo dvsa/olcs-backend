@@ -297,7 +297,7 @@ class ProcessInsolvency extends AbstractConsumer
         }
 
         if ($licence->isPsv()) {
-            if ($licence->isRestricted()) {
+            if ($licence->isRestricted() || $licence->isSpecialRestricted()) {
                 return static::GB_PSV_RESTRICTED_TEMPLATE;
             }
             return static::GB_PSV_STANDARD_TEMPLATE;

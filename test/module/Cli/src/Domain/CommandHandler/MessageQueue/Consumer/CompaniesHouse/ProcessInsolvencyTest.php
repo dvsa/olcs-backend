@@ -521,6 +521,10 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $mockGBLicence = m::mock(Licence::class)
             ->shouldReceive('isNi')
             ->andReturn(false)
+            ->shouldReceive('isRestricted')
+            ->andReturn(true)
+            ->shouldReceive('isNi')
+            ->andReturn(false)
             ->shouldReceive('getId')
             ->andReturn(1)
             ->shouldReceive('isPsv')
@@ -538,6 +542,10 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $mockNiLicence = m::mock(Licence::class)
             ->shouldReceive('isNi')
             ->andReturn(true)
+            ->shouldReceive('isSpecialRestricted')
+            ->andReturn(true)
+            ->shouldReceive('isNi')
+            ->andReturn(true)
             ->getMock()
             ->shouldReceive('getId')
             ->andReturn(2)
@@ -552,6 +560,10 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             ->getMock();
 
         $mockGBLicenceNoRegisteredUsers = m::mock(Licence::class)
+            ->shouldReceive('isNi')
+            ->andReturn(true)
+            ->shouldReceive('isRestricted')
+            ->andReturn(true)
             ->shouldReceive('isNi')
             ->andReturn(false)
             ->shouldReceive('getId')
@@ -570,6 +582,10 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
 
 
         $mockGBLicenceNoCorrespondenceEmail = m::mock(Licence::class)
+            ->shouldReceive('isNi')
+            ->andReturn(true)
+            ->shouldReceive('getId')
+            ->andReturn(123)
             ->shouldReceive('isNi')
             ->andReturn(false)
             ->shouldReceive('getId')
