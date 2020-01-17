@@ -34,6 +34,7 @@ abstract class AbstractConsumer extends AbstractCommandHandler implements QueueI
 
     public function noMessages(): void
     {
+        $this->result->setFlag('no_messages', true);
         $this->result->addMessage(AbstractConsumer::NOTHING_TO_PROCESS_MESSAGE);
     }
 }
