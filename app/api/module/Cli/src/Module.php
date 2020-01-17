@@ -119,7 +119,10 @@ class Module implements ConsoleUsageProviderInterface
                 '<close-expired-window> [--since=<date>]',
                 'action to perform, ie \'close-expired-window\' to close all recently expired windows',
             ],
-            'poll-sqs <queue> [--verbose|-v]' => 'Poll an SQS queue to process a message'
+            'poll-sqs <queue> [--queue-duration=<seconds>] [--verbose|-v]' => 'Poll an SQS queue to process a message',
+            [
+                '--queue-duration=SECONDS', '(optional) Number of seconds the queue process will run for'
+            ],
         ];
     }
 
