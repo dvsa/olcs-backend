@@ -24,9 +24,12 @@ use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 
 class ProcessInsolvency extends AbstractConsumer
 {
+    use QueueAwareTrait;
+
     const GB_TEAMLEADER_TASK = 'GB insolvency team leader';
     const NI_TEAMLEADER_TASK = 'NI insolvency team leader';
 
@@ -327,9 +330,9 @@ class ProcessInsolvency extends AbstractConsumer
             'translateToWelsh' => $translateToWelsh
         ];
         if (!$isRegistered) {
-            $cmd = SendLiquidatedCompanyForUnregisteredUser::create($cmdData);
+            $cmd = $this->emailQueue(SendLiquidatedCompanyForUnregisteredUser::class, $cmdData, null);
         } else {
-            $cmd = SendLiquidatedCompanyForRegisteredUser::create($cmdData);
+            $cmd = $this->emailQueue(SendLiquidatedCompanyForRegisteredUser::class, $cmdData, null);
         }
 
         $this->result->merge($this->handleSideEffect($cmd));
