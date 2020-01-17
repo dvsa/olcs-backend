@@ -6,8 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForRegisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForUnregisteredUser;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\Team;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseInsolvencyPractitioner;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\AbstractConsumer;
@@ -225,7 +226,7 @@ class ProcessInsolvency extends AbstractConsumer
      */
     private function generateFollowUpTask(Licence $licence): void
     {
-        $params = [
+        $taskData = [
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_REG_29_31_SECTION_57,
             'description' => 'Check response to Regulation 29/31/Section 57',
@@ -233,10 +234,15 @@ class ProcessInsolvency extends AbstractConsumer
             'licence' => $licence->getId(),
             'urgent' => 'Y',
             'assignedToTeam' => $licence->isNi() ? $this->getTeamId(self::NI_TEAMLEADER_TASK) : $this->getTeamId(self::GB_TEAMLEADER_TASK)
-
         ];
 
-        $this->result->merge($this->handleSideEffect(CreateTask::create($params)));
+        $params = [
+            'type' => Queue::TYPE_CREATE_TASK,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => json_encode($taskData)
+        ];
+
+        $this->result->merge($this->handleSideEffect(CreateQueue::create($params)));
     }
 
     /**
