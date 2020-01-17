@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForRegisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForUnregisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Team;
@@ -139,7 +139,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             );
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, [], new Result());
-        $this->expectedSideEffect(CreateTask::class, [], new Result());
+        $this->expectedSideEffect(Create::class, [], new Result());
         $this->expectedSideEffect(SendLiquidatedCompanyForRegisteredUser::class, [], new Result(), 3);
 
         $command = ProcessInsolvencyCmd::create([]);
@@ -202,7 +202,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             );
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, [], new Result());
-        $this->expectedSideEffect(CreateTask::class, [], new Result());
+        $this->expectedSideEffect(Create::class, [], new Result());
 
         if ($GBNI === 'GB') {
             $this->expectedSideEffect(
@@ -302,7 +302,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             new Result()
         );
         $this->expectedSideEffect(
-            CreateTask::class,
+            Create::class,
             [],
             new Result()
         );
@@ -376,7 +376,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             new Result()
         );
         $this->expectedSideEffect(
-            CreateTask::class,
+            Create::class,
             [],
             new Result()
         );
