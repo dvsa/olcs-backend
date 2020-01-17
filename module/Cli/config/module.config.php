@@ -304,7 +304,7 @@ return [
                 ],
                 'poll-sqs' => [
                     'options' => [
-                        'route' => 'poll-sqs <queue> [--verbose|-v]',
+                        'route' => 'poll-sqs <queue> [--queue-duration=<seconds>] [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\SQSController::class,
                             'action' => 'index'
