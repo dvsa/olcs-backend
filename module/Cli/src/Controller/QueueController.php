@@ -8,8 +8,8 @@
  */
 namespace Dvsa\Olcs\Cli\Controller;
 
+use Doctrine\ORM\ORMException;
 use Olcs\Logging\Log\Logger;
-use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 
 /**
@@ -18,18 +18,11 @@ use Zend\View\Model\ConsoleModel;
  * @author Rob Caiger <rob@clocal.co.uk>
  * @note ported from Cli\Controller\QueueController
  */
-class QueueController extends AbstractConsoleController
+class QueueController extends AbstractQueueController
 {
-    const DEFAULT_RUN_FOR = 60;
-
-    protected $startTime;
-    protected $endTime;
-    protected $sleepFor = 1000000; // microseconds
-
     /**
      * Index Action
      *
-     * @return void
      */
     public function indexAction()
     {
@@ -61,20 +54,8 @@ class QueueController extends AbstractConsoleController
             try {
                 // process next item
                 $response = $service->processNextItem($includeTypes, $excludeTypes);
-            } catch (\Doctrine\ORM\ORMException $e) {
-                // If ORMException such as "Entity Manager Closed" exit script as they will fail
-                $content = 'ORM Error: '.$e->getMessage();
-
-                Logger::log(
-                    \Zend\Log\Logger::ERR,
-                    'Failed to process next item in the queue',
-                    ['errorLevel' => 1, 'content' => $content]
-                );
-
-                $this->getConsole()->writeLine($content);
-                $model = new ConsoleModel();
-                $model->setErrorLevel(1);
-                return $model;
+            } catch (ORMException $e) {
+                return $this->handleORMException($e);
             } catch (\Exception $e) {
                 $content = 'Error: '.$e->getMessage();
 
@@ -124,35 +105,5 @@ class QueueController extends AbstractConsoleController
         return $this->getRequest()->getParam('exclude') ?
             explode(',', $this->getRequest()->getParam('exclude')) :
             [];
-    }
-
-    /**
-     * Get queue duration
-     *
-     * @param array $config Condig
-     *
-     * @return number Queue duration in seconds
-     */
-    private function getQueueDuration($config)
-    {
-        // get default from config, if not in config then default to self::gsDEFAULT_RUN_FOR
-        $default = isset($config['runFor']) && is_numeric($config['runFor']) ?
-            $config['runFor'] :
-            self::DEFAULT_RUN_FOR;
-        return $this->getRequest()->getParam('queue-duration', $default);
-    }
-
-    /**
-     * Decide whether to run again based on config settings and time elapsed
-     *
-     * @return boolean
-     */
-    protected function shouldRunAgain()
-    {
-        if (isset($this->endTime)) {
-            return microtime(true) < $this->endTime;
-        }
-
-        return true;
     }
 }
