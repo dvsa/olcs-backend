@@ -136,6 +136,13 @@ class User extends AbstractRepository
             );
         }
 
+        // filter by role array if it has been specified
+        if (method_exists($query, 'getRoles') && !empty($query->getRoles())) {
+            $qb->leftJoin('u.roles', 'r');
+            $qb->andWhere('r.role IN (:roles)');
+            $qb->setParameter('roles', $query->getRoles());
+        }
+
         // exclude system user from all lists
         $qb->andWhere($qb->expr()->neq($this->alias . '.id', ':systemUser'))
             ->setParameter('systemUser', PidIdentityProviderEntity::SYSTEM_USER);
@@ -246,7 +253,7 @@ class User extends AbstractRepository
 
         if (isset($data['osType'])) {
                       $data['osType'] = $this->getRefdataReference($data['osType']);
-                   }
+        }
 
         return $data;
     }

@@ -70,7 +70,7 @@ class UserTest extends RepositoryTestCase
             [
                 'localAuthority' => 11,
                 'partnerContactDetails' => 22,
-                'organisation' => 43,
+                'organisation' => 43
             ]
         );
 
@@ -108,7 +108,8 @@ class UserTest extends RepositoryTestCase
             [
                 'organisation' => 43,
                 'team' => 112,
-                'isInternal' => true
+                'isInternal' => true,
+                'roles' => [RoleEntity::ROLE_OPERATOR_USER, RoleEntity::ROLE_OPERATOR_TM]
             ]
         );
 
@@ -127,6 +128,10 @@ class UserTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->neq')->with('u.id', ':systemUser')->once()->andReturn('systemUser');
         $mockQb->shouldReceive('andWhere')->with('systemUser')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('systemUser', PidIdentityProviderEntity::SYSTEM_USER)->once();
+
+        $mockQb->shouldReceive('leftJoin')->with('u.roles', 'r')->once();
+        $mockQb->shouldReceive('andWhere')->with('r.role IN (:roles)')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('roles', [RoleEntity::ROLE_OPERATOR_USER, RoleEntity::ROLE_OPERATOR_TM])->once();
 
         $sut->applyListFilters($mockQb, $query);
     }
