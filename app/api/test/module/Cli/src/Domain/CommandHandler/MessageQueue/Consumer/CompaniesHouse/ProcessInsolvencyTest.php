@@ -4,8 +4,6 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\MessageQueue\Consumer\Companie
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForRegisteredUser;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForUnregisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany;
@@ -96,6 +94,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $this->setupStandardService();
 
         $mockCompany = m::mock(CHCompanyEntity::class);
+        $mockCompany->shouldReceive('getId')->andReturn(123);
         $mockCompany->shouldReceive('getCompanyNumber')
             ->andReturn('1234');
         $mockCompany->shouldReceive('getCompanyStatus')
@@ -159,6 +158,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $this->setupStandardService();
 
         $mockCompany = m::mock(CHCompanyEntity::class);
+        $mockCompany->shouldReceive('getId')->andReturn(123);
         $mockCompany->shouldReceive('getCompanyNumber')
             ->andReturn('1234');
         $mockCompany->shouldReceive('getCompanyStatus')
@@ -220,6 +220,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $licence = $this->getMockLicences()[2];
 
         $mockCompany = m::mock(CHCompanyEntity::class);
+        $mockCompany->shouldReceive('getId')->andReturn(123);
         $mockCompany->shouldReceive('getCompanyNumber')
             ->andReturn('1234');
         $mockCompany->shouldReceive('getCompanyStatus')
