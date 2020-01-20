@@ -258,8 +258,10 @@ class ProcessInsolvency extends AbstractConsumer
 
         $correspondenceEmail = $licence->getCorrespondenceCd()->getEmailAddress();
 
+        $orgId = $licence->getOrganisation()->getId();
+
         $selfServeUserEmailCommands = array_map(
-            function ($organisationUser) use ($translateToWelsh) {
+            function ($organisationUser) use ($translateToWelsh, $orgId) {
                 $selfServeUserEmailCommandsData = [
                     'emailAddress' => $organisationUser->getUser()->getContactDetails()->getEmailAddress(),
                     'translateToWelsh' => $translateToWelsh
@@ -267,7 +269,7 @@ class ProcessInsolvency extends AbstractConsumer
                 return $this->emailQueue(
                     SendLiquidatedCompanyForRegisteredUser::class,
                     $selfServeUserEmailCommandsData,
-                    null
+                    $orgId
                 );
             },
             $licence->getOrganisation()->getAdministratorUsers()->toArray()
@@ -282,7 +284,8 @@ class ProcessInsolvency extends AbstractConsumer
             $this->sendCorrespondenceEmail(
                 $correspondenceEmail,
                 $translateToWelsh,
-                !empty($selfServeUserEmailCommands)
+                !empty($selfServeUserEmailCommands),
+                $orgId
             );
         }
 
@@ -334,16 +337,16 @@ class ProcessInsolvency extends AbstractConsumer
      * @param string $email
      * @param string $translateToWelsh
      */
-    private function sendCorrespondenceEmail(string $email, string $translateToWelsh, bool $isRegistered): void
+    private function sendCorrespondenceEmail(string $email, string $translateToWelsh, bool $isRegistered, int $orgId): void
     {
         $cmdData = [
             'emailAddress' => $email,
             'translateToWelsh' => $translateToWelsh
         ];
         if (!$isRegistered) {
-            $cmd = $this->emailQueue(SendLiquidatedCompanyForUnregisteredUser::class, $cmdData, null);
+            $cmd = $this->emailQueue(SendLiquidatedCompanyForUnregisteredUser::class, $cmdData, $orgId);
         } else {
-            $cmd = $this->emailQueue(SendLiquidatedCompanyForRegisteredUser::class, $cmdData, null);
+            $cmd = $this->emailQueue(SendLiquidatedCompanyForRegisteredUser::class, $cmdData, $orgId);
         }
 
         $this->result->merge($this->handleSideEffect($cmd));
