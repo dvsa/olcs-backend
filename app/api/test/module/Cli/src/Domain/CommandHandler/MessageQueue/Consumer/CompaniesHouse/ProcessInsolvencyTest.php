@@ -4,10 +4,8 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\MessageQueue\Consumer\Companie
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForRegisteredUser;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForUnregisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Team;
@@ -96,6 +94,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $this->setupStandardService();
 
         $mockCompany = m::mock(CHCompanyEntity::class);
+        $mockCompany->shouldReceive('getId')->andReturn(123);
         $mockCompany->shouldReceive('getCompanyNumber')
             ->andReturn('1234');
         $mockCompany->shouldReceive('getCompanyStatus')
@@ -139,8 +138,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             );
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, [], new Result());
-        $this->expectedSideEffect(CreateTask::class, [], new Result());
-        $this->expectedSideEffect(SendLiquidatedCompanyForRegisteredUser::class, [], new Result(), 3);
+        $this->expectedSideEffect(Create::class, [], new Result(), 4);
 
         $command = ProcessInsolvencyCmd::create([]);
         $response = $this->sut->handleCommand($command);
@@ -155,11 +153,12 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
     /**
      * @dataProvider emailTestsDataProvider
      */
-    public function testHandleCommandSendsEmails($licence, $GBNI)
+    public function testHandleCommandSendsEmails($licence)
     {
         $this->setupStandardService();
 
         $mockCompany = m::mock(CHCompanyEntity::class);
+        $mockCompany->shouldReceive('getId')->andReturn(123);
         $mockCompany->shouldReceive('getCompanyNumber')
             ->andReturn('1234');
         $mockCompany->shouldReceive('getCompanyStatus')
@@ -202,41 +201,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             );
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, [], new Result());
-        $this->expectedSideEffect(CreateTask::class, [], new Result());
-
-        if ($GBNI === 'GB') {
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'gbcorrespondenceemail@example.com', 'translateToWelsh' => 'Y'],
-                new Result()
-            );
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'emailgb1@example.com', 'translateToWelsh' => 'Y'],
-                new Result()
-            );
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'emailgb2@example.com', 'translateToWelsh' => 'Y'],
-                new Result()
-            );
-        } else {
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'nicorrespondenceemail@example.com', 'translateToWelsh' => 'N'],
-                new Result()
-            );
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'emailni1@example.com', 'translateToWelsh' => 'N'],
-                new Result()
-            );
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'emailni2@example.com', 'translateToWelsh' => 'N'],
-                new Result()
-            );
-        }
+        $this->expectedSideEffect(Create::class, [], new Result(), 4);
 
         $command = ProcessInsolvencyCmd::create([]);
         $response = $this->sut->handleCommand($command);
@@ -255,6 +220,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $licence = $this->getMockLicences()[2];
 
         $mockCompany = m::mock(CHCompanyEntity::class);
+        $mockCompany->shouldReceive('getId')->andReturn(123);
         $mockCompany->shouldReceive('getCompanyNumber')
             ->andReturn('1234');
         $mockCompany->shouldReceive('getCompanyStatus')
@@ -302,14 +268,10 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             new Result()
         );
         $this->expectedSideEffect(
-            CreateTask::class,
+            Create::class,
             [],
-            new Result()
-        );
-        $this->expectedSideEffect(
-            SendLiquidatedCompanyForUnregisteredUser::class,
-            ['emailAddress' => 'gbcorrespondenceemail@example.com', 'translateToWelsh' => 'N'],
-            new Result()
+            new Result(),
+            2
         );
 
         $command = ProcessInsolvencyCmd::create([]);
@@ -376,7 +338,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             new Result()
         );
         $this->expectedSideEffect(
-            CreateTask::class,
+            Create::class,
             [],
             new Result()
         );
@@ -657,11 +619,9 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         return [
             'GBLicence' => [
                 $this->getMockLicences()[0],
-                'GB'
             ],
             'NILicence' => [
                 $this->getMockLicences()[1],
-                'NI'
             ]
         ];
     }
