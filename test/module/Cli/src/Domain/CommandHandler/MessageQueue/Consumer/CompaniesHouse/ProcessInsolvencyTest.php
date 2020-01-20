@@ -139,8 +139,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             );
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, [], new Result());
-        $this->expectedSideEffect(Create::class, [], new Result());
-        $this->expectedSideEffect(SendLiquidatedCompanyForRegisteredUser::class, [], new Result(), 3);
+        $this->expectedSideEffect(Create::class, [], new Result(), 4);
 
         $command = ProcessInsolvencyCmd::create([]);
         $response = $this->sut->handleCommand($command);
@@ -155,7 +154,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
     /**
      * @dataProvider emailTestsDataProvider
      */
-    public function testHandleCommandSendsEmails($licence, $GBNI)
+    public function testHandleCommandSendsEmails($licence)
     {
         $this->setupStandardService();
 
@@ -202,41 +201,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             );
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, [], new Result());
-        $this->expectedSideEffect(Create::class, [], new Result());
-
-        if ($GBNI === 'GB') {
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'gbcorrespondenceemail@example.com', 'translateToWelsh' => 'Y'],
-                new Result()
-            );
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'emailgb1@example.com', 'translateToWelsh' => 'Y'],
-                new Result()
-            );
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'emailgb2@example.com', 'translateToWelsh' => 'Y'],
-                new Result()
-            );
-        } else {
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'nicorrespondenceemail@example.com', 'translateToWelsh' => 'N'],
-                new Result()
-            );
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'emailni1@example.com', 'translateToWelsh' => 'N'],
-                new Result()
-            );
-            $this->expectedSideEffect(
-                SendLiquidatedCompanyForRegisteredUser::class,
-                ['emailAddress' => 'emailni2@example.com', 'translateToWelsh' => 'N'],
-                new Result()
-            );
-        }
+        $this->expectedSideEffect(Create::class, [], new Result(), 4);
 
         $command = ProcessInsolvencyCmd::create([]);
         $response = $this->sut->handleCommand($command);
@@ -304,12 +269,8 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $this->expectedSideEffect(
             Create::class,
             [],
-            new Result()
-        );
-        $this->expectedSideEffect(
-            SendLiquidatedCompanyForUnregisteredUser::class,
-            ['emailAddress' => 'gbcorrespondenceemail@example.com', 'translateToWelsh' => 'N'],
-            new Result()
+            new Result(),
+            2
         );
 
         $command = ProcessInsolvencyCmd::create([]);
@@ -657,11 +618,9 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         return [
             'GBLicence' => [
                 $this->getMockLicences()[0],
-                'GB'
             ],
             'NILicence' => [
                 $this->getMockLicences()[1],
-                'NI'
             ]
         ];
     }
