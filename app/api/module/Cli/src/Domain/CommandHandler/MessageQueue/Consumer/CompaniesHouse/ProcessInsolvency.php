@@ -178,6 +178,7 @@ class ProcessInsolvency extends AbstractConsumer
 
     /**
      * @param Organisation $organisation
+     *
      * @throws \Exception
      */
     protected function handleGenerations(Organisation $organisation): void
@@ -258,11 +259,16 @@ class ProcessInsolvency extends AbstractConsumer
         $correspondenceEmail = $licence->getCorrespondenceCd()->getEmailAddress();
 
         $selfServeUserEmailCommands = array_map(
-            static function ($organisationUser) use ($translateToWelsh) {
-                return SendLiquidatedCompanyForRegisteredUser::create([
+            function ($organisationUser) use ($translateToWelsh) {
+                $selfServeUserEmailCommandsData = [
                     'emailAddress' => $organisationUser->getUser()->getContactDetails()->getEmailAddress(),
                     'translateToWelsh' => $translateToWelsh
-                ]);
+                ];
+                return $this->emailQueue(
+                    SendLiquidatedCompanyForRegisteredUser::class,
+                    $selfServeUserEmailCommandsData,
+                    null
+                );
             },
             $licence->getOrganisation()->getAdministratorUsers()->toArray()
         );
@@ -273,13 +279,18 @@ class ProcessInsolvency extends AbstractConsumer
         }
 
         if (!is_null($correspondenceEmail)) {
-            $this->sendCorrespondenceEmail($correspondenceEmail, $translateToWelsh, !empty($selfServeUserEmailCommands));
+            $this->sendCorrespondenceEmail(
+                $correspondenceEmail,
+                $translateToWelsh,
+                !empty($selfServeUserEmailCommands)
+            );
         }
 
         foreach ($selfServeUserEmailCommands as $selfServeUserEmailCommand) {
             $this->result->merge($this->handleSideEffect($selfServeUserEmailCommand));
         }
     }
+
     /**
      * @param string $name
      *
