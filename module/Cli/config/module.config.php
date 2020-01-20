@@ -403,6 +403,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\ReportingBulkReprint::class,
             Queue::TYPE_PERMITS_POST_SUBMIT
             => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\PostSubmitTasks::class,
+            Queue::TYPE_CREATE_TASK
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\CreateTask::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,

@@ -6,8 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForRegisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForUnregisteredUser;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\Team;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseInsolvencyPractitioner;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\AbstractConsumer;
@@ -23,9 +24,12 @@ use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 
 class ProcessInsolvency extends AbstractConsumer
 {
+    use QueueAwareTrait;
+
     const GB_TEAMLEADER_TASK = 'GB insolvency team leader';
     const NI_TEAMLEADER_TASK = 'NI insolvency team leader';
 
@@ -139,8 +143,10 @@ class ProcessInsolvency extends AbstractConsumer
     {
         $practitionerData = [];
         foreach ($insolvencyDetails as $details) {
-            $practitionerData = array_merge($practitionerData, $details['practitioners']);
+            $practitionerData [] = $details['practitioners'];
         }
+
+
 
         return new ArrayCollection(array_map(function ($practitioner) {
             return $this->mapToEntity($practitioner);
@@ -174,6 +180,7 @@ class ProcessInsolvency extends AbstractConsumer
 
     /**
      * @param Organisation $organisation
+     *
      * @throws \Exception
      */
     protected function handleGenerations(Organisation $organisation): void
@@ -225,7 +232,7 @@ class ProcessInsolvency extends AbstractConsumer
      */
     private function generateFollowUpTask(Licence $licence): void
     {
-        $params = [
+        $taskData = [
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_REG_29_31_SECTION_57,
             'description' => 'Check response to Regulation 29/31/Section 57',
@@ -233,10 +240,15 @@ class ProcessInsolvency extends AbstractConsumer
             'licence' => $licence->getId(),
             'urgent' => 'Y',
             'assignedToTeam' => $licence->isNi() ? $this->getTeamId(self::NI_TEAMLEADER_TASK) : $this->getTeamId(self::GB_TEAMLEADER_TASK)
-
         ];
 
-        $this->result->merge($this->handleSideEffect(CreateTask::create($params)));
+        $params = [
+            'type' => Queue::TYPE_CREATE_TASK,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => json_encode($taskData)
+        ];
+
+        $this->result->merge($this->handleSideEffect(CreateQueue::create($params)));
     }
 
     /**
@@ -249,11 +261,16 @@ class ProcessInsolvency extends AbstractConsumer
         $correspondenceEmail = $licence->getCorrespondenceCd()->getEmailAddress();
 
         $selfServeUserEmailCommands = array_map(
-            static function ($organisationUser) use ($translateToWelsh) {
-                return SendLiquidatedCompanyForRegisteredUser::create([
+            function ($organisationUser) use ($translateToWelsh) {
+                $selfServeUserEmailCommandsData = [
                     'emailAddress' => $organisationUser->getUser()->getContactDetails()->getEmailAddress(),
                     'translateToWelsh' => $translateToWelsh
-                ]);
+                ];
+                return $this->emailQueue(
+                    SendLiquidatedCompanyForRegisteredUser::class,
+                    $selfServeUserEmailCommandsData,
+                    $this->company->getId()
+                );
             },
             $licence->getOrganisation()->getAdministratorUsers()->toArray()
         );
@@ -264,13 +281,18 @@ class ProcessInsolvency extends AbstractConsumer
         }
 
         if (!is_null($correspondenceEmail)) {
-            $this->sendCorrespondenceEmail($correspondenceEmail, $translateToWelsh, !empty($selfServeUserEmailCommands));
+            $this->sendCorrespondenceEmail(
+                $correspondenceEmail,
+                $translateToWelsh,
+                !empty($selfServeUserEmailCommands)
+            );
         }
 
         foreach ($selfServeUserEmailCommands as $selfServeUserEmailCommand) {
             $this->result->merge($this->handleSideEffect($selfServeUserEmailCommand));
         }
     }
+
     /**
      * @param string $name
      *
@@ -321,9 +343,9 @@ class ProcessInsolvency extends AbstractConsumer
             'translateToWelsh' => $translateToWelsh
         ];
         if (!$isRegistered) {
-            $cmd = SendLiquidatedCompanyForUnregisteredUser::create($cmdData);
+            $cmd = $this->emailQueue(SendLiquidatedCompanyForUnregisteredUser::class, $cmdData, $this->company->getId());
         } else {
-            $cmd = SendLiquidatedCompanyForRegisteredUser::create($cmdData);
+            $cmd = $this->emailQueue(SendLiquidatedCompanyForRegisteredUser::class, $cmdData, $this->company->getId());
         }
 
         $this->result->merge($this->handleSideEffect($cmd));
