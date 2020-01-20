@@ -29,20 +29,10 @@ class CompanyProfile extends AbstractConsumer
         }
 
         $companyNumber = $messages[0]['Body'];
-        $isProcessed = false;
         $this->result->merge($this->handleSideEffect(Compare::create(['companyNumber' => $companyNumber])));
 
-        /** @var CompaniesHouseCompany $companiesHouseCompany */
-        try {
-            $companiesHouseCompany = $this->getRepo()->getLatestByCompanyNumber($companyNumber);
-            $isProcessed = $companiesHouseCompany->getInsolvencyProcessed();
-
-        }
-        catch(NotFoundException $notFoundException)
-        {
-            //company not found halts the consumer logic should be that it drops into DL queue
-
-        }
+        $companiesHouseCompany = $this->getRepo()->getLatestByCompanyNumber($companyNumber);
+        $isProcessed = $companiesHouseCompany->getInsolvencyProcessed();
 
         if ($this->result->getFlag('isInsolvent') && !$isProcessed) {
             $insolvencyMessage = $this->messageBuilderService->buildMessage(
