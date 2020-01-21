@@ -143,6 +143,16 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
         );
 
         $this->expectCommand(
+            Failed::class,
+            [
+                'item' => $this->item,
+                'lastError' => '',
+            ],
+            new Result(),
+            false
+        );
+
+        $this->expectCommand(
             UpdateFeeStatus::class,
             [
                 'id' => $this->item->getEntityId(),
@@ -152,7 +162,6 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
             false
         );
 
-        $this->expectException(ORMException::class);
         $this->sut->processMessage($this->item);
     }
 
