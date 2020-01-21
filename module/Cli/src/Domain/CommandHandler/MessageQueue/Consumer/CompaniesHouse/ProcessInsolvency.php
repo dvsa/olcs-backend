@@ -143,7 +143,7 @@ class ProcessInsolvency extends AbstractConsumer
     {
         $practitionerData = [];
         foreach ($insolvencyDetails as $details) {
-            $practitionerData [] = $details['practitioners'];
+            $practitionerData  = array_merge($practitionerData, $details['practitioners']);
         }
 
 
