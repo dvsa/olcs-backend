@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -34,7 +35,14 @@ class UserList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT), ['contactDetails' => ['person']]
+                $repo->fetchList(
+                    $query,
+                    Query::HYDRATE_OBJECT
+                ),
+                [
+                    'contactDetails' => ['person'],
+                    'roles'
+                ]
             ),
             'count' => $repo->fetchCount($query)
         ];
