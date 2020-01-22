@@ -8,7 +8,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\GrantCommunityLicence;
@@ -40,7 +39,10 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
     {
         $this->refData = [
             CommunityLic::STATUS_ACTIVE,
-            CommunityLic::STATUS_RETURNDED
+            CommunityLic::STATUS_PENDING,
+            CommunityLic::STATUS_RETURNDED,
+            CommunityLic::STATUS_WITHDRAWN,
+            CommunityLic::STATUS_SUSPENDED,
         ];
 
         $this->references = [];
@@ -56,13 +58,19 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
 
         $command = GrantCommunityLicenceCmd::create($data);
 
+        $communityLics = new ArrayCollection();
+
         /** @var CommunityLic $pendingRecord */
         $pendingRecord = m::mock(CommunityLic::class)->makePartial();
         $pendingRecord->setId(123);
+        $pendingRecord->setStatus($this->refData[CommunityLic::STATUS_PENDING]);
+        $communityLics->add($pendingRecord);
 
-        $pendingRecords = [
-            $pendingRecord
-        ];
+        /** @var CommunityLic $suspendedRecord */
+        $suspendedRecord = m::mock(CommunityLic::class)->makePartial();
+        $suspendedRecord->setId(1234);
+        $suspendedRecord->setStatus($this->refData[CommunityLic::STATUS_SUSPENDED]);
+        $communityLics->add($suspendedRecord);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -70,9 +78,8 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
         $licence->shouldReceive('canHaveCommunityLicences')
             ->andReturn(true);
 
-        $licence->shouldReceive('getCommunityLics->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturn($pendingRecords);
+        $licence->shouldReceive('getCommunityLics')
+            ->andReturn($communityLics);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -120,12 +127,19 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
 
         $command = GrantCommunityLicenceCmd::create($data);
 
-        /** @var CommunityLic $pendingRecord */
-        $pendingRecord = m::mock(CommunityLic::class)->makePartial();
-        $pendingRecord->setId(123);
+        $communityLics = new ArrayCollection();
 
-        $pendingRecords = new ArrayCollection();
-        $pendingRecords->add($pendingRecord);
+        /** @var CommunityLic $activeRecord */
+        $activeRecord = m::mock(CommunityLic::class)->makePartial();
+        $activeRecord->setId(123);
+        $activeRecord->setStatus($this->refData[CommunityLic::STATUS_ACTIVE]);
+        $communityLics->add($activeRecord);
+
+        /** @var CommunityLic $withdrawnRecord */
+        $withdrawnRecord = m::mock(CommunityLic::class)->makePartial();
+        $withdrawnRecord->setId(1234);
+        $withdrawnRecord->setStatus($this->refData[CommunityLic::STATUS_WITHDRAWN]);
+        $communityLics->add($withdrawnRecord);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
@@ -133,9 +147,8 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
         $licence->shouldReceive('canHaveCommunityLicences')
             ->andReturn(false);
 
-        $licence->shouldReceive('getCommunityLics->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturn($pendingRecords);
+        $licence->shouldReceive('getCommunityLics')
+            ->andReturn($communityLics);
 
         $licence->shouldReceive('setTotCommunityLicences')
             ->with(0)
@@ -151,7 +164,7 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
 
         $this->repoMap['CommunityLic']->shouldReceive('save')
             ->once()
-            ->with($pendingRecord);
+            ->with($activeRecord);
 
         $this->repoMap['Licence']->shouldReceive('save')
             ->once()
@@ -169,7 +182,7 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
 
-        $this->assertSame($this->refData[CommunityLic::STATUS_RETURNDED], $pendingRecord->getStatus());
-        $this->assertEquals(date('Y-m-d'), $pendingRecord->getExpiredDate()->format('Y-m-d'));
+        $this->assertSame($this->refData[CommunityLic::STATUS_RETURNDED], $activeRecord->getStatus());
+        $this->assertEquals(date('Y-m-d'), $activeRecord->getExpiredDate()->format('Y-m-d'));
     }
 }

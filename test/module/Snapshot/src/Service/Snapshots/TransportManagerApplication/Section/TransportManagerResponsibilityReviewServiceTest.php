@@ -100,11 +100,9 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
         $document2->setSubCategory($subCat1);
 
         /** @var  ArrayCollection|m\MockInterface $documents */
-        $documents = m::mock(ArrayCollection::class)->makePartial();
+        $documents = new ArrayCollection();
         $documents->add($document1);
         $documents->add($document2);
-
-        $documents->shouldReceive('matching')->andReturnSelf();
 
         /** @var Entity\Tm\TransportManager $tm2 */
         $tm2 = m::mock(Entity\Tm\TransportManager::class)->makePartial();

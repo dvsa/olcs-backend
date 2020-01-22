@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Lva\Application;
 
 use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -48,11 +49,15 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(RefData::FEE_TYPE_VAR);
+        $fee1->shouldReceive('getFeeStatus')
+            ->andReturn(new RefData(Fee::STATUS_OUTSTANDING));
 
         /** @var Fee $fee2 */
         $fee2 = m::mock(Fee::class)->makePartial();
         $fee2->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(RefData::FEE_TYPE_GRANT);
+        $fee2->shouldReceive('getFeeStatus')
+            ->andReturn(new RefData(Fee::STATUS_OUTSTANDING));
 
         $fees = new ArrayCollection();
         $fees->add($fee1);
@@ -71,7 +76,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $application->shouldReceive('getApplicationCompletion->getIncompleteSections')
             ->andReturn(['foo' => 'bar']);
 
-        $application->shouldReceive('getFees->matching')
+        $application->shouldReceive('getFees')
             ->andReturn($fees);
 
         $application->shouldReceive('getLicence->getEnforcementArea')
@@ -114,11 +119,15 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(RefData::FEE_TYPE_VAR);
+        $fee1->shouldReceive('getFeeStatus')
+            ->andReturn(new RefData(Fee::STATUS_OUTSTANDING));
 
         /** @var Fee $fee2 */
         $fee2 = m::mock(Fee::class)->makePartial();
         $fee2->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(RefData::FEE_TYPE_GRANT);
+        $fee2->shouldReceive('getFeeStatus')
+            ->andReturn(new RefData(Fee::STATUS_OUTSTANDING));
 
         $fees = new ArrayCollection();
         $fees->add($fee1);
@@ -137,7 +146,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $application->shouldReceive('getApplicationCompletion->getIncompleteSections')
             ->andReturn(['foo' => 'bar']);
 
-        $application->shouldReceive('getFees->matching')
+        $application->shouldReceive('getFees')
             ->andReturn($fees);
 
         $application->shouldReceive('getLicence->getEnforcementArea')
@@ -180,7 +189,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $application->shouldReceive('getApplicationCompletion->isComplete')
             ->andReturn(true);
 
-        $application->shouldReceive('getFees->matching')
+        $application->shouldReceive('getFees')
             ->andReturn($fees);
 
         $application->shouldReceive('getLicence->getEnforcementArea')
@@ -221,11 +230,15 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(RefData::FEE_TYPE_VAR);
+        $fee1->shouldReceive('getFeeStatus')
+            ->andReturn(new RefData(Fee::STATUS_OUTSTANDING));
 
         /** @var Fee $fee2 */
         $fee2 = m::mock(Fee::class)->makePartial();
         $fee2->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(RefData::FEE_TYPE_GRANT);
+        $fee2->shouldReceive('getFeeStatus')
+            ->andReturn(new RefData(Fee::STATUS_OUTSTANDING));
 
         $fees = new ArrayCollection();
         $fees->add($fee1);
@@ -241,7 +254,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $application->shouldReceive('hasVariationChanges')
             ->andReturn(false);
 
-        $application->shouldReceive('getFees->matching')
+        $application->shouldReceive('getFees')
             ->andReturn($fees);
 
         $application->shouldReceive('isGoods')
@@ -278,11 +291,15 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(RefData::FEE_TYPE_VAR);
+        $fee1->shouldReceive('getFeeStatus')
+            ->andReturn(new RefData(Fee::STATUS_OUTSTANDING));
 
         /** @var Fee $fee2 */
         $fee2 = m::mock(Fee::class)->makePartial();
         $fee2->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(RefData::FEE_TYPE_GRANT);
+        $fee2->shouldReceive('getFeeStatus')
+            ->andReturn(new RefData(Fee::STATUS_OUTSTANDING));
 
         $fees = new ArrayCollection();
         $fees->add($fee1);
@@ -301,7 +318,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $application->shouldReceive('getSectionsRequiringAttention')
             ->andReturn(['foo' => 'bar']);
 
-        $application->shouldReceive('getFees->matching')
+        $application->shouldReceive('getFees')
             ->andReturn($fees);
 
         $application->shouldReceive('isGoods')
@@ -335,7 +352,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $application->shouldReceive('getApplicationTracking->isValid')->andReturn(true);
         $application->shouldReceive('getApplicationCompletion->isComplete')->andReturn(false);
         $application->shouldReceive('getApplicationCompletion->getIncompleteSections')->andReturn(['foo' => 'bar']);
-        $application->shouldReceive('getFees->matching')->andReturn(new ArrayCollection());
+        $application->shouldReceive('getFees')->andReturn(new ArrayCollection());
         $application->shouldReceive('getLicence->getEnforcementArea')->andReturn(null);
 
         $this->sectionAccessService->shouldReceive('getAccessibleSections')->andReturn([]);
@@ -359,7 +376,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $application->shouldReceive('getApplicationTracking->isValid')->andReturn(true);
         $application->shouldReceive('getApplicationCompletion->isComplete')->andReturn(false);
         $application->shouldReceive('getApplicationCompletion->getIncompleteSections')->andReturn(['foo' => 'bar']);
-        $application->shouldReceive('getFees->matching')->andReturn(new ArrayCollection());
+        $application->shouldReceive('getFees')->andReturn(new ArrayCollection());
         $application->shouldReceive('getLicence->getEnforcementArea')->andReturn(null);
 
         $this->sectionAccessService->shouldReceive('getAccessibleSections')->andReturn([]);
@@ -383,7 +400,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
         $application->shouldReceive('getApplicationTracking->isValid')->andReturn(true);
         $application->shouldReceive('getApplicationCompletion->isComplete')->andReturn(false);
         $application->shouldReceive('getApplicationCompletion->getIncompleteSections')->andReturn(['foo' => 'bar']);
-        $application->shouldReceive('getFees->matching')->andReturn(new ArrayCollection());
+        $application->shouldReceive('getFees')->andReturn(new ArrayCollection());
         $application->shouldReceive('getLicence->getEnforcementArea')->andReturn(null);
 
         $this->sectionAccessService->shouldReceive('getAccessibleSections')->andReturn([]);

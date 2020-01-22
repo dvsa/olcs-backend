@@ -37,14 +37,6 @@ class Overview extends AbstractQueryHandler
         $discCriteria
             ->where($discCriteria->expr()->isNull('ceasedDate'));
 
-        $statusCriteria = Criteria::create();
-        $statusCriteria->where(
-            $statusCriteria->expr()->in(
-                'status',
-                $this->getLicenceStatusesActive()
-            )
-        );
-
         $applications = $this->getOtherApplicationsFromLicence($licence);
         $trafficAreas = $this->getRepo('TrafficArea')->getValueOptions();
 

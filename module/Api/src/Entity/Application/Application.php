@@ -1862,9 +1862,14 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             PublicationSectionEntity::SCHEDULE_1_NI_UNTRUE,
             PublicationSectionEntity::SCHEDULE_1_NI_TRUE
         ];
-        $criteria = Criteria::create()->where(Criteria::expr()->in('publicationSection', $linkTypes));
 
-        return ($this->getPublicationLinks()->matching($criteria)->count() > 0);
+        $publicationLinks = $this->getPublicationLinks()->filter(
+            function ($element) use ($linkTypes) {
+                return in_array((string)$element->getPublicationSection(), $linkTypes);
+            }
+        );
+
+        return ($publicationLinks->count() > 0);
     }
 
     /**

@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -31,14 +30,13 @@ final class CancelLicenceFees extends AbstractCommandHandler
         /** @var Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->in('feeStatus', [Fee::STATUS_OUTSTANDING])
+        $fees = $licence->getFees()->filter(
+            function ($element) {
+                return in_array($element->getFeeStatus(), [Fee::STATUS_OUTSTANDING]);
+            }
         );
 
-        $fees = $licence->getFees()->matching($criteria);
-
-        if (empty($fees)) {
+        if ($fees->isEmpty()) {
             $result->addMessage('No fees to remove');
             return $result;
         }

@@ -28,7 +28,6 @@ trait BundleSerializableTrait
         $vars = get_object_vars($this);
 
         foreach ($vars as $property => $value) {
-
             $output[$property] = null;
 
             if ($value instanceof Proxy) {
@@ -87,7 +86,6 @@ trait BundleSerializableTrait
         $vars = get_object_vars($this);
 
         foreach ($vars as $property => $value) {
-
             if (in_array($property, $excludeProperties)) {
                 continue;
             }
@@ -165,6 +163,11 @@ trait BundleSerializableTrait
             // Allow criteria mid-bundle
             if (isset($propertyBundle['criteria'])) {
                 $value = $value->matching($propertyBundle['criteria']);
+            }
+
+            // Allow filter mid-bundle
+            if (isset($propertyBundle['filter'])) {
+                $value = $value->filter($propertyBundle['filter']);
             }
 
             // .. serialize each item and add it to the list

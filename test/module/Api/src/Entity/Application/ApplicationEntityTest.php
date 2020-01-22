@@ -17,9 +17,9 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntiy;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntiy;
-use \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
 use Mockery as m;
 
 /**
@@ -3485,22 +3485,60 @@ class ApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testIsPreviouslyPublished()
+    /**
+     * @dataProvider dpIsPreviouslyPublished
+     */
+    public function testIsPreviouslyPublished($publicationSectionId, $expected)
     {
         $application = $this->instantiate(Entity::class);
 
         $this->assertFalse($application->isPreviouslyPublished());
 
-        $publicationLink = m::mock(PublicationLinkEntiy::class)
-            ->shouldReceive('getPublicationSection')
-            ->andReturn(PublicationSectionEntiy::APP_NEW_SECTION)
-            ->getMock();
+        $publicationSection = new PublicationSectionEntity();
+        $publicationSection->setId($publicationSectionId);
+
+        $publicationLink = new Entities\Publication\PublicationLink();
+        $publicationLink->setPublicationSection($publicationSection);
 
         $publicationLinks = new ArrayCollection();
         $publicationLinks->add($publicationLink);
         $application->setPublicationLinks($publicationLinks);
 
-        $this->assertTrue($application->isPreviouslyPublished());
+        $this->assertSame($expected, $application->isPreviouslyPublished());
+    }
+
+    public function dpIsPreviouslyPublished()
+    {
+        return [
+            [PublicationSectionEntity::APP_NEW_SECTION, true],
+            [PublicationSectionEntity::APP_GRANTED_SECTION, true],
+            [PublicationSectionEntity::APP_REFUSED_SECTION, false],
+            [PublicationSectionEntity::APP_WITHDRAWN_SECTION, false],
+            [PublicationSectionEntity::APP_GRANT_NOT_TAKEN_SECTION, false],
+            [PublicationSectionEntity::VAR_NEW_SECTION, true],
+            [PublicationSectionEntity::VAR_GRANTED_SECTION, true],
+            [PublicationSectionEntity::VAR_REFUSED_SECTION, false],
+            [PublicationSectionEntity::SCHEDULE_1_NI_NEW, true],
+            [PublicationSectionEntity::SCHEDULE_4_NEW, true],
+            [PublicationSectionEntity::SCHEDULE_1_NI_UNTRUE, true],
+            [PublicationSectionEntity::SCHEDULE_4_UNTRUE, true],
+            [PublicationSectionEntity::SCHEDULE_1_NI_TRUE, true],
+            [PublicationSectionEntity::SCHEDULE_4_TRUE, true],
+            [PublicationSectionEntity::LIC_SURRENDERED_SECTION, false],
+            [PublicationSectionEntity::LIC_TERMINATED_SECTION, false],
+            [PublicationSectionEntity::LIC_REVOKED_SECTION, false],
+            [PublicationSectionEntity::LIC_CNS_SECTION, false],
+            [PublicationSectionEntity::HEARING_SECTION, false],
+            [PublicationSectionEntity::DECISION_SECTION, false],
+            [PublicationSectionEntity::TM_HEARING_SECTION, false],
+            [PublicationSectionEntity::TM_DECISION_SECTION, false],
+            [PublicationSectionEntity::BUS_NEW_SECTION, false],
+            [PublicationSectionEntity::BUS_NEW_SHORT_SECTION, false],
+            [PublicationSectionEntity::BUS_VAR_SECTION, false],
+            [PublicationSectionEntity::BUS_VAR_SHORT_SECTION, false],
+            [PublicationSectionEntity::BUS_CANCEL_SECTION, false],
+            [PublicationSectionEntity::BUS_CANCEL_SHORT_SECTION, false],
+        ];
     }
 
     /**

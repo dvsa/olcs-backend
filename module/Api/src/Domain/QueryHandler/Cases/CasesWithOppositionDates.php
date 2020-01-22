@@ -2,10 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 
 /**
  * Cases with OOO and OOR dates attached
@@ -18,17 +18,6 @@ final class CasesWithOppositionDates extends AbstractQueryHandler
     {
         $case = $this->getRepo()->fetchUsingId($query);
 
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->in(
-                'publicationSection',
-                [
-                    $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Publication\PublicationSection::class, 1),
-                    $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Publication\PublicationSection::class, 3),
-                ]
-            )
-        );
-
         // @todo look at simplifying
         return $this->result(
             $case,
@@ -36,7 +25,15 @@ final class CasesWithOppositionDates extends AbstractQueryHandler
                 'application' => array(
                     'operatingCentres',
                     'publicationLinks' => array(
-                        'criteria' => $criteria,
+                        'filter' => function ($element) {
+                            return in_array(
+                                (string)$element->getPublicationSection(),
+                                [
+                                    PublicationSectionEntity::APP_NEW_SECTION,
+                                    PublicationSectionEntity::VAR_NEW_SECTION,
+                                ]
+                            );
+                        },
                         'publication'
                     )
                 ),
