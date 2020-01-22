@@ -133,23 +133,20 @@ class GrantValidationService implements \Zend\ServiceManager\FactoryInterface
 
     protected function feeStatusIsValid(ApplicationEntity $application)
     {
-        $criteria = \Doctrine\Common\Collections\Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->in(
-                'feeStatus',
-                [Fee::STATUS_OUTSTANDING]
-            )
-        );
-
         // Get outstanding fees
-        $fees = $application->getFees()->matching($criteria);
-
-        /** @var Fee $fee */
-        foreach ($fees as $fee) {
-            if (!in_array($fee->getFeeType()->getFeeType()->getId(), [RefData::FEE_TYPE_VAR, RefData::FEE_TYPE_APP])) {
-                $fees->removeElement($fee);
+        $fees = $application->getFees()->filter(
+            function ($element) {
+                return in_array(
+                    $element->getFeeStatus(),
+                    [
+                        Fee::STATUS_OUTSTANDING,
+                    ]
+                ) && in_array(
+                    $element->getFeeType()->getFeeType()->getId(),
+                    [RefData::FEE_TYPE_VAR, RefData::FEE_TYPE_APP]
+                );
             }
-        }
+        );
 
         return $fees->count() < 1;
     }

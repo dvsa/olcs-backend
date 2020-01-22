@@ -166,11 +166,11 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function countValidPermits()
     {
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->in('status', IrhpPermit::$validStatuses)
+        $permits = $this->getIrhpPermits()->filter(
+            function ($element) {
+                return in_array($element->getStatus(), IrhpPermit::$validStatuses);
+            }
         );
-        $permits = $this->getIrhpPermits()->matching($criteria);
 
         return $permits->count();
     }

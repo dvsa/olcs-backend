@@ -442,21 +442,17 @@ class Cases extends AbstractCases implements
      */
     public function getConditionUndertakingsAddedViaCase()
     {
-        $expr = Criteria::expr();
-
-        $criteria = Criteria::create()
-            ->where(
-                $expr->andX(
-                    $expr->in(
-                        'addedVia',
+        return $this->getConditionUndertakings()->filter(
+            function ($element) {
+                return ($element->getDeletedDate() === null)
+                    && in_array(
+                        $element->getAddedVia(),
                         [
                             ConditionUndertaking::ADDED_VIA_CASE,
                         ]
-                    ),
-                    $expr->eq('deletedDate', null)
-                )
-            );
-        return $this->getConditionUndertakings()->matching($criteria);
+                    );
+            }
+        );
     }
 
     public function getContextValue()

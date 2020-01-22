@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -92,11 +91,12 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
      */
     protected function findFiles($files, $category, $subCategory)
     {
-        $criteria = Criteria::create();
-        $criteria->andWhere($criteria->expr()->in('category', [$category]));
-        $criteria->andWhere($criteria->expr()->in('subCategory', [$subCategory]));
-
-        return $files->matching($criteria);
+        return $files->filter(
+            function ($element) use ($category, $subCategory) {
+                return ((string)$element->getCategory() == $category)
+                    && ((string)$element->getSubCategory() == $subCategory);
+            }
+        );
     }
 
     /**
