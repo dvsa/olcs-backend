@@ -20,7 +20,6 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
@@ -128,54 +127,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
-     * Check whether the licence can make an ECMT application (in some cases excluding checks on the current app)
-     *
-     * @param IrhpPermitStock            $stock
-     * @param EcmtPermitApplication|null $exclude
-     *
-     * @return bool
-     */
-    public function canMakeEcmtApplication(IrhpPermitStock $stock, ?EcmtPermitApplication $exclude = null): bool
-    {
-        $activeApplication = $this->getActiveEcmtApplicationForStock($stock, $exclude);
-        return !$activeApplication instanceof EcmtPermitApplication && $this->isEligibleForPermits();
-    }
-
-    /**
-     * Get an active ECMT permit application for the stock (if it exists)
-     *
-     * @param IrhpPermitStock            $stock
-     * @param EcmtPermitApplication|null $exclude
-     *
-     * @return EcmtPermitApplication|null
-     */
-    public function getActiveEcmtApplicationForStock(
-        IrhpPermitStock $stock,
-        ?EcmtPermitApplication $exclude = null
-    ): ?EcmtPermitApplication {
-        $emctApplications = $this->getEcmtApplications();
-        if ($emctApplications === null) {
-            return null;
-        }
-
-        /** @var EcmtPermitApplication $application */
-        foreach ($emctApplications as $application) {
-            if ($exclude instanceof EcmtPermitApplication && $application->getId() === $exclude->getId()) {
-                return null;
-            }
-
-            if ($stock instanceof IrhpPermitStock
-                && $application->getAssociatedStock()->getId() === $stock->getId()
-                && $application->isActive()
-            ) {
-                return $application;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Check whether the licence can make an IRHP application of specific type
      *
      * @param IrhpPermitStock      $stock    type to be checked
@@ -240,25 +191,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         }
 
         return null;
-    }
-
-    /**
-     * If this licence has an active permit application for a given stock, return it
-     *
-     * @param IrhpPermitStock    $stock   permit stock
-     * @param IrhpInterface|null $exclude excluded application
-     *
-     * @return IrhpInterface|null
-     */
-    public function getActivePermitApplicationForStock(
-        IrhpPermitStock $stock,
-        ?IrhpInterface $exclude = null
-    ): ?IrhpInterface {
-        if ($stock->getIrhpPermitType()->isEcmtAnnual()) {
-            return $this->getActiveEcmtApplicationForStock($stock, $exclude);
-        }
-
-        return $this->getActiveIrhpApplication($stock, $exclude);
     }
 
     /**

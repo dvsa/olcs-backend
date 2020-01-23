@@ -72,7 +72,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 
         $result = $this->sut->handleCommand($this->commandEntity);
 
-        $this->assertSame(['EcmtPermitApplication' => $this->permitAppId], $result->getIds());
+        $this->assertSame(['IrhpApplication' => $this->permitAppId], $result->getIds());
         $this->assertSame(['Email sent'], $result->getMessages());
 
         /** @var Message $message */
@@ -135,7 +135,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 
         $result = $this->sut->handleCommand($this->commandEntity);
 
-        $this->assertSame(['EcmtPermitApplication' => $this->permitAppId], $result->getIds());
+        $this->assertSame(['IrhpApplication' => $this->permitAppId], $result->getIds());
         $this->assertSame(['Email sent'], $result->getMessages());
 
         /** @var Message $message */
@@ -235,7 +235,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 
         $result = $this->sut->handleCommand($this->commandEntity);
 
-        $this->assertSame(['EcmtPermitApplication' => $this->permitAppId], $result->getIds());
+        $this->assertSame(['IrhpApplication' => $this->permitAppId], $result->getIds());
         $this->assertSame(['Email sent'], $result->getMessages());
 
         /** @var Message $message */
@@ -263,7 +263,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 
         $result = $this->sut->handleCommand($this->commandEntity);
 
-        $this->assertSame(['EcmtPermitApplication' => $this->permitAppId], $result->getIds());
+        $this->assertSame(['IrhpApplication' => $this->permitAppId], $result->getIds());
         $this->assertSame([MissingEmailException::MSG_NO_ORG_EMAIL], $result->getMessages());
         $this->assertNull($this->sut->getMessage());
     }

@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -27,24 +26,7 @@ class StockOperationsPermitted extends AbstractQueryHandler implements ToggleReq
 
     protected $repoServiceName = 'IrhpPermitStock';
 
-    /** @var ScoringQueryProxy */
-    private $scoringQueryProxy;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['IrhpApplication'];
 
     /**
      * Handle query
@@ -65,7 +47,7 @@ class StockOperationsPermitted extends AbstractQueryHandler implements ToggleReq
         $scoringResult = $queryHandler->handleQuery(QueueRunScoringPermittedQuery::create($stockIdParams));
         $acceptResult = $queryHandler->handleQuery(QueueAcceptScoringPermittedQuery::create($stockIdParams));
 
-        $sourceValues = $this->scoringQueryProxy->fetchDeviationSourceValues($stockId);
+        $sourceValues = $this->getRepo('IrhpApplication')->fetchDeviationSourceValues($stockId);
         $deviationData = $this->getQueryHandler()->handleQuery(
             DeviationDataQuery::create(['sourceValues' => $sourceValues])
         );

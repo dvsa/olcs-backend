@@ -221,15 +221,6 @@ class DocumentSearchView implements BundleSerializableInterface
     protected $irhpApplicationId;
 
     /**
-     * Ecmt Application ID
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="ecmt_permit_application_id")
-     */
-    protected $ecmtPermitApplicationId;
-
-    /**
      * Deleted date
      *
      * @var \DateTime
@@ -492,16 +483,6 @@ class DocumentSearchView implements BundleSerializableInterface
     public function getIrhpApplicationId()
     {
         return $this->irhpApplicationId;
-    }
-
-    /**
-     * Get the ECMT Permit Application ID (if applicable)
-     *
-     * @return int
-     */
-    public function getEcmtPermitApplicationId()
-    {
-        return $this->ecmtPermitApplicationId;
     }
 
     /**

@@ -540,7 +540,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
     }
 
     /**
-     * Test handle command for various application types (licence app, ecmt, irhp)
+     * Test handle command for various application types (licence app, irhp)
      *
      * @dataProvider dpHandleForApplication
      */
@@ -562,7 +562,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         $data = [
             'applicationId' => null,
-            'ecmtPermitApplicationId' => null,
             'irhpApplication' => null,
             'cpmsRedirectUrl' => $cpmsRedirectUrl,
             'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
@@ -647,10 +646,6 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             'licence application' => [
                 'applicationId',
                 'getOutstandingFeesForApplication',
-            ],
-            'ecmt application' => [
-                'ecmtPermitApplicationId',
-                'getOutstandingFeesForEcmtApplication',
             ],
             'irhp application' => [
                 'irhpApplication',

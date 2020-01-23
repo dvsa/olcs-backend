@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermit\GenerateCoverLetterDocument as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
@@ -53,7 +52,7 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
         $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication->shouldReceive('getRelatedApplication->getLicence->getId')
+        $irhpPermitApplication->shouldReceive('getIrhpApplication->getLicence->getId')
             ->andReturn($licenceId);
 
         $irhpPermit = m::mock(IrhpPermitEntity::class);
@@ -101,7 +100,7 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
         return [
             'ECMT Annual' => [
                 'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT,
-                'expectedTemplate' => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
+                'expectedTemplate' => DocumentEntity::IRHP_PERMIT_ECMT_COVER_LETTER,
                 'expectedDescription' => 'IRHP PERMIT ECMT COVERING LETTER 123',
                 'expectedMessages' => [
                     'IRHP PERMIT ECMT COVERING LETTER 123 RTF created and stored',

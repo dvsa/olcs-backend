@@ -37,27 +37,6 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     use ModifiedOnTrait;
 
     /**
-     * Constraint
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
-     *     inversedBy="countrys",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinTable(name="ecmt_countries_constraints_link",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="constraint_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $constraints;
-
-    /**
      * Country desc
      *
      * @var string
@@ -76,19 +55,6 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Ecmt application
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication",
-     *     mappedBy="countrys",
-     *     fetch="LAZY"
-     * )
-     */
-    protected $ecmtApplications;
 
     /**
      * Identifier - Id
@@ -213,75 +179,10 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      */
     public function initCollections()
     {
-        $this->ecmtApplications = new ArrayCollection();
-        $this->constraints = new ArrayCollection();
         $this->irfoPsvAuths = new ArrayCollection();
         $this->irhpApplications = new ArrayCollection();
         $this->irhpPermitStockRanges = new ArrayCollection();
         $this->irhpPermitStocks = new ArrayCollection();
-    }
-
-    /**
-     * Set the constraint
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being set as the value
-     *
-     * @return Country
-     */
-    public function setConstraints($constraints)
-    {
-        $this->constraints = $constraints;
-
-        return $this;
-    }
-
-    /**
-     * Get the constraints
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getConstraints()
-    {
-        return $this->constraints;
-    }
-
-    /**
-     * Add a constraints
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being added
-     *
-     * @return Country
-     */
-    public function addConstraints($constraints)
-    {
-        if ($constraints instanceof ArrayCollection) {
-            $this->constraints = new ArrayCollection(
-                array_merge(
-                    $this->constraints->toArray(),
-                    $constraints->toArray()
-                )
-            );
-        } elseif (!$this->constraints->contains($constraints)) {
-            $this->constraints->add($constraints);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a constraints
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being removed
-     *
-     * @return Country
-     */
-    public function removeConstraints($constraints)
-    {
-        if ($this->constraints->contains($constraints)) {
-            $this->constraints->removeElement($constraints);
-        }
-
-        return $this;
     }
 
     /**
@@ -330,69 +231,6 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the ecmt application
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being set as the value
-     *
-     * @return Country
-     */
-    public function setEcmtApplications($ecmtApplications)
-    {
-        $this->ecmtApplications = $ecmtApplications;
-
-        return $this;
-    }
-
-    /**
-     * Get the ecmt applications
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getEcmtApplications()
-    {
-        return $this->ecmtApplications;
-    }
-
-    /**
-     * Add a ecmt applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being added
-     *
-     * @return Country
-     */
-    public function addEcmtApplications($ecmtApplications)
-    {
-        if ($ecmtApplications instanceof ArrayCollection) {
-            $this->ecmtApplications = new ArrayCollection(
-                array_merge(
-                    $this->ecmtApplications->toArray(),
-                    $ecmtApplications->toArray()
-                )
-            );
-        } elseif (!$this->ecmtApplications->contains($ecmtApplications)) {
-            $this->ecmtApplications->add($ecmtApplications);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a ecmt applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being removed
-     *
-     * @return Country
-     */
-    public function removeEcmtApplications($ecmtApplications)
-    {
-        if ($this->ecmtApplications->contains($ecmtApplications)) {
-            $this->ecmtApplications->removeElement($ecmtApplications);
-        }
-
-        return $this;
     }
 
     /**

@@ -100,7 +100,7 @@ class ForCpProviderTest extends MockeryTestCase
         ];
 
         $this->irhpCandidatePermit
-            ->shouldReceive('getIrhpPermitApplication->getRelatedApplication->getCountrys->getValues')
+            ->shouldReceive('getIrhpPermitApplication->getIrhpApplication->getCountrys->getValues')
             ->andReturn([]);
 
         $this->forCpWithNoCountriesProvider->shouldReceive('selectRange')
@@ -141,7 +141,7 @@ class ForCpProviderTest extends MockeryTestCase
         ];
 
         $this->irhpCandidatePermit
-            ->shouldReceive('getIrhpPermitApplication->getRelatedApplication->getCountrys->getValues')
+            ->shouldReceive('getIrhpPermitApplication->getIrhpApplication->getCountrys->getValues')
             ->andReturn($applicationCountries);
 
         $this->forCpWithCountriesProvider->shouldReceive('selectRange')

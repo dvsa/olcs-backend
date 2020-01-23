@@ -556,7 +556,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 self::ALLOWED_OPERATOR_LOCATION_NI : self::ALLOWED_OPERATOR_LOCATION_GB;
         } else {
             $licences = $this->getLicences();
-            $trafficAreaCode = null;
             /** @var LicenceEntity $licence */
             foreach ($licences as $licence) {
                 if ($licence->getStatus() &&
@@ -640,7 +639,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
-            $activeApplication = $licence->getActivePermitApplicationForStock($stock);
+            $activeApplication = $licence->getActiveIrhpApplication($stock);
 
             $canMakeApplication = true;
             $activeApplicationId = null;

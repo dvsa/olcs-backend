@@ -4,12 +4,14 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\QuestionText\Custom\EcmtShortTe
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup as ApplicationPathGroupEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use RuntimeException;
 
 /**
  * RestrictedCountriesGeneratorTest
@@ -18,75 +20,127 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class RestrictedCountriesGeneratorTest extends MockeryTestCase
 {
-    public function testGenerateUpdateKey()
+    const ECMT_ANNUAL_APP_PATH_GROUP_ID = 8;
+
+    private $irhpApplicationEntity;
+
+    private $questionTextGeneratorContext;
+
+    private $questionTextGenerator;
+
+    private $restrictedCountriesGenerator;
+
+    public function setUp()
     {
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getAssociatedStock->getApplicationPathGroup->getId')
+        $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
+
+        $this->questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
+        $this->questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity')
             ->withNoArgs()
-            ->andReturn(ApplicationPathGroupEntity::ECMT_SHORT_TERM_2020_APSG_WITHOUT_SECTORS_ID);
+            ->andReturn($this->irhpApplicationEntity);
+
+        $this->questionTextGenerator = m::mock(QuestionTextGenerator::class);
+
+        $this->restrictedCountriesGenerator = new RestrictedCountriesGenerator($this->questionTextGenerator);
+    }
+
+    /**
+     * @dataProvider dpGenerate
+     */
+    public function testGenerate(
+        $irhpPermitTypeId,
+        $applicationPathGroupId,
+        $expectedQuestionKey,
+        $expectedGuidanceKey
+    ) {
+        $this->irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->andReturn($irhpPermitTypeId);
+        $this->irhpApplicationEntity->shouldReceive('getAssociatedStock->getApplicationPathGroup->getId')
+            ->withNoArgs()
+            ->andReturn($applicationPathGroupId);
 
         $questionTranslateableText = m::mock(TranslateableText::class);
         $questionTranslateableText->shouldReceive('setKey')
-            ->with('qanda.ecmt-short-term.restricted-countries.question.ecmt-short-term-2020-apsg-without-sectors')
+            ->with($expectedQuestionKey)
+            ->once();
+
+        $guidanceTranslateableText = m::mock(TranslateableText::class);
+        $guidanceTranslateableText->shouldReceive('setKey')
+            ->with($expectedGuidanceKey)
             ->once();
 
         $questionText = m::mock(QuestionText::class);
         $questionText->shouldReceive('getQuestion->getTranslateableText')
+            ->withNoArgs()
             ->andReturn($questionTranslateableText);
+        $questionText->shouldReceive('getGuidance->getTranslateableText')
+            ->withNoArgs()
+            ->andReturn($guidanceTranslateableText);
 
-        $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
-        $questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity')
-            ->andReturn($irhpApplicationEntity);
-
-        $questionTextGenerator = m::mock(QuestionTextGenerator::class);
-        $questionTextGenerator->shouldReceive('generate')
-            ->with($questionTextGeneratorContext)
+        $this->questionTextGenerator->shouldReceive('generate')
+            ->with($this->questionTextGeneratorContext)
             ->andReturn($questionText);
-
-        $restrictedCountriesGenerator = new RestrictedCountriesGenerator($questionTextGenerator);
 
         $this->assertSame(
             $questionText,
-            $restrictedCountriesGenerator->generate($questionTextGeneratorContext)
+            $this->restrictedCountriesGenerator->generate($this->questionTextGeneratorContext)
         );
+    }
+
+    public function dpGenerate()
+    {
+        return [
+            [
+                IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT,
+                self::ECMT_ANNUAL_APP_PATH_GROUP_ID,
+                'qanda.ecmt-annual.restricted-countries.question',
+                'qanda.ecmt-annual.restricted-countries.guidance',
+            ],
+            [
+                IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                ApplicationPathGroupEntity::ECMT_SHORT_TERM_2020_APSG_WITHOUT_SECTORS_ID,
+                'qanda.ecmt-short-term.restricted-countries.question.ecmt-short-term-2020-apsg-without-sectors',
+                'qanda.ecmt-short-term.restricted-countries.guidance',
+            ],
+            [
+                IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                ApplicationPathGroupEntity::ECMT_SHORT_TERM_2020_APSG_WITH_SECTORS_ID,
+                'qanda.ecmt-short-term.restricted-countries.question',
+                'qanda.ecmt-short-term.restricted-countries.guidance',
+            ],
+            [
+                IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                ApplicationPathGroupEntity::ECMT_SHORT_TERM_2020_APGG,
+                'qanda.ecmt-short-term.restricted-countries.question',
+                'qanda.ecmt-short-term.restricted-countries.guidance',
+            ],
+        ];
     }
 
     /**
-     * @dataProvider dpGenerateNoChanges
+     * @dataProvider dpGenerateExceptionOnUnsupportedType
      */
-    public function testGenerateNoChanges($applicationPathGroupId)
+    public function testGenerateExceptionOnUnsupportedType($irhpPermitTypeId)
     {
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getAssociatedStock->getApplicationPathGroup->getId')
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('This question does not support permit type ' . $irhpPermitTypeId);
+
+        $this->irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
             ->withNoArgs()
-            ->andReturn($applicationPathGroupId);
+            ->andReturn($irhpPermitTypeId);
 
-        $questionText = m::mock(QuestionText::class);
-        $questionText->shouldReceive('getQuestion')
-            ->never();
-
-        $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
-        $questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity')
-            ->andReturn($irhpApplicationEntity);
-
-        $questionTextGenerator = m::mock(QuestionTextGenerator::class);
-        $questionTextGenerator->shouldReceive('generate')
-            ->with($questionTextGeneratorContext)
-            ->andReturn($questionText);
-
-        $restrictedCountriesGenerator = new RestrictedCountriesGenerator($questionTextGenerator);
-
-        $this->assertSame(
-            $questionText,
-            $restrictedCountriesGenerator->generate($questionTextGeneratorContext)
-        );
+        $this->restrictedCountriesGenerator->generate($this->questionTextGeneratorContext);
     }
 
-    public function dpGenerateNoChanges()
+    public function dpGenerateExceptionOnUnsupportedType()
     {
         return [
-            [ApplicationPathGroupEntity::ECMT_SHORT_TERM_2020_APSG_WITH_SECTORS_ID],
-            [ApplicationPathGroupEntity::ECMT_SHORT_TERM_2020_APGG],
+            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
+            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE],
+            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER],
         ];
     }
 }

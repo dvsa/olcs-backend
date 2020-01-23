@@ -35,6 +35,7 @@ class Question extends AbstractQuestion
     const FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE = 'form_control_cert_road_mot_exp';
     const FORM_CONTROL_COMMON_CERTIFICATES = 'form_control_common_certificates';
     const FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE = 'form_control_ecmt_st_ear_per_dat';
+    const FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS = 'form_control_ecmt_an_2018_nop';
 
     // Question data types
     const QUESTION_TYPE_STRING = 'question_type_string';

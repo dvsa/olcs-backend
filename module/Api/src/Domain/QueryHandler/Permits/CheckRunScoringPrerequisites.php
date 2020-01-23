@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -25,26 +24,7 @@ class CheckRunScoringPrerequisites extends AbstractQueryHandler implements Toggl
 
     protected $repoServiceName = 'IrhpPermitRange';
 
-    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermit'];
-
-    /** @var ScoringQueryProxy */
-    private $scoringQueryProxy;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
-
-        return parent::createService($serviceLocator);
-    }
+    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermit', 'IrhpApplication'];
 
     /**
      * Handle query
@@ -71,7 +51,7 @@ class CheckRunScoringPrerequisites extends AbstractQueryHandler implements Toggl
             );
         }
 
-        $applicationIds = $this->scoringQueryProxy->fetchApplicationIdsAwaitingScoring($stockId);
+        $applicationIds = $this->getRepo('IrhpApplication')->fetchApplicationIdsAwaitingScoring($stockId);
         if (count($applicationIds) == 0) {
             return $this->generateResponse(
                 false,

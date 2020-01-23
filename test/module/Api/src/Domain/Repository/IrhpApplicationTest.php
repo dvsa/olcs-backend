@@ -24,7 +24,7 @@ class IrhpApplicationTest extends RepositoryTestCase
 {
     public function setUp()
     {
-        $this->setUpSut(IrhpApplication::class);
+        $this->setUpSut(IrhpApplication::class, true);
     }
 
     public function testFetchByWindowId()
@@ -205,6 +205,42 @@ class IrhpApplicationTest extends RepositoryTestCase
             $this->sut->fetchInScopeUnderConsiderationApplicationIds($stockId)
         );
     }
+
+    /**
+     * @dataProvider dpHasInScopeUnderConsiderationApplications
+     */
+    public function testHasInScopeUnderConsiderationApplications($applicationIds, $expected)
+    {
+        $stockId = 47;
+
+        $this->sut->shouldReceive('fetchInScopeUnderConsiderationApplicationIds')
+            ->with($stockId)
+            ->andReturn($applicationIds);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->hasInScopeUnderConsiderationApplications($stockId)
+        );
+    }
+
+    public function dpHasInScopeUnderConsiderationApplications()
+    {
+        return [
+            [
+                [],
+                false
+            ],
+            [
+                [5],
+                true
+            ],
+            [
+                [5, 10],
+                true
+            ],
+        ];
+    }
+
 
     public function testClearScope()
     {

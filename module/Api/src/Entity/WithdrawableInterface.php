@@ -17,6 +17,7 @@ interface WithdrawableInterface
     public function isWithdrawn(): bool;
     public function getOutstandingFees(): array;
     public function getWithdrawReason();
+    public function getAppWithdrawnEmailCommand($withdrawReason);
 
     const WITHDRAWN_REASON_NOTSUCCESS = 'permits_app_withdraw_notsuccess';
     const WITHDRAWN_REASON_UNPAID = 'permits_app_withdraw_not_paid';

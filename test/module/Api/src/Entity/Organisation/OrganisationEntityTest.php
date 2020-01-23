@@ -5,11 +5,11 @@ namespace Dvsa\OlcsTest\Api\Entity\Organisation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
@@ -444,7 +444,7 @@ class OrganisationEntityTest extends EntityTester
     public function testGetEligibleIrhpLicencesForStock()
     {
         $permitAppId = 333;
-        $activePermitApp = m::mock(IrhpInterface::class);
+        $activePermitApp = m::mock(IrhpApplication::class);
         $activePermitApp->shouldReceive('getId')->once()->withNoArgs()->andReturn($permitAppId);
         $stock = m::mock(IrhpPermitStock::class);
 
@@ -456,7 +456,7 @@ class OrganisationEntityTest extends EntityTester
 
         $licence1 = m::mock(LicenceEntity::class);
         $licence1->shouldReceive('getId')->once()->withNoArgs()->andReturn($id1);
-        $licence1->shouldReceive('getActivePermitApplicationForStock')->with($stock)->andReturn($activePermitApp);
+        $licence1->shouldReceive('getActiveIrhpApplication')->with($stock)->andReturn($activePermitApp);
         $licence1->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo1);
         $licence1->shouldReceive('getTrafficArea->getName')->once()->withNoArgs()->andReturn($trafficArea1);
         $licence1->shouldReceive('isRestricted')->once()->withNoArgs()->andReturn($isRestricted1);
@@ -470,7 +470,7 @@ class OrganisationEntityTest extends EntityTester
 
         $licence2 = m::mock(LicenceEntity::class);
         $licence2->shouldReceive('getId')->once()->withNoArgs()->andReturn($id2);
-        $licence2->shouldReceive('getActivePermitApplicationForStock')->with($stock)->andReturnNull();
+        $licence2->shouldReceive('getActiveIrhpApplication')->with($stock)->andReturnNull();
         $licence2->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo2);
         $licence2->shouldReceive('getTrafficArea->getName')->once()->withNoArgs()->andReturn($trafficArea2);
         $licence2->shouldReceive('isRestricted')->once()->withNoArgs()->andReturn($isRestricted2);

@@ -10,6 +10,13 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAutomaticallyWithdrawn;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
@@ -843,6 +850,16 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpIsSubmittedForConsideration()
     {
         return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_ISSUED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_ISSUING, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_VALID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_CANCELLED, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
@@ -2039,7 +2056,7 @@ class IrhpApplicationEntityTest extends EntityTester
     public function testGetSectionCompletionForUndefinedIrhpPermitType()
     {
         // undefined IRHP Permit Type id
-        $irhpPermitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT;
+        $irhpPermitTypeId = 99999;
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
@@ -2879,19 +2896,50 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $irhpApplication = m::mock(Entity::class)->makePartial();
         $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
             ->andReturn(7);
 
         $irhpApplication->getApplicationFeeProductReference();
     }
 
-    public function testGetIssueFeeProductReference()
+    public function testGetIssueFeeProductReferenceEcmtShortTerm()
     {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(true);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn(false);
+
         $irhpApplication = m::mock(Entity::class)->makePartial();
-        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+        $irhpApplication->setIrhpPermitType($irhpPermitType);
 
         $this->assertEquals(
             FeeType::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF,
+            $irhpApplication->getIssueFeeProductReference()
+        );
+    }
+
+    public function testGetIssueFeeProductReferenceEcmtAnnual()
+    {
+        $productReference = 'PRODUCT_REFERENCE_FOR_TIER';
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->setIrhpPermitType($irhpPermitType);
+
+        $irhpApplication->shouldReceive('getProductReferenceForTier')
+            ->withNoArgs()
+            ->andReturn($productReference);
+
+        $this->assertEquals(
+            $productReference,
             $irhpApplication->getIssueFeeProductReference()
         );
     }
@@ -2906,9 +2954,18 @@ class IrhpApplicationEntityTest extends EntityTester
             'No issue fee product reference available for permit type ' . $irhpPermitTypeId
         );
 
-        $irhpApplication = m::mock(Entity::class)->makePartial();
-        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('getId')
             ->andReturn($irhpPermitTypeId);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->setIrhpPermitType($irhpPermitType);
 
         $irhpApplication->getIssueFeeProductReference();
     }
@@ -2919,6 +2976,8 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER],
         ];
     }
 
@@ -3075,7 +3134,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->submit($status);
     }
 
-    public function testSubmitShortTerm()
+    /**
+     * @dataProvider dpSubmitShortTermAndAnnual
+     */
+    public function testSubmitShortTermAndAnnual($irhpPermitTypeId)
     {
         $status = m::mock(RefData::class);
 
@@ -3089,9 +3151,17 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->shouldReceive('getIrhpPermitType->getId')
             ->withNoArgs()
             ->once()
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+            ->andReturn($irhpPermitTypeId);
 
         $entity->submit($status);
+    }
+
+    public function dpSubmitShortTermAndAnnual()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
+        ];
     }
 
     /**
@@ -3719,7 +3789,7 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetAnswerForCustomEcmtShortTermNoOfPermits
      */
-    public function testGetAnswerForCustomEcmtShortTermNoOfPermits($requiredEuro5, $requiredEuro6, $expectedAnswer)
+    public function testGetAnswerForCustomEcmtShortTermNoOfPermits($isEcmtAnnual, $requiredEuro5, $requiredEuro6, $expectedAnswer)
     {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
@@ -3739,6 +3809,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity = m::mock(Entity::class)->makePartial();
         $entity->shouldReceive('getFirstIrhpPermitApplication')
             ->andReturn($irhpPermitApplication);
+        $entity->shouldReceive('getIrhpPermitType->isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
 
         $this->assertSame(
             $expectedAnswer,
@@ -3750,41 +3822,49 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         return [
             [
+                'isEcmtAnnual' => true,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 0,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => null,
                 'requiredEuro6' => 5,
                 'expectedAnswer' => null,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 0,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
+                'isEcmtAnnual' => false,
                 'requiredEuro5' => null,
                 'requiredEuro6' => 5,
                 'expectedAnswer' => null,
@@ -3872,6 +3952,53 @@ class IrhpApplicationEntityTest extends EntityTester
         return [
             [$sectors, $sectorId],
             [null, null],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetAnswerForCustomEcmtAnnual2018NoOfPermits
+     */
+    public function testGetAnswerForCustomEcmtAnnual2018NoOfPermits(
+        $isSnapshot,
+        $requiredEuro5,
+        $requiredEuro6,
+        $expectedAnswer
+    ) {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(
+            Question::FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS
+        );
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn($requiredEuro5);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn($requiredEuro6);
+
+        $entity = $this->createNewEntity();
+        $entity->setIrhpPermitApplications(
+            new ArrayCollection([$irhpPermitApplication])
+        );
+
+        $this->assertEquals(
+            $expectedAnswer,
+            $entity->getAnswer($step, $isSnapshot)
+        );
+    }
+
+    public function dpTestGetAnswerForCustomEcmtAnnual2018NoOfPermits()
+    {
+        return [
+            [true, null, null, null],
+            [true, 4, null, 4],
+            [true, null, 6, 6],
+            [false, null, null, null],
+            [false, 4, null, 4],
+            [false, null, 6, 6],
         ];
     }
 
@@ -4607,17 +4734,16 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
-    public function testGetEmailCommandLookup()
+    /**
+     * @dataProvider dpGetEmailCommandLookup
+     */
+    public function testGetEmailCommandLookup($isEcmtShortTerm, $isEcmtAnnual, $expectedEmailCommandLookup)
     {
-        $expectedEmailCommandLookup = [
-            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtShortTermUnsuccessful::class,
-            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtShortTermApsgPartSuccessful::class,
-            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
-        ];
-
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
-            ->andReturn(true);
+            ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
 
         $application = $this->createNewEntity();
         $application->setIrhpPermitType($irhpPermitType);
@@ -4628,13 +4754,39 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
+    public function dpGetEmailCommandLookup()
+    {
+        return [
+            [
+                true,
+                false,
+                [
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtShortTermUnsuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtShortTermApsgPartSuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
+                ]
+            ],
+            [
+                false,
+                true,
+                [
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+                ]
+            ]
+        ];
+    }
+
     public function testGetEmailCommandLookupException()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('getEmailCommandLookup is only applicable to ECMT short term');
+        $this->expectExceptionMessage('getEmailCommandLookup is only applicable to ECMT short term and ECMT Annual');
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
             ->andReturn(false);
 
         $application = $this->createNewEntity();
@@ -4819,11 +4971,18 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetIntensityOfUseWarningThreshold
      */
-    public function testGetIntensityOfUseWarningThreshold($requiredEuro5, $requiredEuro6, $expectedThreshold)
-    {
+    public function testGetIntensityOfUseWarningThreshold(
+        $isEcmtShortTerm,
+        $isEcmtAnnual,
+        $requiredEuro5,
+        $requiredEuro6,
+        $expectedThreshold
+    ) {
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
-            ->andReturn(true);
+            ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('getRequiredEuro5')
@@ -4844,18 +5003,24 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpGetIntensityOfUseWarningThreshold()
     {
         return [
-            [5, 8, 800],
-            [4, 2, 400],
+            [true, false, 5, 8, 800],
+            [true, false, 4, 2, 400],
+            [false, true, 5, 8, 800],
+            [false, true, 4, 2, 400],
         ];
     }
 
     public function testGetIntensityOfUseWarningThresholdException()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('getIntensityOfUseWarningThreshold is only applicable to ECMT short term');
+        $this->expectExceptionMessage(
+            'getIntensityOfUseWarningThreshold is only applicable to ECMT short term and ECMT Annual'
+        );
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
             ->andReturn(false);
 
         $application = $this->createNewEntity();
@@ -4867,11 +5032,17 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetAppSubmittedEmailCommand
      */
-    public function testGetAppSubmittedEmailCommand($isEcmtShortTerm, $businessProcessId, $expectedCommand)
-    {
+    public function testGetAppSubmittedEmailCommand(
+        $isEcmtShortTerm,
+        $isEcmtAnnual,
+        $businessProcessId,
+        $expectedCommand
+    ) {
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
             ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
 
         $application = m::mock(Entity::class)->makePartial();
         $application->shouldReceive('getBusinessProcess->getId')
@@ -4889,12 +5060,105 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpGetAppSubmittedEmailCommand()
     {
         return [
-            [true, RefData::BUSINESS_PROCESS_APG, null],
-            [true, RefData::BUSINESS_PROCESS_APGG, null],
-            [true, RefData::BUSINESS_PROCESS_APSG, SendEcmtShortTermAppSubmitted::class],
-            [false, RefData::BUSINESS_PROCESS_APG, null],
-            [false, RefData::BUSINESS_PROCESS_APGG, null],
-            [false, RefData::BUSINESS_PROCESS_APSG, null],
+            [true, false, RefData::BUSINESS_PROCESS_APG, null],
+            [true, false, RefData::BUSINESS_PROCESS_APGG, null],
+            [true, false, RefData::BUSINESS_PROCESS_APSG, SendEcmtShortTermAppSubmitted::class],
+            [false, true, RefData::BUSINESS_PROCESS_APG, null],
+            [false, true, RefData::BUSINESS_PROCESS_APGG, null],
+            [false, true, RefData::BUSINESS_PROCESS_APSG, SendEcmtAppSubmitted::class],
+            [false, false, RefData::BUSINESS_PROCESS_APG, null],
+            [false, false, RefData::BUSINESS_PROCESS_APGG, null],
+            [false, false, RefData::BUSINESS_PROCESS_APSG, null],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetAppWithdrawnEmailCommand
+     */
+    public function testGetAppWithdrawnEmailCommand($irhpPermitTypeId, $withdrawReason, $expectedCommand)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expectedCommand,
+            $application->getAppWithdrawnEmailCommand($withdrawReason)
+        );
+    }
+
+    public function dpGetAppWithdrawnEmailCommand()
+    {
+        return [
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS,
+                null,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                WithdrawableInterface::WITHDRAWN_REASON_UNPAID,
+                SendEcmtAutomaticallyWithdrawn::class,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                null,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                null,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS,
+                SendEcmtShortTermUnsuccessful::class,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                WithdrawableInterface::WITHDRAWN_REASON_UNPAID,
+                SendEcmtShortTermAutomaticallyWithdrawn::class,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                null,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                null,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetIssuedEmailCommand
+     */
+    public function testGetIssuedEmailCommand($isEcmtAnnual, $expectedCommand)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
+
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expectedCommand,
+            $application->getIssuedEmailCommand()
+        );
+    }
+
+    public function dpGetIssuedEmailCommand()
+    {
+        return [
+            [true, SendEcmtIssued::class],
+            [false, null],
         ];
     }
 
@@ -4980,6 +5244,10 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpGetSubmissionTaskDescription()
     {
         return [
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                Task::TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED
+            ],
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 Task::TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED
@@ -5098,12 +5366,15 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpRequiresPreAllocationCheck
      */
-    public function testRequiresPreAllocationCheck($isEcmtShortTerm, $expected)
+    public function testRequiresPreAllocationCheck($isEcmtShortTerm, $isEcmtAnnual, $expected)
     {
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')
             ->withNoArgs()
             ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn($isEcmtAnnual);
 
         $this->sut->setIrhpPermitType($irhpPermitType);
 
@@ -5116,8 +5387,9 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpRequiresPreAllocationCheck()
     {
         return [
-            [true, true],
-            [false, false],
+            [true, false, true],
+            [false, true, true],
+            [false, false, false],
         ];
     }
 
@@ -5667,5 +5939,103 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->sut->reviveFromUnsuccessful(
             m::mock(RefData::class)
         );
+    }
+
+    /**
+     * @dataProvider productRefMonthProvider
+     */
+    public function testGetProductReferenceForTier($expected, $validFrom, $validTo, $now)
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $this->sut->addIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->andReturn($irhpPermitStock);
+
+        $irhpPermitStock->shouldReceive('getValidFrom')->andReturn($validFrom);
+        $irhpPermitStock->shouldReceive('getValidTo')->andReturn($validTo);
+        $this->assertEquals($expected, $this->sut->getProductReferenceForTier($now));
+    }
+
+    public function productRefMonthProvider()
+    {
+        $validFrom = new DateTime('first day of January next year');
+        $validTo = new DateTime('last day of December next year');
+
+        return [
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of January next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of February next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of March next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of April next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of May next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of June next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of July next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of August next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of September next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of October next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of November next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of December next year')
+            ],
+        ];
     }
 }

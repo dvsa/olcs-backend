@@ -224,7 +224,7 @@ class CreateTest extends CommandHandlerTestCase
                 'data' => [
                     'comment' => 'my comment',
                     'priority' => 'Y',
-                    'ecmtPermitApplication' => 56,
+                    'irhpApplication' => 56,
                 ],
                 'expected' => [
                     'comment' => 'my comment',
@@ -242,7 +242,7 @@ class CreateTest extends CommandHandlerTestCase
                     'licence' => 53,
                     'organisation' => 54,
                     'transportManager' => 55,
-                    'ecmtPermitApplication' => 56,
+                    'irhpApplication' => 56,
                 ],
                 'expected' => [
                     'comment' => 'my comment',
@@ -254,7 +254,7 @@ class CreateTest extends CommandHandlerTestCase
                     'licence' => 53,
                     'organisation' => 54,
                     'transportManager' => 55,
-                    'ecmtPermitApplication' => 56,
+                    'irhpApplication' => 56,
                 ],
             ],
         ];

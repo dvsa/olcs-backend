@@ -21,9 +21,4 @@ class WithdrawTest extends AbstractWithdrawApplicationHandlerTest
     protected $entityClass = IrhpApplication::class;
     protected $sutClass = Sut::class;
     protected $cmdClass = Cmd::class;
-
-    protected $emails = [
-        WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS => SendEcmtShortTermUnsuccessful::class,
-        WithdrawableInterface::WITHDRAWN_REASON_UNPAID => SendEcmtShortTermAutomaticallyWithdrawn::class,
-    ];
 }
