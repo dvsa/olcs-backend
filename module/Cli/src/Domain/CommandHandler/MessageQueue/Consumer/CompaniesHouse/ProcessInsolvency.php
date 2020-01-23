@@ -146,7 +146,9 @@ class ProcessInsolvency extends AbstractConsumer
             $practitionerData  = array_merge($practitionerData, $details['practitioners']);
         }
 
-
+        $practitionerData = array_filter($practitionerData, function ($practitioner) {
+           return !array_key_exists('ceased_to_act_on', $practitioner);
+        });
 
         return new ArrayCollection(array_map(function ($practitioner) {
             return $this->mapToEntity($practitioner);
