@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use RuntimeException;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -36,13 +35,10 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
 
     protected $repoServiceName = 'IrhpCandidatePermit';
 
-    protected $extraRepos = ['IrhpPermit', 'IrhpPermitRange'];
+    protected $extraRepos = ['IrhpPermit', 'IrhpPermitRange', 'IrhpApplication'];
 
     /** @var StockBasedForCpProviderFactory */
     private $stockBasedForCpProviderFactory;
-
-    /** @var ScoringQueryProxy */
-    private $scoringQueryProxy;
 
     /** @var array */
     private $ranges;
@@ -61,8 +57,6 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
         $this->stockBasedForCpProviderFactory = $mainServiceLocator->get(
             'PermitsApplyRangesStockBasedForCpProviderFactory'
         );
-
-        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
 
         return parent::createService($serviceLocator);
     }
@@ -84,7 +78,7 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
             $this->getRepo('IrhpPermitRange')->getByStockId($stockId)
         );
 
-        $candidatePermits = $this->scoringQueryProxy->getSuccessfulScoreOrderedInScope($stockId);
+        $candidatePermits = $this->getRepo('IrhpApplication')->getSuccessfulScoreOrderedInScope($stockId);
 
         $this->profileMessage('apply ranges to successful permit applications...');
 

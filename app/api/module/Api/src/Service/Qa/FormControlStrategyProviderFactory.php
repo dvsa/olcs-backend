@@ -35,6 +35,8 @@ class FormControlStrategyProviderFactory implements FactoryInterface
             Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS => 'QaEcmtShortTermSectorsFormControlStrategy',
             Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE =>
                 'QaEcmtShortTermEarliestPermitDateFormControlStrategy',
+            Question::FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS =>
+                'QaTextFormControlStrategy',
             Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE =>
                 'QaCertRoadworthinessMotExpiryDateFormControlStrategy',
             Question::FORM_CONTROL_COMMON_CERTIFICATES => 'QaCommonCertificatesFormControlStrategy',

@@ -145,9 +145,6 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             case self::ACCRUAL_RULE_IRHP_PERMIT_9_MONTHS:
             case self::ACCRUAL_RULE_IRHP_PERMIT_12_MONTHS:
                 $application = $this->getIrhpApplication();
-                if (is_null($application)) {
-                    $application = $this->getEcmtPermitApplication();
-                }
 
                 $irhpPermitApplication = $application->getIrhpPermitApplications()->first();
                 if ($irhpPermitApplication) {

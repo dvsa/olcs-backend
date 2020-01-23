@@ -172,6 +172,15 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     protected $isShortNotice;
 
     /**
+     * Is txc app (EBSR)
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_txc_app")
+     */
+    protected $isTxcApp;
+
+    /**
      * get date1stReg
      *
      * @return \DateTime
@@ -491,7 +500,7 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
 
     /**
      * Set variation no
-     * 
+     *
      * @param string $variationNo Variation Number
      *
      * @return void
@@ -521,5 +530,27 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     public function getIsShortNotice()
     {
         return $this->isShortNotice;
+    }
+
+    /**
+     * set isTxcApp
+     *
+     * @param bool $isTxcApp whether this is a txc app (EBSR)
+     *
+     * @return void
+     */
+    public function setIsTxcApp($isTxcApp)
+    {
+        $this->isTxcApp = $isTxcApp;
+    }
+
+    /**
+     * get isTxcApp
+     *
+     * @return bool
+     */
+    public function getIsTxcApp(): bool
+    {
+        return $this->isTxcApp;
     }
 }

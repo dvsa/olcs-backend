@@ -1139,49 +1139,13 @@ return [
     Command\IrhpApplication\ResetIrhpPermitApplications::class => CommandHandler\IrhpApplication\ResetIrhpPermitApplications::class,
     Command\IrhpApplication\Expire::class => CommandHandler\IrhpApplication\Expire::class,
 
-    // Permits Create
-    TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
-    TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,
-
-    // Irhp Permit Create
-    Command\Permits\CreateIrhpPermitApplication::class => CommandHandler\Permits\CreateIrhpPermitApplication::class,
-
     // Irhp Permit Application Delete
     Command\IrhpPermitApplication\Delete::class => CommandHandler\IrhpPermitApplication\Delete::class,
 
-    // Permits Cancel
-    TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
-
-    // Permits Withdraw
-    TransferCommand\Permits\WithdrawEcmtPermitApplication::class => CommandHandler\Permits\WithdrawEcmtPermitApplication::class,
-    TransferCommand\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class => CommandHandler\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class,
-    TransferCommand\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class => CommandHandler\Permits\ReviveEcmtPermitApplicationFromUnsuccessful::class,
-
     // Permits Decline
-    TransferCommand\Permits\DeclineEcmtPermits::class => CommandHandler\Permits\DeclineEcmtPermits::class,
-    TransferCommand\Permits\AcceptEcmtPermits::class => CommandHandler\Permits\AcceptEcmtPermits::class,
     TransferCommand\Permits\AcceptIrhpPermits::class => CommandHandler\Permits\AcceptIrhpPermits::class,
 
-    // Permits Update
-    TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
-    TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
-    TransferCommand\Permits\UpdateEcmtRoadworthiness::class => CommandHandler\Permits\UpdateEcmtRoadworthiness::class,
-    TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
-    TransferCommand\Permits\UpdateInternationalJourney::class => CommandHandler\Permits\UpdateInternationalJourney::class,
-    TransferCommand\Permits\UpdateSector::class => CommandHandler\Permits\UpdateSector::class,
-    TransferCommand\Permits\UpdateEcmtCountries::class => CommandHandler\Permits\UpdateEcmtCountries::class,
-    TransferCommand\Permits\UpdateEcmtLicence::class => CommandHandler\Permits\UpdateEcmtLicence::class,
-    TransferCommand\Permits\UpdateEcmtTrips::class => CommandHandler\Permits\UpdateEcmtTrips::class,
-    TransferCommand\Permits\UpdateEcmtCheckAnswers::class => CommandHandler\Permits\UpdateEcmtCheckAnswers::class,
-    TransferCommand\Permits\UpdateDeclaration::class => CommandHandler\Permits\UpdateDeclaration::class,
-    TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
-    TransferCommand\Permits\EcmtSubmitApplication::class => CommandHandler\Permits\EcmtSubmitApplication::class,
-    TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
-    TransferCommand\Permits\CompleteIssuePayment::class => CommandHandler\Permits\CompleteIssuePayment::class,
-
     // Permits - internal backend
-    Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
-    Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
     Command\Permits\AllocateCandidatePermits::class => CommandHandler\Permits\AllocateCandidatePermits::class,
     Command\Permits\AllocateIrhpApplicationPermits::class => CommandHandler\Permits\AllocateIrhpApplicationPermits::class,
     Command\Permits\AllocateIrhpPermitApplicationPermit::class =>
@@ -1191,12 +1155,9 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
-    Command\Permits\ExpireEcmtPermitApplication::class => CommandHandler\Permits\ExpireEcmtPermitApplication::class,
     Command\Permits\PostSubmitTasks::class => CommandHandler\Permits\PostSubmitTasks::class,
 
     // Create HTML Snapshot
-    Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
-        CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
     Command\IrhpApplication\StoreSnapshot::class =>
         CommandHandler\IrhpApplication\StoreSnapshot::class,
 

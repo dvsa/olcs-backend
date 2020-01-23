@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulDaPermitApplications as MarkSuccessfulDaPermitApplicationsCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -27,8 +26,7 @@ class MarkSuccessfulDaPermitApplications extends ScoringCommandHandler implement
 
     protected $repoServiceName = 'IrhpPermitJurisdictionQuota';
 
-    /** @var ScoringQueryProxy */
-    private $scoringQueryProxy;
+    protected $extraRepos = ['IrhpApplication'];
 
     /** @var SuccessfulCandidatePermitsFacade */
     private $successfulCandidatePermitsFacade;
@@ -43,8 +41,6 @@ class MarkSuccessfulDaPermitApplications extends ScoringCommandHandler implement
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
 
         $this->successfulCandidatePermitsFacade = $mainServiceLocator->get(
             'PermitsScoringSuccessfulCandidatePermitsFacade'
@@ -62,6 +58,8 @@ class MarkSuccessfulDaPermitApplications extends ScoringCommandHandler implement
      */
     public function handleCommand(CommandInterface $command)
     {
+        $irhpApplicationRepo = $this->getRepo('IrhpApplication');
+
         $this->profileMessage('mark successful da permit applications...');
 
         $stockId = $command->getStockId();
@@ -73,7 +71,7 @@ class MarkSuccessfulDaPermitApplications extends ScoringCommandHandler implement
         $totalSuccessfulCandidatePermits = 0;
 
         foreach ($daQuotas as $daQuota) {
-            $daSuccessCount = $this->scoringQueryProxy->getSuccessfulDaCountInScope(
+            $daSuccessCount = $irhpApplicationRepo->getSuccessfulDaCountInScope(
                 $stockId,
                 $daQuota['jurisdictionId']
             );
@@ -87,7 +85,7 @@ class MarkSuccessfulDaPermitApplications extends ScoringCommandHandler implement
             $this->result->addMessage('      - #DARemainingQuota: ' . $daRemainingQuota);
 
             if ($daRemainingQuota > 0) {
-                $daCandidatePermits = $this->scoringQueryProxy->getUnsuccessfulScoreOrderedInScope(
+                $daCandidatePermits = $irhpApplicationRepo->getUnsuccessfulScoreOrderedInScope(
                     $stockId,
                     $daQuota['jurisdictionId']
                 );

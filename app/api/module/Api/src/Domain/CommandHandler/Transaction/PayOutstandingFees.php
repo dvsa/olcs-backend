@@ -93,8 +93,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             $fees = $this->getOutstandingFeesForOrganisation($command);
         } elseif (!empty($command->getApplicationId())) {
             $fees = $this->feesHelper->getOutstandingFeesForApplication($command->getApplicationId());
-        } elseif (!empty($command->getEcmtPermitApplicationId())) {
-            $fees = $this->feesHelper->getOutstandingFeesForEcmtApplication($command->getEcmtPermitApplicationId());
         } elseif (!empty($command->getIrhpApplication())) {
             $fees = $this->feesHelper->getOutstandingFeesForIrhpApplication($command->getIrhpApplication());
         } else {

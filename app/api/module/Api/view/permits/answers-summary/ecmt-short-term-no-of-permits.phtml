@@ -1,5 +1,18 @@
-<strong><?php echo($this->escapeHtml($this->translate($periodNameKey, 'snapshot'))); ?></strong>
-<?php
+<strong><?php
+
+if ($periodNameKey) {
+    echo($this->escapeHtml($this->translate($periodNameKey, 'snapshot')));
+} else {
+    $translated = sprintf(
+        $this->translate('permits.check-your-answers.no-of-permits.year', 'snapshot'),
+        $validityYear
+    );
+
+    echo($this->escapeHtml($translated));
+}
+
+?></strong><?php
+
 foreach ($emissionsCategories as $emissionsCategory) {
 
     if ($emissionsCategory['count'] > 0) {

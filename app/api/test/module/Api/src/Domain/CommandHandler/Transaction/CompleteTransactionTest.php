@@ -12,16 +12,13 @@ use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCom
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\CompleteTransaction;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository\Transaction as PaymentRepo;
-use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCommand;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits as AcceptIrhpPermitsCmd;
-use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\Transaction\CompleteTransaction as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -47,7 +44,6 @@ class CompleteTransactionTest extends CommandHandlerTestCase
 
         $this->sut = new CompleteTransaction();
         $this->mockRepo('Transaction', PaymentRepo::class);
-        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
 
         $this->refData = [
             PaymentEntity::STATUS_OUTSTANDING,
@@ -75,16 +71,10 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $fee1 = m::mock(Fee::class);
         $fee2 = m::mock(Fee::class);
 
-        $fee1->shouldReceive('getEcmtPermitApplication')
-            ->andReturn([]);
-        $fee2->shouldReceive('getEcmtPermitApplication')
-            ->andReturn([]);
-
         $fee1->shouldReceive('getIrhpApplication')
             ->andReturn([]);
         $fee2->shouldReceive('getIrhpApplication')
             ->andReturn([]);
-
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
@@ -159,114 +149,6 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandEcmtPermitApplication()
-    {
-        // set up data
-        $paymentId = 69;
-        $guid = 'OLCS-1234-ABCDE';
-        $cpmsData = ['foo' => 'bar'];
-        $ecmtPermitApplicationId = 2;
-
-        $data = [
-            'reference' => $guid,
-            'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
-            'cpmsData' => $cpmsData,
-        ];
-
-        $fee1 = m::mock(Fee::class);
-        $fee2 = m::mock(Fee::class);
-
-        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-
-        $fee1->shouldReceive('getEcmtPermitApplication')
-            ->andReturn($ecmtPermitApplication);
-        $fee2->shouldReceive('getEcmtPermitApplication')
-            ->andReturn([]);
-
-        $fee1->shouldReceive('getIrhpApplication')
-            ->andReturn([]);
-        $fee2->shouldReceive('getIrhpApplication')
-            ->andReturn([]);
-
-        $ecmtPermitApplication->shouldReceive('canBeSubmitted')
-            ->andReturn(true);
-
-        $ecmtPermitApplication->shouldReceive('isAwaitingFee')
-            ->andReturn(false);
-
-        $ecmtPermitApplication->shouldReceive('getId')
-            ->andReturn($ecmtPermitApplicationId);
-
-        $payment = m::mock(PaymentEntity::class)->makePartial();
-        $payment->setId($paymentId);
-        $payment->setReference($guid);
-        $payment
-            ->shouldReceive('getStatus')
-            ->andReturn(
-                $this->refData[PaymentEntity::STATUS_OUTSTANDING],
-                $this->refData[PaymentEntity::STATUS_PAID]
-            )
-            ->shouldReceive('getFees')
-            ->once()
-            ->andReturn([$fee1, $fee2]);
-
-        $command = Cmd::create($data);
-
-        // expectations
-        $this->repoMap['Transaction']
-            ->shouldReceive('fetchByReference')
-            ->once()
-            ->with($guid)
-            ->andReturn($payment);
-
-        $this->mockCpmsService
-            ->shouldReceive('handleResponse')
-            ->once()
-            ->with($guid, $cpmsData, $fee1);
-
-        $resolveResult = new Result();
-        $resolveResult
-            ->addId('transaction', $paymentId)
-            ->addMessage('payment updated');
-        $this->expectedSideEffect(
-            ResolvePaymentCommand::class,
-            [
-                'id' => $paymentId,
-                'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
-            ],
-            $resolveResult
-        );
-
-        $submitResult = new Result();
-        $submitResult
-            ->addId('application', $ecmtPermitApplicationId)
-            ->addMessage('application submitted');
-        $this->expectedSideEffect(
-            SubmitEcmtPermitApplicationCmd::class,
-            [
-                'id' => $ecmtPermitApplicationId
-            ],
-            $submitResult
-        );
-
-        // assertions
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'transaction' => $paymentId,
-                'application' => $ecmtPermitApplicationId,
-            ],
-            'messages' => [
-                'payment updated',
-                'application submitted',
-                'CPMS record updated',
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-    }
-
     public function testHandleCommandIrhpApplicationCanBeSubmitted()
     {
         // set up data
@@ -285,11 +167,6 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $fee2 = m::mock(Fee::class);
 
         $irhpApplication = m::mock(IrhpApplication::class);
-
-        $fee1->shouldReceive('getEcmtPermitApplication')
-            ->andReturn([]);
-        $fee2->shouldReceive('getEcmtPermitApplication')
-            ->andReturn([]);
 
         $fee1->shouldReceive('getIrhpApplication')
             ->andReturn($irhpApplication);
@@ -390,11 +267,6 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $fee2 = m::mock(Fee::class);
 
         $irhpApplication = m::mock(IrhpApplication::class);
-
-        $fee1->shouldReceive('getEcmtPermitApplication')
-            ->andReturn([]);
-        $fee2->shouldReceive('getEcmtPermitApplication')
-            ->andReturn([]);
 
         $fee1->shouldReceive('getIrhpApplication')
             ->andReturn($irhpApplication);

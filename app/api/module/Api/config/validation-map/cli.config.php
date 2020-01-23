@@ -30,7 +30,6 @@ return [
     CliCommandHandler\Permits\CloseExpiredWindows::class => IsSystemUser::class,
     CliCommandHandler\Permits\MarkExpiredPermits::class => IsSystemUser::class,
     CliCommandHandler\Permits\GeneratePermits::class => IsSystemUser::class,
-    CliCommandHandler\Permits\WithdrawUnpaidEcmt::class => IsSystemUser::class,
     CliCommandHandler\Permits\WithdrawUnpaidIrhp::class => IsSystemUser::class,
     CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
 
@@ -92,7 +91,6 @@ return [
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,
-    CommandHandler\Permits\AllocatePermits::class => IsSystemUser::class,
     CommandHandler\Permits\AllocateCandidatePermits::class => IsSystemUser::class,
     CommandHandler\Permits\PostSubmitTasks::class => IsSystemUser::class,
     CommandHandler\Permits\AllocateIrhpApplicationPermits::class => IsSystemUser::class,

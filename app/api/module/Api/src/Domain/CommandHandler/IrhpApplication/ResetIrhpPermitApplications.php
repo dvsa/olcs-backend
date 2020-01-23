@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\CreateDefaultIrhpPermitApplications;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication\Delete as DeleteIrhpPermitApplicationCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -11,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Service\Qa\ApplicationAnswersClearer;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use RuntimeException;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -70,6 +69,7 @@ class ResetIrhpPermitApplications extends AbstractCommandHandler implements Togg
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
                 $this->deleteIrhpPermitApplications($irhpApplication->getIrhpPermitApplications());
                 break;
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE:
