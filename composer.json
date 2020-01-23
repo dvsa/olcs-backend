@@ -42,7 +42,7 @@
         "phpseclib/phpseclib": "^2.0.6",
         "qandidate/toggle": "^1.1",
         "ramsey/uuid": "^3.6",
-        "ruflin/elastica": "~5.1",
+        "ruflin/elastica": "~6.1",
         "simplesamlphp/saml2": "~3.4.2",
         "soflomo/purifier": "~0.1.0",
         "symfony/filesystem": "~3.0.0",
