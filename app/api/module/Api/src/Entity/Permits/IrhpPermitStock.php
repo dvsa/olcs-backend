@@ -642,6 +642,11 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
 
         $mappings = [
             [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                'business_process' => RefData::BUSINESS_PROCESS_APSG,
+                'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 'business_process' => RefData::BUSINESS_PROCESS_APG,
                 'allocation_mode' => self::ALLOCATION_MODE_STANDARD,
@@ -720,19 +725,5 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         }
 
         return self::CANDIDATE_MODE_NONE;
-    }
-
-    /**
-     * Return the repository name to be used for fetching applications within this stock
-     *
-     * @return string
-     */
-    public function getApplicationRepoName()
-    {
-        if ($this->irhpPermitType->isEcmtAnnual()) {
-            return 'EcmtPermitApplication';
-        }
-
-        return 'IrhpApplication';
     }
 }

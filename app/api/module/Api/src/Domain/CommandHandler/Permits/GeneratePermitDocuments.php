@@ -73,7 +73,7 @@ final class GeneratePermitDocuments extends AbstractCommandHandler implements To
         if ($irhpPermitType->isBilateral() || $irhpPermitType->isMultilateral() || $irhpPermitType->isEcmtShortTerm()
             || $irhpPermitType->isEcmtRemoval()
         ) {
-            $licenceId = $irhpPermitApplication->getRelatedApplication()->getLicence()->getId();
+            $licenceId = $irhpPermitApplication->getIrhpApplication()->getLicence()->getId();
 
             if (isset($this->coverLetterLicenceIds[$licenceId])) {
                 // only one cover letter per licence required

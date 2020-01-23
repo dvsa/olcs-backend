@@ -4,10 +4,10 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\GetScoredPermitList as GetScoredPermitListHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList as QryClass;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -22,11 +22,8 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
     {
         $this->sut = new GetScoredPermitListHandler();
         $this->mockRepo('Country', CountryRepo::class);
+        $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
-
-        $this->mockedSmServices = [
-            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
-        ];
 
         parent::setUp();
     }
@@ -92,7 +89,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
             ],
         ];
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchScoringReport')
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchScoringReport')
             ->with($stockId)
             ->andReturn($scoringReport);
 
@@ -142,7 +139,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
             ]
         ];
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchApplicationIdToCountryIdAssociations')
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchApplicationIdToCountryIdAssociations')
             ->with($stockId)
             ->andReturn($applicationIdToCountryIdAssociations);
 

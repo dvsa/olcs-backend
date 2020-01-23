@@ -59,8 +59,6 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $user;
 
-    protected $ecmtPermitApplication;
-
     protected $irhpApplication;
 
     protected $isPostSubmissionUpload = 0;
@@ -293,16 +291,6 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Get ecmt permit application
-     *
-     * @return int
-     */
-    public function getEcmtPermitApplication()
-    {
-        return $this->ecmtPermitApplication;
     }
 
     /**

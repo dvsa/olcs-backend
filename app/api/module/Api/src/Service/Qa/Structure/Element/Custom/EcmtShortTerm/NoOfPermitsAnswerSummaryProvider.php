@@ -40,6 +40,7 @@ class NoOfPermitsAnswerSummaryProvider implements AnswerSummaryProviderInterface
         $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
 
         return [
+            'validityYear' => $irhpPermitStock->getValidityYear(),
             'periodNameKey' => $irhpPermitStock->getPeriodNameKey(),
             'emissionsCategories' => $emissionsCategories
         ];

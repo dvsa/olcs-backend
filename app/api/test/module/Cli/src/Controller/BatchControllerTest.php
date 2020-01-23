@@ -972,25 +972,6 @@ class BatchControllerTest extends MockeryTestCase
         $this->sut->expireBusRegistrationAction();
     }
 
-    public function testWithdrawUnpaidEcmtApplcations()
-    {
-        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
-
-        $this->mockCommandHandler
-            ->shouldReceive('handleCommand')
-            ->with(m::type(CliCommand\Permits\WithdrawUnpaidEcmt::class))
-            ->once()
-            ->andReturn(new Command\Result());
-
-        $this->mockCommandHandler
-            ->shouldReceive('handleCommand')
-            ->with(m::type(CliCommand\Permits\WithdrawUnpaidIrhp::class))
-            ->once()
-            ->andReturn(new Command\Result());
-
-        $this->sut->withdrawUnpaidEcmtApplicationsAction();
-    }
-
     public function testCleanUpVariationsAction()
     {
         $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
@@ -1157,6 +1138,15 @@ class BatchControllerTest extends MockeryTestCase
                 ],
                 [
                     'command' => \Dvsa\Olcs\Cli\Domain\Command\Permits\MarkExpiredPermits::class,
+                    'data' => [],
+                ]
+            ],
+            'withdraw unpaid' => [
+                [
+                    'withdraw-unpaid' => true,
+                ],
+                [
+                    'command' => \Dvsa\Olcs\Cli\Domain\Command\Permits\WithdrawUnpaidIrhp::class,
                     'data' => [],
                 ]
             ],

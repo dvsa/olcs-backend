@@ -42,11 +42,13 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
     /**
      * @dataProvider dpReasonProvider
      */
-    public function testHandleCommand($withdrawReason)
+    public function testHandleCommandWithEmail($withdrawReason)
     {
         $id = 4096;
         $feeId1 = 111;
         $feeId2 = 222;
+
+        $emailCommand = 'Email\Command';
 
         $application = m::mock(WithdrawableInterface::class);
         $application->shouldReceive('withdraw')
@@ -54,6 +56,10 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
             ->once()
             ->globally()
             ->ordered();
+        $application->shouldReceive('getAppWithdrawnEmailCommand')
+            ->with($withdrawReason)
+            ->once()
+            ->andReturn($emailCommand);
 
         $command = m::mock(WithdrawApplicationInterface::class);
         $command->shouldReceive('getId')->andReturn($id);
@@ -79,9 +85,67 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
             new Result()
         );
 
-        if (isset($this->emails[$withdrawReason])) {
-            $this->expectedEmailQueueSideEffect($this->emails[$withdrawReason], ['id' => $id], $id, new Result());
-        }
+        $this->expectedEmailQueueSideEffect($emailCommand, ['id' => $id], $id, new Result());
+
+        $this->repoMap[$this->repoServiceName]->shouldReceive('fetchById')
+            ->once()
+            ->with($id)
+            ->andReturn($application);
+
+        $this->repoMap[$this->repoServiceName]->shouldReceive('save')
+            ->with($application)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals($id, $result->getId($this->repoServiceName));
+        $this->assertEquals(['Application withdrawn'], $result->getMessages());
+    }
+
+    /**
+     * @dataProvider dpReasonProvider
+     */
+    public function testHandleCommandWithoutEmail($withdrawReason)
+    {
+        $id = 4096;
+        $feeId1 = 111;
+        $feeId2 = 222;
+
+        $application = m::mock(WithdrawableInterface::class);
+        $application->shouldReceive('withdraw')
+            ->with($this->mapRefData($this->withdrawStatus), $this->mapRefData($withdrawReason))
+            ->once()
+            ->globally()
+            ->ordered();
+        $application->shouldReceive('getAppWithdrawnEmailCommand')
+            ->with($withdrawReason)
+            ->andReturnNull();
+
+        $command = m::mock(WithdrawApplicationInterface::class);
+        $command->shouldReceive('getId')->andReturn($id);
+        $command->shouldReceive('getReason')->withNoArgs()->andReturn($withdrawReason);
+
+        $fee1 = m::mock(Fee::class);
+        $fee1->shouldReceive('getId')->once()->withNoArgs()->andReturn($feeId1);
+        $fee2 = m::mock(Fee::class);
+        $fee2->shouldReceive('getId')->once()->withNoArgs()->andReturn($feeId2);
+        $fees = [$fee1, $fee2];
+
+        $application->shouldReceive('getOutstandingFees')->once()->withNoArgs()->andReturn($fees);
+
+        $this->expectedSideEffect(
+            CancelFee::class,
+            [ 'id' => $feeId1],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            CancelFee::class,
+            [ 'id' => $feeId2],
+            new Result()
+        );
 
         $this->repoMap[$this->repoServiceName]->shouldReceive('fetchById')
             ->once()

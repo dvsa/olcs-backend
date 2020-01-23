@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service as ApiSrv;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 
-
 return [
     'router' => [
         'routes' => include(__DIR__ . '/../../../vendor/olcs/olcs-transfer/config/backend-routes.config.php')
@@ -350,8 +349,6 @@ return [
                 ApiSrv\Permits\GrantabilityCheckerFactory::class,
             'PermitsScoringCandidatePermitsCreator'
                 => ApiSrv\Permits\Scoring\CandidatePermitsCreatorFactory::class,
-            'PermitsScoringScoringQueryProxy'
-                => ApiSrv\Permits\Scoring\ScoringQueryProxyFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsGenerator'
                 => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsGeneratorFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsWriter'
@@ -437,7 +434,6 @@ return [
             'order' => QueryPartial\Order::class,
             'filterByLicence' => QueryPartial\Filter\ByLicence::class,
             'filterByApplication' => QueryPartial\Filter\ByApplication::class,
-            'filterByPermitApplication' => QueryPartial\Filter\ByPermitApplication::class,
             'filterByBusReg' => QueryPartial\Filter\ByBusReg::class,
             'filterByIds' => QueryPartial\Filter\ByIds::class,
         ]
@@ -612,7 +608,6 @@ return [
             'Surrender' => RepositoryFactory::class,
             'Sectors' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
-            'EcmtPermitApplication' => RepositoryFactory::class,
             'IrhpPermitApplication' => RepositoryFactory::class,
             'IrhpApplication' => RepositoryFactory::class,
             'IrhpApplicationReadAudit' => RepositoryFactory::class,

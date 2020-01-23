@@ -248,7 +248,10 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
     public function dpTestHandleCommandQandAYear()
     {
         return [
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM]
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+            ]
         ];
     }
 

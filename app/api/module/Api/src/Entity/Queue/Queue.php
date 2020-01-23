@@ -60,7 +60,6 @@ class Queue extends AbstractQueue
     const TYPE_REMOVE_DELETED_DOCUMENTS = 'que_typ_remove_deleted_docs';
     const TYPE_CREATE_CONTINUATION_SNAPSHOT = 'que_typ_cont_shapshot';
     const TYPE_CONT_DIGITAL_REMINDER = 'que_typ_cont_digital_reminder';
-    const TYPE_PERMITS_ALLOCATE = 'que_typ_permits_allocate';
     const TYPE_PERMITS_POST_SUBMIT = 'que_typ_permits_post_submit';
     const TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE = 'que_typ_irhp_permits_allocate';
     const TYPE_RUN_ECMT_SCORING = 'que_typ_run_ecmt_scoring';
@@ -95,7 +94,6 @@ class Queue extends AbstractQueue
         self::TYPE_REMOVE_DELETED_DOCUMENTS,
         self::TYPE_CREATE_CONTINUATION_SNAPSHOT,
         self::TYPE_CONT_DIGITAL_REMINDER,
-        self::TYPE_PERMITS_ALLOCATE,
         self::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE,
         self::TYPE_RUN_ECMT_SCORING,
         self::TYPE_ACCEPT_ECMT_SCORING,

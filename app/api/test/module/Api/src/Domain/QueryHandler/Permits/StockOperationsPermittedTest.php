@@ -7,10 +7,10 @@ use Dvsa\Olcs\Api\Domain\Query\Permits\DeviationData as DeviationDataQry;
 use Dvsa\Olcs\Api\Domain\Query\Permits\QueueRunScoringPermitted as QueueRunScoringPermittedQry;
 use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringPermitted as QueueAcceptScoringPermittedQry;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\StockOperationsPermitted as StockOperationsPermittedHandler;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Query\Permits\StockOperationsPermitted as StockOperationsPermittedQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -24,11 +24,8 @@ class StockOperationsPermittedTest extends QueryHandlerTestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
+        $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
-
-        $this->mockedSmServices = [
-            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
-        ];
 
         parent::setUp();
     }
@@ -54,7 +51,7 @@ class StockOperationsPermittedTest extends QueryHandlerTestCase
             ]
         ];
 
-        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchDeviationSourceValues')
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchDeviationSourceValues')
             ->with($stockId)
             ->andReturn($deviationSourceValues);
 

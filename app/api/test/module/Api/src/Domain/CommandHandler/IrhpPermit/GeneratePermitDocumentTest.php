@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
@@ -77,7 +76,7 @@ class GeneratePermitDocumentTest extends CommandHandlerTestCase
         $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
             ->andReturn($irhpPermitStock);
-        $irhpPermitApplication->shouldReceive('getRelatedApplication->getLicence')
+        $irhpPermitApplication->shouldReceive('getIrhpApplication->getLicence')
             ->andReturn($licence);
 
         $irhpPermit = m::mock(IrhpPermitEntity::class);
@@ -128,7 +127,7 @@ class GeneratePermitDocumentTest extends CommandHandlerTestCase
             'ECMT Annual' => [
                 'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT,
                 'countryId' => null,
-                'expectedTemplate' => EcmtPermitApplicationEntity::PERMIT_TEMPLATE_NAME,
+                'expectedTemplate' => DocumentEntity::IRHP_PERMIT_ECMT,
                 'expectedDescription' => 'IRHP PERMIT ECMT 123',
                 'expectedMessages' => [
                     'IRHP PERMIT ECMT 123 RTF created and stored',

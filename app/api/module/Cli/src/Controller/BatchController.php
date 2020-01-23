@@ -89,23 +89,6 @@ class BatchController extends AbstractCliController
     }
 
     /**
-     * Withdraw ecmt applications where the fee hasn't been paid on time
-     *
-     * @return \Zend\View\Model\ConsoleModel
-     */
-    public function withdrawUnpaidEcmtApplicationsAction()
-    {
-        return $this->handleExitStatus(
-            $this->handleCommand(
-                [
-                    CliCommand\Permits\WithdrawUnpaidEcmt::create([]),
-                    CliCommand\Permits\WithdrawUnpaidIrhp::create([]),
-                ]
-            )
-        );
-    }
-
-    /**
      * Flag tasks as urgent
      *
      * @return \Zend\View\Model\ConsoleModel
@@ -539,6 +522,10 @@ class BatchController extends AbstractCliController
         } elseif ($this->params('mark-expired-permits')) {
             return $this->handleExitStatus(
                 $this->handleCommand([CliCommand\Permits\MarkExpiredPermits::create([])])
+            );
+        } elseif ($this->params('withdraw-unpaid')) {
+            return $this->handleExitStatus(
+                $this->handleCommand([CliCommand\Permits\WithdrawUnpaidIrhp::create([])])
             );
         }
     }

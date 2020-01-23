@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
-use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
@@ -214,36 +213,6 @@ class IrhpPermitTest extends RepositoryTestCase
             $flattenedPermitNumbers,
             $this->sut->getAssignedPermitNumbersByRange($rangeId)
         );
-    }
-
-    public function testFetchListForValidEcmtPermits()
-    {
-        $this->setUpSut(IrhpPermit::class, true);
-        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
-
-        $qb = $this->createMockQb('BLAH');
-        $this->mockCreateQueryBuilder($qb);
-
-        $this->queryBuilder
-            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
-            ->shouldReceive('withRefdata')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
-            ->shouldReceive('paginate')->once()->andReturnSelf();
-
-        $query = ValidEcmtPermits::create(['licence' => 'LIC_ID']);
-        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
-
-        $expectedQuery = 'BLAH '
-            . 'INNER JOIN ipa.ecmtPermitApplication epa '
-            . 'AND epa.licence = [[LIC_ID]] '
-            . 'AND m.status IN [[["'.
-            IrhpPermitEntity::STATUS_PENDING.'","'.
-            IrhpPermitEntity::STATUS_AWAITING_PRINTING.'","'.
-            IrhpPermitEntity::STATUS_ERROR.'","'.
-            IrhpPermitEntity::STATUS_PRINTING.'","'.
-            IrhpPermitEntity::STATUS_PRINTED.'"]]]'
-            . ' ORDER BY m.permitNumber DESC';
-        $this->assertEquals($expectedQuery, $this->query);
     }
 
     public function testFetchListForReadyToPrint()

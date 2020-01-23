@@ -7,12 +7,10 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
-use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByEcmtId;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
-use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use PDO;
 
@@ -101,14 +99,7 @@ class IrhpPermit extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        if ($query instanceof ValidEcmtPermits) {
-            $qb->innerJoin('ipa.ecmtPermitApplication', 'epa')
-                ->andWhere($qb->expr()->eq('epa.licence', ':licenceId'))
-                ->setParameter('licenceId', $query->getLicence());
-            $qb->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
-                ->setParameter('statuses', Entity::$validStatuses);
-            $qb->orderBy($this->alias . '.permitNumber', 'DESC');
-        } elseif ($query instanceof ReadyToPrint) {
+        if ($query instanceof ReadyToPrint) {
             if ($query->getIrhpPermitStock() != null) {
                 $qb->innerJoin($this->alias . '.irhpPermitRange', 'ipr')
                     ->innerJoin('ipr.irhpPermitStock', 'ips')
@@ -128,11 +119,6 @@ class IrhpPermit extends AbstractRepository
         if (($query instanceof GetList) && ($query->getIrhpPermitApplication() != null)) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.irhpPermitApplication', ':irhpPermitApplication'));
             $qb->setParameter('irhpPermitApplication', $query->getIrhpPermitApplication());
-        }
-
-        if (($query instanceof GetListByEcmtId) && ($query->getEcmtPermitApplication() != null)) {
-            $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
-                ->setParameter('ecmtId', $query->getEcmtPermitApplication());
         }
 
         if (($query instanceof GetListByIrhpId) && ($query->getIrhpApplication() != null)) {

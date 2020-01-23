@@ -21,7 +21,7 @@ class EmissionsCategoryAvailabilityCounterFactory implements FactoryInterface
         return new EmissionsCategoryAvailabilityCounter(
             $repoServiceManager->get('IrhpPermitRange'),
             $repoServiceManager->get('IrhpPermit'),
-            $serviceLocator->get('PermitsScoringScoringQueryProxy')
+            $repoServiceManager->get('IrhpApplication')
         );
     }
 }

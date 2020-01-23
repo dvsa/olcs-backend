@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
@@ -194,12 +194,12 @@ class FeeEntityTest extends EntityTester
     /**
      * @param string $accrualRuleId,
      * @param Licence $licence
-     * @param EcmtPermitApplication $ecmtPermitApplication EcmtPermitApplication
+     * @param IrhpApplication $irhpApplication
      * @param DateTime $expected
      *
      * @dataProvider ruleStartDateProvider
      */
-    public function testGetRuleStartDate($accrualRuleId, $licence, $ecmtPermitApplication, $expected)
+    public function testGetRuleStartDate($accrualRuleId, $licence, $irhpApplication, $expected)
     {
         $feeType = m::mock()
             ->shouldReceive('getAccrualRule')
@@ -211,8 +211,8 @@ class FeeEntityTest extends EntityTester
             $this->sut->setLicence($licence);
         }
 
-        if (!is_null($ecmtPermitApplication)) {
-            $this->sut->setEcmtPermitApplication($ecmtPermitApplication);
+        if (!is_null($irhpApplication)) {
+            $this->sut->setIrhpApplication($irhpApplication);
         }
 
         $this->assertEquals($expected, $this->sut->getRuleStartDate());
@@ -225,14 +225,14 @@ class FeeEntityTest extends EntityTester
 
         $irhpPermitStartDate = new DateTime('2015-04-04');
 
-        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-        $ecmtPermitApplication
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication
             ->shouldReceive('getIrhpPermitApplications->first->getIrhpPermitWindow->getIrhpPermitStock->getValidFrom')
             ->with(true)
             ->andReturn($irhpPermitStartDate);
 
-        $ecmtPermitApplicationWithoutIrhpPermitApp = m::mock(EcmtPermitApplication::class);
-        $ecmtPermitApplicationWithoutIrhpPermitApp
+        $irhpApplicationWithoutIrhpPermitApp = m::mock(IrhpApplication::class);
+        $irhpApplicationWithoutIrhpPermitApp
             ->shouldReceive('getIrhpPermitApplications->first')
             ->andReturn(null);
 
@@ -291,49 +291,49 @@ class FeeEntityTest extends EntityTester
             'IRHP permit - 3 months - no application' => [
                 Entity::ACCRUAL_RULE_IRHP_PERMIT_3_MONTHS,
                 null,
-                $ecmtPermitApplicationWithoutIrhpPermitApp,
+                $irhpApplicationWithoutIrhpPermitApp,
                 null,
             ],
             'IRHP permit - 3 months - valid from date' => [
                 Entity::ACCRUAL_RULE_IRHP_PERMIT_3_MONTHS,
                 null,
-                $ecmtPermitApplication,
+                $irhpApplication,
                 $irhpPermitStartDate,
             ],
             'IRHP permit - 6 months - no application' => [
                 Entity::ACCRUAL_RULE_IRHP_PERMIT_6_MONTHS,
                 null,
-                $ecmtPermitApplicationWithoutIrhpPermitApp,
+                $irhpApplicationWithoutIrhpPermitApp,
                 null,
             ],
             'IRHP permit - 6 months - valid from date' => [
                 Entity::ACCRUAL_RULE_IRHP_PERMIT_6_MONTHS,
                 null,
-                $ecmtPermitApplication,
+                $irhpApplication,
                 $irhpPermitStartDate,
             ],
             'IRHP permit - 9 months - no application' => [
                 Entity::ACCRUAL_RULE_IRHP_PERMIT_9_MONTHS,
                 null,
-                $ecmtPermitApplicationWithoutIrhpPermitApp,
+                $irhpApplicationWithoutIrhpPermitApp,
                 null,
             ],
             'IRHP permit - 9 months - valid from date' => [
                 Entity::ACCRUAL_RULE_IRHP_PERMIT_9_MONTHS,
                 null,
-                $ecmtPermitApplication,
+                $irhpApplication,
                 $irhpPermitStartDate,
             ],
             'IRHP permit - 12 months - no application' => [
                 Entity::ACCRUAL_RULE_IRHP_PERMIT_12_MONTHS,
                 null,
-                $ecmtPermitApplicationWithoutIrhpPermitApp,
+                $irhpApplicationWithoutIrhpPermitApp,
                 null,
             ],
             'IRHP permit - 12 months - valid from date' => [
                 Entity::ACCRUAL_RULE_IRHP_PERMIT_12_MONTHS,
                 null,
-                $ecmtPermitApplication,
+                $irhpApplication,
                 $irhpPermitStartDate,
             ],
             'invalid' => [

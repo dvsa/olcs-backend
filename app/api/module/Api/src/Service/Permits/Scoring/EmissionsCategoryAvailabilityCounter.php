@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Scoring;
 
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepository;
 
@@ -13,26 +14,26 @@ class EmissionsCategoryAvailabilityCounter
     /** @var IrhpPermitRepository */
     private $irhpPermitRepo;
 
-    /** @var ScoringQueryProxy */
-    private $scoringQueryProxy;
+    /** @var IrhpApplicationRepository */
+    private $irhpApplicationRepo;
 
     /**
      * Create service instance
      *
      * @param IrhpPermitRangeRepository $irhpPermitRangeRepo
      * @param IrhpPermitRepository $irhpPermitRepo
-     * @param ScoringQueryProxy $scoringQueryProxy
+     * @param IrhpApplicationRepository $irhpApplicationRepo
      *
      * @return EmissionsCategoryAvailabilityCounter
      */
     public function __construct(
         IrhpPermitRangeRepository $irhpPermitRangeRepo,
         IrhpPermitRepository $irhpPermitRepo,
-        ScoringQueryProxy $scoringQueryProxy
+        IrhpApplicationRepository $irhpApplicationRepo
     ) {
         $this->irhpPermitRangeRepo = $irhpPermitRangeRepo;
         $this->irhpPermitRepo = $irhpPermitRepo;
-        $this->scoringQueryProxy = $scoringQueryProxy;
+        $this->irhpApplicationRepo = $irhpApplicationRepo;
     }
 
     /**
@@ -56,7 +57,7 @@ class EmissionsCategoryAvailabilityCounter
             $emissionsCategoryId
         );
 
-        $successfulCount = $this->scoringQueryProxy->getSuccessfulCountInScope(
+        $successfulCount = $this->irhpApplicationRepo->getSuccessfulCountInScope(
             $stockId,
             $emissionsCategoryId
         );

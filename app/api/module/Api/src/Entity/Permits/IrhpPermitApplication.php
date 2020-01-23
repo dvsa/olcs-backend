@@ -27,8 +27,6 @@ use RuntimeException;
  *        @ORM\Index(name="fk_irhp_permit_applications_irhp_permit_windows1_idx",
      *     columns={"irhp_permit_window_id"}),
  *        @ORM\Index(name="fk_irhp_permit_applications_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_irhp_permit_application_ecmt_permit_application1_idx",
-     *     columns={"ecmt_permit_application_id"}),
  *        @ORM\Index(name="fk_irhp_permit_application_sectors_id1_idx", columns={"sectors_id"}),
  *        @ORM\Index(name="irhp_permit_type_ref_data_status_id_fk", columns={"status"}),
  *        @ORM\Index(name="fk_irhp_permit_application_created_by_user_id", columns={"created_by"}),
@@ -62,14 +60,12 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
         Licence $licence,
-        EcmtPermitApplication $ecmtPermitApplication = null,
         IrhpApplication $irhpApplication = null
     ) {
         $IrhpPermitApplication = new self();
 
         $IrhpPermitApplication->irhpPermitWindow = $IrhpPermitWindow;
         $IrhpPermitApplication->licence = $licence;
-        $IrhpPermitApplication->ecmtPermitApplication = $ecmtPermitApplication;
         $IrhpPermitApplication->irhpApplication = $irhpApplication;
 
         return $IrhpPermitApplication;
@@ -103,7 +99,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getPermitIntensityOfUse($emissionsCategoryId = null)
     {
-        return $this->getRelatedApplication()->getPermitIntensityOfUse($emissionsCategoryId);
+        return $this->irhpApplication->getPermitIntensityOfUse($emissionsCategoryId);
     }
 
     /**
@@ -115,7 +111,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getPermitApplicationScore($emissionsCategoryId = null)
     {
-        return $this->getRelatedApplication()->getPermitApplicationScore($emissionsCategoryId);
+        return $this->irhpApplication->getPermitApplicationScore($emissionsCategoryId);
     }
 
     /**
@@ -125,7 +121,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getCalculatedBundleValues()
     {
-        $relatedApplication = $this->getRelatedApplication();
+        $relatedApplication = $this->irhpApplication;
 
         return [
             'permitsAwarded' => $this->countPermitsAwarded(),
@@ -238,25 +234,9 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getRelatedOrganisation()
     {
-        $relatedApplication = $this->getRelatedApplication();
+        $relatedApplication = $this->irhpApplication;
 
         return isset($relatedApplication) ? $relatedApplication->getRelatedOrganisation() : null;
-    }
-
-    /**
-     * There are two possible types of parent application ECMT or IRHP
-     *
-     * @return EcmtPermitApplication|IrhpApplication|null
-     */
-    public function getRelatedApplication()
-    {
-        if ($this->ecmtPermitApplication instanceof EcmtPermitApplication) {
-            return $this->ecmtPermitApplication;
-        } elseif ($this->irhpApplication instanceof IrhpApplication) {
-            return $this->irhpApplication;
-        }
-
-        return null;
     }
 
     /**

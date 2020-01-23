@@ -10,10 +10,8 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\CancelApplication as CancelIrhpApplication;
-use Dvsa\Olcs\Transfer\Command\Permits\CancelEcmtPermitApplication;
 
 /**
  * Close IRHP Permit Window
@@ -24,7 +22,7 @@ final class Close extends AbstractCommandHandler implements TransactionedInterfa
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermitWindow';
-    protected $extraRepos = ['EcmtPermitApplication', 'IrhpApplication'];
+    protected $extraRepos = ['IrhpApplication'];
 
     /**
      * Handle Close command
@@ -45,38 +43,12 @@ final class Close extends AbstractCommandHandler implements TransactionedInterfa
 
         // cancel all not yet submitted applications linked to the IRHP permit window
         $windowId = $window->getId();
-        $this->cancelAllNotYetSubmittedEcmtPermitApplications($windowId);
         $this->cancelAllNotYetSubmittedIrhpApplications($windowId);
 
         $this->result->addId('id', $windowId);
         $this->result->addMessage("IRHP permit window '{$windowId}' has been closed");
 
         return $this->result;
-    }
-
-    /**
-     * Cancel all not yet submitted ECMT applications linked to the IRHP permit window
-     *
-     * @param int|\Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow $windowId IRHP permit window id
-     *
-     * @return void
-     */
-    private function cancelAllNotYetSubmittedEcmtPermitApplications($windowId)
-    {
-        $notYetSubmittedApps = $this->getRepo('EcmtPermitApplication')
-            ->fetchByWindowId($windowId, [EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED]);
-
-        foreach ($notYetSubmittedApps as $app) {
-            $this->result->merge(
-                $this->handleSideEffect(
-                    CancelEcmtPermitApplication::create(
-                        [
-                            'id' => $app->getId(),
-                        ]
-                    )
-                )
-            );
-        }
     }
 
     /**

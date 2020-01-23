@@ -585,7 +585,6 @@ class Fee extends AbstractRepository
         $this->getQueryBuilder()
             ->filterByLicence($query->getLicence())
             ->filterByApplication($query->getApplication())
-            ->filterByPermitApplication($query->getEcmtPermitApplication())
             ->filterByIds(!empty($query->getIds()) ? $query->getIds() : null);
 
         if ($query->getOrganisation() !== null) {
@@ -777,24 +776,6 @@ class Fee extends AbstractRepository
             ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeType'))
             ->setParameter('application', $applicationId)
             ->setParameter('feeType', $feeType);
-
-        return $doctrineQb->getQuery()->getResult();
-    }
-
-    /**
-     * Fetch fee by status and ecmt_application id
-     *
-     * @param $ecmtPermitAplicationId
-     * @return array
-     */
-    public function fetchFeeByEcmtPermitApplicationId($ecmtPermitAplicationId)
-    {
-        $doctrineQb = $this->createQueryBuilder();
-        $doctrineQb
-            ->andWhere($doctrineQb->expr()->eq($this->alias . '.ecmtPermitApplication', ':ecmtPermitApplication'))
-            ->andWhere($doctrineQb->expr()->eq($this->alias . '.feeStatus', ':feeStatus'))
-            ->setParameter('feeStatus', Entity::STATUS_OUTSTANDING)
-            ->setParameter('ecmtPermitApplication', $ecmtPermitAplicationId);
 
         return $doctrineQb->getQuery()->getResult();
     }

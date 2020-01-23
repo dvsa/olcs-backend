@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Mockery as m;
 
@@ -77,6 +78,8 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1, $irhpPermitApplication2, $irhpPermitApplication3]);
 
         $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIssuedEmailCommand')
+            ->andReturnNull();
         $irhpApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn($irhpPermitApplications);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
@@ -141,6 +144,8 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1]);
 
         $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIssuedEmailCommand')
+            ->andReturnNull();
         $irhpApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn($irhpPermitApplications);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
@@ -223,6 +228,8 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1, $irhpPermitApplication2, $irhpPermitApplication3]);
 
         $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIssuedEmailCommand')
+            ->andReturnNull();
         $irhpApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn($irhpPermitApplications);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
@@ -305,6 +312,8 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1]);
 
         $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIssuedEmailCommand')
+            ->andReturnNull();
         $irhpApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn($irhpPermitApplications);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
@@ -332,6 +341,63 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             AllocateCandidatePermits::class,
             ['id' => $irhpPermitApplication1Id],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($this->command);
+
+        $this->assertEquals(
+            $this->irhpApplicationId,
+            $result->getId('irhpApplication')
+        );
+    }
+
+    public function testHandleCommandCandidatePermitsWithIssuedEmail()
+    {
+        $irhpPermitApplication1Id = 57;
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getId')
+            ->andReturn($irhpPermitApplication1Id);
+
+        $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1]);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIssuedEmailCommand')
+            ->andReturn(SendEcmtIssued::class);
+        $irhpApplication->shouldReceive('getIrhpPermitApplications')
+            ->andReturn($irhpPermitApplications);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS);
+        $this->repoMap['IrhpApplication']->shouldReceive('refresh')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
+        $irhpApplication->shouldReceive('proceedToValid')
+            ->with($this->refData[IrhpInterface::STATUS_VALID])
+            ->once()
+            ->globally()
+            ->ordered();
+        $this->repoMap['IrhpApplication']->shouldReceive('save')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($this->irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->expectedSideEffect(
+            AllocateCandidatePermits::class,
+            ['id' => $irhpPermitApplication1Id],
+            new Result()
+        );
+
+        $this->expectedEmailQueueSideEffect(
+            SendEcmtIssued::class,
+            ['id' => $this->irhpApplicationId],
+            $this->irhpApplicationId,
             new Result()
         );
 

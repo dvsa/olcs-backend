@@ -38,6 +38,7 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
     public function testGetTemplateVariables($isSnapshot)
     {
         $periodNameKey = 'period.name.key';
+        $validityYear = 2025;
         $requiredEuro5 = 5;
         $requiredEuro6 = 7;
 
@@ -47,6 +48,9 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
         $irhpPermitStockEntity->shouldReceive('getPeriodNameKey')
             ->withNoArgs()
             ->andReturn($periodNameKey);
+        $irhpPermitStockEntity->shouldReceive('getValidityYear')
+            ->withNoArgs()
+            ->andReturn($validityYear);
 
         $irhpPermitApplicationEntity = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplicationEntity->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
@@ -65,6 +69,7 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
             ->andReturn($irhpPermitApplicationEntity);
 
         $expectedTemplateVariables = [
+            'validityYear' => $validityYear,
             'periodNameKey' => $periodNameKey,
             'emissionsCategories' => [
                 [
