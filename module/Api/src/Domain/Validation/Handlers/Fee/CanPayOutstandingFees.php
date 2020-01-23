@@ -24,10 +24,6 @@ class CanPayOutstandingFees extends AbstractHandler
             return $this->canAccessApplication($dto->getApplicationId());
         }
 
-        if ($dto->getEcmtPermitApplicationId()) {
-            return $this->canAccessEcmtPermitApplication($dto->getEcmtPermitApplicationId());
-        }
-
         if ($dto->getIrhpApplication()) {
             return $this->canAccessIrhpApplicationWithId($dto->getIrhpApplication());
         }

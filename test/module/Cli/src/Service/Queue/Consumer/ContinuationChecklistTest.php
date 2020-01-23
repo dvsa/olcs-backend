@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\ORMException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
@@ -107,7 +108,10 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
         );
     }
 
-    public function testProcessMessageFailureOrmException()
+    /**
+     * @dataProvider dpHandledExceptionProvider
+     */
+    public function testProcessMessageFailureHandledExceptions($exception, $exceptionMessageString)
     {
         $user = new UserEntity('pid', 'type');
         $user->setId(1);
@@ -119,33 +123,48 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
         $this->expectCommandException(
             \Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process::class,
             ['id' => 69, 'user' => 1],
-            \Doctrine\ORM\ORMException::class,
-            'ORM Exception'
+            $exception,
+            $exceptionMessageString
         );
 
-        $this->expectException(\Doctrine\ORM\ORMException::class, 'ORM Exception');
+        $this->expectCommandException(
+            \Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update::class,
+            [
+                'id' => 69,
+                'status' => ContinuationDetailEntity::STATUS_ERROR,
+                'version' => null,
+                'received' => null,
+                'totAuthVehicles' => null,
+                'totPsvDiscs' => null,
+                'totCommunityLicences' => null,
+            ],
+            \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
+            'marking as fail failed'
+        );
 
-        $this->sut->processMessage($item);
+        $this->expectCommand(
+            \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
+            [
+                'item' => $item,
+                'lastError' => "{$exceptionMessageString}, marking as fail failed",
+            ],
+            new Result(),
+            false
+        );
+
+        $result = $this->sut->processMessage($item);
+
+        $this->assertEquals(
+            "Failed to process message: 99  {$exceptionMessageString}, marking as fail failed",
+            $result
+        );
     }
 
-    public function testProcessMessageFailureDbalException()
+    public function dpHandledExceptionProvider()
     {
-        $user = new UserEntity('pid', 'type');
-        $user->setId(1);
-        $item = new QueueEntity();
-        $item->setId(99);
-        $item->setEntityId(69);
-        $item->setCreatedBy($user);
-
-        $this->expectCommandException(
-            \Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process::class,
-            ['id' => 69, 'user' => 1],
-            DBALException::class,
-            'DBAL Exception'
-        );
-
-        $this->expectException(DBALException::class, 'DBAL Exception');
-
-        $this->sut->processMessage($item);
+        return [
+            [ORMException::class, 'ORM Exception'],
+            [DBALException::class, 'Database Failure']
+        ];
     }
 }

@@ -85,11 +85,9 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
         } catch (ZendServiceException $e) {
             return $this->handleZendServiceException($item, $e);
         } catch (\Doctrine\ORM\ORMException $e) {
-            // rethrow ORMException such as Entity Manager Closed.
-            throw $e;
+            return $this->failed($item, $e->getMessage());
         } catch (DBALException $e) {
-            // rethrow any exception from DBAL
-            throw $e;
+            return $this->failed($item, $e->getMessage());
         } catch (\Exception $e) {
             return $this->failed($item, $e->getMessage());
         }

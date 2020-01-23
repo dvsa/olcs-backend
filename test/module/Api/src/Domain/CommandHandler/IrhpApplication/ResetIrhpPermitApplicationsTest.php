@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicati
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Service\Qa\ApplicationAnswersClearer;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use RuntimeException;
@@ -172,6 +172,7 @@ class ResetIrhpPermitApplicationsTest extends CommandHandlerTestCase
     public function dpTestHandleCommandQaBasedPermitType()
     {
         return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE],

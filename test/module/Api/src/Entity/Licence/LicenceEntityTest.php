@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
@@ -2557,111 +2556,6 @@ class LicenceEntityTest extends EntityTester
             [Licence::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, false],
             [Licence::LICENCE_STATUS_UNLICENSED, false],
             [Licence::LICENCE_STATUS_CANCELLED, false],
-        ];
-    }
-
-    /**
-     * @dataProvider dpTestHasActiveEcmtApplicationForStock
-     */
-    public function testCanMakeEcmtApplication(
-        $irhpPermitStock,
-        $ecmtApplications,
-        $exclude,
-        $expected
-    ) {
-
-        /** @var Entity $licence */
-        $licence = $this->createEligibleForPermits();
-        $licence->shouldReceive('getEcmtApplications')->andReturn($ecmtApplications);
-
-        $this->assertEquals($expected, $licence->canMakeEcmtApplication($irhpPermitStock, $exclude));
-    }
-
-    public function dpTestHasActiveEcmtApplicationForStock()
-    {
-        $matchingStock = m::mock(IrhpPermitStock::class);
-        $wrongStock = m::mock(IrhpPermitStock::class);
-
-        $matchingStock->shouldReceive('getId')
-            ->andReturn(1);
-
-        $wrongStock->shouldReceive('getId')
-            ->andReturn(999);
-
-        $activeEcmtApp = m::mock(EcmtPermitApplication::class);
-        $activeEcmtApp->shouldReceive('getId')
-            ->andReturn(10)
-            ->shouldReceive('isActive')
-            ->andReturn(true)
-            ->shouldReceive('getAssociatedStock->getId')
-            ->andReturn(1);
-
-        $inactiveEcmtApp = m::mock(EcmtPermitApplication::class);
-        $inactiveEcmtApp->shouldReceive('getId')
-            ->andReturn(11)
-            ->shouldReceive('isActive')
-            ->andReturn(false)
-            ->shouldReceive('getAssociatedStock->getId')
-            ->andReturn(1);
-
-        return [
-            'no ECMT apps' => [
-                'irhpPermitStock' => $matchingStock,
-                'ecmtApplications' => new ArrayCollection(),
-                'exclude' => null,
-                'expected' => true,
-            ],
-            'all inactive ECMT apps' => [
-                'irhpPermitStock' => $matchingStock,
-                'ecmtApplications' => new ArrayCollection([$inactiveEcmtApp, $inactiveEcmtApp]),
-                'exclude' => null,
-                'expected' => true,
-            ],
-            'active ECMT app same stock' => [
-                'irhpPermitStock' => $matchingStock,
-                'ecmtApplications' => new ArrayCollection([$activeEcmtApp, $activeEcmtApp]),
-                'exclude' => null,
-                'expected' => false,
-            ],
-            'active ECMT app diff stock' => [
-                'irhpPermitStock' => $wrongStock,
-                'ecmtApplications' => new ArrayCollection([$activeEcmtApp, $activeEcmtApp]),
-                'exclude' => null,
-                'expected' => true,
-            ],
-            'active ECMT app excluded' => [
-                'irhpPermitStock' => $matchingStock,
-                'ecmtApplications' => new ArrayCollection([$activeEcmtApp, $activeEcmtApp]),
-                'exclude' => $activeEcmtApp,
-                'expected' => true,
-            ],
-        ];
-    }
-
-    /**
-     * No need to test all the code, each method has a test already, only a quick test the right method is being called
-     *
-     * @dataProvider dpTestActivePermitApplicationForStock
-     */
-    public function testActivePermitApplicationForStock($isEcmtAnnual, $method)
-    {
-        $irhpPermitStock = m::mock(IrhpPermitStock::class);
-        $irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtAnnual')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($isEcmtAnnual);
-
-        $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive($method)->once()->with($irhpPermitStock, null);
-
-        $licence->getActivePermitApplicationForStock($irhpPermitStock, null);
-    }
-
-    public function dpTestActivePermitApplicationForStock()
-    {
-        return [
-            [true, 'getActiveEcmtApplicationForStock'],
-            [false, 'getActiveIrhpApplication'],
         ];
     }
 }

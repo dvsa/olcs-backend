@@ -3,8 +3,10 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
+use RuntimeException;
 
 class NoOfPermitsGenerator implements ElementGeneratorInterface
 {
@@ -38,13 +40,26 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
     public function generate(ElementGeneratorContext $context)
     {
         $irhpApplication = $context->getIrhpApplicationEntity();
+
+        $totAuthVehiclesMultiplierMappings = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT => 1,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => 2,
+        ];
+
+        $irhpPermitTypeId = $irhpApplication->getIrhpPermitType()->getId();
+        if (!array_key_exists($irhpPermitTypeId, $totAuthVehiclesMultiplierMappings)) {
+            throw new RuntimeException('This question does not support permit type ' . $irhpPermitTypeId);
+        }
+
         $irhpPermitApplication = $irhpApplication->getFirstIrhpPermitApplication();
         $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
         $irhpPermitStockId = $irhpPermitStock->getId();
 
+        $totAuthVehiclesMultiplier = $totAuthVehiclesMultiplierMappings[$irhpPermitTypeId];
+
         $noOfPermits = $this->noOfPermitsFactory->create(
             $irhpPermitStock->getValidityYear(),
-            $irhpApplication->getLicence()->getTotAuthVehicles() * self::TOT_AUTH_VEHICLES_MULTIPLIER
+            $irhpApplication->getLicence()->getTotAuthVehicles() * $totAuthVehiclesMultiplier
         );
 
         $this->emissionsCategoryConditionalAdder->addIfRequired(

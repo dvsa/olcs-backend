@@ -575,18 +575,6 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $documents;
 
     /**
-     * Ecmt application
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication",
-     *     mappedBy="licence"
-     * )
-     */
-    protected $ecmtApplications;
-
-    /**
      * Fee
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -746,7 +734,6 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
         $this->conditionUndertakings = new ArrayCollection();
         $this->continuationDetails = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->ecmtApplications = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->gracePeriods = new ArrayCollection();
         $this->irhpApplications = new ArrayCollection();
@@ -2431,69 +2418,6 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     {
         if ($this->documents->contains($documents)) {
             $this->documents->removeElement($documents);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the ecmt application
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being set as the value
-     *
-     * @return Licence
-     */
-    public function setEcmtApplications($ecmtApplications)
-    {
-        $this->ecmtApplications = $ecmtApplications;
-
-        return $this;
-    }
-
-    /**
-     * Get the ecmt applications
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getEcmtApplications()
-    {
-        return $this->ecmtApplications;
-    }
-
-    /**
-     * Add a ecmt applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being added
-     *
-     * @return Licence
-     */
-    public function addEcmtApplications($ecmtApplications)
-    {
-        if ($ecmtApplications instanceof ArrayCollection) {
-            $this->ecmtApplications = new ArrayCollection(
-                array_merge(
-                    $this->ecmtApplications->toArray(),
-                    $ecmtApplications->toArray()
-                )
-            );
-        } elseif (!$this->ecmtApplications->contains($ecmtApplications)) {
-            $this->ecmtApplications->add($ecmtApplications);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a ecmt applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being removed
-     *
-     * @return Licence
-     */
-    public function removeEcmtApplications($ecmtApplications)
-    {
-        if ($this->ecmtApplications->contains($ecmtApplications)) {
-            $this->ecmtApplications->removeElement($ecmtApplications);
         }
 
         return $this;

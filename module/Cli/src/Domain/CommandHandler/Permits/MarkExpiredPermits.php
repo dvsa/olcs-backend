@@ -28,7 +28,7 @@ class MarkExpiredPermits extends AbstractCommandHandler implements ToggleRequire
 
     protected $repoServiceName = 'IrhpPermit';
 
-    protected $extraRepos = ['IrhpApplication', 'EcmtPermitApplication'];
+    protected $extraRepos = ['IrhpApplication'];
 
     /**
      * Handle command
@@ -74,9 +74,6 @@ class MarkExpiredPermits extends AbstractCommandHandler implements ToggleRequire
         $this->result->addMessage(
             sprintf(self::MSG_CERT_NUM_EXPIRED, $numCertificatesExpired, count($validCertificates))
         );
-
-        // mark all ECMT applications without valid permits as expired
-        $this->getRepo('EcmtPermitApplication')->markAsExpired();
 
         $this->result->addMessage('Expired permits have been marked');
 

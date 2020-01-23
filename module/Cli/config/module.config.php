@@ -230,15 +230,6 @@ return [
                         ],
                     ],
                 ],
-                'ecmt-withdraw-unpaid' => [
-                    'options' => [
-                        'route' => 'ecmt-withdraw-unpaid [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'withdrawUnpaidEcmtApplications',
-                        ],
-                    ],
-                ],
                 'import-users-from-csv' => [
                     'options' => [
                         'route' => 'import-users-from-csv <csv-path> [--result-csv-path=] [--verbose|-v]',
@@ -295,7 +286,7 @@ return [
                 ],
                 'permits' => [
                     'options' => [
-                        'route' => 'permits (close-expired-windows|mark-expired-permits) [--since=<date>] [--verbose|-v]',
+                        'route' => 'permits (close-expired-windows|mark-expired-permits|withdraw-unpaid) [--since=<date>] [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'permits',
@@ -387,8 +378,6 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationSnapshot::class,
             Queue::TYPE_CONT_DIGITAL_REMINDER
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder::class,
-            Queue::TYPE_PERMITS_ALLOCATE
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AllocatePermits::class,
             Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AllocateIrhpApplicationPermits::class,
             Queue::TYPE_RUN_ECMT_SCORING
@@ -429,7 +418,6 @@ return [
             Command\DataDvaNiExport::class => CommandHandler\DataDvaNiExport::class,
             Command\CompaniesHouseVsOlcsDiffsExport::class => CommandHandler\CompaniesHouseVsOlcsDiffsExport::class,
             Command\Bus\Expire::class => CommandHandler\Bus\Expire::class,
-            Command\Permits\WithdrawUnpaidEcmt::class => CommandHandler\Permits\WithdrawUnpaidEcmt::class,
             Command\Permits\WithdrawUnpaidIrhp::class => CommandHandler\Permits\WithdrawUnpaidIrhp::class,
             Command\ImportUsersFromCsv::class => CommandHandler\ImportUsersFromCsv::class,
             Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,

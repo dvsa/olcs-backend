@@ -1137,12 +1137,6 @@ return array(
                 'property' => 'task'
             )
         ),
-        'ecmt_permit_application_id' => array(
-            'inversedBy' => array(
-                'entity' => 'EcmtPermitApplication',
-                'property' => 'task'
-            )
-        ),
         'bus_reg_id' => array(
             'inversedBy' => array(
                 'entity' => 'BusReg',
@@ -1256,12 +1250,6 @@ return array(
                 'entity' => 'BusReg',
                 'property' => 'fee',
             ),
-        ),
-        'ecmt_permit_application_id' => array(
-            'inversedBy' => array(
-                'entity' => 'EcmtPermitApplication',
-                'property' => 'fee'
-            )
         ),
         'irhp_application_id' => array(
             'inversedBy' => array(
@@ -2156,14 +2144,6 @@ return array(
             'type' => 'encrypted_string'
         ),
     ),
-    'ecmt_permit_application' => array(
-        'licence_id' => array(
-            'inversedBy' => array(
-                'entity' => 'Licence',
-                'property' => 'ecmtApplication'
-            )
-        ),
-    ),
     'irhp_application' => array(
         'licence_id' => array(
             'inversedBy' => array(
@@ -2192,12 +2172,6 @@ return array(
         )
     ),
     'irhp_permit_application' => array(
-        'ecmt_permit_application_id' => array(
-            'inversedBy' => array(
-                'entity' => 'EcmtPermitApplication',
-                'property' => 'irhpPermitApplication'
-            )
-        ),
         'irhp_application_id' => array(
             'inversedBy' => array(
                 'entity' => 'IrhpApplication',

@@ -20,7 +20,7 @@ class SendEcmtAutomaticallyWithdrawn extends AbstractEmailHandler implements Tog
     use PermitEmailTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-    protected $repoServiceName = 'EcmtPermitApplication';
+    protected $repoServiceName = 'IrhpApplication';
     protected $template = 'ecmt-automatically-withdrawn';
     protected $subject = 'email.ecmt.automatically.withdrawn.subject';
     protected $extraRepos = ['FeeType'];

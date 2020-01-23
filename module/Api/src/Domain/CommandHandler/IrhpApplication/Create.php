@@ -24,7 +24,6 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as CreateIrhpApplicationCmd;
-use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -69,32 +68,16 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
      */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var CreateIrhpApplicationCmd $command */
-        $permitTypeId = $command->getIrhpPermitType();
-
         /**
-         * @var IrhpPermitTypeRepo   $irhpPermitTypeRepo
-         * @var IrhpPermitTypeEntity $permitType
+         * @var CreateIrhpApplicationCmd $command
+         * @var IrhpPermitTypeRepo       $irhpPermitTypeRepo
+         * @var IrhpPermitTypeEntity     $permitType
+         * @var LicenceRepo              $licenceRepo
+         * @var LicenceEntity            $licence
          */
+        $permitTypeId = $command->getIrhpPermitType();
         $irhpPermitTypeRepo = $this->getRepo('IrhpPermitType');
         $permitType = $irhpPermitTypeRepo->fetchById($permitTypeId);
-
-        if ($permitType->isEcmtAnnual()) {
-            $this->result->merge(
-                $this->handleSideEffect(
-                    CreateEcmtPermitApplication::create(
-                        $command->getArrayCopy()
-                    )
-                )
-            );
-
-            return $this->result;
-        }
-
-        /**
-         * @var LicenceRepo   $licenceRepo
-         * @var LicenceEntity $licence
-         */
         $licenceRepo = $this->getRepo('Licence');
         $licence = $licenceRepo->fetchById($command->getLicence());
 

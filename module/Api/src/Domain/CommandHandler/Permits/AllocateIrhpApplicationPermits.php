@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateCandidatePermits as AllocateCandidatePermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpApplicationPermits as AllocateIrhpApplicationPermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpPermitApplicationPermit as AllocateIrhpPermitApplicationPermitCmd;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -27,7 +28,7 @@ use RuntimeException;
  */
 final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implements ToggleRequiredInterface
 {
-    use ToggleAwareTrait;
+    use QueueAwareTrait, ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
@@ -45,7 +46,7 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
         $irhpApplicationId = $command->getId();
 
         $repo = $this->getRepo();
-        $irhpApplication = $repo->fetchById($command->getId());
+        $irhpApplication = $repo->fetchById($irhpApplicationId);
         $repo->refresh($irhpApplication);
 
         $irhpPermitApplications = $irhpApplication->getIrhpPermitApplications();
@@ -61,6 +62,19 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
 
         $irhpApplication->proceedToValid($this->refData(IrhpInterface::STATUS_VALID));
         $repo->save($irhpApplication);
+
+        $issuedEmailCommand = $irhpApplication->getIssuedEmailCommand();
+        if ($issuedEmailCommand) {
+            $this->result->merge(
+                $this->handleSideEffect(
+                    $this->emailQueue(
+                        $issuedEmailCommand,
+                        [ 'id' => $irhpApplicationId ],
+                        $irhpApplicationId
+                    )
+                )
+            );
+        }
 
         $this->result->addMessage('Allocated requested permits for IRHP application');
         $this->result->addId('irhpApplication', $irhpApplicationId);

@@ -26,8 +26,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_permit_applications_irhp_permit_windows1_idx",
      *     columns={"irhp_permit_window_id"}),
  *        @ORM\Index(name="fk_irhp_permit_applications_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="fk_irhp_permit_application_ecmt_permit_application1_idx",
-     *     columns={"ecmt_permit_application_id"}),
  *        @ORM\Index(name="fk_irhp_permit_application_sectors_id1_idx", columns={"sectors_id"}),
  *        @ORM\Index(name="irhp_permit_type_ref_data_status_id_fk", columns={"status"}),
  *        @ORM\Index(name="fk_irhp_permit_application_created_by_user_id", columns={"created_by"}),
@@ -56,20 +54,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Ecmt permit application
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication",
-     *     fetch="LAZY",
-     *     inversedBy="irhpPermitApplications"
-     * )
-     * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=true)
-     */
-    protected $ecmtPermitApplication;
 
     /**
      * Identifier - Id
@@ -269,30 +253,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the ecmt permit application
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication $ecmtPermitApplication entity being set as the value
-     *
-     * @return IrhpPermitApplication
-     */
-    public function setEcmtPermitApplication($ecmtPermitApplication)
-    {
-        $this->ecmtPermitApplication = $ecmtPermitApplication;
-
-        return $this;
-    }
-
-    /**
-     * Get the ecmt permit application
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
-     */
-    public function getEcmtPermitApplication()
-    {
-        return $this->ecmtPermitApplication;
     }
 
     /**
