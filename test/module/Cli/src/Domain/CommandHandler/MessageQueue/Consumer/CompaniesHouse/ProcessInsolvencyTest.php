@@ -80,7 +80,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $response = $this->sut->handleCommand($command);
 
         $messages = [
-            '2 insolvency practitioners added for company 1234'
+            '3 insolvency practitioners added for company 1234'
         ];
 
         $this->assertEquals($messages, $response->getMessages());
@@ -144,7 +144,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $response = $this->sut->handleCommand($command);
 
         $messages = [
-            '2 insolvency practitioners added for company 1234'
+            '3 insolvency practitioners added for company 1234'
         ];
 
         $this->assertEquals($messages, $response->getMessages());
@@ -207,7 +207,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $response = $this->sut->handleCommand($command);
 
         $messages = [
-            '2 insolvency practitioners added for company 1234'
+            '3 insolvency practitioners added for company 1234'
         ];
 
         $this->assertEquals($messages, $response->getMessages());
@@ -278,7 +278,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $response = $this->sut->handleCommand($command);
 
         $messages = [
-            '2 insolvency practitioners added for company 1234'
+            '3 insolvency practitioners added for company 1234'
         ];
 
         $this->assertEquals($messages, $response->getMessages());
@@ -347,7 +347,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $response = $this->sut->handleCommand($command);
 
         $messages = [
-            '2 insolvency practitioners added for company 1234',
+            '3 insolvency practitioners added for company 1234',
             'Unable to send emails: No email addresses found'
         ];
 
@@ -429,6 +429,38 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
                         'name' => 'Edwin Hubble',
                     ],
                     1 => [
+                        'address' => [
+                            'locality' => 'locality',
+                            'address_line_1' => 'address line 1',
+                            'postal_code' => 'postal code',
+                            'address_line_2' => 'address line 2',
+                        ],
+                        'name' => 'Alice Cooper',
+                        'role' => 'practitioner',
+                    ],
+                    2 => [
+                        'address' => [
+                            'locality' => 'locality',
+                            'address_line_1' => 'address line 1',
+                            'postal_code' => 'postal code',
+                            'address_line_2' => 'address line 2',
+                        ],
+                        'name' => 'Alice Cooper',
+                        'role' => 'practitioner',
+                        'ceased_to_act_on' => ''
+                    ],
+                    3 => [
+                        'address' => [
+                            'locality' => 'locality',
+                            'address_line_1' => 'address line 1',
+                            'postal_code' => 'postal code',
+                            'address_line_2' => 'address line 2',
+                        ],
+                        'name' => 'Alice Cooper',
+                        'role' => 'practitioner',
+                        'ceased_to_act_on' => '2017-02-02'
+                    ],
+                    4 => [
                         'address' => [
                             'locality' => 'locality',
                             'address_line_1' => 'address line 1',
