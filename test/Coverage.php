@@ -11,7 +11,6 @@ use SebastianBergmann\CodeCoverage;
  * Class Coverage
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- *
  */
 class Coverage implements TestListener
 {
@@ -304,9 +303,7 @@ class Coverage implements TestListener
                         $token instanceof PHP_Token_TRAIT ||
                         $token instanceof PHP_Token_CLASS) {
                         if (empty($classes[$token->getName()]['methods'])) {
-                            for ($i = $token->getLine();
-                                 $i <= $token->getEndLine();
-                                 $i++) {
+                            for ($i = $token->getLine(); $i <= $token->getEndLine(); $i++) {
                                 $ignoredLines[] = $i;
                             }
                         } else {
@@ -325,15 +322,11 @@ class Coverage implements TestListener
                                 $lastMethod = $firstMethod;
                             }
 
-                            for ($i = $token->getLine();
-                                 $i < $firstMethod['startLine'];
-                                 $i++) {
+                            for ($i = $token->getLine(); $i < $firstMethod['startLine']; $i++) {
                                 $ignoredLines[] = $i;
                             }
 
-                            for ($i = $token->getEndLine();
-                                 $i > $lastMethod['endLine'];
-                                 $i--) {
+                            for ($i = $token->getEndLine(); $i > $lastMethod['endLine']; $i--) {
                                 $ignoredLines[] = $i;
                             }
                         }
