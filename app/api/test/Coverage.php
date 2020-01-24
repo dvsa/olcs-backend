@@ -7,6 +7,12 @@ use PHPUnit\Framework\Test;
 use PHPUnit\Framework\Warning;
 use SebastianBergmann\CodeCoverage;
 
+/**
+ * Class Coverage
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ *
+ */
 class Coverage implements TestListener
 {
     private $tests = [];
@@ -209,7 +215,7 @@ class Coverage implements TestListener
         $codeCoverage->setTests($this->tests);
 
         $writer = new CodeCoverage\Report\PHP();
-        $writer->process($codeCoverage, realpath(__DIR__ . '/review/coverage.cov'));
+        $writer->process($codeCoverage, realpath(__DIR__ . '/review') . '/coverage.cov');
     }
 
     /**
