@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8379e501bbc390cf262a1aa57061195",
+    "content-hash": "9c8bc8fd7cc180ccf8cbb9a426c3c98e",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.133.4",
+            "version": "3.133.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.133.4/aws-aws-sdk-php-3.133.4.zip",
-                "reference": "6ecd907672784cca89584c7553fa38589c1efcb6",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.133.5/aws-aws-sdk-php-3.133.5.zip",
+                "reference": "99ea2386f68ba29acd8e91c515e0fc19b2845378",
                 "shasum": ""
             },
             "require": {
@@ -82,7 +82,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-01-21T19:14:39+00:00"
+            "time": "2020-01-23T19:15:25+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -1642,6 +1642,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "abandoned": true,
             "time": "2018-07-31T13:22:33+00:00"
         },
         {
@@ -1938,7 +1939,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-companies-house.git",
-                "reference": "3ce9af3326e4030db85597ff208d5d3b260cd90e"
+                "reference": "f8c4aae9777faf934341d93ffeb44ea05b3a9b89"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2002,7 +2003,7 @@
                 "proprietary"
             ],
             "description": "companies house api client",
-            "time": "2020-01-16T13:24:09+00:00"
+            "time": "2020-01-24T08:26:22+00:00"
         },
         {
             "name": "olcs/olcs-cpms",
@@ -2220,7 +2221,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "fc590d4a5dc97783a866d12fa72ab443de03132b"
+                "reference": "f568b8321242df803f91d86471debc74c47f06f7"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2281,7 +2282,7 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2019-12-01T19:34:43+00:00"
+            "time": "2020-01-24T08:26:03+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
