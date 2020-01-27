@@ -141,16 +141,16 @@ class ProcessInsolvency extends AbstractConsumer
      */
     private function getPractitioners(array $insolvencyDetails): ArrayCollection
     {
-        $practitionerData = [];
+        $practitioners = [];
         foreach ($insolvencyDetails as $details) {
-            $practitionerData  = array_merge($practitionerData, $details['practitioners']);
+            $practitioners  = array_merge($practitioners, $details['practitioners']);
         }
 
-
+        $filteredPractitioners = $this->filterPractitioners($practitioners);
 
         return new ArrayCollection(array_map(function ($practitioner) {
             return $this->mapToEntity($practitioner);
-        }, $practitionerData));
+        }, $filteredPractitioners));
     }
 
 
@@ -349,5 +349,20 @@ class ProcessInsolvency extends AbstractConsumer
         }
 
         $this->result->merge($this->handleSideEffect($cmd));
+    }
+
+    /**
+     * Filters out any practitioners that have ceased to act and then removes any duplicates
+     *
+     * @param array $practitionerData
+     * @return array
+     */
+    private function filterPractitioners(array $practitionerData): array
+    {
+        $practitionerData = array_filter($practitionerData, function ($practitioner) {
+            return empty($practitioner['ceased_to_act_on']);
+        });
+
+        return array_values(array_unique($practitionerData, SORT_REGULAR));
     }
 }
