@@ -7,6 +7,11 @@ use PHPUnit\Framework\Test;
 use PHPUnit\Framework\Warning;
 use SebastianBergmann\CodeCoverage;
 
+/**
+ * Class Coverage
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 class Coverage implements TestListener
 {
     private $tests = [];
@@ -209,7 +214,7 @@ class Coverage implements TestListener
         $codeCoverage->setTests($this->tests);
 
         $writer = new CodeCoverage\Report\PHP();
-        $writer->process($codeCoverage, realpath(__DIR__ . '/review/coverage.cov'));
+        $writer->process($codeCoverage, realpath(__DIR__ . '/review') . '/coverage.cov');
     }
 
     /**
@@ -298,9 +303,7 @@ class Coverage implements TestListener
                         $token instanceof PHP_Token_TRAIT ||
                         $token instanceof PHP_Token_CLASS) {
                         if (empty($classes[$token->getName()]['methods'])) {
-                            for ($i = $token->getLine();
-                                 $i <= $token->getEndLine();
-                                 $i++) {
+                            for ($i = $token->getLine(); $i <= $token->getEndLine(); $i++) {
                                 $ignoredLines[] = $i;
                             }
                         } else {
@@ -319,15 +322,11 @@ class Coverage implements TestListener
                                 $lastMethod = $firstMethod;
                             }
 
-                            for ($i = $token->getLine();
-                                 $i < $firstMethod['startLine'];
-                                 $i++) {
+                            for ($i = $token->getLine(); $i < $firstMethod['startLine']; $i++) {
                                 $ignoredLines[] = $i;
                             }
 
-                            for ($i = $token->getEndLine();
-                                 $i > $lastMethod['endLine'];
-                                 $i--) {
+                            for ($i = $token->getEndLine(); $i > $lastMethod['endLine']; $i--) {
                                 $ignoredLines[] = $i;
                             }
                         }
