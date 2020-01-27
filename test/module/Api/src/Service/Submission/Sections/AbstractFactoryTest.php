@@ -29,24 +29,13 @@ class AbstractFactoryTest extends MockeryTestCase
     public function testCreateService()
     {
         $name = 'unit_Name';
-        $reqName = 'unit_ReqClass';
-
-        $cfg = [
-            'submissions' => [
-                'sections' => [
-                    'aliases' => [
-                        $reqName => AbstractSectionStub::class,
-                    ],
-                ],
-            ],
-        ];
+        $reqName = AbstractSectionStub::class;
 
         $this->mockSl
             ->shouldReceive('get')
             ->andReturnUsing(
-                function ($class) use ($cfg) {
+                function ($class) {
                     $map = [
-                        'Config' => $cfg,
                         'viewrenderer' => m::mock(\Zend\View\Renderer\PhpRenderer::class),
                         'QueryHandlerManager' => m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class),
                     ];
@@ -57,8 +46,6 @@ class AbstractFactoryTest extends MockeryTestCase
 
         $actual = (new AbstractFactory())->createService($this->mockSm, $name, $reqName);
 
-        static::assertInstanceOf(
-            AbstractSectionStub::class, $actual
-        );
+        static::assertInstanceOf(AbstractSectionStub::class, $actual);
     }
 }

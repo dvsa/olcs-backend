@@ -94,7 +94,7 @@ class DocumentControllerTest extends MockeryTestCase
         $jsonModel = $this->sut->create([]);
 
         $this->assertSame(400, $jsonModel->getVariable('status'));
-        $this->assertSame('No temporary directory was found for file', $jsonModel->getVariable('title'));
+        $this->assertSame('Missing a temporary folder', $jsonModel->getVariable('title'));
     }
 
     public function testInvalidImageUnsupportedMediaType()

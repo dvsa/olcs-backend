@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Publication\Context\ContextInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ConfigInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Publication\Context\PluginManager
@@ -19,11 +19,7 @@ class PluginManagerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $mockCfg = m::mock(ConfigInterface::class)
-            ->shouldReceive('configureServiceManager')
-            ->getMock();
-
-        $this->sut = new PluginManager($mockCfg);
+        $this->sut = new PluginManager();
     }
 
     public function testValidatePluginFail()
@@ -43,20 +39,21 @@ class PluginManagerTest extends MockeryTestCase
     public function testValidatePluginOk()
     {
         $plugin = m::mock(ContextInterface::class);
-        $this->sut->validatePlugin($plugin);
+        // make sure no exception is thrown
+        $this->assertNull($this->sut->validatePlugin($plugin));
     }
 
     public function testInjectAddressFormatter()
     {
         $mockAddressFormatter = m::mock(\Dvsa\Olcs\Api\Service\Helper\FormatAddress::class);
 
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface $mockSl */
-        $mockSl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+        /** @var ServiceLocatorInterface $mockSl */
+        $mockSl = m::mock(ServiceLocatorInterface::class)
             ->shouldReceive('get')->with('AddressFormatter')->andReturn($mockAddressFormatter)
             ->getMock();
 
-        /** @var \Zend\ServiceManager\ServiceManager $mockSm */
-        $mockSm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+        /** @var ServiceLocatorInterface $mockSm */
+        $mockSm = m::mock(ServiceLocatorInterface::class)
             ->shouldReceive('getServiceLocator')->andReturn($mockSl)
             ->getMock();
 

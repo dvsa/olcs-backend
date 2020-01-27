@@ -77,7 +77,6 @@ class PayloadValidationListener implements ListenerAggregateInterface
         $matches->setParam('dto', $dto);
 
         if ($method === 'GET') {
-
             $data = array_merge($data, (array) $request->getQuery());
             $dto->exchangeArray($data);
 
@@ -96,7 +95,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
              * @var ContentType $contentType
              * @var string $mediaType
              */
-            $contentType = $request->getHeader('contenttype');
+            $contentType = $request->getHeader('content-type');
             $mediaType = $contentType->getMediaType();
             $isXml = in_array($mediaType, $this->xmlMediaTypes);
 
