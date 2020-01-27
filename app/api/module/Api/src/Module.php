@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api;
 use Dvsa\Olcs\Api\Domain\Util\BlockCipher\PhpSecLib;
 use Olcs\Logging\Log\Logger;
 use phpseclib\Crypt;
-use Zend\Crypt\Symmetric\Mcrypt;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\Mvc\MvcEvent;

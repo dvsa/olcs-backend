@@ -3,7 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Publication\Process;
 
 use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception;
+use Zend\ServiceManager\Exception\InvalidServiceException;
+use Zend\ServiceManager\Exception\RuntimeException;
 
 /**
  * Class PluginManager
@@ -11,20 +12,31 @@ use Zend\ServiceManager\Exception;
  */
 class PluginManager extends AbstractPluginManager
 {
+    protected $instanceOf = ProcessInterface::class;
+
     /**
-     * Validate the plugin
-     *
-     * Checks that the filter loaded is either a valid callback or an instance
-     * of FilterInterface.
-     *
-     * @param  mixed $plugin
-     * @return void
-     * @throws Exception\RuntimeException if invalid
+     * {@inheritdoc}
      */
-    public function validatePlugin($plugin)
+    public function validate($instance)
     {
-        if (!($plugin instanceof ProcessInterface)) {
-            throw new Exception\RuntimeException(get_class($plugin) . ' should implement: ' . ProcessInterface::class);
+        if (! $instance instanceof $this->instanceOf) {
+            throw new InvalidServiceException(sprintf(
+                'Invalid plugin "%s" created; not an instance of %s',
+                get_class($instance),
+                $this->instanceOf
+            ));
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validatePlugin($instance)
+    {
+        try {
+            $this->validate($instance);
+        } catch (InvalidServiceException $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

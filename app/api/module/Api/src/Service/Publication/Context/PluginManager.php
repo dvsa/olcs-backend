@@ -2,11 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\Exception;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\AbstractPluginManager;
+use Zend\ServiceManager\Exception\InvalidServiceException;
+use Zend\ServiceManager\Exception\RuntimeException;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class PluginManager
@@ -14,28 +15,13 @@ use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
  */
 class PluginManager extends AbstractPluginManager
 {
-    public function __construct(ConfigInterface $configuration = null)
+    protected $instanceOf = ContextInterface::class;
+
+    public function __construct(ContainerInterface $configuration = null)
     {
         parent::__construct($configuration);
         $this->addAbstractFactory(new AbstractFactory());
         $this->addInitializer(array($this, 'injectAddressFormatter'), false);
-    }
-
-    /**
-     * Validate the plugin
-     *
-     * Checks that the filter loaded is either a valid callback or an instance
-     * of FilterInterface.
-     *
-     * @param  mixed $plugin
-     * @return void
-     * @throws Exception\RuntimeException if invalid
-     */
-    public function validatePlugin($plugin)
-    {
-        if (!($plugin instanceof ContextInterface)) {
-            throw new Exception\RuntimeException(get_class($plugin) . ' should implement: ' . ContextInterface::class);
-        }
     }
 
     public function injectAddressFormatter($service, ServiceLocatorInterface $serviceLocator)
@@ -46,5 +32,31 @@ class PluginManager extends AbstractPluginManager
         }
 
         return $service;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validate($instance)
+    {
+        if (! $instance instanceof $this->instanceOf) {
+            throw new InvalidServiceException(sprintf(
+                'Invalid plugin "%s" created; not an instance of %s',
+                get_class($instance),
+                $this->instanceOf
+            ));
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validatePlugin($instance)
+    {
+        try {
+            $this->validate($instance);
+        } catch (InvalidServiceException $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }
