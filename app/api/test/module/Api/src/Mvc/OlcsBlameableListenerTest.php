@@ -4,11 +4,13 @@ namespace Dvsa\OlcsTest\Api\Mvc;
 
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Mvc\OlcsBlameableListener;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
+use Gedmo\Mapping\Event\AdapterInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * OlcsBlameableListener Test
@@ -16,15 +18,15 @@ use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 class OlcsBlameableListenerTest extends MockeryTestCase
 {
     /**
-     * @dataProvider getUserValueDataProvider
+     * @dataProvider getFieldValueDataProvider
      */
-    public function testGetUserValue($currentUser, $expected)
+    public function testGetFieldValue($currentUser, $expected)
     {
         /** @var AuthorizationService $mockAuth */
         $mockAuth = m::mock(AuthorizationService::class);
         $mockAuth->shouldReceive('getIdentity->getUser')->andReturn($currentUser);
 
-        $mockUserRepo = m::mock(\Dvsa\Olcs\Api\Domain\Repository\User::class);
+        $mockUserRepo = m::mock(UserRepository::class);
 
         $mockSl = m::mock(ServiceLocatorInterface::class)
             ->shouldReceive('get')
@@ -45,7 +47,7 @@ class OlcsBlameableListenerTest extends MockeryTestCase
             ->shouldReceive('get')
             ->with(PidIdentityProvider::class)
             ->andReturn(
-                m::mock()
+                m::mock(PidIdentityProvider::class)
                 ->shouldReceive('getMasqueradedAsSystemUser')
                 ->andReturn(false)
                 ->once()
@@ -54,13 +56,33 @@ class OlcsBlameableListenerTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $sut = new OlcsBlameableListener();
+        $meta = new \stdClass;
+        $field = 'field';
+        $eventAdapter = m::mock(AdapterInterface::class);
+
+        $sut = m::mock(OlcsBlameableListener::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $sut->setServiceLocator($mockSl);
 
-        $this->assertSame($expected, $sut->getUserValue(null, null));
+        $sut->shouldReceive('setUserValue')
+            ->with($expected)
+            ->once()
+            ->globally()
+            ->ordered();
+        $sut->shouldReceive('callParentGetFieldValue')
+            ->with($meta, $field, $eventAdapter)
+            ->once()
+            ->andReturn($expected)
+            ->globally()
+            ->ordered();
+
+        $this->assertSame(
+            $expected,
+            $sut->getFieldValue($meta, $field, $eventAdapter)
+        );
     }
 
-    public function testGetUserValueMasqueraded()
+    public function testGetFieldValueMasqueraded()
     {
         $mockUser = m::mock(User::class)->makePartial();
         $mockUser->setId(1);
@@ -69,7 +91,7 @@ class OlcsBlameableListenerTest extends MockeryTestCase
         /** @var AuthorizationService $mockAuth */
         $mockAuth = m::mock(AuthorizationService::class);
 
-        $mockUserRepo = m::mock(\Dvsa\Olcs\Api\Domain\Repository\User::class)
+        $mockUserRepo = m::mock(UserRepository::class)
             ->shouldReceive('fetchById')
             ->with(PidIdentityProvider::SYSTEM_USER)
             ->andReturn($mockUser)
@@ -95,7 +117,7 @@ class OlcsBlameableListenerTest extends MockeryTestCase
             ->shouldReceive('get')
             ->with(PidIdentityProvider::class)
             ->andReturn(
-                m::mock()
+                m::mock(PidIdentityProvider::class)
                     ->shouldReceive('getMasqueradedAsSystemUser')
                     ->andReturn(true)
                     ->once()
@@ -104,13 +126,33 @@ class OlcsBlameableListenerTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $sut = new OlcsBlameableListener();
+        $meta = new \stdClass;
+        $field = 'field';
+        $eventAdapter = m::mock(AdapterInterface::class);
+
+        $sut = m::mock(OlcsBlameableListener::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $sut->setServiceLocator($mockSl);
 
-        $this->assertSame($mockUser, $sut->getUserValue(null, null));
+        $sut->shouldReceive('setUserValue')
+            ->with($mockUser)
+            ->once()
+            ->globally()
+            ->ordered();
+        $sut->shouldReceive('callParentGetFieldValue')
+            ->with($meta, $field, $eventAdapter)
+            ->once()
+            ->andReturn($mockUser)
+            ->globally()
+            ->ordered();
+
+        $this->assertSame(
+            $mockUser,
+            $sut->getFieldValue($meta, $field, $eventAdapter)
+        );
     }
 
-    public function getUserValueDataProvider()
+    public function getFieldValueDataProvider()
     {
         /** @var User $mockUser */
         $mockUser = m::mock(User::class)->makePartial();
