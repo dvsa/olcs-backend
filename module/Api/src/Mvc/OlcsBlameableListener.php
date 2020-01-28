@@ -20,14 +20,23 @@ class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareI
     use ServiceLocatorAwareTrait;
 
     /**
+     * {@inheritdoc}
+     */
+    public function getFieldValue($meta, $field, $eventAdapter)
+    {
+        $this->setUserValue(
+            $this->getUserValue()
+        );
+
+        return $this->callParentGetFieldValue($meta, $field, $eventAdapter);
+    }
+
+    /**
      * Get the user value to set on a blameable field
      *
-     * @param object $meta
-     * @param string $field
-     *
-     * @return UserEntity
+     * @return UserEntity|null
      */
-    public function getUserValue($meta, $field)
+    protected function getUserValue()
     {
         $serviceLocator = $this->getServiceLocator();
         if (!$this->getAuthService()) {
@@ -47,5 +56,19 @@ class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareI
         }
 
         return (($currentUser instanceof UserEntity) && !$currentUser->isAnonymous()) ? $currentUser : null;
+    }
+
+    /**
+     * Call getFieldValue of the parent class - to facilitate unit testing
+     *
+     * @param object $meta
+     * @param string $field
+     * @param mixed $eventAdapter
+     *
+     * @return mixed
+     */
+    protected function callParentGetFieldValue($meta, $field, $eventAdapter)
+    {
+        return parent::getFieldValue($meta, $field, $eventAdapter);
     }
 }
