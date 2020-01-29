@@ -31,10 +31,16 @@ return [
 
     // Elastic search
     'elastic_search' => [
-        // Hostname e.g. searchv5.olcs.da.nonprod.dvsa.aws *Environment specific*
-        'host' => 'searchv5.olcs.da.nonprod.dvsa.aws',
-        // Port, e.g. 9200
-        'port' => '9200'
+        // Hostname e.g. searchv6.olcs.dev.nonprod.dvsa.aws *Environment specific*
+        'host' => 'searchv6.olcs.dev.nonprod.dvsa.aws',
+        // Port, e.g. 443
+        'port' => '443',
+        // Transport protocol
+        'transport' => 'Https',
+        // Additional CURL options
+        'curl' => [
+            CURLOPT_SSL_VERIFYHOST => false,
+        ],
     ],
 
     // Doctrine
