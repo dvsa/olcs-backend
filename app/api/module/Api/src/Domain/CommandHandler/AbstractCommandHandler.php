@@ -27,7 +27,6 @@ use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
-use Dvsa\Olcs\Queue\Factories\MessageBuilderFactory;
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
 use Dvsa\Olcs\Queue\Service\Queue;
 use Dvsa\Olcs\Queue\Service\QueueInterface;
@@ -251,7 +250,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             /** @var Redis $redis */
             $redis = $mainServiceLocator->get(Redis::class);
             $this->setRedis($redis);
-
         }
     }
 
@@ -263,10 +261,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      * @return RepositoryInterface
      * @throws RuntimeException
      */
-    protected
-    function getRepo(
-        $name = null
-    ) {
+    protected function getRepo($name = null)
+    {
         if ($name === null) {
             $name = $this->repoServiceName;
         }
@@ -288,8 +284,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Domain\CommandHandlerManager
      */
-    protected
-    function getCommandHandler()
+    protected function getCommandHandler()
     {
         return $this->commandHandler;
     }
@@ -299,8 +294,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Domain\QueryHandlerManager
      */
-    protected
-    function getQueryHandler()
+    protected function getQueryHandler()
     {
         return $this->queryHandler;
     }
@@ -310,8 +304,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return PidIdentityProvider
      */
-    protected
-    function getPidIdentityProvider()
+    protected function getPidIdentityProvider()
     {
         return $this->pidIdentityProvider;
     }
@@ -323,10 +316,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Domain\Query\Result
      */
-    protected
-    function handleQuery(
-        QueryInterface $query
-    ) {
+    protected function handleQuery(QueryInterface $query)
+    {
         try {
             $result = $this->getQueryHandler()->handleQuery($query, false);
         } catch (DisabledHandlerException $e) {
@@ -344,10 +335,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    protected
-    function handleSideEffect(
-        CommandInterface $command
-    ) {
+    protected function handleSideEffect(CommandInterface $command)
+    {
         try {
             $result = $this->getCommandHandler()->handleCommand($command, false);
         } catch (DisabledHandlerException $e) {
@@ -365,10 +354,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    protected
-    function handleSideEffects(
-        array $commands
-    ) {
+    protected function handleSideEffects(array $commands)
+    {
         $result = new Result();
 
         foreach ($commands as $command) {
@@ -385,10 +372,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    protected
-    function handleSideEffectAsSystemUser(
-        CommandInterface $command
-    ) {
+    protected function handleSideEffectAsSystemUser(CommandInterface $command)
+    {
         $pidIdentityProvider = $this->getPidIdentityProvider();
         $pidIdentityProvider->setMasqueradedAsSystemUser(true);
         $result = $this->getCommandHandler()->handleCommand($command, false);
@@ -404,10 +389,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    protected
-    function handleSideEffectsAsSystemUser(
-        array $commands
-    ) {
+    protected function handleSideEffectsAsSystemUser(array $commands)
+    {
         $pidIdentityProvider = $this->getPidIdentityProvider();
         $pidIdentityProvider->setMasqueradedAsSystemUser(true);
         $result = $this->handleSideEffects($commands);
@@ -424,11 +407,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    protected
-    function proxyCommand(
-        $originalCommand,
-        $proxyCommandClassName
-    ) {
+    protected function proxyCommand($originalCommand, $proxyCommandClassName)
+    {
         $dtoData = $originalCommand->getArrayCopy();
 
         return $this->handleSideEffect($proxyCommandClassName::create($dtoData));
@@ -442,11 +422,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    protected
-    function proxyCommandAsSystemUser(
-        $originalCommand,
-        $proxyCommandClassName
-    ) {
+    protected function proxyCommandAsSystemUser($originalCommand, $proxyCommandClassName)
+    {
         $pidIdentityProvider = $this->getPidIdentityProvider();
         $pidIdentityProvider->setMasqueradedAsSystemUser(true);
         $result = $this->proxyCommand($originalCommand, $proxyCommandClassName);
@@ -463,11 +440,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return ArrayCollection
      */
-    protected
-    function buildArrayCollection(
-        $entityClass = '',
-        $referenceIds = []
-    ) {
+    protected function buildArrayCollection($entityClass = '', $referenceIds = [])
+    {
         $collection = new ArrayCollection();
 
         if (!empty($referenceIds)) {
@@ -488,12 +462,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return mixed
      */
-    protected
-    function extractCommandVariable(
-        $command,
-        $variableName,
-        $defaultValue = null
-    ) {
+    protected function extractCommandVariable($command, $variableName, $defaultValue = null)
+    {
         $commandVariable = $defaultValue;
 
         $methodName = 'get' . ucfirst($variableName);
@@ -511,10 +481,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return \Dvsa\Olcs\Api\Entity\System\RefData|null
      */
-    protected
-    function refDataOrNull(
-        $refDataKey
-    ) {
+    protected function refDataOrNull($refDataKey): ?RefDataEntity
+    {
         if ($refDataKey === null) {
             return null;
         }
@@ -527,12 +495,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @param string $refDataKey
      *
-     * @return RefDataEntity
+     * @return RefDataEntity|null
      */
-    protected
-    function refData(
-        string $refDataKey
-    ): RefDataEntity {
+    protected function refData(string $refDataKey): ?RefDataEntity
+    {
         return $this->getRepo()->getRefdataReference($refDataKey);
     }
 
@@ -541,10 +507,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return bool|null
      */
-    protected
-    function yesNoToBoolOrNull(
-        ?string $value
-    ): ?bool {
+    protected function yesNoToBoolOrNull(?string $value): ?bool
+    {
         if ($value === null || ($value !== 'Y' && $value !== 'N')) {
             return null;
         }
