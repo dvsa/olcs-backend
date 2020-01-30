@@ -11,6 +11,6 @@ final class SendLiquidatedCompanyForRegisteredUser extends AbstractEmailOnlyComm
 
     protected function getEmailTemplateName(): string
     {
-        return 'insolvent-company-notification_registered-user';
+        return 'ptr-notification-email-registered-user';
     }
 }

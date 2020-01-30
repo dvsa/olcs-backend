@@ -39,7 +39,7 @@ class SendLiquidatedCompanyForRegisteredUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->with(
             m::type(Message::class),
-            'insolvent-company-notification_registered-user',
+            'ptr-notification-email-registered-user',
             [],
             'default'
         );
