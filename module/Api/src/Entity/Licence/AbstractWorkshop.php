@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
 use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -19,6 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="workshop",
  *    indexes={
  *        @ORM\Index(name="ix_workshop_licence_id", columns={"licence_id"}),
@@ -38,6 +40,7 @@ abstract class AbstractWorkshop implements BundleSerializableInterface, JsonSeri
     use ClearPropertiesTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
+    use SoftDeletableTrait;
 
     /**
      * Contact details
