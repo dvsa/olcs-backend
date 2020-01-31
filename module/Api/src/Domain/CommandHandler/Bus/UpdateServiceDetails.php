@@ -27,6 +27,11 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
     protected $extraRepos = ['BusRegOtherService'];
 
+    protected $filteredValues = [
+        null,
+        '',
+    ];
+
     /**
      * Handle command
      *
@@ -87,19 +92,15 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
         if (!empty($otherServiceNumbers)) {
             foreach ($otherServiceNumbers as $serviceNumber) {
-                if (is_null($serviceNumber['serviceNo'])) {
-                    // filter out empty values
+                if (in_array($serviceNumber['serviceNo'], $this->filteredValues, true)) {
+                    // filter out empty values (but allow a zero)
                     continue;
                 }
 
                 if (!empty($serviceNumber['id'])) {
                     // update
                     /** @var BusRegOtherService $otherServiceEntity */
-                    $otherServiceEntity = $this->getRepo('BusRegOtherService')->fetchById(
-                        $serviceNumber['id'],
-                        Query::HYDRATE_OBJECT,
-                        $serviceNumber['version']
-                    );
+                    $otherServiceEntity = $this->getRepo('BusRegOtherService')->fetchById($serviceNumber['id']);
                     $otherServiceEntity->setServiceNo($serviceNumber['serviceNo']);
                 } else {
                     // create
@@ -107,7 +108,6 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
                 }
 
                 $this->getRepo('BusRegOtherService')->save($otherServiceEntity);
-
 
                 $this->result->addId('BusRegOtherService', $otherServiceEntity->getId(), true);
                 $this->result->addMessage('Other Bus Service/s saved successfully');
