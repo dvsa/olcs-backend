@@ -3,27 +3,21 @@
 /**
  * Update Service Details Test
  */
-
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg;
-use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\UpdateServiceDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\Olcs\Api\Domain\Repository\BusNoticePeriod as BusNoticePeriodRepo;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegOtherService as BusRegOtherServiceRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateServiceDetails as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CmdCreateBusFee;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as BusRegOtherServiceEntity;
-use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Update Service DetailsTest
@@ -34,38 +28,27 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateServiceDetails();
         $this->mockRepo('Bus', BusRepo::class);
-        $this->mockRepo('BusNoticePeriod', BusNoticePeriodRepo::class);
         $this->mockRepo('BusRegOtherService', BusRegOtherServiceRepo::class);
 
-        parent::setUp();
-    }
-
-    protected function initReferences()
-    {
         $this->references = [
             BusNoticePeriodEntity::class => [
                 2 => m::mock(BusNoticePeriodEntity::class)
             ],
-            BusServiceTypeEntity::class => [
-                5 => m::mock(BusServiceTypeEntity::class)
-            ]
         ];
 
-        parent::initReferences();
+        parent::setUp();
     }
 
     /**
      * testHandleCommand
      *
-     * @note         we don't test the two dates here relate to each other properly, that is tested elsewhere
+     * @note we don't test the two dates here relate to each other properly, that is tested elsewhere
      * First date is included for completeness
      *
-     * @dataProvider testHandleCommandProvider
-     *
-     * @param bool  $createFee
-     * @param array $expectedData
+     * @dataProvider createFeeProvider
+     * @param bool $createFee
      */
-    public function testHandleCommand($createFee, $expectedData)
+    public function testHandleCommand($createFee)
     {
         $busRegId = 99;
         $serviceNumber = 12345;
@@ -73,40 +56,49 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $finishPoint = 'finish point';
         $via = 'via';
         $otherDetails = 'other details';
-        $effectiveDate = '';
-        $receivedDate = '';
-        $endDate = '';
+        $effectiveDate = '2020-12-25';
+        $receivedDate = '2019-12-25';
+        $endDate = '2021-12-25';
         $busNoticePeriod = 2;
         $otherServices = [
-            [
-                'id' => 19,
-                'version' => 1,
-                'serviceNo' => 0,
+            0 => [
+                'id' => 1,
+                'serviceNo' => 99999,
             ],
-            [
-                'id' => 21,
-                'version' => 1,
-                'serviceNo' => '1b',
-            ],
-            [
-                'id' => 22,
-                'version' => 1,
-                'serviceNo' => null,
-            ],
-            [
+            1 => [
                 'id' => null,
-                'version' => 1,
-                'serviceNo' => 1,
+                'serviceNo' => 88888,
+            ],
+            2 => [
+                'id' => 2,
+                'serviceNo' => null, //filtered
+            ],
+            3 => [
+                'id' => 3,
+                'serviceNo' => 0, //would have been filtered under previous null/empty checks - OLCS-22939
+            ],
+            4 => [
+                'id' => 4,
+                'serviceNo' => "0", //would have been filtered under previous null/empty checks - OLCS-22939
+            ],
+            5 => [
+                'id' => 5,
+                'serviceNo' => "ab12",
+            ],
+            6 => [
+                'id' => 6,
+                'serviceNo' => '', //filtered
             ],
         ];
         $busServiceTypes = [
             0 => 5
         ];
+        $version = 555;
 
         $command = Cmd::Create(
             [
                 'id' => $busRegId,
-                'serviceNumber' => $serviceNumber,
+                'serviceNo' => $serviceNumber,
                 'startPoint' => $startPoint,
                 'finishPoint' => $finishPoint,
                 'via' => $via,
@@ -116,126 +108,112 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
                 'endDate' => $endDate,
                 'busNoticePeriod' => $busNoticePeriod,
                 'otherServices' => $otherServices,
-                'busServiceTypes' => $busServiceTypes
+                'busServiceTypes' => $busServiceTypes,
+                'version' => $version,
             ]
         );
 
-        $mockOtherService = $this->repoMap['BusRegOtherService'];
-        $mockedEntity = m::mock(BusRegOtherServiceEntity::class)->shouldReceive('setServiceNo')
-            ->with(0)
-            ->getMock();
-        $mockedEntity->shouldReceive('getId')->andReturn(19);
+        $busRegOtherServiceEntity1 = m::mock(BusRegOtherServiceEntity::class);
+        $busRegOtherServiceEntity1->expects('setServiceNo')->with(99999)->andReturnSelf();
+        $busRegOtherServiceEntity1->expects('getId')->times(3)->withNoArgs()->andReturn(1);
 
-        $mockedEntity2 = m::mock(BusRegOtherServiceEntity::class)->shouldReceive('setServiceNo')
-            ->with('1b')
-            ->getMock();
-        $mockedEntity2->shouldReceive('getId')->andReturn(21);
+        $busRegOtherServiceEntity2 = m::mock(BusRegOtherServiceEntity::class);
+        $busRegOtherServiceEntity2->expects('setServiceNo')->with(0)->andReturnSelf();
+        $busRegOtherServiceEntity2->expects('getId')->times(3)->withNoArgs()->andReturn(3);
 
+        $busRegOtherServiceEntity3 = m::mock(BusRegOtherServiceEntity::class);
+        $busRegOtherServiceEntity3->expects('setServiceNo')->with("0")->andReturnSelf();
+        $busRegOtherServiceEntity3->expects('getId')->times(3)->withNoArgs()->andReturn(4);
 
-        $mockOtherService->shouldReceive('fetchById')
-            ->with(19, 1, 1)
-            ->andReturn(
-                $mockedEntity
-            )->getMock();
+        $busRegOtherServiceEntity4 = m::mock(BusRegOtherServiceEntity::class);
+        $busRegOtherServiceEntity4->expects('setServiceNo')->with("ab12")->andReturnSelf();
+        $busRegOtherServiceEntity4->expects('getId')->times(3)->withNoArgs()->andReturn(5); //pre existing, delete check
 
-        $mockOtherService->shouldReceive('fetchById')
-            ->with(21, 1, 1)
-            ->andReturn(
-                $mockedEntity2
-            )->getMock();
-        $mockOtherService->shouldReceive('save')->with($mockedEntity)->getMock();
-        $mockOtherService->shouldReceive('save')->with($mockedEntity2)->getMock();
-        $mockOtherService->shouldReceive('save')->with(\Hamcrest\Matchers::anInstanceOf(BusRegOtherService::class));
+        //data to be deleted
+        $busRegOtherServiceEntityToDelete = m::mock(BusRegOtherServiceEntity::class);
+        $busRegOtherServiceEntityToDelete->expects('getId')->withNoArgs()->andReturn(1111111);
 
-        /** @var BusRegOtherServiceEntity $busReg */
-        $mockBusRegObjectOtherServiceEntity = m::mock(BusRegOtherServiceEntity::class);
-        $mockBusRegObjectOtherServiceEntity->shouldReceive('getId')->andReturn(123);
+        $mockOtherServiceEntities = [
+            $busRegOtherServiceEntity1,
+            $busRegOtherServiceEntity2,
+            $busRegOtherServiceEntity3,
+            $busRegOtherServiceEntity4,
+            $busRegOtherServiceEntityToDelete,
+        ];
 
-        /** @var RefDataEntity $mockStatus */
-        $mockStatus = m::mock(RefDataEntity::class);
-        $mockStatus->shouldReceive('getId')->andReturn(BusRegEntity::STATUS_NEW);
+        $mockOtherServices = new ArrayCollection($mockOtherServiceEntities);
+
+        //updates of existing data
+        $this->repoMap['BusRegOtherService']->expects('fetchById')->with(1)->andReturn($busRegOtherServiceEntity1);
+        $this->repoMap['BusRegOtherService']->expects('save')->with($busRegOtherServiceEntity1);
+        $this->repoMap['BusRegOtherService']->expects('fetchById')->with(3)->andReturn($busRegOtherServiceEntity2);
+        $this->repoMap['BusRegOtherService']->expects('save')->with($busRegOtherServiceEntity2);
+        $this->repoMap['BusRegOtherService']->expects('fetchById')->with(4)->andReturn($busRegOtherServiceEntity3);
+        $this->repoMap['BusRegOtherService']->expects('save')->with($busRegOtherServiceEntity3);
+        $this->repoMap['BusRegOtherService']->expects('fetchById')->with(5)->andReturn($busRegOtherServiceEntity4);
+        $this->repoMap['BusRegOtherService']->expects('save')->with($busRegOtherServiceEntity4);
+
+        //adding new data
+        $this->repoMap['BusRegOtherService']->expects('save')
+            ->andReturnUsing(
+                function (BusRegOtherServiceEntity $entity) {
+                    self::assertSame(88888, $entity->getServiceNo());
+                }
+            );
+
+        //deleting data
+        $this->repoMap['BusRegOtherService']->expects('delete')
+            ->with($busRegOtherServiceEntityToDelete);
 
         /** @var BusRegEntity $busReg */
         $busReg = m::mock(BusRegEntity::class)->makePartial();
-        $busReg->shouldReceive('updateServiceDetails')
-            ->once()
-            ->shouldReceive('getId')
-            ->andReturn($busRegId)
-            ->shouldReceive('getStatus')
-            ->andReturn($mockStatus)
-            ->shouldReceive('setBusServiceTypes')
-            ->with(m::type(ArrayCollection::class))
-            ->once()
-            ->shouldReceive('getOtherServices')
-            ->andReturn([0 => $mockBusRegObjectOtherServiceEntity])
-            ->shouldReceive('shouldCreateFee')
-            ->once()
-            ->andReturn($createFee);
+        $busReg->expects('updateServiceDetails')
+            ->with(
+                $serviceNumber,
+                $startPoint,
+                $finishPoint,
+                $via,
+                $otherDetails,
+                $receivedDate,
+                $effectiveDate,
+                $endDate,
+                $this->references[BusNoticePeriodEntity::class][$busNoticePeriod]
+            );
+        $busReg->expects('getId')->withNoArgs()->andReturn($busRegId);
+        $busReg->expects('setBusServiceTypes')->with(m::type(ArrayCollection::class));
+        $busReg->expects('getOtherServices')->withNoArgs()->andReturn($mockOtherServices);
+        $busReg->expects('shouldCreateFee')->withNoArgs()->andReturn($createFee);
 
-        $this->repoMap['Bus']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
-            ->andReturn($busReg)
-            ->shouldReceive('save')
-            ->with(m::type(BusRegEntity::class))
-            ->once();
+        $this->repoMap['Bus']->expects('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, $version)
+            ->andReturn($busReg);
+        $this->repoMap['Bus']->expects('save')->with($busReg);
 
-        $mockBusNoticePeriodEntity = m::mock(BusNoticePeriodEntity::class);
-
-        $this->repoMap['BusNoticePeriod']->shouldReceive('fetchById')
-            ->andReturn($mockBusNoticePeriodEntity);
-
-        if ($createFee) {
-            $createFeeResult = new Result();
-            $createFeeResult
-                ->addId('fee', 999)
-                ->addMessage('bus reg fee created');
-            $this->expectedSideEffect(CmdCreateBusFee::class, ['id' => $busRegId], $createFeeResult);
-        }
-
-        $busReg = m::mock(BusReg::class);
-
-        $busReg->shouldReceive('getOtherServices')->andReturn(
-            [
-                (new BusRegOtherService($busReg, 19))->setId(19),
-                (new BusRegOtherService($busReg, 20))->setId(20)
-            ]
-        )->getMock();
-        $mockOtherService->shouldReceive('delete')->times(1);
+        //side effect only happens when create fee is true
+        $createFeeResult = new Result();
+        $createFeeResult
+            ->addId('fee', 99)
+            ->addMessage('bus reg fee created');
+        $this->expectedSideEffect(
+            CmdCreateBusFee::class,
+            ['id' => $busRegId],
+            $createFeeResult,
+            $createFee ? 1 : 0
+        );
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame($expectedData, $result->getIds());
+        $this->assertInstanceOf(Result::class, $result);
     }
 
     /**
      * return array
      */
-    public function testHandleCommandProvider()
+    public function createFeeProvider()
     {
         return [
-            [
-                'createFee' => true,
-                'expectedResult' => [
-                    'BusRegOtherService' => [
-                        19,
-                        21,
-                        null,
-                    ],
-                    'fee' => 999,
-                    'BusReg' => 99,
-                ]
-            ],
-            [
-                'createFee' => false,
-                'expectedResult' => [
-                    'BusRegOtherService' => [
-                        19,
-                        21,
-                        null,
-                    ],
-                    'BusReg' => 99,
-                ]
-            ]
+            [true],
+            [false]
         ];
     }
 }
