@@ -68,6 +68,7 @@
         "zendframework/zend-servicemanager": "^2.5",
         "zendframework/zend-session": "^2.5",
         "zendframework/zend-stdlib": "^2.5",
+        "zendframework/zend-text": "^2.5",
         "zendframework/zend-uri": "^2.5",
         "zendframework/zend-validator": "^2.5",
         "zendframework/zend-view": "^2.5",
