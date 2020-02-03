@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Approve as ApproveHandler;
-use Dvsa\Olcs\Api\Domain\Exception\Exception;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -264,7 +264,7 @@ class ApproveTest extends CommandHandlerTestCase
         $licenceEntity->shouldReceive('getLicenceType->getId')->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $licenceEntity->shouldReceive('isNi')->andReturn(true);
 
-        $this->expectException(Exception::class);
+        $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage('Licence type not surrenderable');
 
         $this->sut->handleCommand($command);
@@ -340,7 +340,7 @@ class ApproveTest extends CommandHandlerTestCase
         $licenceEntity->shouldReceive('isNi')->andReturn(true);
 
         if ($expected['throwException'] === true) {
-            $this->expectException(Exception::class);
+            $this->expectException(ForbiddenException::class);
             $this->expectExceptionMessage('The surrender has not been checked');
         }
 
