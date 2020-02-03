@@ -59,19 +59,17 @@ class GenericController extends AbstractRestfulController
 
             if ($result instanceof Response\Stream) {
                 return $this->response()->streamResult($result);
-
             } elseif ($result instanceof Result || !isset($result['result'])) {
                 // we sometimes still get a single result if we're not retrieving by id
                 return $this->response()->singleResult($result);
             }
 
-            $count = $result['count'];
+            $count = isset($result['count']) ? $result['count'] : null;
             $results = $result['result'];
             $countUnfiltered = isset($result['count-unfiltered']) ? $result['count-unfiltered'] : $count;
             unset($result['count'], $result['result'], $result['count-unfiltered']);
 
             return $this->response()->multipleResults($count, $results, $countUnfiltered, $result);
-
         } catch (Exception\NotFoundException $ex) {
             return $this->response()->notFound();
         } catch (Exception\NotReadyException $ex) {
