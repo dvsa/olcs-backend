@@ -5501,7 +5501,6 @@
                 "stdlib",
                 "zf2"
             ],
-            "abandoned": "laminas/laminas-stdlib",
             "time": "2016-04-12T21:17:31+00:00"
         },
         {
