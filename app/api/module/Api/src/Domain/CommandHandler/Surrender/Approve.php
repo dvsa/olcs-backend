@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Exception\Exception;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
@@ -12,13 +12,12 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\SurrenderLicence;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateSurrender;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 class Approve extends AbstractSurrenderCommandHandler
 {
     protected $extraRepos = ['Licence'];
 
-    /** @var $licenceEntity LicenceEntity */
+    /** @var Licence */
     protected $licenceEntity;
 
     /**
@@ -57,6 +56,13 @@ class Approve extends AbstractSurrenderCommandHandler
         return $this->result;
     }
 
+    /**
+     * Generate/store document and send notification email
+     *
+     * @param int $licId
+     *
+     * @return Result
+     */
     private function generateDocumentAndSendNotificationEmail(int $licId): Result
     {
         [$template, $description] = $this->returnTemplateAndDescription();
@@ -78,6 +84,13 @@ class Approve extends AbstractSurrenderCommandHandler
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 
+    /**
+     * Return array containing template and description, or throw exception if licence type is not surrenderable
+     *
+     * @return array
+     *
+     * @throws ForbiddenException
+     */
     private function returnTemplateAndDescription(): array
     {
         $goodsOrPsv = $this->licenceEntity->getGoodsOrPsv()->getId();
@@ -96,9 +109,16 @@ class Approve extends AbstractSurrenderCommandHandler
             return ['NI/SURRENDER_LETTER_TO_OPERATOR_GV_NI', 'GV - Surrender actioned letter (NI)'];
         }
 
-        throw new Exception('Licence type not surrenderable');
+        throw new ForbiddenException('Licence type not surrenderable');
     }
 
+    /**
+     * Whether the specified licence type is valid for surrenders
+     *
+     * @param int $licType
+     *
+     * @return bool
+     */
     private function isValidLicenceType(string $licType): bool
     {
         $validTypes = [
@@ -110,12 +130,19 @@ class Approve extends AbstractSurrenderCommandHandler
         return in_array($licType, $validTypes);
     }
 
+    /**
+     * Throw exception if ecms and signature checks not complete
+     *
+     * @param int $licId
+     *
+     * @throws ForbiddenException
+     */
     private function hasEcmsAndSignatureBeenChecked(int $licId): void
     {
         /** @var Surrender $surrender */
         $surrender = $this->getSurrender($licId);
         if (($surrender->getEcmsChecked() && $surrender->getSignatureChecked()) === false) {
-            throw new Exception('The surrender has not been checked');
+            throw new ForbiddenException('The surrender has not been checked');
         }
     }
 }
