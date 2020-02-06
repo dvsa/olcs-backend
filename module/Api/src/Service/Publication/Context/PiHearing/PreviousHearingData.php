@@ -38,7 +38,7 @@ final class PreviousHearingData extends AbstractContext
 
         if (!empty($previousHearing)) {
             $ph = $previousHearing->serialize();
-            $date = new \DateTime($ph['adjournedDate']);
+            $date = new \DateTime($ph['hearingDate']);
             $context->offsetSet('previousHearing', $date->format('d F Y'));
         }
 

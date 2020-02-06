@@ -22,7 +22,7 @@ class PreviousHearingDataTest extends MockeryTestCase
     {
         $pi = 99;
         $hearingDate = '2014-03-16 14:30:00';
-        $adjournedDate = '2014-03-18 12:45:00';
+        $previousAdjournedDate = '2014-03-18 12:45:00';
         $formattedAdjournedDate = '18 March 2014';
 
         $input = [
@@ -41,7 +41,7 @@ class PreviousHearingDataTest extends MockeryTestCase
 
         $piHearingResult = m::mock();
         $piHearingResult->shouldReceive('serialize')
-            ->andReturn(['adjournedDate' => $adjournedDate])
+            ->andReturn(['hearingDate' => $previousAdjournedDate])
             ->once()
             ->getMock();
 
