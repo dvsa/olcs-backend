@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Form\Element\DateTime;
 
 /**
  * GracePeriod Entity
