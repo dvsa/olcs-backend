@@ -174,22 +174,24 @@ class Summary extends AbstractQueryHandler
         if ($application->getLicenceType()->getId() === Entity\Licence\Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
             return false;
         }
-        $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->notIn(
-                'tmApplicationStatus',
-                [
-                    Entity\Tm\TransportManagerApplication::STATUS_OPERATOR_SIGNED,
-                    Entity\Tm\TransportManagerApplication::STATUS_RECEIVED
-                ]
-            )
+
+        $tms = $application->getTransportManagers()->filter(
+            function ($element) use ($application) {
+                $result = !in_array(
+                    $element->getTmApplicationStatus(),
+                    [
+                        Entity\Tm\TransportManagerApplication::STATUS_OPERATOR_SIGNED,
+                        Entity\Tm\TransportManagerApplication::STATUS_RECEIVED
+                    ]
+                );
+
+                if ($result && $application->isVariation()) {
+                    $result = in_array($element->getAction(), ['A', 'U']);
+                }
+
+                return $result;
+            }
         );
-
-        if ($application->isVariation()) {
-            $criteria->andWhere($criteria->expr()->in('action', ['A', 'U']));
-        }
-
-        $tms = $application->getTransportManagers()->matching($criteria);
 
         return $tms->isEmpty() === false;
     }

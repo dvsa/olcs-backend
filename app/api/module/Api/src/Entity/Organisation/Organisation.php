@@ -276,19 +276,17 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function getActiveLicences($goodsOrPsv = null)
     {
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->in(
-                'status',
-                $this->getLicenceStatusesActive()
-            )
+        return $this->getLicences()->filter(
+            function ($element) use ($goodsOrPsv) {
+                $result = in_array($element->getStatus(), $this->getLicenceStatusesActive());
+
+                if ($result && $goodsOrPsv !== null) {
+                    $result = in_array($element->getGoodsOrPsv(), [$goodsOrPsv]);
+                }
+
+                return $result;
+            }
         );
-
-        if ($goodsOrPsv !== null) {
-            $criteria->andWhere($criteria->expr()->in('goodsOrPsv', [$goodsOrPsv]));
-        }
-
-        return $this->getLicences()->matching($criteria);
     }
 
     /**
@@ -298,22 +296,21 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function getRelatedLicences()
     {
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->in(
-                'status',
-                [
-                    LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
-                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
-                    LicenceEntity::LICENCE_STATUS_GRANTED,
-                    LicenceEntity::LICENCE_STATUS_VALID,
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                    LicenceEntity::LICENCE_STATUS_CURTAILED,
-                ]
-            )
+        return $this->getLicences()->filter(
+            function ($element) {
+                return in_array(
+                    $element->getStatus(),
+                    [
+                        LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
+                        LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                        LicenceEntity::LICENCE_STATUS_GRANTED,
+                        LicenceEntity::LICENCE_STATUS_VALID,
+                        LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                        LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    ]
+                );
+            }
         );
-
-        return $this->getLicences()->matching($criteria);
     }
 
     /**
@@ -382,34 +379,36 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function isMlh()
     {
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->in(
-                'status',
-                [
-                    LicenceEntity::LICENCE_STATUS_VALID,
-                    LicenceEntity::LICENCE_STATUS_CURTAILED,
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED
-                ]
-            )
-        );
+        $totalValidLicences = $this->getLicences()->filter(
+            function ($element) {
+                return in_array(
+                    $element->getStatus(),
+                    [
+                        LicenceEntity::LICENCE_STATUS_VALID,
+                        LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    ]
+                ) && in_array(
+                    $element->getGoodsOrPsv(),
+                    [
+                        LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    ]
+                );
+            }
+        )->count();
 
-        // And the licence must be for goods vehicles
-        $criteria->andWhere($criteria->expr()->in('goodsOrPsv', [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]));
-        $totalValidLicences = $this->getLicences()->matching($criteria)->count();
-
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->in(
-                'status',
-                [
-                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
-                    LicenceEntity::LICENCE_STATUS_GRANTED,
-                ]
-            )
-        );
         /** @var ArrayCollection $newLicences */
-        $newLicences = $this->getLicences()->matching($criteria);
+        $newLicences = $this->getLicences()->filter(
+            function ($element) {
+                return in_array(
+                    $element->getStatus(),
+                    [
+                        LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                        LicenceEntity::LICENCE_STATUS_GRANTED,
+                    ]
+                );
+            }
+        );
 
         $totalLicencesWithNewGoodsApplications = 0;
 
@@ -454,21 +453,20 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function getLinkedLicences()
     {
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->notIn(
-                'status',
-                [
-                    LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
-                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
-                    LicenceEntity::LICENCE_STATUS_GRANTED,
-                    LicenceEntity::LICENCE_STATUS_WITHDRAWN,
-                    LicenceEntity::LICENCE_STATUS_REFUSED
-                ]
-            )
+        return $this->getLicences()->filter(
+            function ($element) {
+                return !in_array(
+                    $element->getStatus(),
+                    [
+                        LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
+                        LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                        LicenceEntity::LICENCE_STATUS_GRANTED,
+                        LicenceEntity::LICENCE_STATUS_WITHDRAWN,
+                        LicenceEntity::LICENCE_STATUS_REFUSED,
+                    ]
+                );
+            }
         );
-
-        return $this->getLicences()->matching($criteria);
     }
 
     public function getContextValue()
@@ -597,32 +595,25 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function getEligibleIrhpLicences()
     {
-        $criteria = Criteria::create();
-        $expr = Criteria::expr();
-
-        $criteria->where(
-            $expr->andX(
-                $expr->eq('goodsOrPsv', new RefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)),
-                $expr->in(
-                    'status',
+        return $this->getLicences()->filter(
+            function ($element) {
+                return ((string)$element->getGoodsOrPsv() === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE) && in_array(
+                    $element->getStatus(),
                     [
                         LicenceEntity::LICENCE_STATUS_VALID,
                         LicenceEntity::LICENCE_STATUS_SUSPENDED,
                         LicenceEntity::LICENCE_STATUS_CURTAILED,
                     ]
-                ),
-                $expr->in(
-                    'licenceType',
+                ) && in_array(
+                    $element->getLicenceType(),
                     [
                         LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                         LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
                         LicenceEntity::LICENCE_TYPE_RESTRICTED,
                     ]
-                )
-            )
+                );
+            }
         );
-
-        return $this->getLicences()->matching($criteria);
     }
 
     /**

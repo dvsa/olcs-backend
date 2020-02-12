@@ -2,12 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
 
-use Common\RefData;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -27,11 +25,6 @@ final class Cases extends AbstractQueryHandler
         $this->auditRead($case);
 
         $latestNote = $this->getLatestNoteByCase($case);
-
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->in('publicationSection', [1, 3])
-        );
 
         // @todo look at simplifying
         return $this->result(
@@ -71,7 +64,15 @@ final class Cases extends AbstractQueryHandler
                 'application' => array(
                     'operatingCentres',
                     'publicationLinks' => array(
-                        'criteria' => $criteria,
+                        'filter' => function ($element) {
+                            return in_array(
+                                (string)$element->getPublicationSection(),
+                                [
+                                    PublicationSectionEntity::APP_NEW_SECTION,
+                                    PublicationSectionEntity::VAR_NEW_SECTION,
+                                ]
+                            );
+                        },
                         'publication'
                     )
                 ),

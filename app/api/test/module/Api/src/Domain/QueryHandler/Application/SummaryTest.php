@@ -67,6 +67,10 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('A');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -76,7 +80,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(0);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(new \stdClass());
 
@@ -132,6 +136,10 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('A');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -141,7 +149,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(0);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(new \stdClass());
 
@@ -198,6 +206,10 @@ class SummaryTest extends QueryHandlerTestCase
 
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('A');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -207,7 +219,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(0);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $docs = new ArrayCollection();
@@ -273,6 +285,10 @@ class SummaryTest extends QueryHandlerTestCase
 
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('A');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -282,7 +298,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(0);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $mockApplication->shouldReceive('getStatus')->andReturn(
@@ -339,6 +355,10 @@ class SummaryTest extends QueryHandlerTestCase
 
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('A');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -348,7 +368,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(0);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
         $this->mockAppRepo->shouldReceive('fetchUsingId')
@@ -405,6 +425,10 @@ class SummaryTest extends QueryHandlerTestCase
 
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('A');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -412,7 +436,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setId(111);
         $mockApplication->setIsVariation(0);
         $mockApplication->setAuthSignature(1);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $mockApplication->setDocuments(new ArrayCollection());
@@ -471,6 +495,10 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('A');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -480,7 +508,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(1);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
@@ -538,6 +566,10 @@ class SummaryTest extends QueryHandlerTestCase
 
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('A');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -547,7 +579,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(1);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
@@ -610,6 +642,10 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('getLicence->getLocByOc')->andReturn($loc);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('U');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -619,7 +655,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(1);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
@@ -682,9 +718,11 @@ class SummaryTest extends QueryHandlerTestCase
 
         $mockApplication->shouldReceive('getLicence->getLocByOc')->andReturn($loc);
 
-        $adDocs = new ArrayCollection();
-
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
+        $tm1->setTmApplicationStatus(
+            new Entity\System\RefData(Entity\Tm\TransportManagerApplication::STATUS_AWAITING_SIGNATURE)
+        );
+        $tm1->setAction('A');
 
         $tms = new ArrayCollection();
         $tms->add($tm1);
@@ -694,7 +732,7 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->setAuthSignature(1);
         $mockApplication->shouldReceive('getLicenceType->getId')
             ->andReturn(Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL);
-        $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
+        $mockApplication->shouldReceive('getTransportManagers')->andReturn($tms);
         $mockApplication->setDocuments(new ArrayCollection());
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
