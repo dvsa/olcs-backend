@@ -305,140 +305,127 @@ class OrganisationEntityTest extends EntityTester
         );
     }
 
-    public function testGetActiveLicences()
+    /**
+     * @dataProvider dpActiveLicences
+     */
+    public function testGetActiveLicences($goodsOrPsv, $status, $expectedAny, $expectedGoods, $expectedPsv)
     {
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setStatus(new RefData($status));
+        $licence->setGoodsOrPsv(new RefData($goodsOrPsv));
+
+        $collection = new ArrayCollection([$licence]);
+
         /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
-        $organisation->shouldReceive('getLicences->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturnUsing(
-                function (Criteria $criteria) {
-
-                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
-                    $expr = $criteria->getWhereExpression();
-
-                    $this->assertEquals('status', $expr->getField());
-                    $this->assertEquals('IN', $expr->getOperator());
-                    $this->assertEquals(
-                        [
-                            LicenceEntity::LICENCE_STATUS_VALID,
-                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                            LicenceEntity::LICENCE_STATUS_CURTAILED,
-                            LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
-                        ],
-                        $expr->getValue()->getValue()
-                    );
-
-                    $collection = m::mock();
-                    $collection->shouldReceive('toArray')
-                        ->andReturn(['active licences']);
-
-                    return $collection;
-                }
-            );
+        $organisation->setLicences($collection);
 
         $this->assertEquals(
-            ['active licences'],
-            $organisation->getActiveLicences()->toArray()
+            $expectedAny,
+            $organisation->getActiveLicences()->contains($licence)
+        );
+
+        $this->assertEquals(
+            $expectedGoods,
+            $organisation->getActiveLicences(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)->contains($licence)
+        );
+
+        $this->assertEquals(
+            $expectedPsv,
+            $organisation->getActiveLicences(LicenceEntity::LICENCE_CATEGORY_PSV)->contains($licence)
         );
     }
 
-    public function testHasActiveLicences()
+    public function dpActiveLicences()
     {
-        /** @var Entity | m\MockInterface $organisation */
-        $organisation = m::mock(Entity::class)->makePartial();
-        $organisation->shouldReceive('getLicences->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturnUsing(
-                function (Criteria $criteria) {
-
-                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
-                    $expr = $criteria->getWhereExpression()->getExpressionList();
-
-                    $this->assertEquals('status', $expr[0]->getField());
-                    $this->assertEquals('IN', $expr[0]->getOperator());
-                    $this->assertEquals(
-                        [
-                            LicenceEntity::LICENCE_STATUS_VALID,
-                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                            LicenceEntity::LICENCE_STATUS_CURTAILED,
-                            LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
-                        ],
-                        $expr[0]->getValue()->getValue()
-                    );
-
-                    $this->assertEquals('goodsOrPsv', $expr[1]->getField());
-                    $this->assertEquals('IN', $expr[1]->getOperator());
-                    $this->assertEquals(
-                        [
-                            LicenceEntity::LICENCE_CATEGORY_PSV,
-                        ],
-                        $expr[1]->getValue()->getValue()
-                    );
-
-                    $collection = m::mock();
-                    $collection->shouldReceive('isEmpty')
-                        ->andReturn(false);
-
-                    return $collection;
-                }
-            );
-
-        $this->assertEquals(true, $organisation->hasActiveLicences(LicenceEntity::LICENCE_CATEGORY_PSV));
+        return [
+            [null, LicenceEntity::LICENCE_STATUS_VALID, true, false, false],
+            [null, LicenceEntity::LICENCE_STATUS_SUSPENDED, true, false, false],
+            [null, LicenceEntity::LICENCE_STATUS_CURTAILED, true, false, false],
+            [null, LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, true, false, false],
+            [null, LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, false, false, false],
+            [null, LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, false, false, false],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_VALID, true, true, false],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_SUSPENDED, true, true, false],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_CURTAILED, true, true, false],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, true, true, false],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, false, false, false],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, false, false, false],
+            [LicenceEntity::LICENCE_CATEGORY_PSV, LicenceEntity::LICENCE_STATUS_VALID, true, false, true],
+            [LicenceEntity::LICENCE_CATEGORY_PSV, LicenceEntity::LICENCE_STATUS_SUSPENDED, true, false, true],
+            [LicenceEntity::LICENCE_CATEGORY_PSV, LicenceEntity::LICENCE_STATUS_CURTAILED, true, false, true],
+            [LicenceEntity::LICENCE_CATEGORY_PSV, LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, true, false, true],
+            [LicenceEntity::LICENCE_CATEGORY_PSV, LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, false, false, false],
+            [LicenceEntity::LICENCE_CATEGORY_PSV, LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, false, false, false],
+        ];
     }
 
-    public function testGetEligibleIrhpLicences()
+    /**
+     * @dataProvider dpActiveLicences
+     */
+    public function testHasActiveLicences($goodsOrPsv, $status, $expectedAny, $expectedGoods, $expectedPsv)
     {
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setStatus(new RefData($status));
+        $licence->setGoodsOrPsv(new RefData($goodsOrPsv));
+
+        $collection = new ArrayCollection([$licence]);
+
         /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
-        $organisation->shouldReceive('getLicences->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturnUsing(
-                function (Criteria $criteria) {
-                    $compositeExpression = $criteria->getWhereExpression();
-                    $expressions = $compositeExpression->getExpressionList();
-
-                    $this->assertEquals('goodsOrPsv', $expressions[0]->getField());
-                    $this->assertEquals('=', $expressions[0]->getOperator());
-                    $this->assertEquals(
-                        new RefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
-                        $expressions[0]->getValue()->getValue()
-                    );
-
-                    $this->assertEquals('status', $expressions[1]->getField());
-                    $this->assertEquals('IN', $expressions[1]->getOperator());
-                    $this->assertEquals(
-                        [
-                            LicenceEntity::LICENCE_STATUS_VALID,
-                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                            LicenceEntity::LICENCE_STATUS_CURTAILED,
-                        ],
-                        $expressions[1]->getValue()->getValue()
-                    );
-
-                    $this->assertEquals('licenceType', $expressions[2]->getField());
-                    $this->assertEquals('IN', $expressions[2]->getOperator());
-                    $this->assertEquals(
-                        [
-                            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-                            LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                        ],
-                        $expressions[2]->getValue()->getValue()
-                    );
-
-                    $collection = m::mock();
-                    $collection->shouldReceive('toArray')
-                        ->andReturn(['eligible licences']);
-
-                    return $collection;
-                }
-            );
+        $organisation->setLicences($collection);
 
         $this->assertEquals(
-            ['eligible licences'],
-            $organisation->getEligibleIrhpLicences()->toArray()
+            $expectedAny,
+            $organisation->hasActiveLicences()
         );
+
+        $this->assertEquals(
+            $expectedGoods,
+            $organisation->hasActiveLicences(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
+        );
+
+        $this->assertEquals(
+            $expectedPsv,
+            $organisation->hasActiveLicences(LicenceEntity::LICENCE_CATEGORY_PSV)
+        );
+    }
+
+    /**
+     * @dataProvider dpEligibleIrhpLicences
+     */
+    public function testGetEligibleIrhpLicences($goodsOrPsv, $status, $licenceType, $expected)
+    {
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setStatus(new RefData($status));
+        $licence->setGoodsOrPsv(new RefData($goodsOrPsv));
+        $licence->setLicenceType(new RefData($licenceType));
+
+        $collection = new ArrayCollection([$licence]);
+
+        /** @var Entity | m\MockInterface $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->setLicences($collection);
+
+        $this->assertEquals(
+            $expected,
+            $organisation->getEligibleIrhpLicences()->contains($licence)
+        );
+    }
+
+    public function dpEligibleIrhpLicences()
+    {
+        return [
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_SUSPENDED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_CURTAILED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
+            [LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE, LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, false],
+            [LicenceEntity::LICENCE_CATEGORY_PSV, LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, false],
+            [null, LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, false],
+        ];
     }
 
     public function testGetEligibleIrhpLicencesForStock()
@@ -501,8 +488,8 @@ class OrganisationEntityTest extends EntityTester
 
         /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
-        $organisation->shouldReceive('getLicences->matching')
-            ->with(m::type(Criteria::class))
+        $organisation->shouldReceive('getEligibleIrhpLicences')
+            ->withNoArgs()
             ->once()
             ->andReturn($licenceCollection);
 
@@ -551,30 +538,44 @@ class OrganisationEntityTest extends EntityTester
         $this->assertSame(Disqualification::STATUS_ACTIVE, $organisation->getDisqualificationStatus());
     }
 
-    public function testGetLinkedLicences()
+    /**
+     * @dataProvider dpGetLinkedLicences
+     */
+    public function testGetLinkedLicences($status, $expected)
     {
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setStatus(new RefData($status));
+
+        $licences = new ArrayCollection();
+        $licences->add($licence);
+
         /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
-        $organisation->shouldReceive('getLicences->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturnUsing(
-                function (Criteria $criteria) {
+        $organisation->setLicences($licences);
 
-                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
-                    $expr = $criteria->getWhereExpression();
-                    $this->assertEquals('status', $expr->getField());
-                    $this->assertEquals('NIN', $expr->getOperator());
-                    $this->assertTrue(is_array($expr->getValue()->getValue()));
+        $this->assertEquals($expected, $organisation->getLinkedLicences()->contains($licence));
+    }
 
-                    $collection = m::mock();
-                    $collection->shouldReceive('toArray')
-                        ->andReturn(['foo']);
-
-                    return $collection;
-                }
-            );
-
-        $this->assertEquals(['foo'], $organisation->getLinkedLicences()->toArray());
+    public function dpGetLinkedLicences()
+    {
+        return [
+            [LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, false],
+            [LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, false],
+            [LicenceEntity::LICENCE_STATUS_SUSPENDED, true],
+            [LicenceEntity::LICENCE_STATUS_VALID, true],
+            [LicenceEntity::LICENCE_STATUS_CURTAILED, true],
+            [LicenceEntity::LICENCE_STATUS_GRANTED, false],
+            [LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, true],
+            [LicenceEntity::LICENCE_STATUS_SURRENDERED, true],
+            [LicenceEntity::LICENCE_STATUS_WITHDRAWN, false],
+            [LicenceEntity::LICENCE_STATUS_REFUSED, false],
+            [LicenceEntity::LICENCE_STATUS_REVOKED, true],
+            [LicenceEntity::LICENCE_STATUS_NOT_TAKEN_UP, true],
+            [LicenceEntity::LICENCE_STATUS_TERMINATED, true],
+            [LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, true],
+            [LicenceEntity::LICENCE_STATUS_UNLICENSED, true],
+            [LicenceEntity::LICENCE_STATUS_CANCELLED, true],
+        ];
     }
 
     public function testGetContextValue()
@@ -763,9 +764,9 @@ class OrganisationEntityTest extends EntityTester
     {
         $mockValidLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getStatus')
-            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID)
+            ->andReturn(new RefData(LicenceEntity::LICENCE_STATUS_VALID))
             ->shouldReceive('getGoodsOrPsv')
-            ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
+            ->andReturn(new RefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE))
             ->getMock();
         $mockLicences = new ArrayCollection();
         $mockLicences->add($mockValidLicence);
@@ -780,7 +781,7 @@ class OrganisationEntityTest extends EntityTester
 
         $mockOutstandingLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getStatus')
-            ->andReturn(LicenceEntity::LICENCE_STATUS_GRANTED)
+            ->andReturn(new RefData(LicenceEntity::LICENCE_STATUS_GRANTED))
             ->shouldReceive('getApplications')
             ->andReturn($mockNewApplications)
             ->once()
@@ -800,9 +801,9 @@ class OrganisationEntityTest extends EntityTester
     {
         $mockValidLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getStatus')
-            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID)
+            ->andReturn(new RefData(LicenceEntity::LICENCE_STATUS_VALID))
             ->shouldReceive('getGoodsOrPsv')
-            ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE)
+            ->andReturn(new RefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE))
             ->getMock();
         $mockLicences = new ArrayCollection();
         $mockLicences->add($mockValidLicence);

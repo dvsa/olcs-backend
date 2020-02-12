@@ -7,7 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees as Cmd;
@@ -37,6 +37,7 @@ class CancelLicenceFeesTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
+            Fee::STATUS_OUTSTANDING,
             Fee::STATUS_CANCELLED
         ];
 
@@ -51,24 +52,17 @@ class CancelLicenceFeesTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $fees = new ArrayCollection();
+
+        /** @var Fee $cancelledFee */
+        $cancelledFee = m::mock(Fee::class)->makePartial();
+        $cancelledFee->setId(123);
+        $cancelledFee->setFeeStatus($this->refData[Fee::STATUS_CANCELLED]);
+        $fees->add($cancelledFee);
+
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
-
-        $fees = [];
-
-        $licence->shouldReceive('getFees->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturnUsing(
-                function (Criteria $criteria) use ($fees) {
-                    $expression = $criteria->getWhereExpression();
-
-                    $this->assertEquals('feeStatus', $expression->getField());
-                    $this->assertEquals('IN', $expression->getOperator());
-                    $this->assertEquals([Fee::STATUS_OUTSTANDING], $expression->getValue()->getValue());
-
-                    return $fees;
-                }
-            );
+        $licence->setFees($fees);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
@@ -94,27 +88,29 @@ class CancelLicenceFeesTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $fees = new ArrayCollection();
+
+        /** @var Fee $outstandingFee1 */
+        $outstandingFee1 = m::mock(Fee::class)->makePartial();
+        $outstandingFee1->setId(123);
+        $outstandingFee1->setFeeStatus($this->refData[Fee::STATUS_OUTSTANDING]);
+        $fees->add($outstandingFee1);
+
+        /** @var Fee $cancelledFee */
+        $cancelledFee = m::mock(Fee::class)->makePartial();
+        $cancelledFee->setId(1);
+        $cancelledFee->setFeeStatus($this->refData[Fee::STATUS_CANCELLED]);
+        $fees->add($cancelledFee);
+
+        /** @var Fee $outstandingFee2 */
+        $outstandingFee2 = m::mock(Fee::class)->makePartial();
+        $outstandingFee2->setId(124);
+        $outstandingFee2->setFeeStatus($this->refData[Fee::STATUS_OUTSTANDING]);
+        $fees->add($outstandingFee2);
+
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
-
-        $fees = [
-            m::mock(Fee::class)->shouldReceive('getId')->andReturn(123)->getMock(),
-            m::mock(Fee::class)->shouldReceive('getId')->andReturn(124)->getMock(),
-        ];
-
-        $licence->shouldReceive('getFees->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturnUsing(
-                function (Criteria $criteria) use ($fees) {
-                    $expression = $criteria->getWhereExpression();
-
-                    $this->assertEquals('feeStatus', $expression->getField());
-                    $this->assertEquals('IN', $expression->getOperator());
-                    $this->assertEquals([Fee::STATUS_OUTSTANDING], $expression->getValue()->getValue());
-
-                    return $fees;
-                }
-            );
+        $licence->setFees($fees);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)

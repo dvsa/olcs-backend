@@ -108,12 +108,9 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
             ->setSubCategory($subCat1);
 
         /** @var ArrayCollection|m\MockInterface $documents */
-        $documents = m::mock(ArrayCollection::class)->makePartial();
+        $documents = new ArrayCollection();
         $documents->add($document1);
         $documents->add($document2);
-
-        $documents->shouldReceive('matching')
-            ->andReturnSelf();
 
         /** @var TransportManager $tm1 */
         $tm1 = m::mock(TransportManager::class)->makePartial();

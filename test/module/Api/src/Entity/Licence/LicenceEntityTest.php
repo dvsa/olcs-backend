@@ -165,18 +165,16 @@ class LicenceEntityTest extends EntityTester
 
     public function testGetOtherActiveLicences()
     {
+        $licences = new ArrayCollection();
+
         /** @var RefData $goodsOrPsv */
         $goodsOrPsv = m::mock(RefData::class)->makePartial();
         $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_PSV);
 
-        $licence1 = m::mock(Entity::class)->makePartial();
-
-        $licences = m::mock(ArrayCollection::class)->makePartial();
-        $licences->add($licence1);
-
-        /** @var OrganisationEntity $org */
-        $org = m::mock(OrganisationEntity::class)->makePartial();
-        $org->setLicences($licences);
+        $licence = $this->instantiate(Entity::class);
+        $licence->setId(111);
+        $licence->setGoodsOrPsv($goodsOrPsv);
+        $licences->add($licence);
 
         /** @var RefData $type1 */
         $type1 = m::mock(RefData::class)->makePartial();
@@ -188,25 +186,28 @@ class LicenceEntityTest extends EntityTester
 
         /** @var Entity $otherLicence1 */
         $otherLicence1 = m::mock(Entity::class)->makePartial();
+        $otherLicence1->setId(222);
+        $otherLicence1->setStatus(new RefData(Entity::LICENCE_STATUS_VALID));
         $otherLicence1->setLicenceType($type1);
+        $otherLicence1->setGoodsOrPsv($goodsOrPsv);
+        $licences->add($otherLicence1);
 
         $otherLicence2 = m::mock(Entity::class)->makePartial();
+        $otherLicence2->setId(333);
+        $otherLicence2->setStatus(new RefData(Entity::LICENCE_STATUS_SUSPENDED));
         $otherLicence2->setLicenceType($type2);
+        $otherLicence2->setGoodsOrPsv($goodsOrPsv);
+        $licences->add($otherLicence2);
 
-        $otherActiveLicences = m::mock(ArrayCollection::class)->makePartial();
-        $otherActiveLicences->add($otherLicence1);
-        $otherActiveLicences->add($otherLicence2);
+        /** @var OrganisationEntity $org */
+        $org = m::mock(OrganisationEntity::class)->makePartial();
+        $org->setLicences($licences);
 
-        $licences->shouldReceive('matching')
-            ->with(m::type(Criteria::class))
-            ->andReturn($otherActiveLicences);
-
-        $licence = $this->instantiate(Entity::class);
-        $licence->setId(111);
-        $licence->setGoodsOrPsv($goodsOrPsv);
         $licence->setOrganisation($org);
 
-        $this->assertSame($otherActiveLicences, $licence->getOtherActiveLicences());
+        $otherActiveLicences = $licence->getOtherActiveLicences();
+
+        $this->assertFalse($otherActiveLicences->contains($licence));
         $this->assertFalse($otherActiveLicences->contains($otherLicence1));
         $this->assertTrue($otherActiveLicences->contains($otherLicence2));
     }
@@ -318,51 +319,42 @@ class LicenceEntityTest extends EntityTester
         ];
     }
 
-    public function testHasCommunityLicenceOfficeCopy()
+    /**
+     * @dataProvider dpHasCommunityLicenceOfficeCopy
+     */
+    public function testHasCommunityLicenceOfficeCopy($status, $expected)
     {
+        $communityLic1 = new CommunityLicEntity();
+        $communityLic1->setId(1);
+        $communityLic1->setIssueNo(0);
+        $communityLic1->setStatus(new RefData($status));
+
+        $communityLic2 = new CommunityLicEntity();
+        $communityLic2->setId(2);
+        $communityLic2->setIssueNo(1);
+        $communityLic2->setStatus(new RefData($status));
+
+        $collection = new ArrayCollection([$communityLic1, $communityLic2]);
+
         $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive('getCommunityLics->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturnUsing(
-                function (Criteria $criteria) {
+        $licence->shouldReceive('getCommunityLics')
+            ->withNoArgs()
+            ->andReturn($collection);
 
-                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
-                    $compositeExpression = $criteria->getWhereExpression();
-                    $expressions = $compositeExpression->getExpressionList();
+        $this->assertSame($expected, $licence->hasCommunityLicenceOfficeCopy([1]));
+    }
 
-                    $this->assertEquals('issueNo', $expressions[0]->getField());
-                    $this->assertEquals('=', $expressions[0]->getOperator());
-                    $this->assertEquals(0, $expressions[0]->getValue()->getValue());
-
-                    $this->assertEquals('status', $expressions[1]->getField());
-                    $this->assertEquals('IN', $expressions[1]->getOperator());
-                    $this->assertEquals(
-                        [
-                            CommunityLicEntity::STATUS_PENDING,
-                            CommunityLicEntity::STATUS_ACTIVE,
-                            CommunityLicEntity::STATUS_WITHDRAWN,
-                            CommunityLicEntity::STATUS_SUSPENDED
-                        ],
-                        $expressions[1]->getValue()->getValue()
-                    );
-
-                    $mockCollection = m::mock()
-                        ->shouldReceive('current')
-                        ->andReturn(
-                            m::mock()
-                            ->shouldReceive('getId')
-                            ->andReturn(1)
-                            ->once()
-                            ->getMock()
-                        )
-                        ->once()
-                        ->getMock();
-
-                    return $mockCollection;
-                }
-            );
-
-        $this->assertTrue($licence->hasCommunityLicenceOfficeCopy([1]));
+    public function dpHasCommunityLicenceOfficeCopy()
+    {
+        return [
+            [CommunityLicEntity::STATUS_ANNUL, false],
+            [CommunityLicEntity::STATUS_ACTIVE, true],
+            [CommunityLicEntity::STATUS_EXPIRED, false],
+            [CommunityLicEntity::STATUS_PENDING, true],
+            [CommunityLicEntity::STATUS_RETURNDED, false],
+            [CommunityLicEntity::STATUS_SUSPENDED, true],
+            [CommunityLicEntity::STATUS_WITHDRAWN, true],
+        ];
     }
 
     public function testHasApprovedUnfulfilledConditions()
@@ -428,10 +420,6 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertEquals($expectedResult, $licence->isValidSiGoods());
     }
-
-
-
-
 
     public function dpValidSiGoods()
     {
@@ -1169,20 +1157,49 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals($expected, $licence->getLicenceDocuments('category', 'subCategory'));
     }
 
-    public function testGetOutstandingOrganisations()
+    /**
+     * @dataProvider dpGetOutstandingOrganisations
+     */
+    public function testGetOutstandingOrganisations($status, $includeNotSubmitted, $expected)
     {
+        $application = m::mock(Application::class)->makePartial();
+        $application->shouldReceive('getStatus')
+            ->andReturn(new RefData($status));
+
+        $applications = new ArrayCollection();
+        $applications->add($application);
+
         $licence = m::mock(Entity::class)->makePartial();
+        $licence->setApplications($applications);
 
-        $allApplications = m::mock(ArrayCollection::class);
-        $outstandingApplications = m::mock(ArrayCollection::class);
-        $licence->setApplications($allApplications);
+        $this->assertEquals($expected, $licence->getOutstandingApplications($includeNotSubmitted)->contains($application));
+    }
 
-        $allApplications->shouldReceive('matching')
-            ->once()
-            ->with(m::type(Criteria::class))
-            ->andReturn($outstandingApplications);
+    public function dpGetOutstandingOrganisations()
+    {
+        return [
+            // exclude Not Submitted
+            [Application::APPLICATION_STATUS_NOT_SUBMITTED, false, false],
+            [Application::APPLICATION_STATUS_GRANTED, false, true],
+            [Application::APPLICATION_STATUS_UNDER_CONSIDERATION, false, true],
+            [Application::APPLICATION_STATUS_VALID, false, false],
+            [Application::APPLICATION_STATUS_WITHDRAWN, false, false],
+            [Application::APPLICATION_STATUS_REFUSED, false, false],
+            [Application::APPLICATION_STATUS_NOT_TAKEN_UP, false, false],
+            [Application::APPLICATION_STATUS_CURTAILED, false, false],
+            [Application::APPLICATION_STATUS_CANCELLED, false, false],
 
-        $this->assertEquals($outstandingApplications, $licence->getOutstandingApplications(true));
+            // include Not Submitted
+            [Application::APPLICATION_STATUS_NOT_SUBMITTED, true, true],
+            [Application::APPLICATION_STATUS_GRANTED, true, true],
+            [Application::APPLICATION_STATUS_UNDER_CONSIDERATION, true, true],
+            [Application::APPLICATION_STATUS_VALID, true, false],
+            [Application::APPLICATION_STATUS_WITHDRAWN, true, false],
+            [Application::APPLICATION_STATUS_REFUSED, true, false],
+            [Application::APPLICATION_STATUS_NOT_TAKEN_UP, true, false],
+            [Application::APPLICATION_STATUS_CURTAILED, true, false],
+            [Application::APPLICATION_STATUS_CANCELLED, true, false],
+        ];
     }
 
     /**
@@ -1222,18 +1239,57 @@ class LicenceEntityTest extends EntityTester
 
     public function testGetApplicationsByStatus()
     {
+        $applications = new ArrayCollection();
+
+        $appNotSubmitted = m::mock(Application::class)->makePartial();
+        $appNotSubmitted->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_NOT_SUBMITTED));
+        $applications->add($appNotSubmitted);
+
+        $appGranted = m::mock(Application::class)->makePartial();
+        $appGranted->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_GRANTED));
+        $applications->add($appGranted);
+
+        $appUnderConsideration = m::mock(Application::class)->makePartial();
+        $appUnderConsideration->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION));
+        $applications->add($appUnderConsideration);
+
+        $appValid = m::mock(Application::class)->makePartial();
+        $appValid->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_VALID));
+        $applications->add($appValid);
+
         $licence = m::mock(Entity::class)->makePartial();
+        $licence->setApplications($applications);
 
-        $allApplications = m::mock(ArrayCollection::class);
-        $outstandingApplications = m::mock(ArrayCollection::class);
-        $licence->setApplications($allApplications);
+        $this->assertEquals(
+            [$appNotSubmitted, $appGranted, $appUnderConsideration, $appValid],
+            $licence->getApplicationsByStatus(
+                [
+                    Application::APPLICATION_STATUS_NOT_SUBMITTED,
+                    Application::APPLICATION_STATUS_GRANTED,
+                    Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                    Application::APPLICATION_STATUS_VALID
+                ]
+            )->getValues()
+        );
 
-        $allApplications->shouldReceive('matching')
-            ->once()
-            ->with(m::type(Criteria::class))
-            ->andReturn($outstandingApplications);
+        $this->assertEquals(
+            [$appGranted, $appValid],
+            $licence->getApplicationsByStatus(
+                [
+                    Application::APPLICATION_STATUS_GRANTED,
+                    Application::APPLICATION_STATUS_VALID
+                ]
+            )->getValues()
+        );
 
-        $this->assertEquals($outstandingApplications, $licence->getApplicationsByStatus(['foo']));
+        $this->assertEquals(
+            [$appValid],
+            $licence->getApplicationsByStatus(
+                [
+                    Application::APPLICATION_STATUS_VALID
+                ]
+            )->getValues()
+        );
     }
 
     public function testGetTrafficAreaForTaskAllocationNonMlh()
@@ -1379,60 +1435,100 @@ class LicenceEntityTest extends EntityTester
         ];
     }
 
-    /**
-     * @dataProvider getLatestBusVariationProvider
-     *
-     * @param $isEmpty
-     * @param $expectedResult
-     * @param $expectedCriteria
-     * @param $statuses
-     */
-    public function testGetLatestBusVariation($isEmpty, $expectedResult, $expectedCriteria, $statuses)
+    public function testGetLatestBusVariation()
     {
-        $busRegCollection = m::mock(CollectionInterface::class);
-        $matchedCollection = m::mock(CollectionInterface::class);
-        $matchedCollection->shouldReceive('isEmpty')->times()->andReturn($isEmpty);
-        $matchedCollection->shouldReceive('current')->times($isEmpty ? 0 : 1)->andReturn($expectedResult);
+        $collection = new ArrayCollection();
 
-        $busRegCollection->shouldReceive('matching')
-            ->once()
-            ->with(m::type(Criteria::class))->andReturnUsing(
-                function (Criteria $criteria) use ($matchedCollection, $expectedCriteria) {
-                    $this->assertEquals($expectedCriteria, $criteria);
-                    return $matchedCollection;
-                }
-            );
+        $busReg1 = m::mock(BusRegEntity::class)->makePartial();
+        $busReg1->setRegNo('1234567');
+        $busReg1->setVariationNo(1);
+        $busReg1->setStatus(new RefData(BusRegEntity::STATUS_NEW));
+        $collection->add($busReg1);
+
+        $busReg2 = m::mock(BusRegEntity::class)->makePartial();
+        $busReg2->setRegNo('1234567');
+        $busReg2->setVariationNo(2);
+        $busReg2->setStatus(new RefData(BusRegEntity::STATUS_VAR));
+        $collection->add($busReg2);
+
+        $busReg3 = m::mock(BusRegEntity::class)->makePartial();
+        $busReg3->setRegNo('1234567');
+        $busReg3->setVariationNo(3);
+        $busReg3->setStatus(new RefData(BusRegEntity::STATUS_REFUSED));
+        $collection->add($busReg3);
+
+        $busReg4 = m::mock(BusRegEntity::class)->makePartial();
+        $busReg4->setRegNo('1234567');
+        $busReg4->setVariationNo(4);
+        $busReg4->setStatus(new RefData(BusRegEntity::STATUS_WITHDRAWN));
+        $collection->add($busReg4);
+
+        $busReg5 = m::mock(BusRegEntity::class)->makePartial();
+        $busReg5->setRegNo('1234567');
+        $busReg5->setVariationNo(5);
+        $busReg5->setStatus(new RefData(BusRegEntity::STATUS_EXPIRED));
+        $collection->add($busReg5);
+
+        $busReg6 = m::mock(BusRegEntity::class)->makePartial();
+        $busReg6->setRegNo('123');
+        $busReg6->setVariationNo(1);
+        $busReg6->setStatus(new RefData(BusRegEntity::STATUS_NEW));
+        $collection->add($busReg6);
+
+        $busReg7 = m::mock(BusRegEntity::class)->makePartial();
+        $busReg7->setRegNo('123');
+        $busReg7->setVariationNo(2);
+        $busReg7->setStatus(new RefData(BusRegEntity::STATUS_EXPIRED));
+        $collection->add($busReg7);
 
         /** @var Entity|\Mockery\MockInterface $licence */
         $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive('getBusRegs')->andReturn($busRegCollection);
-        $this->assertEquals($expectedResult, $licence->getLatestBusVariation('1234567', $statuses));
-    }
+        $licence->shouldReceive('getBusRegs')->andReturn($collection);
 
-    /**
-     * Data provider for testGetLatestBusVariation
-     *
-     * @return array
-     */
-    public function getLatestBusVariationProvider()
-    {
-        $mockBusReg = m::mock(BusRegEntity::class);
+        $this->assertEquals($busReg2, $licence->getLatestBusVariation('1234567'));
+        $this->assertEquals($busReg5, $licence->getLatestBusVariation('1234567', []));
+        $this->assertEquals(
+            $busReg4,
+            $licence->getLatestBusVariation('1234567', [BusRegEntity::STATUS_EXPIRED])
+        );
+        $this->assertEquals(
+            $busReg3,
+            $licence->getLatestBusVariation(
+                '1234567',
+                [
+                    BusRegEntity::STATUS_EXPIRED,
+                    BusRegEntity::STATUS_WITHDRAWN,
+                ]
+            )
+        );
+        $this->assertEquals(
+            $busReg2,
+            $licence->getLatestBusVariation(
+                '1234567',
+                [
+                    BusRegEntity::STATUS_EXPIRED,
+                    BusRegEntity::STATUS_WITHDRAWN,
+                    BusRegEntity::STATUS_REFUSED,
+                ]
+            )
+        );
+        $this->assertEquals(
+            $busReg1,
+            $licence->getLatestBusVariation(
+                '1234567',
+                [
+                    BusRegEntity::STATUS_EXPIRED,
+                    BusRegEntity::STATUS_WITHDRAWN,
+                    BusRegEntity::STATUS_REFUSED,
+                    BusRegEntity::STATUS_VAR,
+                ]
+            )
+        );
 
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('regNo', '1234567'))
-            ->orderBy(array('variationNo' => Criteria::DESC))
-            ->setMaxResults(1);
-
-        $notInStatus = ['status'];
-        $criteriaWithStatus = clone $criteria;
-        $criteriaWithStatus->andWhere(Criteria::expr()->notIn('status', $notInStatus));
-
-        return [
-            [true, null, $criteria, []],
-            [false, $mockBusReg, $criteriaWithStatus, $notInStatus],
-            [true, null, $criteriaWithStatus, $notInStatus],
-            [false, $mockBusReg, $criteria, []]
-        ];
+        $this->assertEquals($busReg6, $licence->getLatestBusVariation('123'));
+        $this->assertEquals($busReg7, $licence->getLatestBusVariation('123', []));
+        $this->assertEquals($busReg6, $licence->getLatestBusVariation('123', [BusRegEntity::STATUS_EXPIRED]));
+        $this->assertEquals($busReg7, $licence->getLatestBusVariation('123', [BusRegEntity::STATUS_REFUSED]));
     }
 
     /**
@@ -1637,25 +1733,25 @@ class LicenceEntityTest extends EntityTester
     public function testGetNotSubmittedOrUnderConsiderationVariations()
     {
         $app1 = m::mock()
-            ->shouldReceive('getstatus')
-            ->andReturn(Application::APPLICATION_STATUS_NOT_SUBMITTED)
+            ->shouldReceive('getStatus')
+            ->andReturn(new RefData(Application::APPLICATION_STATUS_NOT_SUBMITTED))
             ->once()
-            ->shouldReceive('getisVariation')
+            ->shouldReceive('getIsVariation')
             ->andReturn(true)
             ->once()
             ->getMock();
 
         $app2 = m::mock()
-            ->shouldReceive('getstatus')
-            ->andReturn(Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
+            ->shouldReceive('getStatus')
+            ->andReturn(new RefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION))
             ->once()
-            ->shouldReceive('getisVariation')
+            ->shouldReceive('getIsVariation')
             ->andReturn(true)
             ->once()
             ->getMock();
 
         $app3 = m::mock()
-            ->shouldReceive('getisVariation')
+            ->shouldReceive('getIsVariation')
             ->andReturn(false)
             ->once()
             ->getMock();
@@ -2068,12 +2164,12 @@ class LicenceEntityTest extends EntityTester
         foreach ($communityLicStatuses as $status) {
             $communityLic = new CommunityLicEntity();
             $communityLic->setIssueNo(0);
-            $communityLic->setStatus($status);
+            $communityLic->setStatus(new RefData($status));
             $communityLics[$status .'-'. 0] = $communityLic;
 
             $communityLic = new CommunityLicEntity();
             $communityLic->setIssueNo(1);
-            $communityLic->setStatus($status);
+            $communityLic->setStatus(new RefData($status));
             $communityLics[$status .'-'. 1] = $communityLic;
         }
         $licence->setCommunityLics(new ArrayCollection($communityLics));
@@ -2106,12 +2202,12 @@ class LicenceEntityTest extends EntityTester
         foreach ($applicationStatuses as $status) {
             $application = m::mock(Application::class)->makePartial();
             $application->setIsVariation(false);
-            $application->setStatus($status);
+            $application->setStatus(new RefData($status));
             $applications[$status .'-'. 0] = $application;
 
             $application = m::mock(Application::class)->makePartial();
             $application->setIsVariation(true);
-            $application->setStatus($status);
+            $application->setStatus(new RefData($status));
             $applications[$status .'-'. 1] = $application;
         }
         $licence->setApplications(new ArrayCollection($applications));
@@ -2425,56 +2521,43 @@ class LicenceEntityTest extends EntityTester
         $excludedApp->shouldReceive('getId')->times(3)->withNoArgs()->andReturn($excludedAppId);
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')->withNoArgs()->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
 
         $stockId = 999;
         $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+        $stock->shouldReceive('getIrhpPermitType')->withNoArgs()->andReturn($irhpPermitType);
         $stock->shouldReceive('getId')->once()->withNoArgs()->andReturn($stockId);
 
+        $matchExcludedApp = m::mock(IrhpApplication::class);
+        $matchExcludedApp->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+        $matchExcludedApp->shouldReceive('getStatus')->once()->withNoArgs()->andReturn(new RefData(IrhpInterface::STATUS_NOT_YET_SUBMITTED));
+        $matchExcludedApp->shouldReceive('getId')->withNoArgs()->andReturn($excludedAppId);
+        $matchExcludedApp->shouldReceive('isMultiStock')->never();
+        $matchExcludedApp->shouldReceive('getAssociatedStock->getId')->never();
+
+        $nonMatchingStockApp = m::mock(IrhpApplication::class);
+        $nonMatchingStockApp->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+        $nonMatchingStockApp->shouldReceive('getStatus')->once()->withNoArgs()->andReturn(new RefData(IrhpInterface::STATUS_NOT_YET_SUBMITTED));
+        $nonMatchingStockApp->shouldReceive('getId')->withNoArgs()->andReturn(1010);
+        $nonMatchingStockApp->shouldReceive('isMultiStock')->once()->andReturn(false);
+        $nonMatchingStockApp->shouldReceive('getAssociatedStock->getId')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(222);
+
+        $activeApp = m::mock(IrhpApplication::class);
+        $activeApp->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+        $activeApp->shouldReceive('getStatus')->once()->withNoArgs()->andReturn(new RefData(IrhpInterface::STATUS_NOT_YET_SUBMITTED));
+        $activeApp->shouldReceive('getId')->withNoArgs()->andReturn(2020);
+        $activeApp->shouldReceive('isMultiStock')->once()->andReturn(false);
+        $activeApp->shouldReceive('getAssociatedStock->getId')->once()->withNoArgs()->andReturn($stockId);
+
+        $collection = new ArrayCollection([$matchExcludedApp, $nonMatchingStockApp, $activeApp]);
+
         $licence = $this->createEligibleForPermits();
-        $licence->shouldReceive('getIrhpApplications->matching')
-            ->with(m::type(Criteria::class))
-            ->andReturnUsing(
-                function (Criteria $criteria) use ($irhpPermitType, $excludedAppId, $stockId) {
-                    $compositeExpression = $criteria->getWhereExpression();
-                    $expressions = $compositeExpression->getExpressionList();
-
-                    $this->assertEquals('status', $expressions[0]->getField());
-                    $this->assertEquals('IN', $expressions[0]->getOperator());
-                    $this->assertEquals(
-                        IrhpInterface::ACTIVE_STATUSES,
-                        $expressions[0]->getValue()->getValue()
-                    );
-
-                    $this->assertEquals('irhpPermitType', $expressions[1]->getField());
-                    $this->assertEquals('=', $expressions[1]->getOperator());
-                    $this->assertEquals($irhpPermitType, $expressions[1]->getValue()->getValue());
-
-                    $matchExcludedApp = m::mock(IrhpApplication::class);
-                    $matchExcludedApp->shouldReceive('getId')->withNoArgs()->andReturn($excludedAppId);
-                    $matchExcludedApp->shouldReceive('isMultiStock')->never();
-                    $matchExcludedApp->shouldReceive('getAssociatedStock->getId')->never();
-
-                    $nonMatchingStockApp = m::mock(IrhpApplication::class);
-                    $nonMatchingStockApp->shouldReceive('getId')->withNoArgs()->andReturn(1010);
-                    $nonMatchingStockApp->shouldReceive('isMultiStock')->once()->andReturn(false);
-                    $nonMatchingStockApp->shouldReceive('getAssociatedStock->getId')
-                        ->once()
-                        ->withNoArgs()
-                        ->andReturn(222);
-
-                    $activeApp = m::mock(IrhpApplication::class);
-                    $activeApp->shouldReceive('getId')->withNoArgs()->andReturn(2020);
-                    $activeApp->shouldReceive('isMultiStock')->once()->andReturn(false);
-                    $activeApp->shouldReceive('getAssociatedStock->getId')->once()->withNoArgs()->andReturn($stockId);
-
-                    $collection = new ArrayCollection(
-                        [$matchExcludedApp, $nonMatchingStockApp, $activeApp]
-                    );
-
-                    return $collection;
-                }
-            );
+        $licence->shouldReceive('getIrhpApplications')
+            ->withNoArgs()
+            ->andReturn($collection);
 
         $this->assertFalse($licence->canMakeIrhpApplication($stock, $excludedApp));
     }
@@ -2486,13 +2569,16 @@ class LicenceEntityTest extends EntityTester
     public function testCanMakeIrhpApplicationWithOneIgnoredApp()
     {
         $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')->withNoArgs()->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
 
         $stockId = 999;
         $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+        $stock->shouldReceive('getIrhpPermitType')->withNoArgs()->andReturn($irhpPermitType);
         $stock->shouldReceive('getId')->once()->withNoArgs()->andReturn($stockId);
 
         $nonMatchingStockApp = m::mock(IrhpApplication::class);
+        $nonMatchingStockApp->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+        $nonMatchingStockApp->shouldReceive('getStatus')->once()->withNoArgs()->andReturn(new RefData(IrhpInterface::STATUS_UNDER_CONSIDERATION));
         $nonMatchingStockApp->shouldReceive('getId')->never();
         $nonMatchingStockApp->shouldReceive('isMultiStock')->once()->andReturn(true);
         $nonMatchingStockApp->shouldReceive('getAssociatedStock->getId')->never();
@@ -2500,8 +2586,8 @@ class LicenceEntityTest extends EntityTester
         $collection = new ArrayCollection([$nonMatchingStockApp]);
 
         $licence = $this->createEligibleForPermits();
-        $licence->shouldReceive('getIrhpApplications->matching')
-            ->with(m::type(Criteria::class))
+        $licence->shouldReceive('getIrhpApplications')
+            ->withNoArgs()
             ->andReturn($collection);
 
         $this->assertFalse($licence->canMakeIrhpApplication($stock, null));
@@ -2509,14 +2595,12 @@ class LicenceEntityTest extends EntityTester
 
     public function testCanMakeIrhpApplicationNoApplications()
     {
-        $irhpPermitType = m::mock(IrhpPermitType::class);
-
         $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
+        $stock->shouldReceive('getIrhpPermitType')->never();
 
         $licence = $this->createEligibleForPermits();
-        $licence->shouldReceive('getIrhpApplications->matching')
-            ->with(m::type(Criteria::class))
+        $licence->shouldReceive('getIrhpApplications')
+            ->withNoArgs()
             ->andReturn(new ArrayCollection());
 
         $this->assertTrue($licence->canMakeIrhpApplication($stock, null));
