@@ -521,12 +521,19 @@ class ApplicationTest extends RepositoryTestCase
         /** @var QueryBuilder | m\MockInterface $mockQb */
         $mockQb = m::mock(QueryBuilder::class);
         $mockQb->shouldReceive('expr->eq')->with('l.organisation', ':organisation')->once()->andReturn('EXPR1');
-        $mockQb->shouldReceive('setParameter')->with('organisation', $orgId)->once()->andReturn();
+        $mockQb->shouldReceive('setParameter')->with('organisation', $orgId)->once();
         $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->eq')->with('a.status', ':STATUS')->once()->andReturn('EXPR2');
-        $mockQb->shouldReceive('setParameter')->with('STATUS', $status)->once()->andReturn();
+        $mockQb->shouldReceive('setParameter')->with('STATUS', $status)->once();
+
+        $mockQb->shouldReceive('andWhere')->with('EXPR3')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->orX')->with('EXPR4', 'EXPR5')->andReturn('EXPR3');
+        $mockQb->shouldReceive('expr->eq')->with('a.isVariation', ':isVariation')->once()->andReturn('EXPR4');
+        $mockQb->shouldReceive('expr->neq')->with('COALESCE(IDENTITY(a.variationType), \'\')', ':variationType')->once()->andReturn('EXPR5');
+        $mockQb->shouldReceive('setParameter')->with('isVariation', false)->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('variationType', Application::VARIATION_TYPE_DIRECTOR_CHANGE);
 
         $mockQuery = TransferQry\Application\GetList::create(
             [
