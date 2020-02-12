@@ -8,7 +8,6 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Zend\Form\Element\DateTime;
 
 /**
  * TransportManagers review service test
