@@ -252,6 +252,16 @@ class Application extends AbstractRepository
                 )
                 ->setParameter('STATUS', $query->getStatus());
         }
+
+        $qb
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->eq($this->alias . '.isVariation', ':isVariation'),
+                    $qb->expr()->neq('COALESCE(IDENTITY('.$this->alias . '.variationType), \'\')', ':variationType')
+                )
+            )
+            ->setParameter('isVariation', false)
+            ->setParameter('variationType', Entity::VARIATION_TYPE_DIRECTOR_CHANGE);
     }
 
     /**
