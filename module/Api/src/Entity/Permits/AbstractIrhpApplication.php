@@ -23,18 +23,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irhp_application",
  *    indexes={
+ *        @ORM\Index(name="ix_irhp_application_withdraw_reason", columns={"withdraw_reason"}),
+ *        @ORM\Index(name="fk_irhp_application_sectors_id", columns={"sectors_id"}),
  *        @ORM\Index(name="ix_irhp_application_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ix_irhp_application_source", columns={"source"}),
  *        @ORM\Index(name="ix_irhp_application_status", columns={"status"}),
- *        @ORM\Index(name="ix_irhp_application_irhp_permit_type_id", columns={"irhp_permit_type_id"}),
  *        @ORM\Index(name="ix_irhp_application_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_irhp_application_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_irhp_application_cancellation_date", columns={"cancellation_date"}),
  *        @ORM\Index(name="ix_irhp_application_withdrawn_date", columns={"withdrawn_date"}),
- *        @ORM\Index(name="ix_irhp_application_withdraw_reason", columns={"withdraw_reason"}),
  *        @ORM\Index(name="fk_irhp_application_international_journeys",
      *     columns={"international_journeys"}),
- *        @ORM\Index(name="fk_irhp_application_sectors_id", columns={"sectors_id"})
+ *        @ORM\Index(name="ix_irhp_application_source", columns={"source"}),
+ *        @ORM\Index(name="ix_irhp_application_irhp_permit_type_id", columns={"irhp_permit_type_id"}),
+ *        @ORM\Index(name="ix_irhp_application_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

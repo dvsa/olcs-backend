@@ -24,15 +24,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="erru_request",
  *    indexes={
  *        @ORM\Index(name="ix_erru_request_member_state_code", columns={"member_state_code"}),
- *        @ORM\Index(name="ix_erru_request_msi_type", columns={"msi_type"}),
  *        @ORM\Index(name="ix_erru_request_response_user_id", columns={"response_user_id"}),
- *        @ORM\Index(name="ix_erru_request_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_erru_request_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_erru_request_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_erru_request_msi_type", columns={"msi_type"}),
+ *        @ORM\Index(name="ix_erru_request_created_by", columns={"created_by"})
  *    },
  *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_erru_request_request_document_id", columns={"request_document_id"}),
  *        @ORM\UniqueConstraint(name="uk_erru_request_case_id", columns={"case_id"}),
  *        @ORM\UniqueConstraint(name="uk_erru_request_workflow_id", columns={"workflow_id"}),
- *        @ORM\UniqueConstraint(name="uk_erru_request_request_document_id", columns={"request_document_id"}),
  *        @ORM\UniqueConstraint(name="uk_erru_request_response_document_id", columns={"response_document_id"})
  *    }
  * )

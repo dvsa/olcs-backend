@@ -24,8 +24,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="application_step",
  *    indexes={
  *        @ORM\Index(name="ix_application_step_application_path_id", columns={"application_path_id"}),
- *        @ORM\Index(name="ix_application_step_question_id", columns={"question_id"}),
  *        @ORM\Index(name="fk_application_step_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="ix_application_step_question_id", columns={"question_id"}),
  *        @ORM\Index(name="fk_application_step_last_modified_by_user_id",
      *     columns={"last_modified_by"})
  *    }

@@ -22,8 +22,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="opposer",
  *    indexes={
  *        @ORM\Index(name="ix_opposer_contact_details_id", columns={"contact_details_id"}),
- *        @ORM\Index(name="ix_opposer_opposer_type", columns={"opposer_type"}),
  *        @ORM\Index(name="ix_opposer_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_opposer_opposer_type", columns={"opposer_type"}),
  *        @ORM\Index(name="ix_opposer_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={

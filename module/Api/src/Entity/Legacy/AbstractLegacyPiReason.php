@@ -21,8 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="legacy_pi_reason",
  *    indexes={
- *        @ORM\Index(name="ix_legacy_pi_reason_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_legacy_pi_reason_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_legacy_pi_reason_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_legacy_pi_reason_created_by", columns={"created_by"})
  *    }
  * )
  */

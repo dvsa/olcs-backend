@@ -22,13 +22,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="application_organisation_person",
  *    indexes={
  *        @ORM\Index(name="ix_application_organisation_person_person_id", columns={"person_id"}),
- *        @ORM\Index(name="ix_application_organisation_person_organisation_id",
-     *     columns={"organisation_id"}),
  *        @ORM\Index(name="ix_application_organisation_person_application_id",
      *     columns={"application_id"}),
+ *        @ORM\Index(name="ix_application_organisation_person_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_application_organisation_person_organisation_id",
+     *     columns={"organisation_id"}),
  *        @ORM\Index(name="ix_application_organisation_person_last_modified_by",
      *     columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_application_organisation_person_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_application_organisation_person_original_person_id",
      *     columns={"original_person_id"})
  *    }

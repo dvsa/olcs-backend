@@ -22,14 +22,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="continuation_detail",
  *    indexes={
  *        @ORM\Index(name="ix_continuation_detail_continuation_id", columns={"continuation_id"}),
- *        @ORM\Index(name="ix_continuation_detail_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_continuation_detail_status", columns={"status"}),
- *        @ORM\Index(name="ix_continuation_detail_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_continuation_detail_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_continuation_detail_checklist_document_id",
-     *     columns={"checklist_document_id"}),
  *        @ORM\Index(name="fk_continuation_detail_signature_type_ref_data_id",
      *     columns={"signature_type"}),
+ *        @ORM\Index(name="ix_continuation_detail_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_continuation_detail_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_continuation_detail_checklist_document_id",
+     *     columns={"checklist_document_id"}),
  *        @ORM\Index(name="fk_continuation_detail_digital_signature_id_digital_signature_id",
      *     columns={"digital_signature_id"})
  *    },

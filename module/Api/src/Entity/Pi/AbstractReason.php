@@ -26,8 +26,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="reason",
  *    indexes={
  *        @ORM\Index(name="ix_reason_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_reason_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_reason_goods_or_psv", columns={"goods_or_psv"})
+ *        @ORM\Index(name="ix_reason_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_reason_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

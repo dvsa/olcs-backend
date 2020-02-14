@@ -21,8 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="team_printer",
  *    indexes={
  *        @ORM\Index(name="ix_team_printer_printer_id", columns={"printer_id"}),
- *        @ORM\Index(name="ix_team_printer_team_id", columns={"team_id"}),
  *        @ORM\Index(name="ix_team_printer_sub_category_id", columns={"sub_category_id"}),
+ *        @ORM\Index(name="ix_team_printer_team_id", columns={"team_id"}),
  *        @ORM\Index(name="ix_team_printer_user_id", columns={"user_id"})
  *    }
  * )
