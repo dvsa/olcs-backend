@@ -23,9 +23,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="data_retention_rule",
  *    indexes={
- *        @ORM\Index(name="fk_data_retention_rule_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_data_retention_rule_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_data_retention_rule_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_data_retention_rule_action_type_ref_data_id", columns={"action_type"})
  *    }
  * )

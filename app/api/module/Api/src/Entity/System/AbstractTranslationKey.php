@@ -6,10 +6,12 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
-use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
 use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -30,7 +32,7 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
-    use ClearPropertiesTrait;
+    use ClearPropertiesWithCollectionsTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
 
@@ -84,6 +86,51 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Translation key category link
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKeyCategoryLink",
+     *     mappedBy="translationKey"
+     * )
+     */
+    protected $translationKeyCategoryLinks;
+
+    /**
+     * Translation key text
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKeyText",
+     *     mappedBy="translationKey"
+     * )
+     */
+    protected $translationKeyTexts;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->translationKeyCategoryLinks = new ArrayCollection();
+        $this->translationKeyTexts = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -203,5 +250,131 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the translation key category link
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyCategoryLinks collection being set as the value
+     *
+     * @return TranslationKey
+     */
+    public function setTranslationKeyCategoryLinks($translationKeyCategoryLinks)
+    {
+        $this->translationKeyCategoryLinks = $translationKeyCategoryLinks;
+
+        return $this;
+    }
+
+    /**
+     * Get the translation key category links
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTranslationKeyCategoryLinks()
+    {
+        return $this->translationKeyCategoryLinks;
+    }
+
+    /**
+     * Add a translation key category links
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyCategoryLinks collection being added
+     *
+     * @return TranslationKey
+     */
+    public function addTranslationKeyCategoryLinks($translationKeyCategoryLinks)
+    {
+        if ($translationKeyCategoryLinks instanceof ArrayCollection) {
+            $this->translationKeyCategoryLinks = new ArrayCollection(
+                array_merge(
+                    $this->translationKeyCategoryLinks->toArray(),
+                    $translationKeyCategoryLinks->toArray()
+                )
+            );
+        } elseif (!$this->translationKeyCategoryLinks->contains($translationKeyCategoryLinks)) {
+            $this->translationKeyCategoryLinks->add($translationKeyCategoryLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a translation key category links
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyCategoryLinks collection being removed
+     *
+     * @return TranslationKey
+     */
+    public function removeTranslationKeyCategoryLinks($translationKeyCategoryLinks)
+    {
+        if ($this->translationKeyCategoryLinks->contains($translationKeyCategoryLinks)) {
+            $this->translationKeyCategoryLinks->removeElement($translationKeyCategoryLinks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the translation key text
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyTexts collection being set as the value
+     *
+     * @return TranslationKey
+     */
+    public function setTranslationKeyTexts($translationKeyTexts)
+    {
+        $this->translationKeyTexts = $translationKeyTexts;
+
+        return $this;
+    }
+
+    /**
+     * Get the translation key texts
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTranslationKeyTexts()
+    {
+        return $this->translationKeyTexts;
+    }
+
+    /**
+     * Add a translation key texts
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyTexts collection being added
+     *
+     * @return TranslationKey
+     */
+    public function addTranslationKeyTexts($translationKeyTexts)
+    {
+        if ($translationKeyTexts instanceof ArrayCollection) {
+            $this->translationKeyTexts = new ArrayCollection(
+                array_merge(
+                    $this->translationKeyTexts->toArray(),
+                    $translationKeyTexts->toArray()
+                )
+            );
+        } elseif (!$this->translationKeyTexts->contains($translationKeyTexts)) {
+            $this->translationKeyTexts->add($translationKeyTexts);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a translation key texts
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyTexts collection being removed
+     *
+     * @return TranslationKey
+     */
+    public function removeTranslationKeyTexts($translationKeyTexts)
+    {
+        if ($this->translationKeyTexts->contains($translationKeyTexts)) {
+            $this->translationKeyTexts->removeElement($translationKeyTexts);
+        }
+
+        return $this;
     }
 }

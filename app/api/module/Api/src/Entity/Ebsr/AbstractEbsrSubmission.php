@@ -21,10 +21,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="ebsr_submission",
  *    indexes={
  *        @ORM\Index(name="ix_ebsr_submission_bus_reg_id", columns={"bus_reg_id"}),
- *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_status_id",
-     *     columns={"ebsr_submission_status_id"}),
  *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_type_id",
      *     columns={"ebsr_submission_type_id"}),
+ *        @ORM\Index(name="ix_ebsr_submission_ebsr_submission_status_id",
+     *     columns={"ebsr_submission_status_id"}),
  *        @ORM\Index(name="ix_ebsr_submission_organisation_id", columns={"organisation_id"})
  *    },
  *    uniqueConstraints={

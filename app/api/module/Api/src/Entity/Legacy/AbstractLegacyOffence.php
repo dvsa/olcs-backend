@@ -21,9 +21,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="legacy_offence",
  *    indexes={
+ *        @ORM\Index(name="ix_legacy_offence_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_legacy_offence_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_legacy_offence_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_legacy_offence_case_id", columns={"case_id"})
+ *        @ORM\Index(name="ix_legacy_offence_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

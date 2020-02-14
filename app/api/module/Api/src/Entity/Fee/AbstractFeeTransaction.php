@@ -23,11 +23,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="fee_txn",
  *    indexes={
+ *        @ORM\Index(name="ix_fee_txn_reversed_fee_txn_id", columns={"reversed_fee_txn_id"}),
  *        @ORM\Index(name="ix_fee_txn_txn_id", columns={"txn_id"}),
- *        @ORM\Index(name="ix_fee_txn_fee_id", columns={"fee_id"}),
  *        @ORM\Index(name="ix_fee_txn_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_fee_txn_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_fee_txn_reversed_fee_txn_id", columns={"reversed_fee_txn_id"})
+ *        @ORM\Index(name="ix_fee_txn_fee_id", columns={"fee_id"})
  *    }
  * )
  */

@@ -25,8 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ix_si_penalty_serious_infringement_id",
      *     columns={"serious_infringement_id"}),
- *        @ORM\Index(name="ix_si_penalty_si_penalty_type_id", columns={"si_penalty_type_id"}),
  *        @ORM\Index(name="ix_si_penalty_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_si_penalty_si_penalty_type_id", columns={"si_penalty_type_id"}),
  *        @ORM\Index(name="ix_si_penalty_last_modified_by", columns={"last_modified_by"})
  *    }
  * )

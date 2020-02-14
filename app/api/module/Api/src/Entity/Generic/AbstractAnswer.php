@@ -22,8 +22,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="answer",
  *    indexes={
  *        @ORM\Index(name="ix_answer_question_text_id", columns={"question_text_id"}),
- *        @ORM\Index(name="fk_answer_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_answer_last_modified_by_user_id", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_answer_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_answer_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"})
  *    },
@@ -46,7 +46,7 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="ans_array", nullable=true)
+     * @ORM\Column(type="text", name="ans_array", length=0, nullable=true)
      */
     protected $ansArray;
 
@@ -109,7 +109,7 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="ans_text", nullable=true)
+     * @ORM\Column(type="text", name="ans_text", length=0, nullable=true)
      */
     protected $ansText;
 

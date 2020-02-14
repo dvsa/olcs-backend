@@ -23,8 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="system_info_message",
  *    indexes={
- *        @ORM\Index(name="ix_system_info_message_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_system_info_message_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_system_info_message_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_system_info_message_is_internal_start_date_end_date",
      *     columns={"is_internal","start_date","end_date"})
  *    }
