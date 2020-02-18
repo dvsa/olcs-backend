@@ -287,10 +287,8 @@ final class Compare extends AbstractCommandHandler
     {
         $insolvencyStatuses = [
             'administration',
-            'insolvency-proceedings',
             'liquidation',
             'receivership',
-            'voluntary-arrangement',
         ];
         return in_array($data['companyStatus'], $insolvencyStatuses);
     }
