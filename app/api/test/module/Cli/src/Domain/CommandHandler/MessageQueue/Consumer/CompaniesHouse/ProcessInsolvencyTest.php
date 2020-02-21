@@ -4,8 +4,8 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\MessageQueue\Consumer\Companie
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Team;
@@ -22,6 +22,7 @@ use Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\CompaniesHouse\Pro
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
 use Dvsa\Olcs\Queue\Service\Queue;
+use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use Mockery as m;
 
 class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
@@ -43,26 +44,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
     public function testHandleCommand()
     {
         $this->setupStandardService();
-
-        $mockCompany = m::mock(CHCompanyEntity::class);
-        $mockCompany->shouldReceive('getCompanyNumber')
-            ->andReturn('1234');
-        $mockCompany->shouldReceive('setInsolvencyProcessed')
-            ->with(true);
-
-        $mockCompany->shouldReceive('setInsolvencyPractitioners')
-            ->once();
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('getLatestByCompanyNumber')
-            ->once()
-            ->andReturn($mockCompany);
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('save')
-            ->with($mockCompany)
-            ->twice();
-
+        $this->setupMockCHRepo();
 
         $this->repoMap['Organisation']
             ->shouldReceive('getByCompanyOrLlpNo')
@@ -92,28 +74,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
     public function testHandleCommandCreatesTasks($licence, $team)
     {
         $this->setupStandardService();
-
-        $mockCompany = m::mock(CHCompanyEntity::class);
-        $mockCompany->shouldReceive('getId')->andReturn(123);
-        $mockCompany->shouldReceive('getCompanyNumber')
-            ->andReturn('1234');
-        $mockCompany->shouldReceive('getCompanyStatus')
-            ->andReturn('TEST');
-        $mockCompany->shouldReceive('setInsolvencyProcessed')
-            ->with(true);
-
-        $mockCompany->shouldReceive('setInsolvencyPractitioners')
-            ->once();
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('getLatestByCompanyNumber')
-            ->once()
-            ->andReturn($mockCompany);
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('save')
-            ->with($mockCompany)
-            ->twice();
+        $this->setupMockCHRepo();
 
         $this->repoMap['Organisation']
             ->shouldReceive('getByCompanyOrLlpNo')
@@ -137,8 +98,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
                     ->getMock()
             );
 
-        $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, [], new Result());
-        $this->expectedSideEffect(Create::class, [], new Result(), 4);
+        $this->setupSideEffects(4);
 
         $command = ProcessInsolvencyCmd::create([]);
         $response = $this->sut->handleCommand($command);
@@ -156,28 +116,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
     public function testHandleCommandSendsEmails($licence)
     {
         $this->setupStandardService();
-
-        $mockCompany = m::mock(CHCompanyEntity::class);
-        $mockCompany->shouldReceive('getId')->andReturn(123);
-        $mockCompany->shouldReceive('getCompanyNumber')
-            ->andReturn('1234');
-        $mockCompany->shouldReceive('getCompanyStatus')
-            ->andReturn('TEST');
-        $mockCompany->shouldReceive('setInsolvencyProcessed')
-            ->with(true);
-
-        $mockCompany->shouldReceive('setInsolvencyPractitioners')
-            ->once();
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('getLatestByCompanyNumber')
-            ->once()
-            ->andReturn($mockCompany);
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('save')
-            ->with($mockCompany)
-            ->twice();
+        $this->setupMockCHRepo();
 
         $this->repoMap['Organisation']
             ->shouldReceive('getByCompanyOrLlpNo')
@@ -200,8 +139,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
                     ->getMock()
             );
 
-        $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, [], new Result());
-        $this->expectedSideEffect(Create::class, [], new Result(), 4);
+        $this->setupSideEffects(4);
 
         $command = ProcessInsolvencyCmd::create([]);
         $response = $this->sut->handleCommand($command);
@@ -216,30 +154,9 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
     public function testHandleCommandSendsEmailsWithNoRegisteredUsers()
     {
         $this->setupStandardService();
+        $this->setupMockCHRepo();
 
         $licence = $this->getMockLicences()[2];
-
-        $mockCompany = m::mock(CHCompanyEntity::class);
-        $mockCompany->shouldReceive('getId')->andReturn(123);
-        $mockCompany->shouldReceive('getCompanyNumber')
-            ->andReturn('1234');
-        $mockCompany->shouldReceive('getCompanyStatus')
-            ->andReturn('TEST');
-        $mockCompany->shouldReceive('setInsolvencyProcessed')
-            ->with(true);
-
-        $mockCompany->shouldReceive('setInsolvencyPractitioners')
-            ->once();
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('getLatestByCompanyNumber')
-            ->once()
-            ->andReturn($mockCompany);
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('save')
-            ->with($mockCompany)
-            ->twice();
 
         $this->repoMap['Organisation']
             ->shouldReceive('getByCompanyOrLlpNo')
@@ -262,17 +179,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
                     ->getMock()
             );
 
-        $this->expectedSideEffect(
-            GenerateAndStoreWithMultipleAddresses::class,
-            [],
-            new Result()
-        );
-        $this->expectedSideEffect(
-            Create::class,
-            [],
-            new Result(),
-            2
-        );
+        $this->setupSideEffects(2);
 
         $command = ProcessInsolvencyCmd::create([]);
         $response = $this->sut->handleCommand($command);
@@ -287,29 +194,9 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
     public function testHandleCommandSendsEmailsWithNoCorrespondenceEmail()
     {
         $this->setupStandardService();
+        $this->setupMockCHRepo();
 
         $licence = $this->getMockLicences()[3];
-
-        $mockCompany = m::mock(CHCompanyEntity::class);
-        $mockCompany->shouldReceive('getCompanyNumber')
-            ->andReturn('1234');
-        $mockCompany->shouldReceive('getCompanyStatus')
-            ->andReturn('TEST');
-        $mockCompany->shouldReceive('setInsolvencyProcessed')
-            ->with(true);
-
-        $mockCompany->shouldReceive('setInsolvencyPractitioners')
-            ->once();
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('getLatestByCompanyNumber')
-            ->once()
-            ->andReturn($mockCompany);
-
-        $this->repoMap['CompaniesHouseCompany']
-            ->shouldReceive('save')
-            ->with($mockCompany)
-            ->twice();
 
         $this->repoMap['Organisation']
             ->shouldReceive('getByCompanyOrLlpNo')
@@ -332,16 +219,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
                     ->getMock()
             );
 
-        $this->expectedSideEffect(
-            GenerateAndStoreWithMultipleAddresses::class,
-            [],
-            new Result()
-        );
-        $this->expectedSideEffect(
-            Create::class,
-            [],
-            new Result()
-        );
+        $this->setupSideEffects(1);
 
         $command = ProcessInsolvencyCmd::create([]);
         $response = $this->sut->handleCommand($command);
@@ -667,5 +545,66 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             'Config' => $this->config
         ];
         $this->setupService();
+    }
+
+    private function setupSideEffects(int $numberOfQueueItems)
+    {
+        $result = new Result();
+        $result->addId('documents', 1, true);
+        $result->addId('documents', 2, true);
+        $result->addId('documents', 3, true);
+
+        $this->expectedSideEffect(
+            GenerateAndStoreWithMultipleAddresses::class,
+            [],
+            $result
+        );
+
+        for ($i = 1; $i < 4; $i++) {
+            $this->expectedSideEffect(
+                PrintLetter::class,
+                [
+                    'id' => $i,
+                    'method' => PrintLetter::METHOD_PRINT_AND_POST
+                ],
+                new Result()
+            );
+        }
+
+        $this->expectedSideEffect(
+            CreateQueue::class,
+            [],
+            new Result(),
+            $numberOfQueueItems
+        );
+    }
+
+    protected function setupMockCHRepo(): void
+    {
+        $mockCompany = m::mock(CHCompanyEntity::class);
+        $mockCompany
+            ->shouldReceive('getId')
+            ->andReturn(123);
+        $mockCompany
+            ->shouldReceive('getCompanyNumber')
+            ->andReturn('1234');
+        $mockCompany
+            ->shouldReceive('getCompanyStatus')
+            ->andReturn('TEST');
+        $mockCompany
+            ->shouldReceive('setInsolvencyProcessed')
+            ->with(true);
+        $mockCompany->shouldReceive('setInsolvencyPractitioners')
+            ->once();
+
+        $this->repoMap['CompaniesHouseCompany']
+            ->shouldReceive('getLatestByCompanyNumber')
+            ->once()
+            ->andReturn($mockCompany);
+
+        $this->repoMap['CompaniesHouseCompany']
+            ->shouldReceive('save')
+            ->with($mockCompany)
+            ->twice();
     }
 }
