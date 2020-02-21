@@ -23,6 +23,7 @@ use Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\AbstractConsumer;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 
@@ -188,6 +189,7 @@ class ProcessInsolvency extends AbstractConsumer
         $licences = $organisation->getActiveLicences();
         foreach ($licences as $licence) {
             $this->generateLetters($licence);
+            $this->printLetters();
             $this->generateEmails($licence);
             $this->generateFollowUpTask($licence);
         }
@@ -290,6 +292,18 @@ class ProcessInsolvency extends AbstractConsumer
 
         foreach ($selfServeUserEmailCommands as $selfServeUserEmailCommand) {
             $this->result->merge($this->handleSideEffect($selfServeUserEmailCommand));
+        }
+    }
+
+    private function printLetters(): void
+    {
+        foreach ($this->result->getId('documents') as $letter) {
+            $this->result->merge($this->handleSideEffect(
+                PrintLetter::create([
+                    'id' => $letter,
+                    'method' => PrintLetter::METHOD_PRINT_AND_POST
+                ])
+            ));
         }
     }
 
