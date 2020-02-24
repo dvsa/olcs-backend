@@ -23,10 +23,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="trading_name",
  *    indexes={
- *        @ORM\Index(name="ix_trading_name_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_trading_name_organisation_id", columns={"organisation_id"}),
- *        @ORM\Index(name="ix_trading_name_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_trading_name_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_trading_name_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_trading_name_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_trading_name_created_by", columns={"created_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_trading_name_olbs_key", columns={"olbs_key"})

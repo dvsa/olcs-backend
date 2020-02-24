@@ -17,17 +17,17 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="event_history",
  *    indexes={
+ *        @ORM\Index(name="ix_event_history_irhp_application_id", columns={"irhp_application_id"}),
  *        @ORM\Index(name="ix_event_history_user_id", columns={"user_id"}),
- *        @ORM\Index(name="ix_event_history_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_event_history_application_id", columns={"application_id"}),
- *        @ORM\Index(name="ix_event_history_transport_manager_id", columns={"transport_manager_id"}),
  *        @ORM\Index(name="ix_event_history_event_history_type_id", columns={"event_history_type_id"}),
- *        @ORM\Index(name="ix_event_history_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_event_history_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_event_history_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_event_history_account_id", columns={"account_id"}),
- *        @ORM\Index(name="ix_event_history_task_id", columns={"task_id"}),
- *        @ORM\Index(name="ix_event_history_irhp_application_id", columns={"irhp_application_id"})
+ *        @ORM\Index(name="ix_event_history_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_event_history_transport_manager_id", columns={"transport_manager_id"}),
+ *        @ORM\Index(name="ix_event_history_organisation_id", columns={"organisation_id"}),
+ *        @ORM\Index(name="ix_event_history_bus_reg_id", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="ix_event_history_task_id", columns={"task_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_event_history_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})

@@ -26,11 +26,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="serious_infringement",
  *    indexes={
  *        @ORM\Index(name="ix_serious_infringement_si_category_id", columns={"si_category_id"}),
+ *        @ORM\Index(name="ix_serious_infringement_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_serious_infringement_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_serious_infringement_si_category_type_id",
      *     columns={"si_category_type_id"}),
- *        @ORM\Index(name="ix_serious_infringement_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_serious_infringement_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_serious_infringement_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_serious_infringement_member_state_code", columns={"member_state_code"})
  *    }
  * )

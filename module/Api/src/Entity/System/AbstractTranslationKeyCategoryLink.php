@@ -21,14 +21,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="translation_key_category_link",
  *    indexes={
+ *        @ORM\Index(name="fk_translation_key_category_link_users_last_modified_by",
+     *     columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_translation_key_category_link_translation_key1_idx",
      *     columns={"translation_key_id"}),
- *        @ORM\Index(name="fk_translation_key_category_link_category1_idx", columns={"category_id"}),
  *        @ORM\Index(name="fk_translation_key_category_link_sub_category1_idx",
      *     columns={"sub_category_id"}),
- *        @ORM\Index(name="fk_translation_key_category_link_user1_idx", columns={"created_by"}),
- *        @ORM\Index(name="fk_translation_key_category_link_users_last_modified_by",
-     *     columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_translation_key_category_link_category1_idx", columns={"category_id"}),
+ *        @ORM\Index(name="fk_translation_key_category_link_user1_idx", columns={"created_by"})
  *    }
  * )
  */
@@ -84,6 +84,24 @@ abstract class AbstractTranslationKeyCategoryLink implements BundleSerializableI
     protected $lastModifiedBy;
 
     /**
+     * Path
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="path", length=255, nullable=true)
+     */
+    protected $path;
+
+    /**
+     * Repository
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="repository", length=255, nullable=true)
+     */
+    protected $repository;
+
+    /**
      * Sub category
      *
      * @var \Dvsa\Olcs\Api\Entity\System\SubCategory
@@ -98,7 +116,11 @@ abstract class AbstractTranslationKeyCategoryLink implements BundleSerializableI
      *
      * @var \Dvsa\Olcs\Api\Entity\System\TranslationKey
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKey", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKey",
+     *     fetch="LAZY",
+     *     inversedBy="translationKeyCategoryLinks"
+     * )
      * @ORM\JoinColumn(name="translation_key_id", referencedColumnName="id", nullable=false)
      */
     protected $translationKey;
@@ -207,6 +229,54 @@ abstract class AbstractTranslationKeyCategoryLink implements BundleSerializableI
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the path
+     *
+     * @param string $path new value being set
+     *
+     * @return TranslationKeyCategoryLink
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * Get the path
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Set the repository
+     *
+     * @param string $repository new value being set
+     *
+     * @return TranslationKeyCategoryLink
+     */
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+
+        return $this;
+    }
+
+    /**
+     * Get the repository
+     *
+     * @return string
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 
     /**

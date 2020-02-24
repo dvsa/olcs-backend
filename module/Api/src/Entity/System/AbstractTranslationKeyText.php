@@ -22,8 +22,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="translation_key_text",
  *    indexes={
  *        @ORM\Index(name="fk_translation_key_text_languages1_idx", columns={"language_id"}),
- *        @ORM\Index(name="fk_translation_key_text_keys1_idx", columns={"translation_key_id"}),
  *        @ORM\Index(name="fk_translation_key_text_users_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="fk_translation_key_text_keys1_idx", columns={"translation_key_id"}),
  *        @ORM\Index(name="fk_translation_key_text_users_last_modified_by",
      *     columns={"last_modified_by"})
  *    }
@@ -94,7 +94,11 @@ abstract class AbstractTranslationKeyText implements BundleSerializableInterface
      *
      * @var \Dvsa\Olcs\Api\Entity\System\TranslationKey
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKey", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKey",
+     *     fetch="LAZY",
+     *     inversedBy="translationKeyTexts"
+     * )
      * @ORM\JoinColumn(name="translation_key_id", referencedColumnName="id", nullable=false)
      */
     protected $translationKey;

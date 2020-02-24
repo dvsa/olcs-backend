@@ -21,8 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="digital_signature",
  *    indexes={
- *        @ORM\Index(name="ix_digital_signature_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_digital_signature_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_digital_signature_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_digital_signature_created_by", columns={"created_by"})
  *    }
  * )
  */

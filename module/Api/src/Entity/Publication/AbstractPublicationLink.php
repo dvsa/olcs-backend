@@ -25,19 +25,19 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="publication_link",
  *    indexes={
- *        @ORM\Index(name="ix_publication_link_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ix_publication_link_publication_id", columns={"publication_id"}),
  *        @ORM\Index(name="ix_publication_link_pi_id", columns={"pi_id"}),
- *        @ORM\Index(name="ix_publication_link_traffic_area_id", columns={"traffic_area_id"}),
  *        @ORM\Index(name="ix_publication_link_application_id", columns={"application_id"}),
- *        @ORM\Index(name="ix_publication_link_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_publication_link_publication_section_id",
      *     columns={"publication_section_id"}),
- *        @ORM\Index(name="ix_publication_link_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_publication_link_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_publication_link_impounding_id", columns={"impounding_id"}),
+ *        @ORM\Index(name="ix_publication_link_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_publication_link_publication_id", columns={"publication_id"}),
+ *        @ORM\Index(name="ix_publication_link_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_publication_link_bus_reg_id", columns={"bus_reg_id"}),
+ *        @ORM\Index(name="ix_publication_link_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_publication_link_transport_manager_id",
-     *     columns={"transport_manager_id"}),
- *        @ORM\Index(name="ix_publication_link_impounding_id", columns={"impounding_id"})
+     *     columns={"transport_manager_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_publication_link_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
