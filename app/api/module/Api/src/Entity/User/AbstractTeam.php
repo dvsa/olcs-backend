@@ -26,8 +26,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="team",
  *    indexes={
  *        @ORM\Index(name="ix_team_traffic_area_id", columns={"traffic_area_id"}),
- *        @ORM\Index(name="ix_team_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_team_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ix_team_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_team_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_team_name", columns={"name"}),

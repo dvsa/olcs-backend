@@ -19,8 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="organisation_read_audit",
  *    indexes={
- *        @ORM\Index(name="ix_organisation_read_audit_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_organisation_read_audit_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_organisation_read_audit_organisation_id", columns={"organisation_id"}),
  *        @ORM\Index(name="ix_organisation_read_audit_created_on", columns={"created_on"})
  *    },
  *    uniqueConstraints={

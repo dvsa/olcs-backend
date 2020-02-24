@@ -2304,4 +2304,20 @@ return array(
             )
         ),
     ),
+    'translation_key_text' => [
+        'translation_key_id' => [
+            'inversedBy' => [
+                'entity' => 'TranslationKey',
+                'property' => 'translationKeyText',
+            ]
+        ],
+    ],
+    'translation_key_category_link' => [
+        'translation_key_id' => [
+            'inversedBy' => [
+                'entity' => 'TranslationKey',
+                'property' => 'translationKeyCategoryLink',
+            ]
+        ],
+    ],
 );

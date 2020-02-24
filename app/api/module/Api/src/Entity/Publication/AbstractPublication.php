@@ -23,13 +23,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="publication",
  *    indexes={
- *        @ORM\Index(name="ix_publication_traffic_area_id", columns={"traffic_area_id"}),
- *        @ORM\Index(name="ix_publication_pub_status", columns={"pub_status"}),
  *        @ORM\Index(name="ix_publication_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_publication_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_publication_document_id", columns={"document_id"}),
+ *        @ORM\Index(name="ix_publication_doc_template_id", columns={"doc_template_id"}),
+ *        @ORM\Index(name="ix_publication_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_publication_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_publication_police_document_id", columns={"police_document_id"}),
- *        @ORM\Index(name="ix_publication_doc_template_id", columns={"doc_template_id"})
+ *        @ORM\Index(name="ix_publication_pub_status", columns={"pub_status"})
  *    }
  * )
  */

@@ -23,8 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="operating_centre",
  *    indexes={
- *        @ORM\Index(name="ix_operating_centre_address_id", columns={"address_id"}),
  *        @ORM\Index(name="ix_operating_centre_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_operating_centre_address_id", columns={"address_id"}),
  *        @ORM\Index(name="ix_operating_centre_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={

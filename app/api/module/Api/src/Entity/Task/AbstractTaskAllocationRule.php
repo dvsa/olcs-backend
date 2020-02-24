@@ -23,13 +23,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="task_allocation_rule",
  *    indexes={
- *        @ORM\Index(name="ix_task_allocation_rule_category_id", columns={"category_id"}),
- *        @ORM\Index(name="ix_task_allocation_rule_team_id", columns={"team_id"}),
- *        @ORM\Index(name="ix_task_allocation_rule_user_id", columns={"user_id"}),
- *        @ORM\Index(name="ix_task_allocation_rule_goods_or_psv", columns={"goods_or_psv"}),
- *        @ORM\Index(name="ix_task_allocation_rule_traffic_area_id", columns={"traffic_area_id"}),
  *        @ORM\Index(name="ix_task_allocation_rule_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_task_allocation_rule_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_task_allocation_rule_team_id", columns={"team_id"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_goods_or_psv", columns={"goods_or_psv"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_category_id", columns={"category_id"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_task_allocation_rule_traffic_area_id", columns={"traffic_area_id"})
  *    }
  * )
  */

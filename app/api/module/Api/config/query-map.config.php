@@ -689,5 +689,8 @@ return [
     TransferQuery\Template\TemplateSource::class => QueryHandler\Template\TemplateSource::class,
     TransferQuery\Template\TemplateCategories::class => QueryHandler\Template\TemplateCategories::class,
 
+    //Editable Translations
+    TransferQuery\TranslationKey\ById::class => QueryHandler\TranslationKey\ById::class,
+    TransferQuery\TranslationKey\GetList::class => QueryHandler\TranslationKey\GetList::class,
 
 ];

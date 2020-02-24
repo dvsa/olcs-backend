@@ -21,10 +21,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="appeal",
  *    indexes={
- *        @ORM\Index(name="ix_appeal_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_appeal_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_appeal_reason", columns={"reason"}),
- *        @ORM\Index(name="ix_appeal_outcome", columns={"outcome"})
+ *        @ORM\Index(name="ix_appeal_outcome", columns={"outcome"}),
+ *        @ORM\Index(name="ix_appeal_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_appeal_reason", columns={"reason"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_appeal_case_id", columns={"case_id"}),

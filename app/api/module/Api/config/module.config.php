@@ -624,6 +624,7 @@ return [
             'ApplicationStep' => RepositoryFactory::class,
             'Answer' => RepositoryFactory::class,
             'ApplicationPathGroup' => RepositoryFactory::class,
+            'TranslationKey' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
