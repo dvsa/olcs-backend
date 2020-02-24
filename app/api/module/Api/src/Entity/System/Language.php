@@ -17,5 +17,22 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Language extends AbstractLanguage
 {
-
+    const SUPPORTED_LANGUAGES = [
+        'en_GB' => [
+            'id' => 1,
+            'label' => 'English'
+        ],
+        'cy_GB' => [
+            'id' => 2,
+            'label' => 'Welsh'
+        ],
+        'en_NI' => [
+            'id' => 3,
+            'label' => 'English (NI)'
+        ],
+        'cy_NI' => [
+            'id' => 4,
+            'label' => 'Welsh (NI)'
+        ],
+    ];
 }
