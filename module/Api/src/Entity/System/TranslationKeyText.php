@@ -20,5 +20,30 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TranslationKeyText extends AbstractTranslationKeyText
 {
+    /**
+     * @param Language $language
+     * @param TranslationKey $translationKey
+     * @param string $translatedText
+     * @return TranslationKeyText
+     */
+    public static function create(Language $language, TranslationKey $translationKey, string $translatedText)
+    {
+        $instance = new self;
 
+        $instance->language = $language;
+        $instance->translationKey = $translationKey;
+        $instance->translatedText = $translatedText;
+
+        return $instance;
+    }
+
+    /**
+     * @param string $translatedText
+     * @return $this
+     */
+    public function update(string $translatedText)
+    {
+        $this->translatedText = $translatedText;
+        return $this;
+    }
 }

@@ -1204,4 +1204,9 @@ return [
 
     //FeeType
     TransferCommand\FeeType\Update::class => CommandHandler\FeeType\Update::class,
+
+    //TranslationKey
+    TransferCommand\TranslationKey\Update::class => CommandHandler\TranslationKey\Update::class,
+    Command\TranslationKeyText\Create::class => CommandHandler\TranslationKeyText\Create::class,
+    Command\TranslationKeyText\Update::class => CommandHandler\TranslationKeyText\Update::class,
 ];

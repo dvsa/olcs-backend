@@ -17,5 +17,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TranslationKey extends AbstractTranslationKey
 {
-
 }
