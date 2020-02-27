@@ -2152,11 +2152,6 @@ return array(
             )
         ),
     ),
-    'irhp_application_view' => array(
-        '@settings' => array(
-            'ignore' => true
-        )
-    ),
     'irhp_candidate_permit' => array(
         'irhp_permit_application_id' => array(
             'inversedBy' => array(

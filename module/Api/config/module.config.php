@@ -611,7 +611,6 @@ return [
             'IrhpPermitApplication' => RepositoryFactory::class,
             'IrhpApplication' => RepositoryFactory::class,
             'IrhpApplicationReadAudit' => RepositoryFactory::class,
-            'IrhpApplicationView' => RepositoryFactory::class,
             'IrhpCandidatePermit' => RepositoryFactory::class,
             'IrhpPermit' => RepositoryFactory::class,
             'IrhpPermitJurisdictionQuota' => RepositoryFactory::class,
