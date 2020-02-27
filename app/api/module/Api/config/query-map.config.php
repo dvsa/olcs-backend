@@ -633,9 +633,6 @@ return [
     // Permits
     TransferQuery\IrhpApplication\ById::class => QueryHandler\IrhpApplication\ById::class,
     TransferQuery\IrhpApplication\AvailableLicences::class => QueryHandler\IrhpApplication\AvailableLicences::class,
-    TransferQuery\IrhpApplication\GetAllByLicence::class => QueryHandler\IrhpApplication\GetAllByLicence::class,
-    TransferQuery\IrhpApplication\GetAllByOrganisation::class
-        => QueryHandler\IrhpApplication\GetAllByOrganisation::class,
     TransferQuery\IrhpApplication\QuestionAnswer::class => QueryHandler\IrhpApplication\QuestionAnswer::class,
     TransferQuery\IrhpApplication\MaxStockPermits::class => QueryHandler\IrhpApplication\MaxStockPermits::class,
     TransferQuery\IrhpApplication\MaxStockPermitsByApplication::class =>
@@ -649,6 +646,10 @@ return [
     TransferQuery\IrhpApplication\PermitsAvailable::class => QueryHandler\IrhpApplication\PermitsAvailable::class,
     TransferQuery\IrhpApplication\RangesByIrhpApplication::class => QueryHandler\IrhpApplication\RangesByIrhpApplication::class,
     TransferQuery\IrhpApplication\GetGrantability::class => QueryHandler\IrhpApplication\GetGrantability::class,
+    TransferQuery\IrhpApplication\InternalApplicationsSummary::class => QueryHandler\IrhpApplication\InternalApplicationsSummary::class,
+    TransferQuery\IrhpApplication\InternalIssuedPermitsSummary::class => QueryHandler\IrhpApplication\InternalIssuedPermitsSummary::class,
+    TransferQuery\IrhpApplication\SelfserveApplicationsSummary::class => QueryHandler\IrhpApplication\SelfserveApplicationsSummary::class,
+    TransferQuery\IrhpApplication\SelfserveIssuedPermitsSummary::class => QueryHandler\IrhpApplication\SelfserveIssuedPermitsSummary::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
     TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,
