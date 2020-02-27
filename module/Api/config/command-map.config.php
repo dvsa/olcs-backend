@@ -786,6 +786,7 @@ return [
     Command\Email\SendEcmtShortTermUnsuccessful::class => CommandHandler\Email\SendEcmtShortTermUnsuccessful::class,
     Command\Email\SendEcmtShortTermApsgPartSuccessful::class => CommandHandler\Email\SendEcmtShortTermApsgPartSuccessful::class,
     Command\Email\SendEcmtShortTermAppSubmitted::class => CommandHandler\Email\SendEcmtShortTermAppSubmitted::class,
+    Command\Email\SendInsolvencyFailureList::class => CommandHandler\Email\SendInsolvencyFailureList::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
@@ -822,6 +823,7 @@ return [
     CommandCli\MessageQueue\Enqueue::class => CommandHandlerCli\MessageQueue\Enqueue::class,
     CommandCli\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class => CommandHandlerCli\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class,
     CommandCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class => CommandHandlerCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class,
+    CommandCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq::class => CommandHandlerCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq::class,
 
     // Vehicle
     Command\Vehicle\CreateGoodsVehicle::class => CommandHandler\Vehicle\CreateGoodsVehicle::class,
