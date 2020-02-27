@@ -3,12 +3,11 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
-class SendInsolvencyFailureList extends AbstractCommandHandler implements EmailAwareInterface
+class SendInsolvencyFailureList extends AbstractCommandHandler
 {
     use EmailAwareTrait;
 
@@ -17,7 +16,7 @@ class SendInsolvencyFailureList extends AbstractCommandHandler implements EmailA
      */
     public function handleCommand(CommandInterface $command)
     {
-        $organisationIds = $command->getOrganisationIds();
+        $organisationIds = $command->getOrganisationNumbers();
         $emailSubject = $command->getEmailSubject();
         $emailAddress = $command->getEmailAddress();
 

@@ -17,7 +17,7 @@ class SendInsolvencyFailureList extends AbstractCommand
     protected $emailAddress;
 
     /**
-     * @var
+     * @var string
      */
     protected $emailSubject;
 
