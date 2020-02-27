@@ -1,9 +1,10 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\SendInsolvencyFailureList;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
@@ -12,7 +13,7 @@ use Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\AbstractConsumer;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
-class ProcessInsolvencyDlq extends AbstractConsumer
+class ProcessInsolvencyDlq extends AbstractConsumer implements ConfigAwareInterface
 {
     use QueueAwareTrait;
     use ConfigAwareTrait;
@@ -36,11 +37,13 @@ class ProcessInsolvencyDlq extends AbstractConsumer
     {
         $organisationRepo = $this->getRepo('Organisation');
         $messageFailuresRepo = $this->getRepo('MessageFailures');
-        $organisationIds = [];
+        $organisationNumbers = [];
         $emailAddress = $this->getConfig()['company_house_dlq']['notification_email_address'];
 
+        $hasMessages = false;
         while($messages = $this->fetchMessages(self::MAX_NUMBER_OF_MESSAGES)) {
 
+            $hasMessages = true;
             foreach ($messages as $message) {
 
                 $companyNumber = $message['Body'];
@@ -52,26 +55,24 @@ class ProcessInsolvencyDlq extends AbstractConsumer
                 $messageFailuresRepo->saveOnFlush($messageFailure);
 
                 $this->deleteMessage($message);
-                $organisationIds[] = $companyNumber;
+                $organisationNumbers[] = $companyNumber;
             }
+        }
+
+        if (!$hasMessages) {
+            $this->noMessages();
+            return $this->result;
         }
 
         $messageFailuresRepo->flushAll();
 
-        //Use this for email - instead of the emailQueue method
-        $emailParams = [
-            'organisationIds' => $organisationIds,
+        $params = [
+            'organisationNumbers' => $organisationNumbers,
             'emailAddress' => $emailAddress,
             'emailSubject' => self::EMAIL_SUBJECT
         ];
-        $this->result->merge($this->handleSideEffect(SendInsolvencyFailureList::create($emailParams)));
 
-//TODO
-        // Needs to do this
-//        if (is_null($messages)) {
-//            $this->noMessages();
-//            return $this->result;
-//        }
+        $this->result->merge($this->handleSideEffect(SendInsolvencyFailureList::create($params)));
 
         return $this->result;
     }
