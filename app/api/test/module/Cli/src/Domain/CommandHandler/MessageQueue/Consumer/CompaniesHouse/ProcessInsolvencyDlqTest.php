@@ -71,6 +71,46 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
         $this->assertEquals($messages, $response->getMessages());
     }
 
+    public function testHandleCommandRemovesDuplicateOrganisationNumbersFromEmail()
+    {
+        $this->setUpServicesWithDuplicateQueueEntries();
+
+        $this->repoMap['MessageFailures']
+            ->shouldReceive('saveOnFlush')
+            ->times(2);
+
+        $this->repoMap['MessageFailures']
+            ->shouldReceive('flushAll')
+            ->once();
+
+        $this->repoMap['Organisation']
+            ->shouldReceive('getByCompanyOrLlpNo')
+            ->andReturn([m::mock(Organisation::class)])
+            ->times(2)
+            ->getMock();
+
+        $result = new Result();
+        $result->addMessage('Email sent');
+        $this->expectedSideEffect(
+            SendInsolvencyFailureList::class,
+            [
+                'organisationNumbers' => ['0000'],
+                'emailAddress' => 'test@test.com',
+                'emailSubject' => 'Companies House Insolvency process failure - list of those that failed'
+            ],
+            $result
+        );
+
+        $command = ProcessInsolvencyDlqCmd::create([]);
+        $response = $this->sut->handleCommand($command);
+
+        $messages = [
+            'Email sent'
+        ];
+
+        $this->assertEquals($messages, $response->getMessages());
+    }
+
     public function testHandleCommandWhenQueueIsEmpty()
     {
         $this->setupServicesWithEmptyQueue();
@@ -159,5 +199,47 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
             'Config' => $this->config
         ];
         $this->setupService();
+    }
+
+    protected function setUpServicesWithDuplicateQueueEntries()
+    {
+        $this->mockedSmServices = [
+            Queue::class => $this->getMockQueueServiceWithDuplicateEntries(),
+            MessageBuilder::class => m::mock(MessageBuilder::class),
+            'Config' => $this->config
+        ];
+        $this->setupService();
+    }
+
+    protected function getMockQueueServiceWithDuplicateEntries()
+    {
+        $queueService = m::mock(Queue::class);
+
+        $firstFetchResult = [
+            [
+                'Body' => '0000',
+                'ReceiptHandle' => 1
+            ],
+            [
+                'Body' => '0000',
+                'ReceiptHandle' => 1
+            ]
+        ];
+
+        $secondFetchResult = null;
+
+        $queueService->shouldReceive('fetchMessages')
+            ->with('process_insolvency_dlq_url', 10)
+            ->andReturn(
+                $firstFetchResult,
+                $secondFetchResult
+            )
+            ->times(2);
+
+        $queueService->shouldReceive('deleteMessage')
+            ->with('process_insolvency_dlq_url', 1)
+            ->times(2);
+
+        return $queueService;
     }
 }
