@@ -7,17 +7,17 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\MessageFailures;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq as ProcessInsolvencyDlqCmd;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq;
+use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfileDlq as CompanyProfileDlqCmd;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\CompaniesHouse\CompanyProfileDlq;
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
 use Dvsa\Olcs\Queue\Service\Queue;
 use Mockery as m;
 
-class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
+class CompanyProfileDlqTest extends CompaniesHouseConsumerTestCase
 {
     protected $config = [
         'message_queue' => [
-            'ProcessInsolvencyDlq_URL' => 'process_insolvency_dlq_url'
+            'CompanyProfileDlq_URL' => 'company_profile_dlq_url'
         ],
         'company_house_dlq' => [
             'notification_email_address' => 'test@test.com'
@@ -26,7 +26,7 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
 
     public function setUp()
     {
-        $this->sut = new ProcessInsolvencyDlq();
+        $this->sut = new CompanyProfileDlq();
         $this->mockRepo('MessageFailures', MessageFailures::class);
         $this->mockRepo('Organisation', OrganisationRepo::class);
     }
@@ -56,12 +56,12 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
             [
                 'organisationNumbers' => ['0000', '1111', '2222', '3333'],
                 'emailAddress' => 'test@test.com',
-                'emailSubject' => 'Companies House Insolvency process failure - list of those that failed'
+                'emailSubject' => 'Companies House Company Profile process failure - list of those that failed'
             ],
             $result
         );
 
-        $command = ProcessInsolvencyDlqCmd::create([]);
+        $command = CompanyProfileDlqCmd::create([]);
         $response = $this->sut->handleCommand($command);
 
         $messages = [
@@ -96,12 +96,12 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
             [
                 'organisationNumbers' => ['0000'],
                 'emailAddress' => 'test@test.com',
-                'emailSubject' => 'Companies House Insolvency process failure - list of those that failed'
+                'emailSubject' => 'Companies House Company Profile process failure - list of those that failed'
             ],
             $result
         );
 
-        $command = ProcessInsolvencyDlqCmd::create([]);
+        $command = CompanyProfileDlqCmd::create([]);
         $response = $this->sut->handleCommand($command);
 
         $messages = [
@@ -115,7 +115,7 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
     {
         $this->setupServicesWithEmptyQueue();
 
-        $command = ProcessInsolvencyDlqCmd::create([]);
+        $command = CompanyProfileDlqCmd::create([]);
         $response = $this->sut->handleCommand($command);
 
         $messages = ['No messages to process'];
@@ -154,7 +154,7 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
         $thirdFetchResult = null;
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('process_insolvency_dlq_url', 10)
+            ->with('company_profile_dlq_url', 10)
             ->andReturn(
                 $firstFetchResult,
                 $secondFetchResult,
@@ -163,7 +163,7 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
             ->times(3);
 
         $queueService->shouldReceive('deleteMessage')
-            ->with('process_insolvency_dlq_url', 1)
+            ->with('company_profile_dlq_url', 1)
             ->times(4);
 
         return $queueService;
@@ -184,7 +184,7 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
         $queueService = m::mock(Queue::class);
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('process_insolvency_dlq_url', 10)
+            ->with('company_profile_dlq_url', 10)
             ->andReturn([])
             ->once();
 
@@ -229,7 +229,7 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
         $secondFetchResult = null;
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('process_insolvency_dlq_url', 10)
+            ->with('company_profile_dlq_url', 10)
             ->andReturn(
                 $firstFetchResult,
                 $secondFetchResult
@@ -237,7 +237,7 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
             ->times(2);
 
         $queueService->shouldReceive('deleteMessage')
-            ->with('process_insolvency_dlq_url', 1)
+            ->with('company_profile_dlq_url', 1)
             ->times(2);
 
         return $queueService;
