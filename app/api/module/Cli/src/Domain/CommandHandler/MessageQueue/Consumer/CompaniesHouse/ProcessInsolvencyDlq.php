@@ -46,9 +46,7 @@ class ProcessInsolvencyDlq extends AbstractConsumer implements ConfigAwareInterf
         $organisationNumbers = [];
         $emailAddress = $this->getConfig()['company_house_dlq']['notification_email_address'];
 
-        $hasMessages = false;
         while ($messages = $this->fetchMessages(self::MAX_NUMBER_OF_MESSAGES)) {
-            $hasMessages = true;
             foreach ($messages as $message) {
                 $companyNumber = $message['Body'];
                 $organisations = $organisationRepo->getByCompanyOrLlpNo($companyNumber);
@@ -63,7 +61,7 @@ class ProcessInsolvencyDlq extends AbstractConsumer implements ConfigAwareInterf
             }
         }
 
-        if (!$hasMessages) {
+        if (empty($organisationNumbers)) {
             $this->noMessages();
         } else {
             $messageFailuresRepo->flushAll();
@@ -73,7 +71,6 @@ class ProcessInsolvencyDlq extends AbstractConsumer implements ConfigAwareInterf
                 'emailAddress' => $emailAddress,
                 'emailSubject' => self::EMAIL_SUBJECT
             ];
-
             $this->result->merge($this->handleSideEffect(SendInsolvencyFailureList::create($params)));
         }
 
