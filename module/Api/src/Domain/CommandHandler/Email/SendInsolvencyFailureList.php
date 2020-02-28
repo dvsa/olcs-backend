@@ -23,8 +23,6 @@ class SendInsolvencyFailureList extends AbstractCommandHandler
         $emailMessage = new Message($emailAddress, $emailSubject);
         $emailMessage->setPlainBody(implode("\n", $organisationIds));
 
-        $this->result->merge($this->sendEmail($emailMessage));
-
-        return $this->result;
+        return $this->sendEmail($emailMessage);
     }
 }

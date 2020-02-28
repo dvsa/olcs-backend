@@ -12,8 +12,6 @@ use Dvsa\Olcs\Api\Entity\MessageFailures as Entity;
  */
 class MessageFailures extends AbstractRepository
 {
-    use LicenceStatusAwareTrait;
-
     protected $entity = Entity::class;
 
     protected $alias = 'mf';
