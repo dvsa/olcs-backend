@@ -65,18 +65,17 @@ class ProcessInsolvencyDlq extends AbstractConsumer implements ConfigAwareInterf
 
         if (!$hasMessages) {
             $this->noMessages();
-            return $this->result;
+        } else {
+            $messageFailuresRepo->flushAll();
+
+            $params = [
+                'organisationNumbers' => array_keys(array_flip($organisationNumbers)),
+                'emailAddress' => $emailAddress,
+                'emailSubject' => self::EMAIL_SUBJECT
+            ];
+
+            $this->result->merge($this->handleSideEffect(SendInsolvencyFailureList::create($params)));
         }
-
-        $messageFailuresRepo->flushAll();
-
-        $params = [
-            'organisationNumbers' => array_keys(array_flip($organisationNumbers)),
-            'emailAddress' => $emailAddress,
-            'emailSubject' => self::EMAIL_SUBJECT
-        ];
-
-        $this->result->merge($this->handleSideEffect(SendInsolvencyFailureList::create($params)));
 
         return $this->result;
     }
