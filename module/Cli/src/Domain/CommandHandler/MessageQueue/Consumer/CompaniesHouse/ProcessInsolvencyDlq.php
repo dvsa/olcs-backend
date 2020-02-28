@@ -21,8 +21,14 @@ class ProcessInsolvencyDlq extends AbstractConsumer implements ConfigAwareInterf
     const MAX_NUMBER_OF_MESSAGES = 10;
     const EMAIL_SUBJECT = 'Companies House Insolvency process failure - list of those that failed';
 
+    /**
+     * @inheritdoc
+     */
     protected $repoServiceName = 'MessageFailures';
 
+    /**
+     * @inheritdoc
+     */
     protected $extraRepos = ['Organisation'];
 
     /**
