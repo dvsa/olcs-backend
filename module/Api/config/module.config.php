@@ -625,6 +625,7 @@ return [
             'Answer' => RepositoryFactory::class,
             'ApplicationPathGroup' => RepositoryFactory::class,
             'TranslationKey' => RepositoryFactory::class,
+            'MessageFailures' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

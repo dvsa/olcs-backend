@@ -30,14 +30,6 @@ class SendInsolvencyFailureList extends AbstractCommand
     }
 
     /**
-     * @param string[] $organisationNumbers
-     */
-    public function setOrganisationNumbers(array $organisationNumbers): void
-    {
-        $this->organisationNumbers = $organisationNumbers;
-    }
-
-    /**
      * @return string
      */
     public function getEmailAddress(): string
@@ -46,26 +38,10 @@ class SendInsolvencyFailureList extends AbstractCommand
     }
 
     /**
-     * @param string $emailAddress
-     */
-    public function setEmailAddress(string $emailAddress): void
-    {
-        $this->emailAddress = $emailAddress;
-    }
-
-    /**
      * @return mixed
      */
     public function getEmailSubject()
     {
         return $this->emailSubject;
-    }
-
-    /**
-     * @param mixed $emailSubject
-     */
-    public function setEmailSubject($emailSubject): void
-    {
-        $this->emailSubject = $emailSubject;
     }
 }
