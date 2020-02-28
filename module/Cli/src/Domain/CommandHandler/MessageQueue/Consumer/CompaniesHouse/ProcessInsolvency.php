@@ -106,7 +106,6 @@ class ProcessInsolvency extends AbstractConsumer
         }
 
         $companyNumber = $messages[0]['Body'];
-        //organisation number is companyNumber
         $this->company = $this->getRepo('CompaniesHouseCompany')->getLatestByCompanyNumber($companyNumber);
 
         $insolvencyDetails = $this->companiesHouseApi->getInsolvencyDetails($this->company->getCompanyNumber());
