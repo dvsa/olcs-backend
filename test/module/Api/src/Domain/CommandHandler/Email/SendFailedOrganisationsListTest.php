@@ -2,17 +2,17 @@
 
 namespace module\Api\src\Domain\CommandHandler\Email;
 
-use Dvsa\Olcs\Api\Domain\Command\Email\SendInsolvencyFailureList as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendFailedOrganisationsList as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendInsolvencyFailureList;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendFailedOrganisationsList;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
-class SendInsolvencyFailureListTest extends CommandHandlerTestCase
+class SendFailedOrganisationsListTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new SendInsolvencyFailureList();
+        $this->sut = new SendFailedOrganisationsList();
         parent::setUp();
     }
 

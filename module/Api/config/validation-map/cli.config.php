@@ -88,7 +88,7 @@ return [
     CommandHandler\Email\SendEcmtShortTermAppSubmitted::class => IsSystemUser::class,
     CommandHandler\Email\SendLiquidatedCompanyForRegisteredUser::class =>IsSystemUser::class,
     CommandHandler\Email\SendLiquidatedCompanyForUnRegisteredUser::class =>IsSystemUser::class,
-    CommandHandler\Email\SendInsolvencyFailureList::class =>IsSystemUser::class,
+    CommandHandler\Email\SendFailedOrganisationsList::class =>IsSystemUser::class,
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,
@@ -103,6 +103,7 @@ return [
     CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class => IsSystemUser::class,
     CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class => IsSystemUser::class,
     CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq::class => IsSystemUser::class,
+    CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\CompanyProfileDlq::class => IsSystemUser::class,
     CliQueryHandler\CompaniesHouse\Organisations::class => IsSystemUser::class,
 
 ];
