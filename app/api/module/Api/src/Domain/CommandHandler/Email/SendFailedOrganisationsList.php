@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
-class SendInsolvencyFailureList extends AbstractCommandHandler
+class SendFailedOrganisationsList extends AbstractCommandHandler
 {
     use EmailAwareTrait;
 

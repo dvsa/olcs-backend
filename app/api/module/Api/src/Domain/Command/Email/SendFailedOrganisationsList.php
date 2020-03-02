@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Command\Email;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
-class SendInsolvencyFailureList extends AbstractCommand
+class SendFailedOrganisationsList extends AbstractCommand
 {
     /**
      * @var string[]
