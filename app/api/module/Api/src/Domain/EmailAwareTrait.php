@@ -42,7 +42,7 @@ trait EmailAwareTrait
      *
      * @param Message $message
      *
-     * @return true
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      * @throws \Dvsa\Olcs\Email\Exception\EmailNotSentException
      */
     public function sendEmail(Message $message)

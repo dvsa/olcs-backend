@@ -10,6 +10,7 @@ use Doctrine\ORM\ORMException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfile;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency;
+use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq;
 use Olcs\Logging\Log\Logger;
 use Zend\View\Model\ConsoleModel;
 
@@ -21,7 +22,8 @@ class SQSController extends AbstractQueueController
 {
     const VALID_QUEUE_TYPES = [
         'companyProfile',
-        'processInsolvency'
+        'processInsolvency',
+        'processInsolvencyDlq'
     ];
 
     /**
@@ -106,6 +108,11 @@ class SQSController extends AbstractQueueController
     private function processInsolvency()
     {
         return ProcessInsolvency::create([]);
+    }
+
+    private function processInsolvencyDlq()
+    {
+        return ProcessInsolvencyDlq::create([]);
     }
 
     protected function handleSingleCommand($dto): Result
