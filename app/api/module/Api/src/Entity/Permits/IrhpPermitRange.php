@@ -33,6 +33,8 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
      * @param int $reserve
      * @param int $replacement
      * @param array $countries
+     * @param RefData $journey
+     * @param int $cabotage
      *
      * @return IrhpPermitRange
      */
@@ -44,7 +46,9 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $rangeTo,
         $reserve,
         $replacement,
-        $countries
+        $countries,
+        $journey,
+        $cabotage
     ) {
         $instance = new self;
 
@@ -56,6 +60,8 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $instance->ssReserve = $reserve;
         $instance->lostReplacement = $replacement;
         $instance->countrys = $countries;
+        $instance->journey = $journey;
+        $instance->cabotage = $cabotage;
 
         return $instance;
     }
@@ -71,6 +77,8 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
      * @param int $reserve
      * @param int $replacement
      * @param array $countries
+     * @param RefData $journey
+     * @param int $cabotage
      *
      * @return IrhpPermitRange
      */
@@ -82,7 +90,9 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $rangeTo,
         $reserve,
         $replacement,
-        $countries
+        $countries,
+        $journey,
+        $cabotage
     ) {
         $this->irhpPermitStock = $permitStock;
         $this->emissionsCategory = $emissionsCategory;
@@ -92,6 +102,8 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $this->ssReserve = $reserve;
         $this->lostReplacement = $replacement;
         $this->countrys = $countries;
+        $this->journey = $journey;
+        $this->cabotage = $cabotage;
 
         return $this;
     }

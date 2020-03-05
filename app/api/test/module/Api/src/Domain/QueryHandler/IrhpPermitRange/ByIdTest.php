@@ -17,7 +17,7 @@ class ByIdTest extends AbstractQueryByIdHandlerTest
 {
     protected $sutClass = RangeByIdHandler::class;
     protected $sutRepo = 'IrhpPermitRange';
-    protected $bundle = ['countrys', 'irhpPermitStock', 'emissionsCategory'];
+    protected $bundle = ['countrys', 'irhpPermitStock', 'emissionsCategory', 'journey'];
     protected $qryClass = QryClass::class;
     protected $repoClass = PermitRangeRepo::class;
     protected $entityClass = PermitRangeEntity::class;

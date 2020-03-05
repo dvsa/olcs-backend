@@ -36,12 +36,16 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $isReplacement = 0;
         $countrys = [];
         $emissionsCategory = m::mock(RefData::class);
+        $journey = m::mock(RefData::class);
+        $cabotage = 0;
 
         $updatedPrefix = "AU";
         $updatedFromNo = "10";
         $updatedToNo = "1500";
         $updatedIsReserve = 1;
         $updatedCountrys = ['AU'];
+        $updatedJourney = m::mock(RefData::class);
+        $updatedCabotage = 1;
 
         $entity = Entity::create(
             $irhpPermitStock,
@@ -51,7 +55,9 @@ class IrhpPermitRangeEntityTest extends EntityTester
             $toNo,
             $isReserve,
             $isReplacement,
-            $countrys
+            $countrys,
+            $journey,
+            $cabotage
         );
 
         $this->assertEquals($irhpPermitStock, $entity->getIrhpPermitStock());
@@ -62,6 +68,8 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $this->assertEquals($isReplacement, $entity->getLostReplacement());
         $this->assertEquals($countrys, $entity->getCountrys());
         $this->assertSame($emissionsCategory, $entity->getEmissionsCategory());
+        $this->assertSame($journey, $entity->getJourney());
+        $this->assertEquals($cabotage, $entity->getCabotage());
 
         $entity->update(
             $irhpPermitStock,
@@ -71,7 +79,9 @@ class IrhpPermitRangeEntityTest extends EntityTester
             $updatedToNo,
             $updatedIsReserve,
             $isReplacement,
-            $updatedCountrys
+            $updatedCountrys,
+            $updatedJourney,
+            $updatedCabotage
         );
 
         $this->assertEquals($irhpPermitStock, $entity->getIrhpPermitStock());
@@ -82,6 +92,8 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $this->assertEquals($isReplacement, $entity->getLostReplacement());
         $this->assertEquals($updatedCountrys, $entity->getCountrys());
         $this->assertSame($emissionsCategory, $entity->getEmissionsCategory());
+        $this->assertSame($updatedJourney, $entity->getJourney());
+        $this->assertEquals($updatedCabotage, $entity->getCabotage());
     }
 
     /**
@@ -98,6 +110,8 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $isReserve = 0;
         $isReplacement = 0;
         $emissionsCategory = m::mock(RefData::class);
+        $journey = m::mock(RefData::class);
+        $cabotage = 0;
 
         $entity = Entity::create(
             $irhpPermitStock,
@@ -107,7 +121,9 @@ class IrhpPermitRangeEntityTest extends EntityTester
             $toNo,
             $isReserve,
             $isReplacement,
-            $data['countrys']
+            $data['countrys'],
+            $journey,
+            $cabotage
         );
         $entity->setIrhpPermits($data['irhpPermits']);
         $entity->setIrhpCandidatePermits($data['irhpCandidatePermits']);
@@ -199,6 +215,8 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $isReplacement = 0;
         $countrys = [];
         $emissionsCategory = m::mock(RefData::class);
+        $journey = m::mock(RefData::class);
+        $cabotage = 0;
 
         $entity = Entity::create(
             $irhpPermitStock,
@@ -208,7 +226,9 @@ class IrhpPermitRangeEntityTest extends EntityTester
             $toNo,
             $isReserve,
             $isReplacement,
-            $countrys
+            $countrys,
+            $journey,
+            $cabotage
         );
 
         $this->assertEquals(76, $entity->getSize());
