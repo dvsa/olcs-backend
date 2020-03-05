@@ -3,7 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Mockery as m;
@@ -20,7 +21,9 @@ class ElementGeneratorContextTest extends MockeryTestCase
 
     private $applicationStepEntity;
 
-    private $irhpApplicationEntity;
+    private $qaEntity;
+
+    private $qaContext;
 
     private $elementGeneratorContext;
 
@@ -30,16 +33,23 @@ class ElementGeneratorContextTest extends MockeryTestCase
 
         $this->applicationStepEntity = m::mock(ApplicationStepEntity::class);
 
-        $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
+        $this->qaEntity = m::mock(QaEntityInterface::class);
+
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($this->applicationStepEntity);
+        $this->qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($this->qaEntity);
 
         $this->elementGeneratorContext = new ElementGeneratorContext(
             $this->validatorList,
-            $this->applicationStepEntity,
-            $this->irhpApplicationEntity
+            $this->qaContext
         );
     }
 
-    public function testGetValidatorTest()
+    public function testGetValidatorList()
     {
         $this->assertSame(
             $this->validatorList,
@@ -55,11 +65,30 @@ class ElementGeneratorContextTest extends MockeryTestCase
         );
     }
 
-    public function testGetIrhpApplicationEntity()
+    public function testGetQaEntity()
     {
         $this->assertSame(
-            $this->irhpApplicationEntity,
-            $this->elementGeneratorContext->getIrhpApplicationEntity()
+            $this->qaEntity,
+            $this->elementGeneratorContext->getQaEntity()
         );
+    }
+
+    public function testGetQaContext()
+    {
+        $this->assertSame(
+            $this->qaContext,
+            $this->elementGeneratorContext->getQaContext()
+        );
+    }
+
+    public function testGetAnswerValue()
+    {
+        $answerValue = 'foo';
+
+        $this->qaContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
+            ->andReturn($answerValue);
+
+        $this->elementGeneratorContext->getAnswerValue();
     }
 }

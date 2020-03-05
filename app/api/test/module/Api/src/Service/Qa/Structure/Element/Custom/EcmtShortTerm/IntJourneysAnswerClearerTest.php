@@ -3,8 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerClearer;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -18,14 +18,16 @@ class IntJourneysAnswerClearerTest extends MockeryTestCase
 {
     public function testSave()
     {
-        $applicationStep = m::mock(ApplicationStepEntity::class);
-
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
         $irhpApplication->shouldReceive('clearInternationalJourneys')
             ->withNoArgs()
             ->once()
             ->globally()
             ->ordered();
+
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getQaEntity')
+            ->andReturn($irhpApplication);
 
         $irhpApplicationRepo = m::mock(IrhpApplicationRepository::class);
         $irhpApplicationRepo->shouldReceive('save')
@@ -35,6 +37,6 @@ class IntJourneysAnswerClearerTest extends MockeryTestCase
             ->ordered();
 
         $intJourneysAnswerClearer = new IntJourneysAnswerClearer($irhpApplicationRepo);
-        $intJourneysAnswerClearer->clear($applicationStep, $irhpApplication);
+        $intJourneysAnswerClearer->clear($qaContext);
     }
 }

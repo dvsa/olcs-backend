@@ -26,6 +26,7 @@ return [
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
+            'QaContextFactory' => ApiSrv\Qa\QaContextFactory::class,
             'QaCommonCurrentDateTimeFactory' =>
                 ApiSrv\Qa\Common\CurrentDateTimeFactory::class,
             'QaCommonDateTimeFactory' =>
@@ -50,8 +51,6 @@ return [
             'QaValidatorListFactory' => ApiSrv\Qa\Structure\ValidatorListFactory::class,
             'QaElementGeneratorContextFactory' => ApiSrv\Qa\Structure\Element\ElementGeneratorContextFactory::class,
             'QaNamedAnswerFetcher' => ApiSrv\Qa\Structure\Element\NamedAnswerFetcher::class,
-            'QaQuestionTextGeneratorContextFactory' =>
-                ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory::class,
             'QaCommandCreator' => ApiSrv\Qa\Cqrs\CommandCreator::class,
             'QaEcmtShortTermNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
@@ -205,7 +204,8 @@ return [
             'QaGenericAnswerFetcher' => ApiSrv\Qa\Structure\Element\GenericAnswerFetcherFactory::class,
             'QaApplicationAnswersClearer' => ApiSrv\Qa\AnswerSaver\ApplicationAnswersClearerFactory::class,
             
-            'QaApplicationStepObjectsProvider' => ApiSrv\Qa\ApplicationStepObjectsProviderFactory::class,
+            'QaContextGenerator' => ApiSrv\Qa\QaContextGeneratorFactory::class,
+            'QaEntityProvider' => ApiSrv\Qa\QaEntityProviderFactory::class,
             'QaFormControlStrategyProvider' => ApiSrv\Qa\FormControlStrategyProviderFactory::class,
             'QaCheckboxFormControlStrategy' => ApiSrv\Qa\Strategy\CheckboxFormControlStrategyFactory::class,
             'QaTextFormControlStrategy' => ApiSrv\Qa\Strategy\TextFormControlStrategyFactory::class,

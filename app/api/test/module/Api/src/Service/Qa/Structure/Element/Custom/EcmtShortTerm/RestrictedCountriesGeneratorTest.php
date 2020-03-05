@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Answer as AnswerEntity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountries;
@@ -54,11 +55,18 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
 
         $applicationStep = m::mock(ApplicationStepEntity::class);
 
+        $qaContext = m::mock(QaContext::class);
+
         $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
-        $elementGeneratorContext->shouldReceive('getIrhpApplicationEntity')
+        $elementGeneratorContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
             ->andReturn($irhpApplication);
         $elementGeneratorContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
             ->andReturn($applicationStep);
+        $elementGeneratorContext->shouldReceive('getQaContext')
+            ->withNoArgs()
+            ->andReturn($qaContext);
 
         $greeceRestrictedCountry = m::mock(RestrictedCountry::class);
         $hungaryRestrictedCountry = m::mock(RestrictedCountry::class);
@@ -131,7 +139,7 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
 
         $genericAnswerProvider = m::mock(GenericAnswerProvider::class);
         $genericAnswerProvider->shouldReceive('get')
-            ->with($applicationStep, $irhpApplication)
+            ->with($qaContext)
             ->andReturn($yesNo);
 
         $stockBasedRestrictedCountryIdsProvider = m::mock(StockBasedRestrictedCountryIdsProvider::class);

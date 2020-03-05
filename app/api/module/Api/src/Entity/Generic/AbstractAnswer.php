@@ -24,12 +24,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_answer_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_answer_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"}),
+ *        @ORM\Index(name="fk_answer_irhp_permit_application_id_irhp_permit_application_id",
+     *     columns={"irhp_permit_application_id"}),
  *        @ORM\Index(name="fk_answer_last_modified_by_user_id", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_answer_question_text_id", columns={"question_text_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_answer_irhp_application_id_question_text_id",
-     *     columns={"irhp_application_id","question_text_id"})
+     *     columns={"irhp_application_id","irhp_permit_application_id","question_text_id"})
  *    }
  * )
  */
@@ -148,6 +150,20 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
      * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
      */
     protected $irhpApplication;
+
+    /**
+     * Irhp permit application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication",
+     *     fetch="LAZY",
+     *     inversedBy="answers"
+     * )
+     * @ORM\JoinColumn(name="irhp_permit_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irhpPermitApplication;
 
     /**
      * Last modified by
@@ -454,6 +470,30 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     public function getIrhpApplication()
     {
         return $this->irhpApplication;
+    }
+
+    /**
+     * Set the irhp permit application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication $irhpPermitApplication entity being set as the value
+     *
+     * @return Answer
+     */
+    public function setIrhpPermitApplication($irhpPermitApplication)
+    {
+        $this->irhpPermitApplication = $irhpPermitApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     */
+    public function getIrhpPermitApplication()
+    {
+        return $this->irhpPermitApplication;
     }
 
     /**

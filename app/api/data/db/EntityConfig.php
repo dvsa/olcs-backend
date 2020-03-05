@@ -2298,6 +2298,13 @@ return array(
                 'indexBy' => 'question_text_id',
             )
         ),
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
+                'property' => 'answer',
+                'indexBy' => 'question_text_id',
+            )
+        ),
     ),
     'translation_key_text' => [
         'translation_key_id' => [

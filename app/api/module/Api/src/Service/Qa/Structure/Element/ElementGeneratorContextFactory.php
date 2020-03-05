@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 
 class ElementGeneratorContextFactory
@@ -12,16 +11,12 @@ class ElementGeneratorContextFactory
      * Create and return an ElementGeneratorContext instance
      *
      * @param ValidatorList $validatorList
-     * @param ApplicationStepEntity $applicationStepEntity
-     * @param IrhpApplicationEntity $irhpApplicationEntity
+     * @param QaContext $qaContext
      *
      * @return ElementGeneratorContext
      */
-    public function create(
-        ValidatorList $validatorList,
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity
-    ) {
-        return new ElementGeneratorContext($validatorList, $applicationStepEntity, $irhpApplicationEntity);
+    public function create(ValidatorList $validatorList, QaContext $qaContext)
+    {
+        return new ElementGeneratorContext($validatorList, $qaContext);
     }
 }

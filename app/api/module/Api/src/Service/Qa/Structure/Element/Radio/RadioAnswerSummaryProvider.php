@@ -2,14 +2,16 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 use RuntimeException;
 
 class RadioAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
+    use AnyTrait;
+
     /** @var OptionsGenerator */
     private $optionsGenerator;
 
@@ -36,15 +38,12 @@ class RadioAnswerSummaryProvider implements AnswerSummaryProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getTemplateVariables(
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity,
-        $isSnapshot
-    ) {
-        $options = $applicationStepEntity->getDecodedOptionSource();
+    public function getTemplateVariables(QaContext $qaContext, $isSnapshot)
+    {
+        $options = $qaContext->getApplicationStepEntity()->getDecodedOptionSource();
 
         $radioOptions = $this->optionsGenerator->generate($options['source']);
-        $answerValue = $irhpApplicationEntity->getAnswer($applicationStepEntity);
+        $answerValue = $qaContext->getAnswerValue();
 
         foreach ($radioOptions as $radioOption) {
             if ($radioOption['value'] == $answerValue) {

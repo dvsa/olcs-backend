@@ -3,8 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerClearer;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -18,8 +18,6 @@ class SectorsAnswerClearerTest extends MockeryTestCase
 {
     public function testSave()
     {
-        $applicationStep = m::mock(ApplicationStepEntity::class);
-
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
         $irhpApplication->shouldReceive('clearSectors')
             ->withNoArgs()
@@ -34,7 +32,12 @@ class SectorsAnswerClearerTest extends MockeryTestCase
             ->globally()
             ->ordered();
 
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($irhpApplication);
+
         $sectorsAnswerClearer = new SectorsAnswerClearer($irhpApplicationRepo);
-        $sectorsAnswerClearer->clear($applicationStep, $irhpApplication);
+        $sectorsAnswerClearer->clear($qaContext);
     }
 }

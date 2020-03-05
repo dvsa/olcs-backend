@@ -4,14 +4,17 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\Common\DateTimeFactory;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
+use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 
 class DateAnswerSaver implements AnswerSaverInterface
 {
+    use AnyTrait;
+
     /** @var GenericAnswerWriter */
     private $genericAnswerWriter;
 
@@ -43,18 +46,16 @@ class DateAnswerSaver implements AnswerSaverInterface
     /**
      * {@inheritdoc}
      */
-    public function save(
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity,
-        array $postData
-    ) {
+    public function save(QaContext $qaContext, array $postData)
+    {
+        $applicationStepEntity = $qaContext->getApplicationStepEntity();
+
         $answerValue = $this->dateTimeFactory->create(
             $this->genericAnswerFetcher->fetch($applicationStepEntity, $postData)
         );
 
         $this->genericAnswerWriter->write(
-            $applicationStepEntity,
-            $irhpApplicationEntity,
+            $qaContext,
             $answerValue,
             QuestionEntity::QUESTION_TYPE_DATE
         );

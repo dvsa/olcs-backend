@@ -5,56 +5,66 @@ namespace Dvsa\Olcs\Api\Service\Qa;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationStep as ApplicationStepRepository;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 
-class ApplicationStepObjectsProvider
+class QaContextGenerator
 {
     const ERR_ALREADY_SUBMITTED = 'This application has been submitted and cannot be edited';
     const ERR_NOT_ACCESSIBLE = 'This question isn\'t yet accessible';
+    const ERR_QA_NOT_SUPPORTED = 'Entity does not support q&a';
 
     /** @var ApplicationStepRepository */
     private $applicationStepRepo;
 
-    /** @var IrhpApplicationRepository */
-    private $irhpApplicationRepo;
+    /** @var QaEntityProvider */
+    private $qaEntityProvider;
+
+    /** @var QaContextFactory */
+    private $qaContextFactory;
 
     /**
      * Create service instance
      *
      * @param ApplicationStepRepository $applicationStepRepo
-     * @param IrhpApplicationRepository $irhpApplicationRepo
+     * @param QaEntityProvider $qaEntityProvider
+     * @param QaContextFactory $qaContextFactory
      *
-     * @return ApplicationStepObjectsProvider
+     * @return QaContextGenerator
      */
     public function __construct(
         ApplicationStepRepository $applicationStepRepo,
-        IrhpApplicationRepository $irhpApplicationRepo
+        QaEntityProvider $qaEntityProvider,
+        QaContextFactory $qaContextFactory
     ) {
         $this->applicationStepRepo = $applicationStepRepo;
-        $this->irhpApplicationRepo = $irhpApplicationRepo;
+        $this->qaEntityProvider = $qaEntityProvider;
+        $this->qaContextFactory = $qaContextFactory;
     }
 
     /**
-     * Verify that the page corresponding to the specified irhpApplicationId and slug is accessible, and return a
-     * series of associated object instances if so
+     * Verify that the page corresponding to the specified entity ids and slug is accessible, and return a QaContext
+     * instance if so
      *
      * @param int $irhpApplicationId
+     * @param int|null $irhpPermitApplicationId
      * @param string $slug
      *
-     * @return array
+     * @return QaContext
      *
      * @throws ForbiddenException if the application or application step is not accessible
      */
-    public function getObjects($irhpApplicationId, $slug)
+    public function generate($irhpApplicationId, $irhpPermitApplicationId, $slug)
     {
-        /** @var IrhpApplication $irhpApplication */
-        $irhpApplication = $this->irhpApplicationRepo->fetchById($irhpApplicationId);
-        if (!$irhpApplication->isNotYetSubmitted()) {
+        $qaEntity = $this->qaEntityProvider->get($irhpApplicationId, $irhpPermitApplicationId);
+
+        if (!$qaEntity->isApplicationPathEnabled()) {
+            throw new ForbiddenException(self::ERR_QA_NOT_SUPPORTED);
+        }
+
+        if (!$qaEntity->isNotYetSubmitted()) {
             throw new ForbiddenException(self::ERR_ALREADY_SUBMITTED);
         }
 
-        $applicationPath = $irhpApplication->getActiveApplicationPath();
+        $applicationPath = $qaEntity->getActiveApplicationPath();
 
         $applicationStep = $this->applicationStepRepo->fetchByApplicationPathIdAndSlug(
             $applicationPath->getId(),
@@ -67,13 +77,10 @@ class ApplicationStepObjectsProvider
             $previousApplicationStep = null;
         }
 
-        if (is_object($previousApplicationStep) && is_null($irhpApplication->getAnswer($previousApplicationStep))) {
+        if (is_object($previousApplicationStep) && is_null($qaEntity->getAnswer($previousApplicationStep))) {
             throw new ForbiddenException(self::ERR_NOT_ACCESSIBLE);
         }
 
-        return [
-            'applicationStep' => $applicationStep,
-            'irhpApplication' => $irhpApplication,
-        ];
+        return $this->qaContextFactory->create($applicationStep, $qaEntity);
     }
 }

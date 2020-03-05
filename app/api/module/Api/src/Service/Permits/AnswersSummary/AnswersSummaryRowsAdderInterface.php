@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 interface AnswersSummaryRowsAdderInterface
 {
@@ -10,8 +10,8 @@ interface AnswersSummaryRowsAdderInterface
      * Add one or more AnswersSummaryRow instances to the provided AnswersSummary instance
      *
      * @param AnswersSummary $answersSummary
-     * @param IrhpApplicationEntity $irhpApplication
+     * @param QaEntityInterface $qaEntityInterface
      * @param bool $isSnapshot
      */
-    public function addRows(AnswersSummary $answersSummary, IrhpApplicationEntity $irhpApplication, $isSnapshot);
+    public function addRows(AnswersSummary $answersSummary, QaEntityInterface $qaEntity, $isSnapshot);
 }

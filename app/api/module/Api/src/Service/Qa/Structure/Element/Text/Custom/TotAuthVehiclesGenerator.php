@@ -5,9 +5,12 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\TextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class TotAuthVehiclesGenerator implements ElementGeneratorInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     /** @var TextGenerator */
     private $textGenerator;
 
@@ -30,7 +33,7 @@ class TotAuthVehiclesGenerator implements ElementGeneratorInterface
     {
         $textElement = $this->textGenerator->generate($context);
 
-        $totAuthVehicles = $context->getIrhpApplicationEntity()->getLicence()->getTotAuthVehicles();
+        $totAuthVehicles = $context->getQaEntity()->getLicence()->getTotAuthVehicles();
 
         $betweenRule = $context->getValidatorList()->getValidatorByRule('LessThan');
         $betweenRule->setParameter('max', $totAuthVehicles);

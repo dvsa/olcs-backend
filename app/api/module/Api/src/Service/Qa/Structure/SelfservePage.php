@@ -9,8 +9,8 @@ class SelfservePage
     /** @var string */
     private $title;
 
-    /** @var string */
-    private $applicationReference;
+    /** @var array */
+    private $additionalViewData;
 
     /** @var ApplicationStep */
     private $applicationStep;
@@ -25,7 +25,7 @@ class SelfservePage
      * Create instance
      *
      * @param string $title
-     * @param string $applicationReference
+     * @param array $additionalViewData
      * @param ApplicationStep $applicationStep
      * @param QuestionText $questionText
      * @param string $nextStepSlug
@@ -34,13 +34,13 @@ class SelfservePage
      */
     public function __construct(
         $title,
-        $applicationReference,
+        array $additionalViewData,
         ApplicationStep $applicationStep,
         QuestionText $questionText,
         $nextStepSlug
     ) {
         $this->title = $title;
-        $this->applicationReference = $applicationReference;
+        $this->additionalViewData = $additionalViewData;
         $this->applicationStep = $applicationStep;
         $this->questionText = $questionText;
         $this->nextStepSlug = $nextStepSlug;
@@ -55,7 +55,7 @@ class SelfservePage
     {
         return [
             'title' => $this->title,
-            'applicationReference' => $this->applicationReference,
+            'additionalViewData' => $this->additionalViewData,
             'applicationStep' => $this->applicationStep->getRepresentation(),
             'questionText' => $this->questionText->getRepresentation(),
             'nextStepSlug' => $this->nextStepSlug,

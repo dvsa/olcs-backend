@@ -29,7 +29,7 @@ class IntJourneysGeneratorTest extends MockeryTestCase
             ->andReturn($isNi);
 
         $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
-        $elementGeneratorContext->shouldReceive('getIrhpApplicationEntity')
+        $elementGeneratorContext->shouldReceive('getQaEntity')
             ->andReturn($irhpApplication);
 
         $radio = m::mock(Radio::class);

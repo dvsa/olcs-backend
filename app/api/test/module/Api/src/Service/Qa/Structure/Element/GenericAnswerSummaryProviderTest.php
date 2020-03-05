@@ -2,8 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerSummaryProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -37,18 +36,12 @@ class GenericAnswerSummaryProviderTest extends MockeryTestCase
     {
         $answerValue = 'foo';
 
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($applicationStepEntity)
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
             ->andReturn($answerValue);
 
-        $templateVariables = $this->genericAnswerSummaryProvider->getTemplateVariables(
-            $applicationStepEntity,
-            $irhpApplicationEntity,
-            $isSnapshot
-        );
+        $templateVariables = $this->genericAnswerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
 
         $this->assertEquals(
             ['answer' => $answerValue],

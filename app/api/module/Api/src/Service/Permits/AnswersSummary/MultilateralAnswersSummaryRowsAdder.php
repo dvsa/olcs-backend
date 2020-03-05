@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Zend\View\Renderer\RendererInterface;
 
 class MultilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
@@ -32,7 +32,7 @@ class MultilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInte
     /**
      * {@inheritdoc}
      */
-    public function addRows(AnswersSummary $answersSummary, IrhpApplicationEntity $irhpApplication, $isSnapshot)
+    public function addRows(AnswersSummary $answersSummary, QaEntityInterface $irhpApplication, $isSnapshot)
     {
         $irhpPermitApplications = $irhpApplication->getIrhpPermitApplications();
 

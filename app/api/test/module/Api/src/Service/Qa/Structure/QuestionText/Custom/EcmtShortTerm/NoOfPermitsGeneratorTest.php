@@ -2,9 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\QuestionText\Custom\EcmtShortTerm;
 
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\EcmtShortTerm\NoOfPermitsGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
@@ -60,13 +60,13 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $questionText->shouldReceive('getAdditionalGuidance->getTranslateableText')
             ->andReturn($additionalGuidanceTranslateableText);
 
-        $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
-        $questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity')
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getQaEntity')
             ->andReturn($irhpApplicationEntity);
 
         $questionTextGenerator = m::mock(QuestionTextGenerator::class);
         $questionTextGenerator->shouldReceive('generate')
-            ->with($questionTextGeneratorContext)
+            ->with($qaContext)
             ->andReturn($questionText);
 
         $feeTypeRepo = m::mock(FeeTypeRepository::class);
@@ -84,7 +84,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
 
         $this->assertSame(
             $questionText,
-            $noOfPermitsGenerator->generate($questionTextGeneratorContext)
+            $noOfPermitsGenerator->generate($qaContext)
         );
     }
 }

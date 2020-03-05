@@ -8,9 +8,12 @@ use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class RestrictedCountriesGenerator implements ElementGeneratorInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     /** @var RestrictedCountriesFactory */
     private $restrictedCountriesFactory;
 
@@ -56,12 +59,12 @@ class RestrictedCountriesGenerator implements ElementGeneratorInterface
      */
     public function generate(ElementGeneratorContext $context)
     {
-        $irhpApplication = $context->getIrhpApplicationEntity();
-        $applicationStep = $context->getApplicationStepEntity();
+        $irhpApplication = $context->getQaEntity();
+        $qaContext = $context->getQaContext();
 
         $yesNo = null;
         try {
-            $yesNo = $this->genericAnswerProvider->get($applicationStep, $irhpApplication)->getValue();
+            $yesNo = $this->genericAnswerProvider->get($qaContext)->getValue();
         } catch (NotFoundException $e) {
         }
 

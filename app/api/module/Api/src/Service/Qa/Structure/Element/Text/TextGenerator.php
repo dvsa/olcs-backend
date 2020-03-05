@@ -5,9 +5,12 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 
 class TextGenerator implements ElementGeneratorInterface
 {
+    use AnyTrait;
+
     /** @var TextFactory */
     private $textFactory;
 
@@ -36,9 +39,7 @@ class TextGenerator implements ElementGeneratorInterface
     public function generate(ElementGeneratorContext $context)
     {
         $applicationStepEntity = $context->getApplicationStepEntity();
-        $irhpApplicationEntity = $context->getIrhpApplicationEntity();
-
-        $options = $context->getApplicationStepEntity()->getDecodedOptionSource();
+        $options = $applicationStepEntity->getDecodedOptionSource();
 
         $label = null;
         if (isset($options['label'])) {
@@ -53,7 +54,7 @@ class TextGenerator implements ElementGeneratorInterface
         return $this->textFactory->create(
             $label,
             $hint,
-            $irhpApplicationEntity->getAnswer($applicationStepEntity)
+            $context->getAnswerValue()
         );
     }
 }

@@ -8,8 +8,9 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplicationStep as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Service\Qa\ApplicationStepObjectsProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationStep as Cmd;
@@ -28,7 +29,7 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
         $this->mockedSmServices = [
-            'QaApplicationStepObjectsProvider' => m::mock(ApplicationStepObjectsProvider::class),
+            'QaContextGenerator' => m::mock(QaContextGenerator::class),
             'QaFormControlStrategyProvider' => m::mock(FormControlStrategyProvider::class)
         ];
 
@@ -37,23 +38,27 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $irhpApplicationId = 457;
+        $irhpApplicationId = 23;
+        $irhpPermitApplicationId = 457;
         $slug = 'removals-eligibility';
 
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('resetCheckAnswersAndDeclaration')
+        $qaEntity = m::mock(QaEntityInterface::class);
+        $qaEntity->shouldReceive('onSubmitApplicationStep')
             ->withNoArgs()
             ->once();
 
-        $applicationStepObjects = [
-            'applicationStep' => $applicationStepEntity,
-            'irhpApplication' => $irhpApplicationEntity
-        ];
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($applicationStepEntity);
+        $qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($qaEntity);
 
-        $this->mockedSmServices['QaApplicationStepObjectsProvider']->shouldReceive('getObjects')
-            ->with($irhpApplicationId, $slug)
-            ->andReturn($applicationStepObjects);
+        $this->mockedSmServices['QaContextGenerator']->shouldReceive('generate')
+            ->with($irhpApplicationId, $irhpPermitApplicationId, $slug)
+            ->andReturn($qaContext);
 
         $postData = [
             'fieldset123' => [
@@ -63,11 +68,11 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
 
         $formControlStrategy = m::mock(FormControlStrategyInterface::class);
         $formControlStrategy->shouldReceive('saveFormData')
-            ->with($applicationStepEntity, $irhpApplicationEntity, $postData)
+            ->with($qaContext, $postData)
             ->once();
 
         $this->repoMap['IrhpApplication']->shouldReceive('save')
-            ->with($irhpApplicationEntity)
+            ->with($qaEntity)
             ->once();
 
         $this->mockedSmServices['QaFormControlStrategyProvider']->shouldReceive('get')
@@ -77,6 +82,7 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
         $command = Cmd::create(
             [
                 'id' => $irhpApplicationId,
+                'irhpPermitApplication' => $irhpPermitApplicationId,
                 'slug' => $slug,
                 'postData' => $postData
             ]

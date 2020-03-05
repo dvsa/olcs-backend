@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
 use Mockery as m;
@@ -39,6 +40,13 @@ class IntJourneysAnswerSaverTest extends MockeryTestCase
             ->globally()
             ->ordered();
 
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($applicationStep);
+        $qaContext->shouldReceive('getQaEntity')
+            ->andReturn($irhpApplication);
+
         $irhpApplicationRepo = m::mock(IrhpApplicationRepository::class);
         $irhpApplicationRepo->shouldReceive('getRefdataReference')
             ->with($answer)
@@ -55,6 +63,6 @@ class IntJourneysAnswerSaverTest extends MockeryTestCase
             ->andReturn($answer);
 
         $intJourneysAnswerSaver = new IntJourneysAnswerSaver($irhpApplicationRepo, $genericAnswerFetcher);
-        $intJourneysAnswerSaver->save($applicationStep, $irhpApplication, $postData);
+        $intJourneysAnswerSaver->save($qaContext, $postData);
     }
 }

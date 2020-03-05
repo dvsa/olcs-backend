@@ -2,8 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Date;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\Date;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\DateFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\DateGenerator;
@@ -29,18 +27,10 @@ class DateGeneratorTest extends MockeryTestCase
             ->with($answerValue)
             ->andReturn($date);
 
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($applicationStepEntity)
-            ->andReturn($answerValue);
-
         $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
-        $elementGeneratorContext->shouldReceive('getApplicationStepEntity')
-            ->andReturn($applicationStepEntity);
-        $elementGeneratorContext->shouldReceive('getIrhpApplicationEntity')
-            ->andReturn($irhpApplicationEntity);
+        $elementGeneratorContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
+            ->andReturn($answerValue);
 
         $dateGenerator = new DateGenerator($dateFactory);
 

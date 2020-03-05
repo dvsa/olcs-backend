@@ -5,7 +5,10 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Answer;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
+use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -13,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
@@ -35,7 +39,7 @@ use RuntimeException;
  *    }
  * )
  */
-class IrhpPermitApplication extends AbstractIrhpPermitApplication implements OrganisationProviderInterface
+class IrhpPermitApplication extends AbstractIrhpPermitApplication implements OrganisationProviderInterface, QaEntityInterface
 {
     use TieredProductReference;
 
@@ -436,5 +440,122 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     public function getAnswerValueByQuestionId($id)
     {
         return $this->irhpApplication->getAnswerValueByQuestionId($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createAnswer(QuestionText $questionText)
+    {
+        return Answer::createNewForIrhpPermitApplication($questionText, $this);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotYetSubmitted()
+    {
+        // TODO: test coverage
+        return $this->irhpApplication->isNotYetSubmitted();
+    }
+
+    /**
+     * Get the application path locked on datetime
+     *
+     * @return \DateTime
+     */
+    public function getApplicationPathLockedOn()
+    {
+        return $this->irhpApplication->getApplicationPathLockedOn();
+    }
+
+    /**
+     * Get the active application path
+     *
+     * @return ApplicationPath|null
+     */
+    public function getActiveApplicationPath()
+    {
+        return $this->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getApplicationPathGroup()
+            ->getActiveApplicationPath($this->getApplicationPathLockedOn());
+    }
+
+    /**
+     * Get an answer to the given application step
+     *
+     * @return mixed|null
+     */
+    public function getAnswer(ApplicationStep $applicationStep)
+    {
+        $question = $applicationStep->getQuestion();
+        $applicationPathLockedOn = $this->getApplicationPathLockedOn();
+
+        if ($question->isCustom()) {
+            $formControlType = $question->getFormControlType();
+
+            throw new RuntimeException(
+                sprintf(
+                    'Unable to retrieve answer status for form control type %s',
+                    $formControlType
+                )
+            );
+        }
+
+        return $question->getStandardAnswer($this, $applicationPathLockedOn);
+    }
+
+    /**
+     * Reset the checked answers section to a value representing 'not completed'
+     */
+    public function resetCheckAnswers()
+    {
+        if ($this->irhpApplication->canBeUpdated()) {
+            $this->checkedAnswers = false;
+        }
+    }
+
+    /**
+     * Return the entity name in camel case
+     *
+     * @return string
+     */
+    public function getCamelCaseEntityName()
+    {
+        return 'irhpPermitApplication';
+    }
+
+    /**
+     * Executed on submission of an application step
+     */
+    public function onSubmitApplicationStep()
+    {
+        $this->resetCheckAnswers();
+    }
+
+    /**
+     * Return additional Q&A view data applicable to this entity type
+     *
+     * @return array
+     */
+    public function getAdditionalQaViewData()
+    {
+        $countryName = $this->irhpPermitWindow
+            ->getIrhpPermitStock()
+            ->getCountry()
+            ->getCountryDesc();
+
+        return [
+            'countryName' => $countryName
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isApplicationPathEnabled()
+    {
+        return $this->irhpApplication->getIrhpPermitType()->isIrhpPermitApplicationPathEnabled();
     }
 }

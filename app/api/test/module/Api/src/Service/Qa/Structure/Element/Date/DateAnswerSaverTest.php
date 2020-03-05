@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Date;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\Common\DateTimeFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\DateAnswerSaver;
@@ -30,7 +30,11 @@ class DateAnswerSaverTest extends MockeryTestCase
         ];
 
         $applicationStep = m::mock(ApplicationStepEntity::class);
-        $irhpApplication = m::mock(IrhpApplicationEntity::class);
+
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($applicationStep);
 
         $answerValue = m::mock(DateTime::class);
 
@@ -47,10 +51,10 @@ class DateAnswerSaverTest extends MockeryTestCase
 
         $genericAnswerWriter = m::mock(GenericAnswerWriter::class);
         $genericAnswerWriter->shouldReceive('write')
-            ->with($applicationStep, $irhpApplication, $answerValue, QuestionEntity::QUESTION_TYPE_DATE)
+            ->with($qaContext, $answerValue, QuestionEntity::QUESTION_TYPE_DATE)
             ->once();
 
         $dateAnswerSaver = new DateAnswerSaver($genericAnswerWriter, $genericAnswerFetcher, $dateTimeFactory);
-        $dateAnswerSaver->save($applicationStep, $irhpApplication, $postData);
+        $dateAnswerSaver->save($qaContext, $postData);
     }
 }

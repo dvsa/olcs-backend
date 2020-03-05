@@ -6,10 +6,13 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 use RuntimeException;
 
 class NoOfPermitsGenerator implements ElementGeneratorInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     const TOT_AUTH_VEHICLES_MULTIPLIER = 2;
 
     /** @var NoOfPermitsFactory */
@@ -39,7 +42,7 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
      */
     public function generate(ElementGeneratorContext $context)
     {
-        $irhpApplication = $context->getIrhpApplicationEntity();
+        $irhpApplication = $context->getQaEntity();
 
         $totAuthVehiclesMultiplierMappings = [
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT => 1,

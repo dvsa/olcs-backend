@@ -3481,9 +3481,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive(
-            'getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath'
-        )->once()->with($createdOn)->andReturn(null);
+        $irhpPermitApplication->shouldReceive('getActiveApplicationPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturnNull();
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
@@ -3508,9 +3509,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $applicationPath->shouldReceive('getApplicationSteps')->once()->withNoArgs()->andReturn($applicationSteps);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive(
-            'getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath'
-        )->once()->with($data['createdOn'])->andReturn($applicationPath);
+        $irhpPermitApplication->shouldReceive('getActiveApplicationPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($applicationPath);
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
@@ -3538,7 +3540,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question1Text->shouldReceive('getTranslationKeyFromQuestionKey')->withNoArgs()->andReturn('q1-key');
         $question1Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q1-type');
 
-        $question1 = m::mock(Question::class);
+        $question1 = m::mock(Question::class)->makePartial();
         $question1->shouldReceive('getQuestion')->withNoArgs()->andReturn($question1);
         $question1->shouldReceive('getActiveQuestionText')->with($createdOn)->andReturn($question1Text);
         $question1->shouldReceive('getSlug')->withNoArgs()->andReturn('q1-slug');
@@ -3558,7 +3560,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question2Text->shouldReceive('getTranslationKeyFromQuestionKey')->withNoArgs()->andReturn('q2-key');
         $question2Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q2-type');
 
-        $question2 = m::mock(Question::class);
+        $question2 = m::mock(Question::class)->makePartial();
         $question2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
         $question2->shouldReceive('getActiveQuestionText')->with($createdOn)->andReturn($question2Text);
         $question2->shouldReceive('getSlug')->withNoArgs()->andReturn('q2-slug');
@@ -4151,7 +4153,7 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         $createdOn = new DateTime();
 
-        $question = m::mock(Question::class);
+        $question = m::mock(Question::class)->makePartial();
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(false);
         $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn(null);
 
@@ -4175,7 +4177,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $questionText = m::mock(QuestionText::class);
         $questionText->shouldReceive('getId')->withNoArgs()->once()->andReturn($questionTextId);
 
-        $question = m::mock(Question::class);
+        $question = m::mock(Question::class)->makePartial();
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn($isCustom);
         $question->shouldReceive('getFormControlType')->withNoArgs()->andReturn($formControlType);
         $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn($questionText);
@@ -4201,7 +4203,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $questionText = m::mock(QuestionText::class);
         $questionText->shouldReceive('getId')->withNoArgs()->once()->andReturn($questionTextId);
 
-        $question = m::mock(Question::class);
+        $question = m::mock(Question::class)->makePartial();
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn($isCustom);
         $question->shouldReceive('getFormControlType')->withNoArgs()->andReturn($formControlType);
         $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn($questionText);
@@ -5694,7 +5696,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $answer->expects('getValue')->withNoArgs()->andReturn($expiryDate);
         $answers = new ArrayCollection([$activeQuestionTextId => $answer]);
 
-        $question2 = m::mock(Question::class);
+        $question2 = m::mock(Question::class)->makePartial();
         $question2->expects('getId')->andReturn($questionId);
         $question2->expects('isCustom')->withNoArgs()->andReturnTrue();
         $question2->expects('getFormControlType')->andReturn($formControlType);
@@ -5724,8 +5726,9 @@ class IrhpApplicationEntityTest extends EntityTester
         $applicationPath->expects('getApplicationSteps')->withNoArgs()->andReturn($applicationSteps);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->expects('getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath')
-            ->with(m::type(DateTime::class))
+        $irhpPermitApplication->expects('getActiveApplicationPath')
+            ->once()
+            ->withNoArgs()
             ->andReturn($applicationPath);
 
         $entity->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
@@ -6181,6 +6184,59 @@ class IrhpApplicationEntityTest extends EntityTester
                 $validTo,
                 new DateTime('first day of December next year')
             ],
+        ];
+    }
+
+    public function testOnSubmitApplicationStep()
+    {
+        $this->sut->shouldReceive('resetCheckAnswersAndDeclaration')
+            ->withNoArgs()
+            ->once();
+
+        $this->sut->onSubmitApplicationStep();
+    }
+
+    public function testGetAdditionalQaViewData()
+    {
+        $applicationRef = 'OB12345 / 100001';
+
+        $this->sut->shouldReceive('getApplicationRef')
+            ->withNoArgs()
+            ->andReturn($applicationRef);
+
+        $expected = [
+            'applicationReference' => $applicationRef
+        ];
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->getAdditionalQaViewData()
+        );
+    }
+
+    /**
+     * @dataProvider dpIsApplicationPathEnabled
+     */
+    public function testIsApplicationPathEnabled($isEnabled)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isApplicationPathEnabled')
+            ->withNoArgs()
+            ->andReturn($isEnabled);
+
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $isEnabled,
+            $this->sut->isApplicationPathEnabled()
+        );
+    }
+
+    public function dpIsApplicationPathEnabled()
+    {
+        return [
+            [true],
+            [false],
         ];
     }
 }

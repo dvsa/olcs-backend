@@ -19,11 +19,12 @@ class Answer extends AbstractRepository
      * Get an answer to the given application step
      *
      * @param int $questionId
-     * @param int $irhpApplicationId
+     * @param string $entityType
+     * @param int $entityId
      *
-     * @return mix|null
+     * @return mixed|null
      */
-    public function fetchByQuestionIdAndIrhpApplicationId($questionId, $irhpApplicationId)
+    public function fetchByQuestionIdAndEntityTypeAndId($questionId, $entityType, $entityId)
     {
         try {
             return $this->getEntityManager()->createQueryBuilder()
@@ -31,9 +32,9 @@ class Answer extends AbstractRepository
                 ->from(Entity::class, 'a')
                 ->innerJoin('a.questionText', 'qt')
                 ->where('IDENTITY(qt.question) = ?1')
-                ->andWhere('IDENTITY(a.irhpApplication) = ?2')
+                ->andWhere('IDENTITY(a.' . $entityType . ') = ?2')
                 ->setParameter(1, $questionId)
-                ->setParameter(2, $irhpApplicationId)
+                ->setParameter(2, $entityId)
                 ->getQuery()
                 ->getSingleResult();
         } catch (NoResultException $e) {

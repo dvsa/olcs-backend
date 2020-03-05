@@ -88,7 +88,7 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('resetSectionCompletion')
             ->twice();
 
-        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->isApplicationPathEnabled')
+        $irhpApplicationEntity->shouldReceive('isApplicationPathEnabled')
             ->withNoArgs()
             ->once()
             ->andReturn(false);
@@ -189,7 +189,7 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('resetSectionCompletion')
             ->twice();
 
-        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->isApplicationPathEnabled')
+        $irhpApplicationEntity->shouldReceive('isApplicationPathEnabled')
             ->withNoArgs()
             ->once()
             ->andReturn(false);
@@ -276,8 +276,7 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->once()
             ->with($cmdData['dateReceived']);
 
-
-        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->isApplicationPathEnabled')
+        $irhpApplicationEntity->shouldReceive('isApplicationPathEnabled')
             ->withNoArgs()
             ->once()
             ->andReturn(true);

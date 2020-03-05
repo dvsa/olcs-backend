@@ -4,9 +4,11 @@ namespace Dvsa\OlcsTest\Api\Entity\Generic;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\Question as Entity;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 
@@ -128,6 +130,45 @@ class QuestionEntityTest extends EntityTester
         $this->assertEquals(
             $optionSourceAsArray,
             $entity->getDecodedOptionSource()
+        );
+    }
+
+    public function testGetStandardAnswer()
+    {
+        $activeQuestionTextId = 77;
+
+        $answerValue = 'foo';
+
+        $answer = m::mock(Answer::class);
+        $answer->shouldReceive('getValue')
+            ->withNoArgs()
+            ->andReturn($answerValue);
+
+        $answersArrayCollection = m::mock(ArrayCollection::class);
+        $answersArrayCollection->shouldReceive('get')
+            ->with($activeQuestionTextId)
+            ->andReturn($answer);
+
+        $qaEntity = m::mock(QaEntityInterface::class);
+        $qaEntity->shouldReceive('getAnswers')
+            ->withNoArgs()
+            ->andReturn($answersArrayCollection);
+
+        $applicationPathLockedOn = m::mock(\DateTime::class);
+
+        $activeQuestionText = m::mock(QuestionTextEntity::class);
+        $activeQuestionText->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($activeQuestionTextId);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getActiveQuestionText')
+            ->with($applicationPathLockedOn)
+            ->andReturn($activeQuestionText);
+
+        $this->assertEquals(
+            $answerValue,
+            $entity->getStandardAnswer($qaEntity, $applicationPathLockedOn)
         );
     }
 }

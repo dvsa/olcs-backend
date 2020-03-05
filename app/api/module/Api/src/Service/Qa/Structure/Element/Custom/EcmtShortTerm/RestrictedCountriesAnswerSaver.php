@@ -5,17 +5,19 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\Common\ArrayCollectionFactory;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class RestrictedCountriesAnswerSaver implements AnswerSaverInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     /** @var IrhpApplicationRepository */
     private $irhpApplicationRepo;
 
@@ -65,11 +67,11 @@ class RestrictedCountriesAnswerSaver implements AnswerSaverInterface
     /**
      * {@inheritdoc}
      */
-    public function save(
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity,
-        array $postData
-    ) {
+    public function save(QaContext $qaContext, array $postData)
+    {
+        $applicationStepEntity = $qaContext->getApplicationStepEntity();
+        $irhpApplicationEntity = $qaContext->getQaEntity();
+
         $hasRestrictedCountries = $this->namedAnswerFetcher->fetch(
             $applicationStepEntity,
             $postData,
@@ -101,12 +103,7 @@ class RestrictedCountriesAnswerSaver implements AnswerSaverInterface
             }
         }
 
-        $this->genericAnswerWriter->write(
-            $applicationStepEntity,
-            $irhpApplicationEntity,
-            $hasRestrictedCountries,
-            Question::QUESTION_TYPE_BOOLEAN
-        );
+        $this->genericAnswerWriter->write($qaContext, $hasRestrictedCountries, Question::QUESTION_TYPE_BOOLEAN);
 
         $irhpApplicationEntity->updateCountries($countryReferences);
         $this->irhpApplicationRepo->save($irhpApplicationEntity);

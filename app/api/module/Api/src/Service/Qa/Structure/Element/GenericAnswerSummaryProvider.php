@@ -2,12 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
+use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 
 class GenericAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
+    use AnyTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -19,13 +21,8 @@ class GenericAnswerSummaryProvider implements AnswerSummaryProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getTemplateVariables(
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity,
-        $isSnapshot
-    ) {
-        return [
-            'answer' => $irhpApplicationEntity->getAnswer($applicationStepEntity)
-        ];
+    public function getTemplateVariables(QaContext $qaContext, $isSnapshot)
+    {
+        return ['answer' => $qaContext->getAnswerValue()];
     }
 }

@@ -2,8 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\BaseAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerSaver;
 use Mockery as m;
@@ -24,15 +23,14 @@ class GenericAnswerSaverTest extends MockeryTestCase
             ]
         ];
 
-        $applicationStep = m::mock(ApplicationStep::class);
-        $irhpApplication = m::mock(IrhpApplication::class);
+        $qaContext = m::mock(QaContext::class);
 
         $baseAnswerSaver = m::mock(BaseAnswerSaver::class);
         $baseAnswerSaver->shouldReceive('save')
-            ->with($applicationStep, $irhpApplication, $postData)
+            ->with($qaContext, $postData)
             ->once();
 
         $genericAnswerSaver = new GenericAnswerSaver($baseAnswerSaver);
-        $genericAnswerSaver->save($applicationStep, $irhpApplication, $postData);
+        $genericAnswerSaver->save($qaContext, $postData);
     }
 }

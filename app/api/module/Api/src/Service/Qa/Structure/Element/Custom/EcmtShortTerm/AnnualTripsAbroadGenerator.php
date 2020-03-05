@@ -5,9 +5,12 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\TextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class AnnualTripsAbroadGenerator implements ElementGeneratorInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     /** @var AnnualTripsAbroadFactory */
     private $annualTripsAbroadFactory;
 
@@ -33,7 +36,7 @@ class AnnualTripsAbroadGenerator implements ElementGeneratorInterface
      */
     public function generate(ElementGeneratorContext $context)
     {
-        $irhpApplication = $context->getIrhpApplicationEntity();
+        $irhpApplication = $context->getQaEntity();
 
         return $this->annualTripsAbroadFactory->create(
             $irhpApplication->getIntensityOfUseWarningThreshold(),

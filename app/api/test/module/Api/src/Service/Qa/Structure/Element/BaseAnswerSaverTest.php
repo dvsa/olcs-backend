@@ -4,10 +4,10 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\BaseAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -22,9 +22,9 @@ class BaseAnswerSaverTest extends MockeryTestCase
 
     private $postData;
 
-    private $applicationStep;
+    private $qaContext;
 
-    private $irhpApplication;
+    private $applicationStep;
 
     private $genericAnswerWriter;
 
@@ -41,10 +41,11 @@ class BaseAnswerSaverTest extends MockeryTestCase
         ];
 
         $this->applicationStep = m::mock(ApplicationStep::class);
-        $this->applicationStep->shouldReceive('getFieldsetName')
-            ->andReturn($fieldsetName);
 
-        $this->irhpApplication = m::mock(IrhpApplication::class);
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($this->applicationStep);
 
         $this->genericAnswerWriter = m::mock(GenericAnswerWriter::class);
 
@@ -59,10 +60,10 @@ class BaseAnswerSaverTest extends MockeryTestCase
     public function testSaveWithoutQuestionType()
     {
         $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->applicationStep, $this->irhpApplication, $this->qaElementValue, null)
+            ->with($this->qaContext, $this->qaElementValue, null)
             ->once();
 
-        $this->baseAnswerSaver->save($this->applicationStep, $this->irhpApplication, $this->postData);
+        $this->baseAnswerSaver->save($this->qaContext, $this->postData);
     }
 
     /**
@@ -71,10 +72,10 @@ class BaseAnswerSaverTest extends MockeryTestCase
     public function testSaveWithQuestionType($questionType)
     {
         $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->applicationStep, $this->irhpApplication, $this->qaElementValue, $questionType)
+            ->with($this->qaContext, $this->qaElementValue, $questionType)
             ->once();
 
-        $this->baseAnswerSaver->save($this->applicationStep, $this->irhpApplication, $this->postData, $questionType);
+        $this->baseAnswerSaver->save($this->qaContext, $this->postData, $questionType);
     }
 
     public function dpSaveWithQuestionType()

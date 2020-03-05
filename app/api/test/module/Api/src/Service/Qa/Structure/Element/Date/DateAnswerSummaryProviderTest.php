@@ -2,8 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\DateAnswerSummaryProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -37,18 +36,12 @@ class DateAnswerSummaryProviderTest extends MockeryTestCase
     {
         $qaAnswer = '2020-05-02';
 
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($applicationStepEntity)
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
             ->andReturn($qaAnswer);
 
-        $templateVariables = $this->dateAnswerSummaryProvider->getTemplateVariables(
-            $applicationStepEntity,
-            $irhpApplicationEntity,
-            $isSnapshot
-        );
+        $templateVariables = $this->dateAnswerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
 
         $this->assertEquals(
             ['answer' => '02/05/2020'],

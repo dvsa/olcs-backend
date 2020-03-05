@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\AnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerSaver;
@@ -32,6 +33,14 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
             ]
         ];
 
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($applicationStepEntity);
+        $qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($irhpApplicationEntity);
+
         $genericAnswerFetcher = m::mock(GenericAnswerFetcher::class);
         $genericAnswerFetcher->shouldReceive('fetch')
             ->with($applicationStepEntity, $postData)
@@ -53,6 +62,6 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
             $feeCreator
         );
 
-        $noOfPermitsAnswerSaver->save($applicationStepEntity, $irhpApplicationEntity, $postData);
+        $noOfPermitsAnswerSaver->save($qaContext, $postData);
     }
 }

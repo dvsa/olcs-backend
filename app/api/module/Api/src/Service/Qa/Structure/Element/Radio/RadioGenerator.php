@@ -6,9 +6,12 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 
 class RadioGenerator implements ElementGeneratorInterface
 {
+    use AnyTrait;
+
     /** @var RadioFactory */
     private $radioFactory;
 
@@ -48,7 +51,7 @@ class RadioGenerator implements ElementGeneratorInterface
         return $this->radioFactory->create(
             $this->optionsGenerator->generate($options['source']),
             $this->translateableTextGenerator->generate($options['notSelectedMessage']),
-            $context->getIrhpApplicationEntity()->getAnswer($applicationStepEntity)
+            $context->getAnswerValue()
         );
     }
 }
