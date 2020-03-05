@@ -10,6 +10,10 @@
             "type": "composer"
         },
         {
+            "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
+            "type": "vcs"
+        },
+        {
             "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy",
             "type": "composer"
         },
@@ -33,7 +37,7 @@
         "olcs/olcs-companies-house": "~4.206.0",
         "olcs/olcs-cpms": "~4.206.0",
         "olcs/olcs-logging": "~4.206.0",
-        "olcs/olcs-transfer": "~4.206.0",
+        "olcs/olcs-transfer": "dev-project/bilaterals",
         "olcs/olcs-utils": "~4.206.0",
         "olcs/olcs-xmltools": "~4.206.0",
         "oro/doctrine-extensions": "^1.2",
