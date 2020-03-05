@@ -2,9 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\BaseAnswerSaver;
 use Mockery as m;
@@ -25,15 +24,14 @@ class AnnualTripsAbroadAnswerSaverTest extends MockeryTestCase
             ]
         ];
 
-        $applicationStep = m::mock(ApplicationStepEntity::class);
-        $irhpApplication = m::mock(IrhpApplicationEntity::class);
+        $qaContext = m::mock(QaContext::class);
 
         $baseAnswerSaver = m::mock(BaseAnswerSaver::class);
         $baseAnswerSaver->shouldReceive('save')
-            ->with($applicationStep, $irhpApplication, $postData, QuestionEntity::QUESTION_TYPE_STRING)
+            ->with($qaContext, $postData, QuestionEntity::QUESTION_TYPE_STRING)
             ->once();
 
         $annualTripsAbroadAnswerSaver = new AnnualTripsAbroadAnswerSaver($baseAnswerSaver);
-        $annualTripsAbroadAnswerSaver->save($applicationStep, $irhpApplication, $postData);
+        $annualTripsAbroadAnswerSaver->save($qaContext, $postData);
     }
 }

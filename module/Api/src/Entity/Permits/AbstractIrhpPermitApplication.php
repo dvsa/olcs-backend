@@ -196,6 +196,19 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     protected $version = 1;
 
     /**
+     * Answer
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\Answer",
+     *     mappedBy="irhpPermitApplication",
+     *     indexBy="question_text_id"
+     * )
+     */
+    protected $answers;
+
+    /**
      * Irhp candidate permit
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -236,6 +249,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      */
     public function initCollections()
     {
+        $this->answers = new ArrayCollection();
         $this->irhpCandidatePermits = new ArrayCollection();
         $this->irhpPermits = new ArrayCollection();
     }
@@ -604,6 +618,69 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the answer
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setAnswers($answers)
+    {
+        $this->answers = $answers;
+
+        return $this;
+    }
+
+    /**
+     * Get the answers
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getAnswers()
+    {
+        return $this->answers;
+    }
+
+    /**
+     * Add a answers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being added
+     *
+     * @return IrhpPermitApplication
+     */
+    public function addAnswers($answers)
+    {
+        if ($answers instanceof ArrayCollection) {
+            $this->answers = new ArrayCollection(
+                array_merge(
+                    $this->answers->toArray(),
+                    $answers->toArray()
+                )
+            );
+        } elseif (!$this->answers->contains($answers)) {
+            $this->answers->add($answers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a answers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being removed
+     *
+     * @return IrhpPermitApplication
+     */
+    public function removeAnswers($answers)
+    {
+        if ($this->answers->contains($answers)) {
+            $this->answers->removeElement($answers);
+        }
+
+        return $this;
     }
 
     /**

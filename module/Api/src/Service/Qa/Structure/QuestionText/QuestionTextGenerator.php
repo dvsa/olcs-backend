@@ -3,9 +3,13 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\JsonDecodingFilteredTranslateableTextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 
 class QuestionTextGenerator implements QuestionTextGeneratorInterface
 {
+    use AnyTrait;
+
     /** @var QuestionTextFactory */
     private $questionTextFactory;
 
@@ -31,9 +35,9 @@ class QuestionTextGenerator implements QuestionTextGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate(QuestionTextGeneratorContext $context)
+    public function generate(QaContext $qaContext)
     {
-        $questionTextEntity = $context->getApplicationStepEntity()->getQuestion()->getActiveQuestionText();
+        $questionTextEntity = $qaContext->getApplicationStepEntity()->getQuestion()->getActiveQuestionText();
 
         return $this->questionTextFactory->create(
             $this->jsonDecodingFilteredTranslateableTextGenerator->generate(

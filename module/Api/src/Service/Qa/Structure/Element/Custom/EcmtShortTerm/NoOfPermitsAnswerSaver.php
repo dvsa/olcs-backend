@@ -3,12 +3,14 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepository;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class NoOfPermitsAnswerSaver implements AnswerSaverInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     /** @var IrhpPermitApplicationRepository */
     private $irhpPermitApplicationRepo;
 
@@ -40,11 +42,11 @@ class NoOfPermitsAnswerSaver implements AnswerSaverInterface
     /**
      * {@inheritdoc}
      */
-    public function save(
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity,
-        array $postData
-    ) {
+    public function save(QaContext $qaContext, array $postData)
+    {
+        $applicationStepEntity = $qaContext->getApplicationStepEntity();
+        $irhpApplicationEntity = $qaContext->getQaEntity();
+
         $requiredEuro5 = $this->noOfPermitsAnswerFetcher->fetch(
             $applicationStepEntity,
             $postData,

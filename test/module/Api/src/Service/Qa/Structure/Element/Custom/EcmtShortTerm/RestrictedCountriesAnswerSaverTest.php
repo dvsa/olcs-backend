@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\Common\ArrayCollectionFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
@@ -27,6 +28,8 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
     private $applicationStep;
 
     private $irhpApplication;
+
+    private $qaContext;
 
     private $arrayCollection;
 
@@ -49,6 +52,14 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
         $this->applicationStep = m::mock(ApplicationStepEntity::class);
 
         $this->irhpApplication = m::mock(IrhpApplicationEntity::class);
+
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($this->applicationStep);
+        $this->qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($this->irhpApplication);
 
         $this->arrayCollection = m::mock(ArrayCollection::class);
 
@@ -141,8 +152,7 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
 
         $this->genericAnswerWriter->shouldReceive('write')
             ->with(
-                $this->applicationStep,
-                $this->irhpApplication,
+                $this->qaContext,
                 $hasRestrictedCountries,
                 Question::QUESTION_TYPE_BOOLEAN
             )
@@ -152,7 +162,7 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
             ->with($stockId)
             ->andReturn(['GR', 'HU', 'IT', 'RU']);
 
-        $this->restrictedCountriesAnswerSaver->save($this->applicationStep, $this->irhpApplication, $postData);
+        $this->restrictedCountriesAnswerSaver->save($this->qaContext, $postData);
     }
 
     public function testSaveWhenNo()
@@ -190,13 +200,12 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
 
         $this->genericAnswerWriter->shouldReceive('write')
             ->with(
-                $this->applicationStep,
-                $this->irhpApplication,
+                $this->qaContext,
                 $hasRestrictedCountries,
                 Question::QUESTION_TYPE_BOOLEAN
             )
             ->once();
 
-        $this->restrictedCountriesAnswerSaver->save($this->applicationStep, $this->irhpApplication, $postData);
+        $this->restrictedCountriesAnswerSaver->save($this->qaContext, $postData);
     }
 }

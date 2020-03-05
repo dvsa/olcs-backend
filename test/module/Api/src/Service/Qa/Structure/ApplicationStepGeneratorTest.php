@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepGenerator;
@@ -31,7 +31,6 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
         $fieldsetName = 'fieldset123';
         $questionShortKey = 'Cabotage';
         $questionId = 47;
-        $irhpApplicationId = 82;
 
         $question = m::mock(Question::class);
         $question->shouldReceive('getId')
@@ -40,16 +39,16 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($questionShortKey);
 
-
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
         $applicationStepEntity->shouldReceive('getFieldsetName')
             ->andReturn($fieldsetName);
         $applicationStepEntity->shouldReceive('getQuestion')
             ->andReturn($question);
 
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getId')
-            ->andReturn($irhpApplicationId);
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($applicationStepEntity);
 
         $element = m::mock(ElementInterface::class);
 
@@ -83,7 +82,7 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
 
         $elementGeneratorContextFactory = m::mock(ElementGeneratorContextFactory::class);
         $elementGeneratorContextFactory->shouldReceive('create')
-            ->with($validatorList, $applicationStepEntity, $irhpApplicationEntity)
+            ->with($validatorList, $qaContext)
             ->andReturn($elementGeneratorContext);
 
         $applicationStepGenerator = new ApplicationStepGenerator(
@@ -95,7 +94,7 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
 
         $this->assertSame(
             $applicationStep,
-            $applicationStepGenerator->generate($applicationStepEntity, $irhpApplicationEntity)
+            $applicationStepGenerator->generate($qaContext)
         );
     }
 }

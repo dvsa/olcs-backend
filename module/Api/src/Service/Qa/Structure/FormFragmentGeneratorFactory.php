@@ -18,7 +18,8 @@ class FormFragmentGeneratorFactory implements FactoryInterface
     {
         return new FormFragmentGenerator(
             $serviceLocator->get('QaFormFragmentFactory'),
-            $serviceLocator->get('QaApplicationStepGenerator')
+            $serviceLocator->get('QaApplicationStepGenerator'),
+            $serviceLocator->get('QaContextFactory')
         );
     }
 }

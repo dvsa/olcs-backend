@@ -2,11 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class SelfservePageGenerator
 {
@@ -19,53 +16,44 @@ class SelfservePageGenerator
     /** @var FormControlStrategyProvider */
     private $formControlStrategyProvider;
 
-    /** @var QuestionTextGeneratorContextFactory */
-    private $questionTextGeneratorContextFactory;
-
     /**
      * Create service instance
      *
      * @param SelfservePageFactory $selfservePageFactory
      * @param ApplicationStepGenerator $applicationStepGenerator
      * @param FormControlStrategyProvider $formControlStrategyProvider
-     * @param QuestionTextGeneratorContextFactory $questionTextGeneratorContextFactory
      *
      * @return SelfservePageGenerator
      */
     public function __construct(
         SelfservePageFactory $selfservePageFactory,
         ApplicationStepGenerator $applicationStepGenerator,
-        FormControlStrategyProvider $formControlStrategyProvider,
-        QuestionTextGeneratorContextFactory $questionTextGeneratorContextFactory
+        FormControlStrategyProvider $formControlStrategyProvider
     ) {
         $this->selfservePageFactory = $selfservePageFactory;
         $this->applicationStepGenerator = $applicationStepGenerator;
         $this->formControlStrategyProvider = $formControlStrategyProvider;
-        $this->questionTextGeneratorContextFactory = $questionTextGeneratorContextFactory;
     }
 
     /**
      * Build and return a Selfserve instance using the appropriate data sources
      *
-     * @param ApplicationStepEntity $applicationStepEntity
-     * @param IrhpApplicationEntity $irhpApplicationEntity
+     * @param QaContext $qaContext
      *
      * @return SelfservePage
      */
-    public function generate(ApplicationStepEntity $applicationStepEntity, IrhpApplicationEntity $irhpApplicationEntity)
+    public function generate(QaContext $qaContext)
     {
-        $questionTextGeneratorContext = $this->questionTextGeneratorContextFactory->create(
-            $applicationStepEntity,
-            $irhpApplicationEntity
-        );
+        $applicationStepEntity = $qaContext->getApplicationStepEntity();
+        $qaEntity = $qaContext->getQaEntity();
 
         $formControlStrategy = $this->formControlStrategyProvider->get($applicationStepEntity);
 
         $selfservePage = $this->selfservePageFactory->create(
             $applicationStepEntity->getQuestion()->getActiveQuestionText()->getQuestionShortKey(),
-            $irhpApplicationEntity->getApplicationRef(),
-            $this->applicationStepGenerator->generate($applicationStepEntity, $irhpApplicationEntity),
-            $formControlStrategy->getQuestionText($questionTextGeneratorContext),
+            $qaEntity->getAdditionalQaViewData(),
+            $this->applicationStepGenerator->generate($qaContext),
+            $formControlStrategy->getQuestionText($qaContext),
             $applicationStepEntity->getNextStepSlug()
         );
 

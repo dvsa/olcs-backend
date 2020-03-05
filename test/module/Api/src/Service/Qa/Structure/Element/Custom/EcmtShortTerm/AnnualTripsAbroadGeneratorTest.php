@@ -33,7 +33,7 @@ class AnnualTripsAbroadGeneratorTest extends MockeryTestCase
             ->andReturn($isNi);
 
         $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
-        $elementGeneratorContext->shouldReceive('getIrhpApplicationEntity')
+        $elementGeneratorContext->shouldReceive('getQaEntity')
             ->andReturn($irhpApplication);
 
         $text = m::mock(Text::class);

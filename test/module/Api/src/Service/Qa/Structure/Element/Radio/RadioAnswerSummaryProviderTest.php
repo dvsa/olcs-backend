@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\RadioAnswerSummaryProvider;
 use Mockery as m;
@@ -19,7 +19,7 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
 {
     private $applicationStepEntity;
 
-    private $irhpApplicationEntity;
+    private $qaContext;
 
     private $optionsGenerator;
 
@@ -56,7 +56,10 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($decodedOptionSource);
 
-        $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($this->applicationStepEntity);
 
         $this->optionsGenerator = m::mock(OptionsGenerator::class);
         $this->optionsGenerator->shouldReceive('generate')
@@ -81,15 +84,11 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
     {
         $qaAnswer = 'item2Value';
 
-        $this->irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($this->applicationStepEntity)
+        $this->qaContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
             ->andReturn($qaAnswer);
 
-        $templateVariables = $this->radioAnswerSummaryProvider->getTemplateVariables(
-            $this->applicationStepEntity,
-            $this->irhpApplicationEntity,
-            $isSnapshot
-        );
+        $templateVariables = $this->radioAnswerSummaryProvider->getTemplateVariables($this->qaContext, $isSnapshot);
 
         $this->assertEquals(
             ['answer' => 'item2Label'],
@@ -107,15 +106,11 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
 
         $qaAnswer = 'item4Value';
 
-        $this->irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($this->applicationStepEntity)
+        $this->qaContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
             ->andReturn($qaAnswer);
 
-        $this->radioAnswerSummaryProvider->getTemplateVariables(
-            $this->applicationStepEntity,
-            $this->irhpApplicationEntity,
-            $isSnapshot
-        );
+        $this->radioAnswerSummaryProvider->getTemplateVariables($this->qaContext, $isSnapshot);
     }
 
     public function dpSnapshot()

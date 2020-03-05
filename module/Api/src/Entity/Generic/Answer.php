@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Generic;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Doctrine\ORM\Mapping as ORM;
 use RuntimeException;
 
@@ -33,6 +34,25 @@ class Answer extends AbstractAnswer
         $answer = new self();
         $answer->questionText = $questionText;
         $answer->irhpApplication = $irhpApplication;
+
+        return $answer;
+    }
+
+    /**
+     * Create a new instance for use against an IRHP permit application
+     *
+     * @param QuestionText $questionText
+     * @param IrhpPermitApplication $irhpPermitApplication
+     *
+     * @return Answer
+     */
+    public static function createNewForIrhpPermitApplication(
+        QuestionText $questionText,
+        IrhpPermitApplication $irhpPermitApplication
+    ) {
+        $answer = new self();
+        $answer->questionText = $questionText;
+        $answer->irhpPermitApplication = $irhpPermitApplication;
 
         return $answer;
     }

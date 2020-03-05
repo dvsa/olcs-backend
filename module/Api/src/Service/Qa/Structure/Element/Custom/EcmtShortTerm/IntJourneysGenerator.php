@@ -5,9 +5,12 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\RadioGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class IntJourneysGenerator implements ElementGeneratorInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     /** @var IntJourneysFactory */
     private $intJourneysFactory;
 
@@ -33,7 +36,7 @@ class IntJourneysGenerator implements ElementGeneratorInterface
      */
     public function generate(ElementGeneratorContext $context)
     {
-        $irhpApplication = $context->getIrhpApplicationEntity();
+        $irhpApplication = $context->getQaEntity();
 
         $isNi = $irhpApplication->getLicence()->isNi();
         $radio = $this->radioGenerator->generate($context);

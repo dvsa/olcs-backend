@@ -19,7 +19,7 @@ class AnswersSummaryRowGeneratorFactory implements FactoryInterface
         return new AnswersSummaryRowGenerator(
             $serviceLocator->get('PermitsAnswersSummaryRowFactory'),
             $serviceLocator->get('ViewRenderer'),
-            $serviceLocator->get('QaQuestionTextGeneratorContextFactory')
+            $serviceLocator->get('QaContextFactory')
         );
     }
 }

@@ -73,7 +73,7 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
         /** @var IrhpApplicationEntity $irhpApplication */
         $irhpApplication = $irhpApplicationRepo->fetchById($command->getId());
 
-        if ($irhpApplication->getIrhpPermitType()->isApplicationPathEnabled()) {
+        if ($irhpApplication->isApplicationPathEnabled()) {
             $this->handleSideEffect(
                 SubmitApplicationPath::create(
                     [

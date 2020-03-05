@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Generic;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 /**
  * Question Entity
@@ -92,5 +93,31 @@ class Question extends AbstractQuestion
     public function getDecodedOptionSource()
     {
         return json_decode($this->optionSource, true);
+    }
+
+    /**
+     * Get the answer corresponding to a question for a non-custom question type
+     *
+     * @param QaEntityInterface $qaEntity
+     * @param \DateTime $applicationPathLockedOn
+     *
+     * @return mixed|null
+     */
+    public function getStandardAnswer(QaEntityInterface $qaEntity, \DateTime $applicationPathLockedOn)
+    {
+        $activeQuestionText = $this->getActiveQuestionText($applicationPathLockedOn);
+
+        if (!isset($activeQuestionText)) {
+            return null;
+        }
+
+        /** @var Answer $answer answers are indexed by question_text_id */
+        $answer = $qaEntity->getAnswers()->get($activeQuestionText->getId());
+
+        if (!isset($answer)) {
+            return null;
+        }
+
+        return $answer->getValue();
     }
 }

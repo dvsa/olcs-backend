@@ -2,12 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\Common;
 
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorInterface;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class CertificatesGenerator implements QuestionTextGeneratorInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     /** @var QuestionTextGenerator */
     private $questionTextGenerator;
 
@@ -26,11 +29,11 @@ class CertificatesGenerator implements QuestionTextGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate(QuestionTextGeneratorContext $context)
+    public function generate(QaContext $qaContext)
     {
-        $questionText = $this->questionTextGenerator->generate($context);
+        $questionText = $this->questionTextGenerator->generate($qaContext);
 
-        if ($context->getIrhpApplicationEntity()->getIrhpPermitType()->isEcmtRemoval()) {
+        if ($qaContext->getQaEntity()->getIrhpPermitType()->isEcmtRemoval()) {
             $questionText->getAdditionalGuidance()->getTranslateableText()->setKey(
                 'qanda.common.certificates.additional-guidance.ecmt-removal'
             );

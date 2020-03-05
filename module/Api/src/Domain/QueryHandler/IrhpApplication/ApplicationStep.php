@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Service\Qa\ApplicationStepObjectsProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
 use Dvsa\Olcs\Transfer\Query\Qa\ApplicationStep as ApplicationStepQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -15,8 +15,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ApplicationStep extends AbstractQueryHandler
 {
-    /** @var ApplicationStepObjectsProvider */
-    private $applicationStepObjectsProvider;
+    /** @var QaContextGenerator */
+    private $qaContextGenerator;
 
     /** @var SelfservePageGenerator */
     private $selfservePageGenerator;
@@ -32,7 +32,7 @@ class ApplicationStep extends AbstractQueryHandler
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->applicationStepObjectsProvider = $mainServiceLocator->get('QaApplicationStepObjectsProvider');
+        $this->qaContextGenerator = $mainServiceLocator->get('QaContextGenerator');
         $this->selfservePageGenerator = $mainServiceLocator->get('QaSelfservePageGenerator');
 
         return parent::createService($serviceLocator);
@@ -47,16 +47,13 @@ class ApplicationStep extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        $objects = $this->applicationStepObjectsProvider->getObjects(
+        $qaContext = $this->qaContextGenerator->generate(
             $query->getId(),
+            $query->getIrhpPermitApplication(),
             $query->getSlug()
         );
 
-        $selfservePage = $this->selfservePageGenerator->generate(
-            $objects['applicationStep'],
-            $objects['irhpApplication']
-        );
-
+        $selfservePage = $this->selfservePageGenerator->generate($qaContext);
         return $selfservePage->getRepresentation();
     }
 }

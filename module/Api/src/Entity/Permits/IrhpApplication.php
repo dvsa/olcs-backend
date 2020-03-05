@@ -27,6 +27,7 @@ use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
+use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
@@ -47,6 +48,7 @@ use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckableApplicationInterface;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use RuntimeException;
 
 /**
@@ -72,7 +74,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
     CancelableInterface,
     WithdrawableInterface,
     ContextProviderInterface,
-    CheckableApplicationInterface
+    CheckableApplicationInterface,
+    QaEntityInterface
 {
     use SectionTrait, CandidatePermitCreationTrait, FetchPermitAppSubmissionTaskTrait, TieredProductReference;
 
@@ -390,6 +393,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getAnswer(ApplicationStep $applicationStep)
     {
         $question = $applicationStep->getQuestion();
+        $applicationPathLockedOn = $this->getApplicationPathLockedOn();
 
         if ($question->isCustom()) {
             $formControlType = $question->getFormControlType();
@@ -410,7 +414,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE:
                 case Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE:
                 case Question::FORM_CONTROL_COMMON_CERTIFICATES:
-                    return $this->getStandardQaAnswer($question);
+                    return $question->getStandardAnswer($this, $applicationPathLockedOn);
             }
 
             throw new RuntimeException(
@@ -421,32 +425,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             );
         }
 
-        return $this->getStandardQaAnswer($question);
-    }
-
-    /**
-     * Get the answer corresponding to a question for a non-custom question type
-     *
-     * @param Question $question
-     *
-     * @return mixed|null
-     */
-    private function getStandardQaAnswer(Question $question)
-    {
-        $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
-
-        if (!isset($activeQuestionText)) {
-            return null;
-        }
-
-        /** @var Answer $answer answers are indexed by question_text_id */
-        $answer = $this->getAnswers()->get($activeQuestionText->getId());
-
-        if (!isset($answer)) {
-            return null;
-        }
-
-        return $answer->getValue();
+        return $question->getStandardAnswer($this, $applicationPathLockedOn);
     }
 
     /**
@@ -1537,18 +1516,12 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Get the active application path
-     *
-     * @return ApplicationPath|null
+     * {@inheritdoc}
      */
     public function getActiveApplicationPath()
     {
         // get application path active at the time when the application path was locked
-        return $this->getFirstIrhpPermitApplication()
-            ->getIrhpPermitWindow()
-            ->getIrhpPermitStock()
-            ->getApplicationPathGroup()
-            ->getActiveApplicationPath($this->getApplicationPathLockedOn());
+        return $this->getFirstIrhpPermitApplication()->getActiveApplicationPath();
     }
 
     /**
@@ -2384,5 +2357,39 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createAnswer(QuestionText $questionText)
+    {
+        return Answer::createNewForIrhpApplication($questionText, $this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onSubmitApplicationStep()
+    {
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAdditionalQaViewData()
+    {
+        return [
+            'applicationReference' => $this->getApplicationRef()
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isApplicationPathEnabled()
+    {
+        return $this->irhpPermitType->isApplicationPathEnabled();
     }
 }

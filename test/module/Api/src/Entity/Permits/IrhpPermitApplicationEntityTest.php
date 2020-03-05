@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -780,5 +781,162 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             $answer,
             $entity->getAnswerValueByQuestionId($questionId)
         );
+    }
+
+    /**
+     * @dataProvider dpTestIsNotYetSubmitted
+     */
+    public function testIsNotYetSubmitted($isNotYetSubmitted)
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isNotYetSubmitted')
+            ->withNoArgs()
+            ->andReturn($isNotYetSubmitted);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $isNotYetSubmitted,
+            $entity->isNotYetSubmitted()
+        );
+    }
+
+    public function dpTestIsNotYetSubmitted()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    public function testGetApplicationPathLockedOn()
+    {
+        $applicationPathLockedOn = m::mock(DateTime::class);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getApplicationPathLockedOn')
+            ->withNoArgs()
+            ->andReturn($applicationPathLockedOn);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertSame(
+            $applicationPathLockedOn,
+            $entity->getApplicationPathLockedOn()
+        );
+    }
+
+    public function testGetActiveApplicationPath()
+    {
+        $applicationPathLockedOn = m::mock(DateTime::class);
+        $applicationPath = m::mock(ApplicationPath::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getApplicationPathLockedOn')
+            ->withNoArgs()
+            ->andReturn($applicationPathLockedOn);
+        $entity->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath')
+            ->with($applicationPathLockedOn)
+            ->andReturn($applicationPath);
+
+        $this->assertSame(
+            $applicationPath,
+            $entity->getActiveApplicationPath()
+        );
+    }
+
+    /**
+     * @dataProvider dpResetCheckAnswers
+     */
+    public function testResetCheckAnswers($canBeUpdated, $expectedValue)
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturn($canBeUpdated);
+
+        $this->sut->setIrhpApplication($irhpApplication);
+        $this->sut->setCheckedAnswers(true);
+        $this->sut->resetCheckAnswers();
+
+        $this->assertEquals(
+            $expectedValue,
+            $this->sut->getCheckedAnswers()
+        );
+    }
+
+    public function dpResetCheckAnswers()
+    {
+        return [
+            [true, false],
+            [false, true],
+        ];
+    }
+
+    public function testGetCamelCaseEntityName()
+    {
+        $this->assertEquals(
+            'irhpPermitApplication',
+            $this->sut->getCamelCaseEntityName()
+        );
+    }
+
+    public function testOnSubmitApplicationStep()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('resetCheckAnswers')
+            ->once()
+            ->withNoArgs();
+
+        $entity->onSubmitApplicationStep();
+    }
+
+    public function testGetAdditionalQaViewData()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $countryName = 'Germany';
+
+        $expected = ['countryName' => $countryName];
+
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry->getCountryDesc')
+            ->withNoArgs()
+            ->andReturn($countryName);
+
+        $entity->setIrhpPermitWindow($irhpPermitWindow);
+
+        $this->assertEquals(
+            $expected,
+            $entity->getAdditionalQaViewData()
+        );
+    }
+
+    /**
+     * @dataProvider dpIsApplicationPathEnabled
+     */
+    public function testIsApplicationPathEnabled($isIrhpPermitApplicationPathEnabled)
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitType->isIrhpPermitApplicationPathEnabled')
+            ->withNoArgs()
+            ->andReturn($isIrhpPermitApplicationPathEnabled);
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $isIrhpPermitApplicationPathEnabled,
+            $this->sut->isApplicationPathEnabled()
+        );
+    }
+
+    public function dpIsApplicationPathEnabled()
+    {
+        return [
+            [true],
+            [false],
+        ];
     }
 }

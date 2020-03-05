@@ -4,8 +4,8 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Common\ArrayCollectionFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerClearer;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerClearer;
@@ -23,8 +23,6 @@ class RestrictedCountriesAnswerClearerTest extends MockeryTestCase
     {
         $emptyArrayCollection = m::mock(ArrayCollection::class);
 
-        $applicationStep = m::mock(ApplicationStepEntity::class);
-
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
         $irhpApplication->shouldReceive('updateCountries')
             ->with($emptyArrayCollection)
@@ -32,9 +30,14 @@ class RestrictedCountriesAnswerClearerTest extends MockeryTestCase
             ->globally()
             ->ordered();
 
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($irhpApplication);
+
         $genericAnswerClearer = m::mock(GenericAnswerClearer::class);
         $genericAnswerClearer->shouldReceive('clear')
-            ->with($applicationStep, $irhpApplication)
+            ->with($qaContext)
             ->once();
 
         $irhpApplicationRepo = m::mock(IrhpApplicationRepository::class);
@@ -55,6 +58,6 @@ class RestrictedCountriesAnswerClearerTest extends MockeryTestCase
             $arrayCollectionFactory
         );
 
-        $restrictedCountriesAnswerClearer->clear($applicationStep, $irhpApplication);
+        $restrictedCountriesAnswerClearer->clear($qaContext);
     }
 }

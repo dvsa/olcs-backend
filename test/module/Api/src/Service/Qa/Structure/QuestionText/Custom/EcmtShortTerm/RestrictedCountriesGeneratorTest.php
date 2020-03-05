@@ -5,9 +5,9 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\QuestionText\Custom\EcmtShortTe
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup as ApplicationPathGroupEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -24,7 +24,7 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
 
     private $irhpApplicationEntity;
 
-    private $questionTextGeneratorContext;
+    private $qaContext;
 
     private $questionTextGenerator;
 
@@ -34,8 +34,8 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
     {
         $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
 
-        $this->questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
-        $this->questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity')
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getQaEntity')
             ->withNoArgs()
             ->andReturn($this->irhpApplicationEntity);
 
@@ -79,12 +79,12 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
             ->andReturn($guidanceTranslateableText);
 
         $this->questionTextGenerator->shouldReceive('generate')
-            ->with($this->questionTextGeneratorContext)
+            ->with($this->qaContext)
             ->andReturn($questionText);
 
         $this->assertSame(
             $questionText,
-            $this->restrictedCountriesGenerator->generate($this->questionTextGeneratorContext)
+            $this->restrictedCountriesGenerator->generate($this->qaContext)
         );
     }
 
@@ -130,7 +130,7 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($irhpPermitTypeId);
 
-        $this->restrictedCountriesGenerator->generate($this->questionTextGeneratorContext);
+        $this->restrictedCountriesGenerator->generate($this->qaContext);
     }
 
     public function dpGenerateExceptionOnUnsupportedType()

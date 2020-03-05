@@ -17,7 +17,8 @@ class ApplicationAnswersClearerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new ApplicationAnswersClearer(
-            $serviceLocator->get('QaSupplementedApplicationStepsProvider')
+            $serviceLocator->get('QaSupplementedApplicationStepsProvider'),
+            $serviceLocator->get('QaContextFactory')
         );
     }
 }

@@ -3,9 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\QuestionText\Custom\Common;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\Common\CertificatesGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -21,7 +21,7 @@ class CertificatesGeneratorTest extends MockeryTestCase
 
     private $questionText;
 
-    private $questionTextGeneratorContext;
+    private $qaContext;
 
     private $questionTextGenerator;
 
@@ -31,13 +31,13 @@ class CertificatesGeneratorTest extends MockeryTestCase
 
         $this->questionText = m::mock(QuestionText::class);
 
-        $this->questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
-        $this->questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity')
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getQaEntity')
             ->andReturn($this->irhpApplicationEntity);
 
         $this->questionTextGenerator = m::mock(QuestionTextGenerator::class);
         $this->questionTextGenerator->shouldReceive('generate')
-            ->with($this->questionTextGeneratorContext)
+            ->with($this->qaContext)
             ->andReturn($this->questionText);
     }
 
@@ -59,7 +59,7 @@ class CertificatesGeneratorTest extends MockeryTestCase
 
         $this->assertSame(
             $this->questionText,
-            $certificatesGenerator->generate($this->questionTextGeneratorContext)
+            $certificatesGenerator->generate($this->qaContext)
         );
     }
 
@@ -73,7 +73,7 @@ class CertificatesGeneratorTest extends MockeryTestCase
 
         $this->assertSame(
             $this->questionText,
-            $certificatesGenerator->generate($this->questionTextGeneratorContext)
+            $certificatesGenerator->generate($this->qaContext)
         );
     }
 }

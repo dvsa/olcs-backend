@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Service\Qa\ApplicationStepObjectsProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationStep as SubmitApplicationStepCmd;
@@ -19,8 +19,8 @@ class SubmitApplicationStep extends AbstractCommandHandler
 {
     protected $repoServiceName = 'IrhpApplication';
 
-    /** @var ApplicationStepObjectsProvider */
-    private $applicationStepObjectsProvider;
+    /** @var QaContextGenerator */
+    private $qaContextGenerator;
 
     /** @var FormControlStrategyProvider */
     private $formControlStrategyProvider;
@@ -36,7 +36,7 @@ class SubmitApplicationStep extends AbstractCommandHandler
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->applicationStepObjectsProvider = $mainServiceLocator->get('QaApplicationStepObjectsProvider');
+        $this->qaContextGenerator = $mainServiceLocator->get('QaContextGenerator');
         $this->formControlStrategyProvider = $mainServiceLocator->get('QaFormControlStrategyProvider');
 
         return parent::createService($serviceLocator);
@@ -51,19 +51,21 @@ class SubmitApplicationStep extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-        $objects = $this->applicationStepObjectsProvider->getObjects(
+        $qaContext = $this->qaContextGenerator->generate(
             $command->getId(),
+            $command->getIrhpPermitApplication(),
             $command->getSlug()
         );
 
-        extract($objects);
+        $formControlStrategy = $this->formControlStrategyProvider->get(
+            $qaContext->getApplicationStepEntity()
+        );
 
-        $formControlStrategy = $this->formControlStrategyProvider->get($applicationStep);
-        $formControlStrategy->saveFormData($applicationStep, $irhpApplication, $command->getPostData());
+        $formControlStrategy->saveFormData($qaContext, $command->getPostData());
 
-        // reset check answers and declaration
-        $irhpApplication->resetCheckAnswersAndDeclaration();
-        $this->getRepo()->save($irhpApplication);
+        $qaEntity = $qaContext->getQaEntity();
+        $qaEntity->onSubmitApplicationStep();
+        $this->getRepo()->save($qaContext->getQaEntity());
 
         return $this->result;
     }

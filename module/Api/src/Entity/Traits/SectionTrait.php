@@ -99,7 +99,7 @@ trait SectionTrait
     {
         $this->sectionCompletion = [];
 
-        if ($this->getIrhpPermitType()->isApplicationPathEnabled()) {
+        if ($this->isApplicationPathEnabled()) {
             // q&a
             $data = $this->getQuestionAnswerData();
 

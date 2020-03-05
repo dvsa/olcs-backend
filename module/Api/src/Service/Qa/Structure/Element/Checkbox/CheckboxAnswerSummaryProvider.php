@@ -2,12 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 
 class CheckboxAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
+    use AnyTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -19,13 +21,10 @@ class CheckboxAnswerSummaryProvider implements AnswerSummaryProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getTemplateVariables(
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity,
-        $isSnapshot
-    ) {
+    public function getTemplateVariables(QaContext $qaContext, $isSnapshot)
+    {
         $answerValue = 'No';
-        if ($irhpApplicationEntity->getAnswer($applicationStepEntity)) {
+        if ($qaContext->getAnswerValue()) {
             $answerValue = 'Yes';
         }
 
