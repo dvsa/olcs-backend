@@ -12,7 +12,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use RuntimeException;
 
 class IrhpApplication extends AbstractRepository
 {
@@ -471,5 +473,338 @@ class IrhpApplication extends AbstractRepository
             ->setParameter(2, IrhpInterface::STATUS_UNDER_CONSIDERATION)
             ->getQuery()
             ->getScalarResult();
+    }
+
+    /**
+     * Fetch a summary of issued permits for selfserve
+     *
+     * @param int $organisationId
+     *
+     * @return array
+     */
+    public function fetchSelfserveIssuedPermitsSummary($organisationId)
+    {
+        $applicationStatuses = [IrhpInterface::STATUS_VALID];
+        $orderBy = ['l.lic_no', 'trd.description', 'ia.id'];
+        $filterByColumnName = 'l.organisation_id';
+        $filterByColumnValue = $organisationId;
+
+        return $this->fetchIssuedPermitsSummary(
+            $applicationStatuses,
+            $orderBy,
+            $filterByColumnName,
+            $filterByColumnValue
+        );
+    }
+
+    /**
+     * Fetch a summary of permit applications for selfserve
+     *
+     * @param int $organisationId
+     *
+     * @return array
+     */
+    public function fetchSelfserveApplicationsSummary($organisationId)
+    {
+        $applicationStatuses = [
+            IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+            IrhpInterface::STATUS_UNDER_CONSIDERATION,
+            IrhpInterface::STATUS_AWAITING_FEE,
+            IrhpInterface::STATUS_FEE_PAID,
+            IrhpInterface::STATUS_ISSUING,
+        ];
+        $orderBy = ['l.lic_no', 'trd.description', 'ia.id'];
+        $filterByColumnName = 'l.organisation_id';
+        $filterByColumnValue = $organisationId;
+
+        return $this->fetchApplicationsSummary(
+            $applicationStatuses,
+            $orderBy,
+            $filterByColumnName,
+            $filterByColumnValue
+        );
+    }
+
+    /**
+     * Fetch a summary of issued permits for internal
+     *
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function fetchInternalIssuedPermitsSummary($licenceId)
+    {
+        $applicationStatuses = [IrhpInterface::STATUS_VALID, IrhpInterface::STATUS_EXPIRED];
+        $orderBy = ['applicationRef'];
+        $filterByColumnName = 'l.id';
+        $filterByColumnValue = $licenceId;
+
+        return $this->fetchIssuedPermitsSummary(
+            $applicationStatuses,
+            $orderBy,
+            $filterByColumnName,
+            $filterByColumnValue
+        );
+    }
+
+    /**
+     * Fetch a summary of permit applications for internal
+     *
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function fetchInternalApplicationsSummary($licenceId)
+    {
+        $applicationStatuses = [
+            IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+            IrhpInterface::STATUS_UNDER_CONSIDERATION,
+            IrhpInterface::STATUS_AWAITING_FEE,
+            IrhpInterface::STATUS_FEE_PAID,
+            IrhpInterface::STATUS_ISSUING,
+            IrhpInterface::STATUS_CANCELLED,
+            IrhpInterface::STATUS_WITHDRAWN,
+            IrhpInterface::STATUS_UNSUCCESSFUL,
+        ];
+        $orderBy = [];
+        $filterByColumnName = 'l.id';
+        $filterByColumnValue = $licenceId;
+
+        return $this->fetchApplicationsSummary(
+            $applicationStatuses,
+            $orderBy,
+            $filterByColumnName,
+            $filterByColumnValue
+        );
+    }
+
+    /**
+     * Fetch a summary of issued permits, customised in accordance with the supplied parameters
+     *
+     * @param array $applicationStatuses
+     * @param array $orderBy
+     * @param string $filterByColumnName
+     * @param int $filterByColumnValue
+     *
+     * @return array
+     */
+    private function fetchIssuedPermitsSummary(
+        array $applicationStatuses,
+        array $orderBy,
+        $filterByColumnName,
+        $filterByColumnValue
+    ) {
+        $statementParameters = [
+            'permitType1' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
+            'permitType2' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
+            'permitStatus1' => IrhpPermit::STATUS_PENDING,
+            'permitStatus2' => IrhpPermit::STATUS_AWAITING_PRINTING,
+            'permitStatus3' => IrhpPermit::STATUS_PRINTING,
+            'permitStatus4' => IrhpPermit::STATUS_PRINTED,
+            'permitStatus5' => IrhpPermit::STATUS_ERROR,
+            'filterByColumnValue' => $filterByColumnValue,
+        ];
+
+        $applicationStatusParameterIndex = 1;
+        $applicationStatusSqlParameters = [];
+
+        foreach ($applicationStatuses as $applicationStatus) {
+            $parameterName = 'applicationStatus' . $applicationStatusParameterIndex;
+            $applicationStatusSqlParameters[] = ':' . $parameterName;
+            $statementParameters[$parameterName] = $applicationStatus;
+            $applicationStatusParameterIndex++;
+        }
+
+        $sql = 'select ' .
+            'concat (l.lic_no, \' / \', ia.id) as applicationRef, ' .
+            'ia.id as id, ' .
+            'ia.irhp_permit_type_id as typeId, ' .
+            'ia.status as statusId, ' .
+            'l.id as licenceId, ' .
+            'l.lic_no as licNo, ' .
+            'srd.description as statusDescription, ' .
+            'trd.description as typeDescription, ' .
+            'count(ip.id) as validPermitCount ' .
+            'from ' .
+            'irhp_application ia ' .
+            'inner join licence l on ia.licence_id = l.id ' .
+            'inner join ref_data srd on ia.status = srd.id ' .
+            'left join irhp_permit_application ipa on ipa.irhp_application_id = ia.id ' .
+            'left join irhp_permit ip on ip.irhp_permit_application_id = ipa.id ' .
+            'inner join irhp_permit_type ipt on ia.irhp_permit_type_id = ipt.id ' .
+            'inner join ref_data trd on ipt.name = trd.id ' .
+            'where ' . $this->escapeColumnName($filterByColumnName) . ' = :filterByColumnValue ' .
+            'and ia.status in (' . implode(', ', $applicationStatusSqlParameters) . ') ' .
+            'and (' .
+            '    ia.irhp_permit_type_id in (:permitType1, :permitType2) ' .
+            '    or ' .
+            '    ip.status in (:permitStatus1, :permitStatus2, :permitStatus3, :permitStatus4, :permitStatus5)' .
+            ') ' .
+            'group by ia.id';
+
+        if (count($orderBy)) {
+            $escapedOrderBy = [];
+            foreach ($orderBy as $columnName) {
+                $escapedOrderBy[] = $this->escapeColumnName($columnName);
+            }
+
+            $sql .= ' order by ' . implode(', ', $escapedOrderBy);
+        }
+
+        $statement = $this->getEntityManager()->getConnection()->executeQuery($sql, $statementParameters);
+        return $statement->fetchAll();
+    }
+
+    /**
+     * Fetch a summary of current applications, customised in accordance with the supplied parameters
+     *
+     * @param array $applicationStatuses
+     * @param array $orderBy
+     * @param string $filterByColumnName
+     * @param int $filterByColumnValue
+     *
+     * @return array
+     */
+    private function fetchApplicationsSummary(
+        array $applicationStatuses,
+        array $orderBy,
+        $filterByColumnName,
+        $filterByColumnValue
+    ) {
+        $statementParameters = [
+            'filterByColumnValue' => $filterByColumnValue,
+        ];
+
+        $applicationStatusParameterIndex = 1;
+        $applicationStatusSqlParameters = [];
+
+        foreach ($applicationStatuses as $applicationStatus) {
+            $parameterName = 'applicationStatus' . $applicationStatusParameterIndex;
+            $applicationStatusSqlParameters[] = ':' . $parameterName;
+            $statementParameters[$parameterName] = $applicationStatus;
+            $applicationStatusParameterIndex++;
+        }
+
+        $sql = 'select ' .
+            'concat (l.lic_no, \' / \', ia.id) as applicationRef, ' .
+            'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0)) as permitsRequired, ' .
+            'ia.id as id, ' .
+            'ia.irhp_permit_type_id as typeId, ' .
+            'ia.status as statusId, ' .
+            'srd.description as statusDescription, ' .
+            'trd.description as typeDescription, ' .
+            'ips.period_name_key as periodNameKey, ' .
+            'ips.valid_to as stockValidTo, ' .
+            'l.id as licenceId ' .
+            'from ' .
+            'irhp_application ia ' .
+            'inner join licence l on ia.licence_id = l.id ' .
+            'inner join ref_data srd on ia.status = srd.id ' .
+            'left join irhp_permit_application ipa on ipa.irhp_application_id = ia.id ' .
+            'inner join irhp_permit_type ipt on ia.irhp_permit_type_id = ipt.id ' .
+            'inner join ref_data trd on ipt.name = trd.id ' .
+            'left join irhp_permit_window ipw on ipa.irhp_permit_window_id = ipw.id ' .
+            'left join irhp_permit_stock ips on ipw.irhp_permit_stock_id = ips.id ' .
+            'where ' . $this->escapeColumnName($filterByColumnName) . ' = :filterByColumnValue ' .
+            'and ia.status in (' . implode(', ', $applicationStatusSqlParameters) . ') ' .
+            'group by ia.id';
+
+        if (count($orderBy)) {
+            $escapedOrderBy = [];
+            foreach ($orderBy as $columnName) {
+                $escapedOrderBy[] = $this->escapeColumnName($columnName);
+            }
+
+            $sql .= ' order by ' . implode(', ', $escapedOrderBy);
+        }
+
+        $statement = $this->getEntityManager()->getConnection()->executeQuery($sql, $statementParameters);
+        return $statement->fetchAll();
+    }
+
+    /**
+     * Reformulate a column name consisting of an optional prefix and identifier into something usable within a query,
+     * throwing a RuntimeException if it contains risky characters
+     *
+     * @param string $columnName
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    private function escapeColumnName($columnName)
+    {
+        $columnNameElements = explode('.', $columnName);
+        $columnNameElementsCount = count($columnNameElements);
+
+        if ($columnNameElementsCount == 1) {
+            return $this->escapeColumnNameWithoutPrefix($columnNameElements);
+        } elseif ($columnNameElementsCount == 2) {
+            return $this->escapeColumnNameWithPrefix($columnNameElements);
+        }
+
+        throw new RuntimeException('Unexpected number of elements in column name ' . $columnName);
+    }
+
+    /**
+     * Reformulate a column name consisting of an identifier
+     *
+     * @param array $columnNameElements
+     *
+     * return string
+     */
+    private function escapeColumnNameWithoutPrefix(array $columnNameElements)
+    {
+        $identifier = $columnNameElements[0];
+
+        $this->validateIdentifier($identifier);
+
+        return sprintf('`%s`', $identifier);
+    }
+
+    /**
+     * Reformulate a column name consisting of a prefix and identifier
+     *
+     * @param array $columnNameElements
+     *
+     * return string
+     */
+    private function escapeColumnNameWithPrefix(array $columnNameElements)
+    {
+        $prefix = $columnNameElements[0];
+        $identifier = $columnNameElements[1];
+
+        $this->validatePrefix($prefix);
+        $this->validateIdentifier($identifier);
+
+        return sprintf('%s.`%s`', $prefix, $identifier);
+    }
+
+    /**
+     * Validate the prefix element of a column name
+     *
+     * @param string $prefix
+     *
+     * @throws RuntimeException
+     */
+    private function validatePrefix($prefix)
+    {
+        if (preg_match('/^[a-zA-Z0-9]+$/', $prefix) !== 1) {
+            throw new RuntimeException('Unpermitted characters in prefix ' . $prefix);
+        }
+    }
+
+    /**
+     * Validate the identifier element of a column name
+     *
+     * @param string $identifier
+     *
+     * @throws RuntimeException
+     */
+    private function validateIdentifier($identifier)
+    {
+        if (preg_match('/^[a-zA-Z0-9_]+$/', $identifier) !== 1) {
+            throw new RuntimeException('Unpermitted characters in identifier ' . $identifier);
+        }
     }
 }
