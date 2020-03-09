@@ -89,6 +89,11 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
         return $this->getAccessibleSectionsForLva('licence', $licence, $licence);
     }
 
+    public function getAccessibleSectionsForLicenceContinuation(Licence $licence)
+    {
+        return $this->getAccessibleSectionsForLva('continuation', $licence, $licence);
+    }
+
     protected function getAccessibleSectionsForLva($lva, Licence $licence, $entity)
     {
         $location = $this->isGranted(Permission::INTERNAL_USER) ? 'internal' : 'external';
