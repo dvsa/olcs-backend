@@ -193,6 +193,24 @@ class SectionAccessServiceTest extends MockeryTestCase
         static::assertEquals('EXPECTED', $sut->getAccessibleSectionsForLicence($mockLic));
     }
 
+    public function testGetAccessibleSectionsForLicenceContinuation()
+    {
+        /** @var Licence $mockLic */
+        $mockLic = m::mock(Licence::class);
+
+        /** @var SectionAccessService|m\MockInterface $sut */
+        $sut = m::mock(SectionAccessService::class . '[getAccessibleSectionsForLva]')
+            ->shouldAllowMockingProtectedMethods();
+
+        $sut->shouldReceive('getAccessibleSectionsForLva')
+            ->with('continuation', $mockLic, $mockLic)
+            ->once()
+            ->andReturn('EXPECTED')
+            ->getMock();
+
+        static::assertEquals('EXPECTED', $sut->getAccessibleSectionsForLicenceContinuation($mockLic));
+    }
+
     /**
      * Helper method to DRY up the test
      */
