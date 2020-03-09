@@ -335,4 +335,99 @@ class DocumentGeneratorTest extends MockeryTestCase
 
         $this->sut->generateFromTemplate(412, [], []);
     }
+
+    public function testDisableBookmarksFlagWithY()
+    {
+        $this->contentStore->shouldReceive('read')
+            ->with('myTemplate')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/myTemplate.rtf')
+            ->andReturn('file');
+
+        $this->document->shouldNotReceive('getBookmarkQueries');
+
+        $this->queryHandlerManager->shouldNotReceive('handleQuery');
+
+        $this->document->shouldReceive('populateBookmarks')
+            ->with('file', ['knownValues' => 2]);
+
+        $this->sut->generateFromTemplate(
+            'myTemplate',
+            ['queryData' => 1],
+            ['knownValues' => 2],
+            true
+        );
+
+        $expectFileName = 'myTemplate';
+        $expectBody = 'expect_Body';
+
+        $this->fileUploader
+            ->shouldReceive('upload')
+            ->andReturnUsing(
+                function ($fileName, DsFile $file) use ($expectFileName, $expectBody) {
+                    static::assertSame($expectFileName, $fileName);
+                    static::assertEquals($expectBody, $file->getContent());
+
+                    return 'EXPECT';
+                }
+            );
+
+        static::assertEquals('EXPECT', $this->sut->uploadGeneratedContent($expectBody, $expectFileName));
+    }
+
+    public function testDisableBookmarksFlagWithN()
+    {
+        $query = [
+            'a' => m::mock(QueryInterface::class),
+            'b' => [
+                m::mock(QueryInterface::class),
+                m::mock(QueryInterface::class)
+            ]
+        ];
+
+        $this->contentStore->shouldReceive('read')
+            ->with('x')
+            ->andReturn(null)
+            ->shouldReceive('read')
+            ->with('/templates/x.rtf')
+            ->andReturn('file');
+
+        $this->document->shouldReceive('getBookmarkQueries')
+            ->with('file', ['y' => 1])
+            ->andReturn($query)
+            ->shouldReceive('populateBookmarks')
+            ->with('file', ['a' => ['a' => 1], 'b' => [['b' => 1], ['b' => 2]], 'z' => 2]);
+
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['a'])
+            ->andReturn(['a' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][0])
+            ->andReturn(['b' => 1])
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->with($query['b'][1])
+            ->andReturn(['b' => 2]);
+
+        $this->sut->generateFromTemplate('x', ['y' => 1], ['z' => 2], false);
+
+        $expectFileName = 'myTemplate';
+        $expectBody = 'expect_Body';
+
+        $this->fileUploader
+            ->shouldReceive('upload')
+            ->andReturnUsing(
+                function ($fileName, DsFile $file) use ($expectFileName, $expectBody) {
+                    static::assertSame($expectFileName, $fileName);
+                    static::assertEquals($expectBody, $file->getContent());
+
+                    return 'EXPECT';
+                }
+            );
+
+        static::assertEquals('EXPECT', $this->sut->uploadGeneratedContent($expectBody, $expectFileName));
+    }
 }
