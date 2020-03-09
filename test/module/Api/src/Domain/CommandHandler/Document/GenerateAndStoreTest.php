@@ -69,7 +69,8 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
             'category' => 11,
             'subCategory' => 22,
             'licence' => 111,
-            'dispatch' => true
+            'dispatch' => true,
+            'disableBookmarks' => false
         ];
 
         $command = \Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore::create($data);
@@ -94,7 +95,7 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateFromTemplate')
             ->once()
-            ->with('foo', ['licence' => 111, 'user' => 123], ['foo' => 'bar'])
+            ->with('foo', ['licence' => 111, 'user' => 123], ['foo' => 'bar'], false)
             ->andReturn($document)
             ->shouldReceive('uploadGeneratedContent')
             ->once()
@@ -119,6 +120,7 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
         unset($data['query']);
         unset($data['knownValues']);
         unset($data['dispatch']);
+        unset($data['disableBookmarks']);
 
         $data['identifier'] = 12345;
         $data['size'] = 100;
@@ -153,7 +155,8 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
             'description' => 'Foo bar/ [cake]',
             'category' => 11,
             'subCategory' => 22,
-            'licence' => 111
+            'licence' => 111,
+            'disableBookmarks' => true
         ];
 
         $command = \Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore::create($data);
@@ -171,7 +174,7 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['DocumentGenerator']->shouldReceive('generateFromTemplate')
             ->once()
-            ->with('foo', ['licence' => 111, 'user' => 123], ['foo' => 'bar'])
+            ->with('foo', ['licence' => 111, 'user' => 123], ['foo' => 'bar'], true)
             ->andReturn($document)
             ->shouldReceive('uploadGeneratedContent')
             ->once()
@@ -195,6 +198,7 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
         unset($data['template']);
         unset($data['query']);
         unset($data['knownValues']);
+        unset($data['disableBookmarks']);
 
         $data['identifier'] = 12345;
         $data['size'] = 100;

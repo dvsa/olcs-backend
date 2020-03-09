@@ -51,7 +51,8 @@ final class GenerateAndStore extends AbstractCommandHandler implements
         $document = $this->getDocumentGenerator()->generateFromTemplate(
             $command->getTemplate(),
             $queryData,
-            $command->getKnownValues()
+            $command->getKnownValues(),
+            $command->getDisableBookmarks()
         );
 
         $fileName = $this->getNamingService()->generateName(

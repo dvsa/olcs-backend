@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
-final class SendLiquidatedCompanyForRegisteredUser extends AbstractEmailOnlyCommandHandler
+final class SendPtrNotificationForRegisteredUser extends AbstractEmailOnlyCommandHandler
 {
     protected function getEmailSubject(): string
     {
