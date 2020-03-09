@@ -2,9 +2,9 @@
 
 namespace module\Api\src\Domain\CommandHandler\Email;
 
-use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForRegisteredUser as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendPtrNotificationForRegisteredUser as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendLiquidatedCompanyForRegisteredUser;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendPtrNotificationForRegisteredUser;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
@@ -12,14 +12,14 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
-class SendLiquidatedCompanyForRegisteredUserTest extends CommandHandlerTestCase
+class SendPtrNotificationForRegisteredUserTest extends CommandHandlerTestCase
 {
-    /** @var CommandInterface|SendLiquidatedCompanyForRegisteredUser */
+    /** @var CommandInterface|SendPtrNotificationForRegisteredUser */
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new SendLiquidatedCompanyForRegisteredUser();
+        $this->sut = new SendPtrNotificationForRegisteredUser();
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),

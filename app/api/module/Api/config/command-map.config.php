@@ -234,6 +234,7 @@ return [
     Command\Licence\Refuse::class => CommandHandler\Licence\Refuse::class,
     Command\Licence\NotTakenUp::class => CommandHandler\Licence\NotTakenUp::class,
     Command\Licence\UnderConsideration::class => CommandHandler\Licence\UnderConsideration::class,
+    TransferCommand\Licence\ProposeToRevoke::class => CommandHandler\Licence\ProposeToRevoke::class,
 
     TransferCommand\Licence\CreatePsvDiscs::class => CommandHandler\Licence\CreatePsvDiscs::class,
     TransferCommand\Licence\VoidPsvDiscs::class => CommandHandler\Licence\VoidPsvDiscs::class,
@@ -449,6 +450,7 @@ return [
     TransferCommand\Document\MoveDocument::class => CommandHandler\Document\MoveDocument::class,
     TransferCommand\Document\UpdateDocumentLinks::class => CommandHandler\Document\UpdateDocumentLinks::class,
     TransferCommand\Document\PrintLetter::class => CommandHandler\Document\PrintLetter::class,
+    TransferCommand\Document\PrintLetters::class => CommandHandler\Document\PrintLetters::class,
     Command\Document\RemoveDeletedDocuments::class => CommandHandler\Document\RemoveDeletedDocuments::class,
 
     // Transfer - DocumentTemplate
@@ -779,7 +781,8 @@ return [
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
     Command\Email\SendInternationalGoods::class => CommandHandler\Email\SendInternationalGoods::class,
-    Command\Email\SendLiquidatedCompanyForRegisteredUser::class => CommandHandler\Email\SendLiquidatedCompanyForRegisteredUser::class,
+    Command\Email\SendPtrNotificationForRegisteredUser::class => CommandHandler\Email\SendPtrNotificationForRegisteredUser::class,
+    Command\Email\SendPtrNotificationForUnregisteredUser::class => CommandHandler\Email\SendPtrNotificationForUnregisteredUser::class,
     Command\Email\SendLiquidatedCompanyForUnregisteredUser::class => CommandHandler\Email\SendLiquidatedCompanyForUnregisteredUser::class,
     Command\Email\SendEcmtAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtAutomaticallyWithdrawn::class,
     Command\Email\SendEcmtShortTermSuccessful::class => CommandHandler\Email\SendEcmtShortTermSuccessful::class,

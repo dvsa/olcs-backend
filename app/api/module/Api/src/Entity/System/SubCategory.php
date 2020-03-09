@@ -45,4 +45,5 @@ class SubCategory extends AbstractSubCategory
     const REPORT_SUB_CATEGORY_PERMITS = 196;
 
     const DOC_SUB_CATEGORY_REG_29_31_SECTION_57 = 81;
+    const DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION = 195;
 }

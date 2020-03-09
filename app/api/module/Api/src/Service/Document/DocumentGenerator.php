@@ -55,6 +55,8 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
      */
     private $documentRepo;
 
+    private $disableBookmarksFlag = false;
+
     /**
      * Create service
      *
@@ -78,21 +80,23 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
      * Helper method to generate a string of content from a given template and
      * query parameters
      *
-     * @param string $template    Template path or id
-     * @param array  $queryData   Query Data
-     * @param array  $knownValues Values
+     * @param string $template             Template path or id
+     * @param array  $queryData            Query Data
+     * @param array  $knownValues          Values
+     * @param bool $disableBookmarksFlag should the bookmark rendering be disabled?
      *
      * @return string
      */
-    public function generateFromTemplate($template, $queryData = [], $knownValues = [])
+    public function generateFromTemplate($template, $queryData = [], $knownValues = [], $disableBookmarksFlag = false)
     {
+        $this->disableBookmarksFlag = $disableBookmarksFlag;
         // if template is an int then assume it is an ID to a document ID
         if (is_int($template)) {
             try {
                 /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $documentTemplate */
                 $documentTemplate = $this->documentRepo->fetchById($template);
             } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
-                throw new \Exception('Template not found whilst trying to fetch document id'. $template);
+                throw new \Exception('Template not found whilst trying to fetch document id' . $template);
             }
             $possibleTemplatePaths = [$documentTemplate->getIdentifier()];
         } else {
@@ -149,7 +153,9 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         }
 
         try {
-            $queries = $this->documentService->getBookmarkQueries($file, $queryData);
+            $queries =
+                $this->disableBookmarksFlag ? [] :
+                $this->documentService->getBookmarkQueries($file, $queryData);
         } catch (\Exception $e) {
             throw new \Exception('Error generating the document: ' . $e->getMessage());
         }

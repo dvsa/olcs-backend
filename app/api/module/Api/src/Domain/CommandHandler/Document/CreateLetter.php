@@ -55,7 +55,8 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
             'subCategory' => $queryData['details']['documentSubCategory'],
             'isExternal' => false,
             'isScan' => false,
-            'metadata' => $command->getMeta()
+            'metadata' => $command->getMeta(),
+            'disableBookmarks' => $command->getDisableBookmarks()
         ];
 
         try {
