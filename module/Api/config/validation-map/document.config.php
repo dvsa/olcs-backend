@@ -1,13 +1,14 @@
 <?php
 
-use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanAccessDocumentsWithIds;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanAccessDocumentWithId;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanCreateDocument;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanAccessDocumentWithId;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanCreateDocument;
 
 return [
     CommandHandler\Document\DeleteDocument::class => CanAccessDocumentWithId::class,
@@ -20,6 +21,7 @@ return [
     CommandHandler\Document\GenerateAndStoreWithMultipleAddresses::class => IsSystemUser::class,
     CommandHandler\Document\MoveDocument::class => IsInternalUser::class,
     CommandHandler\Document\PrintLetter::class => CanAccessDocumentWithId::class,
+    CommandHandler\Document\PrintLetters::class => CanAccessDocumentsWithIds::class,
     CommandHandler\Document\UpdateDocumentLinks::class => IsInternalUser::class,
     CommandHandler\Document\RemoveDeletedDocuments::class => IsSystemUser::class,
     CommandHandler\Email\SendPsvOperatorListReport::class => CanAccessDocumentWithId::class,

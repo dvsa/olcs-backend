@@ -35,7 +35,8 @@ class CreateLetterTest extends CommandHandlerTestCase
         $data = [
             'template' => 111,
             'data' => $queryData,
-            'meta' => 'foo'
+            'meta' => 'foo',
+            'disableBookmarks' => true
         ];
 
         $command = Cmd::create($data);
@@ -60,7 +61,8 @@ class CreateLetterTest extends CommandHandlerTestCase
             'subCategory' => '321',
             'isExternal' => false,
             'isScan' => false,
-            'metadata' => 'foo'
+            'metadata' => 'foo',
+            'disableBookmarks' => true
         ];
         $this->expectedSideEffect(GenerateAndStore::class, $data, $result);
 
@@ -86,7 +88,8 @@ class CreateLetterTest extends CommandHandlerTestCase
         $data = [
             'template' => 111,
             'data' => $queryData,
-            'meta' => 'foo'
+            'meta' => 'foo',
+            'disableBookmarks' => false
         ];
 
         $command = Cmd::create($data);
@@ -111,7 +114,8 @@ class CreateLetterTest extends CommandHandlerTestCase
             'subCategory' => '321',
             'isExternal' => false,
             'isScan' => false,
-            'metadata' => 'foo'
+            'metadata' => 'foo',
+            'disableBookmarks' => false
         ];
         $this->expectedSideEffectThrowsException(
             GenerateAndStore::class,

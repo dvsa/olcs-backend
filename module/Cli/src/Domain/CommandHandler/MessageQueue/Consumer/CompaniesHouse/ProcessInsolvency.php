@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\CompaniesHou
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForRegisteredUser;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendPtrNotificationForRegisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForUnregisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -269,7 +269,7 @@ class ProcessInsolvency extends AbstractConsumer
                     'translateToWelsh' => $translateToWelsh
                 ];
                 return $this->emailQueue(
-                    SendLiquidatedCompanyForRegisteredUser::class,
+                    SendPtrNotificationForRegisteredUser::class,
                     $selfServeUserEmailCommandsData,
                     $this->company->getId()
                 );
@@ -359,7 +359,7 @@ class ProcessInsolvency extends AbstractConsumer
         if (!$isRegistered) {
             $cmd = $this->emailQueue(SendLiquidatedCompanyForUnregisteredUser::class, $cmdData, $this->company->getId());
         } else {
-            $cmd = $this->emailQueue(SendLiquidatedCompanyForRegisteredUser::class, $cmdData, $this->company->getId());
+            $cmd = $this->emailQueue(SendPtrNotificationForRegisteredUser::class, $cmdData, $this->company->getId());
         }
 
         $this->result->merge($this->handleSideEffect($cmd));
