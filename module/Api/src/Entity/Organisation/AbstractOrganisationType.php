@@ -17,8 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\Table(name="organisation_type",
  *    indexes={
- *        @ORM\Index(name="ix_organisation_type_org_type_id", columns={"org_type_id"}),
- *        @ORM\Index(name="ix_organisation_type_org_person_type_id", columns={"org_person_type_id"})
+ *        @ORM\Index(name="ix_organisation_type_org_person_type_id", columns={"org_person_type_id"}),
+ *        @ORM\Index(name="ix_organisation_type_org_type_id", columns={"org_type_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_organisation_type_org_type_id_org_person_type_id",

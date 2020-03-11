@@ -21,10 +21,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_gv_permit_type",
  *    indexes={
- *        @ORM\Index(name="ix_irfo_gv_permit_type_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_irfo_gv_permit_type_irfo_country_id", columns={"irfo_country_id"}),
  *        @ORM\Index(name="ix_irfo_gv_permit_type_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_irfo_gv_permit_type_irfo_fee_type", columns={"irfo_fee_type"})
+ *        @ORM\Index(name="ix_irfo_gv_permit_type_irfo_country_id", columns={"irfo_country_id"}),
+ *        @ORM\Index(name="ix_irfo_gv_permit_type_irfo_fee_type", columns={"irfo_fee_type"}),
+ *        @ORM\Index(name="ix_irfo_gv_permit_type_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

@@ -21,11 +21,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="task_alpha_split",
  *    indexes={
- *        @ORM\Index(name="ix_task_alpha_split_user_id", columns={"user_id"}),
+ *        @ORM\Index(name="ix_task_alpha_split_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_task_alpha_split_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_task_alpha_split_task_allocation_rule_id",
      *     columns={"task_allocation_rule_id"}),
- *        @ORM\Index(name="ix_task_alpha_split_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ix_task_alpha_split_user_id", columns={"user_id"})
  *    }
  * )
  */
