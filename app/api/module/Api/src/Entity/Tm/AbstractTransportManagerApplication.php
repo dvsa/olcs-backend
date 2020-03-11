@@ -25,22 +25,22 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="transport_manager_application",
  *    indexes={
+ *        @ORM\Index(name="ix_op_application_op_digital_signature_id",
+     *     columns={"op_digital_signature_id"}),
  *        @ORM\Index(name="ix_op_application_op_signature_type", columns={"op_signature_type"}),
+ *        @ORM\Index(name="ix_tm_application_tm_digital_signature_id",
+     *     columns={"tm_digital_signature_id"}),
+ *        @ORM\Index(name="ix_tm_application_tm_signature_type", columns={"tm_signature_type"}),
  *        @ORM\Index(name="ix_transport_manager_application_application_id",
      *     columns={"application_id"}),
+ *        @ORM\Index(name="ix_transport_manager_application_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_transport_manager_application_last_modified_by",
      *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_transport_manager_application_tm_application_status",
      *     columns={"tm_application_status"}),
- *        @ORM\Index(name="ix_tm_application_tm_signature_type", columns={"tm_signature_type"}),
- *        @ORM\Index(name="ix_transport_manager_application_transport_manager_id",
-     *     columns={"transport_manager_id"}),
- *        @ORM\Index(name="ix_transport_manager_application_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_transport_manager_application_tm_type", columns={"tm_type"}),
- *        @ORM\Index(name="ix_tm_application_tm_digital_signature_id",
-     *     columns={"tm_digital_signature_id"}),
- *        @ORM\Index(name="ix_op_application_op_digital_signature_id",
-     *     columns={"op_digital_signature_id"})
+ *        @ORM\Index(name="ix_transport_manager_application_transport_manager_id",
+     *     columns={"transport_manager_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_transport_manager_application_olbs_key", columns={"olbs_key"})

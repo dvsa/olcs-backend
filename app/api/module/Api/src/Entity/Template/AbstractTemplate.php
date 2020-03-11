@@ -22,9 +22,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="template",
  *    indexes={
  *        @ORM\Index(name="ix_template_category_id", columns={"category_id"}),
+ *        @ORM\Index(name="ix_template_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_template_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_template_template_test_data_id", columns={"template_test_data_id"}),
- *        @ORM\Index(name="ix_template_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ix_template_template_test_data_id", columns={"template_test_data_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="unique_name", columns={"locale","format","name"})

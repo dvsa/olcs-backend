@@ -21,10 +21,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="disc_sequence",
  *    indexes={
- *        @ORM\Index(name="ix_disc_sequence_traffic_area_id", columns={"traffic_area_id"}),
- *        @ORM\Index(name="ix_disc_sequence_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_disc_sequence_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_disc_sequence_goods_or_psv", columns={"goods_or_psv"}),
- *        @ORM\Index(name="ix_disc_sequence_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ix_disc_sequence_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_disc_sequence_traffic_area_id", columns={"traffic_area_id"})
  *    }
  * )
  */

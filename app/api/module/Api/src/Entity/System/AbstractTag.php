@@ -21,8 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="tag",
  *    indexes={
- *        @ORM\Index(name="fk_tag_users_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_tag_users_created_by", columns={"created_by"})
+ *        @ORM\Index(name="fk_tag_users_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="fk_tag_users_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

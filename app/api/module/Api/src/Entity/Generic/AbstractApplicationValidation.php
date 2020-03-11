@@ -21,12 +21,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="application_validation",
  *    indexes={
- *        @ORM\Index(name="ix_application_validation_question_id", columns={"question_id"}),
  *        @ORM\Index(name="fk_application_validation_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_application_validation_last_modified_by_user_id",
+     *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_application_validation_application_step_id",
      *     columns={"application_step_id"}),
- *        @ORM\Index(name="fk_application_validation_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_application_validation_question_id", columns={"question_id"})
  *    }
  * )
  */
