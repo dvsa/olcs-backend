@@ -694,4 +694,6 @@ return [
     TransferQuery\TranslationKey\ById::class => QueryHandler\TranslationKey\ById::class,
     TransferQuery\TranslationKey\GetList::class => QueryHandler\TranslationKey\GetList::class,
     TransferQuery\Language\GetList::class => QueryHandler\Language\GetList::class,
+
+    QueryCli\DataRetention\TableChecks::class => QueryHandlerCli\DataRetention\TableChecks::class,
 ];
