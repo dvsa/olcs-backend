@@ -97,32 +97,25 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_ROADWORTHINESS_ONLY = 'This method is only for roadworthiness certificates';
     const ERR_ROADWORTHINESS_MOT_EXPIRY = 'The MOT has not yet expired on this record';
 
+    const COUNTRY_PROPERTY_CODE = 'code';
+    const COUNTRY_PROPERTY_NAME = 'name';
+    const COUNTRY_PROPERTY_STATUS = 'status';
+
     const SECTIONS = [
         IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => [
-            'licence' => [
-                'validator' => 'fieldIsNotNull',
-            ],
             'countries' => [
-                'validator' => 'countriesPopulated',
-            ],
-            'permitsRequired' => [
-                'validator' => 'permitsRequiredPopulated',
-                'validateIf' => [
-                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
-            ],
-            'checkedAnswers' => [
-                'validator' => 'fieldIsAgreed',
-                'validateIf' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
+                'validator' => 'areBilateralCountriesCompleted',
             ],
             'declaration' => [
                 'validator' => 'fieldIsAgreed',
                 'validateIf' => [
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+            'submitAndPay' => [
+                'validator' => SectionableInterface::VALIDATOR_ALWAYS_FALSE,
+                'validateIf' => [
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                 ],
             ],
         ],
@@ -187,20 +180,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     private $storedFeesRequired;
 
     /**
-     * This is a custom validator for the countries field
-     *
-     * @param string $field field being checked
-     *
-     * @return bool
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    private function countriesPopulated($field)
-    {
-        return $this->collectionHasRecord('irhpPermitApplications');
-    }
-
-    /**
      * This is a custom validator for the permitsRequired field
      *
      * @param string $field field being checked
@@ -248,6 +227,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
+            'isOverviewAccessible' => $this->isOverviewAccessible(),
             'isSubmittedForConsideration' => $this->isSubmittedForConsideration(),
             'isValid' => $this->isValid(),
             'isFeePaid' => $this->isFeePaid(),
@@ -277,8 +257,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getQuestionAnswerData(): array
     {
-        // this method is now used only to build the overview page for q&a permit types
-        if ($this->isBilateral() || $this->isMultilateral()) {
+        if ($this->isBilateral()) {
+            return $this->getBilateralQuestionAnswerData();
+        }
+
+        if ($this->isMultilateral()) {
             return [];
         }
 
@@ -384,6 +367,19 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ];
 
         return $data;
+    }
+
+    /**
+     * Get question and answer data for bilateral
+     *
+     * @return array
+     */
+    private function getBilateralQuestionAnswerData()
+    {
+        return [
+            'countries' => $this->getBilateralCountriesAndStatuses(),
+            'reviewAndSubmit' => $this->getSectionCompletion(),
+        ];
     }
 
     /**
@@ -533,108 +529,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Get question and answer data for a bilateral application
-     *
-     * @return array
-     */
-    private function getQuestionAnswerDataBilateral(): array
-    {
-        $numberOfPermits = [];
-        $countriesArray = [];
-
-        /** @var IrhpPermitApplication $irhpPermitApplication */
-        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
-            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
-
-            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
-            if ($permitsRequired === null) {
-                continue;
-            }
-
-            $stock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
-            $country = $stock->getCountry()->getCountryDesc();
-            $year = $stock->getValidTo(true)->format('Y');
-
-            $numberOfPermits[$country][$year] = $permitsRequired;
-            $countriesArray[$country] = $country;
-        }
-
-        $data = [
-            [
-                'question' => 'permits.check-answers.page.question.licence',
-                'answer' =>  $this->licence->getLicNo(),
-                'questionType' => Question::QUESTION_TYPE_STRING,
-            ],
-            [
-                'question' => 'permits.irhp.countries.transporting',
-                'answer' =>  $countriesArray,
-                'questionType' => Question::QUESTION_TYPE_STRING,
-            ],
-            [
-                'question' => 'permits.snapshot.number.required',
-                'answer' =>  $this->getPermitsRequired(),
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-        ];
-
-        foreach ($numberOfPermits as $country => $years) {
-            foreach ($years as $year => $permitsRequired) {
-                $data[] = [
-                    'question' => sprintf('%s for %d', $country, $year),
-                    'answer' => $permitsRequired,
-                    'questionType' => Question::QUESTION_TYPE_INTEGER,
-                ];
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Get question and answer data for a multilateral application
-     *
-     * @return array
-     */
-    private function getQuestionAnswerDataMultilateral(): array
-    {
-        $data = [
-            [
-                'question' => 'permits.check-answers.page.question.licence',
-                'answer' =>  $this->licence->getLicNo(),
-                'questionType' => Question::QUESTION_TYPE_STRING,
-            ],
-            [
-                'question' => 'permits.snapshot.number.required',
-                'answer' =>  $this->getPermitsRequired(),
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ],
-        ];
-
-        /** @var IrhpPermitApplication $irhpPermitApplication */
-        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
-            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
-
-            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
-            if ($permitsRequired === null) {
-                continue;
-            }
-
-            $year = $irhpPermitApplication->getIrhpPermitWindow()
-                ->getIrhpPermitStock()
-                ->getValidTo(true)
-                ->format('Y');
-
-            $data[] = [
-                'question' => sprintf('For %d', $year),
-                'answer' => $permitsRequired,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
-            ];
-        }
-
-        return $data;
-    }
-
-    /**
      * Get the application reference
      *
      * @return string
@@ -698,6 +592,22 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function isNotYetSubmitted()
     {
         return $this->status->getId() === IrhpInterface::STATUS_NOT_YET_SUBMITTED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOverviewAccessible()
+    {
+        if (!$this->isNotYetSubmitted()) {
+            return false;
+        }
+
+        if ($this->isBilateral()) {
+            return count($this->countrys) > 0;
+        }
+
+        return true;
     }
 
     /**
@@ -917,6 +827,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function hasCheckedAnswers()
     {
+        if ($this->isBilateral()) {
+            return false;
+        }
+
         return $this->fieldIsAgreed('checkedAnswers');
     }
 
@@ -952,6 +866,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function canCheckAnswers()
     {
+        if ($this->isBilateral()) {
+            return false;
+        }
+
         return $this->canBeUpdated() && $this->isFieldReadyToComplete('checkedAnswers');
     }
 
@@ -2376,5 +2294,95 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $this->getFirstIrhpPermitApplication()->countPermitsAwarded();
+    }
+
+    /**
+     * Return a list of country codes, names and completion statuses associated with a bilateral application, ordered
+     * alphabetically by country name
+     *
+     * @return array
+     */
+    protected function getBilateralCountriesAndStatuses()
+    {
+        $countryStatuses = [];
+
+        $countryEntities = $this->countrys;
+        foreach ($countryEntities as $countryEntity) {
+            $countryId = $countryEntity->getId();
+
+            $countryStatuses[$countryId] = [
+                self::COUNTRY_PROPERTY_CODE => $countryId,
+                self::COUNTRY_PROPERTY_NAME => $countryEntity->getCountryDesc(),
+                self::COUNTRY_PROPERTY_STATUS => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+            ];
+        }
+
+        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
+            $countryId = $irhpPermitApplication->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getCountry()
+                ->getId();
+
+            if (!isset($countryStatuses[$countryId])) {
+                throw new RuntimeException(
+                    'Found irhp_permit_application instance without accompanying irhp_application_country_link'
+                );
+            }
+
+            $newStatus = SectionableInterface::SECTION_COMPLETION_INCOMPLETE;
+            if ($irhpPermitApplication->getCheckedAnswers()) {
+                $newStatus = SectionableInterface::SECTION_COMPLETION_COMPLETED;
+            }
+
+            $countryStatuses[$countryId][self::COUNTRY_PROPERTY_STATUS] = $newStatus;
+        }
+
+        usort($countryStatuses, [$this, 'usortByCountryName']);
+
+        $result = [];
+        foreach ($countryStatuses as $properties) {
+            $result[] = [
+                'countryCode' => $properties[self::COUNTRY_PROPERTY_CODE],
+                'countryName' => $properties[self::COUNTRY_PROPERTY_NAME],
+                'status' => $properties[self::COUNTRY_PROPERTY_STATUS],
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Sorting method used by getBilateralCountriesAndStatuses
+     *
+     * @return int
+     */
+    protected function usortByCountryName(array $country1, array $country2)
+    {
+        $countryName1 = $country1[self::COUNTRY_PROPERTY_NAME];
+        $countryName2 = $country2[self::COUNTRY_PROPERTY_NAME];
+
+        if ($countryName1 == $countryName2) {
+            return 0;
+        }
+
+        return ($countryName1 > $countryName2) ? 1 : -1;
+    }
+
+    /**
+     * Whether all country sections within a bilateral application have been completed
+     *
+     * @return bool
+     */
+    protected function areBilateralCountriesCompleted()
+    {
+        $countries = $this->getBilateralCountriesAndStatuses();
+
+        foreach ($countries as $country) {
+            if ($country[self::COUNTRY_PROPERTY_STATUS] != SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

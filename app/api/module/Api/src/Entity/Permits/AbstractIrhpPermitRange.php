@@ -23,17 +23,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irhp_permit_range",
  *    indexes={
+ *        @ORM\Index(name="fk_irhp_permit_range_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_range_emissions_category_ref_data_id",
      *     columns={"emissions_category"}),
- *        @ORM\Index(name="fk_irhp_permit_range_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_range_journey_ref_data_id", columns={"journey"}),
  *        @ORM\Index(name="fk_irhp_permit_range_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irhp_permit_range_journey_ref_data_id", columns={"journey"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_ranges_irhp_permit_stocks1_idx",
      *     columns={"irhp_permit_stock_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uniqueRange", columns={"irhp_permit_stock_id","from_no","to_no","cabotage"})
+ *        @ORM\UniqueConstraint(name="uniqueRange",
+     *     columns={"irhp_permit_stock_id","from_no","to_no","cabotage"})
  *    }
  * )
  */
