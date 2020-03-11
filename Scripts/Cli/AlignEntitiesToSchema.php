@@ -1106,9 +1106,13 @@ class AlignEntitiesToSchema
      */
     private function getIndexesFromConfig($config)
     {
-        return $this->standardiseArray(
+        $indexes = $this->standardiseArray(
             isset($config['entity']['indexes']['index']) ? $config['entity']['indexes']['index'] : array()
         );
+
+        usort($indexes, [$this, 'usortItemsByName']);
+
+        return $indexes;
     }
 
     /**
@@ -1119,12 +1123,34 @@ class AlignEntitiesToSchema
      */
     private function getUniqueConstraintsFromConfig($config)
     {
-        return $this->standardiseArray(
+        $uniqueConstraints = $this->standardiseArray(
             isset($config['entity']['unique-constraints']['unique-constraint'])
             ? $config['entity']['unique-constraints']['unique-constraint']
             : array()
         );
+
+        usort($uniqueConstraints, [$this, 'usortItemsByName']);
+
+        return $uniqueConstraints;
     }
+
+    /**
+     * Order items alphabetically
+     *
+     * @param array $item1
+     * @param array $item2
+     */
+    private function usortItemsByName(array $item1, array $item2)
+    {
+        $itemName1 = $item1['@attributes']['name'];
+        $itemName2 = $item2['@attributes']['name'];
+
+        if ($itemName1 == $itemName2) {
+            return 0;
+        }
+        return ($itemName1 < $itemName2) ? -1 : 1;
+    }
+
 
     /**
      * Get fields form config

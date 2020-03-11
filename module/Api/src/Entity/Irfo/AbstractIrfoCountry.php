@@ -21,8 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irfo_country",
  *    indexes={
- *        @ORM\Index(name="ix_irfo_country_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_irfo_country_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ix_irfo_country_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_irfo_country_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */

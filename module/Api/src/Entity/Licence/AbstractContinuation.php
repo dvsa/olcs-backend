@@ -20,10 +20,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="continuation",
  *    indexes={
- *        @ORM\Index(name="ix_continuation_traffic_area_id_year_month",
-     *     columns={"traffic_area_id","year","month"}),
+ *        @ORM\Index(name="ix_continuation_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_continuation_traffic_area_id", columns={"traffic_area_id"}),
- *        @ORM\Index(name="ix_continuation_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ix_continuation_traffic_area_id_year_month",
+     *     columns={"traffic_area_id","year","month"})
  *    }
  * )
  */

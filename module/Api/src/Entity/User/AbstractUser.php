@@ -25,19 +25,19 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="user",
  *    indexes={
- *        @ORM\Index(name="ix_user_team_id", columns={"team_id"}),
- *        @ORM\Index(name="ix_user_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_user_contact_details_id", columns={"contact_details_id"}),
- *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"}),
- *        @ORM\Index(name="ix_user_local_authority_id", columns={"local_authority_id"}),
+ *        @ORM\Index(name="ix_user_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_user_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_user_local_authority_id", columns={"local_authority_id"}),
+ *        @ORM\Index(name="ix_user_os_type", columns={"os_type"}),
  *        @ORM\Index(name="ix_user_partner_contact_details_id",
      *     columns={"partner_contact_details_id"}),
- *        @ORM\Index(name="ix_user_os_type", columns={"os_type"})
+ *        @ORM\Index(name="ix_user_team_id", columns={"team_id"}),
+ *        @ORM\Index(name="ix_user_transport_manager_id", columns={"transport_manager_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_user_pid", columns={"pid"}),
- *        @ORM\UniqueConstraint(name="uk_user_login_id", columns={"login_id"})
+ *        @ORM\UniqueConstraint(name="uk_user_login_id", columns={"login_id"}),
+ *        @ORM\UniqueConstraint(name="uk_user_pid", columns={"pid"})
  *    }
  * )
  */

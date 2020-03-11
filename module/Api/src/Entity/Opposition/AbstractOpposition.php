@@ -25,13 +25,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="opposition",
  *    indexes={
- *        @ORM\Index(name="ix_opposition_opposer_id", columns={"opposer_id"}),
- *        @ORM\Index(name="ix_opposition_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_opposition_opposition_type", columns={"opposition_type"}),
- *        @ORM\Index(name="ix_opposition_status", columns={"status"}),
- *        @ORM\Index(name="ix_opposition_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_opposition_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_opposition_is_valid", columns={"is_valid"})
+ *        @ORM\Index(name="ix_opposition_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_opposition_is_valid", columns={"is_valid"}),
+ *        @ORM\Index(name="ix_opposition_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_opposition_opposer_id", columns={"opposer_id"}),
+ *        @ORM\Index(name="ix_opposition_opposition_type", columns={"opposition_type"}),
+ *        @ORM\Index(name="ix_opposition_status", columns={"status"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_opposition_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})

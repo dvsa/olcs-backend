@@ -25,26 +25,26 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="document",
  *    indexes={
- *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
- *        @ORM\Index(name="ix_document_traffic_area_id", columns={"traffic_area_id"}),
- *        @ORM\Index(name="ix_document_submission_id", columns={"submission_id"}),
- *        @ORM\Index(name="ix_document_sub_category_id", columns={"sub_category_id"}),
  *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
      *     columns={"continuation_detail_id"}),
- *        @ORM\Index(name="ix_document_application_id", columns={"application_id"}),
- *        @ORM\Index(name="ix_document_surrender_id", columns={"surrender_id"}),
- *        @ORM\Index(name="ix_document_transport_manager_id", columns={"transport_manager_id"}),
- *        @ORM\Index(name="ix_document_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_document_irfo_organisation_id", columns={"irfo_organisation_id"}),
- *        @ORM\Index(name="ix_document_category_id", columns={"category_id"}),
- *        @ORM\Index(name="ix_document_statement_id", columns={"statement_id"}),
- *        @ORM\Index(name="ix_document_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"}),
+ *        @ORM\Index(name="ix_document_application_id", columns={"application_id"}),
+ *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_document_case_id", columns={"case_id"}),
- *        @ORM\Index(name="ix_document_os_type", columns={"os_type"}),
+ *        @ORM\Index(name="ix_document_category_id", columns={"category_id"}),
+ *        @ORM\Index(name="ix_document_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_document_irfo_organisation_id", columns={"irfo_organisation_id"}),
+ *        @ORM\Index(name="ix_document_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_document_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_document_operating_centre_id", columns={"operating_centre_id"}),
- *        @ORM\Index(name="ix_document_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_document_os_type", columns={"os_type"}),
+ *        @ORM\Index(name="ix_document_statement_id", columns={"statement_id"}),
+ *        @ORM\Index(name="ix_document_sub_category_id", columns={"sub_category_id"}),
+ *        @ORM\Index(name="ix_document_submission_id", columns={"submission_id"}),
+ *        @ORM\Index(name="ix_document_surrender_id", columns={"surrender_id"}),
+ *        @ORM\Index(name="ix_document_traffic_area_id", columns={"traffic_area_id"}),
+ *        @ORM\Index(name="ix_document_transport_manager_id", columns={"transport_manager_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -432,19 +432,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $ebsrSubmission;
 
     /**
-     * Request erru
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
-     *
-     * @ORM\OneToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
-     *     mappedBy="requestDocument",
-     *     cascade={"persist"}
-     * )
-     */
-    protected $requestErru;
-
-    /**
      * Response erru
      *
      * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
@@ -456,6 +443,19 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * )
      */
     protected $responseErru;
+
+    /**
+     * Request erru
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
+     *     mappedBy="requestDocument",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $requestErru;
 
     /**
      * Sla target date
@@ -1392,30 +1392,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the request erru
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $requestErru entity being set as the value
-     *
-     * @return Document
-     */
-    public function setRequestErru($requestErru)
-    {
-        $this->requestErru = $requestErru;
-
-        return $this;
-    }
-
-    /**
-     * Get the request erru
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
-     */
-    public function getRequestErru()
-    {
-        return $this->requestErru;
-    }
-
-    /**
      * Set the response erru
      *
      * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $responseErru entity being set as the value
@@ -1437,6 +1413,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getResponseErru()
     {
         return $this->responseErru;
+    }
+
+    /**
+     * Set the request erru
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $requestErru entity being set as the value
+     *
+     * @return Document
+     */
+    public function setRequestErru($requestErru)
+    {
+        $this->requestErru = $requestErru;
+
+        return $this;
+    }
+
+    /**
+     * Get the request erru
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     */
+    public function getRequestErru()
+    {
+        return $this->requestErru;
     }
 
     /**

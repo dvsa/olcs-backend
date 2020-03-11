@@ -25,10 +25,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="tm_case_decision",
  *    indexes={
- *        @ORM\Index(name="ix_tm_case_decision_decision", columns={"decision"}),
- *        @ORM\Index(name="ix_tm_case_decision_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_tm_case_decision_case_id", columns={"case_id"}),
  *        @ORM\Index(name="ix_tm_case_decision_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_tm_case_decision_case_id", columns={"case_id"})
+ *        @ORM\Index(name="ix_tm_case_decision_decision", columns={"decision"}),
+ *        @ORM\Index(name="ix_tm_case_decision_last_modified_by", columns={"last_modified_by"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_tm_case_decision_olbs_key", columns={"olbs_key"})
