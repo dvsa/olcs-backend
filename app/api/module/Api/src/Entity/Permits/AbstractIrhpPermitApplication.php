@@ -23,16 +23,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irhp_permit_application",
  *    indexes={
- *        @ORM\Index(name="fk_irhp_permit_applications_irhp_permit_windows1_idx",
-     *     columns={"irhp_permit_window_id"}),
- *        @ORM\Index(name="fk_irhp_permit_application_sectors_id1_idx", columns={"sectors_id"}),
  *        @ORM\Index(name="fk_irhp_permit_application_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_application_irhp_application1",
      *     columns={"irhp_application_id"}),
- *        @ORM\Index(name="fk_irhp_permit_applications_licence1_idx", columns={"licence_id"}),
- *        @ORM\Index(name="irhp_permit_type_ref_data_status_id_fk", columns={"status"}),
  *        @ORM\Index(name="fk_irhp_permit_application_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_application_sectors_id1_idx", columns={"sectors_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_applications_irhp_permit_windows1_idx",
+     *     columns={"irhp_permit_window_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_applications_licence1_idx", columns={"licence_id"}),
+ *        @ORM\Index(name="irhp_permit_type_ref_data_status_id_fk", columns={"status"})
  *    }
  * )
  */

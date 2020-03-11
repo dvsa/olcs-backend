@@ -24,9 +24,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="tm_employment",
  *    indexes={
  *        @ORM\Index(name="ix_tm_employment_contact_details_id", columns={"contact_details_id"}),
+ *        @ORM\Index(name="ix_tm_employment_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_tm_employment_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_tm_employment_transport_manager_id", columns={"transport_manager_id"}),
- *        @ORM\Index(name="ix_tm_employment_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ix_tm_employment_transport_manager_id", columns={"transport_manager_id"})
  *    }
  * )
  */

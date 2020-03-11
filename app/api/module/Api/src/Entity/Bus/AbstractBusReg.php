@@ -25,15 +25,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="bus_reg",
  *    indexes={
- *        @ORM\Index(name="ix_bus_reg_status", columns={"status"}),
- *        @ORM\Index(name="ix_bus_reg_parent_id", columns={"parent_id"}),
- *        @ORM\Index(name="ix_bus_reg_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ix_bus_reg_subsidised", columns={"subsidised"}),
- *        @ORM\Index(name="ix_bus_reg_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_bus_reg_withdrawn_reason", columns={"withdrawn_reason"}),
- *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
  *        @ORM\Index(name="ix_bus_reg_bus_notice_period_id", columns={"bus_notice_period_id"}),
- *        @ORM\Index(name="ix_bus_reg_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ix_bus_reg_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_bus_reg_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_bus_reg_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_bus_reg_parent_id", columns={"parent_id"}),
+ *        @ORM\Index(name="ix_bus_reg_revert_status", columns={"revert_status"}),
+ *        @ORM\Index(name="ix_bus_reg_status", columns={"status"}),
+ *        @ORM\Index(name="ix_bus_reg_subsidised", columns={"subsidised"}),
+ *        @ORM\Index(name="ix_bus_reg_withdrawn_reason", columns={"withdrawn_reason"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_bus_reg_olbs_key", columns={"olbs_key"}),

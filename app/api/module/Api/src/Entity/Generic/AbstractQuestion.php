@@ -23,8 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="question",
  *    indexes={
- *        @ORM\Index(name="fk_question_form_control_type_ref_data_id", columns={"form_control_type"}),
  *        @ORM\Index(name="fk_question_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_question_form_control_type_ref_data_id", columns={"form_control_type"}),
  *        @ORM\Index(name="fk_question_last_modified_by_user_id", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_question_question_type_ref_data_id", columns={"question_type"})
  *    },

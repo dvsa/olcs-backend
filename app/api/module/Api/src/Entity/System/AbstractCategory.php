@@ -21,9 +21,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="category",
  *    indexes={
- *        @ORM\Index(name="ix_category_task_allocation_type", columns={"task_allocation_type"}),
  *        @ORM\Index(name="ix_category_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_category_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_category_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_category_task_allocation_type", columns={"task_allocation_type"})
  *    }
  * )
  */

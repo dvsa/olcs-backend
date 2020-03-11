@@ -25,15 +25,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="statement",
  *    indexes={
- *        @ORM\Index(name="ix_statement_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_statement_contact_type", columns={"contact_type"}),
- *        @ORM\Index(name="ix_statement_requestors_contact_details_id",
-     *     columns={"requestors_contact_details_id"}),
  *        @ORM\Index(name="ix_statement_assigned_caseworker", columns={"assigned_caseworker"}),
  *        @ORM\Index(name="ix_statement_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_statement_contact_type", columns={"contact_type"}),
+ *        @ORM\Index(name="ix_statement_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_statement_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_statement_statement_type", columns={"statement_type"}),
- *        @ORM\Index(name="ix_statement_licence_type", columns={"licence_type"})
+ *        @ORM\Index(name="ix_statement_licence_type", columns={"licence_type"}),
+ *        @ORM\Index(name="ix_statement_requestors_contact_details_id",
+     *     columns={"requestors_contact_details_id"}),
+ *        @ORM\Index(name="ix_statement_statement_type", columns={"statement_type"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_statement_olbs_key", columns={"olbs_key"})
