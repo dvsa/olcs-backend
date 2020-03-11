@@ -45,6 +45,15 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     use ModifiedOnTrait;
 
     /**
+     * Checked answers
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="checked_answers", nullable=false, options={"default": 0})
+     */
+    protected $checkedAnswers = 0;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -229,6 +238,30 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     {
         $this->irhpCandidatePermits = new ArrayCollection();
         $this->irhpPermits = new ArrayCollection();
+    }
+
+    /**
+     * Set the checked answers
+     *
+     * @param boolean $checkedAnswers new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setCheckedAnswers($checkedAnswers)
+    {
+        $this->checkedAnswers = $checkedAnswers;
+
+        return $this;
+    }
+
+    /**
+     * Get the checked answers
+     *
+     * @return boolean
+     */
+    public function getCheckedAnswers()
+    {
+        return $this->checkedAnswers;
     }
 
     /**
