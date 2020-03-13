@@ -128,7 +128,7 @@ final class TableChecks extends AbstractQueryHandler
     private function preRunTableCounts(array $tables)
     {
         // Truncate the table storing counts
-        $truncStatement = $this->connection->prepare('TRUNCATE TABLE DR_TABLE_COUNTS;');
+        $truncStatement = $this->connection->prepare('DELETE FROM DR_TABLE_COUNTS');
         $truncStatement->execute(['schema' => $this->databaseName]);
         $truncStatement->closeCursor();
 
@@ -351,7 +351,7 @@ final class TableChecks extends AbstractQueryHandler
             $queries = array_merge(
                 $queries,
                 [
-                    "TRUNCATE TABLE {$tmpGenerateDeleteTableEsc}",
+                    "DELETE FROM {$tmpGenerateDeleteTableEsc}",
                     "INSERT INTO {$tmpGenerateDeleteTableEsc}
                      SELECT {$pksEsc}
                      FROM {$tableEsc}
@@ -374,7 +374,7 @@ final class TableChecks extends AbstractQueryHandler
      */
     private function generatePersistQueries(array $pksByTable)
     {
-        $queries[] = "TRUNCATE TABLE DR_EXPECTED_DELETES";
+        $queries[] = "DELETE FROM DR_EXPECTED_DELETES";
         foreach ($pksByTable as $table => $pks) {
             $tmpExpectedDeleteTableEsc = $this->escapeMysqlIdentifier("tmp_expected_delete_$table");
             $pksEsc = implode(", ", array_map([$this, 'escapeMysqlIdentifier'], $pks));
