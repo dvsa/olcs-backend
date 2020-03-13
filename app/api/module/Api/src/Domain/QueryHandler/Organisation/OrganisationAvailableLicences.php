@@ -101,6 +101,7 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
         return [
             'hasOpenWindow' => $permitStock->hasOpenWindow(),
             'isEcmtAnnual' => $permitType->isEcmtAnnual(),
+            'isBilateral' => $permitType->isBilateral(),
             'permitTypeId' => $permitTypeId,
             'eligibleLicences' => $eligibleLicences,
             'hasEligibleLicences' => !empty($eligibleLicences),
@@ -138,9 +139,17 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
             $eligibleLicences = [];
         }
 
+        /**
+         * @var PermitTypeRepo     $permitTypeRepo
+         * @var PermitTypeEntity   $permitType
+         */
+        $permitTypeRepo = $this->getRepo('IrhpPermitType');
+        $permitType = $permitTypeRepo->fetchById($permitTypeId);
+
         return [
             'hasOpenWindow' => $hasOpenWindow,
             'isEcmtAnnual' => false,
+            'isBilateral' => $permitType->isBilateral(),
             'permitTypeId' => $permitTypeId,
             'eligibleLicences' => $eligibleLicences,
             'hasEligibleLicences' => !empty($eligibleLicences),
