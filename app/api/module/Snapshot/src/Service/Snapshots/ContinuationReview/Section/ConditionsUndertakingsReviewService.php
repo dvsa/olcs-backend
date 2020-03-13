@@ -26,9 +26,17 @@ class ConditionsUndertakingsReviewService extends AbstractReviewService
             'mainItems' => [
                 [
                     'partial' => 'continuation-conditions-undertakings',
-                    'variables' => ['conditionsUndertakings' => $licence->getGroupedConditionsUndertakings()]
+                    'variables' => [
+                        'isPsvRestricted' => $this->isPsvRestricted($licence),
+                        'conditionsUndertakings' => $licence->getGroupedConditionsUndertakings()
+                    ]
                 ],
             ]
         ];
+    }
+
+    protected function isPsvRestricted(Licence $licence)
+    {
+        return $licence->isPsv() && $licence->isRestricted();
     }
 }
