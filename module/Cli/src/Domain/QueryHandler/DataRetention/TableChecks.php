@@ -165,18 +165,20 @@ final class TableChecks extends AbstractQueryHandler
         // Get Primary keys for all tables.
         $pksByTable = $this->getPksByTable();
         foreach ($tables as $table) {
-            $tableEsc = $this->escapeMysqlIdentifier($table);
-            // Attempt to select rows which should have been deleted in a delete run.
-            $selectExpDeletedRows = $this->connection->prepare(
-                "SELECT {$pksByTable[$table][0]} FROM $tableEsc WHERE {$pksByTable[$table][0]} 
+            if (array_key_exists($table, $pksByTable)) {
+                $tableEsc = $this->escapeMysqlIdentifier($table);
+                // Attempt to select rows which should have been deleted in a delete run.
+                $selectExpDeletedRows = $this->connection->prepare(
+                    "SELECT {$pksByTable[$table][0]} FROM $tableEsc WHERE {$pksByTable[$table][0]} 
                           IN (SELECT primarykey FROM DR_EXPECTED_DELETES WHERE tablename = :tablename)"
-            );
-            $selectExpDeletedRows->execute([':tablename' => $this->databaseName]);
-            $rows = $selectExpDeletedRows->fetchAll(PDO::FETCH_COLUMN);
+                );
+                $selectExpDeletedRows->execute([':tablename' => $this->databaseName]);
+                $rows = $selectExpDeletedRows->fetchAll(PDO::FETCH_COLUMN);
 
-            // ideally rows will always be empty, if not then add to array indexed by table-name for reporting.
-            if (!empty($rows)) {
-                $undeletedRows[$table] = $rows;
+                // ideally rows will always be empty, if not then add to array indexed by table-name for reporting.
+                if (!empty($rows)) {
+                    $undeletedRows[$table] = $rows;
+                }
             }
         }
 
