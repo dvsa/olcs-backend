@@ -267,6 +267,7 @@ return [
     'continuation-review-operating_centres' => 'Canolfannau gweithredu ac awdurdodi',
     'continuation-review-transport_managers' => 'Rheolwyr trafnidiaeth',
     'continuation-review-vehicles' => 'Cerbydau',
+    'continuation-review-users' => 'User access',
     'continuation-review-vehicles_psv' => 'Cerbydau',
     'continuation-review-safety' => 'Diogelwch a chydymffurfiad',
     'continuation-review-conditions_undertakings' => 'Ymgymeriadau amodau',
@@ -279,6 +280,10 @@ return [
     'continuations.people-section.table.date-of-birth' => 'Ddyddiad geni',
     'continuations.vehicles-section.table.vrm' => 'Nod gofrestru cerbyd',
     'continuations.vehicles-section.table.weight' => 'Pwysau plât gros (cg)',
+    'continuations.users-section.table.name' => 'Name',
+    'continuations.users-section.table.email' => 'Email address',
+    'continuations.users-section.table.permission' => 'Permission',
+    'continuations.users-section-empty-table-message' => 'There are no users recorded on your licence',
     'continuation-review-addresses-correspondence-address' => 'Cyfeiriad Gohebu',
     'continuation-review-addresses-establishment-address' => 'Cyfeiriad y Sefydliad',
     'continuations.oc-section.table.name' => 'Canolfan weithredu',
@@ -356,6 +361,13 @@ return [
     'permits.page.restricted-countries.question' => 'A fyddwch chi\'n cludo nwyddau i Awstria, Gwlad Groeg, Hwngari, yr Eidal neu Rwsia?',
     'qanda.ecmt-removal.removal-eligibility.question' => 'Dim ond ar gyfer gweithrediadau symud y gellir defnyddio trwyddedau symud, gan ddefnyddio offer arbenigol a staff',
     'qanda.ecmt-removal.cabotage.question' => 'Nid yw trwyddedau symud yn caniatáu ichi gynnal cabotage',
-    
+
+    'role.local-authority-admin' => 'Administrator',
+    'role.local-authority-user' => 'Standard user',
+    'role.operator-admin' => 'Administrator',
+    'role.operator-tm' => 'Transport Manager',
+    'role.operator-user' => 'Standard user',
+    'role.partner-admin' => 'Administrator',
+    'role.partner-user' => 'Standard user',
     // Potentially unused translations
 ];
