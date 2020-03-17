@@ -95,6 +95,15 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     protected $createdBy;
 
     /**
+     * Hidden ss
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="hidden_ss", nullable=false, options={"default": 0})
+     */
+    protected $hiddenSs = 0;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -351,6 +360,30 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set the hidden ss
+     *
+     * @param boolean $hiddenSs new value being set
+     *
+     * @return IrhpPermitStock
+     */
+    public function setHiddenSs($hiddenSs)
+    {
+        $this->hiddenSs = $hiddenSs;
+
+        return $this;
+    }
+
+    /**
+     * Get the hidden ss
+     *
+     * @return boolean
+     */
+    public function getHiddenSs()
+    {
+        return $this->hiddenSs;
     }
 
     /**

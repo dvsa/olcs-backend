@@ -40,6 +40,7 @@ class IrhpPermitTypeTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitWindows ipw '
             . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
             . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'AND ips.hiddenSs != 1 '
             . 'ORDER BY rd.displayOrder ASC';
 
         $this->assertEquals($expectedQuery, $this->query);

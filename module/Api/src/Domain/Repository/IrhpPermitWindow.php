@@ -240,6 +240,7 @@ class IrhpPermitWindow extends AbstractRepository
             ->where($qb->expr()->eq('ipt.id', ':type'))
             ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
             ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->andWhere($qb->expr()->neq('ips.hiddenSs', 1))
             ->setParameter('type', $type)
             ->setParameter('now', $now->format(DateTime::ISO8601));
 
@@ -271,6 +272,7 @@ class IrhpPermitWindow extends AbstractRepository
             ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
             ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
             ->andWhere($qb->expr()->between('ips.validTo', ':fromDate', ':toDate'))
+            ->andWhere($qb->expr()->neq('ips.hiddenSs', 1))
             ->setParameter('type', $type)
             ->setParameter('now', $now->format(DateTime::ISO8601))
             ->setParameter('fromDate', $fromDate)

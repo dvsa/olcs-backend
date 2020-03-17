@@ -345,7 +345,8 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
             . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]]';
+            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] '
+            . 'AND ips.hiddenSs != 1';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -382,7 +383,8 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitRanges ipr '
             . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT.']] '
             . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] AND ';
+            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] AND '
+            . ' AND ips.hiddenSs != 1';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
