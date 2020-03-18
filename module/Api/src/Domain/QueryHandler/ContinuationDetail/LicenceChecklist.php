@@ -43,6 +43,7 @@ class LicenceChecklist extends AbstractQueryHandler
      * @param QueryInterface $query query
      *
      * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
@@ -52,7 +53,7 @@ class LicenceChecklist extends AbstractQueryHandler
         $notRemoved = Criteria::create();
         $notRemoved->andWhere($notRemoved->expr()->isNull('removalDate'));
 
-        $sections = $this->sectionAccessService->getAccessibleSectionsForLicence($licence);
+        $sections = $this->sectionAccessService->getAccessibleSectionsForLicenceContinuation($licence);
         $sections = $this->alterSections(array_keys($sections), $licence);
 
         $conditionsUndertakings = $this->getRepo('ConditionUndertaking')
@@ -72,6 +73,14 @@ class LicenceChecklist extends AbstractQueryHandler
                             'person' => [
                                 'title'
                             ]
+                        ],
+                        'organisationUsers' => [
+                            'user' => [
+                                'contactDetails' => [
+                                    'person'
+                                ],
+                                'roles'
+                            ],
                         ]
                     ],
                     'tradingNames',
@@ -132,8 +141,7 @@ class LicenceChecklist extends AbstractQueryHandler
      */
     protected function alterSections($sections, Licence $licence)
     {
-        if (
-            count($licence->getConditionUndertakings()) === 0
+        if (count($licence->getConditionUndertakings()) === 0
             && in_array(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)
         ) {
             unset($sections[array_search(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)]);
