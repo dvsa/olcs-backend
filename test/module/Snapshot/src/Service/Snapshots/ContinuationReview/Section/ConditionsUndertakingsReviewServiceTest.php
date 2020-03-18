@@ -23,27 +23,76 @@ class ConditionsUndertakingsReviewServiceTest extends MockeryTestCase
         $this->sut = new ConditionsUndertakingsReviewService();
     }
 
-    public function testGetConfigFromData()
+    /**
+     * @dataProvider licenceProvider
+     */
+    public function testGetConfigFromData($isPsv, $isRestricted, $variables)
     {
         $continuationDetail = new ContinuationDetail();
 
-        $mockLicence = m::mock(Licence::class)
+        $mockLicence = m::mock(Licence::class);
+        $mockLicence
             ->shouldReceive('getGroupedConditionsUndertakings')
             ->andReturn(['foo'])
-            ->once()
-            ->getMock();
+            ->once();
+        $mockLicence
+            ->shouldReceive('isPsv')
+            ->andReturn($isPsv)
+            ->once();
+        $mockLicence
+            ->shouldReceive('isRestricted')
+            ->andReturn($isRestricted);
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             'mainItems' => [
                 [
                     'partial' => 'continuation-conditions-undertakings',
-                    'variables' => ['conditionsUndertakings' => ['foo']]
+                    'variables' => $variables
                 ],
             ]
         ];
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($continuationDetail));
+    }
+
+    public function licenceProvider()
+    {
+        return [
+            'isPsvRestricted' => [
+                'isPsv' => true,
+                'isRestricted' => true,
+                'variables' => [
+                    'isPsvRestricted' => true,
+                    'conditionsUndertakings' => ['foo']
+                ]
+            ],
+            'isPsvNotRestricted' => [
+                'isPsv' => true,
+                'isRestricted' => false,
+                'variables' => [
+                    'isPsvRestricted' => false,
+                    'conditionsUndertakings' => ['foo']
+                ]
+            ],
+            'isNotPsvIsRestricted' => [
+                'isPsv' => true,
+                'isRestricted' => false,
+                'variables' => [
+                    'isPsvRestricted' => false,
+                    'conditionsUndertakings' => ['foo']
+                ]
+            ],
+            'isNotPsvIsNotRestricted' => [
+                'isPsv' => true,
+                'isRestricted' => false,
+                'variables' => [
+                    'isPsvRestricted' => false,
+                    'conditionsUndertakings' => ['foo']
+                ]
+            ]
+
+        ];
     }
 }
