@@ -2,6 +2,11 @@
 
     <h2 class="heading-large"><?php echo $this->translate('continuations.conditions-undertakings.licence', 'snapshot'); ?></h2>
 
+    <?php if ($isPsvRestricted ) : ?>
+        <?php echo $this->translate('markup-continuation-comment-psv-restricted', 'snapshot'); ?>
+    <?php endif; ?>
+
+
     <?php if (
         isset($conditionsUndertakings['licence']['conditions'])
         && count($conditionsUndertakings['licence']['conditions'])
@@ -28,6 +33,9 @@
             <?php foreach($conditionsUndertakings['licence']['undertakings'] as $cu) : ?>
                 <li><?php echo $this->escapeHtml($cu['notes']); ?></li>
             <?php endforeach; ?>
+            <?php if ($isPsvRestricted ) : ?>
+                <?php echo $this->translate('markup-continuation-undertaking-psv-restricted', 'snapshot'); ?>
+            <?php endif; ?>
         </ul>
 
     <?php endif; ?>
