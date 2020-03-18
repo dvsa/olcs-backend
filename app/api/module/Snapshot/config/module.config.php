@@ -78,6 +78,7 @@ return [
             'ContinuationReview\Addresses' => ContinuationReview\AddressesReviewService::class,
             'ContinuationReview\People' => ContinuationReview\PeopleReviewService::class,
             'ContinuationReview\Vehicles' => ContinuationReview\VehiclesReviewService::class,
+            'ContinuationReview\Users' => ContinuationReview\UsersReviewService::class,
             'ContinuationReview\VehiclesPsv' => ContinuationReview\VehiclesReviewService::class,
             'ContinuationReview\OperatingCentres' => ContinuationReview\OperatingCentresReviewService::class,
             'ContinuationReview\TransportManagers' => ContinuationReview\TransportManagersReviewService::class,
