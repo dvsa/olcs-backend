@@ -37,7 +37,7 @@ class Generator extends AbstractGenerator
         $sl = $this->getServiceLocator();
         $licence = $continuationDetail->getLicence();
 
-        $sections = $sl->get('SectionAccessService')->getAccessibleSectionsForLicence($licence);
+        $sections = $sl->get('SectionAccessService')->getAccessibleSectionsForLicenceContinuation($licence);
         $sections = $this->alterSections(array_keys($sections), $licence);
 
         $sl->get('Utils\NiTextTranslation')->setLocaleForNiFlag($licence->getNiFlag());
@@ -160,8 +160,7 @@ class Generator extends AbstractGenerator
             $sections[] = self::FINANCE_SECTION;
         }
 
-        if (
-            count($licence->getConditionUndertakings()) === 0
+        if (count($licence->getConditionUndertakings()) === 0
             && in_array(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)
         ) {
             unset($sections[array_search(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)]);

@@ -116,7 +116,7 @@ class GeneratorTest extends MockeryTestCase
             ->once();
 
         $this->services['SectionAccessService']
-            ->shouldReceive('getAccessibleSectionsForLicence')
+            ->shouldReceive('getAccessibleSectionsForLicenceContinuation')
             ->with($mockLicence)
             ->andReturn($sections)
             ->once();
