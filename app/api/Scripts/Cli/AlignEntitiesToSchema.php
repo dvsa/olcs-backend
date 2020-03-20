@@ -235,6 +235,7 @@ class AlignEntitiesToSchema
 
             $this->removeHistTables();
             $this->removeLiquibaseTables();
+            $this->removeDataRetentionCheckTables();
 
 //            $this->maybeImportSchema();
 
@@ -335,6 +336,21 @@ class AlignEntitiesToSchema
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOG"');
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOGLOCK"');
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS log_update"');
+    }
+
+    private function removeDataRetentionCheckTables()
+    {
+        $this->respond('Removing Data Retention Check tables', 'info');
+
+        $mysqlCommand = sprintf(
+            'mysql -u%s -p%s %s',
+            $this->options['u'],
+            $this->options['p'],
+            $this->options['d']
+        );
+
+        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_EXPECTED_DELETES"');
+        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_TABLE_COUNTS"');
     }
 
     /**
