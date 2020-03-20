@@ -36,6 +36,7 @@ class IrhpPermitType extends AbstractRepository
             ->innerJoin('ips.irhpPermitWindows', 'ipw')
             ->where($qb->expr()->lte('ipw.startDate', ':now'))
             ->andWhere($qb->expr()->gt('ipw.endDate', ':now'))
+            ->andWhere($qb->expr()->neq('ips.hiddenSs', 1))
             ->setParameter('now', $now->format(DateTime::ISO8601))
             ->orderBy('rd.displayOrder', 'ASC');
 
