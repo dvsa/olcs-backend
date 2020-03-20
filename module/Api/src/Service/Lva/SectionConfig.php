@@ -191,11 +191,6 @@ class SectionConfig
                 [
                     'external',
                     'continuation'
-                ],
-                [
-                    Licence::LICENCE_TYPE_RESTRICTED,
-                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
                 ]
             ]
         ],
