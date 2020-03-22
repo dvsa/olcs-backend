@@ -8,6 +8,8 @@ use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
+use Zend\I18n\Translator\TranslatorInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Document
@@ -192,6 +194,34 @@ TXT;
         $this->setServiceManager();
         $file = new File();
         $file->setContent($content);
+
+        $replaced = $this->sut->populateBookmarks(
+            $file,
+            []
+        );
+        $this->assertEquals(
+            $content,
+            $replaced
+        );
+    }
+
+    public function testPopulateBookmarksWithDynamicBookmarksImplementingTranslatorAwareInterface()
+    {
+        $content = "Bookmark 1: {\*\bkmkstart User_Access} {\*\bkmkend User_Access}.";
+
+        $file = new File();
+        $file->setContent($content);
+
+        $translatorMock = $this->createMock(TranslatorInterface::class);
+
+        /** @var \Zend\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $serviceLocator->expects($this->once())
+            ->method('get')
+            ->with('translator')
+            ->willReturn($translatorMock);
+
+        $this->sut->setServiceLocator($serviceLocator);
 
         $replaced = $this->sut->populateBookmarks(
             $file,
