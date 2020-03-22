@@ -7,11 +7,6 @@ use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
 use Dvsa\Olcs\Api\Domain\TranslatorAwareTrait;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 
-/**
- * VehiclesSpecified bookmark
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
@@ -106,10 +101,6 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
 
     private function validate(): bool
     {
-        if (empty($this->data)) {
-            return false;
-        }
-
         if (empty($this->data['organisation']['organisationUsers'])) {
             return false;
         }
