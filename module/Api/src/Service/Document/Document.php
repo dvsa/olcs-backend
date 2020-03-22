@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Document;
 
+use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\DateHelperAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\FileStoreAwareInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
@@ -151,6 +152,10 @@ class Document implements ServiceLocatorAwareInterface
 
             if ($bookmark instanceof FileStoreAwareInterface) {
                 $bookmark->setFileStore($this->getServiceLocator()->get('ContentStore'));
+            }
+
+            if ($bookmark instanceof TranslatorAwareInterface) {
+                $bookmark->setTranslator($this->getServiceLocator()->get('translator'));
             }
 
             $bookmarks[$token] = $bookmark;
