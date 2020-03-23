@@ -166,6 +166,10 @@ class Generator extends AbstractGenerator
             unset($sections[array_search(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)]);
         }
 
+        if ($licence->isRestricted() && $licence->isPsv()) {
+            $sections[] = self::CONDITIONS_UNDERTAKINGS_SECTION;
+        }
+
         $sections[] = self::DECLARATION_SECTION;
 
         return $sections;
