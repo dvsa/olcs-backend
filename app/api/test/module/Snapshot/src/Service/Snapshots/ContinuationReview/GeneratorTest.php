@@ -54,104 +54,12 @@ class GeneratorTest extends MockeryTestCase
 
     public function testGenerate()
     {
-        $sections = [
-            'type_of_licence' => 'foo' ,
-            'operating_centres' => 'foo' ,
-            Generator::PEOPLE_SECTION => 'foo',
-            Generator::TRAILERS_SECTION => 'foo',
-            Generator::TAXI_PHV_SECTION => 'foo',
-            Generator::DISCS_SECTION => 'foo',
-            Generator::COMMUNITY_LICENCES_SECTION => 'foo',
-            Generator::CONDITIONS_UNDERTAKINGS_SECTION => 'foo'
-        ];
-
-        $mockLicence = m::mock(Licence::class)
-            ->shouldReceive('getNiFlag')
-            ->andReturn('N')
-            ->once()
-            ->shouldReceive('getLicenceType')
-            ->andReturn(
-                m::mock()
-                    ->shouldReceive('getId')
-                    ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL)
-                    ->once()
-                    ->getMock()
-            )
-            ->once()
-            ->shouldReceive('getConditionUndertakings')
-            ->andReturn([])
-            ->once()
-            ->shouldReceive('getOrganisation')
-            ->andReturn(
-                m::mock()
-                    ->shouldReceive('getType')
-                    ->andReturn(
-                        m::mock()
-                            ->shouldReceive('getId')
-                            ->andReturn('org_typ_rc')
-                            ->once()
-                            ->getMock()
-                    )
-                    ->once()
-                    ->shouldReceive('getName')
-                    ->andReturn('BAR LTD')
-                    ->once()
-                    ->getMock()
-            )
-            ->twice()
-            ->shouldReceive('getLicNo')
-            ->andReturn('OB123')
-            ->once()
-            ->getMock();
-
-        $continuationDetail = m::mock(ContinuationDetail::class)
-            ->shouldReceive('getLicence')
-            ->andReturn($mockLicence)
-            ->times(4)
-            ->getMock();
-
-        $this->services['Utils\NiTextTranslation']
-            ->shouldReceive('setLocaleForNiFlag')
-            ->with('N')
-            ->once();
-
-        $this->services['SectionAccessService']
-            ->shouldReceive('getAccessibleSectionsForLicenceContinuation')
-            ->with($mockLicence)
-            ->andReturn($sections)
-            ->once();
-
-        $this->services['ContinuationReview\TypeOfLicence']
-            ->shouldReceive('getConfigFromData')
-            ->with($continuationDetail)
-            ->once()
-            ->andReturn('type-of-licence');
-
-        $this->services['ContinuationReview\OperatingCentres']
-            ->shouldReceive('getConfigFromData')
-            ->with($continuationDetail)
-            ->andReturn('operating-centres')
-            ->once()
-            ->shouldReceive('getSummaryFromData')
-            ->with($continuationDetail)
-            ->andReturn('operating-centres-summary')
-            ->once()
-            ->shouldReceive('getSummaryHeader')
-            ->with($continuationDetail)
-            ->andReturn('operating-centres-summary-header')
-            ->once();
-
-        $this->services['ViewRenderer']->shouldReceive('render')
-            ->once()
-            ->with(m::type(ViewModel::class))
-            ->andReturnUsing(
-                function ($view) {
-                    return $view;
-                }
-            );
+        $mockLicence = $this->setUpLicence(false, false);
+        $mockContinuationDetail = $this->setUpContinuationDetail($mockLicence);
+        $this->setUpServices($mockLicence, $mockContinuationDetail, $this->getSections());
 
         /** @var ViewModel $result */
-        $result = $this->sut->generate($continuationDetail);
+        $result = $this->sut->generate($mockContinuationDetail);
 
         $this->assertInstanceOf(ViewModel::class, $result);
         $this->assertEquals('layout/continuation-review', $result->getTemplate());
@@ -188,5 +96,174 @@ class GeneratorTest extends MockeryTestCase
         ];
 
         $this->assertEquals($expected, $params);
+    }
+
+    public function testGeneratePsvRestricted()
+    {
+        $mockLicence = $this->setUpLicence(true, true);
+        $mockContinuationDetail = $this->setUpContinuationDetail($mockLicence);
+        $this->setUpServices($mockLicence, $mockContinuationDetail, $this->getSections());
+
+        /** @var ViewModel $result */
+        $result = $this->sut->generate($mockContinuationDetail);
+
+        $this->assertInstanceOf(ViewModel::class, $result);
+        $this->assertEquals('layout/continuation-review', $result->getTemplate());
+
+        $params = $result->getVariables();
+
+        $expected = [
+            'reviewTitle' => 'BAR LTD OB123',
+            'subTitle' => 'continuation-review-subtitle',
+            'sections' => [
+                [
+                    'header' => 'continuation-review-type_of_licence',
+                    'config' => 'type-of-licence'
+                ],
+                [
+                    'header' => 'continuation-review-operating_centres',
+                    'config' => 'operating-centres',
+                    'summary' => 'operating-centres-summary',
+                    'summaryHeader' => 'operating-centres-summary-header',
+                ],
+                [
+                    'header' => 'continuation-review-people-org_typ_rc',
+                    'config' => ''
+                ],
+                [
+                    'header' => 'continuation-review-finance',
+                    'config' => ''
+                ],
+                [
+                    'header' => 'continuation-review-conditions_undertakings',
+                    'config' => ''
+                ],
+                [
+                    'header' => 'continuation-review-declaration',
+                    'config' => ''
+                ],
+            ]
+        ];
+
+        $this->assertEquals($expected, $params);
+    }
+
+    protected function getSections()
+    {
+        return [
+            'type_of_licence' => 'foo' ,
+            'operating_centres' => 'foo' ,
+            Generator::PEOPLE_SECTION => 'foo',
+            Generator::TRAILERS_SECTION => 'foo',
+            Generator::TAXI_PHV_SECTION => 'foo',
+            Generator::DISCS_SECTION => 'foo',
+            Generator::COMMUNITY_LICENCES_SECTION => 'foo',
+            Generator::CONDITIONS_UNDERTAKINGS_SECTION => 'foo'
+        ];
+    }
+
+    protected function setUpLicence(bool $isPsv, bool $isRestricted)
+    {
+        $licenceType = $isRestricted ? Licence::LICENCE_TYPE_RESTRICTED : Licence::LICENCE_TYPE_STANDARD_NATIONAL;
+
+        $mockLicence = m::mock(Licence::class)
+            ->shouldReceive('getNiFlag')
+            ->andReturn('N')
+            ->once()
+            ->shouldReceive('getLicenceType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn($licenceType)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('isRestricted')
+            ->andReturn($isRestricted)
+            ->once()
+            ->shouldReceive('getConditionUndertakings')
+            ->andReturn([])
+            ->once()
+            ->shouldReceive('getOrganisation')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getType')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn('org_typ_rc')
+                            ->once()
+                            ->getMock()
+                    )
+                    ->once()
+                    ->shouldReceive('getName')
+                    ->andReturn('BAR LTD')
+                    ->once()
+                    ->getMock()
+            )
+            ->twice()
+            ->shouldReceive('getLicNo')
+            ->andReturn('OB123')
+            ->once();
+
+        if ($isRestricted) {
+            $mockLicence->shouldReceive('isPsv')
+                ->andReturn($isPsv)
+                ->once();
+        }
+            return $mockLicence->getMock();
+    }
+
+    protected function setUpContinuationDetail($mockLicence)
+    {
+        return m::mock(ContinuationDetail::class)
+            ->shouldReceive('getLicence')
+            ->andReturn($mockLicence)
+            ->times(4)
+            ->getMock();
+    }
+
+    protected function setUpServices($mockLicence, $mockContinuationDetail, $sections)
+    {
+        $this->services['Utils\NiTextTranslation']
+            ->shouldReceive('setLocaleForNiFlag')
+            ->with('N')
+            ->once();
+
+        $this->services['SectionAccessService']
+            ->shouldReceive('getAccessibleSectionsForLicenceContinuation')
+            ->with($mockLicence)
+            ->andReturn($sections)
+            ->once();
+
+        $this->services['ContinuationReview\TypeOfLicence']
+            ->shouldReceive('getConfigFromData')
+            ->with($mockContinuationDetail)
+            ->once()
+            ->andReturn('type-of-licence');
+
+        $this->services['ContinuationReview\OperatingCentres']
+            ->shouldReceive('getConfigFromData')
+            ->with($mockContinuationDetail)
+            ->andReturn('operating-centres')
+            ->once()
+            ->shouldReceive('getSummaryFromData')
+            ->with($mockContinuationDetail)
+            ->andReturn('operating-centres-summary')
+            ->once()
+            ->shouldReceive('getSummaryHeader')
+            ->with($mockContinuationDetail)
+            ->andReturn('operating-centres-summary-header')
+            ->once();
+
+        $this->services['ViewRenderer']->shouldReceive('render')
+            ->once()
+            ->with(m::type(ViewModel::class))
+            ->andReturnUsing(
+                function ($view) {
+                    return $view;
+                }
+            );
     }
 }
