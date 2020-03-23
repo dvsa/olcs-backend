@@ -52,9 +52,35 @@ class GeneratorTest extends MockeryTestCase
         $this->sut->setServiceLocator($sm);
     }
 
-    public function testGenerate()
+    /**
+     * @dataProvider licenceTypeProvider
+     */
+    public function testGenerate($isPsv, $isRestricted, $expectedSections)
     {
-        $sections = [
+        $mockLicence = $this->setUpLicence($isPsv, $isRestricted);
+        $mockContinuationDetail = $this->setUpContinuationDetail($mockLicence);
+        $this->setUpServices($mockLicence, $mockContinuationDetail, $this->getSections());
+
+        /** @var ViewModel $result */
+        $result = $this->sut->generate($mockContinuationDetail);
+
+        $this->assertInstanceOf(ViewModel::class, $result);
+        $this->assertEquals('layout/continuation-review', $result->getTemplate());
+
+        $params = $result->getVariables();
+
+        $expected = [
+            'reviewTitle' => 'BAR LTD OB123',
+            'subTitle' => 'continuation-review-subtitle',
+            'sections' => $expectedSections
+        ];
+
+        $this->assertEquals($expected, $params);
+    }
+
+    protected function getSections()
+    {
+        return [
             'type_of_licence' => 'foo' ,
             'operating_centres' => 'foo' ,
             Generator::PEOPLE_SECTION => 'foo',
@@ -64,6 +90,11 @@ class GeneratorTest extends MockeryTestCase
             Generator::COMMUNITY_LICENCES_SECTION => 'foo',
             Generator::CONDITIONS_UNDERTAKINGS_SECTION => 'foo'
         ];
+    }
+
+    protected function setUpLicence(bool $isPsv, bool $isRestricted)
+    {
+        $licenceType = $isRestricted ? Licence::LICENCE_TYPE_RESTRICTED : Licence::LICENCE_TYPE_STANDARD_NATIONAL;
 
         $mockLicence = m::mock(Licence::class)
             ->shouldReceive('getNiFlag')
@@ -73,10 +104,13 @@ class GeneratorTest extends MockeryTestCase
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getId')
-                    ->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL)
+                    ->andReturn($licenceType)
                     ->once()
                     ->getMock()
             )
+            ->once()
+            ->shouldReceive('isRestricted')
+            ->andReturn($isRestricted)
             ->once()
             ->shouldReceive('getConditionUndertakings')
             ->andReturn([])
@@ -101,15 +135,27 @@ class GeneratorTest extends MockeryTestCase
             ->twice()
             ->shouldReceive('getLicNo')
             ->andReturn('OB123')
-            ->once()
-            ->getMock();
+            ->once();
 
-        $continuationDetail = m::mock(ContinuationDetail::class)
+        if ($isRestricted) {
+            $mockLicence->shouldReceive('isPsv')
+                ->andReturn($isPsv)
+                ->once();
+        }
+            return $mockLicence->getMock();
+    }
+
+    protected function setUpContinuationDetail($mockLicence)
+    {
+        return m::mock(ContinuationDetail::class)
             ->shouldReceive('getLicence')
             ->andReturn($mockLicence)
             ->times(4)
             ->getMock();
+    }
 
+    protected function setUpServices($mockLicence, $mockContinuationDetail, $sections)
+    {
         $this->services['Utils\NiTextTranslation']
             ->shouldReceive('setLocaleForNiFlag')
             ->with('N')
@@ -123,21 +169,21 @@ class GeneratorTest extends MockeryTestCase
 
         $this->services['ContinuationReview\TypeOfLicence']
             ->shouldReceive('getConfigFromData')
-            ->with($continuationDetail)
+            ->with($mockContinuationDetail)
             ->once()
             ->andReturn('type-of-licence');
 
         $this->services['ContinuationReview\OperatingCentres']
             ->shouldReceive('getConfigFromData')
-            ->with($continuationDetail)
+            ->with($mockContinuationDetail)
             ->andReturn('operating-centres')
             ->once()
             ->shouldReceive('getSummaryFromData')
-            ->with($continuationDetail)
+            ->with($mockContinuationDetail)
             ->andReturn('operating-centres-summary')
             ->once()
             ->shouldReceive('getSummaryHeader')
-            ->with($continuationDetail)
+            ->with($mockContinuationDetail)
             ->andReturn('operating-centres-summary-header')
             ->once();
 
@@ -149,44 +195,127 @@ class GeneratorTest extends MockeryTestCase
                     return $view;
                 }
             );
+    }
 
-        /** @var ViewModel $result */
-        $result = $this->sut->generate($continuationDetail);
-
-        $this->assertInstanceOf(ViewModel::class, $result);
-        $this->assertEquals('layout/continuation-review', $result->getTemplate());
-
-        $params = $result->getVariables();
-
-        $expected = [
-            'reviewTitle' => 'BAR LTD OB123',
-            'subTitle' => 'continuation-review-subtitle',
-            'sections' => [
-                [
-                    'header' => 'continuation-review-type_of_licence',
-                    'config' => 'type-of-licence'
-                ],
-                [
-                    'header' => 'continuation-review-operating_centres',
-                    'config' => 'operating-centres',
-                    'summary' => 'operating-centres-summary',
-                    'summaryHeader' => 'operating-centres-summary-header',
-                ],
-                [
-                    'header' => 'continuation-review-people-org_typ_rc',
-                    'config' => ''
-                ],
-                [
-                    'header' => 'continuation-review-finance',
-                    'config' => ''
-                ],
-                [
-                    'header' => 'continuation-review-declaration',
-                    'config' => ''
-                ],
+    public function licenceTypeProvider()
+    {
+        return [
+            'NotPsvAndNotRestricted' => [
+                'isPsv' => false,
+                'isRestricted' => false,
+                'expectedSections' => [
+                    [
+                        'header' => 'continuation-review-type_of_licence',
+                        'config' => 'type-of-licence'
+                    ],
+                    [
+                        'header' => 'continuation-review-operating_centres',
+                        'config' => 'operating-centres',
+                        'summary' => 'operating-centres-summary',
+                        'summaryHeader' => 'operating-centres-summary-header',
+                    ],
+                    [
+                        'header' => 'continuation-review-people-org_typ_rc',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-finance',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-declaration',
+                        'config' => ''
+                    ],
+                ]
+            ],
+            'IsPsvAndNotRestricted' => [
+                'isPsv' => true,
+                'isRestricted' => false,
+                'expectedSections' => [
+                    [
+                        'header' => 'continuation-review-type_of_licence',
+                        'config' => 'type-of-licence'
+                    ],
+                    [
+                        'header' => 'continuation-review-operating_centres',
+                        'config' => 'operating-centres',
+                        'summary' => 'operating-centres-summary',
+                        'summaryHeader' => 'operating-centres-summary-header',
+                    ],
+                    [
+                        'header' => 'continuation-review-people-org_typ_rc',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-finance',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-declaration',
+                        'config' => ''
+                    ],
+                ]
+            ],
+            'NotPsvAndIsRestricted' => [
+                'isPsv' => false,
+                'isRestricted' => true,
+                'expectedSections' => [
+                    [
+                        'header' => 'continuation-review-type_of_licence',
+                        'config' => 'type-of-licence'
+                    ],
+                    [
+                        'header' => 'continuation-review-operating_centres',
+                        'config' => 'operating-centres',
+                        'summary' => 'operating-centres-summary',
+                        'summaryHeader' => 'operating-centres-summary-header',
+                    ],
+                    [
+                        'header' => 'continuation-review-people-org_typ_rc',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-finance',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-declaration',
+                        'config' => ''
+                    ],
+                ]
+            ],
+            'IsPsvAndIsRestricted' => [
+                'isPsv' => true,
+                'isRestricted' => true,
+                'expectedSections' => [
+                    [
+                        'header' => 'continuation-review-type_of_licence',
+                        'config' => 'type-of-licence'
+                    ],
+                    [
+                        'header' => 'continuation-review-operating_centres',
+                        'config' => 'operating-centres',
+                        'summary' => 'operating-centres-summary',
+                        'summaryHeader' => 'operating-centres-summary-header',
+                    ],
+                    [
+                        'header' => 'continuation-review-people-org_typ_rc',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-finance',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-conditions_undertakings',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-declaration',
+                        'config' => ''
+                    ],
+                ]
             ]
         ];
-
-        $this->assertEquals($expected, $params);
     }
 }
