@@ -1,4 +1,4 @@
-<?php if (count($conditionsUndertakings['licence']) > 0) : ?>
+<?php if (count($conditionsUndertakings['licence']) > 0 || $isPsvRestricted) : ?>
 
     <h2 class="heading-large"><?php echo $this->translate('continuations.conditions-undertakings.licence', 'snapshot'); ?></h2>
 
@@ -23,8 +23,11 @@
     <?php endif; ?>
 
     <?php if (
-        isset($conditionsUndertakings['licence']['undertakings'])
-        && count($conditionsUndertakings['licence']['undertakings'])
+        $isPsvRestricted ||
+        (
+            isset($conditionsUndertakings['licence']['undertakings'])
+            && count($conditionsUndertakings['licence']['undertakings'])
+        )
     ) : ?>
 
         <h4><?php echo $this->translate('continuations.conditions-undertakings.undertakings', 'snapshot'); ?></h4>
