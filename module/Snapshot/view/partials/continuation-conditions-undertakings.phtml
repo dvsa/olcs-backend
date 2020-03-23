@@ -23,9 +23,11 @@
     <?php endif; ?>
 
     <?php if (
-            $isPsvRestricted ||
-            (isset($conditionsUndertakings['licence']['undertakings'])
-        && count($conditionsUndertakings['licence']['undertakings']))
+        $isPsvRestricted ||
+        (
+            isset($conditionsUndertakings['licence']['undertakings'])
+            && count($conditionsUndertakings['licence']['undertakings'])
+        )
     ) : ?>
 
         <h4><?php echo $this->translate('continuations.conditions-undertakings.undertakings', 'snapshot'); ?></h4>
