@@ -1146,9 +1146,12 @@ return [
     Command\IrhpApplication\CreateDefaultIrhpPermitApplications::class => CommandHandler\IrhpApplication\CreateDefaultIrhpPermitApplications::class,
     Command\IrhpApplication\ResetIrhpPermitApplications::class => CommandHandler\IrhpApplication\ResetIrhpPermitApplications::class,
     Command\IrhpApplication\Expire::class => CommandHandler\IrhpApplication\Expire::class,
+    TransferCommand\IrhpApplication\UpdatePeriod::class => CommandHandler\IrhpApplication\UpdatePeriod::class,
 
-    // Irhp Permit Application Delete
+    // Irhp Permit Application
     Command\IrhpPermitApplication\Delete::class => CommandHandler\IrhpPermitApplication\Delete::class,
+    Command\IrhpPermitApplication\CreateForIrhpApplication::class => CommandHandler\IrhpPermitApplication\CreateForIrhpApplication::class,
+    Command\IrhpPermitApplication\UpdateIrhpPermitWindow::class => CommandHandler\IrhpPermitApplication\UpdateIrhpPermitWindow::class,
 
     // Permits Decline
     TransferCommand\Permits\AcceptIrhpPermits::class => CommandHandler\Permits\AcceptIrhpPermits::class,

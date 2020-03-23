@@ -582,7 +582,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         if (!$this->irhpApplication->isBilateral()) {
             throw new RuntimeException(__FUNCTION__ . ' is applicable only to bilateral applications');
         }
-    
+
         $cabotageOnlyAnswer = $this->getAnswerValueByQuestionId(Question::QUESTION_ID_BILATERAL_CABOTAGE_ONLY);
         if (!is_null($cabotageOnlyAnswer)) {
             return $cabotageOnlyAnswer;
@@ -613,5 +613,13 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         }
 
         return $this->getAnswerValueByQuestionId(Question::QUESTION_ID_BILATERAL_PERMIT_USAGE);
+    }
+
+    /**
+     * @param IrhpPermitWindow $irpPermitWindow
+     */
+    public function updateIrhpPermitWindow(IrhpPermitWindow $irhpPermitWindow)
+    {
+        $this->irhpPermitWindow = $irhpPermitWindow;
     }
 }

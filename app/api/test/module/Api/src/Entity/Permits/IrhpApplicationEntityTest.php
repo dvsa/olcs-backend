@@ -3379,6 +3379,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitApplicationIT->shouldReceive('getCheckedAnswers')
             ->withNoArgs()
             ->andReturnTrue();
+        $irhpPermitApplicationIT->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturnNull();
+
 
         $irhpPermitApplicationDE = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplicationDE->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
@@ -3387,6 +3391,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitApplicationDE->shouldReceive('getCheckedAnswers')
             ->withNoArgs()
             ->andReturnFalse();
+
+        $irhpPermitApplicationDE->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(3322);
 
         $this->sut->setIrhpPermitApplications(
             new ArrayCollection([$irhpPermitApplicationIT, $irhpPermitApplicationDE])
@@ -3397,16 +3405,19 @@ class IrhpApplicationEntityTest extends EntityTester
                 'countryCode' => 'FR',
                 'countryName' => 'France',
                 'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                'irhpPermitApplication' => null
             ],
             [
                 'countryCode' => 'DE',
                 'countryName' => 'Germany',
                 'status' => SectionableInterface::SECTION_COMPLETION_INCOMPLETE,
+                'irhpPermitApplication' => 3322
             ],
             [
                 'countryCode' => 'IT',
                 'countryName' => 'Italy',
                 'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                'irhpPermitApplication' => null
             ],
         ];
 
@@ -6173,5 +6184,50 @@ class IrhpApplicationEntityTest extends EntityTester
             'IrhpApplication',
             $this->sut->getRepositoryName()
         );
+    }
+
+    /**
+     * @dataProvider dpGetIrhpPermitApplicationIdForCountry
+     */
+    public function testGetIrhpPermitApplicationIdForCountry($result, $countryCode) {
+
+        $countries = [
+            [
+                'countryCode' => 'FR',
+                'countryName' => 'France',
+                'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                'irhpPermitApplication' => null
+            ],
+            [
+                'countryCode' => 'DE',
+                'countryName' => 'Germany',
+                'status' => SectionableInterface::SECTION_COMPLETION_INCOMPLETE,
+                'irhpPermitApplication' => 3322
+            ],
+            [
+                'countryCode' => 'IT',
+                'countryName' => 'Italy',
+                'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                'irhpPermitApplication' => null
+            ]
+        ];
+
+        $this->sut->shouldReceive('getBilateralCountriesAndStatuses')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($countries);
+
+        $countryEntity =  m::mock(Country::class);
+
+        $countryEntity->shouldReceive('getId')->atMost(3)->withNoArgs()->andReturn($countryCode);
+        $this->assertEquals($result, $this->sut->getIrhpPermitApplicationIdForCountry($countryEntity));
+    }
+
+    public function dpGetIrhpPermitApplicationIdForCountry()
+    {
+        return [
+            [null, 'NO'],
+            [3322, 'DE'],
+        ];
     }
 }

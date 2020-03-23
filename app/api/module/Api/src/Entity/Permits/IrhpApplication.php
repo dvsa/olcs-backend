@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
@@ -103,6 +104,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const COUNTRY_PROPERTY_CODE = 'code';
     const COUNTRY_PROPERTY_NAME = 'name';
     const COUNTRY_PROPERTY_STATUS = 'status';
+    const COUNTRY_PROPERTY_IPA_ID = 'irhpPermitApplication';
 
     const SECTIONS = [
         IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => [
@@ -2300,16 +2302,19 @@ class IrhpApplication extends AbstractIrhpApplication implements
             }
 
             $countryStatuses[$countryId][self::COUNTRY_PROPERTY_STATUS] = $newStatus;
+            $countryStatuses[$countryId][self::COUNTRY_PROPERTY_IPA_ID] = $irhpPermitApplication->getId();
         }
 
         usort($countryStatuses, [$this, 'usortByCountryName']);
 
         $result = [];
         foreach ($countryStatuses as $properties) {
+            $irhpPermitAppId = array_key_exists(self::COUNTRY_PROPERTY_IPA_ID, $properties) ? $properties[self::COUNTRY_PROPERTY_IPA_ID] : null;
             $result[] = [
                 'countryCode' => $properties[self::COUNTRY_PROPERTY_CODE],
                 'countryName' => $properties[self::COUNTRY_PROPERTY_NAME],
                 'status' => $properties[self::COUNTRY_PROPERTY_STATUS],
+                'irhpPermitApplication' => $irhpPermitAppId,
             ];
         }
 
@@ -2383,6 +2388,21 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function isApplicationPathEnabled()
     {
         return $this->irhpPermitType->isApplicationPathEnabled();
+    }
+
+    /**
+     * @param string $countryId
+     * @return mixed
+     */
+    public function getIrhpPermitApplicationIdForCountry(Country $countryEntity)
+    {
+        $countries = $this->getBilateralCountriesAndStatuses();
+        foreach ($countries as $country) {
+            if ($country['countryCode'] == $countryEntity->getId()) {
+                return $country['irhpPermitApplication'];
+            }
+        }
+        return null;
     }
 
     /**

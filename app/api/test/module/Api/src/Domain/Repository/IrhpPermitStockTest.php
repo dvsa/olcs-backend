@@ -2,8 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
@@ -162,5 +164,39 @@ class IrhpPermitStockTest extends RepositoryTestCase
             $irhpPermitStocks,
             $this->sut->fetchAll()
         );
+    }
+
+    public function testFetchOpenBilateralStocksByCountry()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        $now = new DateTime();
+
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchOpenBilateralStocksByCountry(Country::ID_NORWAY, $now)
+        );
+
+        $iso8601String = $now->format(DateTime::ISO8601);
+
+        $expectedQuery = 'BLAH '.
+        'SELECT ips '.
+        'INNER JOIN ips.irhpPermitType ipt '.
+        'INNER JOIN ips.irhpPermitWindows ipw '.
+        'INNER JOIN ips.country c '.
+        'AND ips.country = [[NO]] '.
+        "AND ipw.startDate <= [[$iso8601String]] ".
+        "AND ipw.endDate > [[$iso8601String]] AND ipt.id = [[4]]";
+
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

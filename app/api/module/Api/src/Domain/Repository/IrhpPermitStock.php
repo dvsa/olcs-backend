@@ -5,8 +5,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use DateTime;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 
 /**
@@ -91,6 +93,34 @@ class IrhpPermitStock extends AbstractRepository
     public function fetchAll()
     {
         $qb = $this->createQueryBuilder();
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch all bilateral stocks with open windows for a given country
+     *
+     * @param string $country
+     * @param DateTime $now Now
+     *
+     * @return array
+     */
+    public function fetchOpenBilateralStocksByCountry(string $country, DateTime $now)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias)
+            ->innerJoin('ips.irhpPermitType', 'ipt')
+            ->innerJoin('ips.irhpPermitWindows', 'ipw')
+            ->innerJoin('ips.country', 'c')
+            ->where($qb->expr()->eq($this->alias.'.country', ':country'))
+            ->andWhere($qb->expr()->lte('ipw.startDate', ':now'))
+            ->andWhere($qb->expr()->gt('ipw.endDate', ':now'))
+            ->andWhere($qb->expr()->eq('ipt.id', ':type'))
+            ->setParameter('country', $country)
+            ->setParameter('type', IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL)
+            ->setParameter('now', $now->format(DateTime::ISO8601));
+
         return $qb->getQuery()->getResult();
     }
 }
