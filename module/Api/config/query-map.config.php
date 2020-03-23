@@ -544,6 +544,7 @@ return [
     // IRHP Permit Stock
     TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
+    TransferQuery\IrhpPermitStock\AvailableBilateral::class => QueryHandler\IrhpPermitStock\AvailableBilateral::class,
 
     // IRHP Permit Type
     TransferQuery\IrhpPermitType\ById::class => QueryHandler\IrhpPermitType\ById::class,

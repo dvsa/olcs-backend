@@ -92,9 +92,8 @@ class IrhpPermitWindow extends AbstractRepository
 
     /**
      * @param int $irhpPermitStockId
-     * @param Query::HYDRATE_OBJECT $hydrationMode
-     *
-     * @return array
+     * @param int $hydrationMode
+     * @return Entity
      * @throws NotFoundException
      */
     public function fetchLastOpenWindowByStockId(int $irhpPermitStockId, $hydrationMode = Query::HYDRATE_OBJECT)
