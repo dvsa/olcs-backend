@@ -60,6 +60,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * @param string|null $periodNameKey
      * @param mixed $validFrom
      * @param mixed $validTo
+     * @param bool $hiddenSs
      *
      * @return IrhpPermitStock
      * @throws ValidationException
@@ -73,7 +74,8 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         ?RefData $businessProcess,
         ?string $periodNameKey = null,
         $validFrom = null,
-        $validTo = null
+        $validTo = null,
+        $hiddenSs = false
     ) {
         static::validateCountry($type, $country);
 
@@ -88,6 +90,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         $instance->applicationPathGroup = $applicationPathGroup;
         $instance->businessProcess = $businessProcess;
         $instance->periodNameKey = $periodNameKey;
+        $instance->hiddenSs = $hiddenSs;
 
         return $instance;
     }
@@ -99,10 +102,12 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * @param string|null $periodNameKey
      * @param mixed $validFrom
      * @param mixed $validTo
+     * @param bool $hiddenSs
+     *
      * @return $this
      * @throws ValidationException
      */
-    public function update($type, $country, $quota, $periodNameKey = null, $validFrom = null, $validTo = null)
+    public function update($type, $country, $quota, $periodNameKey = null, $validFrom = null, $validTo = null, $hiddenSs = false)
     {
         static::validateCountry($type, $country);
 
@@ -112,6 +117,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         $this->validTo = static::processDate($validTo, 'Y-m-d');
         $this->initialStock = intval($quota) > 0 ? $quota : 0;
         $this->periodNameKey = $periodNameKey;
+        $this->hiddenSs = $hiddenSs;
 
         return $this;
     }
