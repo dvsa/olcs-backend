@@ -217,4 +217,67 @@ class UserAccessTest extends MockeryTestCase
             $bookmark->render()
         );
     }
+
+    /**
+     * @dataProvider selfServeMessageDataProvider
+     *
+     * @param $isAdministrator
+     * @param $expectedMessage
+     */
+    public function testSelfServeMessage($isAdministrator, $expectedMessage)
+    {
+        $bookmark = m::mock(UserAccess::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('getSnippet')
+            ->with('UserAccess')
+            ->andReturn('snippet')
+            ->shouldReceive('generateUserTable')
+            ->andReturn('table')
+            ->getMock();
+
+        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+            ->shouldReceive('replace')
+            ->with(
+                'snippet',
+                [
+                    'LICENCE_NUMBER' => 1234,
+                    'SELF_SERVE_MESSAGE' => $expectedMessage,
+                    'USERS_TABLE' => 'table'
+                ]
+            )
+            ->andReturn('replacedstring')
+            ->once()
+            ->getMock();
+
+        $data = [
+            'licNo' => 1234,
+            'organisation' => [
+                'organisationUsers' => [
+                    [
+                        'isAdministrator' => $isAdministrator
+                    ]
+                ]
+            ]
+        ];
+
+        $bookmark->setData($data);
+        $bookmark->setParser($mockParser);
+
+        $this->assertEquals('replacedstring', $bookmark->render());
+    }
+
+    public function selfServeMessageDataProvider()
+    {
+        return [
+            [
+                'Y',
+                "You can log in and select 'Manage users' to amend the current users"
+            ],
+            [
+                'N',
+                "You can register for a self-serve account to amend your licence details online"
+            ]
+        ];
+    }
 }
