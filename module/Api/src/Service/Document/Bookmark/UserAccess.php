@@ -31,25 +31,31 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
         return Qry::create(['id' => $data['licence'], 'bundle' => $bundle]);
     }
 
+    /**
+     * @return string
+     */
     public function render()
     {
-        if (!$this->validate()) {
-            return '';
+        if (!empty($this->data['organisation']['organisationUsers'])) {
+            $userAccessSnippet = $this->getSnippet('UserAccess');
+
+            return $this->getParser()->replace(
+                $userAccessSnippet,
+                [
+                    'LICENCE_NUMBER' => $this->data['licNo'],
+                    'SELF_SERVE_MESSAGE' => $this->getSelfServeMessage(),
+                    'USERS_TABLE' => $this->generateUserTable()
+                ]
+            );
         }
 
-        //TODO: Add additional checks - online access / email registered etc.
-
-        $userAccessSnippet = $this->getSnippet('UserAccess');
-        return $this->getParser()->replace(
-            $userAccessSnippet,
-            [
-                'LICENCE_NUMBER' => $this->data['licNo'],
-                'SELF_SERVE_MESSAGE' => $this->getSelfServeMessage(),
-                'USERS_TABLE' => $this->generateUserTable()
-            ]
-        );
+        return '';
     }
 
+    /**
+     * @param $rows
+     * @return mixed
+     */
     protected function sortUsers($rows)
     {
         usort(
@@ -67,16 +73,10 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
         return $rows;
     }
 
-    private function validate(): bool
-    {
-        if (empty($this->data['organisation']['organisationUsers'])) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private function isRegisteredForSelfServe(): bool
+    /**
+     * @return bool
+     */
+    protected function isRegisteredForSelfServe(): bool
     {
         $organisationUsers = $this->data['organisation']['organisationUsers'];
         foreach ($organisationUsers as $organisationUser) {
@@ -91,7 +91,7 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
     /**
      * @return string
      */
-    private function generateUserTable(): string
+    protected function generateUserTable(): string
     {
         $header[] = [
             'BOOKMARK1' => 'Name',
@@ -140,7 +140,10 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
         return $usersTable;
     }
 
-    private function getSelfServeMessage()
+    /**
+     * @return string
+     */
+    protected function getSelfServeMessage()
     {
         return $this->isRegisteredForSelfServe() ? self::USER_MESSAGE_SELF_SERVE : self::USER_MESSAGE_NON_SELF_SERVE;
     }
