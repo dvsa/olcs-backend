@@ -49,7 +49,8 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $this->getRepo()->getRefdataReference($command->getBusinessProcess()),
             $command->getPeriodNameKey(),
             $command->getValidFrom(),
-            $command->getValidTo()
+            $command->getValidTo(),
+            $command->getHiddenSs()
         );
 
         try {
