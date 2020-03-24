@@ -27,7 +27,7 @@ class UserAccessTest extends MockeryTestCase
         );
     }
 
-    public function testRenderWithGoodsVehiclesSpecified()
+    public function testRenderWithUsers()
     {
         $mockTranslator = m::mock()
             ->shouldReceive('translate')
@@ -41,7 +41,11 @@ class UserAccessTest extends MockeryTestCase
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
             ->with('CHECKLIST_3CELL_TABLE')
-            ->andReturn('snippet')
+            ->andReturn('tableSnippet')
+            ->once()
+            ->shouldReceive('getSnippet')
+            ->with('UserAccess')
+            ->andReturn('userAccessSnippet')
             ->once()
             ->shouldReceive('getTranslator')
             ->andReturn($mockTranslator)
@@ -49,9 +53,11 @@ class UserAccessTest extends MockeryTestCase
 
         $bookmark->setData(
             [
+                'licNo' => 1234,
                 'organisation' => [
                     'organisationUsers' => [
                         [
+                            'isAdministrator' => 'N',
                             'user' => [
                                 'contactDetails' =>
                                     [
@@ -71,6 +77,7 @@ class UserAccessTest extends MockeryTestCase
                             ]
                         ],
                         [
+                            'isAdministrator' => 'Y',
                             'user' => [
                                 'contactDetails' =>
                                     [
@@ -90,6 +97,7 @@ class UserAccessTest extends MockeryTestCase
                             ]
                         ],
                         [
+                            'isAdministrator' => 'Y',
                             'user' => [
                                 'contactDetails' =>
                                     [
@@ -109,6 +117,7 @@ class UserAccessTest extends MockeryTestCase
                             ]
                         ],
                         [
+                            'isAdministrator' => 'Y',
                             'user' => [
                                 'contactDetails' =>
                                     [
@@ -166,36 +175,45 @@ class UserAccessTest extends MockeryTestCase
 
         $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
             ->shouldReceive('replace')
-            ->with('snippet', $header)
+            ->with('tableSnippet', $header)
             ->andReturn('header|')
             ->once()
             ->shouldReceive('replace')
-            ->with('snippet', $row1)
+            ->with('tableSnippet', $row1)
             ->andReturn('row1|')
             ->once()
             ->shouldReceive('replace')
-            ->with('snippet', $row2)
+            ->with('tableSnippet', $row2)
             ->andReturn('row2|')
             ->once()
             ->shouldReceive('replace')
-            ->with('snippet', $row3)
+            ->with('tableSnippet', $row3)
             ->andReturn('row3|')
             ->once()
             ->shouldReceive('replace')
-            ->with('snippet', $row4)
+            ->with('tableSnippet', $row4)
             ->andReturn('row4|')
             ->once()
             ->shouldReceive('replace')
-            ->with('snippet', $emptyRow)
+            ->with('tableSnippet', $emptyRow)
             ->andReturn('emptyrow|')
             ->times(11)
+            ->shouldReceive('replace')
+            ->with(
+                'userAccessSnippet',
+                [
+                    'LICENCE_NUMBER' => 1234,
+                    'SELF_SERVE_MESSAGE' => "You can log in and select 'Manage users' to amend the current users",
+                    'USERS_TABLE' => 'header|row1|row2|row3|row4|' . str_repeat('emptyrow|', 11)
+                ]
+            )
+            ->andReturn('UserAccessPageContent')
             ->getMock();
 
         $bookmark->setParser($mockParser);
 
-        $rendered = 'header|row1|row2|row3|row4|' . str_repeat('emptyrow|', 11);
         $this->assertEquals(
-            $rendered,
+            'UserAccessPageContent',
             $bookmark->render()
         );
     }
