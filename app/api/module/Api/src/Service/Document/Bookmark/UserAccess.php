@@ -11,6 +11,9 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
+    const USER_MESSAGE_SELF_SERVE = "You can log in and select 'Manage users' to amend the current users";
+    const USER_MESSAGE_NON_SELF_SERVE = "You can register for a self-serve account to amend your licence details online";
+
     public function getQuery(array $data)
     {
         $bundle = [
@@ -36,50 +39,15 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
 
         //TODO: Add additional checks - online access / email registered etc.
 
-        $header[] = [
-            'BOOKMARK1' => 'Name',
-            'BOOKMARK2' => 'Email address',
-            'BOOKMARK3' => 'Permission'
-        ];
-
-        $rows = [];
-        $organisationUsers = $this->data['organisation']['organisationUsers'];
-        foreach ($organisationUsers as $organisationUser) {
-            $user = $organisationUser['user'];
-            $email = $user['contactDetails']['emailAddress'] ?? '';
-            $forename = $user['contactDetails']['person']['forename'] ?? '';
-            $familyName = $user['contactDetails']['person']['familyName'] ?? '';
-            $name = trim($forename . ' ' . $familyName);
-            $permission = implode(
-                ',',
-                array_map(
-                    function ($role) {
-                        return $this->getTranslator()->translate('role.'.$role['role'], 'snapshot');
-                    },
-                    $user['roles']
-                )
-            );
-
-            $rows[] = [
-                'BOOKMARK1' => $name,
-                'BOOKMARK2' => $email,
-                'BOOKMARK3' => $permission,
-            ];
-        }
-        $snippet = $this->getSnippet('CHECKLIST_3CELL_TABLE');
-
-        $sortUsers = $this->sortUsers($rows);
-
-        $rows = array_pad($sortUsers, 15, ['BOOKMARK1' => '', 'BOOKMARK2' => '', 'BOOKMARK3' => '']);
-
-        $allRows = array_merge($header, $rows);
-        $parser  = $this->getParser();
-
-        $str = '';
-        foreach ($allRows as $tokens) {
-            $str .= $parser->replace($snippet, $tokens);
-        }
-        return $str;
+        $userAccessSnippet = $this->getSnippet('UserAccess');
+        return $this->getParser()->replace(
+            $userAccessSnippet,
+            [
+                'LICENCE_NUMBER' => $this->data['licNo'],
+                'SELF_SERVE_MESSAGE' => $this->getSelfServeMessage(),
+                'USERS_TABLE' => $this->generateUserTable()
+            ]
+        );
     }
 
     protected function sortUsers($rows)
@@ -106,5 +74,74 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
         }
 
         return true;
+    }
+
+    private function isRegisteredForSelfServe(): bool
+    {
+        $organisationUsers = $this->data['organisation']['organisationUsers'];
+        foreach ($organisationUsers as $organisationUser) {
+            if ($organisationUser['isAdministrator'] == 'Y') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    private function generateUserTable(): string
+    {
+        $header[] = [
+            'BOOKMARK1' => 'Name',
+            'BOOKMARK2' => 'Email address',
+            'BOOKMARK3' => 'Permission'
+        ];
+
+        $rows = [];
+        $organisationUsers = $this->data['organisation']['organisationUsers'];
+        foreach ($organisationUsers as $organisationUser) {
+            $user = $organisationUser['user'];
+            $email = $user['contactDetails']['emailAddress'] ?? '';
+            $forename = $user['contactDetails']['person']['forename'] ?? '';
+            $familyName = $user['contactDetails']['person']['familyName'] ?? '';
+            $name = trim($forename . ' ' . $familyName);
+            $permission = implode(
+                ',',
+                array_map(
+                    function ($role) {
+                        return $this->getTranslator()->translate('role.' . $role['role'], 'snapshot');
+                    },
+                    $user['roles']
+                )
+            );
+
+            $rows[] = [
+                'BOOKMARK1' => $name,
+                'BOOKMARK2' => $email,
+                'BOOKMARK3' => $permission,
+            ];
+        }
+        $usersTableSnippet = $this->getSnippet('CHECKLIST_3CELL_TABLE');
+
+        $sortUsers = $this->sortUsers($rows);
+
+        $rows = array_pad($sortUsers, 15, ['BOOKMARK1' => '', 'BOOKMARK2' => '', 'BOOKMARK3' => '']);
+
+        $allRows = array_merge($header, $rows);
+        $parser = $this->getParser();
+
+        $usersTable = '';
+        foreach ($allRows as $tokens) {
+            $usersTable .= $parser->replace($usersTableSnippet, $tokens);
+        }
+
+        return $usersTable;
+    }
+
+    private function getSelfServeMessage()
+    {
+        return $this->isRegisteredForSelfServe() ? self::USER_MESSAGE_SELF_SERVE : self::USER_MESSAGE_NON_SELF_SERVE;
     }
 }
