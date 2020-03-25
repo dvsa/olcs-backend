@@ -76,7 +76,8 @@ class AvailableYearsTest extends QueryHandlerTestCase
         $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByType')
             ->with(
                 $query->getType(),
-                m::type(DateTime::class)
+                m::type(DateTime::class),
+                false
             )
             ->andReturn($irhpPermitWindows);
 
@@ -139,7 +140,8 @@ class AvailableYearsTest extends QueryHandlerTestCase
         $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByType')
             ->with(
                 $query->getType(),
-                m::type(DateTime::class)
+                m::type(DateTime::class),
+                false
             )
             ->andReturn($irhpPermitWindows);
 
@@ -195,7 +197,8 @@ class AvailableYearsTest extends QueryHandlerTestCase
         $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByType')
             ->with(
                 $query->getType(),
-                m::type(DateTime::class)
+                m::type(DateTime::class),
+                false
             )
             ->andReturn([]);
 
