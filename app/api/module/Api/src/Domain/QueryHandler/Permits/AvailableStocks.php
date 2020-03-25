@@ -71,7 +71,8 @@ class AvailableStocks extends AbstractQueryHandler implements ToggleRequiredInte
         $openWindows = $this->getRepo()->fetchOpenWindowsByTypeYear(
             $irhpPermitType,
             new DateTime(),
-            $year
+            $year,
+            $this->isInternalUser()
         );
 
         $availableStocks = [];
