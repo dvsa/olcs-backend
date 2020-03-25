@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.133.36",
+            "version": "3.133.43",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.133.36/aws-aws-sdk-php-3.133.36.zip",
-                "reference": "59e824e235220730a8e1d276d036a9f085486512",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.133.43/aws-aws-sdk-php-3.133.43.zip",
+                "reference": "7c8211d403614f83ce499ee217248660456d2f46",
                 "shasum": ""
             },
             "require": {
@@ -82,7 +82,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-03-13T18:09:32+00:00"
+            "time": "2020-03-24T18:18:11+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -1032,11 +1032,11 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "1.3.6",
+            "version": "1.3.7",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/persistence/1.3.6/doctrine-persistence-1.3.6.zip",
-                "reference": "5dd3ac5eebef2d0b074daa4440bb18f93132dee4",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/persistence/1.3.7/doctrine-persistence-1.3.7.zip",
+                "reference": "0af483f91bada1c9ded6c2cfd26ab7d5ab2094e0",
                 "shasum": ""
             },
             "require": {
@@ -1044,7 +1044,7 @@
                 "doctrine/cache": "^1.0",
                 "doctrine/collections": "^1.0",
                 "doctrine/event-manager": "^1.0",
-                "doctrine/reflection": "^1.1",
+                "doctrine/reflection": "^1.2",
                 "php": "^7.1"
             },
             "conflict": {
@@ -1105,15 +1105,15 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2020-01-16T22:06:23+00:00"
+            "time": "2020-03-21T15:13:52+00:00"
         },
         {
             "name": "doctrine/reflection",
-            "version": "v1.1.0",
+            "version": "1.2.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/reflection/v1.1.0/doctrine-reflection-v1.1.0.zip",
-                "reference": "bc420ead87fdfe08c03ecc3549db603a45b06d4c",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/reflection/1.2.0/doctrine-reflection-1.2.0.zip",
+                "reference": "b699ecc7f2784d1e49924fd9858cf1078db6b0e2",
                 "shasum": ""
             },
             "require": {
@@ -1134,7 +1134,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -1177,7 +1177,7 @@
                 "reflection",
                 "static"
             ],
-            "time": "2020-01-08T19:53:19+00:00"
+            "time": "2020-03-21T11:34:59+00:00"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -1697,11 +1697,11 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.65",
+            "version": "1.0.66",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/league/flysystem/1.0.65/league-flysystem-1.0.65.zip",
-                "reference": "8f17b3ba67097aafb8318cd5c553b1acf7c891c8",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/league/flysystem/1.0.66/league-flysystem-1.0.66.zip",
+                "reference": "021569195e15f8209b1c4bebb78bd66aa4f08c21",
                 "shasum": ""
             },
             "require": {
@@ -1771,7 +1771,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2020-03-08T18:53:20+00:00"
+            "time": "2020-03-17T18:58:12+00:00"
         },
         {
             "name": "league/flysystem-webdav",
@@ -2477,11 +2477,11 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.25",
+            "version": "2.0.26",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpseclib/phpseclib/2.0.25/phpseclib-phpseclib-2.0.25.zip",
-                "reference": "c18159618ed7cd7ff721ac1a8fec7860a475d2f0",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpseclib/phpseclib/2.0.26/phpseclib-phpseclib-2.0.26.zip",
+                "reference": "09655fcc1f8bab65727be036b28f6f20311c126c",
                 "shasum": ""
             },
             "require": {
@@ -2559,7 +2559,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2020-02-25T04:16:50+00:00"
+            "time": "2020-03-13T04:15:39+00:00"
         },
         {
             "name": "psr/cache",
@@ -2690,11 +2690,11 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.2",
+            "version": "1.1.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/psr/log/1.1.2/psr-log-1.1.2.zip",
-                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/psr/log/1.1.3/psr-log-1.1.3.zip",
+                "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc",
                 "shasum": ""
             },
             "require": {
@@ -2727,7 +2727,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2019-11-01T11:05:21+00:00"
+            "time": "2020-03-23T09:12:05+00:00"
         },
         {
             "name": "psr/simple-cache",
@@ -3064,11 +3064,11 @@
         },
         {
             "name": "sabre/dav",
-            "version": "4.0.3",
+            "version": "4.1.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sabre/dav/4.0.3/sabre-dav-4.0.3.zip",
-                "reference": "b793fb4ce27cf0f981b540ad771281c430ffe818",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sabre/dav/4.1.0/sabre-dav-4.1.0.zip",
+                "reference": "8f6f4d272504ee8424e1d0a47d6efc7772de2270",
                 "shasum": ""
             },
             "require": {
@@ -3082,18 +3082,20 @@
                 "ext-simplexml": "*",
                 "ext-spl": "*",
                 "lib-libxml": ">=2.7.0",
-                "php": ">=7.0.0",
+                "php": "^7.1.0",
                 "psr/log": "^1.0",
                 "sabre/event": "^5.0",
-                "sabre/http": "^5.0",
+                "sabre/http": "^5.0.5",
                 "sabre/uri": "^2.0",
-                "sabre/vobject": "^4.2.0-alpha1",
+                "sabre/vobject": "^4.2.1",
                 "sabre/xml": "^2.0.1"
             },
             "require-dev": {
                 "evert/phpdoc-md": "~0.1.0",
+                "friendsofphp/php-cs-fixer": "~2.16.1",
                 "monolog/monolog": "^1.18",
-                "phpunit/phpunit": "^6"
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.0"
             },
             "suggest": {
                 "ext-curl": "*",
@@ -3133,7 +3135,7 @@
                 "framework",
                 "iCalendar"
             ],
-            "time": "2020-01-10T07:52:45+00:00"
+            "time": "2020-03-20T08:55:46+00:00"
         },
         {
             "name": "sabre/event",
@@ -6611,11 +6613,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.14",
+            "version": "0.12.18",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan/0.12.14/phpstan-phpstan-0.12.14.zip",
-                "reference": "37bdd26a80235d0f9045b49f4151102b7831cbe2",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpstan/phpstan/0.12.18/phpstan-phpstan-0.12.18.zip",
+                "reference": "1ce27fe29c8660a27926127d350d53d80c4d4286",
                 "shasum": ""
             },
             "require": {
@@ -6640,7 +6642,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2020-03-02T22:29:43+00:00"
+            "time": "2020-03-22T16:51:47+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
