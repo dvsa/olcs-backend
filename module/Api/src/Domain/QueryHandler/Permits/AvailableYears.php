@@ -68,7 +68,8 @@ class AvailableYears extends AbstractQueryHandler implements ToggleRequiredInter
 
         $openWindows = $this->getRepo()->fetchOpenWindowsByType(
             $permitType,
-            new DateTime()
+            new DateTime(),
+            $this->isInternalUser()
         );
 
         $availableYears = [];
