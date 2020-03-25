@@ -2378,7 +2378,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * {@inheritdoc}
      */
-    public function getAdditionalQaViewData()
+    public function getAdditionalQaViewData(ApplicationStep $applicationStep)
     {
         return [
             'applicationReference' => $this->getApplicationRef()
@@ -2391,5 +2391,13 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function isApplicationPathEnabled()
     {
         return $this->irhpPermitType->isApplicationPathEnabled();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRepositoryName()
+    {
+        return 'IrhpApplication';
     }
 }

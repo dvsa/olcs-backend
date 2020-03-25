@@ -6204,13 +6204,15 @@ class IrhpApplicationEntityTest extends EntityTester
             ->withNoArgs()
             ->andReturn($applicationRef);
 
+        $applicationStep = m::mock(ApplicationStep::class);
+
         $expected = [
             'applicationReference' => $applicationRef
         ];
 
         $this->assertEquals(
             $expected,
-            $this->sut->getAdditionalQaViewData()
+            $this->sut->getAdditionalQaViewData($applicationStep)
         );
     }
 
@@ -6238,5 +6240,13 @@ class IrhpApplicationEntityTest extends EntityTester
             [true],
             [false],
         ];
+    }
+
+    public function testGetRepositoryName()
+    {
+        $this->assertEquals(
+            'IrhpApplication',
+            $this->sut->getRepositoryName()
+        );
     }
 }

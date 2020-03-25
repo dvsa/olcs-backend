@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Cqrs;
+namespace Dvsa\Olcs\Api\Service\Cqrs;
 
 class CommandCreator
 {

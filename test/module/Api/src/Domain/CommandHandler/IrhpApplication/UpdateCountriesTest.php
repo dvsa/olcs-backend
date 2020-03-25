@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries as UpdateCountriesCmd;
 use Mockery as m;
 
@@ -25,6 +26,10 @@ class UpdateCountriesTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpPermitApplication', IrhpPermitApplicationRepo::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
         $this->sut = m::mock(UpdateCountries::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $this->mockedSmServices = [
+            'QaApplicationAnswersClearer' => m::mock(ApplicationAnswersClearer::class),
+        ];
 
         parent::setUp();
     }
@@ -295,6 +300,10 @@ class UpdateCountriesTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($irhpPermitApp3)
             ->shouldReceive('deleteOnFlush')
+            ->with($irhpPermitApp3)
+            ->once();
+
+        $this->mockedSmServices['QaApplicationAnswersClearer']->shouldReceive('clear')
             ->with($irhpPermitApp3)
             ->once();
 

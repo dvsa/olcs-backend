@@ -68,6 +68,40 @@ class ApplicationStepEntityTest extends EntityTester
         );
     }
 
+    public function testGetPreviousStepSlug()
+    {
+        $previousStepSlug = 'previous-slug';
+
+        $previousApplicationStep = m::mock(Entity::class);
+        $previousApplicationStep->shouldReceive('getQuestion->getSlug')
+            ->withNoArgs()
+            ->andReturn($previousStepSlug);
+
+        $currentApplicationStep = m::mock(Entity::class)->makePartial();
+
+        $currentApplicationStep->shouldReceive('getPreviousApplicationStep')
+            ->withNoArgs()
+            ->andReturn($previousApplicationStep);
+
+        $this->assertEquals(
+            $previousStepSlug,
+            $currentApplicationStep->getPreviousStepSlug()
+        );
+    }
+
+    public function testGetPreviousStepSlugNull()
+    {
+        $currentApplicationStep = m::mock(Entity::class)->makePartial();
+
+        $currentApplicationStep->shouldReceive('getPreviousApplicationStep')
+            ->withNoArgs()
+            ->andThrow(new NotFoundException());
+
+        $this->assertNull(
+            $currentApplicationStep->getPreviousStepSlug()
+        );
+    }
+
     public function testGetPreviousApplicationStep()
     {
         $previousApplicationStep = m::mock(Entity::class)->makePartial();

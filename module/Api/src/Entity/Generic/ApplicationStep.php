@@ -40,6 +40,26 @@ class ApplicationStep extends AbstractApplicationStep
     }
 
     /**
+     * Get the slug of the application step immediately following this one, or null if there is no previous step
+     *
+     * @return string|null
+     */
+    public function getPreviousStepSlug()
+    {
+        $previousApplicationStep = null;
+        try {
+            $previousApplicationStep = $this->getPreviousApplicationStep();
+        } catch (NotFoundException $e) {
+        }
+
+        if (is_null($previousApplicationStep)) {
+            return null;
+        }
+
+        return $previousApplicationStep->getQuestion()->getSlug();
+    }
+
+    /**
      * Get the instance of the application step immediately preceding this one
      *
      * @return ApplicationStep

@@ -41,6 +41,9 @@ class FormControlStrategyProviderFactory implements FactoryInterface
                 'QaCertRoadworthinessMotExpiryDateFormControlStrategy',
             Question::FORM_CONTROL_COMMON_CERTIFICATES => 'QaCommonCertificatesFormControlStrategy',
             Question::FORM_CONTROL_BILATERAL_PERMIT_USAGE => 'QaBilateralPermitUsageFormControlStrategy',
+            Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY => 'QaBilateralCabotageOnlyFormControlStrategy',
+            Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE =>
+                'QaBilateralStandardAndCabotageFormControlStrategy',
         ];
 
         $provider = new FormControlStrategyProvider($mappings);

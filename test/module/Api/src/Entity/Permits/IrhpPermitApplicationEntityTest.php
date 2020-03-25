@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -848,6 +849,78 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpGetAnswerWithStandardAnswer
+     */
+    public function testGetAnswerWithStandardAnswer($isCustom, $formControlType)
+    {
+        $answerValue = 'answer value';
+
+        $applicationPathLockedOn = m::mock(DateTime::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getApplicationPathLockedOn')
+            ->withNoArgs()
+            ->andReturn($applicationPathLockedOn);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('getFormControlType')
+            ->withNoArgs()
+            ->andReturn($formControlType);
+        $question->shouldReceive('isCustom')
+            ->withNoArgs()
+            ->andReturn($isCustom);
+        $question->shouldReceive('getStandardAnswer')
+            ->with($entity, $applicationPathLockedOn)
+            ->andReturn($answerValue);
+
+        $applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep->shouldReceive('getQuestion')
+            ->withNoArgs()
+            ->andReturn($question);
+
+        $this->assertEquals(
+            $answerValue,
+            $entity->getAnswer($applicationStep)
+        );
+    }
+
+    public function getAnswerUnsupportedCustomType()
+    {
+        $this->expectExpection(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to retrieve answer status for form control type FORM_CONTROL_OTHER');
+
+        $applicationPathLockedOn = m::mock(DateTime::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getApplicationPathLockedOn')
+            ->withNoArgs()
+            ->andReturn($applicationPathLockedOn);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('getFormControlType')
+            ->withNoArgs()
+            ->andReturn('FORM_CONTROL_OTHER');
+        $question->shouldReceive('isCustom')
+            ->withNoArgs()
+            ->andReturnTrue;
+
+        $applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep->shouldReceive('getQuestion')
+            ->withNoArgs()
+            ->andReturn($question);
+
+        $entity->getAnswer($applicationStep);
+    }
+
+    public function dpGetAnswerWithStandardAnswer()
+    {
+        return [
+            [true, Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY],
+            [true, Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE],
+        ];
+    }
+
+    /**
      * @dataProvider dpResetCheckAnswers
      */
     public function testResetCheckAnswers($canBeUpdated, $expectedValue)
@@ -897,20 +970,39 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     {
         $entity = m::mock(Entity::class)->makePartial();
 
+        $countryCode = 'DE';
         $countryName = 'Germany';
+        $previousStepSlug = 'previous-step-slug';
 
-        $expected = ['countryName' => $countryName];
+        $expected = [
+            'previousStepSlug' => $previousStepSlug,
+            'countryName' => $countryName,
+            'countryCode' => $countryCode,
+        ];
 
-        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
-        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry->getCountryDesc')
+        $country = m::mock(Country::class);
+        $country->shouldReceive('getCountryDesc')
             ->withNoArgs()
             ->andReturn($countryName);
+        $country->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($countryCode);
+
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry')
+            ->withNoArgs()
+            ->andReturn($country);
 
         $entity->setIrhpPermitWindow($irhpPermitWindow);
 
+        $applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep->shouldReceive('getPreviousStepSlug')
+            ->withNoArgs()
+            ->andReturn($previousStepSlug);
+
         $this->assertEquals(
             $expected,
-            $entity->getAdditionalQaViewData()
+            $entity->getAdditionalQaViewData($applicationStep)
         );
     }
 

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\Common\CurrentDateTimeFactory;
-use Dvsa\Olcs\Api\Service\Qa\Cqrs\CommandCreator;
+use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 
 class FeeUpdater
 {

@@ -14,6 +14,8 @@ use RuntimeException;
 
 class BaseFormControlStrategy implements FormControlStrategyInterface
 {
+    const FRONTEND_DESTINATION_NEXT_STEP = 'NEXT_STEP';
+
     /** @var string */
     private $frontendType;
 
@@ -93,7 +95,12 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
             throw new RuntimeException('Answer saver does not support entity type');
         }
 
-        $this->answerSaver->save($qaContext, $postData);
+        $destinationName = $this->answerSaver->save($qaContext, $postData);
+        if (is_null($destinationName)) {
+            $destinationName = self::FRONTEND_DESTINATION_NEXT_STEP;
+        }
+
+        return $destinationName;
     }
 
     /**

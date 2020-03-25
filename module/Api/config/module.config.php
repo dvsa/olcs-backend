@@ -26,6 +26,7 @@ return [
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
+            'CqrsCommandCreator' => ApiSrv\Cqrs\CommandCreator::class,
             'QaContextFactory' => ApiSrv\Qa\QaContextFactory::class,
             'QaCommonCurrentDateTimeFactory' =>
                 ApiSrv\Qa\Common\CurrentDateTimeFactory::class,
@@ -51,7 +52,6 @@ return [
             'QaValidatorListFactory' => ApiSrv\Qa\Structure\ValidatorListFactory::class,
             'QaElementGeneratorContextFactory' => ApiSrv\Qa\Structure\Element\ElementGeneratorContextFactory::class,
             'QaNamedAnswerFetcher' => ApiSrv\Qa\Structure\Element\NamedAnswerFetcher::class,
-            'QaCommandCreator' => ApiSrv\Qa\Cqrs\CommandCreator::class,
             'QaEcmtShortTermNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
             'QaEcmtShortTermEmissionsCategoryFactory' =>
@@ -70,6 +70,11 @@ return [
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
             'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
             'QaOptionFactory' => ApiSrv\Qa\Structure\Element\Options\OptionFactory::class,
+
+            'QaBilateralCabotageOnlyElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyFactory::class,
+            'QaBilateralStandardAndCabotageElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageFactory::class,
 
             'PermitsAnswersSummaryFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryFactory::class,
             'PermitsAnswersSummaryRowFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryRowFactory::class,
@@ -234,6 +239,10 @@ return [
                 => ApiSrv\Qa\Strategy\EcmtShortTermEarliestPermitDateFormControlStrategyFactory::class,
             'QaBilateralPermitUsageFormControlStrategy'
                 => ApiSrv\Qa\Strategy\BilateralPermitUsageFormControlStrategyFactory::class,
+            'QaBilateralCabotageOnlyFormControlStrategy'
+                => ApiSrv\Qa\Strategy\BilateralCabotageOnlyFormControlStrategyFactory::class,
+            'QaBilateralStandardAndCabotageFormControlStrategy'
+                => ApiSrv\Qa\Strategy\BilateralStandardAndCabotageFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
@@ -245,6 +254,8 @@ return [
                 => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
             'QaCommonCertificatesQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\Common\CertificatesGeneratorFactory::class,
+            'QaBilateralCabotageQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\Bilateral\CabotageGeneratorFactory::class,
 
             'QaSelfservePageGenerator' => ApiSrv\Qa\Structure\SelfservePageGeneratorFactory::class,
             'QaFormFragmentGenerator' => ApiSrv\Qa\Structure\FormFragmentGeneratorFactory::class,
@@ -316,6 +327,15 @@ return [
             'QaBilateralPermitUsageGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageGeneratorFactory::class,
 
+            'QaBilateralCabotageOnlyElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyGeneratorFactory::class,
+            'QaBilateralCabotageOnlyAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyAnswerSaverFactory::class,
+            'QaBilateralStandardAndCabotageElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageGeneratorFactory::class,
+            'QaBilateralStandardAndCabotageAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageAnswerSaverFactory::class,
+    
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
 
@@ -334,6 +354,8 @@ return [
             'QaRadioAnswerSummaryProvider' =>
                 ApiSrv\Qa\Structure\Element\Radio\RadioAnswerSummaryProviderFactory::class,
 
+            'PermitsBilateralApplicationCountryRemover' =>
+                ApiSrv\Permits\Bilateral\ApplicationCountryRemoverFactory::class,
             'PermitsShortTermEcmtWindowAvailabilityChecker' =>
                 ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
             'PermitsShortTermEcmtStockAvailabilityChecker' =>
