@@ -17,7 +17,9 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update countries
@@ -33,6 +35,25 @@ class UpdateCountries extends AbstractCommandHandler implements
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitApplication'];
+
+    /** @var ApplicationAnswersClearer */
+    private $applicationAnswersClearer;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->applicationAnswersClearer = $mainServiceLocator->get('QaApplicationAnswersClearer');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -110,10 +131,12 @@ class UpdateCountries extends AbstractCommandHandler implements
         /* @var $existingIrhpPermitApplication IrhpPermitApplication */
         foreach ($existingIrhpPermitAppsByWindowId as $windowId => $existingIrhpPermitAppId) {
             if (!in_array($windowId, $windowIdsToBeKept)) {
+                $irhpPermitApplication = $irhpPermitApplicationRepo->fetchById($existingIrhpPermitAppId);
+
+                // clear all existing q&a answers
+                $this->applicationAnswersClearer->clear($irhpPermitApplication);
                 // delete IrhpPermitApplication if the window is not to be kept
-                $irhpPermitApplicationRepo->deleteOnFlush(
-                    $irhpPermitApplicationRepo->fetchById($existingIrhpPermitAppId)
-                );
+                $irhpPermitApplicationRepo->deleteOnFlush($irhpPermitApplication);
             }
         }
 

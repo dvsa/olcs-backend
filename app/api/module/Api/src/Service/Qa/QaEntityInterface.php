@@ -19,9 +19,11 @@ interface QaEntityInterface
     /**
      * Return additional Q&A view data applicable to this entity type
      *
+     * @param ApplicationStep $applicationStep
+     *
      * @return array
      */
-    public function getAdditionalQaViewData();
+    public function getAdditionalQaViewData(ApplicationStep $applicationStep);
 
     /**
      * Executed on submission of an application step
@@ -69,4 +71,11 @@ interface QaEntityInterface
      * @return bool
      */
     public function isApplicationPathEnabled();
+
+    /**
+     * The repository name associated with this entity
+     *
+     * @return string
+     */
+    public function getRepositoryName();
 }

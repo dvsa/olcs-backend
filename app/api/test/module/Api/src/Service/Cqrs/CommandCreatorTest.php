@@ -1,9 +1,9 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Qa\Cqrs;
+namespace Dvsa\OlcsTest\Api\Service\Cqrs;
 
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Service\Qa\Cqrs\CommandCreator;
+use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 use Dvsa\Olcs\Transfer\Command\Fee\CreateFee;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

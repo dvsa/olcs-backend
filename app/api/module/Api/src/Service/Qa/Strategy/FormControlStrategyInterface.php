@@ -32,6 +32,8 @@ interface FormControlStrategyInterface
      *
      * @param QaContext $qaContext
      * @param array $postData
+     *
+     * @return string
      */
     public function saveFormData(QaContext $qaContext, array $postData);
 

@@ -19,6 +19,8 @@ class SubmitApplicationStep extends AbstractCommandHandler
 {
     protected $repoServiceName = 'IrhpApplication';
 
+    protected $extraRepos = ['IrhpPermitApplication'];
+
     /** @var QaContextGenerator */
     private $qaContextGenerator;
 
@@ -61,11 +63,17 @@ class SubmitApplicationStep extends AbstractCommandHandler
             $qaContext->getApplicationStepEntity()
         );
 
-        $formControlStrategy->saveFormData($qaContext, $command->getPostData());
+        $destinationName = $formControlStrategy->saveFormData($qaContext, $command->getPostData());
+        $this->result->addMessage($destinationName);
 
         $qaEntity = $qaContext->getQaEntity();
-        $qaEntity->onSubmitApplicationStep();
-        $this->getRepo()->save($qaContext->getQaEntity());
+        $repositoryName = $qaEntity->getRepositoryName();
+        $repository = $this->getRepo($repositoryName);
+
+        if ($repository->contains($qaEntity)) {
+            $qaEntity->onSubmitApplicationStep();
+            $repository->save($qaEntity);
+        }
 
         return $this->result;
     }

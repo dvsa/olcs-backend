@@ -51,7 +51,7 @@ class SelfservePageGenerator
 
         $selfservePage = $this->selfservePageFactory->create(
             $applicationStepEntity->getQuestion()->getActiveQuestionText()->getQuestionShortKey(),
-            $qaEntity->getAdditionalQaViewData(),
+            $qaEntity->getAdditionalQaViewData($applicationStepEntity),
             $this->applicationStepGenerator->generate($qaContext),
             $formControlStrategy->getQuestionText($qaContext),
             $applicationStepEntity->getNextStepSlug()

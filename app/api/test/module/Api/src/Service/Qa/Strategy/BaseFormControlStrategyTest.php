@@ -114,7 +114,10 @@ class BaseFormControlStrategyTest extends MockeryTestCase
         $this->baseFormControlStrategy->getElement($elementGeneratorContext);
     }
 
-    public function testSaveFormData()
+    /**
+     * @dataProvider dpSaveFormData
+     */
+    public function testSaveFormData($inDestinationName, $outDestinationName)
     {
         $qaEntity = m::mock(QaEntityInterface::class);
 
@@ -134,9 +137,21 @@ class BaseFormControlStrategyTest extends MockeryTestCase
             ->andReturnTrue();
         $this->answerSaver->shouldReceive('save')
             ->with($qaContext, $postData)
-            ->once();
+            ->once()
+            ->andReturn($inDestinationName);
 
-        $this->baseFormControlStrategy->saveFormData($qaContext, $postData);
+        $this->assertEquals(
+            $outDestinationName,
+            $this->baseFormControlStrategy->saveFormData($qaContext, $postData)
+        );
+    }
+
+    public function dpSaveFormData()
+    {
+        return [
+            [null, BaseFormControlStrategy::FRONTEND_DESTINATION_NEXT_STEP],
+            ['DESTINATION_NAME', 'DESTINATION_NAME']
+        ];
     }
 
     public function testSaveFormDataNotSupported()

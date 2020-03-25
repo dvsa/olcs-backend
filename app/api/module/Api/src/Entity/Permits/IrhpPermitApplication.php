@@ -455,7 +455,6 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function isNotYetSubmitted()
     {
-        // TODO: test coverage
         return $this->irhpApplication->isNotYetSubmitted();
     }
 
@@ -494,6 +493,11 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
 
         if ($question->isCustom()) {
             $formControlType = $question->getFormControlType();
+            switch ($formControlType) {
+                case Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY:
+                case Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE:
+                    return $question->getStandardAnswer($this, $applicationPathLockedOn);
+            }
 
             throw new RuntimeException(
                 sprintf(
@@ -535,19 +539,16 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
-     * Return additional Q&A view data applicable to this entity type
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getAdditionalQaViewData()
+    public function getAdditionalQaViewData(ApplicationStep $applicationStep)
     {
-        $countryName = $this->irhpPermitWindow
-            ->getIrhpPermitStock()
-            ->getCountry()
-            ->getCountryDesc();
+        $country = $this->irhpPermitWindow->getIrhpPermitStock()->getCountry();
 
         return [
-            'countryName' => $countryName
+            'previousStepSlug' => $applicationStep->getPreviousStepSlug(),
+            'countryName' => $country->getCountryDesc(),
+            'countryCode' => $country->getId()
         ];
     }
 
@@ -557,5 +558,13 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     public function isApplicationPathEnabled()
     {
         return $this->irhpApplication->getIrhpPermitType()->isIrhpPermitApplicationPathEnabled();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRepositoryName()
+    {
+        return 'IrhpPermitApplication';
     }
 }

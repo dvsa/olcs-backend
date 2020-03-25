@@ -38,6 +38,8 @@ class Question extends AbstractQuestion
     const FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE = 'form_control_ecmt_st_ear_per_dat';
     const FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS = 'form_control_ecmt_an_2018_nop';
     const FORM_CONTROL_BILATERAL_PERMIT_USAGE = 'form_control_bi_per_usage';
+    const FORM_CONTROL_BILATERAL_CABOTAGE_ONLY = 'form_control_bi_cab_only';
+    const FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE = 'form_control_bi_cab_std_and_cab';
 
     // Question data types
     const QUESTION_TYPE_STRING = 'question_type_string';

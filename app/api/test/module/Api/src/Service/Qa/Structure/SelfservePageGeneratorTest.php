@@ -56,7 +56,7 @@ class SelfservePageGeneratorTest extends MockeryTestCase
 
         $qaEntity = m::mock(QaEntityInterface::class);
         $qaEntity->shouldReceive('getAdditionalQaViewData')
-            ->withNoArgs()
+            ->with($applicationStepEntity)
             ->andReturn($additionalQaViewData);
 
         $qaContext = m::mock(QaContext::class);

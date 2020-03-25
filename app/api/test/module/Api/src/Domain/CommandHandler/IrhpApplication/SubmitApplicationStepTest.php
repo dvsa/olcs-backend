@@ -22,6 +22,24 @@ use Mockery as m;
  */
 class SubmitApplicationStepTest extends CommandHandlerTestCase
 {
+    const IRHP_APPLICATION_ID = 23;
+    const IRHP_PERMIT_APPLICATION_ID = 457;
+    const SLUG = 'removals-eligibility';
+    const REPOSITORY_NAME = 'IrhpApplication';
+    const DESTINATION_NAME = 'DESTINATION_NAME';
+
+    private $applicationStepEntity;
+
+    private $qaEntity;
+
+    private $qaContext;
+
+    private $postData;
+
+    private $formControlStrategy;
+
+    private $command;
+
     public function setUp()
     {
         $this->sut = new Sut();
@@ -33,61 +51,89 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
             'QaFormControlStrategyProvider' => m::mock(FormControlStrategyProvider::class)
         ];
 
-        parent::setUp();
-    }
+        $this->applicationStepEntity = m::mock(ApplicationStepEntity::class);
 
-    public function testHandleCommand()
-    {
-        $irhpApplicationId = 23;
-        $irhpPermitApplicationId = 457;
-        $slug = 'removals-eligibility';
+        $this->qaEntity = m::mock(QaEntityInterface::class);
+        $this->qaEntity->shouldReceive('getRepositoryName')
+            ->withNoArgs()
+            ->andReturn(self::REPOSITORY_NAME);
 
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-        $qaEntity = m::mock(QaEntityInterface::class);
-        $qaEntity->shouldReceive('onSubmitApplicationStep')
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getApplicationStepEntity')
             ->withNoArgs()
-            ->once();
-
-        $qaContext = m::mock(QaContext::class);
-        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->andReturn($this->applicationStepEntity);
+        $this->qaContext->shouldReceive('getQaEntity')
             ->withNoArgs()
-            ->andReturn($applicationStepEntity);
-        $qaContext->shouldReceive('getQaEntity')
-            ->withNoArgs()
-            ->andReturn($qaEntity);
+            ->andReturn($this->qaEntity);
 
         $this->mockedSmServices['QaContextGenerator']->shouldReceive('generate')
-            ->with($irhpApplicationId, $irhpPermitApplicationId, $slug)
-            ->andReturn($qaContext);
+            ->with(self::IRHP_APPLICATION_ID, self::IRHP_PERMIT_APPLICATION_ID, self::SLUG)
+            ->andReturn($this->qaContext);
 
-        $postData = [
+        $this->postData = [
             'fieldset123' => [
                 'qaElement' => '123'
             ]
         ];
 
-        $formControlStrategy = m::mock(FormControlStrategyInterface::class);
-        $formControlStrategy->shouldReceive('saveFormData')
-            ->with($qaContext, $postData)
-            ->once();
-
-        $this->repoMap['IrhpApplication']->shouldReceive('save')
-            ->with($qaEntity)
-            ->once();
+        $this->formControlStrategy = m::mock(FormControlStrategyInterface::class);
+        $this->formControlStrategy->shouldReceive('saveFormData')
+            ->with($this->qaContext, $this->postData)
+            ->once()
+            ->andReturn(self::DESTINATION_NAME);
 
         $this->mockedSmServices['QaFormControlStrategyProvider']->shouldReceive('get')
-            ->with($applicationStepEntity)
-            ->andReturn($formControlStrategy);
+            ->with($this->applicationStepEntity)
+            ->andReturn($this->formControlStrategy);
 
-        $command = Cmd::create(
+        $this->command = Cmd::create(
             [
-                'id' => $irhpApplicationId,
-                'irhpPermitApplication' => $irhpPermitApplicationId,
-                'slug' => $slug,
-                'postData' => $postData
+                'id' => self::IRHP_APPLICATION_ID,
+                'irhpPermitApplication' => self::IRHP_PERMIT_APPLICATION_ID,
+                'slug' => self::SLUG,
+                'postData' => $this->postData
             ]
         );
 
-        $this->sut->handleCommand($command);
+
+        parent::setUp();
+    }
+
+    public function testHandleCommandEntityDeleted()
+    {
+        $this->repoMap[self::REPOSITORY_NAME]->shouldReceive('contains')
+            ->with($this->qaEntity)
+            ->andReturnFalse();
+
+        $result = $this->sut->handleCommand($this->command);
+
+        $this->assertEquals(
+            [self::DESTINATION_NAME],
+            $result->getMessages()
+        );
+    }
+
+    public function testHandleCommandEntityExists()
+    {
+        $this->repoMap[self::REPOSITORY_NAME]->shouldReceive('contains')
+            ->with($this->qaEntity)
+            ->andReturnTrue();
+        $this->qaEntity->shouldReceive('onSubmitApplicationStep')
+            ->withNoArgs()
+            ->once()
+            ->globally()
+            ->ordered();
+        $this->repoMap[self::REPOSITORY_NAME]->shouldReceive('save')
+            ->with($this->qaEntity)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $result = $this->sut->handleCommand($this->command);
+
+        $this->assertEquals(
+            [self::DESTINATION_NAME],
+            $result->getMessages()
+        );
     }
 }
