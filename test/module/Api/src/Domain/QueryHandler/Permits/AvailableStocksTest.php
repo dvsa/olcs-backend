@@ -81,7 +81,8 @@ class AvailableStocksTest extends QueryHandlerTestCase
             ->with(
                 $query->getIrhpPermitType(),
                 m::type(DateTime::class),
-                $query->getYear()
+                $query->getYear(),
+                false
             )
             ->andReturn($irhpPermitWindows);
 
@@ -148,7 +149,8 @@ class AvailableStocksTest extends QueryHandlerTestCase
             ->with(
                 $query->getIrhpPermitType(),
                 m::type(DateTime::class),
-                $query->getYear()
+                $query->getYear(),
+                false
             )
             ->andReturn($irhpPermitWindows);
 
@@ -215,7 +217,8 @@ class AvailableStocksTest extends QueryHandlerTestCase
             ->with(
                 $query->getIrhpPermitType(),
                 m::type(DateTime::class),
-                $query->getYear()
+                $query->getYear(),
+                false
             )
             ->once()
             ->andReturn([]);
