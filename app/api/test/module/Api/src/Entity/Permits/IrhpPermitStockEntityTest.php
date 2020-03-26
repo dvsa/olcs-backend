@@ -1356,7 +1356,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertSame($secondExpectedRange, $resultAsArray[1]);
     }
 
-    private function createMockRange($ssReserve, $lostReplacement, $fromNo, $emissionsCategoryId)
+    private function createMockRange($ssReserve, $lostReplacement, $fromNo, $emissionsCategoryId, $journey = null)
     {
         $irhpPermitRange = m::mock(IrhpPermitRange::class);
         $irhpPermitRange->shouldReceive('getSsReserve')
@@ -1367,6 +1367,8 @@ class IrhpPermitStockEntityTest extends EntityTester
             ->andReturn($fromNo);
         $irhpPermitRange->shouldReceive('getEmissionsCategory->getId')
             ->andReturn($emissionsCategoryId);
+        $irhpPermitRange->shouldReceive('getJourney')
+            ->andReturn($journey);
 
         return $irhpPermitRange;
     }
@@ -1684,6 +1686,81 @@ class IrhpPermitStockEntityTest extends EntityTester
                 false,
                 2020,
                 Entity::CANDIDATE_MODE_NONE
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetPermitUsageList
+     */
+    public function testGetPermitUsageList($irhpPermitRanges, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $entity->shouldReceive('getIrhpPermitRanges')
+            ->andReturn($irhpPermitRanges);
+
+        $result = $entity->getPermitUsageList();
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function dpGetPermitUsageList()
+    {
+        $journeyMultiple = (new RefData(RefData::JOURNEY_MULTIPLE))->setDisplayOrder(10);
+        $journeySingle = (new RefData(RefData::JOURNEY_SINGLE))->setDisplayOrder(20);
+
+        return [
+            [
+                new ArrayCollection(
+                    [
+                        $this->createMockRange(false, false, 1, RefData::EMISSIONS_CATEGORY_EURO5_REF, null),
+                        $this->createMockRange(false, false, 300, RefData::EMISSIONS_CATEGORY_EURO5_REF, $journeyMultiple),
+                        $this->createMockRange(false, true, 230, RefData::EMISSIONS_CATEGORY_EURO5_REF, $journeyMultiple),
+                        $this->createMockRange(true, false, 100, RefData::EMISSIONS_CATEGORY_EURO6_REF, $journeySingle),
+                        $this->createMockRange(true, true, 500, RefData::EMISSIONS_CATEGORY_EURO5_REF, $journeySingle),
+                        $this->createMockRange(false, false, 420, RefData::EMISSIONS_CATEGORY_EURO6_REF, $journeySingle),
+                    ]
+                ),
+                [
+                    10 => $journeyMultiple,
+                    20 => $journeySingle,
+                ],
+            ],
+            [
+                new ArrayCollection(
+                    [
+                        $this->createMockRange(false, false, 1, RefData::EMISSIONS_CATEGORY_EURO5_REF, $journeyMultiple),
+                        $this->createMockRange(false, false, 300, RefData::EMISSIONS_CATEGORY_EURO5_REF, $journeyMultiple),
+                        $this->createMockRange(false, false, 420, RefData::EMISSIONS_CATEGORY_EURO6_REF, $journeyMultiple),
+                    ]
+                ),
+                [
+                    10 => $journeyMultiple,
+                ],
+            ],
+            [
+                new ArrayCollection(
+                    [
+                        $this->createMockRange(false, false, 1, RefData::EMISSIONS_CATEGORY_EURO5_REF, $journeySingle),
+                        $this->createMockRange(false, false, 300, RefData::EMISSIONS_CATEGORY_EURO5_REF, $journeySingle),
+                        $this->createMockRange(false, false, 420, RefData::EMISSIONS_CATEGORY_EURO6_REF, $journeySingle),
+                    ]
+                ),
+                [
+                    20 => $journeySingle,
+                ],
+            ],
+            [
+                new ArrayCollection(
+                    [
+                        $this->createMockRange(false, false, 1, RefData::EMISSIONS_CATEGORY_EURO5_REF, null),
+                        $this->createMockRange(false, true, 230, RefData::EMISSIONS_CATEGORY_EURO5_REF, $journeyMultiple),
+                        $this->createMockRange(true, false, 100, RefData::EMISSIONS_CATEGORY_EURO6_REF, $journeySingle),
+                        $this->createMockRange(true, true, 500, RefData::EMISSIONS_CATEGORY_EURO5_REF, $journeySingle),
+                    ]
+                ),
+                [],
             ],
         ];
     }

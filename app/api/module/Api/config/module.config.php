@@ -232,6 +232,8 @@ return [
                 => ApiSrv\Qa\Strategy\CommonCertificatesFormControlStrategyFactory::class,
             'QaEcmtShortTermEarliestPermitDateFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtShortTermEarliestPermitDateFormControlStrategyFactory::class,
+            'QaBilateralPermitUsageFormControlStrategy'
+                => ApiSrv\Qa\Strategy\BilateralPermitUsageFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
@@ -311,6 +313,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateGeneratorFactory::class,
             'QaCertRoadworthinessMotExpiryDateElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\CertRoadworthiness\MotExpiryDateGeneratorFactory::class,
+            'QaBilateralPermitUsageGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageGeneratorFactory::class,
 
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
