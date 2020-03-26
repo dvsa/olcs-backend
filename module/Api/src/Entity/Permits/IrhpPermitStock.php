@@ -732,4 +732,32 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
 
         return self::CANDIDATE_MODE_NONE;
     }
+
+    /**
+     * Get list of permit usage for the stock
+     *
+     * @return array
+     */
+    public function getPermitUsageList()
+    {
+        $criteria = Criteria::create();
+
+        $criteria->where($criteria->expr()->eq('ssReserve', false))
+            ->andWhere($criteria->expr()->eq('lostReplacement', false))
+            ->andWhere($criteria->expr()->neq('journey', null));
+
+        $ranges = $this->getIrhpPermitRanges()->matching($criteria);
+
+        $result = [];
+
+        foreach ($ranges as $range) {
+            $journey = $range->getJourney();
+
+            $result[$journey->getDisplayOrder()] = $journey;
+        }
+
+        ksort($result);
+
+        return $result;
+    }
 }
