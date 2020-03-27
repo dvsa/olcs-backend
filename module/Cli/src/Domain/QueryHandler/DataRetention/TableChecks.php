@@ -128,7 +128,7 @@ final class TableChecks extends AbstractQueryHandler
     private function preRunTableCounts(array $tables)
     {
         // Truncate the table storing counts
-        $truncStatement = $this->connection->prepare('TRUNCATE TABLE DR_TABLE_COUNTS;');
+        $truncStatement = $this->connection->prepare('DELETE FROM DR_TABLE_COUNTS');
         $truncStatement->execute(['schema' => $this->databaseName]);
         $truncStatement->closeCursor();
 
@@ -165,18 +165,20 @@ final class TableChecks extends AbstractQueryHandler
         // Get Primary keys for all tables.
         $pksByTable = $this->getPksByTable();
         foreach ($tables as $table) {
-            $tableEsc = $this->escapeMysqlIdentifier($table);
-            // Attempt to select rows which should have been deleted in a delete run.
-            $selectExpDeletedRows = $this->connection->prepare(
-                "SELECT {$pksByTable[$table][0]} FROM $tableEsc WHERE {$pksByTable[$table][0]} 
+            if (array_key_exists($table, $pksByTable)) {
+                $tableEsc = $this->escapeMysqlIdentifier($table);
+                // Attempt to select rows which should have been deleted in a delete run.
+                $selectExpDeletedRows = $this->connection->prepare(
+                    "SELECT {$pksByTable[$table][0]} FROM $tableEsc WHERE {$pksByTable[$table][0]} 
                           IN (SELECT primarykey FROM DR_EXPECTED_DELETES WHERE tablename = :tablename)"
-            );
-            $selectExpDeletedRows->execute([':tablename' => $this->databaseName]);
-            $rows = $selectExpDeletedRows->fetchAll(PDO::FETCH_COLUMN);
+                );
+                $selectExpDeletedRows->execute([':tablename' => $this->databaseName]);
+                $rows = $selectExpDeletedRows->fetchAll(PDO::FETCH_COLUMN);
 
-            // ideally rows will always be empty, if not then add to array indexed by table-name for reporting.
-            if (!empty($rows)) {
-                $undeletedRows[$table] = $rows;
+                // ideally rows will always be empty, if not then add to array indexed by table-name for reporting.
+                if (!empty($rows)) {
+                    $undeletedRows[$table] = $rows;
+                }
             }
         }
 
@@ -351,7 +353,7 @@ final class TableChecks extends AbstractQueryHandler
             $queries = array_merge(
                 $queries,
                 [
-                    "TRUNCATE TABLE {$tmpGenerateDeleteTableEsc}",
+                    "DELETE FROM {$tmpGenerateDeleteTableEsc}",
                     "INSERT INTO {$tmpGenerateDeleteTableEsc}
                      SELECT {$pksEsc}
                      FROM {$tableEsc}
@@ -374,7 +376,7 @@ final class TableChecks extends AbstractQueryHandler
      */
     private function generatePersistQueries(array $pksByTable)
     {
-        $queries[] = "TRUNCATE TABLE DR_EXPECTED_DELETES";
+        $queries[] = "DELETE FROM DR_EXPECTED_DELETES";
         foreach ($pksByTable as $table => $pks) {
             $tmpExpectedDeleteTableEsc = $this->escapeMysqlIdentifier("tmp_expected_delete_$table");
             $pksEsc = implode(", ", array_map([$this, 'escapeMysqlIdentifier'], $pks));

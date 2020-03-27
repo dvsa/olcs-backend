@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ContinuationDetail;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ContinuationDetail\LicenceChecklist;
 use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as ContinuationDetailRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
@@ -67,6 +66,14 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                                 'person' => [
                                     'title' => 'expected'
                                 ]
+                            ],
+                            'organisationUsers' => [
+                                'user' => [
+                                    'contactDetails' => [
+                                        'person'
+                                    ],
+                                    'roles'
+                                ],
                             ]
                         ],
                         'tradingNames',
@@ -116,7 +123,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             ->getMock();
 
         $this->mockedSmServices['SectionAccessService']
-            ->shouldReceive('getAccessibleSectionsForLicence')
+            ->shouldReceive('getAccessibleSectionsForLicenceContinuation')
             ->with($mockLicence)
             ->andReturn(['foo_bar' => 'cake', 'conditions_undertakings' => 'cake'])
             ->once()
@@ -148,6 +155,14 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                         'person' => [
                             'title' => 'expected'
                         ]
+                    ],
+                    'organisationUsers' => [
+                        'user' => [
+                            'contactDetails' => [
+                                'person'
+                            ],
+                            'roles'
+                        ],
                     ]
                 ],
                 'tradingNames',
@@ -192,7 +207,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             ],
             'ocChanges' => 1,
             'tmChanges' => 2,
-            'hasConditionsUndertakings' => 1,
+            'hasConditionsUndertakings' => 1
         ];
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
     }

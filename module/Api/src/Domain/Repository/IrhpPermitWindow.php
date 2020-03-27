@@ -225,12 +225,13 @@ class IrhpPermitWindow extends AbstractRepository
     /**
      * Fetch all open windows for the specified type
      *
-     * @param int      $type Type
-     * @param DateTime $now  Now
+     * @param int $type Type
+     * @param DateTime $now Now
+     * @param bool $internalUser
      *
      * @return array
      */
-    public function fetchOpenWindowsByType($type, DateTime $now)
+    public function fetchOpenWindowsByType($type, DateTime $now, $internalUser = false)
     {
         $qb = $this->createQueryBuilder();
 
@@ -243,6 +244,10 @@ class IrhpPermitWindow extends AbstractRepository
             ->setParameter('type', $type)
             ->setParameter('now', $now->format(DateTime::ISO8601));
 
+        if (!$internalUser) {
+            $qb->andWhere($qb->expr()->neq('ips.hiddenSs', 1));
+        }
+
         return $qb->getQuery()->getResult();
     }
 
@@ -251,12 +256,13 @@ class IrhpPermitWindow extends AbstractRepository
      *
      * @param int $type Type
      * @param DateTime $now Now
-     *
      * @param int $year
+     * @param bool $internalUser
      *
      * @return array
+     * @throws \Exception
      */
-    public function fetchOpenWindowsByTypeYear($type, DateTime $now, $year)
+    public function fetchOpenWindowsByTypeYear($type, DateTime $now, $year, $internalUser = false)
     {
         $fromDate = new DateTime($year.'-01-01 00:00:00');
         $toDate = new DateTime($year.'-12-31 23:59:59');
@@ -275,6 +281,10 @@ class IrhpPermitWindow extends AbstractRepository
             ->setParameter('now', $now->format(DateTime::ISO8601))
             ->setParameter('fromDate', $fromDate)
             ->setParameter('toDate', $toDate);
+
+        if (!$internalUser) {
+            $qb->andWhere($qb->expr()->neq('ips.hiddenSs', 1));
+        }
 
         $this->getQueryBuilder()
             ->modifyQuery($qb)
