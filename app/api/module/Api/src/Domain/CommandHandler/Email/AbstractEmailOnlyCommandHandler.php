@@ -23,6 +23,10 @@ abstract class AbstractEmailOnlyCommandHandler extends AbstractCommandHandler im
         $this->message = new Message($command->getEmailAddress(), $this->getEmailSubject());
         $this->message->setTranslateToWelsh($command->shouldTranslateToWelsh());
 
+        if (!empty($command->getDocs())) {
+            $this->message->setDocs($command->getDocs());
+        }
+
         $this->sendEmailTemplate($this->message, $this->getEmailTemplateName(), []);
 
         $result->addMessage('Email sent');
