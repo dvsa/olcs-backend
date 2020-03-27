@@ -41,7 +41,7 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
      */
     public function handleCommand(CommandInterface $command)
     {
-        $this->licenceId = (int) $command->getLicence();
+        $this->licenceId = (int)$command->getLicence();
         $this->licenceEntity = $this->getRepo('Licence')->fetchById($this->licenceId);
 
         $templateDocument = $command->getDocument();
@@ -103,7 +103,7 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
     {
         $this->result->merge($this->handleSideEffect(PrintLetters::create(
             [
-                'ids' => $this->result->getId('documents'),
+                'ids' => $this->result->getIds(),
                 'method' => PrintLetters::METHOD_PRINT_AND_POST
             ]
         )));
@@ -154,6 +154,9 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
             'translateToWelsh' => $translateToWelsh
         ];
         if (!$isRegistered) {
+            $cmdData += [
+                'docs' => $this->result->getIds()['correspondenceAddress']
+            ];
             $cmd = $this->emailQueue(SendPtrNotificationForUnregisteredUser::class, $cmdData, $this->licenceId);
         } else {
             $cmd = $this->emailQueue(SendPtrNotificationForRegisteredUser::class, $cmdData, $this->licenceId);
