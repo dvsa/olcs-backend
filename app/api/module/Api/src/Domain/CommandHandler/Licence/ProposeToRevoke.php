@@ -153,10 +153,9 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
             'emailAddress' => $email,
             'translateToWelsh' => $translateToWelsh
         ];
+
         if (!$isRegistered) {
-            $cmdData += [
-                'docs' => $this->result->getIds()['correspondenceAddress']
-            ];
+            $cmdData['docs'] = [$this->result->getIds()['correspondenceAddress']];
             $cmd = $this->emailQueue(SendPtrNotificationForUnregisteredUser::class, $cmdData, $this->licenceId);
         } else {
             $cmd = $this->emailQueue(SendPtrNotificationForRegisteredUser::class, $cmdData, $this->licenceId);
