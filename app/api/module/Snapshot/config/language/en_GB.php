@@ -283,6 +283,7 @@ return [
     'continuation-review-vehicles' => 'Vehicles',
     'continuation-review-vehicles_psv' => 'Vehicles',
     'continuation-review-safety' => 'Safety and compliance',
+    'continuation-review-users' => 'User access',
     'continuation-review-conditions_undertakings' => 'Conditions and undertakings',
     'continuation-review-finance' => 'Finance',
     'continuation-review-declaration' => 'Declaration',
@@ -297,6 +298,10 @@ return [
     'continuations.people-section.table.date-of-birth' => 'Date of birth',
     'continuations.vehicles-section.table.vrm' => 'Vehicle registration mark',
     'continuations.vehicles-section.table.weight' => 'Gross plated weight (kg)',
+    'continuations.users-section.table.name' => 'Name',
+    'continuations.users-section.table.email' => 'Email address',
+    'continuations.users-section.table.permission' => 'Permission',
+    'continuations.users-section-empty-table-message' => 'There are no users recorded on your licence',
     'continuation-review-addresses-correspondence-address' => 'Correspondence address',
     'continuation-review-addresses-establishment-address' => 'Establishment address',
     'continuation-review-addresses-establishment-address-same' => 'Same as correspondence address',
@@ -446,5 +451,12 @@ return [
     'qanda.common.no-of-permits.emissions-category.euro5' => 'Euro 5',
     'qanda.common.no-of-permits.emissions-category.euro6' => 'Euro 6',
 
+    'role.local-authority-admin' => 'Administrator',
+    'role.local-authority-user' => 'Standard user',
+    'role.operator-admin' => 'Administrator',
+    'role.operator-tm' => 'Transport Manager',
+    'role.operator-user' => 'Standard user',
+    'role.partner-admin' => 'Administrator',
+    'role.partner-user' => 'Standard user',
     // Potentially unused translations
 ];

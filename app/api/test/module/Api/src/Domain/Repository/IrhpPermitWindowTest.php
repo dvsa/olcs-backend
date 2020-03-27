@@ -320,7 +320,10 @@ class IrhpPermitWindowTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testFetchOpenWindowsByType()
+    /**
+     * @dataProvider fetchOpenWindowsByTypeProvider
+     */
+    public function testFetchOpenWindowsByType($isInternal, $expected)
     {
         $now = new DateTime('2019-04-08 09:51:10');
 
@@ -336,20 +339,39 @@ class IrhpPermitWindowTest extends RepositoryTestCase
         );
         $this->assertEquals(
             ['RESULTS'],
-            $this->sut->fetchOpenWindowsByType(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, $now)
+            $this->sut->fetchOpenWindowsByType(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, $now, $isInternal)
         );
 
-        $expectedQuery = 'BLAH '
-            . 'SELECT ipw '
-            . 'INNER JOIN ipw.irhpPermitStock ips '
-            . 'INNER JOIN ips.irhpPermitType ipt '
-            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
-            . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]]';
-
-        $this->assertEquals($expectedQuery, $this->query);
+        $this->assertEquals($expected, $this->query);
     }
 
+    /**
+     * @dataProvider fetchOpenWindowsByTypeProvider
+     */
+    public function fetchOpenWindowsByTypeProvider()
+    {
+        return [
+            [false, 'BLAH '
+                . 'SELECT ipw '
+                . 'INNER JOIN ipw.irhpPermitStock ips '
+                . 'INNER JOIN ips.irhpPermitType ipt '
+                . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
+                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
+                . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] '
+                . 'AND ips.hiddenSs != 1'],
+            [true, 'BLAH '
+                . 'SELECT ipw '
+                . 'INNER JOIN ipw.irhpPermitStock ips '
+                . 'INNER JOIN ips.irhpPermitType ipt '
+                . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
+                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
+                . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]]']
+        ];
+    }
+
+    /**
+     * @dataProvider fetchOpenWindowsByTypeYearProvider
+     */
     public function testFetchOpenWindowsByTypeYear()
     {
         $now = new DateTime('2019-04-08 09:51:10');
@@ -380,11 +402,34 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'INNER JOIN ipw.irhpPermitStock ips '
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'INNER JOIN ips.irhpPermitRanges ipr '
-            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT.']] '
+            . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT . ']] '
             . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] AND ';
+            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] AND '
+            . ' AND ips.hiddenSs != 1';
 
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+
+    public function fetchOpenWindowsByTypeYearProvider()
+    {
+        return [
+            [false, 'BLAH '
+                . 'SELECT ipw '
+                . 'INNER JOIN ipw.irhpPermitStock ips '
+                . 'INNER JOIN ips.irhpPermitType ipt '
+                . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
+                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
+                . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] '
+                . 'AND ips.hiddenSs != 1'],
+            [true, 'BLAH '
+                . 'SELECT ipw '
+                . 'INNER JOIN ipw.irhpPermitStock ips '
+                . 'INNER JOIN ips.irhpPermitType ipt '
+                . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
+                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
+                . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]]']
+        ];
     }
 
     public function testFindOverlappingWindowsByType()

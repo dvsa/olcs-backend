@@ -186,6 +186,14 @@ class SectionConfig
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
             ]
         ],
+        'users' => [
+            'restricted' => [
+                [
+                    'external',
+                    'continuation'
+                ]
+            ]
+        ],
         'conditions_undertakings' => [
             'restricted' => [
                 [

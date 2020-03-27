@@ -50,7 +50,8 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
             $command->getInitialStock(),
             $command->getPeriodNameKey(),
             $command->getValidFrom(),
-            $command->getValidTo()
+            $command->getValidTo(),
+            $command->getHiddenSs()
         );
 
         try {
