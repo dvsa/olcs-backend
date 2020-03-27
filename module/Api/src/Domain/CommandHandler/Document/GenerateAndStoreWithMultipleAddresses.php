@@ -60,7 +60,7 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
             $result = $this->handleSideEffect(GenerateAndStore::create($data));
             $documentId = $result->getId('document');
             $this->result->addId('documents', $documentId, true);
-            // add new result here
+            $this->result->addId($addressName, $documentId);
         }
         return $this->result;
     }
