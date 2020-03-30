@@ -103,7 +103,7 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
     {
         $this->result->merge($this->handleSideEffect(PrintLetters::create(
             [
-                'ids' => $this->result->getIds(),
+                'ids' => $this->result->getIds()['documents'],
                 'method' => PrintLetters::METHOD_PRINT_AND_POST
             ]
         )));
