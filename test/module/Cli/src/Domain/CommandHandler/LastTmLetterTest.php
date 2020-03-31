@@ -405,7 +405,6 @@ class LastTmLetterTest extends CommandHandlerTestCase
         $result = new Result();
 
         foreach ($documents as $id => $data) {
-
             $result->addId($data['address'], $id);
             $result->addId('documents', $id, true);
         }
