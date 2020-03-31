@@ -121,7 +121,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
         $result->addId('documents', 100, true);
         $result->addId('documents', 101, true);
         $result->addId('documents', 102, true);
-        $result->addId('correspondenceAddress', 102, true);
+        $result->addId('correspondenceAddress', 102);
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, $expectedAddressData, $result);
         $this->expectedSideEffect(PrintLetters::class, $expectedPrintLettersData, $result);
 
@@ -332,7 +332,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
 
         $result = new Result();
         $result->addId('documents', 100, true);
-        $result->addId('correspondenceAddress', 100, true);
+        $result->addId('correspondenceAddress', 100);
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, $expectedAddressData, $result);
         $this->expectedSideEffect(PrintLetters::class, $expectedPrintLettersData, $result);
@@ -432,7 +432,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
 
         $result = new Result();
         $result->addId('documents', 100, true);
-        $result->addId('correspondenceAddress', 100, true);
+        $result->addId('correspondenceAddress', 100);
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, $expectedAddressData, $result);
         $this->expectedSideEffect(PrintLetters::class, $expectedPrintLettersData, $result);
