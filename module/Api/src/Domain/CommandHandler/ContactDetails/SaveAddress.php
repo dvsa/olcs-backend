@@ -47,15 +47,17 @@ final class SaveAddress extends AbstractCommandHandler implements TransactionedI
         $this->populate($address, $command);
         $this->getRepo()->save($address);
 
-        $contactDetails = new ContactDetails($this->getRepo()->getRefdataReference($command->getContactType()));
-        $contactDetails->setAddress($address);
-        $this->getRepo('ContactDetails')->save($contactDetails);
+        $contactType = $command->getContactType();
+        if (!is_null($contactType)) {
+            $contactDetails = new ContactDetails($this->getRepo()->getRefdataReference($contactType));
+            $contactDetails->setAddress($address);
+            $this->getRepo('ContactDetails')->save($contactDetails);
+            $result->addId('contactDetails', $contactDetails->getId());
+            $result->addMessage('Contact Details created');
+        }
 
         $result->addId('address', $address->getId());
         $result->addMessage('Address created');
-        $result->addId('contactDetails', $contactDetails->getId());
-        $result->addMessage('Contact Details created');
-
         $result->setFlag('hasChanged', true);
 
         return $result;

@@ -202,8 +202,49 @@ class SaveAddressTest extends CommandHandlerTestCase
                 'contactDetails' => 222
             ],
             'messages' => [
-                'Address created',
-                'Contact Details created'
+                'Contact Details created',
+                'Address created'
+            ],
+            'flags' => ['hasChanged' => 1]
+        ];
+
+        $this->assertTrue($result->getFlag('hasChanged'));
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandCreateNoContactDetailsType()
+    {
+        $data = [
+            'addressLine1' => 'address 1',
+            'town' => 'Town',
+            'postcode' => 'PostCode',
+            'countryCode' => 'GB'
+        ];
+        $command = Cmd::create($data);
+
+        /** @var AddressEntity $savedAddress */
+        $savedAddress = null;
+
+        $this->repoMap['Address']->shouldReceive('save')
+            ->once()
+            ->andReturnUsing(
+                function (AddressEntity $address) use (&$savedAddress) {
+                    $address->setId(111);
+                    $savedAddress = $address;
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(AddressEntity::class, $savedAddress);
+
+        $expected = [
+            'id' => [
+                'address' => 111
+            ],
+            'messages' => [
+                'Address created'
             ],
             'flags' => ['hasChanged' => 1]
         ];
