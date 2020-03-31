@@ -285,7 +285,6 @@ class OperatingCentreHelper implements FactoryInterface
         OcRepo $ocRepo
     ) {
         $data = $command->getAddress();
-        $data['contactType'] = ContactDetails::CONTACT_TYPE_CORRESPONDENCE_ADDRESS;
 
         $result->merge($commandHandler->handleCommand(SaveAddress::create($data), false));
 
