@@ -16,10 +16,7 @@ abstract class AbstractEmailOnlyCommand extends AbstractCommand
      * @var array
      */
     protected $docs = [];
-
-    /**
-     * @return array
-     */
+    
     public function getDocs(): array
     {
         return $this->docs;
