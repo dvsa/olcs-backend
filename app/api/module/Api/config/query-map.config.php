@@ -387,6 +387,7 @@ return [
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
+    TransferQuery\Fee\IrhpBilateralByCountry::class => QueryHandler\Fee\IrhpBilateralByCountry::class,
 
     // Fee Type
     TransferQuery\Fee\FeeType::class => QueryHandler\Fee\FeeType::class,
