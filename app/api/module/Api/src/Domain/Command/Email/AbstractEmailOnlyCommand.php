@@ -12,6 +12,16 @@ abstract class AbstractEmailOnlyCommand extends AbstractCommand
     /** @var string */
     protected $translateToWelsh = 'N';
 
+    /**
+     * @var array
+     */
+    protected $docs = [];
+    
+    public function getDocs(): array
+    {
+        return $this->docs;
+    }
+
     public function getEmailAddress(): string
     {
         return $this->emailAddress;
