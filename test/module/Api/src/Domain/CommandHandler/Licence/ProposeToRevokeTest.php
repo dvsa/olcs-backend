@@ -121,6 +121,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
         $result->addId('documents', 100, true);
         $result->addId('documents', 101, true);
         $result->addId('documents', 102, true);
+        $result->addId('correspondenceAddress', 102);
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, $expectedAddressData, $result);
         $this->expectedSideEffect(PrintLetters::class, $expectedPrintLettersData, $result);
 
@@ -128,7 +129,10 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($cmd);
 
         $expectedResult = [
-            'id' => ['documents' => [100, 101, 102]],
+            'id' => [
+                'documents' => [100, 101, 102],
+                'correspondenceAddress' => 102
+            ],
             'messages' => ['Propose to revoke successfully processed']
         ];
 
@@ -241,7 +245,9 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($cmd);
 
         $expectedResult = [
-            'id' => ['documents' => 100],
+            'id' => [
+                'documents' => 100
+            ],
             'messages' => ['Propose to revoke successfully processed']
         ];
 
@@ -326,6 +332,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
 
         $result = new Result();
         $result->addId('documents', 100, true);
+        $result->addId('correspondenceAddress', 100);
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, $expectedAddressData, $result);
         $this->expectedSideEffect(PrintLetters::class, $expectedPrintLettersData, $result);
@@ -334,7 +341,10 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($cmd);
 
         $expectedResult = [
-            'id' => ['documents' => 100],
+            'id' => [
+                'documents' => 100,
+                'correspondenceAddress' => 100
+            ],
             'messages' => [
                 'Unable to send emails: No email addresses found',
                 'Propose to revoke successfully processed'
@@ -422,6 +432,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
 
         $result = new Result();
         $result->addId('documents', 100, true);
+        $result->addId('correspondenceAddress', 100);
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, $expectedAddressData, $result);
         $this->expectedSideEffect(PrintLetters::class, $expectedPrintLettersData, $result);
@@ -430,7 +441,10 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($cmd);
 
         $expectedResult = [
-            'id' => ['documents' => 100],
+            'id' => [
+                'documents' => 100,
+                'correspondenceAddress' => 100
+            ],
             'messages' => ['Propose to revoke successfully processed']
         ];
 
