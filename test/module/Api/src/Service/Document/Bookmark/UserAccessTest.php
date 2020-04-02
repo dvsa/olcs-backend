@@ -203,7 +203,7 @@ class UserAccessTest extends MockeryTestCase
                 'userAccessSnippet',
                 [
                     'LICENCE_NUMBER' => 1234,
-                    'SELF_SERVE_MESSAGE' => "You can log in and select 'Manage users' to amend the current users",
+                    'SELF_SERVE_MESSAGE' => "You can log in and select 'Manage users' to amend the current users.",
                     'USERS_TABLE' => 'header|row1|row2|row3|row4|' . str_repeat('emptyrow|', 11)
                 ]
             )
@@ -272,11 +272,11 @@ class UserAccessTest extends MockeryTestCase
         return [
             [
                 'Y',
-                "You can log in and select 'Manage users' to amend the current users"
+                "You can log in and select 'Manage users' to amend the current users."
             ],
             [
                 'N',
-                "You can register for a self-serve account to amend your licence details online"
+                "You can register for a self-serve account to amend your licence details online."
             ]
         ];
     }
