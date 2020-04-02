@@ -139,6 +139,15 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     protected $properties;
 
     /**
+     * Required cabotage
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_cabotage", nullable=true)
+     */
+    protected $requiredCabotage;
+
+    /**
      * Required euro5
      *
      * @var int
@@ -155,6 +164,15 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="integer", name="required_euro6", nullable=true)
      */
     protected $requiredEuro6;
+
+    /**
+     * Required standard
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_standard", nullable=true)
+     */
+    protected $requiredStandard;
 
     /**
      * Sectors
@@ -471,6 +489,30 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     }
 
     /**
+     * Set the required cabotage
+     *
+     * @param int $requiredCabotage new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setRequiredCabotage($requiredCabotage)
+    {
+        $this->requiredCabotage = $requiredCabotage;
+
+        return $this;
+    }
+
+    /**
+     * Get the required cabotage
+     *
+     * @return int
+     */
+    public function getRequiredCabotage()
+    {
+        return $this->requiredCabotage;
+    }
+
+    /**
      * Set the required euro5
      *
      * @param int $requiredEuro5 new value being set
@@ -516,6 +558,30 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getRequiredEuro6()
     {
         return $this->requiredEuro6;
+    }
+
+    /**
+     * Set the required standard
+     *
+     * @param int $requiredStandard new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setRequiredStandard($requiredStandard)
+    {
+        $this->requiredStandard = $requiredStandard;
+
+        return $this;
+    }
+
+    /**
+     * Get the required standard
+     *
+     * @return int
+     */
+    public function getRequiredStandard()
+    {
+        return $this->requiredStandard;
     }
 
     /**

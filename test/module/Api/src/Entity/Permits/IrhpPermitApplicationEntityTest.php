@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
@@ -709,12 +710,11 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtRemoval')
             ->withNoArgs()
             ->andReturnTrue();
-
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getAnswerValueByQuestionId')
+        $irhpApplication->shouldReceive('getAnswerValueByQuestionId')
             ->with(Question::QUESTION_ID_REMOVAL_PERMIT_START_DATE)
             ->andReturn($issueDateAsString);
 
+        $entity = m::mock(Entity::class)->makePartial();
         $entity->setIrhpApplication($irhpApplication);
 
         $this->assertEquals(
@@ -767,19 +767,22 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
     public function testGetAnswerValueByQuestionId()
     {
-        $questionId = 46;
-        $answer = 'qanda answer';
-
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('getAnswerValueByQuestionId')
-            ->with($questionId)
-            ->andReturn($answer);
+        $questionId = 47;
+        $answerValue = 'answer value';
 
         $entity = m::mock(Entity::class)->makePartial();
-        $entity->setIrhpApplication($irhpApplication);
+
+        $activeApplicationPath = m::mock(ApplicationPath::class);
+        $activeApplicationPath->shouldReceive('getAnswerValueByQuestionId')
+            ->with($questionId, $entity)
+            ->andReturn($answerValue);
+
+        $entity->shouldReceive('getActiveApplicationPath')
+            ->withNoArgs()
+            ->andReturn($activeApplicationPath);
 
         $this->assertEquals(
-            $answer,
+            $answerValue,
             $entity->getAnswerValueByQuestionId($questionId)
         );
     }
@@ -1030,5 +1033,92 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             [true],
             [false],
         ];
+    }
+
+    /**
+     * @dataProvider dpGetBilateralCabotageSelection
+     */
+    public function testGetBilateralCabotageSelection($cabotageOnlyAnswer, $standardAndCabotageAnswer, $expectedAnswer)
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $entity->setIrhpApplication($irhpApplication);
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_BILATERAL_CABOTAGE_ONLY)
+            ->andReturn($cabotageOnlyAnswer);
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_BILATERAL_STANDARD_AND_CABOTAGE)
+            ->andReturn($standardAndCabotageAnswer);
+
+        $this->assertEquals(
+            $expectedAnswer,
+            $entity->getBilateralCabotageSelection()
+        );
+    }
+
+    public function dpGetBilateralCabotageSelection()
+    {
+        return [
+            ['cabotage_only_answer', null, 'cabotage_only_answer'],
+            [null, 'standard_and_cabotage_answer', 'standard_and_cabotage_answer'],
+            [null, null, Answer::BILATERAL_STANDARD_ONLY],
+        ];
+    }
+
+    public function testGetBilateralCabotageSelectionNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralCabotageSelection is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralCabotageSelection();
+    }
+
+    public function testGetBilateralPermitUsageSelection()
+    {
+        $permitUsageAnswer = 'permit_usage_answer';
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $entity->setIrhpApplication($irhpApplication);
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_BILATERAL_PERMIT_USAGE)
+            ->andReturn($permitUsageAnswer);
+
+        $this->assertEquals(
+            $permitUsageAnswer,
+            $entity->getBilateralPermitUsageSelection()
+        );
+    }
+
+    public function testGetBilateralPermitUsageSelectionNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralPermitUsageSelection is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralPermitUsageSelection();
     }
 }

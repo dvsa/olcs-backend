@@ -1723,16 +1723,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getAnswerValueByQuestionId($id)
     {
-        $applicationSteps = $this->getActiveApplicationPath()->getApplicationSteps();
-
-        /** @var ApplicationStep $applicationStep */
-        foreach ($applicationSteps as $applicationStep) {
-            if ($applicationStep->getQuestion()->getId() == $id) {
-                return $this->getAnswer($applicationStep, false);
-            }
-        }
-
-        return null;
+        return $this->getActiveApplicationPath()
+            ->getAnswerValueByQuestionId($id, $this);
     }
 
     /**
