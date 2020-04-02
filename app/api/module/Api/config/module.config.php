@@ -75,6 +75,10 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyFactory::class,
             'QaBilateralStandardAndCabotageElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageFactory::class,
+            'QaBilateralNoOfPermitsElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsFactory::class,
+            'QaBilateralNoOfPermitsTextFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsTextFactory::class,
 
             'PermitsAnswersSummaryFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryFactory::class,
             'PermitsAnswersSummaryRowFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryRowFactory::class,
@@ -243,6 +247,8 @@ return [
                 => ApiSrv\Qa\Strategy\BilateralCabotageOnlyFormControlStrategyFactory::class,
             'QaBilateralStandardAndCabotageFormControlStrategy'
                 => ApiSrv\Qa\Strategy\BilateralStandardAndCabotageFormControlStrategyFactory::class,
+            'QaBilateralNoOfPermitsFormControlStrategy'
+                => ApiSrv\Qa\Strategy\BilateralNoOfPermitsFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
@@ -335,6 +341,14 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageGeneratorFactory::class,
             'QaBilateralStandardAndCabotageAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageAnswerSaverFactory::class,
+            'QaBilateralNoOfPermitsElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsGeneratorFactory::class,
+            'QaBilateralNoOfPermitsAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSaverFactory::class,
+            'QaBilateralNoOfPermitsUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsUpdaterFactory::class,
+            'QaBilateralNoOfPermitsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerClearerFactory::class,
     
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
@@ -356,6 +370,8 @@ return [
 
             'PermitsBilateralApplicationCountryRemover' =>
                 ApiSrv\Permits\Bilateral\ApplicationCountryRemoverFactory::class,
+            'PermitsBilateralApplicationFeesClearer' =>
+                ApiSrv\Permits\Bilateral\ApplicationFeesClearerFactory::class,
             'PermitsShortTermEcmtWindowAvailabilityChecker' =>
                 ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
             'PermitsShortTermEcmtStockAvailabilityChecker' =>

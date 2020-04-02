@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -15,7 +16,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class SubmitApplicationStep extends AbstractCommandHandler
+class SubmitApplicationStep extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'IrhpApplication';
 

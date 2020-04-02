@@ -44,6 +44,7 @@ class FormControlStrategyProviderFactory implements FactoryInterface
             Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY => 'QaBilateralCabotageOnlyFormControlStrategy',
             Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE =>
                 'QaBilateralStandardAndCabotageFormControlStrategy',
+            Question::FORM_CONTROL_BILATERAL_NO_OF_PERMITS => 'QaBilateralNoOfPermitsFormControlStrategy',
         ];
 
         $provider = new FormControlStrategyProvider($mappings);

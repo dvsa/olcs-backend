@@ -40,6 +40,7 @@ class Question extends AbstractQuestion
     const FORM_CONTROL_BILATERAL_PERMIT_USAGE = 'form_control_bi_per_usage';
     const FORM_CONTROL_BILATERAL_CABOTAGE_ONLY = 'form_control_bi_cab_only';
     const FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE = 'form_control_bi_cab_std_and_cab';
+    const FORM_CONTROL_BILATERAL_NO_OF_PERMITS = 'form_control_bi_no_of_permits';
 
     // Question data types
     const QUESTION_TYPE_STRING = 'question_type_string';
