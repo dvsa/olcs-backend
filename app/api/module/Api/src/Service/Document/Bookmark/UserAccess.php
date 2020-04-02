@@ -11,8 +11,8 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
-    const USER_MESSAGE_SELF_SERVE = "You can log in and select 'Manage users' to amend the current users";
-    const USER_MESSAGE_NON_SELF_SERVE = "You can register for a self-serve account to amend your licence details online";
+    const USER_MESSAGE_SELF_SERVE = "You can log in and select 'Manage users' to amend the current users.";
+    const USER_MESSAGE_NON_SELF_SERVE = "You can register for a self-serve account to amend your licence details online.";
 
     public function getQuery(array $data)
     {
