@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Operator;
 
 use Doctrine\ORM\Query;
@@ -70,7 +71,10 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testHandleCommand($isExempt, $expectedLicenceNo)
     {
         $licenceNoGenId = 1234567;
 
@@ -110,9 +114,8 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
             'operatorType' => 'lcat_psv',
             'trafficArea' => 'N',
             'contactDetails' => $contactDetailsData,
+            'isExempt' => $isExempt
         ];
-
-        $expectedLicenceNo = 'UPN1234567';
 
         $command = CreateUnlicensedCmd::create($data);
 
@@ -154,11 +157,11 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
         $this->assertEquals(1, $result->getIds()['licence']);
         $this->assertEquals(
             [
-              'Licence added',
-              'Organisation added',
-              'ContactDetails added',
-              'Address added',
-              'Phone contact(s) added',
+                'Licence added',
+                'Organisation added',
+                'ContactDetails added',
+                'Address added',
+                'Phone contact(s) added',
             ],
             $result->getMessages()
         );
@@ -200,5 +203,20 @@ class CreateUnlicensedTest extends CommandHandlerTestCase
         $this->assertEquals('phone_t_primary', $phoneContacts->get(0)->getPhoneContactType()->getId());
         $this->assertEquals('01234567891', $phoneContacts->get(1)->getPhoneNumber());
         $this->assertEquals('phone_t_secondary', $phoneContacts->get(1)->getPhoneContactType()->getId());
+    }
+
+    public function dataProvider()
+    {
+        return [
+            'notExempt' => [
+                'isExempt' => 'N',
+                'expectedLicenceNumber' => 'UPN1234567'
+
+            ],
+            'isExempt' => [
+                'isExempt' => 'Y',
+                'expectedLicenceNumber' => 'EPN1234567'
+            ]
+        ];
     }
 }
