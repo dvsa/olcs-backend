@@ -4650,59 +4650,24 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetAnswerValueByQuestionId()
     {
-        $answer = 'qanda answer';
-
-        $applicationSteps = $this->getAnswerValueByQuestionIdApplicationSteps();
+        $questionId = 47;
+        $answerValue = 'answer value';
 
         $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getActiveApplicationPath->getApplicationSteps')
+
+        $activeApplicationPath = m::mock(ApplicationPath::class);
+        $activeApplicationPath->shouldReceive('getAnswerValueByQuestionId')
+            ->with($questionId, $entity)
+            ->andReturn($answerValue);
+
+        $entity->shouldReceive('getActiveApplicationPath')
             ->withNoArgs()
-            ->once()
-            ->andReturn($applicationSteps);
-        $entity->shouldReceive('getAnswer')
-            ->with($applicationSteps[1], false)
-            ->once()
-            ->andReturn($answer);
+            ->andReturn($activeApplicationPath);
 
         $this->assertEquals(
-            $answer,
-            $entity->getAnswerValueByQuestionId(40)
+            $answerValue,
+            $entity->getAnswerValueByQuestionId($questionId)
         );
-    }
-
-    public function testGetAnswerValueByQuestionIdNull()
-    {
-        $applicationSteps = $this->getAnswerValueByQuestionIdApplicationSteps();
-
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getActiveApplicationPath->getApplicationSteps')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($applicationSteps);
-
-        $this->assertNull(
-            $entity->getAnswerValueByQuestionId(50)
-        );
-    }
-
-    private function getAnswerValueByQuestionIdApplicationSteps()
-    {
-        $applicationStep1 = m::mock(ApplicationStep::class);
-        $applicationStep1->shouldReceive('getQuestion->getId')
-            ->withNoArgs()
-            ->andReturn(38);
-
-        $applicationStep2 = m::mock(ApplicationStep::class);
-        $applicationStep2->shouldReceive('getQuestion->getId')
-            ->withNoArgs()
-            ->andReturn(40);
-
-        $applicationStep3 = m::mock(ApplicationStep::class);
-        $applicationStep3->shouldReceive('getQuestion->getId')
-            ->withNoArgs()
-            ->andReturn(42);
-
-        return new ArrayCollection([$applicationStep1, $applicationStep2, $applicationStep3]);
     }
 
     /**
@@ -5678,63 +5643,23 @@ class IrhpApplicationEntityTest extends EntityTester
      */
     public function testGetMotExpiryDate($isTrailer, $questionId)
     {
-        $expiryDate = date('Y-m-d');
-        $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->expects()->isCertificateOfRoadworthiness()->withNoArgs()->andReturnTrue();
-        $irhpPermitType->expects()->isCertificateOfRoadworthinessTrailer()->withNoArgs()->andReturn($isTrailer);
-        $createdOn = '2018-12-25';
+        $expiryDate = '2020-08-01';
 
-        $entity = $this->createNewEntity(null, null, $irhpPermitType);
-        $entity->setCreatedOn($createdOn);
-
-        $formControlType = new RefData(Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE);
-        $activeQuestionTextId = 1111;
-        $activeQuestionText = m::mock(QuestionText::class);
-        $activeQuestionText->expects('getId')->withNoArgs()->andReturn($activeQuestionTextId);
-
-        $answer = m::mock(Answer::class);
-        $answer->expects('getValue')->withNoArgs()->andReturn($expiryDate);
-        $answers = new ArrayCollection([$activeQuestionTextId => $answer]);
-
-        $question2 = m::mock(Question::class)->makePartial();
-        $question2->expects('getId')->andReturn($questionId);
-        $question2->expects('isCustom')->withNoArgs()->andReturnTrue();
-        $question2->expects('getFormControlType')->andReturn($formControlType);
-        $question2->expects('getActiveQuestionText')
-            ->with(m::type(DateTime::class))
-            ->andReturn($activeQuestionText);
-
-        $applicationStep1 = m::mock(ApplicationStep::class);
-        $applicationStep1->shouldReceive('getQuestion->getId')
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isCertificateOfRoadworthiness')
             ->withNoArgs()
-            ->andReturn(888888);
-
-        $applicationStep2 = m::mock(ApplicationStep::class);
-        $applicationStep2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
-        $applicationStep2->shouldReceive('getQuestion->getId')
+            ->andReturnTrue();
+        $entity->shouldReceive('isCertificateOfRoadworthinessTrailer')
             ->withNoArgs()
-            ->andReturn($questionId);
+            ->andReturn($isTrailer);
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with($questionId)
+            ->andReturn($expiryDate);
 
-        $applicationStep3 = m::mock(ApplicationStep::class);
-        $applicationStep3->shouldReceive('getQuestion->getId')
-            ->withNoArgs()
-            ->andReturn(999999);
-
-        $applicationSteps = new ArrayCollection([$applicationStep1, $applicationStep2, $applicationStep3]);
-
-        $applicationPath = m::mock(ApplicationPath::class);
-        $applicationPath->expects('getApplicationSteps')->withNoArgs()->andReturn($applicationSteps);
-
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->expects('getActiveApplicationPath')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($applicationPath);
-
-        $entity->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
-        $entity->setAnswers($answers);
-
-        self::assertEquals($expiryDate, $entity->getMotExpiryDate());
+        $this->assertEquals(
+            $expiryDate,
+            $entity->getMotExpiryDate()
+        );
     }
 
     public function dpTestGetMotExpiryDate()

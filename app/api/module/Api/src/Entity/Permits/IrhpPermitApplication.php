@@ -411,7 +411,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     {
         if ($this->irhpApplication->getIrhpPermitType()->isEcmtRemoval()) {
             return new DateTime(
-                $this->getAnswerValueByQuestionId(Question::QUESTION_ID_REMOVAL_PERMIT_START_DATE)
+                $this->irhpApplication->getAnswerValueByQuestionId(Question::QUESTION_ID_REMOVAL_PERMIT_START_DATE)
             );
         }
 
@@ -439,7 +439,8 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getAnswerValueByQuestionId($id)
     {
-        return $this->irhpApplication->getAnswerValueByQuestionId($id);
+        return $this->getActiveApplicationPath()
+            ->getAnswerValueByQuestionId($id, $this);
     }
 
     /**
@@ -566,5 +567,51 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     public function getRepositoryName()
     {
         return 'IrhpPermitApplication';
+    }
+
+    /**
+     * Returns the selection made on the bilateral cabotage page (or the default selection of standard only if the
+     * journey doesn't contain a cabotage page)
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    public function getBilateralCabotageSelection()
+    {
+        if (!$this->irhpApplication->isBilateral()) {
+            throw new RuntimeException(__FUNCTION__ . ' is applicable only to bilateral applications');
+        }
+    
+        $cabotageOnlyAnswer = $this->getAnswerValueByQuestionId(Question::QUESTION_ID_BILATERAL_CABOTAGE_ONLY);
+        if (!is_null($cabotageOnlyAnswer)) {
+            return $cabotageOnlyAnswer;
+        }
+
+        $standardAndCabotageAnswer = $this->getAnswerValueByQuestionId(
+            Question::QUESTION_ID_BILATERAL_STANDARD_AND_CABOTAGE
+        );
+
+        if (!is_null($standardAndCabotageAnswer)) {
+            return $standardAndCabotageAnswer;
+        }
+
+        return Answer::BILATERAL_STANDARD_ONLY;
+    }
+
+    /**
+     * Returns the selection made on the bilateral permit usage page
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    public function getBilateralPermitUsageSelection()
+    {
+        if (!$this->irhpApplication->isBilateral()) {
+            throw new RuntimeException(__FUNCTION__ . ' is applicable only to bilateral applications');
+        }
+
+        return $this->getAnswerValueByQuestionId(Question::QUESTION_ID_BILATERAL_PERMIT_USAGE);
     }
 }
