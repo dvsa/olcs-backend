@@ -772,4 +772,12 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
         }
         return $this->getOrganisation()->getId();
     }
+
+    /**
+     * Remove any existing association with an IrhpPermitApplication instance
+     */
+    public function removeIrhpPermitApplicationAssociation()
+    {
+        $this->irhpPermitApplication = null;
+    }
 }

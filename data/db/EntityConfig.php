@@ -1257,6 +1257,12 @@ return array(
                 'property' => 'fee'
             )
         ),
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
+                'property' => 'fee'
+            )
+        ),
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(

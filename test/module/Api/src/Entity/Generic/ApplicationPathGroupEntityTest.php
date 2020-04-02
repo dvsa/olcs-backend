@@ -23,8 +23,8 @@ class ApplicationPathGroupEntityTest extends EntityTester
     protected $entityClass = Entity::class;
 
     /**
-    * @dataProvider dpGetActiveApplicationPath
-    */
+     * @dataProvider dpGetActiveApplicationPath
+     */
     public function testGetActiveApplicationPath($applicationPaths, $dateToCheck, $expected)
     {
         $sut = new Entity();
@@ -84,4 +84,28 @@ class ApplicationPathGroupEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider dpIsBilateralOnly
+     */
+    public function testIsBilateralOnly($applicationPathGroupId, $expected)
+    {
+        $sut = new Entity();
+        $sut->setId($applicationPathGroupId);
+
+        $this->assertEquals(
+            $expected,
+            $sut->isBilateralOnly()
+        );
+    }
+
+    public function dpIsBilateralOnly()
+    {
+        return [
+            [Entity::BILATERALS_CABOTAGE_PERMITS_ONLY_ID, true],
+            [Entity::BILATERALS_STANDARD_PERMITS_NO_CABOTAGE_ID, false],
+            [Entity::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID, false],
+        ];
+    }
+
 }

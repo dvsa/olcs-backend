@@ -227,6 +227,15 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     protected $answers;
 
     /**
+     * Fee
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", mappedBy="irhpPermitApplication")
+     */
+    protected $fees;
+
+    /**
      * Irhp candidate permit
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -268,6 +277,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function initCollections()
     {
         $this->answers = new ArrayCollection();
+        $this->fees = new ArrayCollection();
         $this->irhpCandidatePermits = new ArrayCollection();
         $this->irhpPermits = new ArrayCollection();
     }
@@ -744,6 +754,69 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     {
         if ($this->answers->contains($answers)) {
             $this->answers->removeElement($answers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the fee
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setFees($fees)
+    {
+        $this->fees = $fees;
+
+        return $this;
+    }
+
+    /**
+     * Get the fees
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * Add a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     *
+     * @return IrhpPermitApplication
+     */
+    public function addFees($fees)
+    {
+        if ($fees instanceof ArrayCollection) {
+            $this->fees = new ArrayCollection(
+                array_merge(
+                    $this->fees->toArray(),
+                    $fees->toArray()
+                )
+            );
+        } elseif (!$this->fees->contains($fees)) {
+            $this->fees->add($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being removed
+     *
+     * @return IrhpPermitApplication
+     */
+    public function removeFees($fees)
+    {
+        if ($this->fees->contains($fees)) {
+            $this->fees->removeElement($fees);
         }
 
         return $this;

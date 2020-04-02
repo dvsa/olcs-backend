@@ -6,6 +6,7 @@ use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
@@ -42,6 +43,38 @@ use RuntimeException;
 class IrhpPermitApplication extends AbstractIrhpPermitApplication implements OrganisationProviderInterface, QaEntityInterface
 {
     use TieredProductReference;
+
+    const BILATERAL_STANDARD_REQUIRED = 'BILATERAL_STANDARD_REQUIRED';
+    const BILATERAL_CABOTAGE_REQUIRED = 'BILATERAL_CABOTAGE_REQUIRED';
+
+    const BILATERAL_REQUIRED_KEYS = [
+        self::BILATERAL_STANDARD_REQUIRED,
+        self::BILATERAL_CABOTAGE_REQUIRED,
+    ];
+
+    const BILATERAL_APPLICATION_FEE_KEY = 'BILATERAL_APPLICATION_FEE_KEY';
+    const BILATERAL_ISSUE_FEE_KEY = 'BILATERAL_ISSUE_FEE_KEY';
+
+    const BILATERAL_FEE_PRODUCT_REFS_TYPE_1 = [
+        self::BILATERAL_APPLICATION_FEE_KEY => FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
+        self::BILATERAL_ISSUE_FEE_KEY => FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF,
+    ];
+
+    const BILATERAL_FEE_PRODUCT_REFS_TYPE_2 = [
+        self::BILATERAL_APPLICATION_FEE_KEY => FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF,
+        self::BILATERAL_ISSUE_FEE_KEY => FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF,
+    ];
+
+    const BILATERAL_FEE_PRODUCT_REFS = [
+        RefData::JOURNEY_SINGLE => [
+            self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+            self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+        ],
+        RefData::JOURNEY_MULTIPLE => [
+            self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_1,
+            self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+        ],
+    ];
 
     const MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
         'Jan' => FeeType::FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF,
@@ -579,10 +612,8 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getBilateralCabotageSelection()
     {
-        if (!$this->irhpApplication->isBilateral()) {
-            throw new RuntimeException(__FUNCTION__ . ' is applicable only to bilateral applications');
-        }
-
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+    
         $cabotageOnlyAnswer = $this->getAnswerValueByQuestionId(Question::QUESTION_ID_BILATERAL_CABOTAGE_ONLY);
         if (!is_null($cabotageOnlyAnswer)) {
             return $cabotageOnlyAnswer;
@@ -603,16 +634,138 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      * Returns the selection made on the bilateral permit usage page
      *
      * @return string
-     *
-     * @throws RuntimeException
      */
     public function getBilateralPermitUsageSelection()
     {
-        if (!$this->irhpApplication->isBilateral()) {
-            throw new RuntimeException(__FUNCTION__ . ' is applicable only to bilateral applications');
-        }
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
 
         return $this->getAnswerValueByQuestionId(Question::QUESTION_ID_BILATERAL_PERMIT_USAGE);
+    }
+
+    /**
+     * Update required permits for a bilateral application
+     *
+     * @param array $required
+     */
+    public function updateBilateralRequired(array $required)
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        if (!$this->irhpApplication->canBeUpdated()) {
+            throw new RuntimeException(__FUNCTION__ . ' called when application in unexpected state');
+        }
+
+        $inputArrayKeys = array_keys($required);
+        if ($inputArrayKeys != self::BILATERAL_REQUIRED_KEYS) {
+            throw new RuntimeException('Unexpected or missing array keys passed to ' . __FUNCTION__);
+        }
+
+        $this->requiredStandard = $required[self::BILATERAL_STANDARD_REQUIRED];
+        $this->requiredCabotage = $required[self::BILATERAL_CABOTAGE_REQUIRED];
+    }
+
+    /**
+     * Clear required permits for a bilateral application
+     */
+    public function clearBilateralRequired()
+    {
+        $this->updateBilateralRequired(
+            $this->getDefaultBilateralRequired()
+        );
+    }
+
+    /**
+     * Get an array in an empty/default state for use with updateBilateralRequired
+     *
+     * @return array
+     */
+    public function getDefaultBilateralRequired()
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        return array_fill_keys(self::BILATERAL_REQUIRED_KEYS, null);
+    }
+
+    /**
+     * Get required permits for a bilateral application
+     *
+     * @return array
+     */
+    public function getBilateralRequired()
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        return [
+            self::BILATERAL_STANDARD_REQUIRED => $this->requiredStandard,
+            self::BILATERAL_CABOTAGE_REQUIRED => $this->requiredCabotage,
+        ];
+    }
+
+    /**
+     * Get a key value array containing product references and quantities for use in fee creation
+     *
+     * @return array
+     */
+    public function getBilateralFeeProductRefsAndQuantities()
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        $bilateralRequired = $this->getBilateralRequired();
+        $permitUsageSelection = $this->getBilateralPermitUsageSelection();
+
+        $productRefsAndQuantities = [];
+        foreach ($bilateralRequired as $standardOrCabotage => $quantity) {
+            if ($quantity) {
+                $productReferences = self::BILATERAL_FEE_PRODUCT_REFS[$permitUsageSelection][$standardOrCabotage];
+
+                $applicationFeeProductReference = $productReferences[self::BILATERAL_APPLICATION_FEE_KEY];
+                if (isset($productRefsAndQuantities[$applicationFeeProductReference])) {
+                    $productRefsAndQuantities[$applicationFeeProductReference] += $quantity;
+                } else {
+                    $productRefsAndQuantities[$applicationFeeProductReference] = $quantity;
+                }
+
+                $issueFeeProductReference = $productReferences[self::BILATERAL_ISSUE_FEE_KEY];
+                if (isset($productRefsAndQuantities[$issueFeeProductReference])) {
+                    $productRefsAndQuantities[$issueFeeProductReference] += $quantity;
+                } else {
+                    $productRefsAndQuantities[$issueFeeProductReference] = $quantity;
+                }
+            }
+        }
+
+        return $productRefsAndQuantities;
+    }
+
+    /**
+     * Throws an exception if the associated irhp application is not of type bilateral
+     *
+     * @param string $methodName
+     *
+     * @throws RuntimeException
+     */
+    private function throwRuntimeExceptionIfNotBilateral($methodName)
+    {
+        if (!$this->irhpApplication->isBilateral()) {
+            throw new RuntimeException($methodName . ' is applicable only to bilateral applications');
+        }
+    }
+
+    /**
+     * Get outstanding fees
+     *
+     * @return array
+     */
+    public function getOutstandingFees()
+    {
+        $fees = [];
+        foreach ($this->getFees() as $fee) {
+            if ($fee->isOutstanding()) {
+                $fees[] = $fee;
+            }
+        }
+
+        return $fees;
     }
 
     /**
@@ -621,5 +774,19 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     public function updateIrhpPermitWindow(IrhpPermitWindow $irhpPermitWindow)
     {
         $this->irhpPermitWindow = $irhpPermitWindow;
+    }
+
+
+    /**
+     * Whether this application is associated with the bilateral only application path group
+     *
+     * @return bool
+     */
+    public function isAssociatedWithBilateralOnlyApplicationPathGroup()
+    {
+        return $this->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getApplicationPathGroup()
+            ->isBilateralOnly();
     }
 }
