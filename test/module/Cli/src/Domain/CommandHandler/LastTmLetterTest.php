@@ -58,7 +58,8 @@ class LastTmLetterTest extends CommandHandlerTestCase
                                     'allowEmail' => 'Y',
                                     'sendToAddress' => 'correspondenceAddress'
                                 ]
-                            ])
+                            ]),
+                            'address' => 'correspondenceAddress'
                         ],
                         '234' => [
                             'metadata' => json_encode([
@@ -69,7 +70,8 @@ class LastTmLetterTest extends CommandHandlerTestCase
                                     'allowEmail' => 'Y',
                                     'sendToAddress' => 'establishmentAddress'
                                 ]
-                            ])
+                            ]),
+                            'address' => 'establishmentAddress'
                         ]
                     ]
                 ]
@@ -115,7 +117,9 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234]
+                        'documents' => [123, 234],
+                        'correspondenceAddress' => '123',
+                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
@@ -150,7 +154,9 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234]
+                        'documents' => [123, 234],
+                        'correspondenceAddress' => '123',
+                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
@@ -186,7 +192,9 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234]
+                        'documents' => [123, 234],
+                        'correspondenceAddress' => '123',
+                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
@@ -222,7 +230,9 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234]
+                        'documents' => [123, 234],
+                        'correspondenceAddress' => '123',
+                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
@@ -255,7 +265,9 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234]
+                        'documents' => [123, 234],
+                        'correspondenceAddress' => '123',
+                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
@@ -295,7 +307,8 @@ class LastTmLetterTest extends CommandHandlerTestCase
                                                 'allowEmail' => 'N',
                                                 'sendToAddress' => 'correspondenceAddress'
                                             ]
-                                        ])
+                                        ]),
+                                        'address' => 'correspondenceAddress'
                                     ],
                                     '234' => [
                                         'metadata' => json_encode([
@@ -306,7 +319,8 @@ class LastTmLetterTest extends CommandHandlerTestCase
                                                 'allowEmail' => 'N',
                                                 'sendToAddress' => 'establishmentAddress'
                                             ]
-                                        ])
+                                        ]),
+                                        'address' => 'establishmentAddress'
                                     ]
                                 ]
                             ]
@@ -323,7 +337,9 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234]
+                        'documents' => [123, 234],
+                        'correspondenceAddress' => '123',
+                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
@@ -389,6 +405,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
         $result = new Result();
 
         foreach ($documents as $id => $data) {
+            $result->addId($data['address'], $id);
             $result->addId('documents', $id, true);
         }
 
