@@ -354,10 +354,10 @@ class ProcessInsolvency extends AbstractConsumer
     {
         $cmdData = [
             'emailAddress' => $email,
-            'translateToWelsh' => $translateToWelsh
+            'translateToWelsh' => $translateToWelsh,
+            'docs' => [$this->result->getId('correspondenceAddress')]
         ];
         if (!$isRegistered) {
-            $cmdData['docs'] = [$this->result->getId('correspondenceAddress')];
             $cmd = $this->emailQueue(SendLiquidatedCompanyForUnregisteredUser::class, $cmdData, $this->company->getId());
         } else {
             $cmd = $this->emailQueue(SendPtrNotificationForRegisteredUser::class, $cmdData, $this->company->getId());
