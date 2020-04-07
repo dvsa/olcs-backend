@@ -83,7 +83,8 @@ final class UpdateUnlicensed extends AbstractCommandHandler
         $newLicNo = $this->buildLicenceNumber(
             $licence->getCategoryPrefix(),
             $licence->getTrafficArea()->getId(),
-            $licNoNumericPart
+            $licNoNumericPart,
+            $licence->isExempt()
         );
         $licence->setLicNo($newLicNo);
 

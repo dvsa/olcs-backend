@@ -65,6 +65,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     const ERROR_TRANSFER_OVERLAP_ONE = 'LIC_TRAN_2';
     const ERROR_TRANSFER_OVERLAP_MANY = 'LIC_TRAN_3';
 
+    const LICENCE_EXEMPT_PREFIX = 'E';
     const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
     const LICENCE_CATEGORY_PSV = 'lcat_psv';
 
@@ -1536,5 +1537,15 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         ];
 
         return in_array($this->getStatus()->getId(), $eligibleStatusIds);
+    }
+
+    /**
+     * Returns true if this licence has an Exemption prefix
+     *
+     * @return bool
+     */
+    public function isExempt()
+    {
+        return (substr($this->licNo, 0, 1) === self::LICENCE_EXEMPT_PREFIX);
     }
 }
