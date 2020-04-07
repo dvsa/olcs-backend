@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Operator;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -37,11 +38,13 @@ final class CreateUnlicensed extends AbstractCommandHandler
 
         $licence = $this->getLicence($command, $organisation, $contactDetails);
 
+        $isExempt = $command->getIsExempt() === "Y";
+
         // save the licence; organisation, contactDetails and subsequent children will cascade persist
         $this->getRepo()->save($licence);
 
         // generate licence number and re-save the licence
-        $this->generateAndSaveLicenceNumber($licence);
+        $this->generateAndSaveLicenceNumber($licence, $isExempt);
 
         $result
             ->addId('licence', $licence->getId())
@@ -76,7 +79,7 @@ final class CreateUnlicensed extends AbstractCommandHandler
      * @param CommandInterface $command
      * @return OrganisationEntity
      */
-    private function getOrganisation(CommandInterface $command)
+    private function getOrganisation(CommandInterface $command): OrganisationEntity
     {
         $organisation = new OrganisationEntity();
         $organisation
@@ -91,7 +94,7 @@ final class CreateUnlicensed extends AbstractCommandHandler
      * @param CommandInterface $command
      * @return ContactDetailsEntity
      */
-    private function getContactDetails(CommandInterface $command)
+    private function getContactDetails(CommandInterface $command): ContactDetailsEntity
     {
         return ContactDetailsEntity::create(
             $this->getRepo()->getRefdataReference(ContactDetailsEntity::CONTACT_TYPE_CORRESPONDENCE_ADDRESS),
@@ -107,11 +110,8 @@ final class CreateUnlicensed extends AbstractCommandHandler
      * @param ContactDetailsEntity $contactDetails
      * @return LicenceEntity
      */
-    private function getLicence(
-        CommandInterface $command,
-        OrganisationEntity $organisation,
-        ContactDetailsEntity $contactDetails
-    ) {
+    private function getLicence(CommandInterface $command, OrganisationEntity $organisation, ContactDetailsEntity $contactDetails): LicenceEntity
+    {
         $licence = new LicenceEntity(
             $organisation,
             $this->getRepo()->getRefdataReference(LicenceEntity::LICENCE_STATUS_UNLICENSED)
@@ -131,9 +131,11 @@ final class CreateUnlicensed extends AbstractCommandHandler
      * We need a licence id before we generate a licence number,
      * so we actually save the licence twice
      * @param LicenceEntity $licence
+     * @param bool $isExempt
      * @return LicenceEntity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    private function generateAndSaveLicenceNumber($licence)
+    private function generateAndSaveLicenceNumber($licence, $isExempt): LicenceEntity
     {
         $licenceNoGen = new LicenceNoGenEntity($licence);
         $this->getRepo('LicenceNoGen')->save($licenceNoGen);
@@ -141,7 +143,8 @@ final class CreateUnlicensed extends AbstractCommandHandler
         $licNo = $this->buildLicenceNumber(
             $licence->getCategoryPrefix(),
             $licence->getTrafficArea()->getId(),
-            $licenceNoGen->getId()
+            $licenceNoGen->getId(),
+            $isExempt
         );
 
         $licence->setLicNo($licNo);
