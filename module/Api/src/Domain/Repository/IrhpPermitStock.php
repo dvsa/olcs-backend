@@ -121,6 +121,6 @@ class IrhpPermitStock extends AbstractRepository
             ->setParameter('type', IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL)
             ->setParameter('now', $now->format(DateTime::ISO8601));
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }
