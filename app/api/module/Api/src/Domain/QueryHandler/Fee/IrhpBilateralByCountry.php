@@ -12,6 +12,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 /**
  * Class IrhpBilateralByCountry
  * @todo following https://jira.dvsacloud.uk/browse/OLCS-26994 update or replace this once fees are in the database
+ * @todo fees for SE, CH, FR are just placeholders for now
  */
 class IrhpBilateralByCountry extends AbstractQueryHandler
 {
@@ -28,8 +29,50 @@ class IrhpBilateralByCountry extends AbstractQueryHandler
             'cabotage' => [
                 'application' => 2,
                 'grant' => 6
-            ]
-        ]
+            ],
+        ],
+        'SE' => [
+            'single' => [
+                'application' => 2,
+                'grant' => 6
+            ],
+            'multi' => [
+                'application' => 5,
+                'grant' => 45
+            ],
+            'cabotage' => [
+                'application' => 2,
+                'grant' => 6
+            ],
+        ],
+        'CH' => [
+            'single' => [
+                'application' => 2,
+                'grant' => 6
+            ],
+            'multi' => [
+                'application' => 5,
+                'grant' => 45
+            ],
+            'cabotage' => [
+                'application' => 2,
+                'grant' => 6
+            ],
+        ],
+        'FR' => [
+            'single' => [
+                'application' => 2,
+                'grant' => 6
+            ],
+            'multi' => [
+                'application' => 5,
+                'grant' => 45
+            ],
+            'cabotage' => [
+                'application' => 2,
+                'grant' => 6
+            ],
+        ],
     ];
 
     public function handleQuery(QueryInterface $query)
