@@ -2642,4 +2642,16 @@ class LicenceEntityTest extends EntityTester
             [Licence::LICENCE_STATUS_CANCELLED, false],
         ];
     }
+
+    public function testIsExempt()
+    {
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->setLicNo('EPB2000001');
+        $this->assertTrue($licence->isExempt());
+
+        $licence->setLicNo('UPB2000001');
+        $this->assertFalse($licence->isExempt());
+    }
 }
