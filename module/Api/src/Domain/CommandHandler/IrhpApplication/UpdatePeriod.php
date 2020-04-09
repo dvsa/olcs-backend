@@ -91,6 +91,8 @@ class UpdatePeriod extends AbstractCommandHandler implements
             );
             $irhpPermitApplicationId = $this->result->getIds()['irhpPermitApplication'];
         } elseif ($periodWindow->getId() != $irhpPermitApplicationForCountry->getIrhpPermitWindow()->getId()) {
+            $this->applicationAnswersClearer->clear($irhpPermitApplicationForCountry);
+
             $this->result->merge(
                 $this->handleSideEffect(
                     UpdateIrhpPermitWindow::create([
@@ -99,7 +101,6 @@ class UpdatePeriod extends AbstractCommandHandler implements
                     ])
                 )
             );
-            $this->applicationAnswersClearer->clear($irhpPermitApplicationForCountry);
             $irhpPermitApplicationId = $this->result->getIds()['irhpPermitApplication'];
         } else {
             $irhpPermitApplicationId = $irhpPermitApplicationForCountry->getId();
