@@ -34,14 +34,11 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
      */
     public function addRows(AnswersSummary $answersSummary, QaEntityInterface $irhpApplication, $isSnapshot)
     {
+        // TODO this functionality to be updated by OLCS-26894
         $irhpPermitApplications = $irhpApplication->getIrhpPermitApplications();
 
         $answersSummary->addRow(
             $this->getCountryNamesRow($irhpPermitApplications)
-        );
-
-        $answersSummary->addRow(
-            $this->getPermitsRequiredRow($irhpPermitApplications)
         );
     }
 
@@ -76,40 +73,6 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
             'permits.irhp.application.question.countries',
             $formattedAnswer,
             'countries'
-        );
-    }
-
-    /**
-     * Get a row representing the permits required for a bilateral application
-     *
-     * @param mixed $irhpPermitApplications
-     *
-     * @return AnswersSummaryRow
-     */
-    private function getPermitsRequiredRow($irhpPermitApplications)
-    {
-        $rows = [];
-
-        foreach ($irhpPermitApplications as $irhpPermitApplication) {
-            $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()
-                ->getIrhpPermitStock();
-
-            $rows[] = [
-                'permitsRequired' => $irhpPermitApplication->getPermitsRequired(),
-                'countryName' => $irhpPermitStock->getCountry()->getCountryDesc(),
-                'year' => $irhpPermitStock->getValidityYear()
-            ];
-        }
-
-        $formattedAnswer = $this->viewRenderer->render(
-            self::TEMPLATE_DIRECTORY . 'bilateral-permits-required',
-            ['rows' => $rows]
-        );
-
-        return $this->answersSummaryRowFactory->create(
-            'permits.irhp.application.question.no-of-permits',
-            $formattedAnswer,
-            'no-of-permits'
         );
     }
 }

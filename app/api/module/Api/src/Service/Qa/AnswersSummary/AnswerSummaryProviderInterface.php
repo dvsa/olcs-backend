@@ -32,4 +32,13 @@ interface AnswerSummaryProviderInterface
      * @return bool
      */
     public function supports(QaEntityInterface $qaEntity);
+
+    /**
+     * Whether this answer summary provider should include slug
+     *
+     * @param QaEntityInterface $qaEntity
+     *
+     * @return bool
+     */
+    public function shouldIncludeSlug(QaEntityInterface $qaEntity);
 }

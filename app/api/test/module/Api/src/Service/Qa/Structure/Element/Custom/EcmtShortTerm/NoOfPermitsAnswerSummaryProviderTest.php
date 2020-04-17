@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSummaryProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -29,6 +30,15 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
         $this->assertEquals(
             'ecmt-short-term-no-of-permits',
             $this->noOfPermitsAnswerSummaryProvider->getTemplateName()
+        );
+    }
+
+    public function testShouldIncludeSlug()
+    {
+        $qaEntity = m::mock(QaEntityInterface::class);
+
+        $this->assertTrue(
+            $this->noOfPermitsAnswerSummaryProvider->shouldIncludeSlug($qaEntity)
         );
     }
 

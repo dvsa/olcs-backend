@@ -22,7 +22,7 @@ class BilateralNoOfPermitsFormControlStrategyFactory implements FactoryInterface
             $serviceLocator->get('QaBilateralNoOfPermitsAnswerSaver'),
             $serviceLocator->get('QaBilateralNoOfPermitsAnswerClearer'),
             $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaGenericAnswerSummaryProvider')
+            $serviceLocator->get('QaBilateralNoOfPermitsAnswerSummaryProvider')
         );
     }
 }

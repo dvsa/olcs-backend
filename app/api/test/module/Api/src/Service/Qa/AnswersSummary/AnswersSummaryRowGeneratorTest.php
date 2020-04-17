@@ -96,14 +96,21 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
         );
     }
 
+    public function dpSnapshot()
+    {
+        return [
+            [true],
+            [false]
+        ];
+    }
+
     /**
-     * @dataProvider dpSnapshot
+     * @dataProvider dpGenerate
      */
-    public function testGenerate($isSnapshot)
+    public function testGenerate($isSnapshot, $questionSlug, $shouldIncludeSlug, $expectedSlug)
     {
         $questionTranslationKey = 'question.translation.key';
         $formattedAnswer = 'line 1<br>line 2';
-        $questionSlug = 'no-of-permits';
 
         $templateName = 'irhp-no-of-permits';
         $expectedTemplatePath = 'answers-summary/irhp-no-of-permits';
@@ -139,6 +146,9 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
         $this->answerSummaryProvider->shouldReceive('supports')
             ->with($this->qaEntity)
             ->andReturn(true);
+        $this->answerSummaryProvider->shouldReceive('shouldIncludeSlug')
+            ->with($this->qaEntity)
+            ->andReturn($shouldIncludeSlug);
 
         $questionText = m::mock(QuestionText::class);
         $questionText->shouldReceive('getQuestion->getTranslateableText->getKey')
@@ -161,7 +171,7 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
         $answersSummaryRow = m::mock(AnswersSummaryRow::class);
 
         $this->answersSummaryRowFactory->shouldReceive('create')
-            ->with($questionTranslationKey, $formattedAnswer, $questionSlug)
+            ->with($questionTranslationKey, $formattedAnswer, $expectedSlug)
             ->once()
             ->andReturn($answersSummaryRow);
 
@@ -175,11 +185,13 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
         );
     }
 
-    public function dpSnapshot()
+    public function dpGenerate()
     {
         return [
-            [true],
-            [false]
+            [false, 'no-of-permits', true, 'no-of-permits'],
+            [false, 'no-of-permits', false, null],
+            [true, 'no-of-permits', true, null],
+            [true, 'no-of-permits', false, null],
         ];
     }
 }

@@ -22,7 +22,7 @@ class BilateralPermitUsageFormControlStrategyFactory implements FactoryInterface
             $serviceLocator->get('QaGenericAnswerSaver'),
             $serviceLocator->get('QaGenericAnswerClearer'),
             $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaGenericAnswerSummaryProvider')
+            $serviceLocator->get('QaBilateralPermitUsageAnswerSummaryProvider')
         );
     }
 }

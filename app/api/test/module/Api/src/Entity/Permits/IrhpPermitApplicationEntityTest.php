@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
@@ -1443,5 +1444,55 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             [true, true],
             [false, false],
         ];
+    }
+
+    public function testupdateCheckAnswers()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue()
+            ->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->assertSame(0, $this->sut->getCheckedAnswers());
+        $this->sut->updateCheckAnswers();
+        $this->assertTrue($this->sut->getCheckedAnswers());
+    }
+
+    public function testupdateCheckAnswersNotBilateral()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_CHECK_ANSWERS);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->updateCheckAnswers();
+    }
+
+    public function testupdateCheckAnswersNotUpdatableBilateral()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_CHECK_ANSWERS);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue()
+            ->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->updateCheckAnswers();
     }
 }

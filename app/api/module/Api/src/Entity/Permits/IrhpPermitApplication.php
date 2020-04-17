@@ -44,8 +44,8 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
 {
     use TieredProductReference;
 
-    const BILATERAL_STANDARD_REQUIRED = 'BILATERAL_STANDARD_REQUIRED';
-    const BILATERAL_CABOTAGE_REQUIRED = 'BILATERAL_CABOTAGE_REQUIRED';
+    const BILATERAL_STANDARD_REQUIRED = 'standard';
+    const BILATERAL_CABOTAGE_REQUIRED = 'cabotage';
 
     const BILATERAL_REQUIRED_KEYS = [
         self::BILATERAL_STANDARD_REQUIRED,
@@ -93,6 +93,8 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
 
     const REQUESTED_PERMITS_KEY = 'requestedPermits';
     const RANGE_ENTITY_KEY = 'rangeEntity';
+
+    const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers.';
 
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
@@ -776,7 +778,6 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         $this->irhpPermitWindow = $irhpPermitWindow;
     }
 
-
     /**
      * Whether this application is associated with the bilateral only application path group
      *
@@ -788,5 +789,28 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
             ->getIrhpPermitStock()
             ->getApplicationPathGroup()
             ->isBilateralOnly();
+    }
+
+    /**
+     * Update checkedAnswers to true
+     *
+     * @throws ForbiddenException
+     */
+    public function updateCheckAnswers()
+    {
+        if (!$this->canCheckAnswers()) {
+            throw new ForbiddenException(self::ERR_CANT_CHECK_ANSWERS);
+        }
+        return $this->checkedAnswers = true;
+    }
+
+    /**
+     * Whether checkedAnswers can be updated
+     *
+     * @return bool
+     */
+    public function canCheckAnswers()
+    {
+        return $this->irhpApplication->isBilateral() && $this->irhpApplication->canBeUpdated();
     }
 }
