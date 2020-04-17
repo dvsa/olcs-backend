@@ -2,16 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
-use DateTime;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\FeeBreakdown as FeeBreakdownQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Service\Permits\FeeBreakdown\FeeBreakdownGeneratorInterface;
 
 /**
  * Fee breakdown
@@ -24,17 +23,32 @@ class FeeBreakdown extends AbstractQueryHandler implements ToggleRequiredInterfa
 
     protected $repoServiceName = 'IrhpApplication';
 
-    /** @var IrhpApplication */
-    private $irhpApplication;
-
     /** @var array */
-    private $issueFeeMappings = [];
+    private $feeBreakdownGenerators;
 
-    /** @var DateTime */
-    private $issueFeeInvoicedDate;
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-    /** @var FeeType */
-    private $applicationFeeType;
+        $this->registerGenerator(
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            $mainServiceLocator->get('PermitsBilateralFeeBreakdownGenerator')
+        );
+
+        $this->registerGenerator(
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+            $mainServiceLocator->get('PermitsMultilateralFeeBreakdownGenerator')
+        );
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle query
@@ -45,74 +59,26 @@ class FeeBreakdown extends AbstractQueryHandler implements ToggleRequiredInterfa
      */
     public function handleQuery(QueryInterface $query)
     {
-        $this->irhpApplication = $this->getRepo()->fetchUsingId($query);
-        if (!$this->irhpApplication->getIrhpPermitType()->isMultilateral()) {
+        $irhpApplication = $this->getRepo()->fetchUsingId($query);
+
+        $irhpPermitTypeId = $irhpApplication->getIrhpPermitType()->getId();
+        if (!isset($this->feeBreakdownGenerators[$irhpPermitTypeId])) {
             // return an empty table so that the frontend knows not to display it
             return [];
         }
 
-        $this->applicationFeeType = $this->irhpApplication->getLatestOutstandingApplicationFee()->getFeeType();
-
-        $issueFees = $this->irhpApplication->getOutstandingIssueFees();
-        $this->populateIssueFeeMappings($issueFees);
-        $this->issueFeeInvoicedDate = $issueFees[0]->getInvoicedDate(true);
-
-        $rows = [];
-        foreach ($this->irhpApplication->getIrhpPermitApplications() as $irhpPermitApplication) {
-            if ($irhpPermitApplication->getPermitsRequired() > 0) {
-                $rows[] = $this->generateRow($irhpPermitApplication);
-            }
-        }
-
-        return $rows;
+        $feeBreakdownGenerator = $this->feeBreakdownGenerators[$irhpPermitTypeId];
+        return $feeBreakdownGenerator->generate($irhpApplication);
     }
 
     /**
-     * Populates a key/value lookup array of product references to fee types
+     * Register a service to generate the fee breakdown for a specific permit type
      *
-     * @param array $issueFees
+     * @param int $irhpPermitTypeId
+     * @param FeeBreakdownGeneratorInterface $feeBreakdownGenerator
      */
-    private function populateIssueFeeMappings(array $issueFees)
+    private function registerGenerator($irhpPermitTypeId, FeeBreakdownGeneratorInterface $feeBreakdownGenerator)
     {
-        foreach ($issueFees as $issueFee) {
-            $issueFeeType = $issueFee->getFeeType();
-            $this->issueFeeMappings[$issueFeeType->getProductReference()] = $issueFeeType;
-        }
-    }
-
-    /**
-     * Returns an array representing a table row within the fee breakdown
-     *
-     * @param IrhpPermitApplication $irhpPermitApplication
-     *
-     * @return array
-     */
-    private function generateRow(IrhpPermitApplication $irhpPermitApplication)
-    {
-        $issueFeeProductReference = $irhpPermitApplication->getIssueFeeProductReference($this->issueFeeInvoicedDate);
-
-        $feePerPermit = $this->irhpApplication->getFeePerPermit(
-            $this->applicationFeeType,
-            $this->issueFeeMappings[$issueFeeProductReference]
-        );
-
-        $numberOfPermits = $irhpPermitApplication->getPermitsRequired();
-        $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
-        $irhpPermitStockValidFrom = $irhpPermitStock->getValidFrom(true);
-        $irhpPermitStockValidTo = $irhpPermitStock->getValidTo(true);
-
-        $validFrom = $irhpPermitStockValidFrom;
-        if ($this->issueFeeInvoicedDate > $irhpPermitStockValidFrom) {
-            $validFrom = $this->issueFeeInvoicedDate;
-        }
-
-        return [
-            'year' => $irhpPermitStockValidTo->format('Y'),
-            'validFromTimestamp' => $validFrom->getTimestamp(),
-            'validToTimestamp' => $irhpPermitStockValidTo->getTimestamp(),
-            'feePerPermit' => $feePerPermit,
-            'numberOfPermits' => $numberOfPermits,
-            'totalFee' => $numberOfPermits * $feePerPermit,
-        ];
+        $this->feeBreakdownGenerators[$irhpPermitTypeId] = $feeBreakdownGenerator;
     }
 }

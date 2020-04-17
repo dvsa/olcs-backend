@@ -118,7 +118,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 ],
             ],
             'submitAndPay' => [
-                'validator' => SectionableInterface::VALIDATOR_ALWAYS_FALSE,
+                'validator' => SectionableInterface::VALIDATOR_ALWAYS_TRUE,
                 'validateIf' => [
                     'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                 ],
@@ -437,7 +437,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     private function getEcmtRemovalNoOfPermitsAnswer()
     {
-        return $this->getFirstIrhpPermitApplication()->getPermitsRequired();
+        return $this->getFirstIrhpPermitApplication()->countPermitsRequired();
     }
 
     /**
@@ -1236,7 +1236,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         /** @var IrhpPermitApplication $app */
         foreach ($applications as $app) {
-            $permitsRequired = $app->getPermitsRequired();
+            $permitsRequired = $app->countPermitsRequired();
             $total += is_null($permitsRequired) ? 0 : $permitsRequired;
         }
 
@@ -1400,7 +1400,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $irhpPermitApplications = $this->getIrhpPermitApplications();
         foreach ($irhpPermitApplications as $irhpPermitApplication) {
             $productRef = $irhpPermitApplication->getIssueFeeProductReference();
-            $quantity = $irhpPermitApplication->getPermitsRequired();
+            $quantity = $irhpPermitApplication->countPermitsRequired();
 
             if ($quantity > 0) {
                 if (!isset($cumulativeProductRefsAndQuantities[$productRef])) {

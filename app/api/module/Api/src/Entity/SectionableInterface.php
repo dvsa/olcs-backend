@@ -14,7 +14,7 @@ interface SectionableInterface
     const SECTION_COMPLETION_INCOMPLETE = 'section_sts_inc';
     const SECTION_COMPLETION_COMPLETED = 'section_sts_com';
 
-    const VALIDATOR_ALWAYS_FALSE = 'validator_always_false';
+    const VALIDATOR_ALWAYS_TRUE = 'validator_always_true';
 
     /**
      * Get the section completion

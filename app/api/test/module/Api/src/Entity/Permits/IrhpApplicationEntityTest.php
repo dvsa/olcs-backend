@@ -2127,10 +2127,10 @@ class IrhpApplicationEntityTest extends EntityTester
                 'expected' => [
                     'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'submitAndPay' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'submitAndPay' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'totalSections' => 3,
-                    'totalCompleted' => 2,
-                    'allCompleted' => false,
+                    'totalCompleted' => 3,
+                    'allCompleted' => true,
                 ],
             ]
         ];
@@ -2761,10 +2761,15 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function dpTestGetPermitsRequired()
     {
-        $irhpPermitAppWithoutPermits = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitAppWithoutPermits = m::mock(IrhpPermitApplication::class);
+        $irhpPermitAppWithoutPermits->shouldReceive('countPermitsRequired')
+            ->withNoArgs()
+            ->andReturn(0);
 
-        $irhpPermitAppWithPermits = m::mock(IrhpPermitApplication::class)->makePartial();
-        $irhpPermitAppWithPermits->setPermitsRequired(10);
+        $irhpPermitAppWithPermits = m::mock(IrhpPermitApplication::class);
+        $irhpPermitAppWithPermits->shouldReceive('countPermitsRequired')
+            ->withNoArgs()
+            ->andReturn(10);
 
         return [
             'One Irhp Permit Application, 0 permits required' => [
@@ -2849,13 +2854,13 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication1->shouldReceive('getIssueFeeProductReference')
             ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
-        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication1->shouldReceive('countPermitsRequired')
             ->andReturn($stock1QuantityBefore);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication2->shouldReceive('getIssueFeeProductReference')
             ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
-        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication2->shouldReceive('countPermitsRequired')
             ->andReturn($stock2QuantityBefore);
 
         $irhpApplication->setIrhpPermitApplications(
@@ -2867,13 +2872,13 @@ class IrhpApplicationEntityTest extends EntityTester
         $updatedIrhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
         $updatedIrhpPermitApplication1->shouldReceive('getIssueFeeProductReference')
             ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
-        $updatedIrhpPermitApplication1->shouldReceive('getPermitsRequired')
+        $updatedIrhpPermitApplication1->shouldReceive('countPermitsRequired')
             ->andReturn($stock1QuantityAfter);
 
         $updatedIrhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
         $updatedIrhpPermitApplication2->shouldReceive('getIssueFeeProductReference')
             ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
-        $updatedIrhpPermitApplication2->shouldReceive('getPermitsRequired')
+        $updatedIrhpPermitApplication2->shouldReceive('countPermitsRequired')
             ->andReturn($stock2QuantityAfter);
 
         $irhpApplication->setIrhpPermitApplications(
@@ -3046,37 +3051,37 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication1->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_1');
-        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication1->shouldReceive('countPermitsRequired')
             ->andReturn(7);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication2->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_2');
-        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication2->shouldReceive('countPermitsRequired')
             ->andReturn(3);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication3->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_2');
-        $irhpPermitApplication3->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication3->shouldReceive('countPermitsRequired')
             ->andReturn(0);
 
         $irhpPermitApplication4 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication4->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_3');
-        $irhpPermitApplication4->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication4->shouldReceive('countPermitsRequired')
             ->andReturn(0);
 
         $irhpPermitApplication5 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication5->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_4');
-        $irhpPermitApplication5->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication5->shouldReceive('countPermitsRequired')
             ->andReturn(5);
 
         $irhpPermitApplication6 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication6->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_4');
-        $irhpPermitApplication6->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication6->shouldReceive('countPermitsRequired')
             ->andReturn(6);
 
         $irhpApplication = m::mock(Entity::class)->makePartial();
@@ -3928,7 +3933,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $permitsRequired = 47;
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication->shouldReceive('countPermitsRequired')
             ->andReturn($permitsRequired);
 
         $question = m::mock(Question::class);
@@ -6189,8 +6194,8 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetIrhpPermitApplicationIdForCountry
      */
-    public function testGetIrhpPermitApplicationIdForCountry($result, $countryCode) {
-
+    public function testGetIrhpPermitApplicationIdForCountry($result, $countryCode)
+    {
         $countries = [
             [
                 'countryCode' => 'FR',

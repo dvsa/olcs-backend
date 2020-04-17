@@ -42,7 +42,7 @@ class MultilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInte
                 ->getValidityYear();
 
             $rows[] = [
-                'permitsRequired' => $irhpPermitApplication->getPermitsRequired(),
+                'permitsRequired' => $irhpPermitApplication->countPermitsRequired(),
                 'year' => $validityYear
             ];
         }

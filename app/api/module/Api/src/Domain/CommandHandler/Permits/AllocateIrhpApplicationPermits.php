@@ -121,7 +121,7 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
 
         $this->allocatePermits(
             $command,
-            $irhpPermitApplication->getPermitsRequired()
+            $irhpPermitApplication->countPermitsRequired()
         );
     }
 
@@ -141,7 +141,7 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
 
         $this->allocatePermits(
             $command,
-            $irhpPermitApplication->getPermitsRequired()
+            $irhpPermitApplication->countPermitsRequired()
         );
     }
 

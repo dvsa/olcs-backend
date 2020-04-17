@@ -56,7 +56,7 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication1->shouldReceive('getId')
             ->andReturn($irhpPermitApplication1Id);
-        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication1->shouldReceive('countPermitsRequired')
             ->andReturn($irhpPermitApplication1PermitsRequired);
 
         $irhpPermitApplication2Id = 64;
@@ -64,7 +64,7 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication2->shouldReceive('getId')
             ->andReturn($irhpPermitApplication2Id);
-        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication2->shouldReceive('countPermitsRequired')
             ->andReturn($irhpPermitApplication2PermitsRequired);
 
         $irhpPermitApplication3Id = 41;
@@ -72,7 +72,7 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication3->shouldReceive('getId')
             ->andReturn($irhpPermitApplication3Id);
-        $irhpPermitApplication3->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication3->shouldReceive('countPermitsRequired')
             ->andReturn($irhpPermitApplication3PermitsRequired);
 
         $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1, $irhpPermitApplication2, $irhpPermitApplication3]);
@@ -135,7 +135,7 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication1->shouldReceive('getId')
             ->andReturn($irhpPermitApplication1Id);
-        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication1->shouldReceive('countPermitsRequired')
             ->andReturn($irhpPermitApplication1PermitsRequired);
         $irhpPermitApplication1->shouldReceive('generateExpiryDate')
             ->withNoArgs()

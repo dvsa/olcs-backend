@@ -153,6 +153,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $euro5PermitsAwarded = 7;
         $euro6PermitsAwarded = 3;
         $validPermitsCount = 14;
+        $permitsRequired = 3;
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('serialize')
@@ -174,6 +175,9 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $entity->shouldReceive('countValidPermits')
             ->withNoArgs()
             ->andReturn($validPermitsCount);
+        $entity->shouldReceive('countPermitsRequired')
+            ->withNoArgs()
+            ->andReturn($permitsRequired);
 
         $this->assertSame(
             [
@@ -181,6 +185,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
                 'euro5PermitsAwarded' => $euro5PermitsAwarded,
                 'euro6PermitsAwarded' => $euro6PermitsAwarded,
                 'validPermits' => $validPermitsCount,
+                'permitsRequired' => $permitsRequired,
                 'relatedApplication' => $serializedIrhpApplication,
             ],
             $entity->getCalculatedBundleValues()
@@ -394,6 +399,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     {
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
             ->andReturn(true);
 
         $irhpPermitApplication = Entity::createNew(
@@ -413,6 +419,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     {
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
             ->andReturn(false);
 
         $irhpPermitApplication = Entity::createNew(
@@ -1277,6 +1284,64 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpGetFilteredBilateralRequired
+     */
+    public function testGetFilteredBilateralRequired($bilateralRequired, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $entity->shouldReceive('getBilateralRequired')
+            ->withNoArgs()
+            ->andReturn($bilateralRequired);
+
+        $this->assertEquals(
+            $expected,
+            $entity->getFilteredBilateralRequired()
+        );
+    }
+
+    public function dpGetFilteredBilateralRequired()
+    {
+        return [
+            [
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => null,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+                ],
+                []
+            ],
+            [
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 5,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 9,
+                ],
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 5,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 9,
+                ]
+            ],
+            [
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => null,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 3,
+                ],
+                [
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 3,
+                ]
+            ],
+            [
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 12,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+                ],
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 12,
+                ]
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider dpGetBilateralFeeProductRefsAndQuantities
      */
     public function testGetBilateralFeeProductRefsAndQuantities(
@@ -1394,6 +1459,144 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->sut->getBilateralFeeProductRefsAndQuantities();
     }
 
+    /**
+     * @dataProvider dpGetBilateralFeeProductReference
+     */
+    public function testGetBilateralFeeProductReference($permitUsage, $standardOrCabotage, $feeTypeKey, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getBilateralPermitUsageSelection')
+            ->withNoArgs()
+            ->andReturn($permitUsage);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $expected,
+            $entity->getBilateralFeeProductReference($standardOrCabotage, $feeTypeKey)
+        );
+    }
+
+    public function dpGetBilateralFeeProductReference()
+    {
+        return [
+            [
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_APPLICATION_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_ISSUE_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_APPLICATION_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_ISSUE_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_APPLICATION_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_ISSUE_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_APPLICATION_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_ISSUE_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+        ];
+    }
+
+    public function testGetBilateralFeeProductReferenceNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralFeeProductReference is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralFeeProductReference(
+            Entity::BILATERAL_STANDARD_REQUIRED,
+            Entity::BILATERAL_ISSUE_FEE_KEY
+        );
+    }
+
+    public function testGetBilateralFeePerPermit()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $applicationFeeType = m::mock(FeeType::class);
+        $applicationFeeType->shouldReceive('getFixedValue')
+            ->withNoArgs()
+            ->andReturn(5);
+
+        $issueFeeType = m::mock(FeeType::class);
+        $issueFeeType->shouldReceive('getFixedValue')
+            ->withNoArgs()
+            ->andReturn(13);
+
+        $this->assertEquals(
+            18,
+            $this->sut->getBilateralFeePerPermit($applicationFeeType, $issueFeeType)
+        );
+    }
+
+    public function testGetBilateralFeePerPermitNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralFeePerPermit is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralFeePerPermit(
+            m::mock(FeeType::class),
+            m::mock(FeeType::class)
+        );
+    }
+
     public function testGetOutstandingFees()
     {
         $fee1 = m::mock(Fee::class);
@@ -1494,5 +1697,48 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->sut->setIrhpApplication($irhpApplication);
 
         $this->sut->updateCheckAnswers();
+    }
+
+    public function testCountPermitsRequiredBilateral()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpApplication($irhpApplication);
+
+        $filteredBilateralRequired = [
+            Entity::BILATERAL_STANDARD_REQUIRED => 6,
+            Entity::BILATERAL_CABOTAGE_REQUIRED => 11,
+        ];
+
+        $entity->shouldReceive('getFilteredBilateralRequired')
+            ->withNoArgs()
+            ->andReturn($filteredBilateralRequired);
+
+        $this->assertEquals(
+            17,
+            $entity->countPermitsRequired()
+        );
+    }
+
+    public function testCountPermitsRequiredNotBilateral()
+    {
+        $permitsRequired = 13;
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+        $this->sut->setPermitsRequired($permitsRequired);
+
+        $this->assertEquals(
+            $permitsRequired,
+            $this->sut->countPermitsRequired()
+        );
     }
 }

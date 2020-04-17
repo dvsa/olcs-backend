@@ -107,6 +107,9 @@ return [
                 ApiSrv\Permits\CandidatePermits\ApggCandidatePermitFactory::class,
 
             'PermitsCheckableCreateTaskCommandFactory' => ApiSrv\Permits\Checkable\CreateTaskCommandFactory::class,
+
+            'PermitsMultilateralFeeBreakdownGenerator' =>
+                ApiSrv\Permits\FeeBreakdown\MultilateralFeeBreakdownGenerator::class,
         ],
         'abstract_factories' => [
             \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
@@ -426,6 +429,9 @@ return [
                 => ApiSrv\Permits\Checkable\CheckedValueUpdaterFactory::class,
             'PermitsCheckableCreateTaskCommandGenerator'
                 => ApiSrv\Permits\Checkable\CreateTaskCommandGeneratorFactory::class,
+    
+            'PermitsBilateralFeeBreakdownGenerator'
+                => ApiSrv\Permits\FeeBreakdown\BilateralFeeBreakdownGeneratorFactory::class,
 
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
