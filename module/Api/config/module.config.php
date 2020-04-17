@@ -79,6 +79,10 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsFactory::class,
             'QaBilateralNoOfPermitsTextFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsTextFactory::class,
+            'QaBilateralNoOfPermitsAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSummaryProvider::class,
+            'QaBilateralPermitUsageAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageAnswerSummaryProvider::class,
 
             'PermitsAnswersSummaryFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryFactory::class,
             'PermitsAnswersSummaryRowFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryRowFactory::class,
@@ -355,12 +359,16 @@ return [
 
             'PermitsAnswersSummaryGenerator' =>
                 ApiSrv\Permits\AnswersSummary\AnswersSummaryGeneratorFactory::class,
+            'PermitsIpaAnswersSummaryGenerator' =>
+                ApiSrv\Permits\AnswersSummary\IpaAnswersSummaryGeneratorFactory::class,
             'PermitsHeaderAnswersSummaryRowsAdder' =>
                 ApiSrv\Permits\AnswersSummary\HeaderAnswersSummaryRowsAdderFactory::class,
             'QaAnswersSummaryRowGenerator' =>
                 ApiSrv\Qa\AnswersSummary\AnswersSummaryRowGeneratorFactory::class,
             'PermitsBilateralAnswersSummaryRowsAdder' =>
                 ApiSrv\Permits\AnswersSummary\BilateralAnswersSummaryRowsAdderFactory::class,
+            'PermitsBilateralIpaAnswersSummaryRowsAdder' =>
+                ApiSrv\Permits\AnswersSummary\BilateralIpaAnswersSummaryRowsAdderFactory::class,
             'PermitsMultilateralAnswersSummaryRowsAdder' =>
                 ApiSrv\Permits\AnswersSummary\MultilateralAnswersSummaryRowsAdderFactory::class,
             'QaAnswersSummaryRowsAdder' =>

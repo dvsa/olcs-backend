@@ -2,13 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox;
 
+use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AlwaysIncludeSlugTrait;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 
 class CheckboxAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
-    use AnyTrait;
+    use AlwaysIncludeSlugTrait, AnyTrait;
 
     /**
      * {@inheritdoc}

@@ -77,10 +77,12 @@ class AnswersSummaryRowGenerator
         $question = $applicationStep->getQuestion();
         $formattedAnswer = $this->viewRenderer->render($templatePath, $templateVariables);
 
+        $slug = (!$isSnapshot && $answerSummaryProvider->shouldIncludeSlug($qaEntity)) ? $question->getSlug() : null;
+
         return $this->answersSummaryRowFactory->create(
             $questionText->getQuestion()->getTranslateableText()->getKey(),
             $formattedAnswer,
-            $question->getSlug()
+            $slug
         );
     }
 }

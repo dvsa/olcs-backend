@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerSummaryProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -36,6 +37,15 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
         $this->assertEquals(
             'ecmt-short-term-restricted-countries',
             $this->restrictedCountriesAnswerSummaryProvider->getTemplateName()
+        );
+    }
+
+    public function testShouldIncludeSlug()
+    {
+        $qaEntity = m::mock(QaEntityInterface::class);
+
+        $this->assertTrue(
+            $this->restrictedCountriesAnswerSummaryProvider->shouldIncludeSlug($qaEntity)
         );
     }
 

@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio;
 
+use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AlwaysIncludeSlugTrait;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
@@ -10,7 +11,7 @@ use RuntimeException;
 
 class RadioAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
-    use AnyTrait;
+    use AlwaysIncludeSlugTrait, AnyTrait;
 
     /** @var OptionsGenerator */
     private $optionsGenerator;
