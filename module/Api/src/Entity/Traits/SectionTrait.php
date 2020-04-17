@@ -172,8 +172,8 @@ trait SectionTrait
         // validate the field itself
         $validator = $section['validator'];
 
-        if ($validator == SectionableInterface::VALIDATOR_ALWAYS_FALSE) {
-            $validatorResponse = false;
+        if ($validator == SectionableInterface::VALIDATOR_ALWAYS_TRUE) {
+            $validatorResponse = true;
         } else {
             $validatorResponse = $this->$validator($field);
         }

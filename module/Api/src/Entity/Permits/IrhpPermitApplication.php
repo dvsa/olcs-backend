@@ -167,6 +167,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
             'euro5PermitsAwarded' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO5_REF),
             'euro6PermitsAwarded' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO6_REF),
             'validPermits' => $this->countValidPermits(),
+            'permitsRequired' => $this->countPermitsRequired(),
             'relatedApplication' => isset($relatedApplication) ? $relatedApplication->serialize(
                 [
                     'licence' => [
@@ -704,6 +705,18 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
+     * Get required permits for a bilateral application, including only types where a quantity is specified
+     *
+     * @return array
+     */
+    public function getFilteredBilateralRequired()
+    {
+        return array_filter(
+            $this->getBilateralRequired()
+        );
+    }
+
+    /**
      * Get a key value array containing product references and quantities for use in fee creation
      *
      * @return array
@@ -737,6 +750,41 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         }
 
         return $productRefsAndQuantities;
+    }
+
+    /**
+     * Get the bilateral fee product reference in the context of this application
+     *
+     * @param string $standardOrCabotage
+     * @param string $feeTypeKey
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    public function getBilateralFeeProductReference($standardOrCabotage, $feeTypeKey)
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        $permitUsage = $this->getBilateralPermitUsageSelection();
+        return self::BILATERAL_FEE_PRODUCT_REFS[$permitUsage][$standardOrCabotage][$feeTypeKey];
+    }
+
+    /**
+     * Get the bilateral fee per permit
+     *
+     * @param FeeType $applicationFeeType
+     * @param FeeType $issueFeeType
+     *
+     * @return int
+     *
+     * @throws RuntimeException
+     */
+    public function getBilateralFeePerPermit(FeeType $applicationFeeType, FeeType $issueFeeType)
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        return $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
     }
 
     /**
@@ -812,5 +860,26 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     public function canCheckAnswers()
     {
         return $this->irhpApplication->isBilateral() && $this->irhpApplication->canBeUpdated();
+    }
+
+    /**
+     * Get the type-appropriate number of permits required by this application
+     *
+     * @return int|null
+     */
+    public function countPermitsRequired()
+    {
+        if ($this->irhpApplication->isBilateral()) {
+            $permitsRequired = 0;
+
+            $bilateralRequired = $this->getFilteredBilateralRequired();
+            foreach ($bilateralRequired as $quantity) {
+                $permitsRequired += $quantity;
+            }
+
+            return $permitsRequired;
+        }
+
+        return parent::getPermitsRequired();
     }
 }
