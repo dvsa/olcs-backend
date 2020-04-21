@@ -8,6 +8,8 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteria;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteriaFactory;
 use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\ApggCandidatePermitFactory;
 use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\ApggEmissionsCatCandidatePermitsCreator;
 use Mockery as m;
@@ -28,6 +30,8 @@ class ApggEmissionsCatCandidatePermitsCreatorTest extends MockeryTestCase
 
     private $irhpCandidatePermitRepo;
 
+    private $emissionsStandardCriteriaFactory;
+
     private $apggEmissionsCatCandidatePermitsCreator;
 
     public function setUp()
@@ -42,9 +46,12 @@ class ApggEmissionsCatCandidatePermitsCreatorTest extends MockeryTestCase
 
         $this->irhpCandidatePermitRepo = m::mock(IrhpCandidatePermitRepository::class);
 
+        $this->emissionsStandardCriteriaFactory = m::mock(EmissionsStandardCriteriaFactory::class);
+
         $this->apggEmissionsCatCandidatePermitsCreator = new ApggEmissionsCatCandidatePermitsCreator(
             $this->apggCandidatePermitFactory,
-            $this->irhpCandidatePermitRepo
+            $this->irhpCandidatePermitRepo,
+            $this->emissionsStandardCriteriaFactory
         );
     }
 
@@ -61,8 +68,14 @@ class ApggEmissionsCatCandidatePermitsCreatorTest extends MockeryTestCase
 
         $irhpPermitRange = m::mock(IrhpPermitRange::class);
 
-        $this->irhpApplication->shouldReceive('getAssociatedStock->getFirstAvailableRangeWithNoCountries')
+        $emissionsStandardCriteria = m::mock(EmissionsStandardCriteria::class);
+
+        $this->emissionsStandardCriteriaFactory->shouldReceive('create')
             ->with($emissionsCategoryId)
+            ->andReturn($emissionsStandardCriteria);
+
+        $this->irhpApplication->shouldReceive('getAssociatedStock->getFirstAvailableRangeWithNoCountries')
+            ->with($emissionsStandardCriteria)
             ->andReturn($irhpPermitRange);
 
         $irhpCandidatePermit1 = m::mock(IrhpCandidatePermit::class);

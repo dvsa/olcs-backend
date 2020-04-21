@@ -2,13 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
-use DateInterval;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateCandidatePermits as AllocateCandidatePermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpApplicationPermits as AllocateIrhpApplicationPermitsCmd;
-use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpPermitApplicationPermit as AllocateIrhpPermitApplicationPermitCmd;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
@@ -18,8 +16,13 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\BilateralCriteriaFactory;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteriaFactory;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\IrhpPermitAllocator;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\RangeMatchingCriteriaInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use RuntimeException;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Allocate permits for an IRHP Permit application
@@ -33,6 +36,35 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpApplication';
+
+    /** @var EmissionsStandardCriteriaFactory */
+    private $emissionsStandardCriteriaFactory;
+
+    /** @var BilateralCriteriaFactory */
+    private $bilateralCriteriaFactory;
+
+    /** @var IrhpPermitAllocator */
+    private $irhpPermitAllocator;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->emissionsStandardCriteriaFactory = $mainServiceLocator->get(
+            'PermitsAllocateEmissionsStandardCriteriaFactory'
+        );
+        $this->bilateralCriteriaFactory = $mainServiceLocator->get('PermitsAllocateBilateralCriteriaFactory');
+        $this->irhpPermitAllocator = $mainServiceLocator->get('PermitsAllocateIrhpPermitAllocator');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -103,6 +135,9 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
             case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
                 $this->processForCandidatePermits($irhpPermitApplication);
                 break;
+            case IrhpPermitStock::ALLOCATION_MODE_BILATERAL:
+                $this->processForBilateral($irhpPermitApplication);
+                break;
             default:
                 throw new RuntimeException('Unknown allocation mode: ' . $allocationMode);
         }
@@ -115,12 +150,9 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
      */
     private function processStandard(IrhpPermitApplication $irhpPermitApplication)
     {
-        $command = AllocateIrhpPermitApplicationPermitCmd::create(
-            ['id' => $irhpPermitApplication->getId()]
-        );
-
         $this->allocatePermits(
-            $command,
+            $irhpPermitApplication,
+            null,
             $irhpPermitApplication->countPermitsRequired()
         );
     }
@@ -132,16 +164,11 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
      */
     private function processStandardWithExpiry(IrhpPermitApplication $irhpPermitApplication)
     {
-        $command = AllocateIrhpPermitApplicationPermitCmd::create(
-            [
-                'id' => $irhpPermitApplication->getId(),
-                'expiryDate' => $irhpPermitApplication->generateExpiryDate()
-            ]
-        );
-
         $this->allocatePermits(
-            $command,
-            $irhpPermitApplication->countPermitsRequired()
+            $irhpPermitApplication,
+            null,
+            $irhpPermitApplication->countPermitsRequired(),
+            $irhpPermitApplication->generateExpiryDate()
         );
     }
 
@@ -153,13 +180,13 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
     private function processForEmissionsCategories(IrhpPermitApplication $irhpPermitApplication)
     {
         $this->processSingleEmissionsCategory(
-            $irhpPermitApplication->getId(),
+            $irhpPermitApplication,
             $irhpPermitApplication->getRequiredEuro5(),
             RefData::EMISSIONS_CATEGORY_EURO5_REF
         );
 
         $this->processSingleEmissionsCategory(
-            $irhpPermitApplication->getId(),
+            $irhpPermitApplication,
             $irhpPermitApplication->getRequiredEuro6(),
             RefData::EMISSIONS_CATEGORY_EURO6_REF
         );
@@ -182,37 +209,52 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
     }
 
     /**
+     * Allocate the permits for a bilateral application
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     */
+    private function processForBilateral(IrhpPermitApplication $irhpPermitApplication)
+    {
+        $bilateralRequired = $irhpPermitApplication->getFilteredBilateralRequired();
+        $permitUsage = $irhpPermitApplication->getBilateralPermitUsageSelection();
+
+        foreach ($bilateralRequired as $standardOrCabotage => $permitsRequired) {
+            $criteria = $this->bilateralCriteriaFactory->create($standardOrCabotage, $permitUsage);
+            $this->allocatePermits($irhpPermitApplication, $criteria, $permitsRequired);
+        }
+    }
+
+    /**
      * Allocate the permits for a single emissions category within an application that uses the emissions categories
      * allocation method
      *
-     * @param int $irhpPermitApplicationId
+     * @param IrhpPermitApplication $irhpPermitApplication
      * @param int $permitsRequired
      * @param string $emissionsCategoryId
      */
-    private function processSingleEmissionsCategory($irhpPermitApplicationId, $permitsRequired, $emissionsCategoryId)
+    private function processSingleEmissionsCategory(IrhpPermitApplication $irhpPermitApplication, $permitsRequired, $emissionsCategoryId)
     {
-        $command = AllocateIrhpPermitApplicationPermitCmd::create(
-            [
-                'id' => $irhpPermitApplicationId,
-                'emissionsCategory' => $emissionsCategoryId
-            ]
-        );
+        $criteria = $this->emissionsStandardCriteriaFactory->create($emissionsCategoryId);
 
-        $this->allocatePermits($command, $permitsRequired);
+        $this->allocatePermits($irhpPermitApplication, $criteria, $permitsRequired);
     }
 
     /**
      * Run the specified permit allocation command permitsRequired times
      *
-     * @param CommandInterface $command
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param RangeMatchingCriteriaInterface $criteria (optional)
      * @param int $permitsRequired
+     * @param DateTime $expiryDate (optional)
      */
-    private function allocatePermits($command, $permitsRequired)
-    {
+    private function allocatePermits(
+        IrhpPermitApplication $irhpPermitApplication,
+        ?RangeMatchingCriteriaInterface $criteria,
+        $permitsRequired,
+        $expiryDate = null
+    ) {
         for ($index = 0; $index < $permitsRequired; $index++) {
-            $this->result->merge(
-                $this->handleSideEffect($command)
-            );
+            $this->irhpPermitAllocator->allocate($this->result, $irhpPermitApplication, $criteria, $expiryDate);
         }
     }
 }

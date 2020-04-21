@@ -1,72 +1,68 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
+namespace Dvsa\Olcs\Api\Service\Permits\Allocate;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpPermitApplicationPermit as AllocateIrhpPermitApplicationPermitCmd;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use DateTime;
-use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\RangeMatchingCriteriaInterface;
 use RuntimeException;
 
-/**
- * Allocate a single permit for an IRHP Permit application
- *
- * @author Jonathan Thomas <jonathan@opalise.co.uk>
- */
-final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler implements ToggleRequiredInterface
+class IrhpPermitAllocator
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
-    protected $repoServiceName = 'IrhpPermitApplication';
-
-    protected $extraRepos = ['IrhpPermit'];
+    /** @var IrhpPermitRepository */
+    private $irhpPermitRepo;
 
     /**
-     * Handle command
+     * Create service instance
      *
-     * @param AllocateIrhpPermitApplicationPermitCmd|CommandInterface $command command
+     * @param IrhpPermitRepository $irhpPermitRepo
      *
-     * @return Result
+     * @return IrhpPermitAllocator
+     */
+    public function __construct(IrhpPermitRepository $irhpPermitRepo)
+    {
+        $this->irhpPermitRepo = $irhpPermitRepo;
+    }
+
+    /**
+     * Allocate a permit number in accordance with the provided data and populate the provided result with a status
+     * message
+     *
+     * @param Result $result
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param RangeMatchingCriteriaInterface $criteria (optional)
+     * @param DateTime $expiryDate (optional)
      *
      * @throws RuntimeException
      */
-    public function handleCommand(CommandInterface $command)
-    {
-        $irhpPermitApplication = $this->getRepo()->fetchById(
-            $command->getId()
-        );
-
+    public function allocate(
+        Result $result,
+        IrhpPermitApplication $irhpPermitApplication,
+        ?RangeMatchingCriteriaInterface $criteria,
+        ?DateTime $expiryDate
+    ) {
         $irhpPermitRanges = $irhpPermitApplication
             ->getIrhpPermitWindow()
             ->getIrhpPermitStock()
-            ->getNonReservedNonReplacementRangesOrderedByFromNo(
-                $command->getEmissionsCategory()
-            );
+            ->getNonReservedNonReplacementRangesOrderedByFromNo($criteria);
 
         foreach ($irhpPermitRanges as $irhpPermitRange) {
-            $assignedPermitNumbers = $this->getRepo('IrhpPermit')->getAssignedPermitNumbersByRange(
+            $assignedPermitNumbers = $this->irhpPermitRepo->getAssignedPermitNumbersByRange(
                 $irhpPermitRange->getId()
             );
 
             if (count($assignedPermitNumbers) < $irhpPermitRange->getSize()) {
-                $this->addIrhpPermit(
+                return $this->addIrhpPermit(
+                    $result,
                     $irhpPermitApplication,
                     $irhpPermitRange,
                     $assignedPermitNumbers,
-                    $command->getExpiryDate()
+                    $expiryDate
                 );
-                return $this->result;
             }
         }
 
@@ -75,19 +71,20 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
             $irhpPermitApplication->getId()
         );
 
-        Logger::warn($message);
         throw new RuntimeException($message);
     }
 
     /**
-     * Derive an IrhpPermit entity and save it to the repository
+     * Derive an IrhpPermit entity and save it to the repository, adding a status message to the provided result
      *
+     * @param Result $result
      * @param IrhpPermitApplication $irhpPermitApplication
      * @param IrhpPermitRange $irhpPermitRange
      * @param array $assignedPermitNumbers
      * @param DateTime|null $expiryDate
      */
     private function addIrhpPermit(
+        Result $result,
         IrhpPermitApplication $irhpPermitApplication,
         IrhpPermitRange $irhpPermitRange,
         array $assignedPermitNumbers,
@@ -99,21 +96,21 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
             $irhpPermitApplication,
             $irhpPermitRange,
             $irhpPermitApplication->generateIssueDate(),
-            $this->refData(IrhpPermit::STATUS_PENDING),
+            $this->irhpPermitRepo->getRefdataReference(IrhpPermit::STATUS_PENDING),
             $permitNumber,
             $expiryDate
         );
 
-        $this->getRepo('IrhpPermit')->save($irhpPermit);
+        $this->irhpPermitRepo->save($irhpPermit);
 
-        $this->result->addMessage(
-            sprintf(
-                'Allocated permit number %d in range %d for irhp permit application %d',
-                $permitNumber,
-                $irhpPermitRange->getId(),
-                $irhpPermitApplication->getId()
-            )
+        $message = sprintf(
+            'Allocated permit number %d in range %d for irhp permit application %d',
+            $permitNumber,
+            $irhpPermitRange->getId(),
+            $irhpPermitApplication->getId()
         );
+
+        $result->addMessage($message);
     }
 
     /**

@@ -110,6 +110,10 @@ return [
 
             'PermitsMultilateralFeeBreakdownGenerator' =>
                 ApiSrv\Permits\FeeBreakdown\MultilateralFeeBreakdownGenerator::class,
+    
+            'PermitsAllocateBilateralCriteriaFactory' => ApiSrv\Permits\Allocate\BilateralCriteriaFactory::class,
+            'PermitsAllocateEmissionsStandardCriteriaFactory' =>
+                ApiSrv\Permits\Allocate\EmissionsStandardCriteriaFactory::class,
         ],
         'abstract_factories' => [
             \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
@@ -432,6 +436,8 @@ return [
     
             'PermitsBilateralFeeBreakdownGenerator'
                 => ApiSrv\Permits\FeeBreakdown\BilateralFeeBreakdownGeneratorFactory::class,
+
+            'PermitsAllocateIrhpPermitAllocator' => ApiSrv\Permits\Allocate\IrhpPermitAllocatorFactory::class,
 
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
