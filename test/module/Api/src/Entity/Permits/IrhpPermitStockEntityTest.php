@@ -13,6 +13,8 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteria;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\RangeMatchingCriteriaInterface;
 use Mockery as m;
 use RuntimeException;
 
@@ -1326,37 +1328,46 @@ class IrhpPermitStockEntityTest extends EntityTester
     {
         $entity = m::mock(Entity::class)->makePartial();
 
-        $firstExpectedRange = $this->createMockRange(false, false, 300, RefData::EMISSIONS_CATEGORY_EURO5_REF);
-        $secondExpectedRange = $this->createMockRange(false, false, 500, RefData::EMISSIONS_CATEGORY_EURO5_REF);
+        $range1 = $this->createMockRange(false, false, 600);
+        $range2 = $this->createMockRange(false, true, 700);
+        $range3 = $this->createMockRange(false, false, 500);
+        $range4 = $this->createMockRange(true, false, 800);
+        $range5 = $this->createMockRange(true, true, 900);
+        $range6 = $this->createMockRange(false, false, 300);
+        $range7 = $this->createMockRange(false, false, 1000);
+        $range8 = $this->createMockRange(false, true, 110);
+        $range9 = $this->createMockRange(true, false, 1200);
+        $range10 = $this->createMockRange(true, true, 1300);
+
+        $criteria = m::mock(RangeMatchingCriteriaInterface::class);
+        $criteria->shouldReceive('matches')->with($range1)->andReturn(false);
+        $criteria->shouldReceive('matches')->with($range2)->andReturn(true);
+        $criteria->shouldReceive('matches')->with($range3)->andReturn(true);
+        $criteria->shouldReceive('matches')->with($range4)->andReturn(false);
+        $criteria->shouldReceive('matches')->with($range5)->andReturn(true);
+        $criteria->shouldReceive('matches')->with($range6)->andReturn(true);
+        $criteria->shouldReceive('matches')->with($range7)->andReturn(false);
+        $criteria->shouldReceive('matches')->with($range8)->andReturn(true);
+        $criteria->shouldReceive('matches')->with($range9)->andReturn(false);
+        $criteria->shouldReceive('matches')->with($range10)->andReturn(false);
 
         $irhpPermitRanges = new ArrayCollection(
-            [
-                $this->createMockRange(false, false, 600, RefData::EMISSIONS_CATEGORY_EURO6_REF),
-                $this->createMockRange(false, true, 700, RefData::EMISSIONS_CATEGORY_EURO5_REF),
-                $secondExpectedRange,
-                $this->createMockRange(true, false, 800, RefData::EMISSIONS_CATEGORY_EURO6_REF),
-                $this->createMockRange(true, true, 900, RefData::EMISSIONS_CATEGORY_EURO5_REF),
-                $firstExpectedRange,
-                $this->createMockRange(false, false, 1000, RefData::EMISSIONS_CATEGORY_EURO6_REF),
-                $this->createMockRange(false, true, 110, RefData::EMISSIONS_CATEGORY_EURO5_REF),
-                $this->createMockRange(true, false, 1200, RefData::EMISSIONS_CATEGORY_EURO6_REF),
-                $this->createMockRange(true, true, 1300, RefData::EMISSIONS_CATEGORY_EURO6_REF)
-            ]
+            [$range1, $range2, $range3, $range4, $range5, $range6, $range7, $range8, $range9, $range10]
         );
 
         $entity->shouldReceive('getIrhpPermitRanges')
             ->andReturn($irhpPermitRanges);
 
-        $result = $entity->getNonReservedNonReplacementRangesOrderedByFromNo(RefData::EMISSIONS_CATEGORY_EURO5_REF);
+        $result = $entity->getNonReservedNonReplacementRangesOrderedByFromNo($criteria);
 
         $this->assertInstanceOf(ArrayCollection::class, $result);
 
         $resultAsArray = array_values($result->toArray());
-        $this->assertSame($firstExpectedRange, $resultAsArray[0]);
-        $this->assertSame($secondExpectedRange, $resultAsArray[1]);
+        $this->assertSame($range6, $resultAsArray[0]);
+        $this->assertSame($range3, $resultAsArray[1]);
     }
 
-    private function createMockRange($ssReserve, $lostReplacement, $fromNo, $emissionsCategoryId, $journey = null)
+    private function createMockRange($ssReserve, $lostReplacement, $fromNo, $emissionsCategoryId = null, $journey = null)
     {
         $irhpPermitRange = m::mock(IrhpPermitRange::class);
         $irhpPermitRange->shouldReceive('getSsReserve')
@@ -1395,11 +1406,10 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertNull($entity->getValidityYear());
     }
 
-    /**
-     * @dataProvider dpGetFirstAvailableRangeWithNoCountries
-     */
-    public function testGetFirstAvailableRangeWithNoCountries($emissionsCategoryId)
+    public function testGetFirstAvailableRangeWithNoCountries()
     {
+        $emissionsStandardCriteria = m::mock(EmissionsStandardCriteria::class);
+
         $entity = m::mock(Entity::class)->makePartial();
 
         $range1 = m::mock(IrhpPermitRange::class);
@@ -1417,23 +1427,22 @@ class IrhpPermitStockEntityTest extends EntityTester
         $ranges = [$range1, $range2, $range3];
 
         $entity->shouldReceive('getNonReservedNonReplacementRangesOrderedByFromNo')
-            ->with($emissionsCategoryId)
+            ->with($emissionsStandardCriteria)
             ->once()
             ->andReturn($ranges);
 
         $this->assertSame(
             $range2,
-            $entity->getFirstAvailableRangeWithNoCountries($emissionsCategoryId)
+            $entity->getFirstAvailableRangeWithNoCountries($emissionsStandardCriteria)
         );
     }
 
-    /**
-     * @dataProvider dpGetFirstAvailableRangeWithNoCountries
-     */
-    public function testGetFirstAvailableRangeWithNoCountriesException($emissionsCategoryId)
+    public function testGetFirstAvailableRangeWithNoCountriesException()
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to find range with no countries');
+
+        $emissionsStandardCriteria = m::mock(EmissionsStandardCriteria::class);
 
         $entity = m::mock(Entity::class)->makePartial();
 
@@ -1448,19 +1457,11 @@ class IrhpPermitStockEntityTest extends EntityTester
         $ranges = [$range1, $range2];
 
         $entity->shouldReceive('getNonReservedNonReplacementRangesOrderedByFromNo')
-            ->with($emissionsCategoryId)
+            ->with($emissionsStandardCriteria)
             ->once()
             ->andReturn($ranges);
 
-        $entity->getFirstAvailableRangeWithNoCountries($emissionsCategoryId);
-    }
-
-    public function dpGetFirstAvailableRangeWithNoCountries()
-    {
-        return [
-            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
-            [RefData::EMISSIONS_CATEGORY_EURO6_REF],
-        ];
+        $entity->getFirstAvailableRangeWithNoCountries($emissionsStandardCriteria);
     }
 
     /**
@@ -1505,7 +1506,7 @@ class IrhpPermitStockEntityTest extends EntityTester
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 RefData::BUSINESS_PROCESS_APG,
                 2019,
-                Entity::ALLOCATION_MODE_STANDARD,
+                Entity::ALLOCATION_MODE_BILATERAL,
             ],
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
@@ -1535,7 +1536,7 @@ class IrhpPermitStockEntityTest extends EntityTester
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 RefData::BUSINESS_PROCESS_APG,
                 2020,
-                Entity::ALLOCATION_MODE_STANDARD,
+                Entity::ALLOCATION_MODE_BILATERAL,
             ],
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,

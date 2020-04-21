@@ -1159,8 +1159,6 @@ return [
     // Permits - internal backend
     Command\Permits\AllocateCandidatePermits::class => CommandHandler\Permits\AllocateCandidatePermits::class,
     Command\Permits\AllocateIrhpApplicationPermits::class => CommandHandler\Permits\AllocateIrhpApplicationPermits::class,
-    Command\Permits\AllocateIrhpPermitApplicationPermit::class =>
-        CommandHandler\Permits\AllocateIrhpPermitApplicationPermit::class,
     Command\Permits\GeneratePermitDocuments::class => CommandHandler\Permits\GeneratePermitDocuments::class,
     TransferCommand\Permits\PrintPermits::class => CommandHandler\Permits\PrintPermits::class,
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,

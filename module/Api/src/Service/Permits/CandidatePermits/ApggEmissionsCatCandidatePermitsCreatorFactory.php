@@ -18,7 +18,8 @@ class ApggEmissionsCatCandidatePermitsCreatorFactory implements FactoryInterface
     {
         return new ApggEmissionsCatCandidatePermitsCreator(
             $serviceLocator->get('PermitsCandidatePermitsApggCandidatePermitFactory'),
-            $serviceLocator->get('RepositoryServiceManager')->get('IrhpCandidatePermit')
+            $serviceLocator->get('RepositoryServiceManager')->get('IrhpCandidatePermit'),
+            $serviceLocator->get('PermitsAllocateEmissionsStandardCriteriaFactory')
         );
     }
 }
