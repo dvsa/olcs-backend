@@ -37,6 +37,8 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
+
+        /** @var User $user */
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
 
         $data = $command->getArrayCopy();
@@ -51,12 +53,16 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
             $this->getRepo()->populateRefDataReference($data)
         );
 
+        // If the user is a transport manager, then no Self Serve updates to Forename or Surname are allowed.
+        $canUpdatePerson = $user->getUserType() == User::USER_TYPE_TRANSPORT_MANAGER ? false : true;
+
         if ($user->getContactDetails() instanceof ContactDetails) {
             // update existing contact details
             $user->getContactDetails()->update(
                 $this->getRepo('ContactDetails')->populateRefDataReference(
                     $command->getContactDetails()
-                )
+                ),
+                $canUpdatePerson
             );
         } else {
             // create new contact details

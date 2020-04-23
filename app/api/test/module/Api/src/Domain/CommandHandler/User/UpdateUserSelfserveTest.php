@@ -125,22 +125,21 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         );
     }
 
-    public function testHandleCommandWithUpdatedContactDetails()
+    /**
+     * @dataProvider dpTestHandleCommandWithUpdatedContactDetails
+     */
+    public function testHandleCommandWithUpdatedContactDetails($userType, $canUpdatePerson)
     {
         $userId = 111;
 
         $data = [
             'id' => 111,
             'version' => 1,
-            'userType' => UserEntity::USER_TYPE_OPERATOR,
+            'userType' => $userType,
             'team' => 1,
             'loginId' => 'login_id',
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
-                'person' => [
-                    'forename' => 'updated forename',
-                    'familyName' => 'updated familyName',
-                ],
             ],
             'permission' => UserEntity::PERMISSION_ADMIN,
         ];
@@ -151,7 +150,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
             ->once()
-            ->with($data['contactDetails'])
+            ->with($data['contactDetails'], $canUpdatePerson)
             ->andReturnSelf();
 
         /** @var UserEntity $user */
@@ -160,6 +159,9 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
         $user->setContactDetails($contactDetails);
+
+        $user->shouldReceive('getUserType')->twice()->withNoArgs()->andReturn($userType);
+
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
@@ -208,6 +210,15 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             $savedUser->getContactDetails()
         );
     }
+
+    public function dpTestHandleCommandWithUpdatedContactDetails()
+    {
+        return [
+            [UserEntity::USER_TYPE_OPERATOR, true],
+            [UserEntity::USER_TYPE_TRANSPORT_MANAGER, false]
+        ];
+    }
+
 
     /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
