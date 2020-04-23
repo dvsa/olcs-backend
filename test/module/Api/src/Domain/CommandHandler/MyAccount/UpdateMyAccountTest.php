@@ -168,40 +168,14 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         );
     }
 
-    public function testHandleCommandWithUpdatedContactDetails()
+    /**
+     * @dataProvider dpTestHandleCommandWithUpdatedContactDetails
+     */
+    public function testHandleCommandWithUpdatedContactDetails($data, $isInternal)
     {
-        $userId = 1;
+        $this->setupIsInternalUser($isInternal);
 
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'team' => 1,
-            'loginId' => 'login_id',
-            'contactDetails' => [
-                'emailAddress' => 'test1@test.me',
-                'person' => [
-                    'title' => 'title_mr',
-                    'forename' => 'updated forename',
-                    'familyName' => 'updated familyName',
-                    'birthDate' => '1975-12-12',
-                ],
-                'address' => [
-                    'addressLine1' => 'a12',
-                    'addressLine2' => 'a23',
-                    'addressLine3' => 'a34',
-                    'addressLine4' => 'a45',
-                    'town' => 'town',
-                    'postcode' => 'LS1 2AB',
-                    'countryCode' => 'GB',
-                ],
-                'phoneContacts' => [
-                    [
-                        'phoneContactType' => PhoneContactEntity::TYPE_PRIMARY,
-                        'phoneNumber' => '111',
-                    ],
-                ],
-            ],
-        ];
+        $userId = 1;
 
         /** @var User $mockUser */
         $mockUser = m::mock(UserEntity::class)->makePartial();
@@ -230,7 +204,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                     $savedPerson->setId(753);
                 }
             )
-            ->once();
+            ->times($isInternal);
 
         $savedAddress = null;
         $this->repoMap['Address']
@@ -280,7 +254,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('setPerson')
             ->with(m::type(PersonEntity::class))
-            ->once()
+            ->times($isInternal)
             ->shouldReceive('setAddress')
             ->with(m::type(AddressEntity::class))
             ->once()
@@ -292,7 +266,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('getPerson')
             ->andReturnNull()
-            ->once()
+            ->times($isInternal)
             ->shouldReceive('getAddress')
             ->andReturnNull()
             ->once()
@@ -346,6 +320,72 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             $contactDetails,
             $savedUser->getContactDetails()
         );
+    }
+
+    public function dpTestHandleCommandWithUpdatedContactDetails()
+    {
+        return [
+            [
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'team' => 1,
+                    'loginId' => 'login_id',
+                    'contactDetails' => [
+                        'emailAddress' => 'test1@test.me',
+                        'address' => [
+                            'addressLine1' => 'a12',
+                            'addressLine2' => 'a23',
+                            'addressLine3' => 'a34',
+                            'addressLine4' => 'a45',
+                            'town' => 'town',
+                            'postcode' => 'LS1 2AB',
+                            'countryCode' => 'GB',
+                        ],
+                        'phoneContacts' => [
+                            [
+                                'phoneContactType' => PhoneContactEntity::TYPE_PRIMARY,
+                                'phoneNumber' => '111',
+                            ],
+                        ],
+                    ],
+                ],
+                0
+            ],
+            [
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'team' => 1,
+                    'loginId' => 'login_id',
+                    'contactDetails' => [
+                        'emailAddress' => 'test1@test.me',
+                        'person' => [
+                            'title' => 'title_mr',
+                            'forename' => 'updated forename',
+                            'familyName' => 'updated familyName',
+                            'birthDate' => '1975-12-12',
+                        ],
+                        'address' => [
+                            'addressLine1' => 'a12',
+                            'addressLine2' => 'a23',
+                            'addressLine3' => 'a34',
+                            'addressLine4' => 'a45',
+                            'town' => 'town',
+                            'postcode' => 'LS1 2AB',
+                            'countryCode' => 'GB',
+                        ],
+                        'phoneContacts' => [
+                            [
+                                'phoneContactType' => PhoneContactEntity::TYPE_PRIMARY,
+                                'phoneNumber' => '111',
+                            ],
+                        ],
+                    ],
+                ],
+                1
+            ]
+        ];
     }
 
     /**

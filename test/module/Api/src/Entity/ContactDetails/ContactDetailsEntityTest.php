@@ -188,7 +188,7 @@ class ContactDetailsEntityTest extends EntityTester
     /**
      * @dataProvider dpTestUpdate
      */
-    public function testUpdate($contactType, $data, $expect)
+    public function testUpdate($contactType, $data, $expect, $fromInternal)
     {
         $cdTypeEntity = (new RefData())->setId($contactType);
 
@@ -208,7 +208,7 @@ class ContactDetailsEntityTest extends EntityTester
         $sut->setPhoneContacts($mockPhoneCollection);
 
         // update the entity
-        $sut->update($data);
+        $sut->update($data, $fromInternal);
 
         //  check
         static::assertSame($cdTypeEntity, $sut->getContactType());
@@ -306,6 +306,7 @@ class ContactDetailsEntityTest extends EntityTester
                         ],
                     ],
                 ],
+                false
             ],
             //  test update of CONTACT_TYPE_PARTNER
             [
@@ -341,6 +342,7 @@ class ContactDetailsEntityTest extends EntityTester
                         ],
                     ],
                 ],
+                false
             ],
             //  test update of CONTACT_TYPE_OBJECTOR
             [
@@ -395,6 +397,7 @@ class ContactDetailsEntityTest extends EntityTester
                         ],
                     ],
                 ],
+                false
             ],
             //  test update of CONTACT_TYPE_STATEMENT_REQUESTOR
             [
@@ -439,18 +442,13 @@ class ContactDetailsEntityTest extends EntityTester
                         ],
                     ],
                 ],
+                false
             ],
-            //  test update of CONTACT_TYPE_USER
+            //  test update of CONTACT_TYPE_USER FROM SelfServe
             [
                 'contactType' => ContactDetails::CONTACT_TYPE_USER,
                 'data' => [
                     'emailAddress' => 'unit_Email',
-                    'person' => [
-                        'title' => new RefData('unit_PersonTitle'),
-                        'forename' => 'unit_ForeName',
-                        'familyName' => 'unit_FamilyName',
-                        'birthDate' => '1975-04-03',
-                    ],
                     'address' => [
                         'addressLine1' => 'unit_Addr1',
                         'addressLine2' => 'unit_Addr2',
@@ -475,11 +473,6 @@ class ContactDetailsEntityTest extends EntityTester
                 ],
                 'expect' => [
                     'email' => 'unit_Email',
-                    'person' => [
-                        'title' => 'unit_PersonTitle',
-                        'fullName' => 'unit_ForeName unit_FamilyName',
-                        'dob' => '1975-04-03',
-                    ],
                     'address' => [
                         'addressLine1' => 'unit_Addr1',
                         'addressLine2' => 'unit_Addr2',
@@ -497,6 +490,54 @@ class ContactDetailsEntityTest extends EntityTester
                         ],
                     ],
                 ],
+                false
+            ],
+            [
+                'contactType' => ContactDetails::CONTACT_TYPE_USER,
+                'data' => [
+                    'emailAddress' => 'unit_Email',
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => (new Country())->setId('unit_CountryCodeUser'),
+                    ],
+                    'phoneContacts' => [
+                        [
+                            'id' => null,
+                            'phoneContactType' => new RefData('unit_PhoneContactType1'),
+                            'phoneNumber' => 'unit_Phone1',
+                        ],
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'phoneContactType' => new RefData('unit_Other_PhoneContactType'),
+                            'phoneNumber' => '',
+                        ],
+                    ],
+                ],
+                'expect' => [
+                    'email' => 'unit_Email',
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => 'unit_CountryCodeUser',
+                    ],
+                    'phones' => [
+                        [
+                            'id' => null,
+                            'type' => 'unit_PhoneContactType1',
+                            'number' => 'unit_Phone1',
+                        ],
+                    ],
+                ],
+                true
             ],
             //  test update of CONTACT_TYPE_COMPLAINANT
             [
@@ -541,6 +582,7 @@ class ContactDetailsEntityTest extends EntityTester
                         ],
                     ],
                 ],
+                false
             ],
             //  test update of CONTACT_TYPE_
             [
@@ -593,6 +635,7 @@ class ContactDetailsEntityTest extends EntityTester
                         ],
                     ],
                 ],
+                false
             ],
         ];
     }
