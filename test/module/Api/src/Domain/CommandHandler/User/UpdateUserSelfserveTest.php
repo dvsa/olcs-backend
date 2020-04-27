@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
@@ -15,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -30,7 +32,8 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            UserInterface::class => m::mock(UserInterface::class)
+            UserInterface::class => m::mock(UserInterface::class),
+            'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
         ];
 
         parent::setUp();
@@ -66,8 +69,21 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        /** @var ContactDetailsEntity $contactDetails */
+        $contactDetails = m::mock(ContactDetailsEntity::class);
+        $contactDetails->shouldReceive('getEmailAddress')
+            ->withNoArgs()
+            ->once()
+            ->andReturn('test1@test.me');
+
+        $contactDetails->shouldReceive('update')
+            ->once()
+            ->andReturnSelf();
+
+
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
+        $user->setContactDetails($contactDetails);
         $user->setId($userId);
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
@@ -128,7 +144,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
     /**
      * @dataProvider dpTestHandleCommandWithUpdatedContactDetails
      */
-    public function testHandleCommandWithUpdatedContactDetails($userType, $canUpdatePerson)
+    public function testHandleCommandWithUpdatedContactDetails($userType, $canUpdatePerson, $existingEmail, $eventHistoryTimes)
     {
         $userId = 111;
 
@@ -152,6 +168,8 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->once()
             ->with($data['contactDetails'], $canUpdatePerson)
             ->andReturnSelf();
+
+        $contactDetails->setEmailAddress($existingEmail);
 
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
@@ -179,6 +197,10 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->once()
             ->with($data['contactDetails'])
             ->andReturn($data['contactDetails']);
+
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->times($eventHistoryTimes);
+
 
         /** @var UserEntity $savedUser */
         $savedUser = null;
@@ -214,8 +236,8 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
     public function dpTestHandleCommandWithUpdatedContactDetails()
     {
         return [
-            [UserEntity::USER_TYPE_OPERATOR, true],
-            [UserEntity::USER_TYPE_TRANSPORT_MANAGER, false]
+            [UserEntity::USER_TYPE_OPERATOR, true, 'test2@test.me', 1],
+            [UserEntity::USER_TYPE_TRANSPORT_MANAGER, false, 'test1@test.me', 0]
         ];
     }
 

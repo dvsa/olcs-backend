@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Repository\EventHistory as EventHistoryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistoryType as EventHistoryTypeRepo;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Entity\User\User;
 use RuntimeException;
 use ZfcRbac\Service\AuthorizationService;
 
@@ -47,7 +48,7 @@ class Creator
      *
      * @return void
      */
-    public function create($entity, $eventHistoryType)
+    public function create($entity, $eventHistoryType, $eventData = null)
     {
         // create event history record
         $eventHistory = new EventHistoryEntity(
@@ -61,12 +62,17 @@ class Creator
                 $eventHistory->setIrhpApplication($entity);
                 $eventHistory->setEntityType('irhp_application');
                 break;
+            case $entity instanceof User:
+                $eventHistory->setUser($entity);
+                $eventHistory->setEntityType('user');
+                break;
             default:
                 throw new RuntimeException('Cannot create event history for the entity');
         }
 
         $eventHistory->setEntityPk($entity->getId());
         $eventHistory->setEntityVersion($entity->getVersion());
+        $eventHistory->setEventData($eventData);
 
         // save
         $this->eventHistoryRepo->save($eventHistory);
