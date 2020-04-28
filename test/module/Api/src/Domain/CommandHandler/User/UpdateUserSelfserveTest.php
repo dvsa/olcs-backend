@@ -6,6 +6,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
@@ -69,17 +70,22 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $contactType = m::mock(RefData::class);
+        $contactType->shouldReceive('getId')->andReturn('ct_user');
+
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class);
         $contactDetails->shouldReceive('getEmailAddress')
             ->withNoArgs()
-            ->once()
             ->andReturn('test1@test.me');
 
         $contactDetails->shouldReceive('update')
             ->once()
             ->andReturnSelf();
 
+        $contactDetails->shouldReceive('getContactType')
+            ->once()
+            ->andReturn($contactType);
 
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
