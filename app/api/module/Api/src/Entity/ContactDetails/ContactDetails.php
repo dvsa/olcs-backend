@@ -80,7 +80,7 @@ class ContactDetails extends AbstractContactDetails
      * Update
      *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
-     * @param bool $allowUpdatePerson Will be true for all new record creations, only true for edits if initiated by a caseworker
+     * @param bool $allowUpdatePerson Will be true for all new record creations, only true for edits for non-transport manager users
      *
      * @return $this
      */
@@ -211,7 +211,7 @@ class ContactDetails extends AbstractContactDetails
      * Update user
      *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
-     * @param bool $allowUpdatePerson Has this change come from an internal user
+     * @param bool $allowUpdatePerson Should person details be updated
      *
      * @return void
      */
