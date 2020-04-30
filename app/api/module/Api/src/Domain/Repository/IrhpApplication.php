@@ -692,7 +692,7 @@ class IrhpApplication extends AbstractRepository
 
         $sql = 'select ' .
             'concat (l.lic_no, \' / \', ia.id) as applicationRef, ' .
-            'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0)) as permitsRequired, ' .
+            'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0) + ifnull(ipa.required_standard, 0) + ifnull(ipa.required_cabotage, 0)) as permitsRequired, ' .
             'ia.id as id, ' .
             'ia.irhp_permit_type_id as typeId, ' .
             'ia.status as statusId, ' .
