@@ -106,7 +106,7 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
     private function generateTranslationKey($standardOrCabotage, $permitUsage)
     {
         return sprintf(
-            'permits.irhp.fee-breakdown.type.%s.%s',
+            'permits.irhp.range.type.%s.%s',
             self::STANDARD_OR_CABOTAGE_KEY_MAPPINGS[$standardOrCabotage],
             self::PERMIT_USAGE_KEY_MAPPINGS[$permitUsage]
         );
