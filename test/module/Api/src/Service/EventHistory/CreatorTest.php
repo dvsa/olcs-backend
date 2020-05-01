@@ -81,6 +81,43 @@ class CreatorTest extends MockeryTestCase
         $this->sut->create($entity, $eventHistoryType);
     }
 
+    public function testCreateForUpdateUser()
+    {
+        $entityId = 612;
+        $entityVersion = 2;
+        $eventHistoryType = EventHistoryTypeEntity::USER_EMAIL_ADDRESS_UPDATED;
+        $eventData = "New:new Old:old";
+
+        $entity = m::mock(UserEntity::class);
+        $entity->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($entityId)
+            ->shouldReceive('getVersion')
+            ->withNoArgs()
+            ->andReturn($entityVersion);
+
+        $eventHistoryTypeEntity = m::mock(EventHistoryTypeEntity::class);
+
+        $this->eventHistoryTypeRepo->shouldReceive('fetchOneByEventCode')
+            ->with($eventHistoryType)
+            ->andReturn($eventHistoryTypeEntity);
+
+        $this->eventHistoryRepo->shouldReceive('save')
+            ->with(m::type(EventHistoryEntity::class))
+            ->once()
+            ->andReturnUsing(
+                function (EventHistoryEntity $eventHistory) use ($entity, $entityId, $entityVersion, $eventData) {
+                    $this->assertSame($entity, $eventHistory->getUser());
+                    $this->assertSame('user', $eventHistory->getEntityType());
+                    $this->assertSame($entityId, $eventHistory->getEntityPk());
+                    $this->assertSame($entityVersion, $eventHistory->getEntityVersion());
+                    $this->assertSame($eventData, $eventHistory->getEventData());
+                }
+            );
+
+        $this->sut->create($entity, $eventHistoryType, $eventData);
+    }
+
     /**
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Cannot create event history for the entity
