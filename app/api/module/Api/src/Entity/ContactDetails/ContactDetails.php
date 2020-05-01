@@ -71,7 +71,7 @@ class ContactDetails extends AbstractContactDetails
     public static function create(RefData $contactType, array $contactParams)
     {
         $contactDetails = new static($contactType);
-        $contactDetails->update($contactParams);
+        $contactDetails->update($contactParams, true);
 
         return $contactDetails;
     }
@@ -80,13 +80,14 @@ class ContactDetails extends AbstractContactDetails
      * Update
      *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     * @param bool $allowUpdatePerson Will be true for all new record creations, only true for edits for non-transport manager users
      *
      * @return $this
      */
-    public function update(array $contactParams)
+    public function update(array $contactParams, $allowUpdatePerson = false)
     {
         // each type may have different update
-        switch($this->getContactType()->getId()) {
+        switch ($this->getContactType()->getId()) {
             case self::CONTACT_TYPE_IRFO_OPERATOR:
                 $this->updateIrfoOperator($contactParams);
                 break;
@@ -100,7 +101,7 @@ class ContactDetails extends AbstractContactDetails
                 $this->updateStatementRequestor($contactParams);
                 break;
             case self::CONTACT_TYPE_USER:
-                $this->updateUser($contactParams);
+                $this->updateUser($contactParams, $allowUpdatePerson);
                 break;
             case self::CONTACT_TYPE_COMPLAINANT:
                 $this->updateComplainant($contactParams);
@@ -210,16 +211,17 @@ class ContactDetails extends AbstractContactDetails
      * Update user
      *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
+     * @param bool $allowUpdatePerson Should person details be updated
      *
      * @return void
      */
-    private function updateUser(array $contactParams)
+    private function updateUser(array $contactParams, $allowUpdatePerson)
     {
         // set email address
         $this->setEmailAddress($contactParams['emailAddress']);
 
-        if (isset($contactParams['person'])) {
-            // populate person
+        // populate person if initiated by a caseworker
+        if (isset($contactParams['person']) && $allowUpdatePerson) {
             $this->populatePerson($contactParams['person']);
         }
 

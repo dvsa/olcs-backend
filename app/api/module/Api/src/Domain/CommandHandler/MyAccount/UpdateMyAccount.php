@@ -67,10 +67,12 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
             $savePhoneContactsSeparately = true;
 
             // update existing contact details separately
-            $savedPerson = $this->savePerson($cmdContactDetails['person'], $contactDetails);
-            $savedAddress = $this->saveAddress($cmdContactDetails['address'], $contactDetails);
+            if ($this->isInternalUser()) {
+                $savedPerson = $this->savePerson($cmdContactDetails['person'], $contactDetails);
+                $contactDetails->setPerson($savedPerson);
+            }
 
-            $contactDetails->setPerson($savedPerson);
+            $savedAddress = $this->saveAddress($cmdContactDetails['address'], $contactDetails);
             $contactDetails->setAddress($savedAddress);
             $contactDetails->setEmailAddress($cmdContactDetails['emailAddress']);
         } else {
