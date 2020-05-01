@@ -58,7 +58,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
     public function testGenerateOneTextbox(
         $permitUsageSelection,
         $cabotageSelection,
-        $isAssociatedWithBilateralOnlyApplicationPathGroup,
+        $isAssociatedWithBilateralCabotageOnlyApplicationPathGroup,
         $required,
         $expectedText
     ) {
@@ -71,9 +71,9 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
             ->withNoArgs()
             ->andReturn($required);
-        $this->irhpPermitApplication->shouldReceive('isAssociatedWithBilateralOnlyApplicationPathGroup')
+        $this->irhpPermitApplication->shouldReceive('isAssociatedWithBilateralCabotageOnlyApplicationPathGroup')
             ->withNoArgs()
-            ->andReturn($isAssociatedWithBilateralOnlyApplicationPathGroup);
+            ->andReturn($isAssociatedWithBilateralCabotageOnlyApplicationPathGroup);
 
         $noOfPermitsText = m::mock(NoOfPermitsText::class);
         $this->noOfPermitsTextFactory->shouldReceive('create')
@@ -96,7 +96,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             'single, standard only, not associated with bilateral only application group' => [
                 'permitUsageSelection' => RefData::JOURNEY_SINGLE,
                 'cabotageSelection' => Answer::BILATERAL_CABOTAGE_ONLY,
-                'isAssociatedWithBilateralOnlyApplicationPathGroup' => false,
+                'isAssociatedWithBilateralCabotageOnlyApplicationPathGroup' => false,
                 'required' => [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
                     IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => 7,
@@ -111,7 +111,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             'single, cabotage only, associated with bilateral only application group' => [
                 'permitUsageSelection' => RefData::JOURNEY_SINGLE,
                 'cabotageSelection' => Answer::BILATERAL_CABOTAGE_ONLY,
-                'isAssociatedWithBilateralOnlyApplicationPathGroup' => true,
+                'isAssociatedWithBilateralCabotageOnlyApplicationPathGroup' => true,
                 'required' => [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
                     IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => 6,
@@ -126,7 +126,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             'single, cabotage only, not associated with bilateral only application group' => [
                 'permitUsageSelection' => RefData::JOURNEY_SINGLE,
                 'cabotageSelection' => Answer::BILATERAL_CABOTAGE_ONLY,
-                'isAssociatedWithBilateralOnlyApplicationPathGroup' => false,
+                'isAssociatedWithBilateralCabotageOnlyApplicationPathGroup' => false,
                 'required' => [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
                     IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => 8,
@@ -141,7 +141,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             'multiple, standard only, not associated with bilateral only application group' => [
                 'permitUsageSelection' => RefData::JOURNEY_MULTIPLE,
                 'cabotageSelection' => Answer::BILATERAL_CABOTAGE_ONLY,
-                'isAssociatedWithBilateralOnlyApplicationPathGroup' => false,
+                'isAssociatedWithBilateralCabotageOnlyApplicationPathGroup' => false,
                 'required' => [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
                     IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => 7,
@@ -156,7 +156,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             'multiple, cabotage only, associated with bilateral only application group' => [
                 'permitUsageSelection' => RefData::JOURNEY_MULTIPLE,
                 'cabotageSelection' => Answer::BILATERAL_CABOTAGE_ONLY,
-                'isAssociatedWithBilateralOnlyApplicationPathGroup' => true,
+                'isAssociatedWithBilateralCabotageOnlyApplicationPathGroup' => true,
                 'required' => [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
                     IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => 6,
@@ -171,7 +171,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             'multiple, cabotage only, not associated with bilateral only application group' => [
                 'permitUsageSelection' => RefData::JOURNEY_MULTIPLE,
                 'cabotageSelection' => Answer::BILATERAL_CABOTAGE_ONLY,
-                'isAssociatedWithBilateralOnlyApplicationPathGroup' => false,
+                'isAssociatedWithBilateralCabotageOnlyApplicationPathGroup' => false,
                 'required' => [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
                     IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => 8,
@@ -200,7 +200,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
             ->withNoArgs()
             ->andReturn($required);
-        $this->irhpPermitApplication->shouldReceive('isAssociatedWithBilateralOnlyApplicationPathGroup')
+        $this->irhpPermitApplication->shouldReceive('isAssociatedWithBilateralCabotageOnlyApplicationPathGroup')
             ->withNoArgs()
             ->andReturn(false);
 

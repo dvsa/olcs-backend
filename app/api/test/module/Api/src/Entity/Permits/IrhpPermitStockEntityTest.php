@@ -277,6 +277,63 @@ class IrhpPermitStockEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpHasCabotageOrStandardRange
+     */
+    public function testHasCabotageOrStandardRange($data, $expected)
+    {
+        $status = m::mock(RefData::class);
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
+
+        $stock = Entity::create(
+            $irhpPermitType,
+            null,
+            1400,
+            $status,
+            null,
+            null
+        );
+
+        $stock->setIrhpPermitRanges($data);
+
+        $this->assertEquals($expected['cabotage'], $stock->hasCabotageRange());
+        $this->assertEquals($expected['standard'], $stock->hasStandardRange());
+    }
+
+    public function dpHasCabotageOrStandardRange()
+    {
+        $cabotageRange = m::mock(IrhpPermitRange::class);
+        $cabotageRange->shouldReceive('isCabotage')->withNoArgs()->andReturnTrue();
+        $cabotageRange->shouldReceive('isStandard')->withNoArgs()->andReturnFalse();
+
+        $standardRange = m::mock(IrhpPermitRange::class);
+        $standardRange->shouldReceive('isCabotage')->withNoArgs()->andReturnFalse();
+        $standardRange->shouldReceive('isStandard')->withNoArgs()->andReturnTrue();
+
+        $naRange = m::mock(IrhpPermitRange::class);
+        $naRange->shouldReceive('isCabotage')->withNoArgs()->andReturnFalse();
+        $naRange->shouldReceive('isStandard')->withNoArgs()->andReturnFalse();
+
+        return [
+            'both' => [
+                [$cabotageRange, $standardRange],
+                ['cabotage' => true, 'standard' => true],
+            ],
+            'cabotage' => [
+                [$cabotageRange],
+                ['cabotage' => true, 'standard' => false],
+            ],
+            'standard' => [
+                [$standardRange],
+                ['cabotage' => false, 'standard' => true],
+            ],
+            'na' => [
+                [$naRange],
+                ['cabotage' => false, 'standard' => false],
+            ],
+        ];
+    }
+
+    /**
      * Data provider
      *
      * @return array

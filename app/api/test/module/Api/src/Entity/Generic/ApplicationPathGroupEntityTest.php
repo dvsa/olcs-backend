@@ -86,26 +86,71 @@ class ApplicationPathGroupEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpIsBilateralOnly
+     * @dataProvider dpIsBilateralCabotageOnly
      */
-    public function testIsBilateralOnly($applicationPathGroupId, $expected)
+    public function testIsBilateralCabotageOnly($applicationPathGroupId, $expected)
     {
         $sut = new Entity();
         $sut->setId($applicationPathGroupId);
 
         $this->assertEquals(
             $expected,
-            $sut->isBilateralOnly()
+            $sut->isBilateralCabotageOnly()
         );
     }
 
-    public function dpIsBilateralOnly()
+    public function dpIsBilateralCabotageOnly()
     {
         return [
             [Entity::BILATERALS_CABOTAGE_PERMITS_ONLY_ID, true],
-            [Entity::BILATERALS_STANDARD_PERMITS_NO_CABOTAGE_ID, false],
+            [Entity::BILATERALS_STANDARD_PERMITS_ONLY_ID, false],
             [Entity::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID, false],
         ];
     }
 
+    /**
+     * @dataProvider dpIsBilateralStandardOnly
+     */
+    public function testIsBilateralStandardOnly($applicationPathGroupId, $expected)
+    {
+        $sut = new Entity();
+        $sut->setId($applicationPathGroupId);
+
+        $this->assertEquals(
+            $expected,
+            $sut->isBilateralStandardOnly()
+        );
+    }
+
+    public function dpIsBilateralStandardOnly()
+    {
+        return [
+            [Entity::BILATERALS_CABOTAGE_PERMITS_ONLY_ID, false],
+            [Entity::BILATERALS_STANDARD_PERMITS_ONLY_ID, true],
+            [Entity::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsBilateralStandardAndCabotage
+     */
+    public function testIsBilateralStandardAndCabotage($applicationPathGroupId, $expected)
+    {
+        $sut = new Entity();
+        $sut->setId($applicationPathGroupId);
+
+        $this->assertEquals(
+            $expected,
+            $sut->isBilateralStandardAndCabotage()
+        );
+    }
+
+    public function dpIsBilateralStandardAndCabotage()
+    {
+        return [
+            [Entity::BILATERALS_CABOTAGE_PERMITS_ONLY_ID, false],
+            [Entity::BILATERALS_STANDARD_PERMITS_ONLY_ID, false],
+            [Entity::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID, true],
+        ];
+    }
 }

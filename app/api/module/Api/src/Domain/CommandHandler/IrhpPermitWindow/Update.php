@@ -18,9 +18,9 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
  *
  * @author Andy Newton
  */
-final class Update extends AbstractCommandHandler implements ToggleRequiredInterface
+class Update extends AbstractCommandHandler implements ToggleRequiredInterface
 {
-    use IrhpPermitWindowOverlapTrait;
+    use IrhpPermitWindowTrait;
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
@@ -61,6 +61,8 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
 
         if ($this->numberOfOverlappingWindows($command->getIrhpPermitStock(), $command->getStartDate(), $command->getEndDate(), $command->getId()) === 0) {
             $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
+
+            $this->validateStockRanges($permitStock);
 
             $window->update(
                 $permitStock,

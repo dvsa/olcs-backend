@@ -140,4 +140,24 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
     {
         return count($this->countrys) > 0;
     }
+
+    /**
+     * Whether this range is a cabotage one
+     *
+     * @return bool
+     */
+    public function isCabotage()
+    {
+        return $this->cabotage;
+    }
+
+    /**
+     * Whether this range is a standard one
+     *
+     * @return bool
+     */
+    public function isStandard()
+    {
+        return !$this->cabotage;
+    }
 }

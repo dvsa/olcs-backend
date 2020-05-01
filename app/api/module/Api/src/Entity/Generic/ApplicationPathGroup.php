@@ -24,7 +24,7 @@ class ApplicationPathGroup extends AbstractApplicationPathGroup
     const ECMT_SHORT_TERM_2020_APGG = 5;
 
     const BILATERALS_CABOTAGE_PERMITS_ONLY_ID = 10;
-    const BILATERALS_STANDARD_PERMITS_NO_CABOTAGE_ID = 11;
+    const BILATERALS_STANDARD_PERMITS_ONLY_ID = 11;
     const BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID = 12;
 
     /**
@@ -52,12 +52,32 @@ class ApplicationPathGroup extends AbstractApplicationPathGroup
     }
 
     /**
-     * Whether this is a bilateral only application path group
+     * Whether this is a bilateral cabotage only application path group
      *
      * @return bool
      */
-    public function isBilateralOnly()
+    public function isBilateralCabotageOnly()
     {
         return $this->id == self::BILATERALS_CABOTAGE_PERMITS_ONLY_ID;
+    }
+
+    /**
+     * Whether this is a bilateral standard only application path group
+     *
+     * @return bool
+     */
+    public function isBilateralStandardOnly()
+    {
+        return $this->id == self::BILATERALS_STANDARD_PERMITS_ONLY_ID;
+    }
+
+    /**
+     * Whether this is a bilateral standard and cabotage application path group
+     *
+     * @return bool
+     */
+    public function isBilateralStandardAndCabotage()
+    {
+        return $this->id == self::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID;
     }
 }

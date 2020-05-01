@@ -21,7 +21,7 @@ class CreateTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new CreateHandler();
+        $this->sut = m::mock(CreateHandler::class)->makePartial();
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);
 
@@ -64,6 +64,10 @@ class CreateTest extends CommandHandlerTestCase
                     $permitWindow->setId(1);
                 }
             );
+
+        $this->sut->shouldReceive('validateStockRanges')
+            ->with($irhpPermitStock)
+            ->once();
 
         $result = $this->sut->handleCommand($command);
 
