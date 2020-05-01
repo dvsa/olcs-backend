@@ -827,16 +827,16 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
-     * Whether this application is associated with the bilateral only application path group
+     * Whether this application is associated with the bilateral cabotage only application path group
      *
      * @return bool
      */
-    public function isAssociatedWithBilateralOnlyApplicationPathGroup()
+    public function isAssociatedWithBilateralCabotageOnlyApplicationPathGroup()
     {
         return $this->getIrhpPermitWindow()
             ->getIrhpPermitStock()
             ->getApplicationPathGroup()
-            ->isBilateralOnly();
+            ->isBilateralCabotageOnly();
     }
 
     /**

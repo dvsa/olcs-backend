@@ -265,4 +265,42 @@ class IrhpPermitRangeEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider dpIsCabotage
+     */
+    public function testIsCabotage($cabotage, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setCabotage($cabotage);
+
+        $this->assertEquals($expected, $entity->isCabotage());
+    }
+
+    public function dpIsCabotage()
+    {
+        return [
+            [false, false],
+            [true, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsStandard
+     */
+    public function testIsStandard($cabotage, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setCabotage($cabotage);
+
+        $this->assertEquals($expected, $entity->isStandard());
+    }
+
+    public function dpIsStandard()
+    {
+        return [
+            [false, true],
+            [true, false],
+        ];
+    }
 }

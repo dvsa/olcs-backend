@@ -24,7 +24,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = new UpdateHandler();
+        $this->sut = m::mock(UpdateHandler::class)->makePartial();
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);
 
@@ -93,6 +93,10 @@ class UpdateTest extends CommandHandlerTestCase
             ->shouldReceive('getId')
             ->twice()
             ->andReturn($cmdData['id']);
+
+        $this->sut->shouldReceive('validateStockRanges')
+            ->with($permitStockEntity)
+            ->once();
 
         $result = $this->sut->handleCommand($command);
 

@@ -63,7 +63,7 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
             $standardOrCabotageKey = self::STANDARD_OR_CABOTAGE_KEY_LOOKUP[$standardOrCabotage];
 
             $hint = $this->generateTranslationKey('hint', $standardOrCabotageKey, $permitUsageKey);
-            if ($irhpPermitApplication->isAssociatedWithBilateralOnlyApplicationPathGroup()) {
+            if ($irhpPermitApplication->isAssociatedWithBilateralCabotageOnlyApplicationPathGroup()) {
                 $hint = 'qanda.bilaterals.number-of-permits.hint.cabotage.pre-october-2021';
             }
 

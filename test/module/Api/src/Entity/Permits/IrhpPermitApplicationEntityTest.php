@@ -1626,22 +1626,22 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpIsAssociatedWithBilateralOnlyApplicationPathGroup
+     * @dataProvider dpIsAssociatedWithBilateralCabotageOnlyApplicationPathGroup
      */
-    public function testIsAssociatedWithBilateralOnlyApplicationPathGroup($isBilateralOnly, $expected)
+    public function testIsAssociatedWithBilateralCabotageOnlyApplicationPathGroup($isBilateralCabotageOnly, $expected)
     {
         $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->isBilateralOnly')
+        $entity->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->isBilateralCabotageOnly')
             ->withNoArgs()
-            ->andReturn($isBilateralOnly);
+            ->andReturn($isBilateralCabotageOnly);
 
         $this->assertEquals(
             $expected,
-            $entity->isAssociatedWithBilateralOnlyApplicationPathGroup()
+            $entity->isAssociatedWithBilateralCabotageOnlyApplicationPathGroup()
         );
     }
 
-    public function dpIsAssociatedWithBilateralOnlyApplicationPathGroup()
+    public function dpIsAssociatedWithBilateralCabotageOnlyApplicationPathGroup()
     {
         return [
             [true, true],

@@ -609,6 +609,42 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     }
 
     /**
+     * Does stock have a cabotage range?
+     *
+     * @return bool
+     */
+    public function hasCabotageRange()
+    {
+        $ranges = $this->getIrhpPermitRanges();
+
+        foreach ($ranges as $range) {
+            if ($range->isCabotage()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Does stock have a standard range?
+     *
+     * @return bool
+     */
+    public function hasStandardRange()
+    {
+        $ranges = $this->getIrhpPermitRanges();
+
+        foreach ($ranges as $range) {
+            if ($range->isStandard()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get the first available unreserved range with no countries matching the specified emissions category
      *
      * @param EmissionsStandardCriteria $criteria

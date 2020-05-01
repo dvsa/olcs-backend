@@ -20,7 +20,7 @@ class GetList extends AbstractQueryHandler implements ToggleRequiredInterface
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitRange';
 
-    private $bundle = ['countrys', 'irhpPermitStock' => ['irhpPermitType' => ['name']], 'emissionsCategory'];
+    private $bundle = ['countrys', 'irhpPermitStock' => ['irhpPermitType' => ['name']], 'emissionsCategory', 'journey'];
 
     public function handleQuery(QueryInterface $query)
     {
