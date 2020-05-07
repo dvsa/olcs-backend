@@ -18,7 +18,8 @@ class BilateralAnswersSummaryRowsAdderFactory implements FactoryInterface
     {
         return new BilateralAnswersSummaryRowsAdder(
             $serviceLocator->get('PermitsAnswersSummaryRowFactory'),
-            $serviceLocator->get('ViewRenderer')
+            $serviceLocator->get('ViewRenderer'),
+            $serviceLocator->get('PermitsBilateralIpaAnswersSummaryRowsAdder')
         );
     }
 }

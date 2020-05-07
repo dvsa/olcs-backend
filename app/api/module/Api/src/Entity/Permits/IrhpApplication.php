@@ -657,6 +657,43 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Gets IrhpPermitApplications ordered by country name
+     *
+     * @return ArrayCollection
+     * @throws ForbiddenException
+     */
+    public function getIrhpPermitApplicationsByCountryName(): ArrayCollection
+    {
+        if (!$this->isBilateral()) {
+            throw new ForbiddenException(
+                'Cannot get IrhpPermitApplications by country name for irhpPermitType ' . $this->getIrhpPermitType()->getId()
+            );
+        }
+
+        $iterator = $this->getIrhpPermitApplications()->getIterator();
+
+        $iterator->uasort(function ($a, $b) {
+            $countryNameA = $a->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getCountry()
+                ->getCountryDesc();
+
+            $countryNameB = $b->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getCountry()
+                ->getCountryDesc();
+
+            if ($countryNameA == $countryNameB) {
+                return 0;
+            }
+
+            return ($countryNameA < $countryNameB) ? -1 : 1;
+        });
+
+        return new ArrayCollection(iterator_to_array($iterator));
+    }
+
+    /**
      * @return bool
      */
     public function isIssueInProgress()

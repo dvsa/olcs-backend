@@ -25,7 +25,7 @@ final class StoreSnapshot extends AbstractCreateSnapshotHandler implements Toggl
     protected $generatorClass = IrhpGenerator::class;
     protected $documentCategory = Category::CATEGORY_PERMITS;
     protected $documentSubCategory = SubCategory::DOC_SUB_CATEGORY_PERMIT_APPLICATION;
-    protected $documentDescription = '%s Permit Application %s Snapshot (app submitted)';
+    protected $documentDescription = '%s Application %s Snapshot (app submitted)';
     protected $documentLinkId = 'irhpApplication';
 
     /**

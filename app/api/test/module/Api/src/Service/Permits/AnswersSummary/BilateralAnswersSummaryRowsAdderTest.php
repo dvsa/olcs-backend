@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\AnswersSummary;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
@@ -9,6 +10,7 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummary;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRow;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowFactory;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\BilateralAnswersSummaryRowsAdder;
+use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\BilateralIpaAnswersSummaryRowsAdder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\View\Renderer\RendererInterface;
@@ -27,24 +29,31 @@ class BilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
     {
         $countryNamesFormattedAnswer = 'country names line 1<br>country names line 2';
         $countryNamesAnswersSummaryRow = m::mock(AnswersSummaryRow::class);
+        $country1AnswersSummaryRow = m::mock(AnswersSummaryRow::class);
+        $country2AnswersSummaryRow = m::mock(AnswersSummaryRow::class);
+        $country3AnswersSummaryRow = m::mock(AnswersSummaryRow::class);
 
         $answersSummary = m::mock(AnswersSummary::class);
         $answersSummary->shouldReceive('addRow')
             ->with($countryNamesAnswersSummaryRow)
             ->once()
+            ->globally()
             ->ordered();
 
-        $irhpPermitApplication1CountryName = 'Spain';
+        $irhpPermitApplication1CountryName = 'Hungary';
+        $irhpPermitApplication1CountryNameFormatted = 'Hungary formatted';
         $irhpPermitApplication1 = $this->createMockIrhpPermitApplication(
             $irhpPermitApplication1CountryName
         );
 
         $irhpPermitApplication2CountryName = 'Spain';
+        $irhpPermitApplication2CountryNameFormatted = 'Spain formatted';
         $irhpPermitApplication2 = $this->createMockIrhpPermitApplication(
             $irhpPermitApplication2CountryName
         );
 
-        $irhpPermitApplication3CountryName = 'Hungary';
+        $irhpPermitApplication3CountryName = 'Spain';
+        $irhpPermitApplication3CountryNameFormatted = 'Spain formatted';
         $irhpPermitApplication3 = $this->createMockIrhpPermitApplication(
             $irhpPermitApplication3CountryName
         );
@@ -56,20 +65,32 @@ class BilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
         ];
 
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
-        $irhpApplication->shouldReceive('getIrhpPermitApplications')
+        $irhpApplication->shouldReceive('getIrhpPermitApplicationsByCountryName')
             ->withNoArgs()
-            ->andReturn($irhpPermitApplications);
+            ->andReturn(new ArrayCollection($irhpPermitApplications));
 
         $answersSummaryRowFactory = m::mock(AnswersSummaryRowFactory::class);
         $answersSummaryRowFactory->shouldReceive('create')
-            ->with('permits.irhp.application.question.countries', $countryNamesFormattedAnswer, 'countries')
+            ->with('permits.irhp.application.question.countries', $countryNamesFormattedAnswer)
             ->once()
-            ->andReturn($countryNamesAnswersSummaryRow);
+            ->andReturn($countryNamesAnswersSummaryRow)
+            ->shouldReceive('create')
+            ->with('permits.irhp.application.question.country', $irhpPermitApplication1CountryNameFormatted)
+            ->once()
+            ->andReturn($country1AnswersSummaryRow)
+            ->shouldReceive('create')
+            ->with('permits.irhp.application.question.country', $irhpPermitApplication2CountryNameFormatted)
+            ->once()
+            ->andReturn($country2AnswersSummaryRow)
+            ->shouldReceive('create')
+            ->with('permits.irhp.application.question.country', $irhpPermitApplication3CountryNameFormatted)
+            ->once()
+            ->andReturn($country3AnswersSummaryRow);
 
         $expectedCountryNamesTemplateVariables = [
             'countryNames' => [
                 $irhpPermitApplication1CountryName,
-                $irhpPermitApplication3CountryName
+                $irhpPermitApplication2CountryName
             ]
         ];
 
@@ -77,11 +98,59 @@ class BilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
         $viewRenderer->shouldReceive('render')
             ->with('answers-summary/bilateral-country-names', $expectedCountryNamesTemplateVariables)
             ->once()
-            ->andReturn($countryNamesFormattedAnswer);
+            ->andReturn($countryNamesFormattedAnswer)
+            ->shouldReceive('render')
+            ->with('answers-summary/generic', ['answer' => $irhpPermitApplication1CountryName])
+            ->once()
+            ->andReturn($irhpPermitApplication1CountryNameFormatted)
+            ->shouldReceive('render')
+            ->with('answers-summary/generic', ['answer' => $irhpPermitApplication2CountryName])
+            ->once()
+            ->andReturn($irhpPermitApplication2CountryNameFormatted)
+            ->shouldReceive('render')
+            ->with('answers-summary/generic', ['answer' => $irhpPermitApplication3CountryName])
+            ->once()
+            ->andReturn($irhpPermitApplication3CountryNameFormatted);
+
+        $bilateralIpaAnswersSummaryRowsAdder = m::mock(BilateralIpaAnswersSummaryRowsAdder::class);
+
+        $answersSummary->shouldReceive('addRow')
+            ->with($country1AnswersSummaryRow)
+            ->once()
+            ->globally()
+            ->ordered();
+        $bilateralIpaAnswersSummaryRowsAdder->shouldReceive('addRows')
+            ->with($answersSummary, $irhpPermitApplication1, $isSnapshot)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $answersSummary->shouldReceive('addRow')
+            ->with($country2AnswersSummaryRow)
+            ->once()
+            ->globally()
+            ->ordered();
+        $bilateralIpaAnswersSummaryRowsAdder->shouldReceive('addRows')
+            ->with($answersSummary, $irhpPermitApplication2, $isSnapshot)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $answersSummary->shouldReceive('addRow')
+            ->with($country3AnswersSummaryRow)
+            ->once()
+            ->globally()
+            ->ordered();
+        $bilateralIpaAnswersSummaryRowsAdder->shouldReceive('addRows')
+            ->with($answersSummary, $irhpPermitApplication3, $isSnapshot)
+            ->once()
+            ->globally()
+            ->ordered();
 
         $bilateralAnswersSummaryRowsAdder = new BilateralAnswersSummaryRowsAdder(
             $answersSummaryRowFactory,
-            $viewRenderer
+            $viewRenderer,
+            $bilateralIpaAnswersSummaryRowsAdder
         );
 
         $bilateralAnswersSummaryRowsAdder->addRows($answersSummary, $irhpApplication, $isSnapshot);
@@ -102,7 +171,7 @@ class BilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($countryName);
 
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
             ->withNoArgs()
             ->andReturn($irhpPermitStock);
