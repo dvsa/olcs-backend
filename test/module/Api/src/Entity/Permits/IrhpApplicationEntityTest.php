@@ -6235,4 +6235,64 @@ class IrhpApplicationEntityTest extends EntityTester
             [3322, 'DE'],
         ];
     }
+
+    /**
+     * @dataProvider dpGetIrhpPermitApplicationsByCountryName
+     */
+    public function testGetIrhpPermitApplicationsByCountryName($irhpPermitApplications, $expected)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturnTrue();
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $entity->setIrhpPermitApplications($irhpPermitApplications);
+
+        $this->assertEquals($expected->getValues(), $entity->getIrhpPermitApplicationsByCountryName()->getValues());
+    }
+
+    public function dpGetIrhpPermitApplicationsByCountryName()
+    {
+        $irhpPermitApplicationA = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplicationA->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getCountryDesc')
+            ->withNoArgs()
+            ->andReturn('A');
+
+        $irhpPermitApplicationB = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplicationB->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getCountryDesc')
+            ->withNoArgs()
+            ->andReturn('B');
+
+        $irhpPermitApplicationC = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplicationC->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getCountryDesc')
+            ->withNoArgs()
+            ->andReturn('C');
+
+        return [
+            [
+                new ArrayCollection([$irhpPermitApplicationA, $irhpPermitApplicationB, $irhpPermitApplicationB, $irhpPermitApplicationC]),
+                new ArrayCollection([$irhpPermitApplicationA, $irhpPermitApplicationB, $irhpPermitApplicationB, $irhpPermitApplicationC])
+            ],
+            [
+                new ArrayCollection([$irhpPermitApplicationC, $irhpPermitApplicationB, $irhpPermitApplicationB, $irhpPermitApplicationA]),
+                new ArrayCollection([$irhpPermitApplicationA, $irhpPermitApplicationB, $irhpPermitApplicationB, $irhpPermitApplicationC])
+            ],
+        ];
+    }
+
+    public function testGetIrhpPermitApplicationsByCountryNameForUnsupportedType()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'Cannot get IrhpPermitApplications by country name for irhpPermitType ' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT
+        );
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity
+            ->shouldReceive('isBilateral')
+            ->andReturnFalse()
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT);
+
+        $entity->getIrhpPermitApplicationsByCountryName();
+    }
 }
