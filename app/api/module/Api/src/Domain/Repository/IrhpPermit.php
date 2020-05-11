@@ -138,6 +138,11 @@ class IrhpPermit extends AbstractRepository
                 ->andWhere($qb->expr()->in($this->alias . '.status', ':validStatuses'))
                 ->setParameter('validStatuses', Entity::$validStatuses);
 
+            if ($query->getCountry()) {
+                $qb->andWhere($qb->expr()->eq('ips.country', ':countryId'))
+                    ->setParameter('countryId', $query->getCountry());
+            }
+
             $qb->orderBy('ipc.countryDesc', 'ASC');
             $qb->addOrderBy($this->alias . '.expiryDate', 'ASC');
             $qb->addOrderBy('ipa.id', 'ASC');
