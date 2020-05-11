@@ -59,6 +59,7 @@ class GetListByLicenceTest extends QueryHandlerTestCase
             'irhpPermitApplication',
             'irhpPermitRange' => [
                 'irhpPermitStock' => [
+                    'irhpPermitType',
                     'country'
                 ],
                 'emissionsCategory',
@@ -184,6 +185,7 @@ class GetListByLicenceTest extends QueryHandlerTestCase
             'irhpPermitApplication',
             'irhpPermitRange' => [
                 'irhpPermitStock' => [
+                    'irhpPermitType',
                     'country'
                 ],
                 'emissionsCategory',
@@ -240,6 +242,7 @@ class GetListByLicenceTest extends QueryHandlerTestCase
             'irhpPermitApplication',
             'irhpPermitRange' => [
                 'irhpPermitStock' => [
+                    'irhpPermitType',
                     'country'
                 ],
                 'emissionsCategory',
