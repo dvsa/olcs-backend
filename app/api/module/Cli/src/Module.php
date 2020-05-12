@@ -105,6 +105,12 @@ class Module implements ConsoleUsageProviderInterface
                 '--limit',
                 'Number of data retention records to process (NB only applicable when deleting)'
             ],
+            'dr-checks <precheck|postcheck>' =>
+                'Run the DR pre or post checks',
+            [
+                '<precheck|postcheck>',
+                '\'precheck\' can be run after the data-retention-rule populate has complete and before the delete phase. \'postcheck\' should be run once delete is complete.',
+            ],
             'digital-continuation-reminders [--verbose|-v]' => 'Generate/Send checklists for digital continuations',
             'create-psv-licence-surrender-tasks [--verbose|-v] [--dryrun|-d]' =>
                 'Create tasks to surrender PSV licences that have expired',
