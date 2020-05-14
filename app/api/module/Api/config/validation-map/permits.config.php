@@ -29,6 +29,7 @@ return [
     QueryHandler\IrhpApplication\InternalIssuedPermitsSummary::class => IsInternalUser::class,
     QueryHandler\IrhpApplication\SelfserveApplicationsSummary::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpApplication\SelfserveIssuedPermitsSummary::class => CanAccessOrganisationWithOrganisation::class,
+    QueryHandler\IrhpApplication\BilateralCountryAccessible::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\Permits\Sectors::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitFees::class => NotIsAnonymousUser::class,
     QueryHandler\IrhpPermitStock\AvailableCountries::class => NotIsAnonymousUser::class,
