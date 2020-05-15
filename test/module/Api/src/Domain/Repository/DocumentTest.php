@@ -219,4 +219,33 @@ class DocumentTest extends RepositoryTestCase
 
         static::assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchListForSurrender()
+    {
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn('RESULT')
+                ->getMock()
+        );
+        static::assertEquals('RESULT', $this->sut->fetchListForSurrender(123));
+
+        $expectedQuery = 'BLAH AND m.surrender = [[123]]';
+
+        static::assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testHardDelete()
+    {
+        $sut = m::mock(DocumentRepo::class)->makePartial();
+
+        $document = m::mock(Document::class);
+        $document->shouldReceive('setDeletedDate');
+
+        $sut->shouldReceive('delete')
+            ->with($document);
+
+        $sut->hardDelete($document);
+    }
 }
