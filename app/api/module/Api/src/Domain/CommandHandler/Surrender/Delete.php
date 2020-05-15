@@ -4,12 +4,17 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Surrender\Delete as DeleteCmd;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 
 final class Delete extends AbstractSurrenderCommandHandler
 {
     protected $repoServiceName = "Surrender";
+
+    protected $extraRepos = ['Document'];
 
     /**
      * @param DeleteCmd $command
@@ -21,9 +26,14 @@ final class Delete extends AbstractSurrenderCommandHandler
         $id = $command->getId();
 
         try {
-            $this->getRepo()->delete(
-                $this->getRepo()->fetchOneByLicenceId($id)
-            );
+
+            /** @var Surrender $surrender */
+            $surrender = $this->getRepo()->fetchOneByLicenceId($id);
+
+            $this->deleteDocuments($surrender->getId());
+
+            $this->getRepo()->delete($surrender);
+
             $this->result->addId('id' . $id, $id);
             $this->result->addMessage(sprintf('surrender for licence Id %d deleted', $id));
         } catch (NotFoundException $e) {
@@ -31,5 +41,19 @@ final class Delete extends AbstractSurrenderCommandHandler
         }
 
         return $this->result;
+    }
+
+    protected function deleteDocuments($id)
+    {
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\Document $documentRepo */
+        $documentRepo = $this->getRepo("Document");
+
+        /** @var Document[] $documents  */
+        $documents = $documentRepo->fetchListForSurrender($id);
+
+        foreach ($documents as $document) {
+            $documentRepo->hardDelete($document);
+            $this->result->addId("documents", $document->getId(), true);
+        }
     }
 }
