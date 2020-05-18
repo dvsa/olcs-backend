@@ -26,6 +26,7 @@ class GetListByLicence extends AbstractQueryHandler implements ToggleRequiredInt
     protected $bundle = [
         'irhpPermitApplication',
         'irhpPermitRange' => [
+            'journey',
             'irhpPermitStock' => [
                 'irhpPermitType',
                 'country'
