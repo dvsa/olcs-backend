@@ -1131,6 +1131,7 @@ return [
     TransferCommand\IrhpApplication\UpdateDeclaration::class => CommandHandler\IrhpApplication\UpdateDeclaration::class,
     TransferCommand\IrhpApplication\SubmitApplication::class => CommandHandler\IrhpApplication\SubmitApplication::class,
     TransferCommand\IrhpApplication\CancelApplication::class => CommandHandler\IrhpApplication\Cancel::class,
+    TransferCommand\IrhpApplication\Terminate::class => CommandHandler\IrhpApplication\Terminate::class,
     TransferCommand\IrhpApplication\Withdraw::class => CommandHandler\IrhpApplication\Withdraw::class,
     TransferCommand\IrhpApplication\ReviveFromWithdrawn::class => CommandHandler\IrhpApplication\ReviveFromWithdrawn::class,
     TransferCommand\IrhpApplication\ReviveFromUnsuccessful::class => CommandHandler\IrhpApplication\ReviveFromUnsuccessful::class,

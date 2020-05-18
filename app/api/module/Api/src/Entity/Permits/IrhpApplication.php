@@ -87,6 +87,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const NON_SCALAR_ANSWER_PRESENT = 'Answer is present but has non-scalar representation';
 
     const ERR_CANT_CANCEL = 'Unable to cancel this application';
+    const ERR_CANT_TERMINATE = 'Unable to terminate this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
     const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
     const ERR_CANT_SUBMIT = 'This application cannot be submitted';
@@ -234,6 +235,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         return [
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
+            'canBeTerminated' => $this->canBeTerminated(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
             'canBeGranted' => $this->canBeGranted(),
             'canBeDeclined' => $this->canBeDeclined(),
@@ -840,6 +842,33 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function canBeCancelled()
     {
         return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Terminate an application
+     *
+     * @param RefData $terminateStatus
+     *
+     * @return void
+     */
+    public function terminate(RefData $terminateStatus)
+    {
+        if (!$this->canBeTerminated()) {
+            throw new ForbiddenException(self::ERR_CANT_TERMINATE);
+        }
+
+        $this->status = $terminateStatus;
+        $this->expiryDate = new \DateTime();
+    }
+
+    /**
+     * Whether the permit application can be terminated
+     *
+     * @return bool
+     */
+    public function canBeTerminated()
+    {
+        return $this->isValid() && $this->isCertificateOfRoadworthiness();
     }
 
     /**

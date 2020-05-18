@@ -1140,7 +1140,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 'inner join irhp_permit_type ipt on ia.irhp_permit_type_id = ipt.id ' .
                 'inner join ref_data trd on ipt.name = trd.id ' .
                 'where l.`id` = :filterByColumnValue ' .
-                'and ia.status in (:applicationStatus1, :applicationStatus2) ' .
+                'and ia.status in (:applicationStatus1, :applicationStatus2, :applicationStatus3) ' .
                 'and (' .
                 '    ia.irhp_permit_type_id in (:permitType1, :permitType2) ' .
                 '    or ' .
@@ -1152,6 +1152,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                     'filterByColumnValue' => $licenceId,
                     'applicationStatus1' => IrhpInterface::STATUS_VALID,
                     'applicationStatus2' => IrhpInterface::STATUS_EXPIRED,
+                    'applicationStatus3' => IrhpInterface::STATUS_TERMINATED,
                     'permitType1' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
                     'permitType2' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
                     'permitStatus1' => IrhpPermit::STATUS_PENDING,
