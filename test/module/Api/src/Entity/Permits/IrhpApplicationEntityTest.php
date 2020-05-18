@@ -80,6 +80,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('canBeTerminated')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('canBeWithdrawn')
             ->once()
             ->withNoArgs()
@@ -193,6 +197,7 @@ class IrhpApplicationEntityTest extends EntityTester
             [
                 'applicationRef' => 'appRef',
                 'canBeCancelled' => false,
+                'canBeTerminated' => false,
                 'canBeWithdrawn' => false,
                 'canBeGranted' => false,
                 'canBeDeclined' => false,
@@ -482,6 +487,59 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
+        ];
+    }
+
+    public function testTerminate()
+    {
+        $this->sut->shouldReceive('canBeTerminated')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $terminateStatus = m::mock(RefData::class);
+
+        $this->sut->terminate($terminateStatus);
+        $this->assertSame($terminateStatus, $this->sut->getStatus());
+        $this->assertInstanceOf(DateTime::class, $this->sut->getExpiryDate());
+    }
+
+    public function testTerminateException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_TERMINATE);
+
+        $this->sut->shouldReceive('canBeTerminated')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->terminate(m::mock(RefData::class));
+    }
+
+    /**
+     * @dataProvider dpCanBeTerminated
+     */
+    public function testCanBeTerminated($isValid, $isCertificateOfRoadworthiness, $expected)
+    {
+        $this->sut->shouldReceive('isValid')
+            ->withNoArgs()
+            ->andReturn($isValid);
+        $this->sut->shouldReceive('isCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturn($isCertificateOfRoadworthiness);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->canBeTerminated()
+        );
+    }
+
+    public function dpCanBeTerminated()
+    {
+        return [
+            [false, false, false],
+            [false, true, false],
+            [true, false, false],
+            [true, true, true],
         ];
     }
 

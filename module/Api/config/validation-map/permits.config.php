@@ -54,6 +54,7 @@ return [
     QueryHandler\IrhpPermitWindow\OpenByCountry::class => NotIsAnonymousUser::class,
     CommandHandler\IrhpApplication\UpdateCheckAnswers::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Cancel::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\Terminate::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\Withdraw::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Grant::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\ReviveFromWithdrawn::class => IsInternalUser::class,
