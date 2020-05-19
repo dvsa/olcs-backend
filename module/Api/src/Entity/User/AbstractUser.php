@@ -105,6 +105,15 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     protected $id;
 
     /**
+     * Last login at
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_login_at", nullable=true)
+     */
+    protected $lastLoginAt;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -391,6 +400,36 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the last login at
+     *
+     * @param \DateTime $lastLoginAt new value being set
+     *
+     * @return User
+     */
+    public function setLastLoginAt($lastLoginAt)
+    {
+        $this->lastLoginAt = $lastLoginAt;
+
+        return $this;
+    }
+
+    /**
+     * Get the last login at
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getLastLoginAt($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastLoginAt);
+        }
+
+        return $this->lastLoginAt;
     }
 
     /**
