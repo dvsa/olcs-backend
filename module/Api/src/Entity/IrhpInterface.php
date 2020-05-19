@@ -18,6 +18,7 @@ interface IrhpInterface
     const STATUS_ISSUING = 'permit_app_issuing';
     const STATUS_VALID = 'permit_app_valid';
     const STATUS_EXPIRED = 'permit_app_expired';
+    const STATUS_TERMINATED = 'permit_app_terminated';
 
     const ACTIVE_STATUSES = [
         self::STATUS_NOT_YET_SUBMITTED,
