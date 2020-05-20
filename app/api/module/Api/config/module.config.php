@@ -271,6 +271,8 @@ return [
                 => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
             'QaCommonCertificatesQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\Common\CertificatesGeneratorFactory::class,
+            'QaBilateralPermitUsageQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\Bilateral\PermitUsageGeneratorFactory::class,
             'QaBilateralCabotageQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\Bilateral\CabotageGeneratorFactory::class,
 
