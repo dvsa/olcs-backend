@@ -168,6 +168,9 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $contactType = m::mock(RefData::class);
+        $contactType->shouldReceive('getId')->andReturn('ct_user');
+
         /** @var ContactDetailsEntity $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
@@ -176,6 +179,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturnSelf();
 
         $contactDetails->setEmailAddress($existingEmail);
+        $contactDetails->setContactType($contactType);
 
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
@@ -184,7 +188,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $user->setLoginId($data['loginId']);
         $user->setContactDetails($contactDetails);
 
-        $user->shouldReceive('getUserType')->twice()->withNoArgs()->andReturn($userType);
+        $user->shouldReceive('getUserType')->once()->withNoArgs()->andReturn($userType);
 
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
 
@@ -242,7 +246,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
     public function dpTestHandleCommandWithUpdatedContactDetails()
     {
         return [
-            [UserEntity::USER_TYPE_OPERATOR, true, 'test2@test.me', 1],
+            [UserEntity::USER_TYPE_OPERATOR, false, 'test2@test.me', 1],
             [UserEntity::USER_TYPE_TRANSPORT_MANAGER, false, 'test1@test.me', 0]
         ];
     }
