@@ -513,7 +513,7 @@ class IrhpApplication extends AbstractRepository
             IrhpInterface::STATUS_FEE_PAID,
             IrhpInterface::STATUS_ISSUING,
         ];
-        $orderBy = ['l.lic_no', 'trd.description', 'ia.id'];
+        $orderBy = ['l.lic_no' => 'ASC', 'trd.description' => 'ASC', 'ia.id' => 'ASC'];
         $filterByColumnName = 'l.organisation_id';
         $filterByColumnValue = $organisationId;
 
@@ -556,22 +556,20 @@ class IrhpApplication extends AbstractRepository
      * Fetch a summary of permit applications for internal
      *
      * @param int $licenceId
+     * @param string|null $status
      *
      * @return array
      */
-    public function fetchInternalApplicationsSummary($licenceId)
+    public function fetchInternalApplicationsSummary($licenceId, $status = null)
     {
-        $applicationStatuses = [
-            IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-            IrhpInterface::STATUS_UNDER_CONSIDERATION,
-            IrhpInterface::STATUS_AWAITING_FEE,
-            IrhpInterface::STATUS_FEE_PAID,
-            IrhpInterface::STATUS_ISSUING,
-            IrhpInterface::STATUS_CANCELLED,
-            IrhpInterface::STATUS_WITHDRAWN,
-            IrhpInterface::STATUS_UNSUCCESSFUL,
-        ];
-        $orderBy = [];
+        $applicationStatuses = IrhpInterface::ALL_STATUSES;
+
+        if (isset($status)) {
+            // only return apps of specific status, if provided
+            $applicationStatuses = [$status];
+        }
+
+        $orderBy = ['ia.id' => 'DESC'];
         $filterByColumnName = 'l.id';
         $filterByColumnValue = $licenceId;
 
@@ -716,8 +714,14 @@ class IrhpApplication extends AbstractRepository
 
         if (count($orderBy)) {
             $escapedOrderBy = [];
-            foreach ($orderBy as $columnName) {
-                $escapedOrderBy[] = $this->escapeColumnName($columnName);
+            foreach ($orderBy as $columnName => $order) {
+                $escapedOrderBy[] = trim(
+                    sprintf(
+                        '%s %s',
+                        $this->escapeColumnName($columnName),
+                        $order === 'DESC' ? 'DESC' : ''
+                    )
+                );
             }
 
             $sql .= ' order by ' . implode(', ', $escapedOrderBy);

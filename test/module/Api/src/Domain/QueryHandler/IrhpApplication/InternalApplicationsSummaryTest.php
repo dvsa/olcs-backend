@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication\InternalApplicationsSummary;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\InternalApplicationsSummary as InternalApplicationsSummaryQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
@@ -21,6 +22,7 @@ class InternalApplicationsSummaryTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $licenceId = 10;
+        $status = IrhpInterface::STATUS_NOT_YET_SUBMITTED;
 
         $rows = [
             'row1',
@@ -29,10 +31,14 @@ class InternalApplicationsSummaryTest extends QueryHandlerTestCase
         ];
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchInternalApplicationsSummary')
-            ->with($licenceId)
+            ->with($licenceId, $status)
             ->andReturn($rows);
 
-        $result = $this->sut->handleQuery(InternalApplicationsSummaryQry::create(['licence' => $licenceId]));
+        $result = $this->sut->handleQuery(
+            InternalApplicationsSummaryQry::create(
+                ['licence' => $licenceId, 'status' => $status]
+            )
+        );
         $this->assertEquals($rows, $result);
     }
 }
