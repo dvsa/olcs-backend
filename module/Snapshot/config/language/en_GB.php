@@ -406,6 +406,7 @@ return [
     'permits.irhp.application.question.country' => 'Questions answered for',
     'permits.page.bilateral.which-period-required' =>'Period for which you need permits',
     'qanda.bilaterals.permit-usage.question' => 'What do you need to use your permits for?',
+    'qanda.bilaterals.permit-usage.question.single-option' => 'Permit usage',
     'qanda.bilaterals.cabotage.question' => 'Do you need to carry out cabotage?',
     'qanda.bilaterals.number-of-permits.question' => 'How many permits do you need?',
 
