@@ -2153,17 +2153,19 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.66",
+            "version": "4.206.68",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.66/olcs-olcs-transfer-4.206.66.zip",
-                "reference": "301e6772c3fd9870910aa79a185012fcdb9fed12",
-                "shasum": "301e6772c3fd9870910aa79a185012fcdb9fed12"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.68/olcs-olcs-transfer-4.206.68.zip",
+                "reference": "f9636164c27e8fba88570e0982cb8a113cedd8a9",
+                "shasum": "f9636164c27e8fba88570e0982cb8a113cedd8a9"
             },
             "require": {
-                "elendev/nexus-composer-push": "^0.1.3",
+                "elendev/nexus-composer-push": "^0.1.5",
+                "ext-openssl": "*",
                 "php": "^5.5 || ^7.0",
                 "soflomo/purifier": "^1.0",
+                "zendframework/zend-crypt": "^3.0",
                 "zendframework/zend-filter": "^2.5",
                 "zendframework/zend-form": "^2.5",
                 "zendframework/zend-i18n": "^2.5",
@@ -2222,7 +2224,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2020-04-07T13:02:08+00:00"
+            "time": "2020-05-19T23:25:55+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -4355,6 +4357,53 @@
             "time": "2018-01-25T19:08:04+00:00"
         },
         {
+            "name": "zendframework/zend-crypt",
+            "version": "3.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/zendframework/zend-crypt/3.3.1/zendframework-zend-crypt-3.3.1.zip",
+                "reference": "cf23da2731dabdbb916cf888f611fc0f123bd36b",
+                "shasum": ""
+            },
+            "require": {
+                "container-interop/container-interop": "^1.2",
+                "ext-mbstring": "*",
+                "php": "^5.6 || ^7.0",
+                "zendframework/zend-math": "^3.0",
+                "zendframework/zend-stdlib": "^2.7.7 || ^3.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.2",
+                "zendframework/zend-coding-standard": "~1.0.0"
+            },
+            "suggest": {
+                "ext-openssl": "Required for most features of Zend\\Crypt"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3.x-dev",
+                    "dev-develop": "3.4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Crypt\\": "src/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Strong cryptography tools and password hashing",
+            "keywords": [
+                "ZendFramework",
+                "crypt",
+                "zf"
+            ],
+            "abandoned": "laminas/laminas-crypt",
+            "time": "2019-05-14T20:19:53+00:00"
+        },
+        {
             "name": "zendframework/zend-db",
             "version": "2.11.0",
             "dist": {
@@ -5111,6 +5160,52 @@
             ],
             "abandoned": "laminas/laminas-mail",
             "time": "2018-06-07T13:37:07+00:00"
+        },
+        {
+            "name": "zendframework/zend-math",
+            "version": "3.2.0",
+            "dist": {
+                "type": "zip",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/zendframework/zend-math/3.2.0/zendframework-zend-math-3.2.0.zip",
+                "reference": "07e43d87fd5c7edc4f54121b9a4625eb10e4b726",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "paragonie/random_compat": "^2.0.11 || 9.99.99",
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.2",
+                "zendframework/zend-coding-standard": "~1.0.0"
+            },
+            "suggest": {
+                "ext-bcmath": "If using the bcmath functionality",
+                "ext-gmp": "If using the gmp functionality"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.2.x-dev",
+                    "dev-develop": "3.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Math\\": "src/"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Create cryptographically secure pseudo-random numbers, and manage big integers",
+            "keywords": [
+                "ZendFramework",
+                "math",
+                "zf"
+            ],
+            "abandoned": "laminas/laminas-math",
+            "time": "2018-12-04T15:45:09+00:00"
         },
         {
             "name": "zendframework/zend-mime",
