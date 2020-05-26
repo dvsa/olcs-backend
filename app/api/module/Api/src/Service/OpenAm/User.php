@@ -185,7 +185,7 @@ class User implements UserInterface
      * @throws FailedRequestException
      * @throws \RuntimeException
      */
-    public function fetchUser($pid): array
+    public function fetchUser($pid)
     {
         return $this->openAmClient->fetchUser($pid);
     }
@@ -197,7 +197,7 @@ class User implements UserInterface
      * @return array
      * @throws FailedRequestException
      */
-    public function fetchUsers(array $pids): array
+    public function fetchUsers(array $pids)
     {
         return $this->openAmClient->fetchUsers($pids);
     }
