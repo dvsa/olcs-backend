@@ -11,7 +11,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
 {
     use OpenAmUserAwareTrait;
 
-    const DEFAULT_BATCH_SIZE = 100;
+    const DEFAULT_BATCH_SIZE = 10;
 
     protected $repoServiceName = 'User';
 
@@ -26,35 +26,68 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
      */
     public function handleCommand(CommandInterface $command)
     {
-        $isLiveRun = $command->isLiveRun();
-        $batchSize = $this->getBatchSize($command);
+        $liveRun = $command->isLiveRun();
+        $limit = $command->getLimit();
+        $batchSize = $command->getBatchSize() ?? self::DEFAULT_BATCH_SIZE;
         $progressBar = $command->getProgressBar();
-        $numberOfUsersToProcess = $this->getNumberOfUsersToProcess($command);
-        $numberOfBatches = $this->getNumberOfBatches($numberOfUsersToProcess, $batchSize);
+
+        if ($limit > 0) {
+            $this->result->addMessage("Limiting run to process $limit users");
+            $numberOfUsersToProcess = $limit;
+            if ($limit <= $batchSize) {
+                $batchSize = $limit;
+            }
+        } else {
+            $numberOfUsersToProcess = $this->getRepo()->fetchActiveUserCount();
+            $this->result->addMessage("This run will try to process $numberOfUsersToProcess users");
+        }
 
         if ($progressBar) {
             $progressBar->start($numberOfUsersToProcess);
         }
 
-        $totalCount = 0;
-        for ($batchNumber = 1; $batchNumber <= $numberOfBatches; $batchNumber++) {
-            $offset = $batchSize * ($batchNumber - 1);
+        $numberOfBatches = ceil($numberOfUsersToProcess / $batchSize);
 
-            $batchedUsers = $this->getBatchedUsers($offset, $batchSize);
+        $totalCount = 0;
+        for ($batch = 1; $batch <= $numberOfBatches; $batch++) {
+            $offset = $batchSize * ($batch - 1);
+
+            $usersWithoutLastLoginTime = $this->getRepo()->fetchPaginatedActiveUsers($offset, $batchSize);
+
+            $batchedUsers = [];
+            foreach ($usersWithoutLastLoginTime as $user) {
+                if ($progressBar) {
+                    $progressBar->advance();
+                }
+
+                $batchedUsers[$user->getPid()] = $user;
+            }
 
             if (!empty($batchedUsers)) {
-                $this->result->addMessage("[Batch $batchNumber] Querying OpenAM for " . count($batchedUsers) . " users");
+                $this->result->addMessage("[Batch $batch] Querying OpenAM for " . count($batchedUsers) . " users");
                 $totalCount += count($batchedUsers);
-                if ($progressBar) {
-                    $progressBar->advance(count($batchedUsers));
-                }
 
                 try {
-                    $this->processBatch($batchedUsers, $batchNumber, $isLiveRun);
+                    $openAmResult = $this->getOpenAmUser()->fetchUsers(array_keys($batchedUsers));
                 } catch (\Exception $exception) {
-                    $this->result->addMessage("[Batch $batchNumber] Unable to process batch. Error : " . $exception->getMessage());
+                    $this->result->addMessage("[Batch $batch] Unable to get OpenAM data. Error : " . $exception->getMessage());
                     continue;
                 }
+
+                $batchedUsers = $this->updateUsers($openAmResult, $batchedUsers, $batch);
+
+                if (!empty($batchedUsers)) {
+                    $this->reportAnomalies($batchedUsers, $batch);
+                }
+
+                if ($liveRun) {
+                    $this->result->addMessage("[Batch $batch] Sending updates to database");
+                    $this->getRepo()->flushAll();
+                } else {
+                    $this->result->addMessage("[Batch $batch] Dry run mode. Skipping database update");
+                }
+
+                $this->result->addMessage("[Batch $batch] Update complete");
             }
         }
 
@@ -72,11 +105,11 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
      *
      * @param array $openAmResult
      * @param array $users
-     * @param int $batchNumber
+     * @param int $batch
      * @return array
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    private function updateUsers(array $openAmResult, array $users, int $batchNumber): array
+    private function updateUsers(array $openAmResult, array $users, int $batch): array
     {
         foreach ($openAmResult as $openAmUser) {
             $pid = $openAmUser['pid'];
@@ -88,9 +121,9 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
                 if (!empty($lastLoginTime)) {
                     $user->setLastLoginAt($lastLoginTime);
                     $this->getRepo()->saveOnFlush($user);
-                    $this->result->addMessage("[Batch $batchNumber] Setting last login time for user '{$user->getLoginId()}' to '$lastLoginTime'");
+                    $this->result->addMessage("[Batch $batch] Setting last login time for user '{$user->getLoginId()}' to '$lastLoginTime'");
                 } else {
-                    $this->result->addMessage("[Batch $batchNumber] No last login time found for user '{$user->getLoginId()}'");
+                    $this->result->addMessage("[Batch $batch] No last login time found for user '{$user->getLoginId()}'");
                 }
 
                 unset($users[$pid]);
@@ -104,102 +137,12 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
      * Report users not found on OpenAM
      *
      * @param array $users
-     * @param int $batchNumber
+     * @param int $batch
      */
-    private function reportAnomalies(array $users, int $batchNumber)
+    private function reportAnomalies(array $users, int $batch)
     {
         foreach ($users as $user) {
-            $this->result->addMessage("[Batch $batchNumber] Could not find user '{$user->getLoginId()}' in OpenAM");
+            $this->result->addMessage("[Batch $batch] Could not find user '{$user->getLoginId()}' in OpenAM");
         }
-    }
-
-    /**
-     * @param CommandInterface $command
-     * @return int
-     */
-    protected function getBatchSize(CommandInterface $command): int
-    {
-        $limit = $command->getLimit();
-        $batchSize = $command->getBatchSize() ?? self::DEFAULT_BATCH_SIZE;
-
-        if ($limit > 0 && $limit <= $batchSize) {
-            $batchSize = $limit;
-        }
-
-        return $batchSize;
-    }
-
-    /**
-     * @param CommandInterface $command
-     * @return int
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    protected function getNumberOfUsersToProcess(CommandInterface $command) : int
-    {
-        $limit = $command->getLimit();
-        if ($limit > 0) {
-            $this->result->addMessage("Limiting run to process $limit users");
-            $numberOfUsersToProcess = $limit;
-        } else {
-            $numberOfUsersToProcess = $this->getRepo()->fetchActiveUserCount();
-            $this->result->addMessage("This run will try to process $numberOfUsersToProcess users");
-        }
-
-        return $numberOfUsersToProcess;
-    }
-
-    /**
-     * @param int $numberOfUsersToProcess
-     * @param int $batchSize
-     * @return float
-     */
-    protected function getNumberOfBatches(int $numberOfUsersToProcess, int $batchSize) : float
-    {
-        return ceil($numberOfUsersToProcess / $batchSize);
-    }
-
-    /**
-     * @param int $offset
-     * @param int $batchSize
-     * @return array
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    protected function getBatchedUsers(int $offset, int $batchSize): array
-    {
-        $usersToProcess = $this->getRepo()->fetchPaginatedActiveUsers($offset, $batchSize);
-
-        $batchedUsers = [];
-        foreach ($usersToProcess as $user) {
-            $batchedUsers[$user->getPid()] = $user;
-        }
-
-        return $batchedUsers;
-    }
-
-    /**
-     * @param array $batchedUsers
-     * @param int $batchNumber
-     * @param bool $isLiveRun
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     * @throws \Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException
-     */
-    protected function processBatch(array $batchedUsers, int $batchNumber, bool $isLiveRun): void
-    {
-        $openAmResult = $this->getOpenAmUser()->fetchUsers(array_keys($batchedUsers));
-
-        $unprocessedUsers = $this->updateUsers($openAmResult, $batchedUsers, $batchNumber);
-
-        if (!empty($unprocessedUsers)) {
-            $this->reportAnomalies($unprocessedUsers, $batchNumber);
-        }
-
-        if ($isLiveRun) {
-            $this->result->addMessage("[Batch $batchNumber] Sending updates to database");
-            $this->getRepo()->flushAll();
-        } else {
-            $this->result->addMessage("[Batch $batchNumber] Dry run mode. Skipping database update");
-        }
-
-        $this->result->addMessage("[Batch $batchNumber] Update complete");
     }
 }
