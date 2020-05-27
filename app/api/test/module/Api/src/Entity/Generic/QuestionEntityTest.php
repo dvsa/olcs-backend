@@ -139,15 +139,25 @@ class QuestionEntityTest extends EntityTester
 
         $answerValue = 'foo';
 
-        $answer = m::mock(Answer::class);
-        $answer->shouldReceive('getValue')
+        $answer1 = m::mock(Answer::class);
+        $answer1->shouldReceive('getQuestionText->getId')
+            ->withNoArgs()
+            ->andReturn(70);
+
+        $answer2 = m::mock(Answer::class);
+        $answer2->shouldReceive('getValue')
             ->withNoArgs()
             ->andReturn($answerValue);
+        $answer2->shouldReceive('getQuestionText->getId')
+            ->withNoArgs()
+            ->andReturn($activeQuestionTextId);
 
-        $answersArrayCollection = m::mock(ArrayCollection::class);
-        $answersArrayCollection->shouldReceive('get')
-            ->with($activeQuestionTextId)
-            ->andReturn($answer);
+        $answer3 = m::mock(Answer::class);
+        $answer3->shouldReceive('getQuestionText->getId')
+            ->withNoArgs()
+            ->andReturn(80);
+
+        $answersArrayCollection = new ArrayCollection([$answer1, $answer2, $answer3]);
 
         $qaEntity = m::mock(QaEntityInterface::class);
         $qaEntity->shouldReceive('getAnswers')

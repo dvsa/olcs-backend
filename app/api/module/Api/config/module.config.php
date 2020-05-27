@@ -26,10 +26,10 @@ return [
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
+            'CommonCurrentDateTimeFactory' =>
+                ApiSrv\Common\CurrentDateTimeFactory::class,
             'CqrsCommandCreator' => ApiSrv\Cqrs\CommandCreator::class,
             'QaContextFactory' => ApiSrv\Qa\QaContextFactory::class,
-            'QaCommonCurrentDateTimeFactory' =>
-                ApiSrv\Qa\Common\CurrentDateTimeFactory::class,
             'QaCommonDateTimeFactory' =>
                 ApiSrv\Qa\Common\DateTimeFactory::class,
             'QaCommonDateIntervalFactory' =>
@@ -114,6 +114,16 @@ return [
             'PermitsAllocateBilateralCriteriaFactory' => ApiSrv\Permits\Allocate\BilateralCriteriaFactory::class,
             'PermitsAllocateEmissionsStandardCriteriaFactory' =>
                 ApiSrv\Permits\Allocate\EmissionsStandardCriteriaFactory::class,
+    
+            'PermitsBilateralInternalBilateralRequiredGenerator'
+                => ApiSrv\Permits\Bilateral\Internal\BilateralRequiredGenerator::class,
+            'PermitsBilateralInternalIrhpPermitApplicationFactory'
+                => ApiSrv\Permits\Bilateral\Internal\IrhpPermitApplicationFactory::class,
+            'PermitsBilateralInternalPermitUsageSelectionGenerator'
+                => ApiSrv\Permits\Bilateral\Internal\PermitUsageSelectionGenerator::class,
+
+            'PermitsBilateralMetadataCurrentFieldValuesGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\CurrentFieldValuesGenerator::class,
         ],
         'abstract_factories' => [
             \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
@@ -441,6 +451,30 @@ return [
 
             'PermitsAllocateIrhpPermitAllocator' => ApiSrv\Permits\Allocate\IrhpPermitAllocatorFactory::class,
 
+            'PermitsBilateralInternalApplicationCountryUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\ApplicationCountryUpdaterFactory::class,
+            'PermitsBilateralInternalApplicationUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\ApplicationUpdaterFactory::class,
+            'PermitsBilateralInternalCabotageAnswerUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\CabotageAnswerUpdaterFactory::class,
+            'PermitsBilateralInternalExistingIrhpPermitApplicationHandler'
+                => ApiSrv\Permits\Bilateral\Internal\ExistingIrhpPermitApplicationHandlerFactory::class,
+            'PermitsBilateralInternalIrhpPermitApplicationCreator'
+                => ApiSrv\Permits\Bilateral\Internal\IrhpPermitApplicationCreatorFactory::class,
+            'PermitsBilateralInternalOtherAnswersUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\OtherAnswersUpdaterFactory::class,
+            'PermitsBilateralInternalPermitUsageAnswerUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\PermitUsageAnswerUpdaterFactory::class,
+
+            'PermitsBilateralMetadataCountryGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\CountryGeneratorFactory::class,
+            'PermitsBilateralMetadataPeriodArrayGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\PeriodArrayGeneratorFactory::class,
+            'PermitsBilateralMetadataPeriodGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\PeriodGeneratorFactory::class,
+            'PermitsBilateralMetadataFieldsGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\FieldsGeneratorFactory::class,
+    
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
         ],

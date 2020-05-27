@@ -70,6 +70,9 @@ class GenericAnswerWriterTest extends MockeryTestCase
             ->andReturn($this->question);
 
         $this->qaEntity = m::mock(QaEntityInterface::class);
+        $this->qaEntity->shouldReceive('addAnswers')
+            ->with($this->answer)
+            ->once();
 
         $this->qaContext = m::mock(QaContext::class);
         $this->qaContext->shouldReceive('getApplicationStepEntity')

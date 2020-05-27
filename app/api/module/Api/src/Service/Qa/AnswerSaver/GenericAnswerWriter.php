@@ -69,6 +69,8 @@ class GenericAnswerWriter
         }
 
         $answer->setValue($questionType, $answerValue);
+        $qaEntity->addAnswers($answer);
+
         $this->answerRepo->save($answer);
     }
 }

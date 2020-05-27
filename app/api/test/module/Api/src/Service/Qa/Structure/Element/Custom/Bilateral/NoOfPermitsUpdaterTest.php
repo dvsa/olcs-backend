@@ -10,9 +10,9 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicati
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Service\Common\CurrentDateTimeFactory;
 use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\ApplicationFeesClearer;
-use Dvsa\Olcs\Api\Service\Qa\Common\CurrentDateTimeFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsUpdater;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

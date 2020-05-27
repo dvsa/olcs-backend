@@ -546,18 +546,30 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Whether the stock has an open permit application window
      *
-     * @return bool
+     * @return IrhpPermitWindow|null
      */
-    public function hasOpenWindow(): bool
+    public function getOpenWindow()
     {
         /** @var IrhpPermitWindow $window */
         foreach ($this->irhpPermitWindows as $window) {
             if ($window->isActive()) {
-                return true;
+                return $window;
             }
         }
 
-        return false;
+        return null;
+    }
+
+    /**
+     * Whether the stock has an open permit application window
+     *
+     * @return bool
+     */
+    public function hasOpenWindow(): bool
+    {
+        return !is_null(
+            $this->getOpenWindow()
+        );
     }
 
     /**

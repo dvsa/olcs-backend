@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Common;
+namespace Dvsa\Olcs\Api\Service\Common;
 
 use DateTime;
 

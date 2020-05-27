@@ -655,6 +655,7 @@ return [
     TransferQuery\IrhpApplication\SelfserveApplicationsSummary::class => QueryHandler\IrhpApplication\SelfserveApplicationsSummary::class,
     TransferQuery\IrhpApplication\SelfserveIssuedPermitsSummary::class => QueryHandler\IrhpApplication\SelfserveIssuedPermitsSummary::class,
     TransferQuery\IrhpApplication\BilateralCountryAccessible::class => QueryHandler\IrhpApplication\BilateralCountryAccessible::class,
+    TransferQuery\IrhpApplication\BilateralMetadata::class => QueryHandler\IrhpApplication\BilateralMetadata::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
     TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,
