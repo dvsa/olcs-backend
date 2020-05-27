@@ -79,9 +79,8 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
             $this->getRepo()->populateRefDataReference($data)
         );
 
-        // If the user is a transport manager, then no Self Serve updates to Forename or Surname are allowed.
-        $canUpdatePerson = $user->getUserType() == User::USER_TYPE_TRANSPORT_MANAGER ? false : true;
-
+        // Forename and surname cannot be updated from self-serve
+        $canUpdatePerson = false;
         if ($user->getContactDetails() instanceof ContactDetails) {
             // update existing contact details
             $user->getContactDetails()->update(
