@@ -27,10 +27,27 @@ class ApplicationPath extends AbstractApplicationPath
      */
     public function getAnswerValueByQuestionId($id, QaEntityInterface $qaEntity)
     {
+        $applicationStep = $this->getApplicationStepByQuestionId($id);
+        if (!is_null($applicationStep)) {
+            return $qaEntity->getAnswer($applicationStep);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the application step corresponding to the specified question id
+     *
+     * @param int $id
+     *
+     * @return ApplicationStep|null
+     */
+    public function getApplicationStepByQuestionId($id)
+    {
         /** @var ApplicationStep $applicationStep */
         foreach ($this->applicationSteps as $applicationStep) {
             if ($applicationStep->getQuestion()->getId() == $id) {
-                return $qaEntity->getAnswer($applicationStep);
+                return $applicationStep;
             }
         }
 

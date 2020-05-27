@@ -44,6 +44,7 @@ class GenericAnswerClearer implements AnswerClearerInterface
         }
 
         if (is_object($answer)) {
+            $qaContext->getQaEntity()->getAnswers()->remove($answer);
             $this->answerRepo->delete($answer);
         }
     }

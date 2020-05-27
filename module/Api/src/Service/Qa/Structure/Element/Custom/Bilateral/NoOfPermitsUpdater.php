@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\ApplicationFeesClearer;
-use Dvsa\Olcs\Api\Service\Qa\Common\CurrentDateTimeFactory;
+use Dvsa\Olcs\Api\Service\Common\CurrentDateTimeFactory;
 
 class NoOfPermitsUpdater
 {

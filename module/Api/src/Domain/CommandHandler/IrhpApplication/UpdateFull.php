@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ApplicationUpdater as BilateralApplicationUpdater;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as Cmd;
@@ -39,6 +40,9 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
     /** @var EventHistoryCreator */
     private $eventHistoryCreator;
 
+    /** @var BilateralApplicationUpdater */
+    private $bilateralApplicationUpdater;
+
     /**
      * Create service
      *
@@ -52,6 +56,7 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
 
         $this->checkedValueUpdater = $mainServiceLocator->get('PermitsCheckableCheckedValueUpdater');
         $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
+        $this->bilateralApplicationUpdater = $mainServiceLocator->get('PermitsBilateralInternalApplicationUpdater');
 
         return parent::createService($serviceLocator);
     }
@@ -83,18 +88,14 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
                 )
             );
         } else {
-            $this->updateCountries($irhpApplication, $irhpApplication->getIrhpPermitType()->getId(), $command);
+            $irhpPermitTypeId = $irhpApplication->getIrhpPermitType()->getId();
+
+            $this->updateCountries($irhpApplication, $irhpPermitTypeId, $command);
             $irhpApplicationRepo->refresh($irhpApplication);
             $irhpApplication->resetSectionCompletion();
 
-            $this->result->merge(
-                $this->handleSideEffect(
-                    UpdateMultipleNoOfPermits::create([
-                        'id' => $irhpApplication->getId(),
-                        'permitsRequired' => $command->getPermitsRequired()
-                    ])
-                )
-            );
+            $this->updatePermitCounts($irhpApplication, $irhpPermitTypeId, $command);
+
             $irhpApplicationRepo->refresh($irhpApplication);
             $irhpApplication->resetSectionCompletion();
         }
@@ -143,5 +144,36 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
                 ])
             )
         );
+    }
+
+    /**
+     * Update the permit counts against the specified application
+     *
+     * @param IrhpApplicationEntity $irhpApplication
+     * @param int $permitTypeId
+     * @param CommandInterface $command
+     */
+    private function updatePermitCounts(IrhpApplicationEntity $irhpApplication, $permitTypeId, CommandInterface $command)
+    {
+        switch ($permitTypeId) {
+            case IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL:
+                $this->bilateralApplicationUpdater->update(
+                    $irhpApplication,
+                    $command->getPermitsRequired()
+                );
+                break;
+            case IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        UpdateMultipleNoOfPermits::create([
+                            'id' => $irhpApplication->getId(),
+                            'permitsRequired' => $command->getPermitsRequired()
+                        ])
+                    )
+                );
+                break;
+            default:
+                throw new RuntimeException('Unsupported permit type' . $permitTypeId);
+        }
     }
 }

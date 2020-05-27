@@ -44,6 +44,10 @@ class GenericAnswerClearerTest extends MockeryTestCase
     {
         $answer = m::mock(Answer::class);
 
+        $this->qaContext->shouldReceive('getQaEntity->getAnswers->remove')
+            ->with($answer)
+            ->once();
+
         $this->genericAnswerProvider->shouldReceive('get')
             ->with($this->qaContext)
             ->andReturn($answer);

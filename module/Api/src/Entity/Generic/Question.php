@@ -118,13 +118,13 @@ class Question extends AbstractQuestion
             return null;
         }
 
-        /** @var Answer $answer answers are indexed by question_text_id */
-        $answer = $qaEntity->getAnswers()->get($activeQuestionText->getId());
-
-        if (!isset($answer)) {
-            return null;
+        $activeQuestionTextId = $activeQuestionText->getId();
+        foreach ($qaEntity->getAnswers() as $answer) {
+            if ($answer->getQuestionText()->getId() == $activeQuestionTextId) {
+                return $answer->getValue();
+            }
         }
 
-        return $answer->getValue();
+        return null;
     }
 }

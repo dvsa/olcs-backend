@@ -2430,9 +2430,12 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
-    public function testUpdateCheckAnswers()
+    public function testUpdateCheckAnswersNotBilateral()
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
         $irhpApplication->shouldReceive('canCheckAnswers')
             ->once()
             ->andReturn(true);
@@ -2442,15 +2445,28 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertTrue($irhpApplication->getCheckedAnswers());
     }
 
-    public function testUpdateCheckAnswersException()
+    public function testUpdateCheckAnswersNotBilateralException()
     {
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage(Entity::ERR_CANT_CHECK_ANSWERS);
 
         $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
         $irhpApplication->shouldReceive('canCheckAnswers')
             ->once()
             ->andReturn(false);
+
+        $irhpApplication->updateCheckAnswers();
+    }
+
+    public function testUpdateCheckAnswers()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
 
         $irhpApplication->updateCheckAnswers();
     }
@@ -3566,6 +3582,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $step1->shouldReceive('getQuestion')->withNoArgs()->andReturn($question1);
 
         $answer1 = m::mock(Answer::class);
+        $answer1->shouldReceive('getQuestionText')->withNoArgs()->andReturn($question1Text);
         $answer1->shouldReceive('getValue')->withNoArgs()->andReturn('q1-answer');
 
         // q2
@@ -3586,6 +3603,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $step2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
 
         $answer2 = m::mock(Answer::class);
+        $answer2->shouldReceive('getQuestionText')->withNoArgs()->andReturn($question2Text);
         $answer2->shouldReceive('getValue')->withNoArgs()->andReturn('q2-answer');
 
         return [
@@ -4217,7 +4235,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $questionTextId = 1;
         $questionText = m::mock(QuestionText::class);
-        $questionText->shouldReceive('getId')->withNoArgs()->once()->andReturn($questionTextId);
+        $questionText->shouldReceive('getId')->withNoArgs()->andReturn($questionTextId);
 
         $question = m::mock(Question::class)->makePartial();
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn($isCustom);
@@ -4229,6 +4247,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $answer = m::mock(Answer::class);
         $answer->shouldReceive('getValue')->withNoArgs()->once()->andReturn($answer);
+        $answer->shouldReceive('getQuestionText')->withNoArgs()->andReturn($questionText);
 
         $entity = $this->createNewEntity();
         $entity->setCreatedOn($createdOn);
@@ -6294,5 +6313,52 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT);
 
         $entity->getIrhpPermitApplicationsByCountryName();
+    }
+
+    /**
+     * @dataProvider dpGetIrhpPermitApplicationByStockCountryId
+     */
+    public function testGetIrhpPermitApplicationByStockCountryId($irhpPermitApplications, $countryId, $expected)
+    {
+        $entity = $this->createNewEntity();
+        $entity->setIrhpPermitApplications($irhpPermitApplications);
+
+        $this->assertSame(
+            $expected,
+            $entity->getIrhpPermitApplicationByStockCountryId($countryId)
+        );
+    }
+
+    public function dpGetIrhpPermitApplicationByStockCountryId()
+    {
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn('FR');
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn('DE');
+
+        $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn('CH');
+
+        $irhpPermitApplications = new ArrayCollection(
+            [
+                $irhpPermitApplication1,
+                $irhpPermitApplication2,
+                $irhpPermitApplication3
+            ]
+        );
+
+        return [
+            [$irhpPermitApplications, 'FR', $irhpPermitApplication1],
+            [$irhpPermitApplications, 'DE', $irhpPermitApplication2],
+            [$irhpPermitApplications, 'CH', $irhpPermitApplication3],
+            [$irhpPermitApplications, 'NO', null],
+        ];
     }
 }

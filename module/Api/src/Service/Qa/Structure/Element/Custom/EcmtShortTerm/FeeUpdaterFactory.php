@@ -20,7 +20,7 @@ class FeeUpdaterFactory implements FactoryInterface
             $serviceLocator->get('RepositoryServiceManager')->get('FeeType'),
             $serviceLocator->get('CqrsCommandCreator'),
             $serviceLocator->get('CommandHandlerManager'),
-            $serviceLocator->get('QaCommonCurrentDateTimeFactory')
+            $serviceLocator->get('CommonCurrentDateTimeFactory')
         );
     }
 }

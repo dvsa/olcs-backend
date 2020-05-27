@@ -871,6 +871,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function updateCheckAnswers()
     {
+        if ($this->isBilateral()) {
+            return;
+        }
+
         if (!$this->canCheckAnswers()) {
             throw new ForbiddenException(self::ERR_CANT_CHECK_ANSWERS);
         }
@@ -2448,5 +2452,28 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getRepositoryName()
     {
         return 'IrhpApplication';
+    }
+
+    /**
+     * @param string $countryId
+     *
+     * @return IrhpPermitApplication|null
+     */
+    public function getIrhpPermitApplicationByStockCountryId($countryId)
+    {
+        $irhpPermitApplications = $this->irhpPermitApplications;
+
+        foreach ($irhpPermitApplications as $irhpPermitApplication) {
+            $stockCountryId = $irhpPermitApplication->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getCountry()
+                ->getId();
+
+            if ($countryId == $stockCountryId) {
+                return $irhpPermitApplication;
+            }
+        }
+
+        return null;
     }
 }

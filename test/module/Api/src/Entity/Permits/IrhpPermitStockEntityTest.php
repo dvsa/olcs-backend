@@ -106,7 +106,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertEquals($updatePeriodNameKey, $entity->getPeriodNameKey());
     }
 
-    public function testHasOpenWindowTrue()
+    public function testGetOpenWindowTrue()
     {
         $window1 = m::mock(IrhpPermitWindow::class);
         $window1->shouldReceive('isActive')->once()->withNoArgs()->andReturnFalse();
@@ -117,10 +117,13 @@ class IrhpPermitStockEntityTest extends EntityTester
         $entity = m::mock(Entity::class)->makePartial();
         $entity->setIrhpPermitWindows(new ArrayCollection([$window1, $window2]));
 
-        $this->assertTrue($entity->hasOpenWindow());
+        $this->assertSame(
+            $window2,
+            $entity->getOpenWindow()
+        );
     }
 
-    public function testHasOpenWindowFalse()
+    public function testGetOpenWindowNull()
     {
         $window1 = m::mock(IrhpPermitWindow::class);
         $window1->shouldReceive('isActive')->once()->withNoArgs()->andReturnFalse();
@@ -128,7 +131,33 @@ class IrhpPermitStockEntityTest extends EntityTester
         $entity = m::mock(Entity::class)->makePartial();
         $entity->setIrhpPermitWindows(new ArrayCollection([$window1]));
 
-        $this->assertFalse($entity->hasOpenWindow());
+        $this->assertNull(
+            $entity->getOpenWindow()
+        );
+    }
+
+    /**
+     * @dataProvider dpHasOpenWindow
+     */
+    public function testHasOpenWindow($openWindow, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getOpenWindow')
+           ->withNoArgs()
+           ->andReturn($openWindow);
+
+        $this->assertEquals(
+            $expected,
+            $entity->hasOpenWindow()
+        );
+    }
+
+    public function dpHasOpenWindow()
+    {
+        return [
+            [null, false],
+            [m::mock(IrhpPermitWindow::class), true],
+        ];
     }
 
     public function testGetStatusDescription()

@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationE
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ApplicationUpdater as BilateralApplicationUpdater;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\CreateFull as Cmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
@@ -38,6 +39,9 @@ final class CreateFull extends AbstractCommandHandler implements ToggleRequiredI
     /** @var EventHistoryCreator */
     private $eventHistoryCreator;
 
+    /** @var BilateralApplicationUpdater */
+    private $bilateralApplicationUpdater;
+
     /**
      * Create service
      *
@@ -49,6 +53,7 @@ final class CreateFull extends AbstractCommandHandler implements ToggleRequiredI
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
+        $this->bilateralApplicationUpdater = $mainServiceLocator->get('PermitsBilateralInternalApplicationUpdater');
         $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
 
         return parent::createService($serviceLocator);
@@ -92,14 +97,22 @@ final class CreateFull extends AbstractCommandHandler implements ToggleRequiredI
         $irhpApplicationRepo->refresh($irhpApplication);
         $irhpApplication->resetSectionCompletion();
 
-        $this->result->merge(
-            $this->handleSideEffect(
-                UpdateMultipleNoOfPermits::create([
-                    'id' => $irhpApplication->getId(),
-                    'permitsRequired' => $command->getPermitsRequired()
-                ])
-            )
-        );
+        if ($permitType->getId() == IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL) {
+            $this->result->merge(
+                $this->handleSideEffect(
+                    UpdateMultipleNoOfPermits::create([
+                        'id' => $irhpApplication->getId(),
+                        'permitsRequired' => $command->getPermitsRequired()
+                    ])
+                )
+            );
+        } elseif ($permitType->getId() == IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
+            $this->bilateralApplicationUpdater->update(
+                $irhpApplication,
+                $command->getPermitsRequired()
+            );
+        }
+
         $irhpApplicationRepo->refresh($irhpApplication);
         $irhpApplication->resetSectionCompletion();
 

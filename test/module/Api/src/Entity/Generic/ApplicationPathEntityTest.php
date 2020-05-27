@@ -23,10 +23,60 @@ class ApplicationPathEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
+    public function testGetAnswerValueByQuestionId()
+    {
+        $questionId = 42;
+        $answerValue = 'answer value';
+
+        $applicationStep = m::mock(ApplicationStep::class);
+
+        $qaEntity = m::mock(QaEntityInterface::class);
+        $qaEntity->shouldReceive('getAnswer')
+            ->with($applicationStep)
+            ->andReturn($answerValue);
+
+        $applicationPath = m::mock(Entity::class)->makePartial();
+        $applicationPath->shouldReceive('getApplicationStepByQuestionId')
+            ->with($questionId)
+            ->andReturn($applicationStep);
+
+        $this->assertEquals(
+            $answerValue,
+            $applicationPath->getAnswerValueByQuestionId($questionId, $qaEntity)
+        );
+    }
+
+    public function testGetAnswerValueByQuestionIdNull()
+    {
+        $questionId = 44;
+
+        $qaEntity = m::mock(QaEntityInterface::class);
+
+        $applicationPath = m::mock(Entity::class)->makePartial();
+        $applicationPath->shouldReceive('getApplicationStepByQuestionId')
+            ->with($questionId)
+            ->andReturnNull();
+
+        $this->assertNull(
+            $applicationPath->getAnswerValueByQuestionId($questionId, $qaEntity)
+        );
+    }
+
     /**
-     * @dataProvider dpGetAnswerValueByQuestionId
+     * @dataProvider dpGetApplicationStepByQuestionId
      */
-    public function testGetAnswerValueByQuestionId($questionId, $expectedAnswerValue)
+    public function testGetApplicationStepByQuestionId($applicationSteps, $questionId, $expectedApplicationStep)
+    {
+        $applicationPath = new Entity();
+        $applicationPath->setApplicationSteps($applicationSteps);
+
+        $this->assertSame(
+            $expectedApplicationStep,
+            $applicationPath->getApplicationStepByQuestionId($questionId)
+        );
+    }
+
+    public function dpGetApplicationStepByQuestionId()
     {
         $applicationStep1 = m::mock(ApplicationStep::class);
         $applicationStep1->shouldReceive('getQuestion->getId')
@@ -45,25 +95,11 @@ class ApplicationPathEntityTest extends EntityTester
 
         $applicationSteps = new ArrayCollection([$applicationStep1, $applicationStep2, $applicationStep3]);
 
-        $qaEntity = m::mock(QaEntityInterface::class);
-        $qaEntity->shouldReceive('getAnswer')
-            ->with($applicationStep2)
-            ->andReturn('answer value');
-
-        $applicationPath = new Entity();
-        $applicationPath->setApplicationSteps($applicationSteps);
-
-        $this->assertEquals(
-            $expectedAnswerValue,
-            $applicationPath->getAnswerValueByQuestionId($questionId, $qaEntity)
-        );
-    }
-
-    public function dpGetAnswerValueByQuestionId()
-    {
         return [
-            [40, 'answer value'],
-            [62, null]
+            [$applicationSteps, 38, $applicationStep1],
+            [$applicationSteps, 40, $applicationStep2],
+            [$applicationSteps, 42, $applicationStep3],
+            [$applicationSteps, 44, null],
         ];
     }
 }

@@ -18,7 +18,7 @@ class DateWithThresholdGeneratorFactory implements FactoryInterface
     {
         return new DateWithThresholdGenerator(
             $serviceLocator->get('QaCommonDateWithThresholdElementFactory'),
-            $serviceLocator->get('QaCommonCurrentDateTimeFactory'),
+            $serviceLocator->get('CommonCurrentDateTimeFactory'),
             $serviceLocator->get('QaCommonDateIntervalFactory'),
             $serviceLocator->get('QaDateElementGenerator')
         );

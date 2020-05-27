@@ -24,7 +24,7 @@ class NoOfPermitsUpdaterFactory implements FactoryInterface
             $serviceLocator->get('CqrsCommandCreator'),
             $serviceLocator->get('CommandHandlerManager'),
             $serviceLocator->get('PermitsBilateralApplicationFeesClearer'),
-            $serviceLocator->get('QaCommonCurrentDateTimeFactory')
+            $serviceLocator->get('CommonCurrentDateTimeFactory')
         );
     }
 }
