@@ -80,11 +80,11 @@ class ContactDetails extends AbstractContactDetails
      * Update
      *
      * @param array $contactParams Array of data as defined by Dvsa\Olcs\Transfer\Command\Partial\ContactDetails
-     * @param bool $allowUpdatePerson Will be true for all new record creations, only true for edits for non-transport manager users
+     * @param bool $allowUpdatePerson Will be true for all new record creations and updates, only false for edits from self-serve
      *
      * @return $this
      */
-    public function update(array $contactParams, $allowUpdatePerson = false)
+    public function update(array $contactParams, $allowUpdatePerson = true)
     {
         // each type may have different update
         switch ($this->getContactType()->getId()) {
