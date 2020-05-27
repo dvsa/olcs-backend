@@ -295,6 +295,8 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         );
         $eventHistory->setLicence($licence);
         $eventHistory->setEventData("");
+        $eventHistory->setEntityType('licence');
+        $eventHistory->setEntityPk($licenceId);
         $this->getRepo('EventHistory')->save($eventHistory);
 
         return $result;

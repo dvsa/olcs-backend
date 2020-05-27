@@ -42,6 +42,8 @@ abstract class AbstractSurrenderCommandHandler extends AbstractCommandHandler im
             $eventType
         );
         $eventHistory->setLicence($licence);
+        $eventHistory->setEntityType('licence');
+        $eventHistory->setEntityPk($licence->getId());
 
         $this->getRepo('EventHistory')->save($eventHistory);
         $this->result->addMessage('Event history added for licence ' . $licence->getId());
