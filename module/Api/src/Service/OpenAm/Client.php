@@ -127,7 +127,7 @@ class Client implements ClientInterface
      * @return array
      * @throws FailedRequestException
      */
-    public function fetchUsers(array $pids)
+    public function fetchUsers(array $pids): array
     {
         $query = $this->createPidQuery($pids);
 
@@ -171,7 +171,7 @@ class Client implements ClientInterface
      * @param array $pids
      * @return string
      */
-    private function createPidQuery(array $pids)
+    private function createPidQuery(array $pids): string
     {
         $queryArray = [];
 

@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implements OpenAmUserAwareInterface
 {
@@ -29,6 +30,8 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
         $liveRun = $command->isLiveRun();
         $limit = $command->getLimit();
         $batchSize = $command->getBatchSize() ?? self::DEFAULT_BATCH_SIZE;
+
+        /** @var ProgressBar $progressBar */
         $progressBar = $command->getProgressBar();
 
         if ($limit > 0) {
@@ -52,13 +55,10 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
         for ($batch = 1; $batch <= $numberOfBatches; $batch++) {
             $offset = $batchSize * ($batch - 1);
 
-            $usersWithoutLastLoginTime = $this->getRepo()->fetchPaginatedActiveUsers($offset, $batchSize);
+            $usersToProcess = $this->getRepo()->fetchPaginatedActiveUsers($offset, $batchSize);
 
             $batchedUsers = [];
-            foreach ($usersWithoutLastLoginTime as $user) {
-                if ($progressBar) {
-                    $progressBar->advance();
-                }
+            foreach ($usersToProcess as $user) {
 
                 $batchedUsers[$user->getPid()] = $user;
             }
@@ -66,6 +66,9 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
             if (!empty($batchedUsers)) {
                 $this->result->addMessage("[Batch $batch] Querying OpenAM for " . count($batchedUsers) . " users");
                 $totalCount += count($batchedUsers);
+                if ($progressBar) {
+                    $progressBar->advance(count($batchedUsers));
+                }
 
                 try {
                     $openAmResult = $this->getOpenAmUser()->fetchUsers(array_keys($batchedUsers));
