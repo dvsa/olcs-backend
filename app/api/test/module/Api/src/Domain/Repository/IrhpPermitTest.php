@@ -339,7 +339,10 @@ class IrhpPermitTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchListForDashboard()
+    /**
+     * @dataProvider dpFetchListByLicence
+     */
+    public function testFetchListByLicence($status, $validOnly, $expectedStatuses)
     {
         $this->setUpSut(IrhpPermit::class, true);
         $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
@@ -358,7 +361,9 @@ class IrhpPermitTest extends RepositoryTestCase
                 'licence' => 7,
                 'irhpPermitType' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 'page' => 1,
-                'limit' => 10
+                'limit' => 10,
+                'status' => $status,
+                'validOnly' => $validOnly,
             ]
         );
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
@@ -369,15 +374,22 @@ class IrhpPermitTest extends RepositoryTestCase
             . 'INNER JOIN ipr.irhpPermitStock ips '
             . 'LEFT JOIN ips.country ipc '
             . 'AND ia.licence = [[7]] '
+            . 'AND m.status IN [[["'.implode('","', $expectedStatuses).'"]]] '
             . 'AND ips.irhpPermitType = [['.IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
-            . 'AND m.status IN [[["'.IrhpPermitEntity::STATUS_PENDING.'","'
-            . IrhpPermitEntity::STATUS_AWAITING_PRINTING.'","'.IrhpPermitEntity::STATUS_ERROR.'","'
-            . IrhpPermitEntity::STATUS_PRINTING.'","'.IrhpPermitEntity::STATUS_PRINTED.'"]]] '
             . 'ORDER BY ipc.countryDesc ASC '
             . 'ORDER BY m.expiryDate ASC '
             . 'ORDER BY ipa.id ASC '
             . 'ORDER BY m.permitNumber ASC';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function dpFetchListByLicence()
+    {
+        return [
+            'valid only' => [null, true, IrhpPermitEntity::$validStatuses],
+            'all' => [null, false, IrhpPermitEntity::ALL_STATUSES],
+            'specific' => [IrhpPermitEntity::STATUS_PRINTING, null, [IrhpPermitEntity::STATUS_PRINTING]],
+        ];
     }
 
     public function testGetLivePermitCountsGroupedByStock()
