@@ -26,7 +26,6 @@ return [
     QueryHandler\IrhpApplication\PermitsAvailableByYear::class => NotIsAnonymousUser::class,
     QueryHandler\IrhpApplication\AnswersSummary::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\InternalApplicationsSummary::class => IsInternalUser::class,
-    QueryHandler\IrhpApplication\InternalIssuedPermitsSummary::class => IsInternalUser::class,
     QueryHandler\IrhpApplication\SelfserveApplicationsSummary::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpApplication\SelfserveIssuedPermitsSummary::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpApplication\BilateralCountryAccessible::class => Permits\CanAccessIrhpApplicationWithId::class,

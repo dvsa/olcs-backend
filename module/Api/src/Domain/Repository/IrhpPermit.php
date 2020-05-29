@@ -127,16 +127,29 @@ class IrhpPermit extends AbstractRepository
         }
 
         if ($query instanceof GetListByLicence) {
+            $statuses = Entity::ALL_STATUSES;
+
+            if ($query->getStatus()) {
+                // filter by specific status
+                $statuses = [$query->getStatus()];
+            } elseif ($query->getValidOnly()) {
+                // valid only
+                $statuses = Entity::$validStatuses;
+            }
+
             $qb->innerJoin('ipa.irhpApplication', 'ia')
                 ->innerJoin($this->alias . '.irhpPermitRange', 'ipr')
                 ->innerJoin('ipr.irhpPermitStock', 'ips')
                 ->leftJoin('ips.country', 'ipc')
                 ->andWhere($qb->expr()->eq('ia.licence', ':licenceId'))
                 ->setParameter('licenceId', $query->getLicence())
-                ->andWhere($qb->expr()->eq('ips.irhpPermitType', ':irhpPermitTypeId'))
-                ->setParameter('irhpPermitTypeId', $query->getIrhpPermitType())
-                ->andWhere($qb->expr()->in($this->alias . '.status', ':validStatuses'))
-                ->setParameter('validStatuses', Entity::$validStatuses);
+                ->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
+                ->setParameter('statuses', $statuses);
+
+            if ($query->getIrhpPermitType()) {
+                $qb->andWhere($qb->expr()->eq('ips.irhpPermitType', ':irhpPermitTypeId'))
+                    ->setParameter('irhpPermitTypeId', $query->getIrhpPermitType());
+            }
 
             if ($query->getCountry()) {
                 $qb->andWhere($qb->expr()->eq('ips.country', ':countryId'))

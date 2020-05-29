@@ -651,7 +651,6 @@ return [
     TransferQuery\IrhpApplication\RangesByIrhpApplication::class => QueryHandler\IrhpApplication\RangesByIrhpApplication::class,
     TransferQuery\IrhpApplication\GetGrantability::class => QueryHandler\IrhpApplication\GetGrantability::class,
     TransferQuery\IrhpApplication\InternalApplicationsSummary::class => QueryHandler\IrhpApplication\InternalApplicationsSummary::class,
-    TransferQuery\IrhpApplication\InternalIssuedPermitsSummary::class => QueryHandler\IrhpApplication\InternalIssuedPermitsSummary::class,
     TransferQuery\IrhpApplication\SelfserveApplicationsSummary::class => QueryHandler\IrhpApplication\SelfserveApplicationsSummary::class,
     TransferQuery\IrhpApplication\SelfserveIssuedPermitsSummary::class => QueryHandler\IrhpApplication\SelfserveIssuedPermitsSummary::class,
     TransferQuery\IrhpApplication\BilateralCountryAccessible::class => QueryHandler\IrhpApplication\BilateralCountryAccessible::class,

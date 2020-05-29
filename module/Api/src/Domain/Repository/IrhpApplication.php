@@ -526,33 +526,6 @@ class IrhpApplication extends AbstractRepository
     }
 
     /**
-     * Fetch a summary of issued permits for internal
-     *
-     * @param int $licenceId
-     *
-     * @return array
-     */
-    public function fetchInternalIssuedPermitsSummary($licenceId)
-    {
-        $applicationStatuses = [
-            IrhpInterface::STATUS_VALID,
-            IrhpInterface::STATUS_EXPIRED,
-            IrhpInterface::STATUS_TERMINATED
-        ];
-
-        $orderBy = ['applicationRef'];
-        $filterByColumnName = 'l.id';
-        $filterByColumnValue = $licenceId;
-
-        return $this->fetchIssuedPermitsSummary(
-            $applicationStatuses,
-            $orderBy,
-            $filterByColumnName,
-            $filterByColumnValue
-        );
-    }
-
-    /**
      * Fetch a summary of permit applications for internal
      *
      * @param int $licenceId
