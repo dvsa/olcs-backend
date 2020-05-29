@@ -53,5 +53,5 @@ interface ClientInterface
      * @return array
      * @throws FailedRequestException
      */
-    public function fetchUsers(array $pids);
+    public function fetchUsers(array $pids): array;
 }

@@ -18,7 +18,7 @@ interface UserInterface
      * @return array
      * @throws FailedRequestException
      */
-    public function fetchUser($pid);
+    public function fetchUser($pid): array;
 
     /**
      * Fetch multiple users
@@ -27,7 +27,7 @@ interface UserInterface
      * @return array
      * @throws FailedRequestException
      */
-    public function fetchUsers(array $pids);
+    public function fetchUsers(array $pids): array;
 
     /**
      * Registers a user

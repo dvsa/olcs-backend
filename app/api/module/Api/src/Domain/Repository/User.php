@@ -370,7 +370,7 @@ class User extends AbstractRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function fetchActiveUserCount()
+    public function fetchActiveUserCount(): int
     {
         $qb = $this->createQueryBuilder();
         $qb->select('COUNT(DISTINCT ' . $this->alias . '.id)')
