@@ -8,7 +8,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -24,24 +23,14 @@ final class UpdateUserLastLoginAt extends AbstractUserCommandHandler
      * @param CommandInterface $command command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    public function handleCommand(CommandInterface $command)
+    public function handleCommand(CommandInterface $command): Result
     {
         /** @var \Dvsa\Olcs\Api\Domain\Repository\User $repo */
         $repo = $this->getRepo();
 
-        $users = $repo->fetchByLoginId($command->getId());
-
-        if (count($users) != 1) {
-            // TODO: Remove and throw exception
-            var_dump("ERROR HANDLING COMMAND");
-            var_dump($users);
-            die();
-        }
-
-        /** @var User $user */
-        $user = $users[0];
-
+        $user = $this->getCurrentUser();
         $user->setLastLoginAt(new \DateTime());
 
         $repo->save($user);
