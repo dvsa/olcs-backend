@@ -27,16 +27,16 @@ class UpdateUserLastLoginAtTest extends CommandHandlerTestCase
             AuthorizationService::class => m::mock(AuthorizationService::class)
         ];
 
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity')
-            ->once()
-            ->andReturn($this->getMockIdentity());
-
         parent::setUp();
     }
 
     public function testUserLastLoginAtIsUpdatedToCurrentTimestamp()
     {
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity')
+            ->once()
+            ->andReturn($this->getMockIdentity());
+
         $this->repoMap['User']->shouldReceive('save')
             ->once()
             ->with(m::on(function ($user) {
