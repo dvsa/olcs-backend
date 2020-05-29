@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Update User
- */
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
