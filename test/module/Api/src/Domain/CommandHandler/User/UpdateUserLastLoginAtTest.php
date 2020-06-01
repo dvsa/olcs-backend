@@ -34,6 +34,7 @@ class UpdateUserLastLoginAtTest extends CommandHandlerTestCase
     {
         $this->mockedSmServices[AuthorizationService::class]
             ->shouldReceive('getIdentity')
+            ->withNoArgs()
             ->once()
             ->andReturn($this->getMockIdentity());
 
