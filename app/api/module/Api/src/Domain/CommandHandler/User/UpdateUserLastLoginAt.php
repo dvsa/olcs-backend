@@ -23,13 +23,10 @@ final class UpdateUserLastLoginAt extends AbstractUserCommandHandler
      */
     public function handleCommand(CommandInterface $command): Result
     {
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\User $repo */
-        $repo = $this->getRepo();
-
         $user = $this->getCurrentUser();
         $user->setLastLoginAt(new \DateTime());
 
-        $repo->save($user);
+        $this->getRepo()->save($user);
 
         $result = new Result();
         $result->addId('user', $user->getId());
