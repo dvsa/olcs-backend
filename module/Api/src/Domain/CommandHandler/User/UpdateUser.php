@@ -202,7 +202,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
         );
         $eventHistory->setAccount($user);
         $eventHistory->setEntityType('user');
-        $eventHistory->setEntityPk($this->getUser()->getId());
+        $eventHistory->setEntityPk($user->getId());
 
         $this->getRepo('EventHistory')->save($eventHistory);
 
