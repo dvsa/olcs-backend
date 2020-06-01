@@ -12,7 +12,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
 {
     use OpenAmUserAwareTrait;
 
-    const DEFAULT_BATCH_SIZE = 10;
+    const DEFAULT_BATCH_SIZE = 100;
 
     protected $repoServiceName = 'User';
 
@@ -59,7 +59,6 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
 
             $batchedUsers = [];
             foreach ($usersToProcess as $user) {
-
                 $batchedUsers[$user->getPid()] = $user;
             }
 

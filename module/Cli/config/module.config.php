@@ -304,7 +304,7 @@ return [
                 ],
                 'populate-last-login' => [
                     'options' => [
-                        'route' => 'populate-last-login [--live] --limit=<limit> --batch-size=<batchSize> [--show-progress] [--verbose|-v]',
+                        'route' => 'populate-last-login [--live] [--limit=<limit>] [--batch-size=<batchSize>] [--show-progress] [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'populateLastLogin',
