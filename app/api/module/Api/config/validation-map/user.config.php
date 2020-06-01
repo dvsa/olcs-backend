@@ -4,6 +4,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsExternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\User\CanAccessUserList;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\User\CanManageUser;
@@ -32,4 +33,5 @@ return [
     CommandHandler\User\CreateUserSelfserve::class                              => CanManageUser::class,
     CommandHandler\User\DeleteUserSelfserve::class                              => CanManageUser::class,
     CommandHandler\User\UpdateUserSelfserve::class                              => CanManageUser::class,
+    CommandHandler\User\UpdateUserLastLoginAt::class                            => NotIsAnonymousUser::class,
 ];
