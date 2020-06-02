@@ -42,7 +42,6 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $params = [
             'isLiveRun' => true,
             'batchSize' => $batchSize,
-            'limit' => -1,
             'progressBar' => $this->makeProgressBar()
         ];
 
@@ -108,8 +107,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
         $params = [
             'isLiveRun' => true,
-            'batchSize' => $batchSize,
-            'limit' => -1
+            'batchSize' => $batchSize
         ];
 
         $this->repoMap['User']->shouldReceive('fetchActiveUserCount')
@@ -134,8 +132,8 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
         $messages = $result["messages"];
 
-        $this->assertContains("[Batch 1] Unable to get OpenAM data. Error : Exception from OpenAM", $messages);
-        $this->assertContains("[Batch 2] Unable to get OpenAM data. Error : Exception from OpenAM", $messages);
+        $this->assertContains("[Batch 1] Unable to process batch. Error : Exception from OpenAM", $messages);
+        $this->assertContains("[Batch 2] Unable to process batch. Error : Exception from OpenAM", $messages);
     }
 
     public function testHandleCommandWithUsersMissingInOpenAM()
@@ -146,8 +144,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
         $params = [
             'isLiveRun' => true,
-            'batchSize' => $batchSize,
-            'limit' => -1
+            'batchSize' => $batchSize
         ];
 
         $this->repoMap['User']->shouldReceive('fetchActiveUserCount')
@@ -204,7 +201,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $params = [
             'isLiveRun' => true,
             'batchSize' => $batchSize,
-            'limit' => -1
+            'limit' => 2
         ];
 
         $this->repoMap['User']->shouldReceive('fetchActiveUserCount')
@@ -313,7 +310,6 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $params = [
             'isLiveRun' => false,
             'batchSize' => $batchSize,
-            'limit' => -1,
             'progressBar' => $this->makeProgressBar()
         ];
 
