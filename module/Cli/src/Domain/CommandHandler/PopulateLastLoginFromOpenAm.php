@@ -2,12 +2,10 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
-use Aws\Command;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implements OpenAmUserAwareInterface
 {
