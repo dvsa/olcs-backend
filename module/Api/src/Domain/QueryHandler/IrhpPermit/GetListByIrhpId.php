@@ -27,9 +27,10 @@ class GetListByIrhpId extends AbstractQueryHandler implements ToggleRequiredInte
     protected $bundle = [
         'replaces',
         'irhpPermitRange' => [
-            'irhpPermitStock' => ['country'],
+            'irhpPermitStock' => ['country', 'irhpPermitType'],
             'emissionsCategory',
         ],
+        'irhpPermitApplication',
     ];
 
     /** @var RangeBasedRestrictedCountriesProvider */
