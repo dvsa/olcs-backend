@@ -111,6 +111,7 @@ class Licence extends AbstractQueryHandler
                     'disqualifications',
                 ],
                 'licenceStatusRules' => ['licenceStatus'],
+                'applications',
             ],
             [
                 'sections' => $this->sectionAccessService->getAccessibleSectionsForLicence($licence),
