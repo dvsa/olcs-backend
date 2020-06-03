@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result as QueryResult;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\View\Model\JsonModel;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Response
@@ -91,10 +92,8 @@ class Response extends AbstractPlugin
             $result = $result->serialize();
         }
 
-        if (
-            !is_array($result)
-            && $result instanceof \JsonSerializable
-        ) {
+        if (!is_array($result) && $result instanceof \JsonSerializable) {
+            Logger::info('Using legacy jsonSerialize on ' . get_class($result));
             $result = $result->jsonSerialize();
         }
 
