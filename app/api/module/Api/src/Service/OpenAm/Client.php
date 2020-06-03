@@ -121,6 +121,34 @@ class Client implements ClientInterface
     }
 
     /**
+     * Fetch multiple users
+     *
+     * @param array $pids
+     * @return array
+     * @throws FailedRequestException
+     */
+    public function fetchUsers(array $pids): array
+    {
+        $query = $this->createPidQuery($pids);
+
+        $request = $this->createRequest('/users?_queryFilter='. $query, Request::METHOD_GET);
+
+        $response = $this->httpClient->send($request);
+
+        if (!$response->isSuccess()) {
+            throw new FailedRequestException($response);
+        }
+
+        $decoded = json_decode($response->getBody(), true);
+
+        if ($decoded === null) {
+            throw new \RuntimeException('Unable to JSON decode response body: ' . json_last_error_msg());
+        }
+
+        return $decoded['result'] ?? [];
+    }
+
+    /**
      * Creates a request
      *
      * @param string $path
@@ -135,5 +163,22 @@ class Client implements ClientInterface
         $request->setUri(Uri::merge($request->getUriString(), $path));
 
         return $request;
+    }
+
+    /**
+     * Create PID query string
+     *
+     * @param array $pids
+     * @return string
+     */
+    private function createPidQuery(array $pids): string
+    {
+        $queryArray = [];
+
+        foreach ($pids as $pid) {
+            $queryArray[] = 'pid eq "'.$pid.'"';
+        }
+
+        return urlencode(implode(" or ", $queryArray));
     }
 }

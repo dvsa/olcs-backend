@@ -302,6 +302,15 @@ return [
                         ],
                     ],
                 ],
+                'populate-last-login' => [
+                    'options' => [
+                        'route' => 'populate-last-login [--live] [--limit=<limit>] [--batch-size=<batchSize>] [--show-progress] [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'populateLastLogin',
+                        ],
+                    ],
+                ],
                 'poll-sqs' => [
                     'options' => [
                         'route' => 'poll-sqs <queue> [--queue-duration=<seconds>] [--verbose|-v]',
@@ -432,6 +441,7 @@ return [
             Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,
             Command\Permits\CloseExpiredWindows::class => CommandHandler\Permits\CloseExpiredWindows::class,
             Command\Permits\MarkExpiredPermits::class => CommandHandler\Permits\MarkExpiredPermits::class,
+            Command\PopulateLastLoginFromOpenAm::class => CommandHandler\PopulateLastLoginFromOpenAm::class,
         ],
     ],
 

@@ -126,6 +126,26 @@ class Module implements ConsoleUsageProviderInterface
                 '<close-expired-windows> [--since=<date>]',
                 'action to perform, ie \'close-expired-windows\' to close all recently expired windows',
             ],
+
+            'populate-last-login --limit=<limit> --batch-size=<batchSize> [--live]  [--show-progress] [--verbose|-v]' =>
+                'Populate last login timestamp in user table with data from OpenAM',
+                [
+                    '--live',
+                    'Explicit flag to indicate this is not a dry run',
+                ],
+                [
+                    '--batch-size=<batchSize>',
+                    'Defines the number of users to be queried from openAM and updated in the database in one go'
+                ],
+                [
+                    '--limit=<limit>',
+                    'Limit the number of users to process. Set it to -1 to process all users.'
+                ],
+                [
+                    '--show-progress',
+                    'Show a progress bar'
+                ],
+
             'poll-sqs <queue> [--queue-duration=<seconds>] [--verbose|-v]' => 'Poll an SQS queue to process a message',
             [
                 '--queue-duration=SECONDS', '(optional) Number of seconds the queue process will run for'
