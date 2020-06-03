@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
@@ -360,5 +361,40 @@ class User extends AbstractRepository
             ->setParameter('role', $role);
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Get count of users with lastLoginAt column set to null
+     *
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function fetchActiveUserCount(): int
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->select('COUNT(DISTINCT ' . $this->alias . '.id)')
+            ->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'));
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Get a paginated list of users with lastLoginAt column set to null
+     *
+     * @param int $offset
+     * @param int $maxResults
+     * @return Paginator
+     */
+    public function fetchPaginatedActiveUsers($offset, $maxResults) : Paginator
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'));
+
+        $qb->setFirstResult($offset)
+            ->setMaxResults($maxResults);
+
+        return new Paginator($qb->getQuery());
     }
 }
