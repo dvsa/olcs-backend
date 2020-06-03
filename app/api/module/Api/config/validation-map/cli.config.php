@@ -31,6 +31,7 @@ return [
     CliCommandHandler\Permits\MarkExpiredPermits::class => IsSystemUser::class,
     CliCommandHandler\Permits\GeneratePermits::class => IsSystemUser::class,
     CliCommandHandler\Permits\WithdrawUnpaidIrhp::class => IsSystemUser::class,
+    CliCommandHandler\PopulateLastLoginFromOpenAm::class => IsSystemUser::class,
     CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
 
     //  api commands

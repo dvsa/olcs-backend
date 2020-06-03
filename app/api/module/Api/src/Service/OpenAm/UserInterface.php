@@ -11,6 +11,25 @@ namespace Dvsa\Olcs\Api\Service\OpenAm;
 interface UserInterface
 {
     /**
+     * Fetch a user
+     *
+     * @param string $pid Pid
+     *
+     * @return array
+     * @throws FailedRequestException
+     */
+    public function fetchUser($pid): array;
+
+    /**
+     * Fetch multiple users
+     *
+     * @param array $pids
+     * @return array
+     * @throws FailedRequestException
+     */
+    public function fetchUsers(array $pids): array;
+
+    /**
      * Registers a user
      *
      * @param string $loginId

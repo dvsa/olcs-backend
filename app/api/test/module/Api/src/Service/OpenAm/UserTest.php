@@ -259,4 +259,25 @@ class UserTest extends MockeryTestCase
             ],
         ];
     }
+
+    public function testFetchUsers()
+    {
+        $expected = [
+            [
+                'pid' => 'some-pid-1'
+            ],
+            [
+                'pid' => 'some-pid-2'
+            ]
+        ];
+
+        $param = ['some-pid-1', 'some-pid-2'];
+
+        $this->mockClient->shouldReceive('fetchUsers')
+            ->once()
+            ->with($param)
+            ->andReturn($expected);
+
+        $this->assertEquals($expected, $this->sut->fetchUsers($param));
+    }
 }
