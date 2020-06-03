@@ -204,4 +204,93 @@ class ClientTest extends MockeryTestCase
 
         $sut->fetchUser('some-pid');
     }
+
+    public function testFetchUsers()
+    {
+        $expectedResult = [
+            [
+                'pid' => 'some-pid-1'
+            ],
+            [
+                'pid' => 'some-pid-2'
+            ]
+        ];
+
+        $httpResponseContent = [
+            'result' => $expectedResult
+        ];
+
+        $sentRequest = null;
+
+        $return = function ($request) use (&$sentRequest, $httpResponseContent) {
+            $sentRequest = $request;
+
+            $resp = new Response();
+            $resp->setContent(json_encode($httpResponseContent));
+            return $resp;
+        };
+
+        $mockClient = m::mock(HttpClient::class);
+        $mockClient->shouldReceive('send')->with(m::type(Request::class))->andReturnUsing($return);
+
+        $request = new Request();
+        $request->setUri('http://testing.com');
+
+        $sut = new Client($mockClient, $request);
+
+        $userData = $sut->fetchUsers(['some-pid-1', 'some-pid-2']);
+
+        $this->assertInstanceOf(Request::class, $sentRequest);
+        $this->assertNotSame($request, $sentRequest);
+        $queryString = urlencode('pid eq "some-pid-1" or pid eq "some-pid-2"');
+        $this->assertStringStartsWith(
+            'GET http://testing.com:80/users?_queryFilter='.$queryString,
+            $sentRequest->renderRequestLine()
+        );
+        $this->assertEquals($expectedResult, $userData);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException
+     */
+    public function testFetchUsersError()
+    {
+        $return = function () {
+            $resp = new Response();
+            $resp->setStatusCode(500);
+            return $resp;
+        };
+
+        $mockClient = m::mock(HttpClient::class);
+        $mockClient->shouldReceive('send')->with(m::type(Request::class))->andReturnUsing($return);
+
+        $request = new Request();
+        $request->setUri('http://testing.com');
+
+        $sut = new Client($mockClient, $request);
+
+        $sut->fetchUsers(['some-pid']);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testFetchUsersJsonError()
+    {
+        $return = function () {
+            $resp = new Response();
+            $resp->setContent('invalid json');
+            return $resp;
+        };
+
+        $mockClient = m::mock(HttpClient::class);
+        $mockClient->shouldReceive('send')->with(m::type(Request::class))->andReturnUsing($return);
+
+        $request = new Request();
+        $request->setUri('http://testing.com');
+
+        $sut = new Client($mockClient, $request);
+
+        $sut->fetchUsers(['some-pid']);
+    }
 }

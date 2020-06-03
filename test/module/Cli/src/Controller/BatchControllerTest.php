@@ -1152,4 +1152,23 @@ class BatchControllerTest extends MockeryTestCase
             ],
         ];
     }
+
+    public function testPopulateLastLoginAction()
+    {
+        $this->mockParamsPlugin([
+            'live' => true,
+            'show-progress' => true,
+            'v' => true
+        ]);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\PopulateLastLoginFromOpenAm::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->mockConsole->shouldReceive('writeLine');
+
+        $this->sut->populateLastLoginAction();
+    }
 }

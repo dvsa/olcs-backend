@@ -45,4 +45,13 @@ interface ClientInterface
      * @throws \RuntimeException
      */
     public function fetchUser($pid);
+
+    /**
+     * Fetch multiple users
+     *
+     * @param array $pids
+     * @return array
+     * @throws FailedRequestException
+     */
+    public function fetchUsers(array $pids): array;
 }

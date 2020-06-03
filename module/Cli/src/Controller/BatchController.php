@@ -5,12 +5,16 @@ namespace Dvsa\Olcs\Cli\Controller;
 use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Service\OpenAm\ClientInterface;
 use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
+use Dvsa\Olcs\Cli\Domain\Command\PopulateLastLoginFromOpenAm;
 use Dvsa\Olcs\Cli\Domain\Query\DataRetention\TableChecks;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Enqueue;
 use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile;
 use Dvsa\Olcs\Transfer\Command as TransferCommand;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Zend\Http\Response;
 use Zend\View\Model\ConsoleModel;
 
@@ -555,5 +559,30 @@ class BatchController extends AbstractCliController
         }
 
         return $consoleModel;
+    }
+
+    /**
+     * Populate lastLoginAt column in user with data from OpenAM
+     *
+     * @throws \Exception
+     */
+    public function populateLastLoginAction()
+    {
+        $params['isLiveRun'] = $this->params('live') ? true : false;
+        $params['limit'] = $this->params('limit');
+        $params['batchSize'] = $this->params('batch-size');
+        if ($this->params('show-progress')) {
+            $progressBar = new ProgressBar(new ConsoleOutput());
+
+            if ($this->params('v') || $this->params('verbose')) {
+                $progressBar->setFormat('very_verbose');
+            }
+
+            $params['progressBar'] = $progressBar;
+        }
+
+        $this->handleExitStatus(
+            $this->handleCommand([PopulateLastLoginFromOpenAm::create($params)])
+        );
     }
 }
