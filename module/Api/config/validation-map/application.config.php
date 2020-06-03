@@ -35,6 +35,7 @@ return [
 
     QueryHandler\Application\OutstandingFees::class     => CanAccessApplicationWithId::class,
     QueryHandler\Application\Application::class => CanAccessApplicationWithId::class,
+    QueryHandler\Application\Completion::class => CanAccessApplicationWithId::class,
     QueryHandler\Application\Declaration::class => CanAccessApplicationWithId::class,
     QueryHandler\Application\DeclarationUndertakings::class => CanAccessApplicationWithId::class,
     QueryHandler\Application\FinancialEvidence::class => CanAccessApplicationWithId::class,
