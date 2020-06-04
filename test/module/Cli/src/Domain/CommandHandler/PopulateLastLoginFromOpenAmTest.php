@@ -3,12 +3,11 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use ArrayIterator;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Service\OpenAm\User;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Cli\Domain\Command\PopulateLastLoginFromOpenAm as PopulateLastLoginFromOpenAmCmd;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\PopulateLastLoginFromOpenAm;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\PopulateLastLoginFromOpenAmNew;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Exception;
 use Mockery as m;
@@ -21,7 +20,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = new PopulateLastLoginFromOpenAm();
+        $this->sut = new PopulateLastLoginFromOpenAmNew();
 
         $this->mockRepo('User', Repository\User::class);
         $this->mockRepo('Document', Repository\Document::class);
@@ -50,10 +49,10 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         ];
 
         $expectedOutputMessages = [
-            "[Batch 1] Setting last login time for user 'batch1-loginId-1' to '2020-01-01 10:00:00'",
-            "[Batch 1] Setting last login time for user 'batch1-loginId-2' to '2020-01-01 11:00:00'",
-            "[Batch 2] Setting last login time for user 'batch2-loginId-1' to '2020-01-02 10:00:00'",
-            "[Batch 2] Setting last login time for user 'batch2-loginId-2' to '2020-01-02 11:00:00'"
+            "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
+            "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
+            "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
+            "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -64,7 +63,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $totalNumberOfUsers = 4;
         $batchSize = 2;
 
-        $this->mockUserRepoThatDoesNotSaveUsers($totalNumberOfUsers, $batchSize);
+        $this->mockUserRepoThatDoesNotSaveUsers($totalNumberOfUsers);
         $this->mockOpenAMWithException();
 
         $params = [
@@ -96,8 +95,8 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         ];
 
         $expectedOutputMessages = [
-            "[Batch 1] Could not find user 'batch1-loginId-2' in OpenAM",
-            "[Batch 2] Could not find user 'batch2-loginId-2' in OpenAM"
+            "[Batch 1] Could not find user 'loginId-2' in OpenAM",
+            "[Batch 2] Could not find user 'loginId-4' in OpenAM"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -118,8 +117,8 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         ];
 
         $expectedOutputMessages = [
-            "[Batch 1] No last login time found for user 'batch1-loginId-2'",
-            "[Batch 2] No last login time found for user 'batch2-loginId-2'"
+            "[Batch 1] No last login time found for user 'loginId-2'",
+            "[Batch 2] No last login time found for user 'loginId-4'"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -141,10 +140,10 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         ];
 
         $expectedOutputMessages = [
-            "[Batch 1] Setting last login time for user 'batch1-loginId-1' to '2020-01-01 10:00:00'",
-            "[Batch 1] Setting last login time for user 'batch1-loginId-2' to '2020-01-01 11:00:00'",
-            "[Batch 2] Setting last login time for user 'batch2-loginId-1' to '2020-01-02 10:00:00'",
-            "[Batch 2] Setting last login time for user 'batch2-loginId-2' to '2020-01-02 11:00:00'"
+            "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
+            "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
+            "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
+            "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -155,7 +154,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $limit = 2;
         $batchSize = 3;
 
-        $this->mockUserRepoWithSingleBatchAndNoCountCall($limit, $limit);
+        $this->mockUserRepoWithSingleBatchAndNoCountCall($limit);
 
         $this->mockOpenAMWithUsers();
 
@@ -166,8 +165,8 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         ];
 
         $expectedOutputMessages = [
-            "[Batch 1] Setting last login time for user 'batch1-loginId-1' to '2020-01-01 10:00:00'",
-            "[Batch 1] Setting last login time for user 'batch1-loginId-2' to '2020-01-01 11:00:00'"
+            "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
+            "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -178,7 +177,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $totalNumberOfUsers = 4;
         $batchSize = 2;
 
-        $this->mockUserRepoWithUsers($totalNumberOfUsers, $batchSize);
+        $this->mockUserRepoWithUsers($totalNumberOfUsers);
 
         $this->repoMap['User']->shouldReceive('saveOnFlush')->times($totalNumberOfUsers);
         $this->repoMap['User']->shouldReceive('flushAll')->never();
@@ -192,11 +191,11 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         ];
 
         $expectedOutputMessages = [
-            "[Batch 1] Setting last login time for user 'batch1-loginId-1' to '2020-01-01 10:00:00'",
-            "[Batch 1] Setting last login time for user 'batch1-loginId-2' to '2020-01-01 11:00:00'",
+            "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
+            "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
             "[Batch 1] Dry run mode. Skipping database update",
-            "[Batch 2] Setting last login time for user 'batch2-loginId-1' to '2020-01-02 10:00:00'",
-            "[Batch 2] Setting last login time for user 'batch2-loginId-2' to '2020-01-02 11:00:00'",
+            "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
+            "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'",
             "[Batch 2] Dry run mode. Skipping database update"
         ];
 
@@ -219,29 +218,25 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
     }
 
     /**
-     * @param $prefix
      * @param $count
-     * @return Paginator|m\LegacyMockInterface|m\MockInterface
+     * @return ArrayIterator
      */
-    private function iterableListOfUsers($prefix, $count)
+    private function iterableListOfUsers($count)
     {
-        $users = [];
+        $result = [];
 
         for ($i=1; $i<=$count; $i++) {
             $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
             $mockUser->shouldReceive('getPid')
-                ->andReturn($prefix . '-pid-' . $i);
+                ->andReturn('pid-' . $i);
             $mockUser->shouldReceive('getLoginId')
-                ->andReturn($prefix. '-loginId-' . $i);
+                ->andReturn('loginId-' . $i);
             $mockUser->shouldReceive('setLastLoginAt');
 
-            $users[] = $mockUser;
+            $result[][] = $mockUser;
         }
 
-        $paginator = m::mock(Paginator::class);
-        $paginator->shouldReceive('getIterator')->andReturn(new ArrayIterator($users));
-
-        return $paginator;
+        return new ArrayIterator($result);
     }
 
     private function makeProgressBar()
@@ -255,7 +250,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
      */
     protected function mockUserRepoThatSavesAllUsers(int $totalNumberOfUsers, int $batchSize): void
     {
-        $this->mockUserRepoWithUsers($totalNumberOfUsers, $batchSize);
+        $this->mockUserRepoWithUsers($totalNumberOfUsers);
 
         $this->repoMap['User']->shouldReceive('saveOnFlush')->times($totalNumberOfUsers);
         $this->repoMap['User']->shouldReceive('flushAll')->times($batchSize);
@@ -268,7 +263,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
      */
     protected function mockUserRepoThatSavesSomeUsers(int $totalNumberOfUsers, int $batchSize, int $usersSaved): void
     {
-        $this->mockUserRepoWithUsers($totalNumberOfUsers, $batchSize);
+        $this->mockUserRepoWithUsers($totalNumberOfUsers);
 
         $this->repoMap['User']->shouldReceive('saveOnFlush')->times($usersSaved);
         $this->repoMap['User']->shouldReceive('flushAll')->times($batchSize);
@@ -278,9 +273,9 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
      * @param int $totalNumberOfUsers
      * @param int $batchSize
      */
-    protected function mockUserRepoThatDoesNotSaveUsers(int $totalNumberOfUsers, int $batchSize): void
+    protected function mockUserRepoThatDoesNotSaveUsers(int $totalNumberOfUsers): void
     {
-        $this->mockUserRepoWithUsers($totalNumberOfUsers, $batchSize);
+        $this->mockUserRepoWithUsers($totalNumberOfUsers);
 
         $this->repoMap['User']->shouldReceive('saveOnFlush')->never();
         $this->repoMap['User']->shouldReceive('flushAll')->never();
@@ -291,18 +286,13 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
      * @param int $batchSize
      * @return void
      */
-    protected function mockUserRepoWithUsers(int $totalNumberOfUsers, int $batchSize) : void
+    protected function mockUserRepoWithUsers(int $totalNumberOfUsers) : void
     {
-        $this->repoMap['User']->shouldReceive('fetchActiveUserCount')
+        $this->repoMap['User']->shouldReceive('fetchUsersCountWithoutLastLoginTime')
             ->andReturn($totalNumberOfUsers);
 
-        $this->repoMap['User']->shouldReceive('fetchPaginatedActiveUsers')
-            ->with(0, 2)
-            ->andReturn($this->iterableListOfUsers('batch1', $batchSize));
-
-        $this->repoMap['User']->shouldReceive('fetchPaginatedActiveUsers')
-            ->with(2, 2)
-            ->andReturn($this->iterableListOfUsers('batch2', $batchSize));
+        $this->repoMap['User']->shouldReceive('fetchUsersWithoutLastLoginTime')
+            ->andReturn($this->iterableListOfUsers($totalNumberOfUsers));
     }
 
     /**
@@ -311,16 +301,11 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
      */
     protected function mockUserRepoWithUsersAndNoCountCall(int $batchSize, int $totalNumberOfUsers): void
     {
-        $this->repoMap['User']->shouldReceive('fetchActiveUserCount')
+        $this->repoMap['User']->shouldReceive('fetchUsersCountWithoutLastLoginTime')
             ->never();
 
-        $this->repoMap['User']->shouldReceive('fetchPaginatedActiveUsers')
-            ->with(0, 2)
-            ->andReturn($this->iterableListOfUsers('batch1', $batchSize));
-
-        $this->repoMap['User']->shouldReceive('fetchPaginatedActiveUsers')
-            ->with(2, 2)
-            ->andReturn($this->iterableListOfUsers('batch2', $batchSize));
+        $this->repoMap['User']->shouldReceive('fetchUsersWithoutLastLoginTime')
+            ->andReturn($this->iterableListOfUsers($totalNumberOfUsers));
 
         $this->repoMap['User']->shouldReceive('saveOnFlush')->times($totalNumberOfUsers);
         $this->repoMap['User']->shouldReceive('flushAll')->times($batchSize);
@@ -330,14 +315,13 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
      * @param int $batchSize
      * @param int $totalNumberOfUsers
      */
-    protected function mockUserRepoWithSingleBatchAndNoCountCall(int $batchSize, int $totalNumberOfUsers): void
+    protected function mockUserRepoWithSingleBatchAndNoCountCall(int $totalNumberOfUsers): void
     {
-        $this->repoMap['User']->shouldReceive('fetchActiveUserCount')
+        $this->repoMap['User']->shouldReceive('fetchUsersCountWithoutLastLoginTime')
             ->never();
 
-        $this->repoMap['User']->shouldReceive('fetchPaginatedActiveUsers')
-            ->with(0, $batchSize)
-            ->andReturn($this->iterableListOfUsers('batch1', $batchSize));
+        $this->repoMap['User']->shouldReceive('fetchUsersWithoutLastLoginTime')
+            ->andReturn($this->iterableListOfUsers($totalNumberOfUsers));
 
         $this->repoMap['User']->shouldReceive('saveOnFlush')->times($totalNumberOfUsers);
         $this->repoMap['User']->shouldReceive('flushAll')->times(1);
@@ -347,30 +331,30 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
     {
         $this->mockOpenAmUserService
             ->shouldReceive('fetchUsers')
-            ->with(['batch1-pid-1', 'batch1-pid-2'])
+            ->with(['pid-1', 'pid-2'])
             ->andReturn(
                 [
                     [
-                        'pid' => 'batch1-pid-1',
+                        'pid' => 'pid-1',
                         'lastLoginTime' => '2020-01-01 10:00:00'
                     ],
                     [
-                        'pid' => 'batch1-pid-2',
+                        'pid' => 'pid-2',
                         'lastLoginTime' => '2020-01-01 11:00:00'
                     ]
                 ]
             );
         $this->mockOpenAmUserService
             ->shouldReceive('fetchUsers')
-            ->with(['batch2-pid-1', 'batch2-pid-2'])
+            ->with(['pid-3', 'pid-4'])
             ->andReturn(
                 [
                     [
-                        'pid' => 'batch2-pid-1',
+                        'pid' => 'pid-3',
                         'lastLoginTime' => '2020-01-02 10:00:00'
                     ],
                     [
-                        'pid' => 'batch2-pid-2',
+                        'pid' => 'pid-4',
                         'lastLoginTime' => '2020-01-02 11:00:00'
                     ]
                 ]
@@ -381,22 +365,22 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
     {
         $this->mockOpenAmUserService
             ->shouldReceive('fetchUsers')
-            ->with(['batch1-pid-1', 'batch1-pid-2'])
+            ->with(['pid-1', 'pid-2'])
             ->andReturn(
                 [
                     [
-                        'pid' => 'batch1-pid-1',
+                        'pid' => 'pid-1',
                         'lastLoginTime' => '2020-01-01 10:00:00'
                     ]
                 ]
             );
         $this->mockOpenAmUserService
             ->shouldReceive('fetchUsers')
-            ->with(['batch2-pid-1', 'batch2-pid-2'])
+            ->with(['pid-3', 'pid-4'])
             ->andReturn(
                 [
                     [
-                        'pid' => 'batch2-pid-1',
+                        'pid' => 'pid-3',
                         'lastLoginTime' => '2020-01-02 10:00:00'
                     ]
                 ]
@@ -407,30 +391,30 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
     {
         $this->mockOpenAmUserService
             ->shouldReceive('fetchUsers')
-            ->with(['batch1-pid-1', 'batch1-pid-2'])
+            ->with(['pid-1', 'pid-2'])
             ->andReturn(
                 [
                     [
-                        'pid' => 'batch1-pid-1',
+                        'pid' => 'pid-1',
                         'lastLoginTime' => '2020-01-01 10:00:00'
                     ],
                     [
-                        'pid' => 'batch1-pid-2'
+                        'pid' => 'pid-2'
                     ]
                 ]
             );
 
         $this->mockOpenAmUserService
             ->shouldReceive('fetchUsers')
-            ->with(['batch2-pid-1', 'batch2-pid-2'])
+            ->with(['pid-3', 'pid-4'])
             ->andReturn(
                 [
                     [
-                        'pid' => 'batch2-pid-1',
+                        'pid' => 'pid-3',
                         'lastLoginTime' => '2020-01-01 10:00:00'
                     ],
                     [
-                        'pid' => 'batch2-pid-2'
+                        'pid' => 'pid-4'
                     ]
                 ]
             );
