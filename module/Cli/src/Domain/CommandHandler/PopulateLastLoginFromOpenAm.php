@@ -200,6 +200,6 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
             $loginIds[] = $user->getLoginId();
         }
 
-        return json_encode($loginIds);
+        return json_encode($loginIds, JSON_PRETTY_PRINT);
     }
 }
