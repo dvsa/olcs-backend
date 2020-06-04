@@ -150,12 +150,12 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
      */
     protected function getNumberOfUsersToProcess(CommandInterface $command) : int
     {
+        $numberOfUsersToProcess = $this->getRepo()->fetchUsersCountWithoutLastLoginTime();
         $limit = $command->getLimit();
-        if ($limit > 0) {
+        if ($limit > 0 && $limit < $numberOfUsersToProcess) {
             $this->result->addMessage("Limiting run to process $limit users");
             $numberOfUsersToProcess = $limit;
         } else {
-            $numberOfUsersToProcess = $this->getRepo()->fetchUsersCountWithoutLastLoginTime();
             $this->result->addMessage("This run will try to process $numberOfUsersToProcess users");
         }
 
