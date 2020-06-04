@@ -3,48 +3,54 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implements OpenAmUserAwareInterface
 {
     use OpenAmUserAwareTrait;
 
-    const DEFAULT_BATCH_SIZE = 100;
+    const DEFAULT_BATCH_SIZE = 50;
 
     protected $repoServiceName = 'User';
 
     /**
      * Handle command
      *
-     * @param PopulateLastLoginFromOpenAm $command Command
+     * @param \Dvsa\Olcs\Cli\Domain\Command\PopulateLastLoginFromOpenAm $command Command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     * @throws \Exception
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
         $isLiveRun = $command->isLiveRun();
         $batchSize = $this->getBatchSize($command);
+        $limit = $command->getLimit();
         $progressBar = $command->getProgressBar();
+
+        $iterableResult = $this->getRepo()->fetchUsersWithoutLastLoginTime();
         $numberOfUsersToProcess = $this->getNumberOfUsersToProcess($command);
-        $numberOfBatches = $this->getNumberOfBatches($numberOfUsersToProcess, $batchSize);
 
         if ($progressBar) {
             $progressBar->start($numberOfUsersToProcess);
         }
 
+        $batchNumber = 0;
+        $batchedUsers = [];
         $totalCount = 0;
-        for ($batchNumber = 1; $batchNumber <= $numberOfBatches; $batchNumber++) {
-            $offset = $batchSize * ($batchNumber - 1);
+        foreach ($iterableResult as $row) {
+            $user = $row[0];
+            $batchedUsers[$user->getPid()] = $user;
+            $totalCount++;
 
-            $batchedUsers = $this->getBatchedUsers($offset, $batchSize);
+            if (($totalCount % $batchSize == 0) || ($totalCount == $numberOfUsersToProcess)) {
+                $batchNumber++;
 
-            if (!empty($batchedUsers)) {
-                $this->result->addMessage("[Batch $batchNumber] Querying OpenAM for " . count($batchedUsers) . " users");
-                $totalCount += count($batchedUsers);
                 if ($progressBar) {
                     $progressBar->advance(count($batchedUsers));
                 }
@@ -53,8 +59,16 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
                     $this->processBatch($batchedUsers, $batchNumber, $isLiveRun);
                 } catch (\Exception $exception) {
                     $this->result->addMessage("[Batch $batchNumber] Unable to process batch. Error : " . $exception->getMessage());
+                    $this->result->addMessage("[Batch $batchNumber] Users not processed : " . $this->getLoginIds($batchedUsers));
                     continue;
+                } finally {
+                    $batchedUsers = [];
                 }
+            }
+
+            //If there's a custom limit set, end the for loop
+            if ($totalCount === $limit) {
+                break;
             }
         }
 
@@ -74,7 +88,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
      * @param array $users
      * @param int $batchNumber
      * @return array
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      */
     private function updateUsers(array $openAmResult, array $users, int $batchNumber): array
     {
@@ -132,7 +146,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
     /**
      * @param CommandInterface $command
      * @return int
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      */
     protected function getNumberOfUsersToProcess(CommandInterface $command) : int
     {
@@ -141,7 +155,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
             $this->result->addMessage("Limiting run to process $limit users");
             $numberOfUsersToProcess = $limit;
         } else {
-            $numberOfUsersToProcess = $this->getRepo()->fetchActiveUserCount();
+            $numberOfUsersToProcess = $this->getRepo()->fetchUsersCountWithoutLastLoginTime();
             $this->result->addMessage("This run will try to process $numberOfUsersToProcess users");
         }
 
@@ -149,39 +163,11 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
     }
 
     /**
-     * @param int $numberOfUsersToProcess
-     * @param int $batchSize
-     * @return float
-     */
-    protected function getNumberOfBatches(int $numberOfUsersToProcess, int $batchSize) : float
-    {
-        return ceil($numberOfUsersToProcess / $batchSize);
-    }
-
-    /**
-     * @param int $offset
-     * @param int $batchSize
-     * @return array
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    protected function getBatchedUsers(int $offset, int $batchSize): array
-    {
-        $usersToProcess = $this->getRepo()->fetchPaginatedActiveUsers($offset, $batchSize);
-
-        $batchedUsers = [];
-        foreach ($usersToProcess as $user) {
-            $batchedUsers[$user->getPid()] = $user;
-        }
-
-        return $batchedUsers;
-    }
-
-    /**
      * @param array $batchedUsers
      * @param int $batchNumber
      * @param bool $isLiveRun
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     * @throws \Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException
+     * @throws RuntimeException
+     * @throws FailedRequestException
      */
     protected function processBatch(array $batchedUsers, int $batchNumber, bool $isLiveRun): void
     {
@@ -201,5 +187,19 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
         }
 
         $this->result->addMessage("[Batch $batchNumber] Update complete");
+    }
+
+    /**
+     * @param User[] $batchedUsers
+     * @return string
+     */
+    private function getLoginIds(array $batchedUsers)
+    {
+        $loginIds = [];
+        foreach ($batchedUsers as $user) {
+            $loginIds[] = $user->getLoginId();
+        }
+
+        return json_encode($loginIds);
     }
 }

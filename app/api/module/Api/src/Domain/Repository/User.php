@@ -2,18 +2,19 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 
 /**
  * User
@@ -367,14 +368,15 @@ class User extends AbstractRepository
      * Get count of users with lastLoginAt column set to null
      *
      * @return int
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    public function fetchActiveUserCount(): int
+    public function fetchUsersCountWithoutLastLoginTime(): int
     {
         $qb = $this->createQueryBuilder();
         $qb->select('COUNT(DISTINCT ' . $this->alias . '.id)')
-            ->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'));
+            ->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'))
+            ->andWhere($qb->expr()->isNull($this->alias . '.lastLoginAt'));
 
         return $qb->getQuery()->getSingleScalarResult();
     }
@@ -382,19 +384,15 @@ class User extends AbstractRepository
     /**
      * Get a paginated list of users with lastLoginAt column set to null
      *
-     * @param int $offset
-     * @param int $maxResults
-     * @return Paginator
+     * @return \Iterator
      */
-    public function fetchPaginatedActiveUsers($offset, $maxResults) : Paginator
+    public function fetchUsersWithoutLastLoginTime() : \Iterator
     {
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'));
+        $qb->andWhere($qb->expr()->isNull($this->alias . '.lastLoginAt'));
 
-        $qb->setFirstResult($offset)
-            ->setMaxResults($maxResults);
-
-        return new Paginator($qb->getQuery());
+        return $qb->getQuery()->iterate();
     }
 }
