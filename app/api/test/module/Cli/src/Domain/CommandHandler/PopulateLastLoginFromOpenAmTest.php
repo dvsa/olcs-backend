@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Service\OpenAm\User;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Cli\Domain\Command\PopulateLastLoginFromOpenAm as PopulateLastLoginFromOpenAmCmd;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\PopulateLastLoginFromOpenAmNew;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\PopulateLastLoginFromOpenAm;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Exception;
 use Mockery as m;
@@ -20,7 +20,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = new PopulateLastLoginFromOpenAmNew();
+        $this->sut = new PopulateLastLoginFromOpenAm();
 
         $this->mockRepo('User', Repository\User::class);
         $this->mockRepo('Document', Repository\Document::class);
@@ -129,7 +129,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $totalNumberOfUsers = 4;
         $batchSize = 2;
 
-        $this->mockUserRepoWithUsersAndNoCountCall($batchSize, $totalNumberOfUsers);
+        $this->mockUserRepoThatSavesAllUsers($totalNumberOfUsers, $batchSize);
 
         $this->mockOpenAMWithUsers();
 
@@ -151,10 +151,11 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithLimitLessThanBatchSize()
     {
+        $totalNumberOfUsers = 4;
         $limit = 2;
         $batchSize = 3;
 
-        $this->mockUserRepoWithSingleBatchAndNoCountCall($limit);
+        $this->mockUserRepoWithLimit($totalNumberOfUsers, $limit);
 
         $this->mockOpenAMWithUsers();
 
@@ -296,34 +297,18 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
     }
 
     /**
-     * @param int $batchSize
      * @param int $totalNumberOfUsers
+     * @param int $limit
      */
-    protected function mockUserRepoWithUsersAndNoCountCall(int $batchSize, int $totalNumberOfUsers): void
+    protected function mockUserRepoWithLimit(int $totalNumberOfUsers, int $limit): void
     {
         $this->repoMap['User']->shouldReceive('fetchUsersCountWithoutLastLoginTime')
-            ->never();
+            ->andReturn($totalNumberOfUsers);
 
         $this->repoMap['User']->shouldReceive('fetchUsersWithoutLastLoginTime')
             ->andReturn($this->iterableListOfUsers($totalNumberOfUsers));
 
-        $this->repoMap['User']->shouldReceive('saveOnFlush')->times($totalNumberOfUsers);
-        $this->repoMap['User']->shouldReceive('flushAll')->times($batchSize);
-    }
-
-    /**
-     * @param int $batchSize
-     * @param int $totalNumberOfUsers
-     */
-    protected function mockUserRepoWithSingleBatchAndNoCountCall(int $totalNumberOfUsers): void
-    {
-        $this->repoMap['User']->shouldReceive('fetchUsersCountWithoutLastLoginTime')
-            ->never();
-
-        $this->repoMap['User']->shouldReceive('fetchUsersWithoutLastLoginTime')
-            ->andReturn($this->iterableListOfUsers($totalNumberOfUsers));
-
-        $this->repoMap['User']->shouldReceive('saveOnFlush')->times($totalNumberOfUsers);
+        $this->repoMap['User']->shouldReceive('saveOnFlush')->times($limit);
         $this->repoMap['User']->shouldReceive('flushAll')->times(1);
     }
 
