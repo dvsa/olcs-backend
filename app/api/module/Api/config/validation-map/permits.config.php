@@ -48,6 +48,7 @@ return [
     QueryHandler\Permits\ReadyToPrintType::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintCountry::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintStock::class => IsInternalAdmin::class,
+    QueryHandler\Permits\ReadyToPrintRangeType::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintConfirm::class => IsInternalAdmin::class,
     QueryHandler\Permits\DeviationData::class => IsInternalOrSystemUser::class,

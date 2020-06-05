@@ -22,6 +22,41 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterface
 {
+    const BILATERAL_TYPE_STANDARD_SINGLE = 'standard.single';
+    const BILATERAL_TYPE_STANDARD_MULTIPLE = 'standard.multiple';
+    const BILATERAL_TYPE_CABOTAGE_SINGLE = 'cabotage.single';
+    const BILATERAL_TYPE_CABOTAGE_MULTIPLE = 'cabotage.multiple';
+
+    const BILATERAL_TYPES = [
+        RefData::JOURNEY_SINGLE => [
+            0 => self::BILATERAL_TYPE_STANDARD_SINGLE,
+            1 => self::BILATERAL_TYPE_CABOTAGE_SINGLE,
+        ],
+        RefData::JOURNEY_MULTIPLE => [
+            0 => self::BILATERAL_TYPE_STANDARD_MULTIPLE,
+            1 => self::BILATERAL_TYPE_CABOTAGE_MULTIPLE,
+        ],
+    ];
+
+    const BILATERAL_TYPES_CRITERIA = [
+        self::BILATERAL_TYPE_STANDARD_SINGLE => [
+            'journey' => RefData::JOURNEY_SINGLE,
+            'cabotage' => false,
+        ],
+        self::BILATERAL_TYPE_STANDARD_MULTIPLE => [
+            'journey' => RefData::JOURNEY_MULTIPLE,
+            'cabotage' => false,
+        ],
+        self::BILATERAL_TYPE_CABOTAGE_SINGLE => [
+            'journey' => RefData::JOURNEY_SINGLE,
+            'cabotage' => true,
+        ],
+        self::BILATERAL_TYPE_CABOTAGE_MULTIPLE => [
+            'journey' => RefData::JOURNEY_MULTIPLE,
+            'cabotage' => true,
+        ],
+    ];
+
     /**
      * Create
      *

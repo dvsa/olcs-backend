@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as Entity;
 
 /**
@@ -144,5 +146,42 @@ class IrhpPermitRange extends AbstractRepository
         );
 
         return $statement->fetchAll();
+    }
+
+    /**
+     * Returns list of range types ready to print
+     *
+     * @param int $irhpPermitStockId Irhp Permit Stock Id
+     *
+     * @return array
+     */
+    public function fetchReadyToPrint($irhpPermitStockId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select('rd.id as journey', $this->alias.'.cabotage')
+            ->distinct()
+            ->innerJoin($this->alias . '.irhpPermits', 'ip')
+            ->innerJoin($this->alias . '.journey', 'rd')
+            ->where($qb->expr()->in('ip.status', ':statuses'))
+            ->andWhere($this->alias . '.irhpPermitStock = :irhpPermitStockId')
+            ->setParameter('statuses', IrhpPermitEntity::$readyToPrintStatuses)
+            ->setParameter('irhpPermitStockId', $irhpPermitStockId)
+            ->orderBy('rd.id', 'ASC')
+            ->addOrderBy($this->alias . '.cabotage', 'ASC');
+
+        $result = $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
+        $list = [];
+
+        foreach ($result as $value) {
+            $journeyKey = $value['journey'];
+            $cabotageKey = $value['cabotage'];
+
+            $list[] = Entity::BILATERAL_TYPES[$journeyKey][$cabotageKey];
+        }
+
+        return $list;
     }
 }

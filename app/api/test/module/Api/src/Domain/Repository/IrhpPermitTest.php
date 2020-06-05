@@ -12,6 +12,7 @@ use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Mockery as m;
 use PDO;
@@ -272,6 +273,73 @@ class IrhpPermitTest extends RepositoryTestCase
             . ']]] '
             . 'ORDER BY m.permitNumber ASC';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    /**
+     * @dataProvider dpFetchListForReadyToPrintWithStockAndRangeType
+     */
+    public function testFetchListForReadyToPrintWithStockAndRangeType($irhpPermitRangeType, $expectedJourney, $expectedCabotage)
+    {
+        $this->setUpSut(IrhpPermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $query = ReadyToPrint::create(
+            [
+                'irhpPermitStock' => 100,
+                'irhpPermitRangeType' => $irhpPermitRangeType,
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'INNER JOIN m.irhpPermitRange ipr '
+            . 'INNER JOIN ipr.irhpPermitStock ips '
+            . 'AND ips.id = [[100]] '
+            . 'AND ipr.journey = [['.$expectedJourney.']] '
+            . 'AND ipr.cabotage = [['.$expectedCabotage.']] '
+            . 'AND m.status IN [[['
+                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
+                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+            . ']]] '
+            . 'ORDER BY m.permitNumber ASC';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function dpFetchListForReadyToPrintWithStockAndRangeType()
+    {
+        return [
+            [
+                IrhpPermitRangeEntity::BILATERAL_TYPE_STANDARD_SINGLE,
+                RefData::JOURNEY_SINGLE,
+                'false',
+            ],
+            [
+                IrhpPermitRangeEntity::BILATERAL_TYPE_STANDARD_MULTIPLE,
+                RefData::JOURNEY_MULTIPLE,
+                'false',
+            ],
+            [
+                IrhpPermitRangeEntity::BILATERAL_TYPE_CABOTAGE_SINGLE,
+                RefData::JOURNEY_SINGLE,
+                'true',
+            ],
+            [
+                IrhpPermitRangeEntity::BILATERAL_TYPE_CABOTAGE_MULTIPLE,
+                RefData::JOURNEY_MULTIPLE,
+                'true',
+            ],
+        ];
     }
 
     public function testFetchListForReadyToPrintConfirm()
