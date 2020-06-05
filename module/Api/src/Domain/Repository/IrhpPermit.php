@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
@@ -100,11 +101,24 @@ class IrhpPermit extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query instanceof ReadyToPrint) {
-            if ($query->getIrhpPermitStock() != null) {
-                $qb->innerJoin($this->alias . '.irhpPermitRange', 'ipr')
-                    ->innerJoin('ipr.irhpPermitStock', 'ips')
-                    ->andWhere($qb->expr()->eq('ips.id', ':stockId'))
-                    ->setParameter('stockId', $query->getIrhpPermitStock());
+            if ($query->getIrhpPermitStock() || $query->getIrhpPermitRangeType()) {
+                $qb->innerJoin($this->alias . '.irhpPermitRange', 'ipr');
+
+                if ($query->getIrhpPermitStock()) {
+                    $qb->innerJoin('ipr.irhpPermitStock', 'ips')
+                        ->andWhere($qb->expr()->eq('ips.id', ':stockId'))
+                        ->setParameter('stockId', $query->getIrhpPermitStock());
+                }
+
+                if ($query->getIrhpPermitRangeType()) {
+                    $rangeTypeCriteria
+                        = IrhpPermitRangeEntity::BILATERAL_TYPES_CRITERIA[$query->getIrhpPermitRangeType()];
+
+                    $qb->andWhere($qb->expr()->eq('ipr.journey', ':journey'))
+                        ->andWhere($qb->expr()->eq('ipr.cabotage', ':cabotage'))
+                        ->setParameter('journey', $rangeTypeCriteria['journey'])
+                        ->setParameter('cabotage', $rangeTypeCriteria['cabotage']);
+                }
             }
 
             $qb->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
