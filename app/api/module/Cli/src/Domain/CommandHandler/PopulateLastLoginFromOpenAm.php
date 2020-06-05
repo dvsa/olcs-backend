@@ -186,6 +186,8 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
             $this->result->addMessage("[Batch $batchNumber] Dry run mode. Skipping database update");
         }
 
+        $this->getRepo()->clear();
+
         $this->result->addMessage("[Batch $batchNumber] Update complete");
     }
 

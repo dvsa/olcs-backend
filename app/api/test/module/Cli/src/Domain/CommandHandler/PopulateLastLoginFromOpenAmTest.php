@@ -294,6 +294,8 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
         $this->repoMap['User']->shouldReceive('fetchUsersWithoutLastLoginTime')
             ->andReturn($this->iterableListOfUsers($totalNumberOfUsers));
+
+        $this->repoMap['User']->shouldReceive('clear');
     }
 
     /**
@@ -310,6 +312,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
         $this->repoMap['User']->shouldReceive('saveOnFlush')->times($limit);
         $this->repoMap['User']->shouldReceive('flushAll')->times(1);
+        $this->repoMap['User']->shouldReceive('clear')->times(1);
     }
 
     protected function mockOpenAMWithUsers(): void
