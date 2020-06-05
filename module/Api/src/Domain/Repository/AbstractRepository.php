@@ -78,6 +78,15 @@ abstract class AbstractRepository extends AbstractReadonlyRepository implements 
     }
 
     /**
+     * Clears the EntityManager. All objects that are currently managed
+     * by this EntityManager become detached.
+     */
+    public function clear()
+    {
+        $this->getEntityManager()->clear();
+    }
+
+    /**
      * Delete an entity
      *
      * @param mixed $entity Entity to delete
