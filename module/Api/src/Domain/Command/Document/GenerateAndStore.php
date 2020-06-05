@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\ApplicationOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\BusRegOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\CasesOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\IrfoOrganisationOptional;
+use Dvsa\Olcs\Transfer\FieldType\Traits\IrhpApplicationOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\LicenceOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\TrafficAreasOptional;
 use Dvsa\Olcs\Transfer\FieldType\Traits\TransportManagerOptional;
@@ -24,6 +25,7 @@ class GenerateAndStore extends AbstractCommand
         BusRegOptional,
         CasesOptional,
         IrfoOrganisationOptional,
+        IrhpApplicationOptional,
         TransportManagerOptional,
         TrafficAreasOptional,
         PrintOptional;
