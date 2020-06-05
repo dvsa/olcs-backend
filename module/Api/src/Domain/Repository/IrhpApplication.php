@@ -667,6 +667,7 @@ class IrhpApplication extends AbstractRepository
             'ia.id as id, ' .
             'ia.irhp_permit_type_id as typeId, ' .
             'ia.status as statusId, ' .
+            'ia.date_received as dateReceived, ' .
             'srd.description as statusDescription, ' .
             'trd.description as typeDescription, ' .
             'ips.period_name_key as periodNameKey, ' .
