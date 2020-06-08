@@ -76,14 +76,14 @@ class CreateTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage The dates overlap with another window for this Permit stock
-     *
      * Test for overlapping IRHP Permit Windows - no values are asserted as this tests to ensure that a validation
      * exception is thrown.
      */
     public function testHandleOverlap()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('The dates overlap with another window for this Permit stock');
+
         $cmdData = [
             'irhpPermitStock' => '1',
             'startDate' => $this->today,

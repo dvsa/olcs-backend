@@ -81,11 +81,11 @@ class PiEntityTest extends EntityTester
 
     /**
      * test create throws exception when case is closed
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCreateClosedCaseException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $caseEntity = m::mock(CasesEntity::class);
         $caseEntity->shouldReceive('isClosed')->andReturn(true);
         $agreedByTc = m::mock(PresidingTcEntity::class);
@@ -191,11 +191,11 @@ class PiEntityTest extends EntityTester
     }
     /**
      * test agreed and legislation throws exception when Pi is closed
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testAgreedAndLegislationClosedException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $agreedByTc = m::mock(PresidingTcEntity::class);
         $agreedByTcRole = m::mock(RefData::class);
         $assignedCaseworker = m::mock(User::class);
@@ -328,11 +328,10 @@ class PiEntityTest extends EntityTester
         ];
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testUpdatePiWithDecisionClosedException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $decidedByTc = m::mock(PresidingTcEntity::class);
         $decidedByTcRole = m::mock(RefData::class);
         $decisions = new ArrayCollection();
@@ -377,11 +376,10 @@ class PiEntityTest extends EntityTester
         $this->assertEquals(null, $this->entity->getWrittenReasonLetterDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testUpdateWrittenOutcomeNoneClosedException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $writtenOutcome = m::mock(RefData::class);
         $this->entity->setClosedDate(new \DateTime());
 
@@ -417,11 +415,10 @@ class PiEntityTest extends EntityTester
         $this->assertEquals(null, $this->entity->getWrittenReasonLetterDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testUpdateWrittenOutcomeVerbalClosedException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $writtenOutcome = m::mock(RefData::class);
         $this->entity->setClosedDate(new \DateTime());
 
@@ -459,11 +456,10 @@ class PiEntityTest extends EntityTester
         $this->assertEquals(null, $this->entity->getWrittenReasonLetterDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testUpdateWrittenOutcomeDecisionClosedException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $writtenOutcome = m::mock(RefData::class);
         $this->entity->setClosedDate(new \DateTime());
 
@@ -501,11 +497,10 @@ class PiEntityTest extends EntityTester
         $this->assertEquals($entityDate, $this->entity->getWrittenReasonLetterDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testUpdateWrittenOutcomeReasonClosedException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $writtenOutcome = m::mock(RefData::class);
         $this->entity->setClosedDate(new \DateTime());
 
@@ -545,7 +540,6 @@ class PiEntityTest extends EntityTester
             ['N', $date, false]
         ];
     }
-
 
     public function testCanCloseNoHearingNoOutcome()
     {
@@ -646,11 +640,10 @@ class PiEntityTest extends EntityTester
         $this->assertInstanceOf('\DateTime', $this->entity->getClosedDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testCloseThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->entity->setPiHearings(new ArrayCollection());
 
         $this->entity->close();
@@ -668,11 +661,10 @@ class PiEntityTest extends EntityTester
         $this->assertEquals(null, $this->entity->getClosedDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testReopenThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->entity->setPiHearings(new ArrayCollection());
 
         $this->entity->reopen();

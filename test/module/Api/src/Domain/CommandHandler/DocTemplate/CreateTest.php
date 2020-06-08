@@ -59,7 +59,6 @@ class CreateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-
     protected function initReferences()
     {
         $this->references = [
@@ -168,7 +167,6 @@ class CreateTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
-
 
     public function testHandleCommandIdentifierExists()
     {

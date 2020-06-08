@@ -19,7 +19,6 @@ class LicenceHolderNameTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 
-
     public function testRender()
     {
         $bookmark = new LicenceHolderName();

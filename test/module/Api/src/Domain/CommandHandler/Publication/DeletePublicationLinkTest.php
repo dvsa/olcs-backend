@@ -69,11 +69,10 @@ class DeletePublicationLinkTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testHandleCommandThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $command = Cmd::create(['id' => 34]);
 
         $publication = m::mock(PublicationEntity::class);

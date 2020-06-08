@@ -99,12 +99,11 @@ class AbstractQueryHandlerTest extends QueryHandlerTestCase
         ];
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Cannot create audit read for entity, no DTO is defined
-     */
     public function testAuditReadForUndefinedEntity()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot create audit read for entity, no DTO is defined');
+
         $id = 1;
 
         $this->currentUser->shouldReceive('isAnonymous')->andReturn(false);

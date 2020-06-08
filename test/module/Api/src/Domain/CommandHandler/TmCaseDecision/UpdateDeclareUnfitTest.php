@@ -124,11 +124,10 @@ class UpdateDeclareUnfitTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testHandleCommandThrowsIncorrectActionException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $data = [
             'id' => 111,
             'version' => 1,

@@ -330,10 +330,11 @@ class SearchTest extends MockeryTestCase
 
     /**
      * @dataProvider invalidDateProvider
-     * @expectedException \Olcs\Db\Exceptions\SearchDateFilterParseException
      */
     public function testInvalidDateFilter($data)
     {
+        $this->expectException(\Olcs\Db\Exceptions\SearchDateFilterParseException::class);
+
         $this->sut->setDateRanges($data);
     }
 

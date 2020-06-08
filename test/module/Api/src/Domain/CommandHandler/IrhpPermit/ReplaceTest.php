@@ -131,11 +131,11 @@ class ReplaceTest extends CommandHandlerTestCase
 
     /**
      * Tests exception thrown for wrong status
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testWrongStatusException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $cmdData = [
             'id' => '9',
             'replacementIrhpPermit' => '1001'
@@ -160,11 +160,11 @@ class ReplaceTest extends CommandHandlerTestCase
 
     /**
      * Tests exception thrown for wrong status
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function testBadRangeException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
         $cmdData = [
             'id' => '9',
             'replacementIrhpPermit' => '1001'

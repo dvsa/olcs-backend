@@ -388,11 +388,10 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         ];
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsUsernameExistsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $userId = 111;
 
         $data = [

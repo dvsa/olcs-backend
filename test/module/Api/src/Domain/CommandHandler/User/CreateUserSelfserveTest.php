@@ -51,7 +51,6 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-
     public function commonHandleCommandTest()
     {
         $userId = 111;
@@ -248,11 +247,10 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $this->assertEquals(UserEntity::USER_TYPE_OPERATOR, $savedUser->getUserType());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testHandleCommandThrowsIncorrectUserTypeException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $userId = 111;
 
         $data = [
@@ -292,11 +290,10 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsUsernameExistsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'loginId' => 'login_id',
         ];

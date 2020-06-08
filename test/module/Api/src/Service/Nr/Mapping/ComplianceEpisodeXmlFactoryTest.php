@@ -39,12 +39,11 @@ class ComplianceEpisodeXmlFactoryTest extends TestCase
         $this->assertInstanceOf(ComplianceEpisodeXml::class, $service);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Missing INR service config
-     */
     public function testCreateServiceMissingConfig()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Missing INR service config');
+
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
 

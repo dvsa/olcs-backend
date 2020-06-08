@@ -237,7 +237,6 @@ class UserTest extends RepositoryTestCase
         $this->assertSame('RESULT', $this->sut->fetchByPid('123456'));
     }
 
-
     public function testPopulateRefDataReference()
     {
         $teamId = 1;

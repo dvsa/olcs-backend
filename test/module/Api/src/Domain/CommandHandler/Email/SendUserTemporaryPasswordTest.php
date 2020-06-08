@@ -36,7 +36,6 @@ class SendUserTemporaryPasswordTest extends CommandHandlerTestCase
 
     /**
      * @dataProvider handleCommandDataProvider
-     *
      */
     public function testHandleCommand($isInternal, $expectedUrl)
     {

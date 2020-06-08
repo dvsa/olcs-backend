@@ -57,7 +57,6 @@ class UpdateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-
     protected function initReferences()
     {
         $this->references = [
@@ -78,8 +77,6 @@ class UpdateTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    /**
-     */
     public function testHandleCommand()
     {
         $data = [
@@ -196,7 +193,6 @@ class UpdateTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
-
 
     public function testHandleCommandNoContent()
     {

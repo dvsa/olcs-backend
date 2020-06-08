@@ -242,7 +242,6 @@ class IrhpApplicationTest extends RepositoryTestCase
         ];
     }
 
-
     public function testClearScope()
     {
         $stockId = 7;

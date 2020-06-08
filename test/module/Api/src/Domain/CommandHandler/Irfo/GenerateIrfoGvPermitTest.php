@@ -81,11 +81,10 @@ class GenerateIrfoGvPermitTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Result::class, $result);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testHandleCommandThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $command = Cmd::Create(
             [
                 'id' => 99,

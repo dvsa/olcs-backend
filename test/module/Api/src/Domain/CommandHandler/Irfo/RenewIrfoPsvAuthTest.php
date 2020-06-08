@@ -89,11 +89,10 @@ class RenewIrfoPsvAuthTest extends CommandHandlerTestCase
         }
     }
 
-    /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandWithMaxIdsCountExceeded()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'ids' => array_fill(0, Sut::MAX_IDS_COUNT + 1, 'id')
         ];

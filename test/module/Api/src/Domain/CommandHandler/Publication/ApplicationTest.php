@@ -318,11 +318,10 @@ class ApplicationTest extends CommandHandlerTestCase
         $this->assertEquals($expectedSection, $this->sut->getPublicationSectionId($application));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testInvalidSectionIdException()
     {
+        $this->expectException(\RuntimeException::class);
+
         $application = $this->getTestingApplication();
         $application->getStatus()->setId('some_status');
 

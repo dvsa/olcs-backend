@@ -141,12 +141,11 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
         ];
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     * @expectedExceptionMessage Cover letter template not defined for IRHP Permit Type (id: undefined)
-     */
     public function testHandleCommandForUndefinedTemplate()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Cover letter template not defined for IRHP Permit Type (id: undefined)');
+
         $irhpPermitTypeId = 'undefined';
         $irhpPermitId = 1;
 

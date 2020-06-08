@@ -32,7 +32,7 @@ class ConditionUndertakingTest extends MockeryTestCase
     }
 
     /**
-     * @dataProvider dataProviderTestProvideOnlyRecievedOrGrantSections     *
+     * @dataProvider dataProviderTestProvideOnlyRecievedOrGrantSections
      */
     public function testProvideOnlyRecievedOrGrantSections($publicationSectionId)
     {

@@ -189,7 +189,6 @@ class ProcessToRevokeCurtailSuspendTest extends CommandHandlerTestCase
         );
     }
 
-
     public function dataProviderHandleCommandInvalidToLicence()
     {
         return [

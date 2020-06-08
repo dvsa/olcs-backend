@@ -433,12 +433,11 @@ class GeneratePermitDocumentTest extends CommandHandlerTestCase
         ];
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     * @expectedExceptionMessage Permit template not defined for IRHP Permit Type (id: undefined)
-     */
     public function testHandleCommandForUndefinedTemplate()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Permit template not defined for IRHP Permit Type (id: undefined)');
+
         $irhpPermitTypeId = 'undefined';
         $irhpPermitId = 1;
 

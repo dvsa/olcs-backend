@@ -32,11 +32,10 @@ class BusTest extends RepositoryTestCase
         $this->setUpSut(BusRepo::class);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
-     */
     public function testFetchUsingId()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
         $busRegId = 15;
         $version = 1;
 

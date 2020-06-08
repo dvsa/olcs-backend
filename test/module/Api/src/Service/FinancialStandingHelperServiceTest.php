@@ -170,7 +170,6 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
         );
     }
 
-
     public function getStubRates()
     {
         return [

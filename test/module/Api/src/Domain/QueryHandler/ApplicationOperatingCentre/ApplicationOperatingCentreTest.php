@@ -155,7 +155,6 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
         $this->assertEquals($expected, $result->serialize());
     }
 
-
     public function testHandleQueryReadOnlyUser()
     {
         $this->expectedBundle = [

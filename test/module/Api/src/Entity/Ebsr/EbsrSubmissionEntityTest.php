@@ -89,12 +89,13 @@ class EbsrSubmissionEntityTest extends EntityTester
      * tests beginValidating throws an exception for incorrect statuses
      *
      * @dataProvider beginValidatingProvider
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      *
      * @param string $previousStatus
      */
     public function testBeginValidatingThrowsException($previousStatus)
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $ebsrSubmissionStatus = m::mock(RefData::class)->makePartial();
 
         $previousEbsrSubmissionStatus = m::mock(RefData::class)->makePartial();

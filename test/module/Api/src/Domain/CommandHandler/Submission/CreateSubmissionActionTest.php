@@ -99,11 +99,10 @@ class CreateSubmissionActionTest extends CommandHandlerTestCase
         );
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleInvalidCommand()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'submission' => 11,
             'isDecision' => 'N',

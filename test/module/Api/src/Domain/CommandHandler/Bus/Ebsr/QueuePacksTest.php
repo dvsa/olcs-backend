@@ -114,11 +114,11 @@ class QueuePacksTest extends CommandHandlerTestCase
 
     /**
      * Tests what happens if there are no packs for the organisation
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testHandleCommandNoPacks()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $submissionType = EbsrSubmission::NEW_SUBMISSION_TYPE;
         $cmd = QueuePacksCmd::create(['submissionType' => $submissionType]);
 
@@ -146,11 +146,11 @@ class QueuePacksTest extends CommandHandlerTestCase
 
     /**
      * Tests what happens if the organisation is missing
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testHandleCommandNoOrganisation()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $submissionType = EbsrSubmission::NEW_SUBMISSION_TYPE;
         $cmd = QueuePacksCmd::create(['submissionType' => $submissionType]);
 

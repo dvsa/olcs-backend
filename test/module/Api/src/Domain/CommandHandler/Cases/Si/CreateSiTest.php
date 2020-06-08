@@ -117,11 +117,10 @@ class CreateSiTest extends CommandHandlerTestCase
         $this->assertEquals($reason, $savedSi->getReason());
     }
 
-    /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsErruException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $caseId = 1;
 
         $data = [

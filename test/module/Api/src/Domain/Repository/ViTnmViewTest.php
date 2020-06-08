@@ -65,11 +65,10 @@ class ViTnmViewTest extends RepositoryTestCase
         $this->sut->clearTradingNamesViIndicators($params);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
     public function testClearTradingNamesViIndicatorsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
         $params = [['tradingNameId' => 1]];
 
         $this->dbQueryService->shouldReceive('get')

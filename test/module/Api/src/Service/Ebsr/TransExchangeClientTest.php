@@ -61,12 +61,12 @@ class TransExchangeClientTest extends TestCase
 
     /**
      * Tests exception thrown when request not valid
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
-     * @expectedExceptionMessage TransXchange response did not validate against the schema: message 1, message 2
      */
     public function testMakeRequestThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\TransxchangeException::class);
+        $this->expectExceptionMessage('TransXchange response did not validate against the schema: message 1, message 2');
+
         $requestBody = 'body';
         $responseContent = '<success></success>';
         $responseStringContent = 'string<success></success>string';

@@ -51,7 +51,6 @@ class UpdateIrfoDetailsTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-
     public function testHandleCommandWithTradingNames()
     {
         $data = [
@@ -120,7 +119,6 @@ class UpdateIrfoDetailsTest extends CommandHandlerTestCase
             $savedOrganisation->getIrfoNationality()
         );
     }
-
 
     public function testHandleCommandWithIrfoPartners()
     {

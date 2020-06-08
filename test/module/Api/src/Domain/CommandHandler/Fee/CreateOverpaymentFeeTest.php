@@ -55,7 +55,6 @@ class CreateOverpaymentFeeTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-
     protected function initReferences()
     {
         $this->references = [

@@ -43,7 +43,6 @@ class UserEntityTest extends EntityTester
 
     /**
      * @dataProvider getUserTypeDataProvider
-     *
      */
     public function testGetUserType(
         $team,
@@ -641,11 +640,10 @@ class UserEntityTest extends EntityTester
         $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testCreateThrowsInvalidRoleException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $role = m::mock(RoleEntity::class)->makePartial();
         $role->setRole(RoleEntity::ROLE_INTERNAL_ADMIN);
 
@@ -665,11 +663,10 @@ class UserEntityTest extends EntityTester
         Entity::create('pid', Entity::USER_TYPE_OPERATOR, $data);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testUpdateThrowsInvalidRoleException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $role = m::mock(RoleEntity::class)->makePartial();
         $role->setRole(RoleEntity::ROLE_INTERNAL_ADMIN);
 
@@ -708,11 +705,10 @@ class UserEntityTest extends EntityTester
         $entity->update($data);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testMissingRoleException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $role = m::mock(RoleEntity::class)->makePartial();
         $role->setRole('invalid_role');
 
@@ -868,11 +864,10 @@ class UserEntityTest extends EntityTester
         $this->assertFalse($user->isSystemUser());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testAnonUsernameReserved()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         Entity::create('123456', Entity::USER_TYPE_INTERNAL, ['loginId' => 'anon']);
     }
 

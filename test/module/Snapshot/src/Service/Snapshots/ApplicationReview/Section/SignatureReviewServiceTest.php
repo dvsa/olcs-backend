@@ -93,7 +93,6 @@ class SignatureReviewServiceTest extends MockeryTestCase
         $this->assertEquals($expected, $markup);
     }
 
-
     protected function mockTranslator()
     {
         $mockTranslator = m::mock();
