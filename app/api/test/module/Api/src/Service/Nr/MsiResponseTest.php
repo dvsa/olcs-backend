@@ -21,11 +21,10 @@ use Mockery as m;
  */
 class MsiResponseTest extends MockeryTestCase
 {
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testCreateThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $cases = m::mock(CasesEntity::class);
         $cases->shouldReceive('canSendMsiResponse')->once()->andReturn(false);
 

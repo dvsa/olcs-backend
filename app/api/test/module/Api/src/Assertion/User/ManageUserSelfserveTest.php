@@ -31,7 +31,6 @@ class ManageUserSelfserveTest extends MockeryTestCase
 
     /**
      * @dataProvider getAssertForPartnerDataProvider
-     *
      */
     public function testAssertForPartner(
         $isGranted,
@@ -71,7 +70,6 @@ class ManageUserSelfserveTest extends MockeryTestCase
 
     /**
      * @dataProvider getAssertForLocalAuthorityDataProvider
-     *
      */
     public function testAssertForLocalAuthority(
         $isGranted,
@@ -111,7 +109,6 @@ class ManageUserSelfserveTest extends MockeryTestCase
 
     /**
      * @dataProvider getAssertForOperatorDataProvider
-     *
      */
     public function testAssertForOperator(
         $isGranted,

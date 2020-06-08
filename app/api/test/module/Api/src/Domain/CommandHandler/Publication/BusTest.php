@@ -87,11 +87,11 @@ class BusTest extends CommandHandlerTestCase
 
     /**
      * testHandleCommand throws exception on incorrect status
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testHandleCommandThrowsCorrectException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $id = 99;
         $regNo = 44;
         $revertStatus = 'some_status';

@@ -227,11 +227,10 @@ class IrhpCandidatePermitEntityTest extends EntityTester
         $this->assertSame($newRange, $entity->getIrhpPermitRange());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testUpdateIrhpPermitRangeWrongStatus()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
 
         $irhpPermitApplication

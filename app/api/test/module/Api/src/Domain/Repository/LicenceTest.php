@@ -192,11 +192,11 @@ class LicenceTest extends RepositoryTestCase
 
     /**
      * Tests exception thrown when returned licence record is null
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function testFetchByLicNoWithoutAdditionalDataNotFound()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
         $licNo = 'OB1234567';
         $qb = m::mock(QueryBuilder::class);
         $repo = m::mock(EntityRepository::class);
@@ -289,11 +289,10 @@ class LicenceTest extends RepositoryTestCase
         $this->assertSame($licence, $this->sut->fetchForUserRegistration($licNo));
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testFetchForUserRegistrationThrowsIncorrectAddressException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $licNo = 'LIC0001';
 
         $address = m::mock(AddressEntity::class)->makePartial();
@@ -313,11 +312,10 @@ class LicenceTest extends RepositoryTestCase
         $this->sut->fetchForUserRegistration($licNo);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testFetchForUserRegistrationThrowsUnlicencedException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $licNo = 'LIC0001';
 
         $address = m::mock(AddressEntity::class)->makePartial();
@@ -339,11 +337,10 @@ class LicenceTest extends RepositoryTestCase
         $this->sut->fetchForUserRegistration($licNo);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testFetchForUserRegistrationThrowsAdminUsersException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $licNo = 'LIC0001';
 
         $address = m::mock(AddressEntity::class)->makePartial();

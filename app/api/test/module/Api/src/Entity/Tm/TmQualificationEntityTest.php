@@ -38,11 +38,10 @@ class TmQualificationEntityTest extends EntityTester
         $this->assertEquals(1, $entity->getTransportManager());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testUpdateTmQualificationWithException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $entity = new Entity();
 
         $entity->updateTmQualification(

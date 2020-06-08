@@ -36,11 +36,11 @@ class PublicationLinkEntityTest extends EntityTester
 
     /**
      * Tests updateText throws an exception if the corresponding publication isn't of status New
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateTextThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $publicationMock = $this->getPublicationMock(false);
 
         $entity = new Entity();
@@ -94,11 +94,11 @@ class PublicationLinkEntityTest extends EntityTester
 
     /**
      * Tests creating bus reg throws ForbiddenException when necessary
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCreateBusRegThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $publicationSection = m::mock(PublicationSectionEntity::class);
         $trafficArea = m::mock(TrafficAreaEntity::class);
         $licence = m::mock(LicenceEntity::class);
@@ -133,11 +133,11 @@ class PublicationLinkEntityTest extends EntityTester
 
     /**
      * Tests creating tm pi hearing throws ForbiddenException when necessary
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCreateTmPiHearingThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $publicationSection = m::mock(PublicationSectionEntity::class);
         $trafficArea = m::mock(TrafficAreaEntity::class);
         $tm = m::mock(TmEntity::class);
@@ -171,11 +171,11 @@ class PublicationLinkEntityTest extends EntityTester
 
     /**
      * Tests creating pi hearing throws ForbiddenException when necessary
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCreatePiHearingThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $publicationSection = m::mock(PublicationSectionEntity::class);
         $trafficArea = m::mock(TrafficAreaEntity::class);
         $licence = m::mock(LicenceEntity::class);
@@ -207,11 +207,11 @@ class PublicationLinkEntityTest extends EntityTester
 
     /**
      * Tests creating licence throws ForbiddenException when necessary
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCreateLicenceThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $publicationSection = m::mock(PublicationSectionEntity::class);
         $trafficArea = m::mock(TrafficAreaEntity::class);
         $licence = m::mock(LicenceEntity::class);
@@ -244,11 +244,11 @@ class PublicationLinkEntityTest extends EntityTester
 
     /**
      * Tests creating application throws ForbiddenException when necessary
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCreateApplicationThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $publicationSection = m::mock(PublicationSectionEntity::class);
         $trafficArea = m::mock(TrafficAreaEntity::class);
         $licence = m::mock(LicenceEntity::class);
@@ -284,11 +284,11 @@ class PublicationLinkEntityTest extends EntityTester
 
     /**
      * Tests creating impounding throws ForbiddenException when necessary
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCreateImpoundingThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $impounding = m::mock(ImpoundingEntity::class);
         $publicationSection = m::mock(PublicationSectionEntity::class);
         $trafficArea = m::mock(TrafficAreaEntity::class);

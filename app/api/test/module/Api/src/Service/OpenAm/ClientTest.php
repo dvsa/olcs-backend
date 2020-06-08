@@ -55,11 +55,10 @@ class ClientTest extends MockeryTestCase
         $this->assertEquals($expected, json_decode($sentRequest->getContent(), JSON_OBJECT_AS_ARRAY));
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException
-     */
     public function testRegisterUserError()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException::class);
+
         $return = function ($request) {
             $resp = new Response();
             $resp->setStatusCode(500);
@@ -106,11 +105,10 @@ class ClientTest extends MockeryTestCase
         $this->assertEquals($expected, json_decode($sentRequest->getContent(), JSON_OBJECT_AS_ARRAY));
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException
-     */
     public function testUpdateUserError()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException::class);
+
         $return = function ($request) {
             $resp = new Response();
             $resp->setStatusCode(500);
@@ -161,11 +159,10 @@ class ClientTest extends MockeryTestCase
         $this->assertEquals($expected, $userData);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException
-     */
     public function testFetchUserError()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException::class);
+
         $return = function () {
             $resp = new Response();
             $resp->setStatusCode(500);
@@ -183,11 +180,10 @@ class ClientTest extends MockeryTestCase
         $sut->fetchUser('some-pid');
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testFetchUserJsonError()
     {
+        $this->expectException(\RuntimeException::class);
+
         $return = function () {
             $resp = new Response();
             $resp->setContent('invalid json');
@@ -250,11 +246,10 @@ class ClientTest extends MockeryTestCase
         $this->assertEquals($expectedResult, $userData);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException
-     */
     public function testFetchUsersError()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException::class);
+
         $return = function () {
             $resp = new Response();
             $resp->setStatusCode(500);
@@ -272,11 +267,10 @@ class ClientTest extends MockeryTestCase
         $sut->fetchUsers(['some-pid']);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testFetchUsersJsonError()
     {
+        $this->expectException(\RuntimeException::class);
+
         $return = function () {
             $resp = new Response();
             $resp->setContent('invalid json');

@@ -91,11 +91,11 @@ class CasesEntityTest extends EntityTester
 
     /**
      * Tests create function throws an exception when application can't create cases
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCreateThrowsExceptionWhenApplicationCantCreate()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $caseType = m::mock(RefData::class);
         $openDate = new \DateTime();
         $categorys = new ArrayCollection();
@@ -241,21 +241,19 @@ class CasesEntityTest extends EntityTester
         $this->assertInstanceOf('\DateTime', $this->entity->getClosedDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testCloseThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $this->entity->setOutcomes(new ArrayCollection());
 
         $this->entity->close();
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testCloseWithOutstandingAppealThrowsValidationException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $outcome = m::mock(RefData::class);
         $appeal = new AppealEntity('1234');
 
@@ -293,11 +291,10 @@ class CasesEntityTest extends EntityTester
         $this->assertInstanceOf('\DateTime', $this->entity->getClosedDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testCloseWithOutstandingStay()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $outcome = m::mock(RefData::class);
         $stay = new StayEntity($this->entity, $outcome);
 
@@ -343,11 +340,10 @@ class CasesEntityTest extends EntityTester
         $this->assertEquals(null, $this->entity->getClosedDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testReopenThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->entity->setClosedDate(null);
         $this->entity->reopen();
     }

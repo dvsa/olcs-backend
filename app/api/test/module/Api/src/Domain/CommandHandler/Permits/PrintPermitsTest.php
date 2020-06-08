@@ -35,12 +35,11 @@ class PrintPermitsTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage ERR_PERMIT_PRINTING_MAX_BATCH_SIZE_REACHED
-     */
     public function testHandleMaxBatchSizeReached()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('ERR_PERMIT_PRINTING_MAX_BATCH_SIZE_REACHED');
+
         $cmdData = [
             'ids' => range(1, PrintPermitsHandler::MAX_BATCH_SIZE+1),
         ];
@@ -50,12 +49,11 @@ class PrintPermitsTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage ERR_PERMIT_PRINTING_ALREADY_IN_PROGRESS
-     */
     public function testHandlePrintingAlreadyInProgress()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('ERR_PERMIT_PRINTING_ALREADY_IN_PROGRESS');
+
         $cmdData = [
             'ids' => range(1, PrintPermitsHandler::MAX_BATCH_SIZE),
         ];

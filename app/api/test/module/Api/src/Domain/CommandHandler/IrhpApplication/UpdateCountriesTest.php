@@ -27,12 +27,11 @@ class UpdateCountriesTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage IRHP application cannot be updated.
-     */
     public function testHandleCommandWhenCannotUpdate()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('IRHP application cannot be updated.');
+
         $id = 1;
         $countries = ['DE', 'FR', 'NL'];
 

@@ -98,12 +98,12 @@ class SendResponseTest extends CommandHandlerTestCase
 
     /**
      * Tests sending the Msi response when the response code is 400
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\InrClientException
-     * @expectedExceptionMessage INR Http response code was 400
      */
     public function testHandleCommandInvalidResponseCode()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\InrClientException::class);
+        $this->expectExceptionMessage('INR Http response code was 400');
+
         $xml = 'xml string';
         $xmlIdentifier = 'identifier';
         $erruId = 333;
@@ -144,12 +144,12 @@ class SendResponseTest extends CommandHandlerTestCase
 
     /**
      * Tests sending the Msi response when the inr client throws an exception
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\InrClientException
-     * @expectedExceptionMessage There was an error sending the INR response adapter exception message
      */
     public function testHandleCommandAdapterException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\InrClientException::class);
+        $this->expectExceptionMessage('There was an error sending the INR response adapter exception message');
+
         $xml = 'xml string';
         $xmlIdentifier = 'identifier';
         $erruId = 333;

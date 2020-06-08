@@ -88,11 +88,10 @@ class UpdateTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandBadRange()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $cmdData = [
             'irhpPermitRange' => '22',
             'irhpPermitApplication' => '77',

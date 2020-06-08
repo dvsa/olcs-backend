@@ -679,11 +679,11 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
     /**
      * Tests exception thrown for missing config
-     *
-     * @expectedException \RuntimeException
      */
     public function testMissingConfigException()
     {
+        $this->expectException(\RuntimeException::class);
+
         $this->sut->setConfig([]);
 
         $ebsrSubId = 1234;

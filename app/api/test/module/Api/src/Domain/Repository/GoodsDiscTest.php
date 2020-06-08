@@ -187,8 +187,6 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->sut->fetchDiscsToPrint('N', $licenceType, $maxResults);
     }
 
-
-
     public function testSetPrintingOn()
     {
         $discs = [1, 2];

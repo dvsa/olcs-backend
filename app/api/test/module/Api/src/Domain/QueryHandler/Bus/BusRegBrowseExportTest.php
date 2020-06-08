@@ -69,11 +69,10 @@ class BusRegBrowseExportTest extends QueryHandlerTestCase
         $this->assertTrue($result->getHeaders()->has('Content-Length'));
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
-     */
     public function testHandleQueryWithoutResults()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
         $acceptedDate = '2016-12-05';
         $trafficAreas = ['B', 'C'];
         $status = 'STATUS';

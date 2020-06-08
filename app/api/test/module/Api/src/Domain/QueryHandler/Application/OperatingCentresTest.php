@@ -488,7 +488,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $this->assertEquals($expected, $result->serialize());
     }
 
-
     public function testHandleQueryReadOnlyUser()
     {
 

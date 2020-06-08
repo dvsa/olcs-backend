@@ -65,11 +65,10 @@ class ViOpViewTest extends RepositoryTestCase
         $this->sut->clearLicencesViIndicators($params);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
     public function testClearLicencesViIndicatorsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
         $params = [['licId' => 1]];
 
         $this->dbQueryService->shouldReceive('get')

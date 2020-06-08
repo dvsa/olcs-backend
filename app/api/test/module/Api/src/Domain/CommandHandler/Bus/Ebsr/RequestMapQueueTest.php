@@ -93,11 +93,11 @@ class RequestMapQueueTest extends CommandHandlerTestCase
 
     /**
      * Tests exception thrown when no ebsr submission present
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function testHandleCommandNoSubmission()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
         $busRegId = 123;
         $scale = 'small';
 

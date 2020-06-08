@@ -881,7 +881,6 @@ class SummaryTest extends QueryHandlerTestCase
         );
     }
 
-
     public function testHandleQueryOpenCases()
     {
         $query = Qry::create(['id' => 111]);

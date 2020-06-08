@@ -238,11 +238,10 @@ class TmCaseDecisionEntityTest extends EntityTester
         $this->assertEquals($data['rehabMeasures'], $entity->getRehabMeasures());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testUpdateForDeclareUnfitThrowsIncorrectNotifiedDateException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'case' => 11,
             'isMsi' => 'Y',
@@ -263,11 +262,10 @@ class TmCaseDecisionEntityTest extends EntityTester
         $entity->update($data);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testUpdateForDeclareUnfitThrowsIncorrectUnfitnessEndDateException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'case' => 11,
             'isMsi' => 'Y',

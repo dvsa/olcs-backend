@@ -299,7 +299,6 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-
     public function testProcessSignatureSurrender()
     {
         $data = [

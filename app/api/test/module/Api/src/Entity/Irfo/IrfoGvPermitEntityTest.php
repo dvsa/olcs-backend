@@ -78,11 +78,11 @@ class IrfoGvPermitEntityTest extends EntityTester
 
     /**
      * Tests update throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testUpdateWithInvalidExpiryDate()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $irfoGvPermitType = m::mock(IrfoGvPermitTypeEntity::class);
         $yearRequired = 2010;
         $inForceDate = new \DateTime('2010-02-03');
@@ -114,11 +114,11 @@ class IrfoGvPermitEntityTest extends EntityTester
 
     /**
      * Tests reset throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testResetThrowsInvalidStatusException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_APPROVED);
 
@@ -143,11 +143,11 @@ class IrfoGvPermitEntityTest extends EntityTester
 
     /**
      * Tests withdraw throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testWithdrawThrowsInvalidStatusException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_APPROVED);
 
@@ -172,11 +172,11 @@ class IrfoGvPermitEntityTest extends EntityTester
 
     /**
      * Tests refuse throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testRefuseThrowsInvalidStatusException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_APPROVED);
 
@@ -187,11 +187,11 @@ class IrfoGvPermitEntityTest extends EntityTester
 
     /**
      * Tests approve throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testApproveThrowsInvalidStatusException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_PENDING);
 
@@ -204,11 +204,11 @@ class IrfoGvPermitEntityTest extends EntityTester
 
     /**
      * Tests approve throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testApproveThrowsNotApprovableException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('isApprovable')->once()->andReturn(false);
 

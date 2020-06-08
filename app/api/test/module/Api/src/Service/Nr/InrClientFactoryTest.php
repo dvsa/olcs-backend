@@ -18,11 +18,11 @@ use Zend\Http\Client\Adapter\Curl;
  */
 class InrClientFactoryTest extends TestCase
 {
-    /**
-     * @expectedException \RuntimeException
-     */
+
     public function testCreateServiceNoConfig()
     {
+        $this->expectException(\RuntimeException::class);
+
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
 

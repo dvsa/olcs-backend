@@ -25,12 +25,11 @@ class GeneratePermitsTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage Empty list of permits provided.
-     */
     public function testHandleWithoutIds()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('Empty list of permits provided.');
+
         $cmdData = [
             'ids' => [],
             'user' => 456,
@@ -41,12 +40,11 @@ class GeneratePermitsTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage No user provided.
-     */
     public function testHandleWithoutUser()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('No user provided.');
+
         $cmdData = [
             'ids' => [1, 2, 3],
             'user' => null,
@@ -142,12 +140,11 @@ class GeneratePermitsTest extends CommandHandlerTestCase
         ];
     }
 
-    /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     * @expectedExceptionMessage Permits generation failed with error: Permits printing failed.
-     */
     public function testHandleButIssueWithPermitsPrinting()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Permits generation failed with error: Permits printing failed.');
+
         $ids = [1, 2, 3];
         $userId = 456;
         $permitDocs = [101, 102, 103];
@@ -211,12 +208,11 @@ class GeneratePermitsTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     * @expectedExceptionMessage Permits generation failed with error: Letter printing failed.
-     */
     public function testHandleButIssueWithLetterPrinting()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Permits generation failed with error: Letter printing failed.');
+
         $ids = [1, 2, 3];
         $userId = 456;
         $permitDocs = [101, 102, 103];

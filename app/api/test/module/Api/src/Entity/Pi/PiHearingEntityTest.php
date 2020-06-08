@@ -254,11 +254,10 @@ class PiHearingEntityTest extends EntityTester
         $this->assertEquals($details, $this->entity->getDetails());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testCreateExceptionWhenPiClosed()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $piEntity = m::mock(PiEntity::class);
         $piEntity->shouldReceive('isClosed')->andReturn(true);
         $presidingTc = m::mock(PresidingTcEntity::class);
@@ -284,11 +283,10 @@ class PiHearingEntityTest extends EntityTester
         );
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testUpdateExceptionWhenPiClosed()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $piEntity = m::mock(PiEntity::class);
         $piEntity->shouldReceive('isClosed')->andReturn(true);
         $this->entity->setPi($piEntity);

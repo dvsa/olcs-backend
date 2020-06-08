@@ -318,7 +318,8 @@ class EmailTest extends MockeryTestCase
      */
     public function testToFromAddressException($fromEmail, $fromName, $toEmail, $exceptionMessage)
     {
-        $this->expectException(EmailNotSentException::class, $exceptionMessage);
+        $this->expectException(EmailNotSentException::class);
+        $this->expectExceptionMessage($exceptionMessage);
 
         $this->sut->send(
             $fromEmail,
@@ -346,12 +347,11 @@ class EmailTest extends MockeryTestCase
         ];
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Email\Exception\EmailNotSentException
-     * @expectedExceptionMessage Email not sent: exception message
-     */
     public function testSendHandlesException()
     {
+        $this->expectException(\Dvsa\Olcs\Email\Exception\EmailNotSentException::class);
+        $this->expectExceptionMessage('Email not sent: exception message');
+
         $transport = m::mock(TransportInterface::class);
 
         $this->sut->setMailTransport($transport);

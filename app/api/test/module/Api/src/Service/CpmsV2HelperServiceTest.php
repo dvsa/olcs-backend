@@ -2049,7 +2049,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $sut->validateCustomerParams();
     }
 
-
     public function testGetReceiverReferenceMiscFee()
     {
         $mockFee = m::mock()
