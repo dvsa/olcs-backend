@@ -7,13 +7,12 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
-use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 
 /**
  * Document
@@ -126,22 +125,6 @@ class Document extends AbstractRepository
     }
 
     /**
-     * Get Documents linked to a Surrender
-     *
-     * @param int $surrenderId Surrender ID
-     *
-     * @return array of Document entities
-     */
-    public function fetchListForSurrender($surrenderId, $hydrationMode = Query::HYDRATE_OBJECT)
-    {
-        $qb = $this->createQueryBuilder();
-        $qb->andWhere($qb->expr()->eq($this->alias . '.surrender', ':surrenderId'))
-            ->setParameter('surrenderId', $surrenderId);
-
-        return $qb->getQuery()->getResult($hydrationMode);
-    }
-
-    /**
      * @param string $documentStoreId
      * @return array
      */
@@ -152,18 +135,5 @@ class Document extends AbstractRepository
             ->setParameter('documentStoreId', $documentStoreId);
 
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
-    }
-
-    /**
-     * Deletes the entity from the database. Document entity has soft-delete enabled by default and doesn't get removed
-     * from the database.
-     *
-     * @param Entity $document
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    public function hardDelete(Entity $document)
-    {
-        $document->setDeletedDate(new DateTime());
-        $this->delete($document);
     }
 }

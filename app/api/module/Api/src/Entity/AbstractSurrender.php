@@ -3,14 +3,13 @@
 namespace Dvsa\Olcs\Api\Entity;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
-use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
-use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
 use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
+use JsonSerializable;
 
 /**
  * Surrender Abstract Entity
@@ -19,6 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="surrender",
  *    indexes={
  *        @ORM\Index(name="fk_signature_type_ref_data_id", columns={"signature_type"}),
@@ -46,6 +46,7 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     use ClearPropertiesTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
+    use SoftDeletableTrait;
 
     /**
      * Community licence document info
