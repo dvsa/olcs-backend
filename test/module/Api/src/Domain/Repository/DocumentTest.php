@@ -8,17 +8,16 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Mockery as m;
 
 /**
  * Document Test
@@ -218,34 +217,5 @@ class DocumentTest extends RepositoryTestCase
         $expectedQuery = 'BLAH AND m.statement = [[123]]';
 
         static::assertEquals($expectedQuery, $this->query);
-    }
-
-    public function testFetchListForSurrender()
-    {
-        $qb = $this->createMockQb('BLAH');
-        $this->mockCreateQueryBuilder($qb);
-
-        $qb->shouldReceive('getQuery')->andReturn(
-            m::mock()->shouldReceive('getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn('RESULT')
-                ->getMock()
-        );
-        static::assertEquals('RESULT', $this->sut->fetchListForSurrender(123));
-
-        $expectedQuery = 'BLAH AND m.surrender = [[123]]';
-
-        static::assertEquals($expectedQuery, $this->query);
-    }
-
-    public function testHardDelete()
-    {
-        $sut = m::mock(DocumentRepo::class)->makePartial();
-
-        $document = m::mock(Document::class);
-        $document->shouldReceive('setDeletedDate');
-
-        $sut->shouldReceive('delete')
-            ->with($document);
-
-        $sut->hardDelete($document);
     }
 }
