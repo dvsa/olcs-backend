@@ -437,7 +437,6 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $this->assertSame(['Snapshot created', 'Application 1 refused.'], $result->getMessages());
     }
 
-
     public function testHandleCommandRefund()
     {
         $command = Command::create(['id' => 111]);

@@ -29,7 +29,6 @@ class ReadUserSelfserveTest extends MockeryTestCase
 
     /**
      * @dataProvider getAssertForOperatorDataProvider
-     *
      */
     public function testAssertForOperator(
         $currentUserType,

@@ -65,7 +65,6 @@ class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
         $this->sut->handleCommand($mockCommand);
     }
 
-
     protected function getAddresses()
     {
         $addresses = [];

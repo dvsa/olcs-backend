@@ -97,12 +97,12 @@ class XmlStructureInputFactoryTest extends TestCase
 
     /**
      * test correct exception thrown when the max errors config is missing
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No config specified for max_schema_errors
      */
     public function testCreateServiceMissingMaxErrorsConfig()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No config specified for max_schema_errors');
+
         $config = [
             'ebsr' => [
                 'validate' => [
@@ -124,12 +124,12 @@ class XmlStructureInputFactoryTest extends TestCase
 
     /**
      * test correct exception thrown when the max errors config is missing
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No config specified for transxchange schema version
      */
     public function testCreateServiceMissingSchemaVersionConfig()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No config specified for transxchange schema version');
+
         $config = [
             'ebsr' => [
                 'validate' => [
@@ -152,12 +152,12 @@ class XmlStructureInputFactoryTest extends TestCase
 
     /**
      * test correct exception thrown when the max errors config is missing
-     *
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No config specified for xml messages to exclude
      */
     public function testCreateServiceMissingXmlMessageExclude()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No config specified for xml messages to exclude');
+
         $config = [
             'ebsr' => [
                 'validate' => [

@@ -84,11 +84,11 @@ class OrganisationUnprocessedListTest extends QueryHandlerTestCase
 
     /**
      * Tests handleQuery when no organisation exists
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testHandleQueryNoOrganisation()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $query = Qry::create([]);
 
         $identity = m::mock(IdentityInterface::class);

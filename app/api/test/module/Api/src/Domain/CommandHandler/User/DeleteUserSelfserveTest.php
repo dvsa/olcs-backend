@@ -100,11 +100,10 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testHandleCommandForUserWithTasks()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $data = [
             'id' => self::USER_ID,
         ];

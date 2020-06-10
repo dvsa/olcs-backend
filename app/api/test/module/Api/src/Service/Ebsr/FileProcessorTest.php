@@ -57,11 +57,10 @@ class FileProcessorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\EbsrPackException
-     */
     public function testFetchXmlFileNameFromDocumentStoreExGt1()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class);
+
         vfsStream::setup();
 
         $fileIdentifier = 'ebsr.zip';
@@ -95,11 +94,10 @@ class FileProcessorTest extends TestCase
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\EbsrPackException
-     */
     public function testFetchXmlFileNameFromDocumentStoreEx0()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class);
+
         vfsStream::setup();
 
         $fileIdentifier = 'ebsr.zip';
@@ -129,11 +127,10 @@ class FileProcessorTest extends TestCase
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\EbsrPackException
-     */
     public function testFetchXmlFileNameFromDocumentStoreWithCorruptZip()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class);
+
         vfsStream::setup();
 
         $fileIdentifier = 'ebsr.zip';
@@ -166,11 +163,10 @@ class FileProcessorTest extends TestCase
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testFetchXmlFileNameFromDocumentStoreMissingTmpDir()
     {
+        $this->expectException(\RuntimeException::class);
+
         vfsStream::setup();
 
         $fileIdentifier = 'ebsr.zip';

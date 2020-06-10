@@ -38,10 +38,6 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @expectedException
-     * @expectedExceptionMessage
-     */
     public function testHandleQueryTypeMismatch()
     {
         $this->expectException(\Exception::class);

@@ -338,11 +338,10 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandInformationIncomplete()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'id' => 1,
             'version' => 1,
@@ -615,7 +614,6 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-
     public function testIsValidThrowsExceptionWhenDateLessThanInformationCompleteDate()
     {
 
@@ -657,7 +655,6 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
 
     }
-
 
     public function informationCompleteDateDataProvider()
     {

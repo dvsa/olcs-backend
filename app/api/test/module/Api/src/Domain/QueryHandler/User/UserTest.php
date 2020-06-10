@@ -209,11 +209,10 @@ class UserTest extends QueryHandlerTestCase
         );
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testHandleQueryThrowsIncorrectPermissionException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)

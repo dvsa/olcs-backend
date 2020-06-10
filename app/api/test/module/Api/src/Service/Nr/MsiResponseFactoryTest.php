@@ -39,12 +39,11 @@ class MsiResponseFactoryTest extends TestCase
         $this->assertInstanceOf(XmlNodeBuilder::class, $service->getXmlBuilder());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No config specified for xml ns
-     */
     public function testCreateServiceMissingConfig()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No config specified for xml ns');
+
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn([]);
         $sut = new MsiResponseFactory();

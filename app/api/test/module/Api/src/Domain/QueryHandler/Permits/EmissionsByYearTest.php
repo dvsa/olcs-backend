@@ -96,7 +96,6 @@ class EmissionsByYearTest extends QueryHandlerTestCase
         ];
     }
 
-
     public function testHandleQueryNoYears()
     {
         $query = EmissionsByYearQuery::create(

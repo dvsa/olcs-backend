@@ -257,12 +257,11 @@ class IrhpPermitWindowTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
-     * @expectedExceptionMessage No window available.
-     */
     public function testFetchLastOpenWindowByIrhpPermitTypeWhenNoWindowOpen()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+        $this->expectExceptionMessage('No window available.');
+
         $now = new \DateTime('2018-10-25 13:21:10');
 
         $qb = $this->createMockQb('BLAH');
@@ -409,7 +408,6 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
         $this->assertEquals($expectedQuery, $this->query);
     }
-
 
     public function fetchOpenWindowsByTypeYearProvider()
     {

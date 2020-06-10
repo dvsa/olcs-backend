@@ -304,7 +304,6 @@ class DocumentGeneratorTest extends MockeryTestCase
         $this->sut->uploadGeneratedContent('fileName', 'body');
     }
 
-
     public function testGenerateFromTemplateWithDocumentId()
     {
         $document = m::mock();

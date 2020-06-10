@@ -30,7 +30,6 @@ class UpdateTest extends CommandHandlerTestCase
 
     /**
      * @dataProvider handleCommandProvider
-     *
      */
     public function testHandleCommand($data)
     {

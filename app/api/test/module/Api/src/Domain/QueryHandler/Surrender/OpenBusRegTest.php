@@ -11,9 +11,6 @@ use Mockery as m;
 
 class OpenBusRegTest extends QueryHandlerTestCase
 {
-    /**
-     *
-     */
     public function setUp()
     {
         $this->sut = new QryHandler();

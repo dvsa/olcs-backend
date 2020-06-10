@@ -112,13 +112,13 @@ class UpdateTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage Windows which have ended cannot be edited
-     *
      * Test for ended Window - no values are asserted as this tests to ensure that a validation exception is thrown.
      */
     public function testHandleWindowEnd()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('Windows which have ended cannot be edited');
+
         $cmdData = [
             'id' => 1,
             'irhpPermitStock' => 1,
@@ -145,14 +145,14 @@ class UpdateTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage It is not permitted to edit the start date of an Active Window
-     *
      * Test to prevent editing the start date of an active window - no values are asserted as this tests to ensure that
      * a validation exception is thrown.
      */
     public function testIsActiveEditStartDate()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('It is not permitted to edit the start date of an Active Window');
+
         $cmdData = [
             'id' => 1,
             'irhpPermitStock' => 1,
@@ -187,14 +187,14 @@ class UpdateTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage The end date of an Active Window must be greater than or equal to todays date
-     *
      * Test to prevent editing the end date of an active window to before todays date - no values are asserted as this
      * tests to ensure that a validation exception is thrown.
      */
     public function testIsActivePastEndDate()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('The end date of an Active Window must be greater than or equal to todays date');
+
         $cmdData = [
             'id' => 1,
             'irhpPermitStock' => 1,
@@ -230,14 +230,14 @@ class UpdateTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage The dates overlap with another window for this Permit stock
-     *
      * Test for overlapping Windows - no values are asserted as this tests to ensure that a validation exception
      * is thrown.
      */
     public function testOverlappingWindows()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('The dates overlap with another window for this Permit stock');
+
         $cmdData = [
             'id' => 1,
             'irhpPermitStock' => 1,

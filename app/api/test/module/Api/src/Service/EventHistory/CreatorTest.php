@@ -118,12 +118,11 @@ class CreatorTest extends MockeryTestCase
         $this->sut->create($entity, $eventHistoryType, $eventData);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Cannot create event history for the entity
-     */
     public function testCreateForUndefinedEntity()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot create event history for the entity');
+
         $eventHistoryType = EventHistoryTypeEntity::IRHP_APPLICATION_CREATED;
 
         $entity = m::mock(EventHistoryEntity::class);

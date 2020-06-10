@@ -108,13 +108,12 @@ class UpdateTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     *
      * Test for overlapping IRHP Permit Ranges - no values are asserted as this tests to ensure that a validation
      * exception is thrown.
      */
     public function testHandleOverlap()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
         $cmdData = [
             'irhpPermitStock' => '1',
             'emissionsCategory' => RefData::EMISSIONS_CATEGORY_EURO6_REF,
@@ -150,12 +149,11 @@ class UpdateTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     *
      * @dataProvider dpShortTermAnnualTypeCombinations
      */
     public function testHandleCommandBadEcmtEmissionsCategory($isEcmtShortTerm, $isEcmtAnnual)
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
         $cmdData = [
             'irhpPermitStock' => '1',
             'emissionsCategory' => RefData::EMISSIONS_CATEGORY_NA_REF,

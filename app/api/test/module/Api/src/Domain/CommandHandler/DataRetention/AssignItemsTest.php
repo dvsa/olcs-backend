@@ -111,12 +111,11 @@ class AssignItemsTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage can't assign data retention record to this user
-     */
     public function testHandleCommandUserNotAllowed()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('can\'t assign data retention record to this user');
+
         $user = 999;
 
         $command = AssignItemsCommand::create(

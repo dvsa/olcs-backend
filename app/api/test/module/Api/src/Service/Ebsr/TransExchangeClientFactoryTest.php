@@ -18,11 +18,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class TransExchangeClientFactoryTest extends TestCase
 {
-    /**
-     * @expectedException \RuntimeException
-     */
+
     public function testCreateServiceNoConfig()
     {
+        $this->expectException(\RuntimeException::class);
+
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
 

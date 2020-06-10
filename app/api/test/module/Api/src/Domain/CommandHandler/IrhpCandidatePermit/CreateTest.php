@@ -35,7 +35,6 @@ class CreateTest extends CommandHandlerTestCase
 
     /**
      * Test the Happy Path
-     *
      */
     public function testHandleCommand()
     {

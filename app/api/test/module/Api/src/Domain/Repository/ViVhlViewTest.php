@@ -74,11 +74,10 @@ class ViVhlViewTest extends RepositoryTestCase
         $this->sut->clearLicenceVehiclesViIndicators($params);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
     public function testClearLicenceVehiclesViIndicatorsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
         $params = [
             [
                 'licId' => 1,

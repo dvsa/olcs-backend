@@ -94,11 +94,10 @@ class CreateTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsExceptionWhenCaseClosed()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $siId = 333;
 
         $caseEntity = m::mock(CaseEntity::class)->makePartial();

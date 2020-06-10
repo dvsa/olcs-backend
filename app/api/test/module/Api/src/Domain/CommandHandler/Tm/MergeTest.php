@@ -496,7 +496,6 @@ class MergeTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-
     public function testHandleCommandRecipientAlreadyRemoved()
     {
         $data = [
