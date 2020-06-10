@@ -105,7 +105,6 @@ class Text3Test extends MockeryTestCase
         $this->assertSame($expectedText3, $publicationLink->getText3());
     }
 
-
     public function testTransportManagers()
     {
         $person1 = new \Dvsa\Olcs\Api\Entity\Person\Person();

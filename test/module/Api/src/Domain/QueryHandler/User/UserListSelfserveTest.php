@@ -135,11 +135,10 @@ class UserListSelfserveTest extends QueryHandlerTestCase
         $this->commonHandleQueryTest();
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testHandleQueryThrowsIncorrectUserTypeException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
 
@@ -154,11 +153,10 @@ class UserListSelfserveTest extends QueryHandlerTestCase
         $this->commonHandleQueryTest();
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testHandleQueryThrowsIncorrectFilterException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         /** @var ContactDetailsEntity $partnerContactDetails */
         $partnerContactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $partnerContactDetails->setId(1000);

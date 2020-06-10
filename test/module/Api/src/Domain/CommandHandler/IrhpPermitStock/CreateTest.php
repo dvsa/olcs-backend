@@ -90,7 +90,6 @@ class CreateTest extends CommandHandlerTestCase
 
     /**
      * Tests method on IrhpPermitStockTrait
-     *
      */
     public function testGoodValidityPeriodValidationEcmt()
     {
@@ -107,7 +106,6 @@ class CreateTest extends CommandHandlerTestCase
 
     /**
      * Tests method on IrhpPermitStockTrait
-     *
      */
     public function testGoodValidityPeriodValidationRemovals()
     {
@@ -124,7 +122,6 @@ class CreateTest extends CommandHandlerTestCase
 
     /**
      * Tests method on IrhpPermitStockTrait
-     *
      */
     public function testBadValidityPeriodValidationEcmt()
     {
@@ -142,7 +139,6 @@ class CreateTest extends CommandHandlerTestCase
 
     /**
      * Tests method on IrhpPermitStockTrait
-     *
      */
     public function testToBeforeFromValidityPeriodValidationEcmt()
     {
@@ -160,7 +156,6 @@ class CreateTest extends CommandHandlerTestCase
 
     /**
      * Tests method on IrhpPermitStockTrait
-     *
      */
     public function testDuplicateStockCheckGood()
     {
@@ -190,7 +185,6 @@ class CreateTest extends CommandHandlerTestCase
 
     /**
      * Tests method on IrhpPermitStockTrait
-     *
      */
     public function testDuplicateStockCheckBad()
     {

@@ -57,11 +57,10 @@ class UpdateInterimTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandValidationError()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'id' => 111,
             'version' => 1,
@@ -81,11 +80,12 @@ class UpdateInterimTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
      * @throws ValidationException
      */
     public function testTotalAuthTrailersVehiclesValidation()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'id' => 111,
             'version' => 1,

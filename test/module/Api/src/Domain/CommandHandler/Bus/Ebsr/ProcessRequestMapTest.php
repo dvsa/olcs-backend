@@ -334,7 +334,8 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
      */
     public function testHandleCommandMissingEbsrPack($fileProcessorException)
     {
-        $this->expectException(TransxchangeException::class, ProcessRequestMap::MISSING_PACK_FILE_ERROR);
+        $this->expectException(TransxchangeException::class);
+        $this->expectExceptionMessage(ProcessRequestMap::MISSING_PACK_FILE_ERROR);
 
         $config = [
             'ebsr' => [
@@ -447,12 +448,12 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
 
     /**
      * test handleCommand throws an exception when config not found
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\TransxchangeException
-     * @expectedExceptionMessage No tmp directory specified in config
      */
     public function testHandleCommandMissingFilePathConfig()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\TransxchangeException::class);
+        $this->expectExceptionMessage('No tmp directory specified in config');
+
         $command = ProcessRequestMapCmd::create([]);
         $this->sut->setConfig([]);
         $this->sut->handleCommand($command);

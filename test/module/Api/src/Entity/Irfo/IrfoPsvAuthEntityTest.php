@@ -172,11 +172,10 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->assertEquals($newStatus, $this->entity->getStatus());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testGrantFeeNotPaidThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_PENDING);
         $this->entity->setStatus($status);
@@ -192,11 +191,10 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->entity->grant($newStatus, $fee);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testGrantInvalidStateThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_GRANTED);
         $this->entity->setStatus($status);
@@ -251,11 +249,10 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->assertEquals($newStatus, $this->entity->getStatus());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testRefuseThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_REFUSED);
         $this->entity->setStatus($status);
@@ -292,11 +289,10 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->assertEquals($newStatus, $this->entity->getStatus());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testWithdrawThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_WITHDRAWN);
         $this->entity->setStatus($status);
@@ -306,7 +302,6 @@ class IrfoPsvAuthEntityTest extends EntityTester
 
         $this->entity->withdraw($newStatus);
     }
-
 
     public function isWithdrawableStates()
     {
@@ -373,11 +368,10 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->assertEquals($newStatus, $this->entity->getStatus());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testContinuationNotSoughtThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_PENDING);
         $this->entity->setStatus($status);
@@ -431,11 +425,10 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->assertInstanceOf(\DateTime::class, $this->entity->getRenewalDate());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testApproveThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_GRANTED);
         $this->entity->setStatus($status);
@@ -485,11 +478,10 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->assertEquals($newStatus, $this->entity->getStatus());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testRenewThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_WITHDRAWN);
         $this->entity->setStatus($status);
@@ -546,11 +538,10 @@ class IrfoPsvAuthEntityTest extends EntityTester
         $this->assertEquals(55, $this->entity->getCopiesIssuedTotal());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testGenerateThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $status = new RefData();
         $status->setId(Entity::STATUS_GRANTED);
         $this->entity->setStatus($status);

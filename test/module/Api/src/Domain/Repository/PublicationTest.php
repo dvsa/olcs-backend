@@ -68,11 +68,10 @@ class PublicationTest extends RepositoryTestCase
         $this->sut->fetchLatestForTrafficAreaAndType($trafficArea, $pubType);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
-     */
     public function testFetchLatestForTrafficAreaAndTypeNotFound()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
         $trafficArea = 'M';
         $pubType = 'A&D';
         $results = [];

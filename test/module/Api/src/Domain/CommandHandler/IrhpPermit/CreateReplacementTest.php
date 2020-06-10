@@ -98,11 +98,11 @@ class CreateReplacementTest extends CommandHandlerTestCase
 
     /**
      * Tests exception thrown for missing config
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testCantSaveException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $cmdData = [
             'replaces' => '201',
             'irhpPermitRange' => '7',

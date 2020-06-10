@@ -65,7 +65,6 @@ class WebDavClientTest extends MockeryTestCase
         $this->assertEquals($expectContent, file_get_contents($actual->getResource()));
     }
 
-
     public function testReadFail()
     {
         $testPath = 'test';
@@ -76,7 +75,6 @@ class WebDavClientTest extends MockeryTestCase
 
         $this->assertEquals(false, $actual);
     }
-
 
     public function testReadFileNotFound()
     {

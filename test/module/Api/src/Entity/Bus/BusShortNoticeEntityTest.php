@@ -48,11 +48,11 @@ class BusShortNoticeEntityTest extends EntityTester
 
     /**
      * Test exception is thrown when edit not allowed
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $busReg = new BusRegEntity();
         $busReg->setIsTxcApp('Y');
 

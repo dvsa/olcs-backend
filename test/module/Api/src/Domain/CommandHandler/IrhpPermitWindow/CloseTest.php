@@ -96,12 +96,11 @@ class CloseTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage Window which has not ended cannot be closed
-     */
     public function testHandleWindowOpen()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('Window which has not ended cannot be closed');
+
         $cmdData = [
             'id' => 1,
         ];

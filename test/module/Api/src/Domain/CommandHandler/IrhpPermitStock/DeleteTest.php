@@ -135,14 +135,14 @@ class DeleteTest extends CommandHandlerTestCase
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage irhp-permit-stock-cannot-delete-active-dependencies
-     *
      * Test for preventing a Permit Stock being deleted if it has existing dependencies - no values are asserted as
      * this tests to ensure that a validation exception is thrown.
      */
     public function testHandleCantDelete()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('irhp-permit-stock-cannot-delete-active-dependencies');
+
         $cmdData = [
             'id' => '1'
         ];

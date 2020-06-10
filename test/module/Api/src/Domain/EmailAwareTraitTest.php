@@ -92,11 +92,10 @@ class EmailAwareTraitTest extends m\Adapter\Phpunit\MockeryTestCase
         ];
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\MissingEmailException
-     */
     public function testOrganisationRecipientsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\MissingEmailException::class);
+
         $organisation = m::mock(Organisation::class);
         $organisation->shouldReceive('getAdminEmailAddresses')->once()->withNoArgs()->andReturn([]);
 

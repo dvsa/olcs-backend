@@ -65,11 +65,10 @@ class ViOcViewTest extends RepositoryTestCase
         $this->sut->clearOcViIndicators($params);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
     public function testClearOcViIndicatorsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
         $params = [['ocId' => 1]];
 
         $this->dbQueryService->shouldReceive('get')

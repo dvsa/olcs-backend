@@ -88,7 +88,6 @@ class LicenceOperatingCentreTest extends QueryHandlerTestCase
         $this->assertEquals($expected, $result->serialize());
     }
 
-
     public function testHandleQueryReadOnly()
     {
         $this->expectedBundle = [

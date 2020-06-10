@@ -322,11 +322,10 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->assertEquals(UserEntity::USER_TYPE_OPERATOR, $savedUser->getUserType());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
     public function testHandleCommandThrowsIncorrectOrgException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $data = [
             'loginId' => 'login_id',
             'contactDetails' => [
@@ -353,11 +352,10 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsUsernameExistsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'loginId' => 'login_id',
         ];

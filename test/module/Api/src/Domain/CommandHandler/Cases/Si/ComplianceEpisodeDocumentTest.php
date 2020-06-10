@@ -42,11 +42,11 @@ class ComplianceEpisodeDocumentTest extends CommandHandlerTestCase
 
     /**
      * tests correct exception is thrown when errors are returned
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\Exception
      */
     public function testHandleCommandWithException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\Exception::class);
+
         $xmlString = 'xml string';
         $documentId = 123;
         $cmd = ComplianceEpisodeDocCmd::create(['xml' => $xmlString]);

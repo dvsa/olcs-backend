@@ -219,10 +219,11 @@ class BusRegWithTxcInboxTest extends QueryHandlerTestCase
 
     /**
      * Test LA user querying a non existent bus reg
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function testHandleQueryBusRegNotFoundException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
         $busRegId = 2;
         $query = Qry::create(
             [
@@ -247,10 +248,11 @@ class BusRegWithTxcInboxTest extends QueryHandlerTestCase
 
     /**
      * Test Anon user querying a non existent bus reg
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      */
     public function testHandleQueryForAnonBusRegNotFoundException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+
         $busRegId = 2;
         $query = Qry::create(
             [

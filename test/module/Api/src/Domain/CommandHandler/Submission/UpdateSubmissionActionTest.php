@@ -99,11 +99,10 @@ class UpdateSubmissionActionTest extends CommandHandlerTestCase
         );
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleInvalidCommand()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'id' => 1,
             'version' => 1,

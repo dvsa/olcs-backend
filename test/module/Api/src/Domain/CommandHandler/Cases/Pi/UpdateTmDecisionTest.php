@@ -114,11 +114,10 @@ class UpdateTmDecisionTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Result::class, $result);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandNoHearings()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $id = 11;
         $version = 22;
         $witnesses = 33;

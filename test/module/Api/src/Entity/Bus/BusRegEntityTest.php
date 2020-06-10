@@ -445,11 +445,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests canDelete throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCanDeleteThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanEditIsFalseDueToVariation();
         $this->entity->canDelete();
 
@@ -469,11 +469,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests updateStops throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateStopsThrowsCanEditExceptionForEbsr()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->entity->setIsTxcApp('Y');
         $this->entity->updateStops(null, null, null, null, null, null, null, null, null);
 
@@ -482,11 +482,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests updateStops throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateStopsThrowsCanEditExceptionForLatestVariation()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanEditIsFalseDueToVariation();
         $this->entity->updateStops(null, null, null, null, null, null, null, null, null);
 
@@ -495,11 +495,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests updateQualitySchemes throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateQualitySchemesThrowsCanEditExceptionForEbsr()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->entity->setIsTxcApp('Y');
         $this->entity->updateQualitySchemes(null, null, null, null, null);
 
@@ -508,11 +508,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests updateQualitySchemes throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateQualitySchemesThrowsCanEditExceptionForLatestVariation()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanEditIsFalseDueToVariation();
         $this->entity->updateQualitySchemes(null, null, null, null, null);
 
@@ -521,11 +521,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests updateServiceDetails throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateServiceDetailsThrowsCanEditExceptionForEbsr()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->entity->setIsTxcApp('Y');
         $this->entity->updateServiceDetails(null, null, null, null, null, null, null, null, null, null);
 
@@ -534,11 +534,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests updateServiceDetails throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateServiceDetailsThrowsCanEditExceptionForLatestVariation()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanEditIsFalseDueToVariation();
         $this->entity->updateServiceDetails(null, null, null, null, null, null, null, null, null, null);
 
@@ -547,11 +547,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests updateTaAuthority throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateTaAuthorityThrowsCanEditExceptionForEbsr()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->entity->setIsTxcApp('Y');
         $this->entity->updateTaAuthority(null);
 
@@ -560,11 +560,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests updateTaAuthority throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateTaAuthorityThrowsCanEditExceptionForLatestVariation()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanEditIsFalseDueToVariation();
         $this->entity->updateTaAuthority(null);
 
@@ -912,11 +912,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests updateServiceRegister throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testUpdateServiceRegisterThrowsExceptionForLatestVariation()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanEditIsFalseDueToVariation();
         $this->entity->updateServiceRegister(null, null, null, null, null, null, null, null, null);
 
@@ -980,11 +980,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests resetStatus throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testResetStatusThrowsCanMakeDecisionException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanMakeDecisionIsFalse();
         $this->entity->resetStatus(null);
 
@@ -1014,11 +1014,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests cancelByAdmin throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testCancelByAdminThrowsCanMakeDecisionException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanMakeDecisionIsFalse();
 
         $status = new RefDataEntity();
@@ -1031,11 +1031,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests cancelByAdmin throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testCancelByAdminThrowsIncorrectStatusException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $this->getAssertionsForCanMakeDecisionIsTrue();
 
         $status = new RefDataEntity();
@@ -1069,11 +1069,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests withdraw throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testWithdrawThrowsCanMakeDecisionException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanMakeDecisionIsFalse();
 
         $status = new RefDataEntity();
@@ -1088,11 +1088,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests withdraw throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testWithdrawThrowsIncorrectStatusException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $this->getAssertionsForCanMakeDecisionIsTrue();
 
         $status = new RefDataEntity();
@@ -1128,11 +1128,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests refuse throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testRefuseThrowsCanMakeDecisionException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanMakeDecisionIsFalse();
 
         $status = new RefDataEntity();
@@ -1145,11 +1145,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests refuse throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testRefuseThrowsIncorrectStatusException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         $this->getAssertionsForCanMakeDecisionIsTrue();
 
         $status = new RefDataEntity();
@@ -1355,11 +1355,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests refuseByShortNotice throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testRefuseByShortNoticeThrowsCanMakeDecisionException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanMakeDecisionIsFalse();
 
         $this->entity->refuseByShortNotice(null);
@@ -1396,11 +1396,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests grant throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testGrantThrowsCanMakeDecisionException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $this->getAssertionsForCanMakeDecisionIsFalse();
 
         $status = new RefDataEntity();
@@ -1413,11 +1413,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests grant throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testGrantThrowsNotGrantableException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         /** @var Entity|m\MockInterface $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('canMakeDecision')->once()->andReturn(true);
@@ -1433,11 +1433,11 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * Tests grant throws exception correctly
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
      */
     public function testGrantThrowsIncorrectStatusException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+
         /** @var Entity|m\MockInterface $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->shouldReceive('canMakeDecision')->once()->andReturn(true);
@@ -2231,12 +2231,13 @@ class BusRegEntityTest extends EntityTester
      * Tests the method throws exception if status is incorrect
      *
      * @dataProvider publicationSectionForGrantEmailInvalidStatusProvider
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      *
      * @param string $status
      */
     public function testPublicationSectionForGrantEmailStatusException($status)
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
         $entity = new Entity();
         $status = new RefData($status);
         $entity->setStatus($status);
@@ -2266,13 +2267,14 @@ class BusRegEntityTest extends EntityTester
      * Tests the method throws exception if revertStatus is incorrect
      *
      * @dataProvider publicationSectionForGrantEmailInvalidRevertStatusProvider
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      *
      * @param        $status
      * @param string $revertStatus
      */
     public function testPublicationSectionForGrantEmailRevertStatusException($status, $revertStatus)
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
         $entity = new Entity();
         $status = new RefData($status);
         $entity->setStatus($status);

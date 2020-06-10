@@ -63,11 +63,10 @@ class TxcInboxEntityTest extends EntityTester
         ];
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testCreateNotFromEbsr()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $busReg = new BusRegEntity();
         $busReg->setIsTxcApp('N');
         $document = m::mock(DocumentEntity::class);
@@ -77,7 +76,6 @@ class TxcInboxEntityTest extends EntityTester
     }
 
     /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      * @dataProvider createValidationErrorProvider
      *
      * @param $localAuthority
@@ -85,6 +83,8 @@ class TxcInboxEntityTest extends EntityTester
      */
     public function testCreateValidationError($localAuthority, $organisation)
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $busReg = new BusRegEntity();
         $busReg->setIsTxcApp('Y');
         $document = m::mock(DocumentEntity::class);

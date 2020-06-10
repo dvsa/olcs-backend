@@ -384,7 +384,6 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-
     public function testGetLatestIrfoFeeTypeForGvPermits()
     {
         $organisation = new Organisation();

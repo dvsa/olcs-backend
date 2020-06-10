@@ -78,10 +78,11 @@ class PublicationEntityTest extends EntityTester
      * Check exception is thrown if no pub date is set when generating the future date
      *
      * @dataProvider notGeneratedStatusProvider
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function testGetNextPublicationDateThrowsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
         $entity = $this->instantiate(Entity::class);
         $entity->getNextPublicationDate();
     }
@@ -102,10 +103,11 @@ class PublicationEntityTest extends EntityTester
     /**
      * @dataProvider notGeneratedStatusProvider
      * @param string $pubStatus
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testPublishThrowsException($pubStatus)
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $entity = $this->instantiate(Entity::class);
         $entity->setPubStatus(new RefData($pubStatus));
         $printedStatus = new RefData(Entity::PUB_PRINTED_STATUS);
@@ -143,10 +145,11 @@ class PublicationEntityTest extends EntityTester
     /**
      * @dataProvider notNewStatusProvider
      * @param string $pubStatus
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
      */
     public function testGenerateThrowsException($pubStatus)
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $entity = $this->instantiate(Entity::class);
         $entity->setPubStatus(new RefData($pubStatus));
         $generateStatus = new RefData(Entity::PUB_GENERATED_STATUS);

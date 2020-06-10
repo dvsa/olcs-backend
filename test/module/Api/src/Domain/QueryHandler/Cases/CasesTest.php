@@ -124,7 +124,6 @@ class CasesTest extends QueryHandlerTestCase
         $this->assertInstanceOf(Result::class, $result);
     }
 
-
     public function testHandleQueryTmCaseType()
     {
         $query = Qry::create(['id' => 24]);

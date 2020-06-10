@@ -536,11 +536,10 @@ class CreateUserTest extends CommandHandlerTestCase
         );
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testHandleCommandThrowsIncorrectPermissionException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+
         $data = [
             'id' => 111,
             'version' => 1,
@@ -564,11 +563,10 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsUsernameExistsException()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'loginId' => 'login_id',
         ];
@@ -597,10 +595,11 @@ class CreateUserTest extends CommandHandlerTestCase
 
     /**
      * @dataProvider handleCommandThrowsNoOrgExceptionProvider
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testHandleCommandThrowsNoOrgException($userType)
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $data = [
             'userType' => $userType,
             'loginId' => 'login_id',

@@ -78,11 +78,10 @@ class UpdateTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandThrowsExceptionWhenCaseClosed()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $penaltyId = 111;
 
         $command = Cmd::create(

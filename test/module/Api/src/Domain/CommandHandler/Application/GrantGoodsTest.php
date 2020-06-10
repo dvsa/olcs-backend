@@ -157,7 +157,6 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-
     public function testHandleCommandRefund()
     {
         $this->setupIsInternalUser(false);

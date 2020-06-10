@@ -94,9 +94,6 @@ class CreateAppealTest extends CommandHandlerTestCase
         $this->assertContains('Appeal created', $result->getMessages());
     }
 
-    /**
-     *
-     */
     public function testHandleCommandExistingAppeal()
     {
         $this->refData = [

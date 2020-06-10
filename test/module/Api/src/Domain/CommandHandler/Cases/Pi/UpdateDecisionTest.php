@@ -122,11 +122,10 @@ class UpdateDecisionTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Result::class, $result);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandNoHearings()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $licenceRevokedAtPi = 'Y';
         $licenceSuspendedAtPi = 'N';
         $licenceCurtailedAtPi = 'Y';

@@ -439,7 +439,6 @@ class ApplicationEntityTest extends EntityTester
         $this->assertSame($expected, $sut->hasNewOperatingCentre());
     }
 
-
     public function setupOperatingCentres()
     {
         $operatingCentreValues = [
@@ -3346,7 +3345,6 @@ class ApplicationEntityTest extends EntityTester
 
     /**
      * @dataProvider dataProviderValidateTol
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     public function testValidateTolNotValid(
         $niFlag,
@@ -3356,6 +3354,8 @@ class ApplicationEntityTest extends EntityTester
         $currentGoodsOrPsv,
         $currentNiFlag
     ) {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->setIsVariation($isVariation)

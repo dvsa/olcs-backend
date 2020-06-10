@@ -620,7 +620,6 @@ class OrganisationEntityTest extends EntityTester
 
     /**
      *  test if org user not found due to soft delete
-     *
      */
     public function testGetAdminEmailAddressesWhenOrganisationUserNotFound()
     {
