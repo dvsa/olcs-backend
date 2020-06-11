@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Cli\Domain\Command;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Zend\Console\Adapter\AdapterInterface as ConsoleAdapter;
 
 /**
  * Class ImportUsersFromCsv
@@ -30,6 +31,11 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommand
      * @var ProgressBar
      */
     protected $progressBar;
+
+    /**
+     * @var ConsoleAdapter
+     */
+    protected $console;
 
     /**
      * @return bool
@@ -61,5 +67,13 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommand
     public function getProgressBar() : ?ProgressBar
     {
         return $this->progressBar;
+    }
+
+    /**
+     * @return ConsoleAdapter
+     */
+    public function getConsole()
+    {
+        return $this->console;
     }
 }
