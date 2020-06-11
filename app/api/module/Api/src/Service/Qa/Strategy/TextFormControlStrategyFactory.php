@@ -16,13 +16,15 @@ class TextFormControlStrategyFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'text',
-            $serviceLocator->get('QaTextElementGenerator'),
-            $serviceLocator->get('QaGenericAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaGenericAnswerSummaryProvider')
+            $mainServiceLocator->get('QaTextElementGenerator'),
+            $mainServiceLocator->get('QaGenericAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaGenericAnswerSummaryProvider')
         );
     }
 }

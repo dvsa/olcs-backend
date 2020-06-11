@@ -17,7 +17,7 @@ class SupplementedApplicationStepsProviderFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new SupplementedApplicationStepsProvider(
-            $serviceLocator->get('QaFormControlStrategyProvider'),
+            $serviceLocator->get('FormControlServiceManager'),
             $serviceLocator->get('QaSupplementedApplicationStepFactory')
         );
     }

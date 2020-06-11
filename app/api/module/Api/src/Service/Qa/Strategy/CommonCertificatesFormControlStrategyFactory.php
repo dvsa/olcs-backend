@@ -16,13 +16,15 @@ class CommonCertificatesFormControlStrategyFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'checkbox',
-            $serviceLocator->get('QaCheckboxElementGenerator'),
-            $serviceLocator->get('QaCommonCertificatesAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaCommonCertificatesQuestionTextGenerator'),
-            $serviceLocator->get('QaCheckboxAnswerSummaryProvider')
+            $mainServiceLocator->get('QaCheckboxElementGenerator'),
+            $mainServiceLocator->get('QaCommonCertificatesAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaCommonCertificatesQuestionTextGenerator'),
+            $mainServiceLocator->get('QaCheckboxAnswerSummaryProvider')
         );
     }
 }

@@ -16,13 +16,15 @@ class BilateralCabotageOnlyFormControlStrategyFactory implements FactoryInterfac
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'bilateral_cabotage_only',
-            $serviceLocator->get('QaBilateralCabotageOnlyElementGenerator'),
-            $serviceLocator->get('QaBilateralCabotageOnlyAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaBilateralCabotageQuestionTextGenerator'),
-            $serviceLocator->get('QaGenericAnswerSummaryProvider')
+            $mainServiceLocator->get('QaBilateralCabotageOnlyElementGenerator'),
+            $mainServiceLocator->get('QaBilateralCabotageOnlyAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaBilateralCabotageQuestionTextGenerator'),
+            $mainServiceLocator->get('QaGenericAnswerSummaryProvider')
         );
     }
 }

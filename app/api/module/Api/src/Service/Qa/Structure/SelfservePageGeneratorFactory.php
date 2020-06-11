@@ -19,7 +19,7 @@ class SelfservePageGeneratorFactory implements FactoryInterface
         return new SelfservePageGenerator(
             $serviceLocator->get('QaSelfservePageFactory'),
             $serviceLocator->get('QaApplicationStepGenerator'),
-            $serviceLocator->get('QaFormControlStrategyProvider'),
+            $serviceLocator->get('FormControlServiceManager'),
             $serviceLocator->get('QaContextFactory')
         );
     }

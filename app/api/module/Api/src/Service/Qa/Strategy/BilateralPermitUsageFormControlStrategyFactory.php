@@ -16,13 +16,15 @@ class BilateralPermitUsageFormControlStrategyFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'bilateral_permit_usage',
-            $serviceLocator->get('QaBilateralPermitUsageGenerator'),
-            $serviceLocator->get('QaGenericAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaBilateralPermitUsageQuestionTextGenerator'),
-            $serviceLocator->get('QaBilateralPermitUsageAnswerSummaryProvider')
+            $mainServiceLocator->get('QaBilateralPermitUsageGenerator'),
+            $mainServiceLocator->get('QaBilateralPermitUsageAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaBilateralPermitUsageQuestionTextGenerator'),
+            $mainServiceLocator->get('QaBilateralPermitUsageAnswerSummaryProvider')
         );
     }
 }
