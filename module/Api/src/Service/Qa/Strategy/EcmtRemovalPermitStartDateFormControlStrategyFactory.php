@@ -16,13 +16,15 @@ class EcmtRemovalPermitStartDateFormControlStrategyFactory implements FactoryInt
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'ecmt_rem_permit_start_date',
-            $serviceLocator->get('QaEcmtRemovalPermitStartDateElementGenerator'),
-            $serviceLocator->get('QaDateAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaDateAnswerSummaryProvider')
+            $mainServiceLocator->get('QaEcmtRemovalPermitStartDateElementGenerator'),
+            $mainServiceLocator->get('QaDateAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaDateAnswerSummaryProvider')
         );
     }
 }

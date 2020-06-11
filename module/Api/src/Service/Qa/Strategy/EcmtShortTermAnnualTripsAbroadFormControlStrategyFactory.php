@@ -16,13 +16,15 @@ class EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory implements Factor
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'ecmt_st_annual_trips_abroad',
-            $serviceLocator->get('QaEcmtShortTermAnnualTripsAbroadElementGenerator'),
-            $serviceLocator->get('QaEcmtShortTermAnnualTripsAbroadAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaGenericAnswerSummaryProvider')
+            $mainServiceLocator->get('QaEcmtShortTermAnnualTripsAbroadElementGenerator'),
+            $mainServiceLocator->get('QaEcmtShortTermAnnualTripsAbroadAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaGenericAnswerSummaryProvider')
         );
     }
 }

@@ -16,13 +16,15 @@ class RadioFormControlStrategyFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'radio',
-            $serviceLocator->get('QaRadioElementGenerator'),
-            $serviceLocator->get('QaGenericAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaRadioAnswerSummaryProvider')
+            $mainServiceLocator->get('QaRadioElementGenerator'),
+            $mainServiceLocator->get('QaGenericAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaRadioAnswerSummaryProvider')
         );
     }
 }

@@ -16,13 +16,15 @@ class CertRoadworthinessMotExpiryDateFormControlStrategyFactory implements Facto
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'cert_road_mot_expiry_date',
-            $serviceLocator->get('QaCertRoadworthinessMotExpiryDateElementGenerator'),
-            $serviceLocator->get('QaDateAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaDateAnswerSummaryProvider')
+            $mainServiceLocator->get('QaCertRoadworthinessMotExpiryDateElementGenerator'),
+            $mainServiceLocator->get('QaDateAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaDateAnswerSummaryProvider')
         );
     }
 }

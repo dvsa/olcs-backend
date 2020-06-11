@@ -16,13 +16,15 @@ class EcmtShortTermNoOfPermitsFormControlStrategyFactory implements FactoryInter
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'ecmt_st_no_of_permits',
-            $serviceLocator->get('QaEcmtShortTermNoOfPermitsElementGenerator'),
-            $serviceLocator->get('QaEcmtShortTermNoOfPermitsAnswerSaver'),
-            $serviceLocator->get('QaEcmtShortTermNoOfPermitsAnswerClearer'),
-            $serviceLocator->get('QaEcmtShortTermNoOfPermitsQuestionTextGenerator'),
-            $serviceLocator->get('QaEcmtShortTermNoOfPermitsAnswerSummaryProvider')
+            $mainServiceLocator->get('QaEcmtShortTermNoOfPermitsElementGenerator'),
+            $mainServiceLocator->get('QaEcmtShortTermNoOfPermitsAnswerSaver'),
+            $mainServiceLocator->get('QaEcmtShortTermNoOfPermitsAnswerClearer'),
+            $mainServiceLocator->get('QaEcmtShortTermNoOfPermitsQuestionTextGenerator'),
+            $mainServiceLocator->get('QaEcmtShortTermNoOfPermitsAnswerSummaryProvider')
         );
     }
 }
