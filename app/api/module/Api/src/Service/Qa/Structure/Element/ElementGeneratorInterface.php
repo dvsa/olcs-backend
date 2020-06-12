@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
+
 interface ElementGeneratorInterface
 {
     /**
@@ -12,4 +14,13 @@ interface ElementGeneratorInterface
      * @return ElementInterface
      */
     public function generate(ElementGeneratorContext $context);
+
+    /**
+     * Whether this element generator supports the specified entity
+     *
+     * @param QaEntityInterface $qaEntity
+     *
+     * @return bool
+     */
+    public function supports(QaEntityInterface $qaEntity);
 }

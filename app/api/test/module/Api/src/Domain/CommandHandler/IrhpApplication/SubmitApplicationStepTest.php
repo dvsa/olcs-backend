@@ -8,8 +8,9 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplicationStep as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Service\Qa\ApplicationStepObjectsProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationStep as Cmd;
@@ -21,6 +22,24 @@ use Mockery as m;
  */
 class SubmitApplicationStepTest extends CommandHandlerTestCase
 {
+    const IRHP_APPLICATION_ID = 23;
+    const IRHP_PERMIT_APPLICATION_ID = 457;
+    const SLUG = 'removals-eligibility';
+    const REPOSITORY_NAME = 'IrhpApplication';
+    const DESTINATION_NAME = 'DESTINATION_NAME';
+
+    private $applicationStepEntity;
+
+    private $qaEntity;
+
+    private $qaContext;
+
+    private $postData;
+
+    private $formControlStrategy;
+
+    private $command;
+
     public function setUp()
     {
         $this->sut = new Sut();
@@ -28,60 +47,93 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
         $this->mockedSmServices = [
-            'QaApplicationStepObjectsProvider' => m::mock(ApplicationStepObjectsProvider::class),
+            'QaContextGenerator' => m::mock(QaContextGenerator::class),
             'QaFormControlStrategyProvider' => m::mock(FormControlStrategyProvider::class)
         ];
 
-        parent::setUp();
-    }
+        $this->applicationStepEntity = m::mock(ApplicationStepEntity::class);
 
-    public function testHandleCommand()
-    {
-        $irhpApplicationId = 457;
-        $slug = 'removals-eligibility';
-
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('resetCheckAnswersAndDeclaration')
+        $this->qaEntity = m::mock(QaEntityInterface::class);
+        $this->qaEntity->shouldReceive('getRepositoryName')
             ->withNoArgs()
-            ->once();
+            ->andReturn(self::REPOSITORY_NAME);
 
-        $applicationStepObjects = [
-            'applicationStep' => $applicationStepEntity,
-            'irhpApplication' => $irhpApplicationEntity
-        ];
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($this->applicationStepEntity);
+        $this->qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($this->qaEntity);
 
-        $this->mockedSmServices['QaApplicationStepObjectsProvider']->shouldReceive('getObjects')
-            ->with($irhpApplicationId, $slug)
-            ->andReturn($applicationStepObjects);
+        $this->mockedSmServices['QaContextGenerator']->shouldReceive('generate')
+            ->with(self::IRHP_APPLICATION_ID, self::IRHP_PERMIT_APPLICATION_ID, self::SLUG)
+            ->andReturn($this->qaContext);
 
-        $postData = [
+        $this->postData = [
             'fieldset123' => [
                 'qaElement' => '123'
             ]
         ];
 
-        $formControlStrategy = m::mock(FormControlStrategyInterface::class);
-        $formControlStrategy->shouldReceive('saveFormData')
-            ->with($applicationStepEntity, $irhpApplicationEntity, $postData)
-            ->once();
-
-        $this->repoMap['IrhpApplication']->shouldReceive('save')
-            ->with($irhpApplicationEntity)
-            ->once();
+        $this->formControlStrategy = m::mock(FormControlStrategyInterface::class);
+        $this->formControlStrategy->shouldReceive('saveFormData')
+            ->with($this->qaContext, $this->postData)
+            ->once()
+            ->andReturn(self::DESTINATION_NAME);
 
         $this->mockedSmServices['QaFormControlStrategyProvider']->shouldReceive('get')
-            ->with($applicationStepEntity)
-            ->andReturn($formControlStrategy);
+            ->with($this->applicationStepEntity)
+            ->andReturn($this->formControlStrategy);
 
-        $command = Cmd::create(
+        $this->command = Cmd::create(
             [
-                'id' => $irhpApplicationId,
-                'slug' => $slug,
-                'postData' => $postData
+                'id' => self::IRHP_APPLICATION_ID,
+                'irhpPermitApplication' => self::IRHP_PERMIT_APPLICATION_ID,
+                'slug' => self::SLUG,
+                'postData' => $this->postData
             ]
         );
 
-        $this->sut->handleCommand($command);
+
+        parent::setUp();
+    }
+
+    public function testHandleCommandEntityDeleted()
+    {
+        $this->repoMap[self::REPOSITORY_NAME]->shouldReceive('contains')
+            ->with($this->qaEntity)
+            ->andReturnFalse();
+
+        $result = $this->sut->handleCommand($this->command);
+
+        $this->assertEquals(
+            [self::DESTINATION_NAME],
+            $result->getMessages()
+        );
+    }
+
+    public function testHandleCommandEntityExists()
+    {
+        $this->repoMap[self::REPOSITORY_NAME]->shouldReceive('contains')
+            ->with($this->qaEntity)
+            ->andReturnTrue();
+        $this->qaEntity->shouldReceive('onSubmitApplicationStep')
+            ->withNoArgs()
+            ->once()
+            ->globally()
+            ->ordered();
+        $this->repoMap[self::REPOSITORY_NAME]->shouldReceive('save')
+            ->with($this->qaEntity)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $result = $this->sut->handleCommand($this->command);
+
+        $this->assertEquals(
+            [self::DESTINATION_NAME],
+            $result->getMessages()
+        );
     }
 }

@@ -513,7 +513,7 @@ class IrhpApplication extends AbstractRepository
             IrhpInterface::STATUS_FEE_PAID,
             IrhpInterface::STATUS_ISSUING,
         ];
-        $orderBy = ['l.lic_no', 'trd.description', 'ia.id'];
+        $orderBy = ['l.lic_no' => 'ASC', 'trd.description' => 'ASC', 'ia.id' => 'ASC'];
         $filterByColumnName = 'l.organisation_id';
         $filterByColumnValue = $organisationId;
 
@@ -526,52 +526,23 @@ class IrhpApplication extends AbstractRepository
     }
 
     /**
-     * Fetch a summary of issued permits for internal
-     *
-     * @param int $licenceId
-     *
-     * @return array
-     */
-    public function fetchInternalIssuedPermitsSummary($licenceId)
-    {
-        $applicationStatuses = [
-            IrhpInterface::STATUS_VALID,
-            IrhpInterface::STATUS_EXPIRED,
-            IrhpInterface::STATUS_TERMINATED
-        ];
-
-        $orderBy = ['applicationRef'];
-        $filterByColumnName = 'l.id';
-        $filterByColumnValue = $licenceId;
-
-        return $this->fetchIssuedPermitsSummary(
-            $applicationStatuses,
-            $orderBy,
-            $filterByColumnName,
-            $filterByColumnValue
-        );
-    }
-
-    /**
      * Fetch a summary of permit applications for internal
      *
      * @param int $licenceId
+     * @param string|null $status
      *
      * @return array
      */
-    public function fetchInternalApplicationsSummary($licenceId)
+    public function fetchInternalApplicationsSummary($licenceId, $status = null)
     {
-        $applicationStatuses = [
-            IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-            IrhpInterface::STATUS_UNDER_CONSIDERATION,
-            IrhpInterface::STATUS_AWAITING_FEE,
-            IrhpInterface::STATUS_FEE_PAID,
-            IrhpInterface::STATUS_ISSUING,
-            IrhpInterface::STATUS_CANCELLED,
-            IrhpInterface::STATUS_WITHDRAWN,
-            IrhpInterface::STATUS_UNSUCCESSFUL,
-        ];
-        $orderBy = [];
+        $applicationStatuses = IrhpInterface::ALL_STATUSES;
+
+        if (isset($status)) {
+            // only return apps of specific status, if provided
+            $applicationStatuses = [$status];
+        }
+
+        $orderBy = ['ia.id' => 'DESC'];
         $filterByColumnName = 'l.id';
         $filterByColumnValue = $licenceId;
 
@@ -692,10 +663,11 @@ class IrhpApplication extends AbstractRepository
 
         $sql = 'select ' .
             'concat (l.lic_no, \' / \', ia.id) as applicationRef, ' .
-            'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0)) as permitsRequired, ' .
+            'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0) + ifnull(ipa.required_standard, 0) + ifnull(ipa.required_cabotage, 0)) as permitsRequired, ' .
             'ia.id as id, ' .
             'ia.irhp_permit_type_id as typeId, ' .
             'ia.status as statusId, ' .
+            'ia.date_received as dateReceived, ' .
             'srd.description as statusDescription, ' .
             'trd.description as typeDescription, ' .
             'ips.period_name_key as periodNameKey, ' .
@@ -716,8 +688,14 @@ class IrhpApplication extends AbstractRepository
 
         if (count($orderBy)) {
             $escapedOrderBy = [];
-            foreach ($orderBy as $columnName) {
-                $escapedOrderBy[] = $this->escapeColumnName($columnName);
+            foreach ($orderBy as $columnName => $order) {
+                $escapedOrderBy[] = trim(
+                    sprintf(
+                        '%s %s',
+                        $this->escapeColumnName($columnName),
+                        $order === 'DESC' ? 'DESC' : ''
+                    )
+                );
             }
 
             $sql .= ' order by ' . implode(', ', $escapedOrderBy);

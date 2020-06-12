@@ -49,6 +49,10 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
             throw new ValidationException(['Emissions Category: N/A not valid for Short-term/Annual ECMT Stock']);
         }
 
+        if ($permitType->isBilateral() && !$command->getJourney()) {
+            throw new ValidationException(['Journey type is required.']);
+        }
+
         $countrys = [];
         foreach ($command->getRestrictedCountries() as $country) {
             $countrys[] = $this->getRepo('Country')->getReference(Country::class, $country);
@@ -65,7 +69,9 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
             $command->getToNo(),
             $command->getSsReserve(),
             $command->getIsLostReplacement(),
-            $countrys
+            $countrys,
+            $this->refDataOrNull($command->getJourney()),
+            $command->getCabotage()
         );
 
         $this->getRepo()->save($range);

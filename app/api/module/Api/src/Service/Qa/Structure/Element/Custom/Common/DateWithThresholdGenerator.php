@@ -2,11 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common;
 
-use Dvsa\Olcs\Api\Service\Qa\Common\CurrentDateTimeFactory;
+use Dvsa\Olcs\Api\Service\Common\CurrentDateTimeFactory;
 use Dvsa\Olcs\Api\Service\Qa\Common\DateIntervalFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\DateGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 
 class DateWithThresholdGenerator
 {

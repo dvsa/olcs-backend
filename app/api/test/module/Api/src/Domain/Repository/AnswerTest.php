@@ -21,10 +21,11 @@ class AnswerTest extends RepositoryTestCase
         $this->setUpSut(Answer::class);
     }
 
-    public function testFetchByQuestionIdAndIrhpApplicationId()
+    public function testFetchByQuestionIdAndEntityTypeAndId()
     {
         $questionId = 47;
-        $irhpApplicationId = 28;
+        $entityType = 'entityTypeName';
+        $entityId = 28;
         $answerEntity = m::mock(AnswerEntity::class);
 
         $queryBuilder = m::mock(QueryBuilder::class);
@@ -47,7 +48,7 @@ class AnswerTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('andWhere')
-            ->with('IDENTITY(a.irhpApplication) = ?2')
+            ->with('IDENTITY(a.entityTypeName) = ?2')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
@@ -55,7 +56,7 @@ class AnswerTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with(2, $irhpApplicationId)
+            ->with(2, $entityId)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('getQuery->getSingleResult')
@@ -64,17 +65,18 @@ class AnswerTest extends RepositoryTestCase
 
         $this->assertSame(
             $answerEntity,
-            $this->sut->fetchByQuestionIdAndIrhpApplicationId($questionId, $irhpApplicationId)
+            $this->sut->fetchByQuestionIdAndEntityTypeAndId($questionId, $entityType, $entityId)
         );
     }
 
-    public function testFetchByQuestionIdAndIrhpApplicationIdNotFound()
+    public function testFetchByQuestionIdAndEntityTypeAndIdNotFound()
     {
         $this->expectException(NotFoundException::class);
         $this->expectExceptionMessage('Answer not found');
 
         $questionId = 47;
-        $irhpApplicationId = 28;
+        $entityType = 'entityTypeName';
+        $entityId = 28;
 
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
@@ -96,7 +98,7 @@ class AnswerTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('andWhere')
-            ->with('IDENTITY(a.irhpApplication) = ?2')
+            ->with('IDENTITY(a.entityTypeName) = ?2')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
@@ -104,13 +106,13 @@ class AnswerTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with(2, $irhpApplicationId)
+            ->with(2, $entityId)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('getQuery->getSingleResult')
             ->once()
             ->andThrow(new NoResultException());
 
-        $this->sut->fetchByQuestionIdAndIrhpApplicationId($questionId, $irhpApplicationId);
+        $this->sut->fetchByQuestionIdAndEntityTypeAndId($questionId, $entityType, $entityId);
     }
 }

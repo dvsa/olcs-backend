@@ -7,7 +7,8 @@ use Dvsa\Olcs\Api\Domain\Repository\Answer as AnswerRepository;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\AnswerFactory;
@@ -23,7 +24,7 @@ class GenericAnswerWriterTest extends MockeryTestCase
 {
     private $questionId;
 
-    private $irhpApplicationId;
+    private $qaEntityId;
 
     private $answerValue;
 
@@ -37,7 +38,9 @@ class GenericAnswerWriterTest extends MockeryTestCase
 
     private $applicationStep;
 
-    private $irhpApplication;
+    private $qaEntity;
+
+    private $qaContext;
 
     private $genericAnswerProvider;
 
@@ -49,7 +52,7 @@ class GenericAnswerWriterTest extends MockeryTestCase
 
         $this->questionType = Question::QUESTION_TYPE_STRING;
 
-        $this->irhpApplicationId = 47;
+        $this->qaEntityId = 47;
 
         $this->answerValue = 866;
 
@@ -60,16 +63,24 @@ class GenericAnswerWriterTest extends MockeryTestCase
         $this->answerFactory = m::mock(AnswerFactory::class);
 
         $this->question = m::mock(Question::class);
-        $this->question->shouldReceive('getId')
-            ->andReturn($this->questionId);
 
         $this->applicationStep = m::mock(ApplicationStep::class);
         $this->applicationStep->shouldReceive('getQuestion')
+            ->withNoArgs()
             ->andReturn($this->question);
 
-        $this->irhpApplication = m::mock(IrhpApplication::class);
-        $this->irhpApplication->shouldReceive('getId')
-            ->andReturn($this->irhpApplicationId);
+        $this->qaEntity = m::mock(QaEntityInterface::class);
+        $this->qaEntity->shouldReceive('addAnswers')
+            ->with($this->answer)
+            ->once();
+
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($this->applicationStep);
+        $this->qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($this->qaEntity);
 
         $this->genericAnswerProvider = m::mock(GenericAnswerProvider::class);
 
@@ -100,12 +111,11 @@ class GenericAnswerWriterTest extends MockeryTestCase
             ->andReturn($questionType);
 
         $this->genericAnswerProvider->shouldReceive('get')
-            ->with($this->applicationStep, $this->irhpApplication)
+            ->with($this->qaContext)
             ->andReturn($this->answer);
 
         $this->genericAnswerWriter->write(
-            $this->applicationStep,
-            $this->irhpApplication,
+            $this->qaContext,
             $this->answerValue,
             $forcedType
         );
@@ -124,7 +134,7 @@ class GenericAnswerWriterTest extends MockeryTestCase
             ->andReturn($questionType);
 
         $this->genericAnswerProvider->shouldReceive('get')
-            ->with($this->applicationStep, $this->irhpApplication)
+            ->with($this->qaContext)
             ->andThrow(new NotFoundException());
 
         $this->answer->shouldReceive('setValue')
@@ -140,12 +150,11 @@ class GenericAnswerWriterTest extends MockeryTestCase
             ->globally();
 
         $this->answerFactory->shouldReceive('create')
-            ->with($questionText, $this->irhpApplication)
+            ->with($questionText, $this->qaEntity)
             ->andReturn($this->answer);
 
         $this->genericAnswerWriter->write(
-            $this->applicationStep,
-            $this->irhpApplication,
+            $this->qaContext,
             $this->answerValue,
             $forcedType
         );

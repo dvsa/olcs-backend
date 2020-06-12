@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
@@ -100,11 +101,24 @@ class IrhpPermit extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query instanceof ReadyToPrint) {
-            if ($query->getIrhpPermitStock() != null) {
-                $qb->innerJoin($this->alias . '.irhpPermitRange', 'ipr')
-                    ->innerJoin('ipr.irhpPermitStock', 'ips')
-                    ->andWhere($qb->expr()->eq('ips.id', ':stockId'))
-                    ->setParameter('stockId', $query->getIrhpPermitStock());
+            if ($query->getIrhpPermitStock() || $query->getIrhpPermitRangeType()) {
+                $qb->innerJoin($this->alias . '.irhpPermitRange', 'ipr');
+
+                if ($query->getIrhpPermitStock()) {
+                    $qb->innerJoin('ipr.irhpPermitStock', 'ips')
+                        ->andWhere($qb->expr()->eq('ips.id', ':stockId'))
+                        ->setParameter('stockId', $query->getIrhpPermitStock());
+                }
+
+                if ($query->getIrhpPermitRangeType()) {
+                    $rangeTypeCriteria
+                        = IrhpPermitRangeEntity::BILATERAL_TYPES_CRITERIA[$query->getIrhpPermitRangeType()];
+
+                    $qb->andWhere($qb->expr()->eq('ipr.journey', ':journey'))
+                        ->andWhere($qb->expr()->eq('ipr.cabotage', ':cabotage'))
+                        ->setParameter('journey', $rangeTypeCriteria['journey'])
+                        ->setParameter('cabotage', $rangeTypeCriteria['cabotage']);
+                }
             }
 
             $qb->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
@@ -127,16 +141,34 @@ class IrhpPermit extends AbstractRepository
         }
 
         if ($query instanceof GetListByLicence) {
+            $statuses = Entity::ALL_STATUSES;
+
+            if ($query->getStatus()) {
+                // filter by specific status
+                $statuses = [$query->getStatus()];
+            } elseif ($query->getValidOnly()) {
+                // valid only
+                $statuses = Entity::$validStatuses;
+            }
+
             $qb->innerJoin('ipa.irhpApplication', 'ia')
                 ->innerJoin($this->alias . '.irhpPermitRange', 'ipr')
                 ->innerJoin('ipr.irhpPermitStock', 'ips')
                 ->leftJoin('ips.country', 'ipc')
                 ->andWhere($qb->expr()->eq('ia.licence', ':licenceId'))
                 ->setParameter('licenceId', $query->getLicence())
-                ->andWhere($qb->expr()->eq('ips.irhpPermitType', ':irhpPermitTypeId'))
-                ->setParameter('irhpPermitTypeId', $query->getIrhpPermitType())
-                ->andWhere($qb->expr()->in($this->alias . '.status', ':validStatuses'))
-                ->setParameter('validStatuses', Entity::$validStatuses);
+                ->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
+                ->setParameter('statuses', $statuses);
+
+            if ($query->getIrhpPermitType()) {
+                $qb->andWhere($qb->expr()->eq('ips.irhpPermitType', ':irhpPermitTypeId'))
+                    ->setParameter('irhpPermitTypeId', $query->getIrhpPermitType());
+            }
+
+            if ($query->getCountry()) {
+                $qb->andWhere($qb->expr()->eq('ips.country', ':countryId'))
+                    ->setParameter('countryId', $query->getCountry());
+            }
 
             $qb->orderBy('ipc.countryDesc', 'ASC');
             $qb->addOrderBy($this->alias . '.expiryDate', 'ASC');

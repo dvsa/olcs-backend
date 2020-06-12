@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermit\GenerateCoverLetterDocument as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
@@ -38,6 +40,7 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
         $irhpPermitId = 1;
         $permitNo = 123;
         $licenceId = 10;
+        $irhpAppId = 789;
 
         $command = Cmd::Create(
             [
@@ -45,22 +48,28 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
             ]
         );
 
+        $licence = m::mock(Licence::class);
+        $licence->expects('getId')->twice()->andReturn($licenceId);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->expects('getLicence')->andReturn($licence);
+        $irhpApplication->expects('getId')->andReturn($irhpAppId);
+
         $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
-        $irhpPermitType->shouldReceive('getId')
+        $irhpPermitType->expects('getId')
             ->andReturn($irhpPermitTypeId);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
-        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+        $irhpPermitApplication->expects('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
             ->andReturn($irhpPermitType);
-        $irhpPermitApplication->shouldReceive('getIrhpApplication->getLicence->getId')
-            ->andReturn($licenceId);
+        $irhpPermitApplication->expects('getIrhpApplication')->andReturn($irhpApplication);
 
         $irhpPermit = m::mock(IrhpPermitEntity::class);
-        $irhpPermit->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication);
-        $irhpPermit->shouldReceive('getId')->andReturn($irhpPermitId);
-        $irhpPermit->shouldReceive('getPermitNumber')->andReturn($permitNo);
+        $irhpPermit->expects('getIrhpPermitApplication')->andReturn($irhpPermitApplication);
+        $irhpPermit->expects('getId')->andReturn($irhpPermitId);
+        $irhpPermit->expects('getPermitNumber')->andReturn($permitNo);
 
-        $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
+        $this->repoMap['IrhpPermit']->expects('fetchById')
             ->with($irhpPermitId, Query::HYDRATE_OBJECT)
             ->andReturn($irhpPermit);
 
@@ -73,6 +82,8 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
                     'irhpPermit' => $irhpPermitId,
                 ],
                 'knownValues' => [],
+                'irhpApplication' => $irhpAppId,
+                'licence' => $licenceId,
                 'description' => $expectedDescription,
                 'category' => CategoryEntity::CATEGORY_PERMITS,
                 'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT_COVERING_LETTER,

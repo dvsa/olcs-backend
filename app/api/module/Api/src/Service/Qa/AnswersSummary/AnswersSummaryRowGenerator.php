@@ -2,10 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\AnswersSummary;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowFactory;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory;
+use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
+use RuntimeException;
 use Zend\View\Renderer\RendererInterface;
 
 class AnswersSummaryRowGenerator
@@ -18,69 +19,70 @@ class AnswersSummaryRowGenerator
     /** @var RendererInterface */
     private $viewRenderer;
 
-    /** @var QuestionTextGeneratorContextFactory */
-    private $questionTextGeneratorContextFactory;
+    /** @var QaContextFactory */
+    private $qaContextFactory;
 
     /**
      * Create service instance
      *
      * @param AnswersSummaryRowFactory $answersSummaryRowFactory
      * @param RendererInterface $viewRenderer
-     * @param QuestionTextGeneratorContextFactory $questionTextGeneratorContextFactory
+     * @param QaContextFactory $qaContextFactory
      *
      * @return AnswersSummaryRowGenerator
      */
     public function __construct(
         AnswersSummaryRowFactory $answersSummaryRowFactory,
         RendererInterface $viewRenderer,
-        QuestionTextGeneratorContextFactory $questionTextGeneratorContextFactory
+        QaContextFactory $qaContextFactory
     ) {
         $this->answersSummaryRowFactory = $answersSummaryRowFactory;
         $this->viewRenderer = $viewRenderer;
-        $this->questionTextGeneratorContextFactory = $questionTextGeneratorContextFactory;
+        $this->qaContextFactory = $qaContextFactory;
     }
 
     /**
      * Build and return a AnswersSummaryRow instance using the appropriate data sources
      *
      * @param SupplementedApplicationStep $supplementedApplicationStep
-     * @param IrhpApplicationEntity $irhpApplicationEntity
+     * @param QaEntityInterface $qaEntity
      * @param bool $isSnapshot
      *
      * @return AnswersSummaryRow
      */
     public function generate(
         SupplementedApplicationStep $supplementedApplicationStep,
-        IrhpApplicationEntity $irhpApplicationEntity,
+        QaEntityInterface $qaEntity,
         $isSnapshot
     ) {
         $formControlStrategy = $supplementedApplicationStep->getFormControlStrategy();
-
-        $questionTextGeneratorContext = $this->questionTextGeneratorContextFactory->create(
-            $supplementedApplicationStep->getApplicationStep(),
-            $irhpApplicationEntity
-        );
-
-        $questionText = $formControlStrategy->getQuestionText($questionTextGeneratorContext);
-
         $answerSummaryProvider = $formControlStrategy->getAnswerSummaryProvider();
+
+        if (!$answerSummaryProvider->supports($qaEntity)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Answer summary provider does not support entity type %s',
+                    $qaEntity->getCamelCaseEntityName()
+                )
+            );
+        }
+
+        $applicationStep = $supplementedApplicationStep->getApplicationStep();
+        $qaContext = $this->qaContextFactory->create($applicationStep, $qaEntity);
+        $questionText = $formControlStrategy->getQuestionText($qaContext);
+
         $templatePath = self::TEMPLATE_DIRECTORY . $answerSummaryProvider->getTemplateName();
+        $templateVariables = $answerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
 
-        $applicationStepEntity = $supplementedApplicationStep->getApplicationStep();
-
-        $templateVariables = $answerSummaryProvider->getTemplateVariables(
-            $applicationStepEntity,
-            $irhpApplicationEntity,
-            $isSnapshot
-        );
-
-        $question = $applicationStepEntity->getQuestion();
+        $question = $applicationStep->getQuestion();
         $formattedAnswer = $this->viewRenderer->render($templatePath, $templateVariables);
+
+        $slug = (!$isSnapshot && $answerSummaryProvider->shouldIncludeSlug($qaEntity)) ? $question->getSlug() : null;
 
         return $this->answersSummaryRowFactory->create(
             $questionText->getQuestion()->getTranslateableText()->getKey(),
             $formattedAnswer,
-            $question->getSlug()
+            $slug
         );
     }
 }

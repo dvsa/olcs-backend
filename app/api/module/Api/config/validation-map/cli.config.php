@@ -97,7 +97,6 @@ return [
     CommandHandler\Permits\AllocateCandidatePermits::class => IsSystemUser::class,
     CommandHandler\Permits\PostSubmitTasks::class => IsSystemUser::class,
     CommandHandler\Permits\AllocateIrhpApplicationPermits::class => IsSystemUser::class,
-    CommandHandler\Permits\AllocateIrhpPermitApplicationPermit::class => IsSystemUser::class,
     CommandHandler\Permits\RunScoring::class => IsSystemUser::class,
     CommandHandler\Permits\AcceptScoring::class => IsSystemUser::class,
     CommandHandler\CommunityLic\ReportingBulkReprint::class => IsSystemUser::class,

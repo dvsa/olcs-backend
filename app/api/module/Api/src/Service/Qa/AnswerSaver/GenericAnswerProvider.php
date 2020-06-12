@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\AnswerSaver;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Domain\Repository\Answer as AnswerRepository;
 
 class GenericAnswerProvider
@@ -24,16 +23,18 @@ class GenericAnswerProvider
     }
 
     /**
-     * Get the answer entity corresponding to the specified application step and irhp application
+     * Get the answer entity corresponding to the specified application step and entity
      *
-     * @param ApplicationStep $applicationStep
-     * @param IrhpApplication $irhpApplication
+     * @param QaContext $qaContext
      */
-    public function get(ApplicationStep $applicationStep, IrhpApplication $irhpApplication)
+    public function get(QaContext $qaContext)
     {
-        return $this->answerRepo->fetchByQuestionIdAndIrhpApplicationId(
-            $applicationStep->getQuestion()->getId(),
-            $irhpApplication->getId()
+        $qaEntity = $qaContext->getQaEntity();
+
+        return $this->answerRepo->fetchByQuestionIdAndEntityTypeAndId(
+            $qaContext->getApplicationStepEntity()->getQuestion()->getId(),
+            $qaEntity->getCamelCaseEntityName(),
+            $qaEntity->getId()
         );
     }
 }

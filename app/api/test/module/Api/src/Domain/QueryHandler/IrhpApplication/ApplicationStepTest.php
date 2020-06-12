@@ -3,11 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Qa\Element\SelfservePage;
 use Dvsa\Olcs\Api\Service\Qa\Element\SelfservePageGenerator;
-use Dvsa\Olcs\Api\Service\Qa\ApplicationStepObjectsProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\ApplicationStep as ApplicationStepQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -19,7 +18,7 @@ class ApplicationStepTest extends QueryHandlerTestCase
         $this->sut = new ApplicationStep();
 
         $this->mockedSmServices = [
-            'QaApplicationStepObjectsProvider' => m::mock(ApplicationStepObjectsProvider::class),
+            'QaContextGenerator' => m::mock(QaContextGenerator::class),
             'QaSelfservePageGenerator' => m::mock(SelfservePageGenerator::class),
         ];
 
@@ -28,32 +27,28 @@ class ApplicationStepTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $irhpApplicationId = 457;
+        $irhpApplicationId = 23;
+        $irhpPermitApplicationId = 457;
         $slug = 'removals-eligibility';
 
         $query = ApplicationStepQry::create(
             [
                 'id' => $irhpApplicationId,
+                'irhpPermitApplication' => $irhpPermitApplicationId,
                 'slug' => $slug,
             ]
         );
 
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
+        $qaContext = m::mock(QaContext::class);
 
-        $applicationStepObjects = [
-            'applicationStep' => $applicationStepEntity,
-            'irhpApplication' => $irhpApplicationEntity
-        ];
-
-        $this->mockedSmServices['QaApplicationStepObjectsProvider']->shouldReceive('getObjects')
-            ->with($irhpApplicationId, $slug)
-            ->andReturn($applicationStepObjects);
+        $this->mockedSmServices['QaContextGenerator']->shouldReceive('generate')
+            ->with($irhpApplicationId, $irhpPermitApplicationId, $slug)
+            ->andReturn($qaContext);
 
         $selfservePage = m::mock(SelfservePage::class);
 
         $this->mockedSmServices['QaSelfservePageGenerator']->shouldReceive('generate')
-            ->with($applicationStepEntity, $irhpApplicationEntity)
+            ->with($qaContext)
             ->once()
             ->andReturn($selfservePage);
 

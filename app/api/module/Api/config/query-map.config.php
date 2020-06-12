@@ -387,6 +387,7 @@ return [
     // Fee
     TransferQuery\Fee\Fee::class => QueryHandler\Fee\Fee::class,
     TransferQuery\Fee\FeeList::class => QueryHandler\Fee\FeeList::class,
+    TransferQuery\Fee\IrhpBilateralByCountry::class => QueryHandler\Fee\IrhpBilateralByCountry::class,
 
     // Fee Type
     TransferQuery\Fee\FeeType::class => QueryHandler\Fee\FeeType::class,
@@ -544,6 +545,7 @@ return [
     // IRHP Permit Stock
     TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
+    TransferQuery\IrhpPermitStock\AvailableBilateral::class => QueryHandler\IrhpPermitStock\AvailableBilateral::class,
 
     // IRHP Permit Type
     TransferQuery\IrhpPermitType\ById::class => QueryHandler\IrhpPermitType\ById::class,
@@ -569,6 +571,7 @@ return [
     TransferQuery\Permits\ReadyToPrintType::class => QueryHandler\Permits\ReadyToPrintType::class,
     TransferQuery\Permits\ReadyToPrintCountry::class => QueryHandler\Permits\ReadyToPrintCountry::class,
     TransferQuery\Permits\ReadyToPrintStock::class => QueryHandler\Permits\ReadyToPrintStock::class,
+    TransferQuery\Permits\ReadyToPrintRangeType::class => QueryHandler\Permits\ReadyToPrintRangeType::class,
     TransferQuery\Permits\ReadyToPrint::class => QueryHandler\Permits\ReadyToPrint::class,
     TransferQuery\Permits\ReadyToPrintConfirm::class => QueryHandler\Permits\ReadyToPrintConfirm::class,
 
@@ -576,6 +579,7 @@ return [
     TransferQuery\IrhpPermit\GetListByIrhpId::class => QueryHandler\IrhpPermit\GetListByIrhpId::class,
     TransferQuery\IrhpPermit\ById::class => QueryHandler\IrhpPermit\ById::class,
     TransferQuery\IrhpPermit\GetListByLicence::class => QueryHandler\IrhpPermit\GetListByLicence::class,
+    TransferQuery\IrhpPermit\UniqueCountriesByLicence::class => QueryHandler\IrhpPermit\UniqueCountriesByLicence::class,
 
     // IRHP Candidate Permits
     TransferQuery\IrhpCandidatePermit\ById::class => QueryHandler\IrhpCandidatePermit\ById::class,
@@ -648,9 +652,10 @@ return [
     TransferQuery\IrhpApplication\RangesByIrhpApplication::class => QueryHandler\IrhpApplication\RangesByIrhpApplication::class,
     TransferQuery\IrhpApplication\GetGrantability::class => QueryHandler\IrhpApplication\GetGrantability::class,
     TransferQuery\IrhpApplication\InternalApplicationsSummary::class => QueryHandler\IrhpApplication\InternalApplicationsSummary::class,
-    TransferQuery\IrhpApplication\InternalIssuedPermitsSummary::class => QueryHandler\IrhpApplication\InternalIssuedPermitsSummary::class,
     TransferQuery\IrhpApplication\SelfserveApplicationsSummary::class => QueryHandler\IrhpApplication\SelfserveApplicationsSummary::class,
     TransferQuery\IrhpApplication\SelfserveIssuedPermitsSummary::class => QueryHandler\IrhpApplication\SelfserveIssuedPermitsSummary::class,
+    TransferQuery\IrhpApplication\BilateralCountryAccessible::class => QueryHandler\IrhpApplication\BilateralCountryAccessible::class,
+    TransferQuery\IrhpApplication\BilateralMetadata::class => QueryHandler\IrhpApplication\BilateralMetadata::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
     TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,

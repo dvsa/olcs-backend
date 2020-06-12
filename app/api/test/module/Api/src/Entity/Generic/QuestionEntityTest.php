@@ -4,9 +4,11 @@ namespace Dvsa\OlcsTest\Api\Entity\Generic;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\Question as Entity;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 
@@ -128,6 +130,55 @@ class QuestionEntityTest extends EntityTester
         $this->assertEquals(
             $optionSourceAsArray,
             $entity->getDecodedOptionSource()
+        );
+    }
+
+    public function testGetStandardAnswer()
+    {
+        $activeQuestionTextId = 77;
+
+        $answerValue = 'foo';
+
+        $answer1 = m::mock(Answer::class);
+        $answer1->shouldReceive('getQuestionText->getId')
+            ->withNoArgs()
+            ->andReturn(70);
+
+        $answer2 = m::mock(Answer::class);
+        $answer2->shouldReceive('getValue')
+            ->withNoArgs()
+            ->andReturn($answerValue);
+        $answer2->shouldReceive('getQuestionText->getId')
+            ->withNoArgs()
+            ->andReturn($activeQuestionTextId);
+
+        $answer3 = m::mock(Answer::class);
+        $answer3->shouldReceive('getQuestionText->getId')
+            ->withNoArgs()
+            ->andReturn(80);
+
+        $answersArrayCollection = new ArrayCollection([$answer1, $answer2, $answer3]);
+
+        $qaEntity = m::mock(QaEntityInterface::class);
+        $qaEntity->shouldReceive('getAnswers')
+            ->withNoArgs()
+            ->andReturn($answersArrayCollection);
+
+        $applicationPathLockedOn = m::mock(\DateTime::class);
+
+        $activeQuestionText = m::mock(QuestionTextEntity::class);
+        $activeQuestionText->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($activeQuestionTextId);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getActiveQuestionText')
+            ->with($applicationPathLockedOn)
+            ->andReturn($activeQuestionText);
+
+        $this->assertEquals(
+            $answerValue,
+            $entity->getStandardAnswer($qaEntity, $applicationPathLockedOn)
         );
     }
 }

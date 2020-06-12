@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 
 class ElementGeneratorContext
@@ -11,29 +11,21 @@ class ElementGeneratorContext
     /** @var ValidatorList */
     private $validatorList;
 
-    /** @var ApplicationStepEntity */
-    private $applicationStepEntity;
-
-    /** @var IrhpApplicationEntity */
-    private $irhpApplicationEntity;
+    /** @var QaContext */
+    private $qaContext;
 
     /**
      * Create instance
      *
      * @param ValidatorList $validatorList
-     * @param ApplicationStepEntity $applicationStepEntity
-     * @param IrhpApplicationEntity $irhpApplicationEntity
+     * @param QaContext $qaContext
      *
      * @return ElementGeneratorContext
      */
-    public function __construct(
-        ValidatorList $validatorList,
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity
-    ) {
+    public function __construct(ValidatorList $validatorList, QaContext $qaContext)
+    {
         $this->validatorList = $validatorList;
-        $this->applicationStepEntity = $applicationStepEntity;
-        $this->irhpApplicationEntity = $irhpApplicationEntity;
+        $this->qaContext = $qaContext;
     }
 
     /**
@@ -53,16 +45,36 @@ class ElementGeneratorContext
      */
     public function getApplicationStepEntity()
     {
-        return $this->applicationStepEntity;
+        return $this->qaContext->getApplicationStepEntity();
     }
 
     /**
-     * Get the embedded IrhpApplicationEntity instance
+     * Get the embedded QaEntityInterface instance
      *
-     * @return IrhpApplicationEntity
+     * @return QaEntityInterface
      */
-    public function getIrhpApplicationEntity()
+    public function getQaEntity()
     {
-        return $this->irhpApplicationEntity;
+        return $this->qaContext->getQaEntity();
+    }
+
+    /**
+     * Get the embedded QaContext instance
+     *
+     * @return QaContext
+     */
+    public function getQaContext()
+    {
+        return $this->qaContext;
+    }
+
+    /*
+     * Get the answer value associated with this context
+     *
+     * @return mixed
+     */
+    public function getAnswerValue()
+    {
+        return $this->qaContext->getAnswerValue();
     }
 }

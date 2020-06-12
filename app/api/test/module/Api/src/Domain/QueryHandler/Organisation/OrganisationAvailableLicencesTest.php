@@ -69,6 +69,7 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
         $stockId = 33;
         $hasOpenWindow = true;
         $isEcmtAnnual = false;
+        $isBilateral = false;
         $query = m::mock(Qry::class);
         $query->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($permitTypeId);
         $query->shouldReceive('getIrhpPermitStock')->once()->withNoArgs()->andReturn($stockId);
@@ -85,6 +86,7 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')->once()->withNoArgs()->andReturn($isShortTerm);
         $irhpPermitType->shouldReceive('isEcmtAnnual')->once()->withNoArgs()->andReturn($isEcmtAnnual);
+        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn($isBilateral);
         $irhpPermitType->shouldReceive('usesMultiStockLicenceBehaviour')->never();
 
         $this->repoMap['IrhpPermitType']
@@ -114,6 +116,7 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
         $expected = [
             'hasOpenWindow' => $hasOpenWindow,
             'isEcmtAnnual' => $isEcmtAnnual,
+            'isBilateral' => $isBilateral,
             'permitTypeId' => $permitTypeId,
             'eligibleLicences' => $eligibleLicences,
             'hasEligibleLicences' => $hasEligibleLicences,
@@ -139,6 +142,7 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
     public function testHandleQueryMultiStockNoStockId()
     {
         $permitTypeId = 22;
+        $isBilateral = false;
         $eligibleLicences = ['eligiblelicences'];
         $query = m::mock(Qry::class);
         $query->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($permitTypeId);
@@ -172,16 +176,17 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
             ->withNoArgs()
             ->once()
             ->andReturn(true);
+        $irhpPermitType->shouldReceive('isBilateral')->withNoArgs()->andReturn($isBilateral);
 
         $this->repoMap['IrhpPermitType']
             ->shouldReceive('fetchById')
-            ->once()
             ->with($permitTypeId)
             ->andReturn($irhpPermitType);
 
         $expected = [
             'hasOpenWindow' => true,
             'isEcmtAnnual' => false,
+            'isBilateral' => false,
             'permitTypeId' => $permitTypeId,
             'eligibleLicences' => $eligibleLicences,
             'hasEligibleLicences' => true,
@@ -195,6 +200,8 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
     public function testHandleQueryMultiStockNoStockIdOrWindow()
     {
         $permitTypeId = 22;
+        $isBilateral = false;
+
         $query = m::mock(Qry::class);
         $query->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($permitTypeId);
         $query->shouldReceive('getIrhpPermitStock')->once()->withNoArgs()->andReturnNull();
@@ -218,16 +225,17 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
             ->withNoArgs()
             ->once()
             ->andReturn(true);
+        $irhpPermitType->shouldReceive('isBilateral')->withNoArgs()->andReturn($isBilateral);
 
         $this->repoMap['IrhpPermitType']
             ->shouldReceive('fetchById')
-            ->once()
             ->with($permitTypeId)
             ->andReturn($irhpPermitType);
 
         $expected = [
             'hasOpenWindow' => false,
             'isEcmtAnnual' => false,
+            'isBilateral' => $isBilateral,
             'permitTypeId' => $permitTypeId,
             'eligibleLicences' => [],
             'hasEligibleLicences' => false,

@@ -5,10 +5,10 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\QuestionText;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
 use Dvsa\Olcs\Api\Service\Qa\Structure\FilteredTranslateableText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\JsonDecodingFilteredTranslateableTextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -69,8 +69,8 @@ class QuestionTextGeneratorTest extends MockeryTestCase
             ->with($additionalGuidanceKey)
             ->andReturn($transformedAdditionalGuidanceKey);
 
-        $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
-        $questionTextGeneratorContext->shouldReceive('getApplicationStepEntity->getQuestion->getActiveQuestionText')
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity->getQuestion->getActiveQuestionText')
             ->andReturn($questionTextEntity);
 
         $questionTextGenerator = new QuestionTextGenerator(
@@ -80,7 +80,7 @@ class QuestionTextGeneratorTest extends MockeryTestCase
 
         $this->assertSame(
             $questionText,
-            $questionTextGenerator->generate($questionTextGeneratorContext)
+            $questionTextGenerator->generate($qaContext)
         );
     }
 }

@@ -4,18 +4,19 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\AnswersSummary;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRow;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowFactory;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswersSummaryRowGenerator;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use RuntimeException;
 use Zend\View\Renderer\RendererInterface;
 
 /**
@@ -25,14 +26,91 @@ use Zend\View\Renderer\RendererInterface;
  */
 class AnswersSummaryRowGeneratorTest extends MockeryTestCase
 {
+    private $formControlStrategy;
+
+    private $supplementedApplicationStep;
+
+    private $qaEntity;
+
+    private $answerSummaryProvider;
+
+    private $answersSummaryRowFactory;
+
+    private $viewRenderer;
+
+    private $qaContextFactory;
+
+    private $answersSummaryRowGenerator;
+
+    public function setUp()
+    {
+        $this->formControlStrategy = m::mock(FormControlStrategyInterface::class);
+
+        $this->supplementedApplicationStep = m::mock(SupplementedApplicationStep::class);
+        $this->supplementedApplicationStep->shouldReceive('getFormControlStrategy')
+            ->withNoArgs()
+            ->andReturn($this->formControlStrategy);
+
+        $this->qaEntity = m::mock(QaEntityInterface::class);
+
+        $this->answerSummaryProvider = m::mock(AnswerSummaryProviderInterface::class);
+
+        $this->formControlStrategy->shouldReceive('getAnswerSummaryProvider')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($this->answerSummaryProvider);
+
+        $this->answersSummaryRowFactory = m::mock(AnswersSummaryRowFactory::class);
+
+        $this->viewRenderer = m::mock(RendererInterface::class);
+
+        $this->qaContextFactory = m::mock(QaContextFactory::class);
+
+        $this->answersSummaryRowGenerator = new AnswersSummaryRowGenerator(
+            $this->answersSummaryRowFactory,
+            $this->viewRenderer,
+            $this->qaContextFactory
+        );
+    }
+
     /**
      * @dataProvider dpSnapshot
      */
-    public function testGenerate($isSnapshot)
+    public function testGenerateNotSupported($isSnapshot)
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Answer summary provider does not support entity type entityType');
+
+        $this->qaEntity->shouldReceive('getCamelCaseEntityName')
+            ->withNoArgs()
+            ->andReturn('entityType');
+
+        $this->answerSummaryProvider->shouldReceive('supports')
+            ->with($this->qaEntity)
+            ->andReturn(false);
+
+        $this->answersSummaryRowGenerator->generate(
+            $this->supplementedApplicationStep,
+            $this->qaEntity,
+            $isSnapshot
+        );
+    }
+
+    public function dpSnapshot()
+    {
+        return [
+            [true],
+            [false]
+        ];
+    }
+
+    /**
+     * @dataProvider dpGenerate
+     */
+    public function testGenerate($isSnapshot, $questionSlug, $shouldIncludeSlug, $expectedSlug)
     {
         $questionTranslationKey = 'question.translation.key';
         $formattedAnswer = 'line 1<br>line 2';
-        $questionSlug = 'no-of-permits';
 
         $templateName = 'irhp-no-of-permits';
         $expectedTemplatePath = 'answers-summary/irhp-no-of-permits';
@@ -47,86 +125,73 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($questionSlug);
 
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
         $applicationStepEntity->shouldReceive('getQuestion')
             ->withNoArgs()
             ->andReturn($questionEntity);
 
-        $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
+        $qaContext = m::mock(QaContext::class);
 
-        $questionTextGeneratorContextFactory = m::mock(QuestionTextGeneratorContextFactory::class);
-        $questionTextGeneratorContextFactory->shouldReceive('create')
-            ->with($applicationStepEntity, $irhpApplicationEntity)
+        $this->qaContextFactory->shouldReceive('create')
+            ->with($applicationStepEntity, $this->qaEntity)
             ->once()
-            ->andReturn($questionTextGeneratorContext);
+            ->andReturn($qaContext);
 
-        $answerSummaryProvider = m::mock(AnswerSummaryProviderInterface::class);
-        $answerSummaryProvider->shouldReceive('getTemplateName')
+        $this->answerSummaryProvider->shouldReceive('getTemplateName')
             ->withNoArgs()
             ->andReturn($templateName);
-        $answerSummaryProvider->shouldReceive('getTemplateVariables')
-            ->with($applicationStepEntity, $irhpApplicationEntity, $isSnapshot)
+        $this->answerSummaryProvider->shouldReceive('getTemplateVariables')
+            ->with($qaContext, $isSnapshot)
             ->andReturn($templateVariables);
+        $this->answerSummaryProvider->shouldReceive('supports')
+            ->with($this->qaEntity)
+            ->andReturn(true);
+        $this->answerSummaryProvider->shouldReceive('shouldIncludeSlug')
+            ->with($this->qaEntity)
+            ->andReturn($shouldIncludeSlug);
 
         $questionText = m::mock(QuestionText::class);
         $questionText->shouldReceive('getQuestion->getTranslateableText->getKey')
             ->withNoArgs()
             ->andReturn($questionTranslationKey);
 
-        $formControlStrategy = m::mock(FormControlStrategyInterface::class);
-        $formControlStrategy->shouldReceive('getAnswerSummaryProvider')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($answerSummaryProvider);
-        $formControlStrategy->shouldReceive('getQuestionText')
-            ->with($questionTextGeneratorContext)
+        $this->formControlStrategy->shouldReceive('getQuestionText')
+            ->with($qaContext)
             ->andReturn($questionText);
 
-        $supplementedApplicationStep = m::mock(SupplementedApplicationStep::class);
-        $supplementedApplicationStep->shouldReceive('getFormControlStrategy')
-            ->withNoArgs()
-            ->andReturn($formControlStrategy);
-        $supplementedApplicationStep->shouldReceive('getApplicationStep')
+        $this->supplementedApplicationStep->shouldReceive('getApplicationStep')
             ->withNoArgs()
             ->andReturn($applicationStepEntity);
 
-        $viewRenderer = m::mock(RendererInterface::class);
-        $viewRenderer->shouldReceive('render')
+        $this->viewRenderer->shouldReceive('render')
             ->with($expectedTemplatePath, $templateVariables)
             ->once()
             ->andReturn($formattedAnswer);
 
         $answersSummaryRow = m::mock(AnswersSummaryRow::class);
 
-        $answersSummaryRowFactory = m::mock(AnswersSummaryRowFactory::class);
-        $answersSummaryRowFactory->shouldReceive('create')
-            ->with($questionTranslationKey, $formattedAnswer, $questionSlug)
+        $this->answersSummaryRowFactory->shouldReceive('create')
+            ->with($questionTranslationKey, $formattedAnswer, $expectedSlug)
             ->once()
             ->andReturn($answersSummaryRow);
 
-        $answersSummaryRowGenerator = new AnswersSummaryRowGenerator(
-            $answersSummaryRowFactory,
-            $viewRenderer,
-            $questionTextGeneratorContextFactory
-        );
-
         $this->assertSame(
             $answersSummaryRow,
-            $answersSummaryRowGenerator->generate(
-                $supplementedApplicationStep,
-                $irhpApplicationEntity,
+            $this->answersSummaryRowGenerator->generate(
+                $this->supplementedApplicationStep,
+                $this->qaEntity,
                 $isSnapshot
             )
         );
     }
 
-    public function dpSnapshot()
+    public function dpGenerate()
     {
         return [
-            [true],
-            [false]
+            [false, 'no-of-permits', true, 'no-of-permits'],
+            [false, 'no-of-permits', false, null],
+            [true, 'no-of-permits', true, null],
+            [true, 'no-of-permits', false, null],
         ];
     }
 }

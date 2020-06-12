@@ -26,13 +26,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_permit_range_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_range_emissions_category_ref_data_id",
      *     columns={"emissions_category"}),
+ *        @ORM\Index(name="fk_irhp_permit_range_journey_ref_data_id", columns={"journey"}),
  *        @ORM\Index(name="fk_irhp_permit_range_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_ranges_irhp_permit_stocks1_idx",
      *     columns={"irhp_permit_stock_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uniqueRange", columns={"irhp_permit_stock_id","from_no","to_no"})
+ *        @ORM\UniqueConstraint(name="uniqueRange",
+     *     columns={"irhp_permit_stock_id","from_no","to_no","cabotage"})
  *    }
  * )
  */
@@ -43,6 +45,15 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     use ClearPropertiesWithCollectionsTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
+
+    /**
+     * Cabotage
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="cabotage", nullable=true)
+     */
+    protected $cabotage;
 
     /**
      * Country
@@ -119,6 +130,16 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
      * @ORM\JoinColumn(name="irhp_permit_stock_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitStock;
+
+    /**
+     * Journey
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="journey", referencedColumnName="id", nullable=true)
+     */
+    protected $journey;
 
     /**
      * Last modified by
@@ -221,6 +242,30 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
         $this->countrys = new ArrayCollection();
         $this->irhpCandidatePermits = new ArrayCollection();
         $this->irhpPermits = new ArrayCollection();
+    }
+
+    /**
+     * Set the cabotage
+     *
+     * @param boolean $cabotage new value being set
+     *
+     * @return IrhpPermitRange
+     */
+    public function setCabotage($cabotage)
+    {
+        $this->cabotage = $cabotage;
+
+        return $this;
+    }
+
+    /**
+     * Get the cabotage
+     *
+     * @return boolean
+     */
+    public function getCabotage()
+    {
+        return $this->cabotage;
     }
 
     /**
@@ -404,6 +449,30 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     public function getIrhpPermitStock()
     {
         return $this->irhpPermitStock;
+    }
+
+    /**
+     * Set the journey
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $journey entity being set as the value
+     *
+     * @return IrhpPermitRange
+     */
+    public function setJourney($journey)
+    {
+        $this->journey = $journey;
+
+        return $this;
+    }
+
+    /**
+     * Get the journey
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getJourney()
+    {
+        return $this->journey;
     }
 
     /**

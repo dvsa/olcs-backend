@@ -18,7 +18,7 @@ class SelfservePageTest extends MockeryTestCase
 {
     private $title;
 
-    private $applicationReference;
+    private $additionalViewData;
 
     private $applicationStep;
 
@@ -32,7 +32,10 @@ class SelfservePageTest extends MockeryTestCase
     {
         $this->title = 'title';
 
-        $this->applicationReference = 'OB123456 / 12300';
+        $this->additionalViewData = [
+            'property1' => 'value1',
+            'property2' => 'value2',
+        ];
 
         $this->applicationStep = m::mock(ApplicationStep::class);
 
@@ -42,7 +45,7 @@ class SelfservePageTest extends MockeryTestCase
 
         $this->selfservePage = new SelfservePage(
             $this->title,
-            $this->applicationReference,
+            $this->additionalViewData,
             $this->applicationStep,
             $this->questionText,
             $this->nextStepSlug
@@ -63,7 +66,7 @@ class SelfservePageTest extends MockeryTestCase
 
         $expectedRepresentation = [
             'title' => $this->title,
-            'applicationReference' => $this->applicationReference,
+            'additionalViewData' => $this->additionalViewData,
             'applicationStep' => $applicationStepRepresentation,
             'questionText' => $questionTextRepresentation,
             'nextStepSlug' => $this->nextStepSlug

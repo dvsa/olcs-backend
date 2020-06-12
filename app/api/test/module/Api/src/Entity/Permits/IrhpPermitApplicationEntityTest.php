@@ -4,7 +4,12 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Answer;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -148,6 +153,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $euro5PermitsAwarded = 7;
         $euro6PermitsAwarded = 3;
         $validPermitsCount = 14;
+        $permitsRequired = 3;
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('serialize')
@@ -169,6 +175,9 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $entity->shouldReceive('countValidPermits')
             ->withNoArgs()
             ->andReturn($validPermitsCount);
+        $entity->shouldReceive('countPermitsRequired')
+            ->withNoArgs()
+            ->andReturn($permitsRequired);
 
         $this->assertSame(
             [
@@ -176,6 +185,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
                 'euro5PermitsAwarded' => $euro5PermitsAwarded,
                 'euro6PermitsAwarded' => $euro6PermitsAwarded,
                 'validPermits' => $validPermitsCount,
+                'permitsRequired' => $permitsRequired,
                 'relatedApplication' => $serializedIrhpApplication,
             ],
             $entity->getCalculatedBundleValues()
@@ -389,6 +399,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     {
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
             ->andReturn(true);
 
         $irhpPermitApplication = Entity::createNew(
@@ -408,6 +419,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     {
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
             ->andReturn(false);
 
         $irhpPermitApplication = Entity::createNew(
@@ -707,12 +719,11 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtRemoval')
             ->withNoArgs()
             ->andReturnTrue();
-
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getAnswerValueByQuestionId')
+        $irhpApplication->shouldReceive('getAnswerValueByQuestionId')
             ->with(Question::QUESTION_ID_REMOVAL_PERMIT_START_DATE)
             ->andReturn($issueDateAsString);
 
+        $entity = m::mock(Entity::class)->makePartial();
         $entity->setIrhpApplication($irhpApplication);
 
         $this->assertEquals(
@@ -765,20 +776,969 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
     public function testGetAnswerValueByQuestionId()
     {
-        $questionId = 46;
-        $answer = 'qanda answer';
+        $questionId = 47;
+        $answerValue = 'answer value';
 
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $activeApplicationPath = m::mock(ApplicationPath::class);
+        $activeApplicationPath->shouldReceive('getAnswerValueByQuestionId')
+            ->with($questionId, $entity)
+            ->andReturn($answerValue);
+
+        $entity->shouldReceive('getActiveApplicationPath')
+            ->withNoArgs()
+            ->andReturn($activeApplicationPath);
+
+        $this->assertEquals(
+            $answerValue,
+            $entity->getAnswerValueByQuestionId($questionId)
+        );
+    }
+
+    /**
+     * @dataProvider dpTestIsNotYetSubmitted
+     */
+    public function testIsNotYetSubmitted($isNotYetSubmitted)
+    {
         $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('getAnswerValueByQuestionId')
-            ->with($questionId)
-            ->andReturn($answer);
+        $irhpApplication->shouldReceive('isNotYetSubmitted')
+            ->withNoArgs()
+            ->andReturn($isNotYetSubmitted);
 
         $entity = m::mock(Entity::class)->makePartial();
         $entity->setIrhpApplication($irhpApplication);
 
         $this->assertEquals(
-            $answer,
-            $entity->getAnswerValueByQuestionId($questionId)
+            $isNotYetSubmitted,
+            $entity->isNotYetSubmitted()
+        );
+    }
+
+    public function dpTestIsNotYetSubmitted()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    public function testGetApplicationPathLockedOn()
+    {
+        $applicationPathLockedOn = m::mock(DateTime::class);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getApplicationPathLockedOn')
+            ->withNoArgs()
+            ->andReturn($applicationPathLockedOn);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertSame(
+            $applicationPathLockedOn,
+            $entity->getApplicationPathLockedOn()
+        );
+    }
+
+    public function testGetActiveApplicationPath()
+    {
+        $applicationPathLockedOn = m::mock(DateTime::class);
+        $applicationPath = m::mock(ApplicationPath::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getApplicationPathLockedOn')
+            ->withNoArgs()
+            ->andReturn($applicationPathLockedOn);
+        $entity->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath')
+            ->with($applicationPathLockedOn)
+            ->andReturn($applicationPath);
+
+        $this->assertSame(
+            $applicationPath,
+            $entity->getActiveApplicationPath()
+        );
+    }
+
+    /**
+     * @dataProvider dpGetAnswerWithStandardAnswer
+     */
+    public function testGetAnswerWithStandardAnswer($isCustom, $formControlType)
+    {
+        $answerValue = 'answer value';
+
+        $applicationPathLockedOn = m::mock(DateTime::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getApplicationPathLockedOn')
+            ->withNoArgs()
+            ->andReturn($applicationPathLockedOn);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('getFormControlType')
+            ->withNoArgs()
+            ->andReturn($formControlType);
+        $question->shouldReceive('isCustom')
+            ->withNoArgs()
+            ->andReturn($isCustom);
+        $question->shouldReceive('getStandardAnswer')
+            ->with($entity, $applicationPathLockedOn)
+            ->andReturn($answerValue);
+
+        $applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep->shouldReceive('getQuestion')
+            ->withNoArgs()
+            ->andReturn($question);
+
+        $this->assertEquals(
+            $answerValue,
+            $entity->getAnswer($applicationStep)
+        );
+    }
+
+    public function getAnswerUnsupportedCustomType()
+    {
+        $this->expectExpection(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to retrieve answer status for form control type FORM_CONTROL_OTHER');
+
+        $applicationPathLockedOn = m::mock(DateTime::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getApplicationPathLockedOn')
+            ->withNoArgs()
+            ->andReturn($applicationPathLockedOn);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('getFormControlType')
+            ->withNoArgs()
+            ->andReturn('FORM_CONTROL_OTHER');
+        $question->shouldReceive('isCustom')
+            ->withNoArgs()
+            ->andReturnTrue;
+
+        $applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep->shouldReceive('getQuestion')
+            ->withNoArgs()
+            ->andReturn($question);
+
+        $entity->getAnswer($applicationStep);
+    }
+
+    public function dpGetAnswerWithStandardAnswer()
+    {
+        return [
+            [true, Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY],
+            [true, Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE],
+        ];
+    }
+
+    /**
+     * @dataProvider dpResetCheckAnswers
+     */
+    public function testResetCheckAnswers($canBeUpdated, $expectedValue)
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturn($canBeUpdated);
+
+        $this->sut->setIrhpApplication($irhpApplication);
+        $this->sut->setCheckedAnswers(true);
+        $this->sut->resetCheckAnswers();
+
+        $this->assertEquals(
+            $expectedValue,
+            $this->sut->getCheckedAnswers()
+        );
+    }
+
+    public function dpResetCheckAnswers()
+    {
+        return [
+            [true, false],
+            [false, true],
+        ];
+    }
+
+    public function testGetCamelCaseEntityName()
+    {
+        $this->assertEquals(
+            'irhpPermitApplication',
+            $this->sut->getCamelCaseEntityName()
+        );
+    }
+
+    public function testOnSubmitApplicationStep()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('resetCheckAnswers')
+            ->once()
+            ->withNoArgs();
+
+        $entity->onSubmitApplicationStep();
+    }
+
+    public function testGetAdditionalQaViewData()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $countryCode = 'DE';
+        $countryName = 'Germany';
+        $previousStepSlug = 'previous-step-slug';
+
+        $expected = [
+            'previousStepSlug' => $previousStepSlug,
+            'countryName' => $countryName,
+            'countryCode' => $countryCode,
+        ];
+
+        $country = m::mock(Country::class);
+        $country->shouldReceive('getCountryDesc')
+            ->withNoArgs()
+            ->andReturn($countryName);
+        $country->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($countryCode);
+
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry')
+            ->withNoArgs()
+            ->andReturn($country);
+
+        $entity->setIrhpPermitWindow($irhpPermitWindow);
+
+        $applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep->shouldReceive('getPreviousStepSlug')
+            ->withNoArgs()
+            ->andReturn($previousStepSlug);
+
+        $this->assertEquals(
+            $expected,
+            $entity->getAdditionalQaViewData($applicationStep)
+        );
+    }
+
+    /**
+     * @dataProvider dpIsApplicationPathEnabled
+     */
+    public function testIsApplicationPathEnabled($isIrhpPermitApplicationPathEnabled)
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitType->isIrhpPermitApplicationPathEnabled')
+            ->withNoArgs()
+            ->andReturn($isIrhpPermitApplicationPathEnabled);
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $isIrhpPermitApplicationPathEnabled,
+            $this->sut->isApplicationPathEnabled()
+        );
+    }
+
+    public function dpIsApplicationPathEnabled()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetBilateralCabotageSelection
+     */
+    public function testGetBilateralCabotageSelection($cabotageOnlyAnswer, $standardAndCabotageAnswer, $expectedAnswer)
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $entity->setIrhpApplication($irhpApplication);
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_BILATERAL_CABOTAGE_ONLY)
+            ->andReturn($cabotageOnlyAnswer);
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_BILATERAL_STANDARD_AND_CABOTAGE)
+            ->andReturn($standardAndCabotageAnswer);
+
+        $this->assertEquals(
+            $expectedAnswer,
+            $entity->getBilateralCabotageSelection()
+        );
+    }
+
+    public function dpGetBilateralCabotageSelection()
+    {
+        return [
+            ['cabotage_only_answer', null, 'cabotage_only_answer'],
+            [null, 'standard_and_cabotage_answer', 'standard_and_cabotage_answer'],
+            [null, null, Answer::BILATERAL_STANDARD_ONLY],
+        ];
+    }
+
+    public function testGetBilateralCabotageSelectionNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralCabotageSelection is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralCabotageSelection();
+    }
+
+    public function testGetBilateralPermitUsageSelection()
+    {
+        $permitUsageAnswer = 'permit_usage_answer';
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $entity->setIrhpApplication($irhpApplication);
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_BILATERAL_PERMIT_USAGE)
+            ->andReturn($permitUsageAnswer);
+
+        $this->assertEquals(
+            $permitUsageAnswer,
+            $entity->getBilateralPermitUsageSelection()
+        );
+    }
+
+    public function testGetBilateralPermitUsageSelectionNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralPermitUsageSelection is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralPermitUsageSelection();
+    }
+
+    /**
+     * @dataProvider dpUpdateAndGetBilateralRequired
+     */
+    public function testUpdateAndGetBilateralRequired($standardRequired, $cabotageRequired)
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $required = [
+            Entity::BILATERAL_STANDARD_REQUIRED => $standardRequired,
+            Entity::BILATERAL_CABOTAGE_REQUIRED => $cabotageRequired,
+        ];
+
+        $this->sut->updateBilateralRequired($required);
+        $this->assertEquals($required, $this->sut->getBilateralRequired());
+    }
+
+    public function dpUpdateAndGetBilateralRequired()
+    {
+        return [
+            ['43', '57'],
+            ['22', null],
+            [null, '31'],
+        ];
+    }
+
+    public function testUpdateBilateralRequiredBadKeys()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unexpected or missing array keys passed to updateBilateralRequired');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $required = [
+            'foo' => 'bar',
+            'test' => 'key',
+        ];
+
+        $this->sut->updateBilateralRequired($required);
+    }
+
+    public function testUpdateBilateralRequiredNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('updateBilateralRequired is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->updateBilateralRequired([]);
+    }
+
+    public function testupdateBilateralRequiredCannotBeUpdated()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('updateBilateralRequired called when application in unexpected state');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->updateBilateralRequired([]);
+    }
+
+    public function testClearBilateralRequired()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $required = [
+            Entity::BILATERAL_STANDARD_REQUIRED => '7',
+            Entity::BILATERAL_CABOTAGE_REQUIRED => '8',
+        ];
+
+        $this->sut->updateBilateralRequired($required);
+
+        $expected = [
+            Entity::BILATERAL_STANDARD_REQUIRED => null,
+            Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+        ];
+
+        $this->sut->clearBilateralRequired();
+        $this->assertEquals($expected, $this->sut->getBilateralRequired());
+    }
+
+    public function testGetDefaultBilateralRequired()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $expected = [
+            Entity::BILATERAL_STANDARD_REQUIRED => null,
+            Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+        ];
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->getDefaultBilateralRequired()
+        );
+    }
+
+    public function testGetDefaultBilateralRequiredNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getDefaultBilateralRequired is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->clearBilateralRequired();
+    }
+
+    /**
+     * @dataProvider dpGetFilteredBilateralRequired
+     */
+    public function testGetFilteredBilateralRequired($bilateralRequired, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $entity->shouldReceive('getBilateralRequired')
+            ->withNoArgs()
+            ->andReturn($bilateralRequired);
+
+        $this->assertEquals(
+            $expected,
+            $entity->getFilteredBilateralRequired()
+        );
+    }
+
+    public function dpGetFilteredBilateralRequired()
+    {
+        return [
+            [
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => null,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+                ],
+                []
+            ],
+            [
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 5,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 9,
+                ],
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 5,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 9,
+                ]
+            ],
+            [
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => null,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 3,
+                ],
+                [
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 3,
+                ]
+            ],
+            [
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 12,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+                ],
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 12,
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetBilateralFeeProductRefsAndQuantities
+     */
+    public function testGetBilateralFeeProductRefsAndQuantities(
+        $bilateralRequired,
+        $permitUsageSelection,
+        $expectedProductRefsAndQuantities
+    ) {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getBilateralRequired')
+            ->withNoArgs()
+            ->andReturn($bilateralRequired);
+        $entity->shouldReceive('getBilateralPermitUsageSelection')
+            ->withNoArgs()
+            ->andReturn($permitUsageSelection);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $expectedProductRefsAndQuantities,
+            $entity->getBilateralFeeProductRefsAndQuantities()
+        );
+    }
+
+    public function dpGetBilateralFeeProductRefsAndQuantities()
+    {
+        return [
+            'single - cabotage only' => [
+                'bilateralRequired' => [
+                    Entity::BILATERAL_STANDARD_REQUIRED => null,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 5
+                ],
+                'permitUsageSelection' => RefData::JOURNEY_SINGLE,
+                'expectedProductRefsAndQuantities' => [
+                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 5,
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 5,
+                ],
+            ],
+            'single - standard and cabotage' => [
+                'bilateralRequired' => [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 7,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 5
+                ],
+                'permitUsageSelection' => RefData::JOURNEY_SINGLE,
+                'expectedProductRefsAndQuantities' => [
+                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 12,
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 12,
+                ],
+            ],
+            'single - standard only' => [
+                'bilateralRequired' => [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 7,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => null
+                ],
+                'permitUsageSelection' => RefData::JOURNEY_SINGLE,
+                'expectedProductRefsAndQuantities' => [
+                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 7,
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 7,
+                ],
+            ],
+            'multiple - cabotage only' => [
+                'bilateralRequired' => [
+                    Entity::BILATERAL_STANDARD_REQUIRED => null,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 9
+                ],
+                'permitUsageSelection' => RefData::JOURNEY_MULTIPLE,
+                'expectedProductRefsAndQuantities' => [
+                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 9,
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 9,
+                ],
+            ],
+            'multiple - standard and cabotage' => [
+                'bilateralRequired' => [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 3,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => 4
+                ],
+                'permitUsageSelection' => RefData::JOURNEY_MULTIPLE,
+                'expectedProductRefsAndQuantities' => [
+                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF => 3,
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF => 3,
+                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 4,
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 4,
+                ],
+            ],
+            'multiple - standard only' => [
+                'bilateralRequired' => [
+                    Entity::BILATERAL_STANDARD_REQUIRED => 6,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => null
+                ],
+                'permitUsageSelection' => RefData::JOURNEY_MULTIPLE,
+                'expectedProductRefsAndQuantities' => [
+                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF => 6,
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF => 6,
+                ],
+            ],
+        ];
+    }
+
+    public function testGetBilateralFeeProductRefsAndQuantitiesNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralFeeProductRefsAndQuantities is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralFeeProductRefsAndQuantities();
+    }
+
+    /**
+     * @dataProvider dpGetBilateralFeeProductReference
+     */
+    public function testGetBilateralFeeProductReference($permitUsage, $standardOrCabotage, $feeTypeKey, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getBilateralPermitUsageSelection')
+            ->withNoArgs()
+            ->andReturn($permitUsage);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $expected,
+            $entity->getBilateralFeeProductReference($standardOrCabotage, $feeTypeKey)
+        );
+    }
+
+    public function dpGetBilateralFeeProductReference()
+    {
+        return [
+            [
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_APPLICATION_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_ISSUE_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_APPLICATION_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_ISSUE_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_APPLICATION_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_ISSUE_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_APPLICATION_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+            [
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_ISSUE_FEE_KEY,
+                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF
+            ],
+        ];
+    }
+
+    public function testGetBilateralFeeProductReferenceNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralFeeProductReference is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralFeeProductReference(
+            Entity::BILATERAL_STANDARD_REQUIRED,
+            Entity::BILATERAL_ISSUE_FEE_KEY
+        );
+    }
+
+    public function testGetBilateralFeePerPermit()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $applicationFeeType = m::mock(FeeType::class);
+        $applicationFeeType->shouldReceive('getFixedValue')
+            ->withNoArgs()
+            ->andReturn(5);
+
+        $issueFeeType = m::mock(FeeType::class);
+        $issueFeeType->shouldReceive('getFixedValue')
+            ->withNoArgs()
+            ->andReturn(13);
+
+        $this->assertEquals(
+            18,
+            $this->sut->getBilateralFeePerPermit($applicationFeeType, $issueFeeType)
+        );
+    }
+
+    public function testGetBilateralFeePerPermitNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralFeePerPermit is applicable only to bilateral applications');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralFeePerPermit(
+            m::mock(FeeType::class),
+            m::mock(FeeType::class)
+        );
+    }
+
+    public function testGetOutstandingFees()
+    {
+        $fee1 = m::mock(Fee::class);
+        $fee1->shouldReceive('isOutstanding')
+            ->andReturnTrue();
+
+        $fee2 = m::mock(Fee::class);
+        $fee2->shouldReceive('isOutstanding')
+            ->andReturnFalse();
+
+        $fee3 = m::mock(Fee::class);
+        $fee3->shouldReceive('isOutstanding')
+            ->andReturnTrue();
+
+        $fees = [$fee1, $fee2, $fee3];
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getFees')
+            ->withNoArgs()
+            ->andReturn($fees);
+
+        $outstandingFees = $entity->getOutstandingFees();
+
+        $this->assertCount(2, $outstandingFees);
+        $this->assertContains($fee1, $outstandingFees);
+        $this->assertContains($fee3, $outstandingFees);
+    }
+
+    /**
+     * @dataProvider dpIsAssociatedWithBilateralCabotageOnlyApplicationPathGroup
+     */
+    public function testIsAssociatedWithBilateralCabotageOnlyApplicationPathGroup($isBilateralCabotageOnly, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->isBilateralCabotageOnly')
+            ->withNoArgs()
+            ->andReturn($isBilateralCabotageOnly);
+
+        $this->assertEquals(
+            $expected,
+            $entity->isAssociatedWithBilateralCabotageOnlyApplicationPathGroup()
+        );
+    }
+
+    public function dpIsAssociatedWithBilateralCabotageOnlyApplicationPathGroup()
+    {
+        return [
+            [true, true],
+            [false, false],
+        ];
+    }
+
+    public function testupdateCheckAnswers()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue()
+            ->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->assertSame(0, $this->sut->getCheckedAnswers());
+        $this->sut->updateCheckAnswers();
+        $this->assertTrue($this->sut->getCheckedAnswers());
+    }
+
+    public function testupdateCheckAnswersNotBilateral()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_CHECK_ANSWERS);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->updateCheckAnswers();
+    }
+
+    public function testupdateCheckAnswersNotUpdatableBilateral()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_CHECK_ANSWERS);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue()
+            ->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->updateCheckAnswers();
+    }
+
+    public function testCountPermitsRequiredBilateral()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpApplication($irhpApplication);
+
+        $filteredBilateralRequired = [
+            Entity::BILATERAL_STANDARD_REQUIRED => 6,
+            Entity::BILATERAL_CABOTAGE_REQUIRED => 11,
+        ];
+
+        $entity->shouldReceive('getFilteredBilateralRequired')
+            ->withNoArgs()
+            ->andReturn($filteredBilateralRequired);
+
+        $this->assertEquals(
+            17,
+            $entity->countPermitsRequired()
+        );
+    }
+
+    public function testCountPermitsRequiredNotBilateral()
+    {
+        $permitsRequired = 13;
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+        $this->sut->setPermitsRequired($permitsRequired);
+
+        $this->assertEquals(
+            $permitsRequired,
+            $this->sut->countPermitsRequired()
         );
     }
 }

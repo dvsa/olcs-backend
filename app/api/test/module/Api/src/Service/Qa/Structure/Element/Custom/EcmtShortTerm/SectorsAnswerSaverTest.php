@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors as SectorsEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
 use Mockery as m;
@@ -39,6 +40,14 @@ class SectorsAnswerSaverTest extends MockeryTestCase
             ->globally()
             ->ordered();
 
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($applicationStep);
+        $qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($irhpApplication);
+
         $irhpApplicationRepo = m::mock(IrhpApplicationRepository::class);
         $irhpApplicationRepo->shouldReceive('getReference')
             ->with(SectorsEntity::class, $answer)
@@ -55,6 +64,6 @@ class SectorsAnswerSaverTest extends MockeryTestCase
             ->andReturn($answer);
 
         $sectorsAnswerSaver = new SectorsAnswerSaver($irhpApplicationRepo, $genericAnswerFetcher);
-        $sectorsAnswerSaver->save($applicationStep, $irhpApplication, $postData);
+        $sectorsAnswerSaver->save($qaContext, $postData);
     }
 }

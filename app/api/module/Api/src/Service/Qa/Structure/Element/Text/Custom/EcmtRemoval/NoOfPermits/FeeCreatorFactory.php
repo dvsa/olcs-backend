@@ -18,9 +18,9 @@ class FeeCreatorFactory implements FactoryInterface
     {
         return new FeeCreator(
             $serviceLocator->get('RepositoryServiceManager')->get('FeeType'),
-            $serviceLocator->get('QaCommandCreator'),
+            $serviceLocator->get('CqrsCommandCreator'),
             $serviceLocator->get('CommandHandlerManager'),
-            $serviceLocator->get('QaCommonCurrentDateTimeFactory')
+            $serviceLocator->get('CommonCurrentDateTimeFactory')
         );
     }
 }

@@ -23,8 +23,8 @@ class ApplicationPathGroupEntityTest extends EntityTester
     protected $entityClass = Entity::class;
 
     /**
-    * @dataProvider dpGetActiveApplicationPath
-    */
+     * @dataProvider dpGetActiveApplicationPath
+     */
     public function testGetActiveApplicationPath($applicationPaths, $dateToCheck, $expected)
     {
         $sut = new Entity();
@@ -82,6 +82,75 @@ class ApplicationPathGroupEntityTest extends EntityTester
                 'dateToCheck' => null,
                 'expected' => null,
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsBilateralCabotageOnly
+     */
+    public function testIsBilateralCabotageOnly($applicationPathGroupId, $expected)
+    {
+        $sut = new Entity();
+        $sut->setId($applicationPathGroupId);
+
+        $this->assertEquals(
+            $expected,
+            $sut->isBilateralCabotageOnly()
+        );
+    }
+
+    public function dpIsBilateralCabotageOnly()
+    {
+        return [
+            [Entity::BILATERALS_CABOTAGE_PERMITS_ONLY_ID, true],
+            [Entity::BILATERALS_STANDARD_PERMITS_ONLY_ID, false],
+            [Entity::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsBilateralStandardOnly
+     */
+    public function testIsBilateralStandardOnly($applicationPathGroupId, $expected)
+    {
+        $sut = new Entity();
+        $sut->setId($applicationPathGroupId);
+
+        $this->assertEquals(
+            $expected,
+            $sut->isBilateralStandardOnly()
+        );
+    }
+
+    public function dpIsBilateralStandardOnly()
+    {
+        return [
+            [Entity::BILATERALS_CABOTAGE_PERMITS_ONLY_ID, false],
+            [Entity::BILATERALS_STANDARD_PERMITS_ONLY_ID, true],
+            [Entity::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsBilateralStandardAndCabotage
+     */
+    public function testIsBilateralStandardAndCabotage($applicationPathGroupId, $expected)
+    {
+        $sut = new Entity();
+        $sut->setId($applicationPathGroupId);
+
+        $this->assertEquals(
+            $expected,
+            $sut->isBilateralStandardAndCabotage()
+        );
+    }
+
+    public function dpIsBilateralStandardAndCabotage()
+    {
+        return [
+            [Entity::BILATERALS_CABOTAGE_PERMITS_ONLY_ID, false],
+            [Entity::BILATERALS_STANDARD_PERMITS_ONLY_ID, false],
+            [Entity::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID, true],
         ];
     }
 }

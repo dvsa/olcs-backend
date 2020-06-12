@@ -4,15 +4,14 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePage;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Mockery as m;
@@ -31,7 +30,10 @@ class SelfservePageGeneratorTest extends MockeryTestCase
 
         $questionShortKey = 'How will you use the permits';
 
-        $applicationReference = 'OB1234567 / 12390';
+        $additionalQaViewData = [
+            'property1' => 'value1',
+            'property2' => 'value2',
+        ];
 
         $nextStepSlug = 'removals-cabotage';
 
@@ -41,38 +43,43 @@ class SelfservePageGeneratorTest extends MockeryTestCase
 
         $questionTextEntity = m::mock(QuestionTextEntity::class);
         $questionTextEntity->shouldReceive('getQuestionShortKey')
+            ->withNoArgs()
             ->andReturn($questionShortKey);
 
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
         $applicationStepEntity->shouldReceive('getQuestion->getActiveQuestionText')
+            ->withNoArgs()
             ->andReturn($questionTextEntity);
         $applicationStepEntity->shouldReceive('getNextStepSlug')
+            ->withNoArgs()
             ->andReturn($nextStepSlug);
 
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getApplicationRef')
-            ->andReturn($applicationReference);
+        $qaEntity = m::mock(QaEntityInterface::class);
+        $qaEntity->shouldReceive('getAdditionalQaViewData')
+            ->with($applicationStepEntity)
+            ->andReturn($additionalQaViewData);
 
-        $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
-
-        $questionTextGeneratorContextFactory = m::mock(QuestionTextGeneratorContextFactory::class);
-        $questionTextGeneratorContextFactory->shouldReceive('create')
-            ->with($applicationStepEntity, $irhpApplicationEntity)
-            ->andReturn($questionTextGeneratorContext);
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($applicationStepEntity);
+        $qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($qaEntity);
 
         $selfservePageFactory = m::mock(SelfservePageFactory::class);
         $selfservePageFactory->shouldReceive('create')
-            ->with($questionShortKey, $applicationReference, $applicationStep, $questionText, $nextStepSlug)
+            ->with($questionShortKey, $additionalQaViewData, $applicationStep, $questionText, $nextStepSlug)
             ->andReturn($selfservePage);
        
         $applicationStepGenerator = m::mock(ApplicationStepGenerator::class);
         $applicationStepGenerator->shouldReceive('generate')
-            ->with($applicationStepEntity, $irhpApplicationEntity)
+            ->with($qaContext)
             ->andReturn($applicationStep);
 
         $formControlStrategy = m::mock(FormControlStrategyInterface::class);
         $formControlStrategy->shouldReceive('getQuestionText')
-            ->with($questionTextGeneratorContext)
+            ->with($qaContext)
             ->andReturn($questionText);
 
         $formControlStrategyProvider = m::mock(FormControlStrategyProvider::class);
@@ -83,13 +90,12 @@ class SelfservePageGeneratorTest extends MockeryTestCase
         $selfservePageGenerator = new SelfservePageGenerator(
             $selfservePageFactory,
             $applicationStepGenerator,
-            $formControlStrategyProvider,
-            $questionTextGeneratorContextFactory
+            $formControlStrategyProvider
         );
 
         $this->assertSame(
             $selfservePage,
-            $selfservePageGenerator->generate($applicationStepEntity, $irhpApplicationEntity)
+            $selfservePageGenerator->generate($qaContext)
         );
     }
 }

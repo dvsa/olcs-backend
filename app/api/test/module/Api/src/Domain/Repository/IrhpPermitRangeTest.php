@@ -7,6 +7,7 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
@@ -269,5 +270,62 @@ class IrhpPermitRangeTest extends RepositoryTestCase
             $associations,
             $this->sut->fetchRangeIdToCountryIdAssociations($stockId)
         );
+    }
+
+    public function testFetchReadyToPrint()
+    {
+        $irhpPermitStockId = 100;
+        $results = [
+            [
+                'journey' => RefData::JOURNEY_SINGLE,
+                'cabotage' => false,
+            ],
+            [
+                'journey' => RefData::JOURNEY_MULTIPLE,
+                'cabotage' => false,
+            ],
+            [
+                'journey' => RefData::JOURNEY_SINGLE,
+                'cabotage' => true,
+            ],
+            [
+                'journey' => RefData::JOURNEY_MULTIPLE,
+                'cabotage' => true,
+            ],
+        ];
+        $expected = [
+            IrhpPermitRangeEntity::BILATERAL_TYPE_STANDARD_SINGLE,
+            IrhpPermitRangeEntity::BILATERAL_TYPE_STANDARD_MULTIPLE,
+            IrhpPermitRangeEntity::BILATERAL_TYPE_CABOTAGE_SINGLE,
+            IrhpPermitRangeEntity::BILATERAL_TYPE_CABOTAGE_MULTIPLE,
+        ];
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn($results)
+                ->getMock()
+        );
+        $this->assertEquals($expected, $this->sut->fetchReadyToPrint($irhpPermitStockId));
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT rd.id as journey, m.cabotage DISTINCT '
+            . 'INNER JOIN m.irhpPermits ip '
+            . 'INNER JOIN m.journey rd '
+            . 'AND ip.status IN [[['
+                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
+                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+            . ']]] '
+            . 'AND m.irhpPermitStock = [[100]] '
+            . 'ORDER BY rd.id ASC '
+            . 'ORDER BY m.cabotage ASC';
+
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

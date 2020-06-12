@@ -4,6 +4,8 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\FormFragment;
@@ -30,12 +32,23 @@ class FormFragmentGeneratorTest extends MockeryTestCase
         $applicationStepEntity2 = m::mock(ApplicationStepEntity::class);
         $applicationStepEntities = [$applicationStepEntity1, $applicationStepEntity2];
 
+        $qaContext1 = m::mock(QaContext::class);
+        $qaContext2 = m::mock(QaContext::class);
+
+        $qaContextFactory = m::mock(QaContextFactory::class);
+        $qaContextFactory->shouldReceive('create')
+            ->with($applicationStepEntity1, $irhpApplicationEntity)
+            ->andReturn($qaContext1);
+        $qaContextFactory->shouldReceive('create')
+            ->with($applicationStepEntity2, $irhpApplicationEntity)
+            ->andReturn($qaContext2);
+
         $applicationStepGenerator = m::mock(ApplicationStepGenerator::class);
         $applicationStepGenerator->shouldReceive('generate')
-            ->with($applicationStepEntity1, $irhpApplicationEntity)
+            ->with($qaContext1)
             ->andReturn($applicationStep1);
         $applicationStepGenerator->shouldReceive('generate')
-            ->with($applicationStepEntity2, $irhpApplicationEntity)
+            ->with($qaContext2)
             ->andReturn($applicationStep2);
 
         $formFragment = m::mock(FormFragment::class);
@@ -55,7 +68,8 @@ class FormFragmentGeneratorTest extends MockeryTestCase
        
         $formFragmentGenerator = new FormFragmentGenerator(
             $formFragmentFactory,
-            $applicationStepGenerator
+            $applicationStepGenerator,
+            $qaContextFactory
         );
 
         $this->assertSame(

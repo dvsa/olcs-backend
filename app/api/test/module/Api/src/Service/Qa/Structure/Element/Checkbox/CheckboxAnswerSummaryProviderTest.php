@@ -2,8 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox\CheckboxAnswerSummaryProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -35,18 +34,12 @@ class CheckboxAnswerSummaryProviderTest extends MockeryTestCase
      */
     public function testGetTemplateVariables($isSnapshot, $qaAnswer, $expectedAnswerValue)
     {
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($applicationStepEntity)
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
             ->andReturn($qaAnswer);
 
-        $templateVariables = $this->checkboxAnswerSummaryProvider->getTemplateVariables(
-            $applicationStepEntity,
-            $irhpApplicationEntity,
-            $isSnapshot
-        );
+        $templateVariables = $this->checkboxAnswerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
 
         $this->assertEquals(
             ['answer' => $expectedAnswerValue],

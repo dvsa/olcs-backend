@@ -58,7 +58,9 @@ class GetListByLicenceTest extends QueryHandlerTestCase
         $expectedBundle = [
             'irhpPermitApplication',
             'irhpPermitRange' => [
+                'journey',
                 'irhpPermitStock' => [
+                    'irhpPermitType' => ['name'],
                     'country'
                 ],
                 'emissionsCategory',
@@ -183,7 +185,9 @@ class GetListByLicenceTest extends QueryHandlerTestCase
         $expectedBundle = [
             'irhpPermitApplication',
             'irhpPermitRange' => [
+                'journey',
                 'irhpPermitStock' => [
+                    'irhpPermitType',
                     'country'
                 ],
                 'emissionsCategory',
@@ -239,7 +243,9 @@ class GetListByLicenceTest extends QueryHandlerTestCase
         $expectedBundle = [
             'irhpPermitApplication',
             'irhpPermitRange' => [
+                'journey',
                 'irhpPermitStock' => [
+                    'irhpPermitType' => ['name'],
                     'country'
                 ],
                 'emissionsCategory',

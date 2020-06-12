@@ -3,10 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\AnswerSaver;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -19,13 +21,21 @@ class ApplicationAnswersClearerTest extends MockeryTestCase
 {
     public function testClear()
     {
-        $irhpApplication = m::mock(IrhpApplication::class);
+        $qaEntity = m::mock(QaEntityInterface::class);
 
         $applicationStep1 = m::mock(ApplicationStep::class);
 
+        $qaContext1 = m::mock(QaContext::class);
+
+        $qaContextFactory = m::mock(QaContextFactory::class);
+
+        $qaContextFactory->shouldReceive('create')
+            ->with($applicationStep1, $qaEntity)
+            ->andReturn($qaContext1);
+
         $formControlStrategy1 = m::mock(FormControlStrategyInterface::class);
         $formControlStrategy1->shouldReceive('clearAnswer')
-            ->with($applicationStep1, $irhpApplication)
+            ->with($qaContext1)
             ->once()
             ->ordered()
             ->globally();
@@ -38,9 +48,15 @@ class ApplicationAnswersClearerTest extends MockeryTestCase
 
         $applicationStep2 = m::mock(ApplicationStep::class);
 
+        $qaContext2 = m::mock(QaContext::class);
+
+        $qaContextFactory->shouldReceive('create')
+            ->with($applicationStep2, $qaEntity)
+            ->andReturn($qaContext2);
+
         $formControlStrategy2 = m::mock(FormControlStrategyInterface::class);
         $formControlStrategy2->shouldReceive('clearAnswer')
-            ->with($applicationStep2, $irhpApplication)
+            ->with($qaContext2)
             ->once()
             ->ordered()
             ->globally();
@@ -58,10 +74,14 @@ class ApplicationAnswersClearerTest extends MockeryTestCase
 
         $supplementedApplicationStepsProvider = m::mock(SupplementedApplicationStepsProvider::class);
         $supplementedApplicationStepsProvider->shouldReceive('get')
-            ->with($irhpApplication)
+            ->with($qaEntity)
             ->andReturn($supplementedApplicationSteps);
 
-        $applicationAnswersClearer = new ApplicationAnswersClearer($supplementedApplicationStepsProvider);
-        $applicationAnswersClearer->clear($irhpApplication);
+        $applicationAnswersClearer = new ApplicationAnswersClearer(
+            $supplementedApplicationStepsProvider,
+            $qaContextFactory
+        );
+
+        $applicationAnswersClearer->clear($qaEntity);
     }
 }

@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdateCountries as UpdateCountriesCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -10,12 +11,15 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update countries
@@ -32,6 +36,25 @@ class UpdateCountries extends AbstractCommandHandler implements
 
     protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitApplication'];
 
+    /** @var ApplicationAnswersClearer */
+    private $applicationAnswersClearer;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->applicationAnswersClearer = $mainServiceLocator->get('QaApplicationAnswersClearer');
+
+        return parent::createService($serviceLocator);
+    }
+
     /**
      * Handle command
      *
@@ -41,6 +64,12 @@ class UpdateCountries extends AbstractCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
+        $countries = $command->getCountries();
+
+        if (empty($countries)) {
+            throw new ValidationException(['At least one country must be selected.']);
+        }
+
         $irhpApplicationId = $command->getId();
 
         /* @var $irhpApplicationRepo \Dvsa\Olcs\Api\Domain\Repository\IrhpApplication */
@@ -52,6 +81,18 @@ class UpdateCountries extends AbstractCommandHandler implements
         if (!$irhpApplication->canUpdateCountries()) {
             throw new ValidationException(['IRHP application cannot be updated.']);
         }
+
+        // update list of countries linked to the application
+        $irhpApplication->setCountrys(
+            new ArrayCollection(
+                array_map(
+                    function ($countryId) {
+                        return $this->getRepo()->getReference(Country::class, $countryId);
+                    },
+                    $countries
+                )
+            )
+        );
 
         // get the list of existing IrhpPermitApplication indexed by window id
         $existingIrhpPermitAppsByWindowId = [];
@@ -68,7 +109,7 @@ class UpdateCountries extends AbstractCommandHandler implements
         // fetch the list of all open windows for selected countries
         $openWindows = $irhpPermitWindowRepo->fetchOpenWindowsByCountry(
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-            $command->getCountries(),
+            $countries,
             new DateTime()
         );
 
@@ -83,10 +124,6 @@ class UpdateCountries extends AbstractCommandHandler implements
             if (isset($existingIrhpPermitAppsByWindowId[$irhpPermitWindow->getId()])) {
                 // the application already linked to the window - mark to be kept
                 $windowIdsToBeKept[] = $irhpPermitWindow->getId();
-            } else {
-                // create new record if the application isn't linked to the window yet
-                $irhpPermitApplication = $this->createIrhpPermitApplication($irhpApplication, $irhpPermitWindow);
-                $irhpPermitApplicationRepo->saveOnFlush($irhpPermitApplication);
             }
         }
 
@@ -94,10 +131,12 @@ class UpdateCountries extends AbstractCommandHandler implements
         /* @var $existingIrhpPermitApplication IrhpPermitApplication */
         foreach ($existingIrhpPermitAppsByWindowId as $windowId => $existingIrhpPermitAppId) {
             if (!in_array($windowId, $windowIdsToBeKept)) {
+                $irhpPermitApplication = $irhpPermitApplicationRepo->fetchById($existingIrhpPermitAppId);
+
+                // clear all existing q&a answers
+                $this->applicationAnswersClearer->clear($irhpPermitApplication);
                 // delete IrhpPermitApplication if the window is not to be kept
-                $irhpPermitApplicationRepo->deleteOnFlush(
-                    $irhpPermitApplicationRepo->fetchById($existingIrhpPermitAppId)
-                );
+                $irhpPermitApplicationRepo->deleteOnFlush($irhpPermitApplication);
             }
         }
 
@@ -112,18 +151,5 @@ class UpdateCountries extends AbstractCommandHandler implements
         $this->result->addMessage('Countries updated for IRHP application');
 
         return $this->result;
-    }
-
-    /**
-     * Create Irhp Permit Application for Irhp Application
-     *
-     * @param IrhpApplication  $irhpApplication  Irhp Application
-     * @param IrhpPermitWindow $irhpPermitWindow Irhp Permit Window
-     *
-     * @return IrhpPermitApplication
-     */
-    protected function createIrhpPermitApplication(IrhpApplication $irhpApplication, IrhpPermitWindow $irhpPermitWindow)
-    {
-        return IrhpPermitApplication::createNewForIrhpApplication($irhpApplication, $irhpPermitWindow);
     }
 }

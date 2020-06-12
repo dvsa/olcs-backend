@@ -2,18 +2,28 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 interface AnswerSaverInterface
 {
     /**
-     * Save an answer corresponding to the supplied application step and application to persistent storage using
-     * the supplied post data as the source of the answer
+     * Save an answer corresponding to the supplied context to persistent storage using the supplied post data as the
+     * source of the answer. Optionally returns a string representing what the frontend should do after saving
      *
-     * @param ApplicationStep $applicationStep
-     * @param IrhpApplication $irhpApplication
+     * @param QaContext $qaContext
      * @param array $postData
+     *
+     * @return string|null
      */
-    public function save(ApplicationStep $applicationStep, IrhpApplication $irhpApplication, array $postData);
+    public function save(QaContext $qaContext, array $postData);
+
+    /**
+     * Whether this answer saver supports the specified entity
+     *
+     * @param QaEntityInterface $qaEntity
+     *
+     * @return bool
+     */
+    public function supports(QaEntityInterface $qaEntity);
 }

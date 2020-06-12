@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProvider;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -17,6 +18,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class SubmitApplicationPath extends AbstractCommandHandler
 {
+    /** @var QaContextFactory */
+    private $qaContextFactory;
+
     /** @var SupplementedApplicationStepsProvider */
     private $supplementedApplicationStepsProvider;
 
@@ -32,6 +36,8 @@ class SubmitApplicationPath extends AbstractCommandHandler
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->qaContextFactory = $mainServiceLocator->get('QaContextFactory');
 
         $this->supplementedApplicationStepsProvider = $mainServiceLocator->get(
             'QaSupplementedApplicationStepsProvider'
@@ -56,9 +62,13 @@ class SubmitApplicationPath extends AbstractCommandHandler
         );
 
         foreach ($supplementedApplicationSteps as $supplementedApplicationStep) {
-            $supplementedApplicationStep->getFormControlStrategy()->saveFormData(
+            $qaContext = $this->qaContextFactory->create(
                 $supplementedApplicationStep->getApplicationStep(),
-                $irhpApplication,
+                $irhpApplication
+            );
+
+            $supplementedApplicationStep->getFormControlStrategy()->saveFormData(
+                $qaContext,
                 $command->getPostData()
             );
         }

@@ -45,6 +45,15 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     use ModifiedOnTrait;
 
     /**
+     * Checked answers
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="checked_answers", nullable=false, options={"default": 0})
+     */
+    protected $checkedAnswers = 0;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -130,6 +139,15 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     protected $properties;
 
     /**
+     * Required cabotage
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_cabotage", nullable=true)
+     */
+    protected $requiredCabotage;
+
+    /**
      * Required euro5
      *
      * @var int
@@ -146,6 +164,15 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="integer", name="required_euro6", nullable=true)
      */
     protected $requiredEuro6;
+
+    /**
+     * Required standard
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_standard", nullable=true)
+     */
+    protected $requiredStandard;
 
     /**
      * Sectors
@@ -185,6 +212,28 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Answer
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\Answer",
+     *     mappedBy="irhpPermitApplication",
+     *     indexBy="question_text_id"
+     * )
+     */
+    protected $answers;
+
+    /**
+     * Fee
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", mappedBy="irhpPermitApplication")
+     */
+    protected $fees;
 
     /**
      * Irhp candidate permit
@@ -227,8 +276,34 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      */
     public function initCollections()
     {
+        $this->answers = new ArrayCollection();
+        $this->fees = new ArrayCollection();
         $this->irhpCandidatePermits = new ArrayCollection();
         $this->irhpPermits = new ArrayCollection();
+    }
+
+    /**
+     * Set the checked answers
+     *
+     * @param boolean $checkedAnswers new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setCheckedAnswers($checkedAnswers)
+    {
+        $this->checkedAnswers = $checkedAnswers;
+
+        return $this;
+    }
+
+    /**
+     * Get the checked answers
+     *
+     * @return boolean
+     */
+    public function getCheckedAnswers()
+    {
+        return $this->checkedAnswers;
     }
 
     /**
@@ -424,6 +499,30 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     }
 
     /**
+     * Set the required cabotage
+     *
+     * @param int $requiredCabotage new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setRequiredCabotage($requiredCabotage)
+    {
+        $this->requiredCabotage = $requiredCabotage;
+
+        return $this;
+    }
+
+    /**
+     * Get the required cabotage
+     *
+     * @return int
+     */
+    public function getRequiredCabotage()
+    {
+        return $this->requiredCabotage;
+    }
+
+    /**
      * Set the required euro5
      *
      * @param int $requiredEuro5 new value being set
@@ -469,6 +568,30 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getRequiredEuro6()
     {
         return $this->requiredEuro6;
+    }
+
+    /**
+     * Set the required standard
+     *
+     * @param int $requiredStandard new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setRequiredStandard($requiredStandard)
+    {
+        $this->requiredStandard = $requiredStandard;
+
+        return $this;
+    }
+
+    /**
+     * Get the required standard
+     *
+     * @return int
+     */
+    public function getRequiredStandard()
+    {
+        return $this->requiredStandard;
     }
 
     /**
@@ -571,6 +694,132 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the answer
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setAnswers($answers)
+    {
+        $this->answers = $answers;
+
+        return $this;
+    }
+
+    /**
+     * Get the answers
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getAnswers()
+    {
+        return $this->answers;
+    }
+
+    /**
+     * Add a answers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being added
+     *
+     * @return IrhpPermitApplication
+     */
+    public function addAnswers($answers)
+    {
+        if ($answers instanceof ArrayCollection) {
+            $this->answers = new ArrayCollection(
+                array_merge(
+                    $this->answers->toArray(),
+                    $answers->toArray()
+                )
+            );
+        } elseif (!$this->answers->contains($answers)) {
+            $this->answers->add($answers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a answers
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being removed
+     *
+     * @return IrhpPermitApplication
+     */
+    public function removeAnswers($answers)
+    {
+        if ($this->answers->contains($answers)) {
+            $this->answers->removeElement($answers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the fee
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setFees($fees)
+    {
+        $this->fees = $fees;
+
+        return $this;
+    }
+
+    /**
+     * Get the fees
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * Add a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     *
+     * @return IrhpPermitApplication
+     */
+    public function addFees($fees)
+    {
+        if ($fees instanceof ArrayCollection) {
+            $this->fees = new ArrayCollection(
+                array_merge(
+                    $this->fees->toArray(),
+                    $fees->toArray()
+                )
+            );
+        } elseif (!$this->fees->contains($fees)) {
+            $this->fees->add($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being removed
+     *
+     * @return IrhpPermitApplication
+     */
+    public function removeFees($fees)
+    {
+        if ($this->fees->contains($fees)) {
+            $this->fees->removeElement($fees);
+        }
+
+        return $this;
     }
 
     /**

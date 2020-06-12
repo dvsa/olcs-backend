@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
@@ -1774,5 +1775,13 @@ class FeeEntityTest extends EntityTester
             [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_IRHP_ISSUE, null, null],
             [Entity::STATUS_OUTSTANDING, FeeType::FEE_TYPE_IRHP_ISSUE, $now, $nowPlus10Weekdays],
         ];
+    }
+
+    public function testRemoveIrhpPermitApplicationAssociation()
+    {
+        $this->sut->setIrhpPermitApplication(m::mock(IrhpPermitApplication::class));
+        $this->sut->removeIrhpPermitApplicationAssociation();
+
+        $this->assertNull($this->sut->getIrhpPermitApplication());
     }
 }

@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ApplicationUpdater;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
@@ -30,12 +31,13 @@ class UpdateFullTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             'PermitsCheckableCheckedValueUpdater' => m::mock(CheckedValueUpdater::class),
             'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
+            'PermitsBilateralInternalApplicationUpdater' => m::mock(ApplicationUpdater::class),
         ];
 
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommandBilateral()
     {
         $permitTypeId = 1;
         $licenceId = 2;
@@ -74,7 +76,7 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->andReturn($irhpApplicationEntity);
 
         $irhpApplicationEntity->shouldReceive('getId')
-            ->times(3)
+            ->withNoArgs()
             ->andReturn(4);
 
         $this->mockedSmServices['PermitsCheckableCheckedValueUpdater']->shouldReceive('updateIfRequired')
@@ -88,7 +90,7 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('resetSectionCompletion')
             ->twice();
 
-        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->isApplicationPathEnabled')
+        $irhpApplicationEntity->shouldReceive('isApplicationPathEnabled')
             ->withNoArgs()
             ->once()
             ->andReturn(false);
@@ -121,13 +123,9 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->twice()
             ->andReturnSelf();
 
-        $result2 = new Result();
-        $result2->addMessage('section updated');
-        $sideEffectData = [
-            'id' => 4,
-            'permitsRequired' => $command->getPermitsRequired()
-        ];
-        $this->expectedSideEffect(UpdateMultipleNoOfPermits::class, $sideEffectData, $result2);
+        $this->mockedSmServices['PermitsBilateralInternalApplicationUpdater']->shouldReceive('update')
+            ->with($irhpApplicationEntity, $command->getPermitsRequired())
+            ->once();
 
         $result = $this->sut->handleCommand($command);
 
@@ -137,8 +135,7 @@ class UpdateFullTest extends CommandHandlerTestCase
             ],
             'messages' => [
                 0 => 'section updated',
-                1 => 'section updated',
-                2 => 'IRHP Application updated successfully',
+                1 => 'IRHP Application updated successfully',
             ]
         ];
 
@@ -189,7 +186,7 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('resetSectionCompletion')
             ->twice();
 
-        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->isApplicationPathEnabled')
+        $irhpApplicationEntity->shouldReceive('isApplicationPathEnabled')
             ->withNoArgs()
             ->once()
             ->andReturn(false);
@@ -276,8 +273,7 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->once()
             ->with($cmdData['dateReceived']);
 
-
-        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->isApplicationPathEnabled')
+        $irhpApplicationEntity->shouldReceive('isApplicationPathEnabled')
             ->withNoArgs()
             ->once()
             ->andReturn(true);

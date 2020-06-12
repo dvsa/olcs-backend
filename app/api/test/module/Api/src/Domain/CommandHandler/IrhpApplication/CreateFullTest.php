@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ApplicationUpdater;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\CreateFull as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
@@ -37,6 +38,7 @@ class CreateFullTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
+            'PermitsBilateralInternalApplicationUpdater' => m::mock(ApplicationUpdater::class),
         ];
 
         parent::setUp();
@@ -65,7 +67,7 @@ class CreateFullTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommandBilateral()
     {
         $permitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL;
         $licenceId = 2;
@@ -94,7 +96,6 @@ class CreateFullTest extends CommandHandlerTestCase
         $command = CreateCmd::create($cmdData);
 
         $irhpApplication = null;
-
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
@@ -130,7 +131,10 @@ class CreateFullTest extends CommandHandlerTestCase
             'id' => 4,
             'permitsRequired' => $command->getPermitsRequired()
         ];
-        $this->expectedSideEffect(UpdateMultipleNoOfPermits::class, $sideEffectData, $result2);
+
+        $this->mockedSmServices['PermitsBilateralInternalApplicationUpdater']->shouldReceive('update')
+            ->with(m::type(IrhpApplication::class), $command->getPermitsRequired())
+            ->once();
 
         $result = $this->sut->handleCommand($command);
 
@@ -140,8 +144,7 @@ class CreateFullTest extends CommandHandlerTestCase
             ],
             'messages' => [
                 0 => 'section updated',
-                1 => 'section updated',
-                2 => 'IRHP Application created successfully',
+                1 => 'IRHP Application created successfully',
             ]
         ];
 

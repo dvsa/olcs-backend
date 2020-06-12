@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\DeletableInterface;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteria;
+use Dvsa\Olcs\Api\Service\Permits\Allocate\RangeMatchingCriteriaInterface;
 use RuntimeException;
 
 /**
@@ -42,6 +44,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     const ALLOCATION_MODE_EMISSIONS_CATEGORIES = 'allocation_mode_emissions_categories';
     const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
     const ALLOCATION_MODE_CANDIDATE_PERMITS = 'allocation_mode_candidate_permits';
+    const ALLOCATION_MODE_BILATERAL = 'allocation_mode_bilateral';
     const ALLOCATION_MODE_NONE = 'allocation_mode_none';
 
     const CANDIDATE_MODE_APSG = 'candidate_mode_apsg';
@@ -512,11 +515,11 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Get non-reserved, non-replacement ranges relating to this stock ordered by from no
      *
-     * @param string $emissionsCategoryId (optional)
+     * @param RangeMatchingCriteriaInterface $criteria (optional)
      *
      * @return array
      */
-    public function getNonReservedNonReplacementRangesOrderedByFromNo($emissionsCategoryId = null)
+    public function getNonReservedNonReplacementRangesOrderedByFromNo(?RangeMatchingCriteriaInterface $rangeMatchingCriteria = null)
     {
         $criteria = Criteria::create();
 
@@ -526,13 +529,13 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
 
         $ranges = $this->getIrhpPermitRanges()->matching($criteria);
 
-        if (is_null($emissionsCategoryId)) {
+        if (is_null($rangeMatchingCriteria)) {
             return $ranges;
         }
 
         $filteredRanges = new ArrayCollection();
         foreach ($ranges as $range) {
-            if ($range->getEmissionsCategory()->getId() == $emissionsCategoryId) {
+            if ($rangeMatchingCriteria->matches($range)) {
                 $filteredRanges->add($range);
             }
         }
@@ -543,18 +546,30 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Whether the stock has an open permit application window
      *
-     * @return bool
+     * @return IrhpPermitWindow|null
      */
-    public function hasOpenWindow(): bool
+    public function getOpenWindow()
     {
         /** @var IrhpPermitWindow $window */
         foreach ($this->irhpPermitWindows as $window) {
             if ($window->isActive()) {
-                return true;
+                return $window;
             }
         }
 
-        return false;
+        return null;
+    }
+
+    /**
+     * Whether the stock has an open permit application window
+     *
+     * @return bool
+     */
+    public function hasOpenWindow(): bool
+    {
+        return !is_null(
+            $this->getOpenWindow()
+        );
     }
 
     /**
@@ -606,17 +621,53 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     }
 
     /**
+     * Does stock have a cabotage range?
+     *
+     * @return bool
+     */
+    public function hasCabotageRange()
+    {
+        $ranges = $this->getIrhpPermitRanges();
+
+        foreach ($ranges as $range) {
+            if ($range->isCabotage()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Does stock have a standard range?
+     *
+     * @return bool
+     */
+    public function hasStandardRange()
+    {
+        $ranges = $this->getIrhpPermitRanges();
+
+        foreach ($ranges as $range) {
+            if ($range->isStandard()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get the first available unreserved range with no countries matching the specified emissions category
      *
-     * @param string $emissionsCategoryId
+     * @param EmissionsStandardCriteria $criteria
      *
      * @return IrhpPermitRange
      *
      * @throws RuntimeException
      */
-    public function getFirstAvailableRangeWithNoCountries($emissionsCategoryId)
+    public function getFirstAvailableRangeWithNoCountries(EmissionsStandardCriteria $criteria)
     {
-        $ranges = $this->getNonReservedNonReplacementRangesOrderedByFromNo($emissionsCategoryId);
+        $ranges = $this->getNonReservedNonReplacementRangesOrderedByFromNo($criteria);
 
         foreach ($ranges as $range) {
             if (!$range->hasCountries()) {
@@ -655,7 +706,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
             [
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 'business_process' => RefData::BUSINESS_PROCESS_APG,
-                'allocation_mode' => self::ALLOCATION_MODE_STANDARD,
+                'allocation_mode' => self::ALLOCATION_MODE_BILATERAL,
             ],
             [
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
@@ -731,5 +782,33 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         }
 
         return self::CANDIDATE_MODE_NONE;
+    }
+
+    /**
+     * Get list of permit usage for the stock
+     *
+     * @return array
+     */
+    public function getPermitUsageList()
+    {
+        $criteria = Criteria::create();
+
+        $criteria->where($criteria->expr()->eq('ssReserve', false))
+            ->andWhere($criteria->expr()->eq('lostReplacement', false))
+            ->andWhere($criteria->expr()->neq('journey', null));
+
+        $ranges = $this->getIrhpPermitRanges()->matching($criteria);
+
+        $result = [];
+
+        foreach ($ranges as $range) {
+            $journey = $range->getJourney();
+
+            $result[$journey->getDisplayOrder()] = $journey;
+        }
+
+        ksort($result);
+
+        return $result;
     }
 }
