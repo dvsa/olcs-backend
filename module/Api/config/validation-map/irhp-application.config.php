@@ -17,6 +17,7 @@ return [
     CommandHandler\IrhpApplication\UpdateFull::class => CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\StoreSnapshot::class => IsSideEffect::class,
     CommandHandler\IrhpApplication\Expire::class => IsSideEffect::class,
+    CommandHandler\IrhpApplication\UpdatePeriod::class => CanEditIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\AvailableLicences::class => CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\ApplicationPathGroupList::class => IsSystemAdmin::class,
     QueryHandler\IrhpApplication\RangesByIrhpApplication::class => IsInternalUser::class,

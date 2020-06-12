@@ -9,7 +9,9 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -53,10 +55,12 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
      */
     public function handleCommand(CommandInterface $command)
     {
+        /** @var IrhpPermitEntity $irhpPermit */
         $irhpPermit = $this->getRepo()->fetchById($command->getIrhpPermit(), Query::HYDRATE_OBJECT);
+        $irhpPermitApplication = $irhpPermit->getIrhpPermitApplication();
 
         // get document template
-        $template = $this->getTemplate($irhpPermit);
+        $template = $this->getTemplate($irhpPermitApplication);
 
         $description = sprintf(
             '%s %d',
@@ -64,12 +68,17 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
             $irhpPermit->getPermitNumber()
         );
 
+        $irhpApplication = $irhpPermitApplication->getIrhpApplication();
+        $licence = $irhpApplication->getLicence();
+
         $document = $this->handleSideEffect(
             GenerateAndStore::create(
                 [
                     'template' => $template,
-                    'query' => $this->getDocumentQuery($irhpPermit),
+                    'query' => $this->getDocumentQuery($irhpPermit, $licence),
                     'knownValues' => [],
+                    'irhpApplication' => $irhpApplication->getId(),
+                    'licence' => $licence->getId(),
                     'description' => $description,
                     'category' => CategoryEntity::CATEGORY_PERMITS,
                     'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT_COVERING_LETTER,
@@ -88,14 +97,14 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
     /**
      * Get template
      *
-     * @param IrhpPermitEntity $irhpPermit IRHP Permit
+     * @param IrhpPermitApplicationEntity $irhpPermitApplication IRHP Permit Application
      *
      * @return string
      * @throws RuntimeException
      */
-    private function getTemplate(IrhpPermitEntity $irhpPermit)
+    private function getTemplate(IrhpPermitApplicationEntity $irhpPermitApplication)
     {
-        $irhpPermitTypeId = $irhpPermit->getIrhpPermitApplication()->getIrhpPermitWindow()->getIrhpPermitStock()
+        $irhpPermitTypeId = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()
             ->getIrhpPermitType()->getId();
 
         if (!isset($this->templates[$irhpPermitTypeId])) {
@@ -114,18 +123,15 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
      * Get document query
      *
      * @param IrhpPermitEntity $irhpPermit IRHP Permit
+     * @param LicenceEntity    $licence    Licence
      *
      * @return array
      */
-    private function getDocumentQuery(IrhpPermitEntity $irhpPermit)
+    private function getDocumentQuery(IrhpPermitEntity $irhpPermit, LicenceEntity $licence)
     {
-        $licence = $irhpPermit->getIrhpPermitApplication()->getIrhpApplication()->getLicence();
-
-        $documentQuery = [
+        return [
             'licence' => $licence->getId(),
             'irhpPermit' => $irhpPermit->getId(),
         ];
-
-        return $documentQuery;
     }
 }

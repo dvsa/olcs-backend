@@ -12,6 +12,7 @@ use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Mockery as m;
 use PDO;
@@ -274,6 +275,73 @@ class IrhpPermitTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
+    /**
+     * @dataProvider dpFetchListForReadyToPrintWithStockAndRangeType
+     */
+    public function testFetchListForReadyToPrintWithStockAndRangeType($irhpPermitRangeType, $expectedJourney, $expectedCabotage)
+    {
+        $this->setUpSut(IrhpPermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $query = ReadyToPrint::create(
+            [
+                'irhpPermitStock' => 100,
+                'irhpPermitRangeType' => $irhpPermitRangeType,
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'INNER JOIN m.irhpPermitRange ipr '
+            . 'INNER JOIN ipr.irhpPermitStock ips '
+            . 'AND ips.id = [[100]] '
+            . 'AND ipr.journey = [['.$expectedJourney.']] '
+            . 'AND ipr.cabotage = [['.$expectedCabotage.']] '
+            . 'AND m.status IN [[['
+                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
+                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+            . ']]] '
+            . 'ORDER BY m.permitNumber ASC';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function dpFetchListForReadyToPrintWithStockAndRangeType()
+    {
+        return [
+            [
+                IrhpPermitRangeEntity::BILATERAL_TYPE_STANDARD_SINGLE,
+                RefData::JOURNEY_SINGLE,
+                'false',
+            ],
+            [
+                IrhpPermitRangeEntity::BILATERAL_TYPE_STANDARD_MULTIPLE,
+                RefData::JOURNEY_MULTIPLE,
+                'false',
+            ],
+            [
+                IrhpPermitRangeEntity::BILATERAL_TYPE_CABOTAGE_SINGLE,
+                RefData::JOURNEY_SINGLE,
+                'true',
+            ],
+            [
+                IrhpPermitRangeEntity::BILATERAL_TYPE_CABOTAGE_MULTIPLE,
+                RefData::JOURNEY_MULTIPLE,
+                'true',
+            ],
+        ];
+    }
+
     public function testFetchListForReadyToPrintConfirm()
     {
         $this->setUpSut(IrhpPermit::class, true);
@@ -339,7 +407,10 @@ class IrhpPermitTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchListForDashboard()
+    /**
+     * @dataProvider dpFetchListByLicence
+     */
+    public function testFetchListByLicence($status, $validOnly, $expectedStatuses)
     {
         $this->setUpSut(IrhpPermit::class, true);
         $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
@@ -358,7 +429,9 @@ class IrhpPermitTest extends RepositoryTestCase
                 'licence' => 7,
                 'irhpPermitType' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 'page' => 1,
-                'limit' => 10
+                'limit' => 10,
+                'status' => $status,
+                'validOnly' => $validOnly,
             ]
         );
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
@@ -369,15 +442,22 @@ class IrhpPermitTest extends RepositoryTestCase
             . 'INNER JOIN ipr.irhpPermitStock ips '
             . 'LEFT JOIN ips.country ipc '
             . 'AND ia.licence = [[7]] '
+            . 'AND m.status IN [[["'.implode('","', $expectedStatuses).'"]]] '
             . 'AND ips.irhpPermitType = [['.IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
-            . 'AND m.status IN [[["'.IrhpPermitEntity::STATUS_PENDING.'","'
-            . IrhpPermitEntity::STATUS_AWAITING_PRINTING.'","'.IrhpPermitEntity::STATUS_ERROR.'","'
-            . IrhpPermitEntity::STATUS_PRINTING.'","'.IrhpPermitEntity::STATUS_PRINTED.'"]]] '
             . 'ORDER BY ipc.countryDesc ASC '
             . 'ORDER BY m.expiryDate ASC '
             . 'ORDER BY ipa.id ASC '
             . 'ORDER BY m.permitNumber ASC';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function dpFetchListByLicence()
+    {
+        return [
+            'valid only' => [null, true, IrhpPermitEntity::$validStatuses],
+            'all' => [null, false, IrhpPermitEntity::ALL_STATUSES],
+            'specific' => [IrhpPermitEntity::STATUS_PRINTING, null, [IrhpPermitEntity::STATUS_PRINTING]],
+        ];
     }
 
     public function testGetLivePermitCountsGroupedByStock()

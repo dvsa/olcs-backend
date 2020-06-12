@@ -126,6 +126,16 @@ class IrhpPermitType extends AbstractIrhpPermitType
     }
 
     /**
+     * Is irhp permit application path enabled
+     *
+     * @return bool
+     */
+    public function isIrhpPermitApplicationPathEnabled()
+    {
+        return $this->isBilateral();
+    }
+
+    /**
      * Generate an expiry date for this permit type using the supplied date time as an issue date
      *
      * @param DateTime $issueDateTime

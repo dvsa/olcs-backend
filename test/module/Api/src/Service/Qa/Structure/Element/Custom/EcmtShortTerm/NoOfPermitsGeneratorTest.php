@@ -39,7 +39,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $this->irhpApplication = m::mock(IrhpApplicationEntity::class);
 
         $this->elementGeneratorContext = m::mock(ElementGeneratorContext::class);
-        $this->elementGeneratorContext->shouldReceive('getIrhpApplicationEntity')
+        $this->elementGeneratorContext->shouldReceive('getQaEntity')
             ->andReturn($this->irhpApplication);
 
         $this->noOfPermitsFactory = m::mock(NoOfPermitsFactory::class);

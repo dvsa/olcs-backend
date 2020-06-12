@@ -2,6 +2,7 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
@@ -16,5 +17,6 @@ return [
     CommandHandler\IrhpPermit\CreateReplacement::class => IsSideEffect::class,
     QueryHandler\IrhpPermit\ByPermitNumber::class => NotIsAnonymousUser::class,
     QueryHandler\IrhpPermitRange\ByPermitNumber::class => NotIsAnonymousUser::class,
-    QueryHandler\IrhpPermit\GetListByLicence::class => NotIsAnonymousUser::class,
+    QueryHandler\IrhpPermit\GetListByLicence::class => CanAccessLicenceWithLicence::class,
+    QueryHandler\IrhpPermit\UniqueCountriesByLicence::class => CanAccessLicenceWithLicence::class,
 ];

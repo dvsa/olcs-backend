@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Generic;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Doctrine\ORM\Mapping as ORM;
 use RuntimeException;
 
@@ -20,6 +21,10 @@ use RuntimeException;
  */
 class Answer extends AbstractAnswer
 {
+    const BILATERAL_CABOTAGE_ONLY = 'qanda.bilaterals.cabotage.answer.cabotage-only';
+    const BILATERAL_STANDARD_AND_CABOTAGE = 'qanda.bilaterals.cabotage.answer.standard-and-cabotage';
+    const BILATERAL_STANDARD_ONLY = 'qanda.bilaterals.cabotage.answer.standard-only';
+
     /**
      * Create a new instance for use against an IRHP application
      *
@@ -33,6 +38,25 @@ class Answer extends AbstractAnswer
         $answer = new self();
         $answer->questionText = $questionText;
         $answer->irhpApplication = $irhpApplication;
+
+        return $answer;
+    }
+
+    /**
+     * Create a new instance for use against an IRHP permit application
+     *
+     * @param QuestionText $questionText
+     * @param IrhpPermitApplication $irhpPermitApplication
+     *
+     * @return Answer
+     */
+    public static function createNewForIrhpPermitApplication(
+        QuestionText $questionText,
+        IrhpPermitApplication $irhpPermitApplication
+    ) {
+        $answer = new self();
+        $answer->questionText = $questionText;
+        $answer->irhpPermitApplication = $irhpPermitApplication;
 
         return $answer;
     }

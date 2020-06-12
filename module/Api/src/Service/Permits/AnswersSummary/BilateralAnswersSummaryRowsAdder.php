@@ -2,7 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Zend\View\Renderer\RendererInterface;
 
 class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
@@ -15,34 +16,46 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
     /** @var RendererInterface */
     private $viewRenderer;
 
+    /** @var BilateralIpaAnswersSummaryRowsAdder */
+    private $bilateralIpaAnswersSummaryRowsAdder;
+
     /**
      * Create service instance
      *
      * @param AnswersSummaryRowFactory $answersSummaryRowFactory
      * @param RendererInterface $viewRenderer
+     * @param BilateralIpaAnswersSummaryRowsAdder $bilateralIpaAnswersSummaryRowsAdder
      *
      * @return BilateralAnswersSummaryRowsAdder
      */
-    public function __construct(AnswersSummaryRowFactory $answersSummaryRowFactory, RendererInterface $viewRenderer)
-    {
+    public function __construct(
+        AnswersSummaryRowFactory $answersSummaryRowFactory,
+        RendererInterface $viewRenderer,
+        BilateralIpaAnswersSummaryRowsAdder $bilateralIpaAnswersSummaryRowsAdder
+    ) {
         $this->answersSummaryRowFactory = $answersSummaryRowFactory;
         $this->viewRenderer = $viewRenderer;
+        $this->bilateralIpaAnswersSummaryRowsAdder = $bilateralIpaAnswersSummaryRowsAdder;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addRows(AnswersSummary $answersSummary, IrhpApplicationEntity $irhpApplication, $isSnapshot)
+    public function addRows(AnswersSummary $answersSummary, QaEntityInterface $irhpApplication, $isSnapshot)
     {
-        $irhpPermitApplications = $irhpApplication->getIrhpPermitApplications();
+        $irhpPermitApplications = $irhpApplication->getIrhpPermitApplicationsByCountryName();
 
         $answersSummary->addRow(
             $this->getCountryNamesRow($irhpPermitApplications)
         );
 
-        $answersSummary->addRow(
-            $this->getPermitsRequiredRow($irhpPermitApplications)
-        );
+        foreach ($irhpPermitApplications as $irhpPermitApplication) {
+            $answersSummary->addRow(
+                $this->getCountryNameRow($irhpPermitApplication)
+            );
+
+            $this->bilateralIpaAnswersSummaryRowsAdder->addRows($answersSummary, $irhpPermitApplication, $isSnapshot);
+        }
     }
 
     /**
@@ -74,42 +87,36 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
  
         return $this->answersSummaryRowFactory->create(
             'permits.irhp.application.question.countries',
-            $formattedAnswer,
-            'countries'
+            $formattedAnswer
         );
     }
 
     /**
-     * Get a row representing the permits required for a bilateral application
+     * Get a row representing the country name for a bilateral application
      *
-     * @param mixed $irhpPermitApplications
+     * @param IrhpPermitApplication $irhpPermitApplication
      *
      * @return AnswersSummaryRow
      */
-    private function getPermitsRequiredRow($irhpPermitApplications)
+    private function getCountryNameRow(IrhpPermitApplication $irhpPermitApplication)
     {
-        $rows = [];
+        $countryName = $irhpPermitApplication->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getCountry()
+            ->getCountryDesc();
 
-        foreach ($irhpPermitApplications as $irhpPermitApplication) {
-            $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()
-                ->getIrhpPermitStock();
-
-            $rows[] = [
-                'permitsRequired' => $irhpPermitApplication->getPermitsRequired(),
-                'countryName' => $irhpPermitStock->getCountry()->getCountryDesc(),
-                'year' => $irhpPermitStock->getValidityYear()
-            ];
-        }
+        $templateVariables = [
+            'answer' => $countryName
+        ];
 
         $formattedAnswer = $this->viewRenderer->render(
-            self::TEMPLATE_DIRECTORY . 'bilateral-permits-required',
-            ['rows' => $rows]
+            self::TEMPLATE_DIRECTORY . 'generic',
+            $templateVariables
         );
 
         return $this->answersSummaryRowFactory->create(
-            'permits.irhp.application.question.no-of-permits',
-            $formattedAnswer,
-            'no-of-permits'
+            'permits.irhp.application.question.country',
+            $formattedAnswer
         );
     }
 }

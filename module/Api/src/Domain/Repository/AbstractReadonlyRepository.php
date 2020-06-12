@@ -330,6 +330,18 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Whether this repository contains the specified entity
+     *
+     * @param $entity
+     *
+     * @return bool
+     */
+    public function contains($entity)
+    {
+        return $this->em->contains($entity);
+    }
+
+    /**
      * Fetch by ids
      *
      * @param array $ids         List of Ids

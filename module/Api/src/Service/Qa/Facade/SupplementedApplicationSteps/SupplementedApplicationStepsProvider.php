@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 class SupplementedApplicationStepsProvider
 {
@@ -30,15 +30,15 @@ class SupplementedApplicationStepsProvider
     }
 
     /**
-     * Get a list of application steps and associated form control strategies for the specified application
+     * Get a list of application steps and associated form control strategies for the specified qa entity
      *
-     * @param IrhpApplication $irhpApplication
+     * @param QaEntityInterface $qaEntity
      *
      * @return array
      */
-    public function get(IrhpApplication $irhpApplication)
+    public function get(QaEntityInterface $qaEntity)
     {
-        $applicationPath = $irhpApplication->getActiveApplicationPath();
+        $applicationPath = $qaEntity->getActiveApplicationPath();
 
         $supplementedApplicationSteps = [];
 

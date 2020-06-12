@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Common;
 
 use DateInterval;
 use DateTime;
-use Dvsa\Olcs\Api\Service\Qa\Common\CurrentDateTimeFactory;
+use Dvsa\Olcs\Api\Service\Common\CurrentDateTimeFactory;
 use Dvsa\Olcs\Api\Service\Qa\Common\DateIntervalFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThresholdFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThresholdGenerator;

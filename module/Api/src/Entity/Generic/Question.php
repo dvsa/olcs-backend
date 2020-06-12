@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Generic;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 /**
  * Question Entity
@@ -36,6 +37,10 @@ class Question extends AbstractQuestion
     const FORM_CONTROL_COMMON_CERTIFICATES = 'form_control_common_certificates';
     const FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE = 'form_control_ecmt_st_ear_per_dat';
     const FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS = 'form_control_ecmt_an_2018_nop';
+    const FORM_CONTROL_BILATERAL_PERMIT_USAGE = 'form_control_bi_per_usage';
+    const FORM_CONTROL_BILATERAL_CABOTAGE_ONLY = 'form_control_bi_cab_only';
+    const FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE = 'form_control_bi_cab_std_and_cab';
+    const FORM_CONTROL_BILATERAL_NO_OF_PERMITS = 'form_control_bi_no_of_permits';
 
     // Question data types
     const QUESTION_TYPE_STRING = 'question_type_string';
@@ -49,6 +54,9 @@ class Question extends AbstractQuestion
     const QUESTION_ID_REMOVAL_PERMIT_START_DATE = 13;
     const QUESTION_ID_ROADWORTHINESS_VEHICLE_MOT_EXPIRY = 20;
     const QUESTION_ID_ROADWORTHINESS_TRAILER_MOT_EXPIRY = 25;
+    const QUESTION_ID_BILATERAL_PERMIT_USAGE = 29;
+    const QUESTION_ID_BILATERAL_CABOTAGE_ONLY = 30;
+    const QUESTION_ID_BILATERAL_STANDARD_AND_CABOTAGE = 31;
 
     /**
      * Is custom
@@ -92,5 +100,31 @@ class Question extends AbstractQuestion
     public function getDecodedOptionSource()
     {
         return json_decode($this->optionSource, true);
+    }
+
+    /**
+     * Get the answer corresponding to a question for a non-custom question type
+     *
+     * @param QaEntityInterface $qaEntity
+     * @param \DateTime $applicationPathLockedOn
+     *
+     * @return mixed|null
+     */
+    public function getStandardAnswer(QaEntityInterface $qaEntity, \DateTime $applicationPathLockedOn)
+    {
+        $activeQuestionText = $this->getActiveQuestionText($applicationPathLockedOn);
+
+        if (!isset($activeQuestionText)) {
+            return null;
+        }
+
+        $activeQuestionTextId = $activeQuestionText->getId();
+        foreach ($qaEntity->getAnswers() as $answer) {
+            if ($answer->getQuestionText()->getId() == $activeQuestionTextId) {
+                return $answer->getValue();
+            }
+        }
+
+        return null;
     }
 }

@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\AnswerSaver;
 
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 class AnswerFactory
 {
@@ -12,12 +12,12 @@ class AnswerFactory
      * Create an Answer entity instance referencing the supplied parameters
      *
      * @param QuestionText $questionText
-     * @param IrhpApplication $irhpApplication
+     * @param QaEntityInterface $qaEntity
      *
      * @return Answer
      */
-    public function create(QuestionText $questionText, IrhpApplication $irhpApplication)
+    public function create(QuestionText $questionText, QaEntityInterface $qaEntity)
     {
-        return Answer::createNewForIrhpApplication($questionText, $irhpApplication);
+        return $qaEntity->createAnswer($questionText);
     }
 }

@@ -95,6 +95,9 @@ class RefData extends AbstractRefData
     const USER_OS_TYPE_WINDOWS_7 = 'windows_7';
     const USER_OS_TYPE_WINDOWS_10 = 'windows_10';
 
+    // journey
+    const JOURNEY_SINGLE = 'journey_single';
+    const JOURNEY_MULTIPLE = 'journey_multiple';
 
     /**
      * RefData constructor.

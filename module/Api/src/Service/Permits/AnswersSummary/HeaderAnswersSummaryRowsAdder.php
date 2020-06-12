@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Zend\View\Renderer\RendererInterface;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 class HeaderAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
 {
@@ -32,16 +33,16 @@ class HeaderAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
     /**
      * {@inheritdoc}
      */
-    public function addRows(AnswersSummary $answersSummary, IrhpApplicationEntity $irhpApplicationEntity, $isSnapshot)
+    public function addRows(AnswersSummary $answersSummary, QaEntityInterface $entity, $isSnapshot)
     {
         if (!$isSnapshot) {
             $answersSummary->addRow(
-                $this->generatePermitTypeRow($irhpApplicationEntity)
+                $this->generatePermitTypeRow($entity)
             );
         }
 
         $answersSummary->addRow(
-            $this->generateLicenceRow($irhpApplicationEntity)
+            $this->generateLicenceRow($entity)
         );
     }
 

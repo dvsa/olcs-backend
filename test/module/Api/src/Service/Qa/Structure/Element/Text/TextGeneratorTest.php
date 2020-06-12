@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Text;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Text;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\TextFactory;
@@ -27,8 +27,6 @@ class TextGeneratorTest extends MockeryTestCase
     private $labelOption;
 
     private $applicationStepEntity;
-
-    private $irhpApplicationEntity;
 
     private $elementGeneratorContext;
 
@@ -64,20 +62,14 @@ class TextGeneratorTest extends MockeryTestCase
             ]
         ];
 
-        $this->answerEntity = m::mock(AnswerEntity::class);
-
         $this->applicationStepEntity = m::mock(ApplicationStepEntity::class);
-
-        $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $this->irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($this->applicationStepEntity)
-            ->andReturn($this->answerValue);
 
         $this->elementGeneratorContext = m::mock(ElementGeneratorContext::class);
         $this->elementGeneratorContext->shouldReceive('getApplicationStepEntity')
             ->andReturn($this->applicationStepEntity);
-        $this->elementGeneratorContext->shouldReceive('getIrhpApplicationEntity')
-            ->andReturn($this->irhpApplicationEntity);
+        $this->elementGeneratorContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
+            ->andReturn($this->answerValue);
 
         $this->labelTranslateableText = m::mock(TranslateableText::class);
         $this->hintTranslateableText = m::mock(TranslateableText::class);

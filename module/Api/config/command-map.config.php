@@ -1146,9 +1146,12 @@ return [
     Command\IrhpApplication\CreateDefaultIrhpPermitApplications::class => CommandHandler\IrhpApplication\CreateDefaultIrhpPermitApplications::class,
     Command\IrhpApplication\ResetIrhpPermitApplications::class => CommandHandler\IrhpApplication\ResetIrhpPermitApplications::class,
     Command\IrhpApplication\Expire::class => CommandHandler\IrhpApplication\Expire::class,
+    TransferCommand\IrhpApplication\UpdatePeriod::class => CommandHandler\IrhpApplication\UpdatePeriod::class,
 
-    // Irhp Permit Application Delete
+    // Irhp Permit Application
     Command\IrhpPermitApplication\Delete::class => CommandHandler\IrhpPermitApplication\Delete::class,
+    Command\IrhpPermitApplication\CreateForIrhpApplication::class => CommandHandler\IrhpPermitApplication\CreateForIrhpApplication::class,
+    Command\IrhpPermitApplication\UpdateIrhpPermitWindow::class => CommandHandler\IrhpPermitApplication\UpdateIrhpPermitWindow::class,
 
     // Permits Decline
     TransferCommand\Permits\AcceptIrhpPermits::class => CommandHandler\Permits\AcceptIrhpPermits::class,
@@ -1156,8 +1159,6 @@ return [
     // Permits - internal backend
     Command\Permits\AllocateCandidatePermits::class => CommandHandler\Permits\AllocateCandidatePermits::class,
     Command\Permits\AllocateIrhpApplicationPermits::class => CommandHandler\Permits\AllocateIrhpApplicationPermits::class,
-    Command\Permits\AllocateIrhpPermitApplicationPermit::class =>
-        CommandHandler\Permits\AllocateIrhpPermitApplicationPermit::class,
     Command\Permits\GeneratePermitDocuments::class => CommandHandler\Permits\GeneratePermitDocuments::class,
     TransferCommand\Permits\PrintPermits::class => CommandHandler\Permits\PrintPermits::class,
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,

@@ -3,8 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerSummaryProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -16,17 +17,17 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
 {
-    private $applicationStepEntity;
-
     private $irhpApplicationEntity;
+
+    private $qaContext;
 
     private $restrictedCountriesAnswerSummaryProvider;
 
     public function setUp()
     {
-        $this->applicationStepEntity = m::mock(ApplicationStepEntity::class);
-
         $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
+
+        $this->qaContext = m::mock(QaContext::class);
 
         $this->restrictedCountriesAnswerSummaryProvider = new RestrictedCountriesAnswerSummaryProvider();
     }
@@ -36,6 +37,15 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
         $this->assertEquals(
             'ecmt-short-term-restricted-countries',
             $this->restrictedCountriesAnswerSummaryProvider->getTemplateName()
+        );
+    }
+
+    public function testShouldIncludeSlug()
+    {
+        $qaEntity = m::mock(QaEntityInterface::class);
+
+        $this->assertTrue(
+            $this->restrictedCountriesAnswerSummaryProvider->shouldIncludeSlug($qaEntity)
         );
     }
 
@@ -60,11 +70,15 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
 
         $countries = [$country1, $country2];
 
-        $this->irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($this->applicationStepEntity)
-            ->andReturn($hasRestrictedCountries);
         $this->irhpApplicationEntity->shouldReceive('getCountrys')
             ->andReturn($countries);
+
+        $this->qaContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
+            ->andReturn($hasRestrictedCountries);
+        $this->qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($this->irhpApplicationEntity);
 
         $expectedTemplateVariables = [
             'hasRestrictedCountries' => $hasRestrictedCountries,
@@ -72,8 +86,7 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
         ];
 
         $templateVariables = $this->restrictedCountriesAnswerSummaryProvider->getTemplateVariables(
-            $this->applicationStepEntity,
-            $this->irhpApplicationEntity,
+            $this->qaContext,
             $isSnapshot
         );
 
@@ -87,9 +100,12 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
     {
         $hasRestrictedCountries = false;
 
-        $this->irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($this->applicationStepEntity)
+        $this->qaContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
             ->andReturn($hasRestrictedCountries);
+        $this->qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($this->irhpApplicationEntity);
 
         $expectedTemplateVariables = [
             'hasRestrictedCountries' => $hasRestrictedCountries,
@@ -97,8 +113,7 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
         ];
 
         $templateVariables = $this->restrictedCountriesAnswerSummaryProvider->getTemplateVariables(
-            $this->applicationStepEntity,
-            $this->irhpApplicationEntity,
+            $this->qaContext,
             $isSnapshot
         );
 

@@ -19,6 +19,23 @@ interface IrhpInterface
     const STATUS_VALID = 'permit_app_valid';
     const STATUS_EXPIRED = 'permit_app_expired';
     const STATUS_TERMINATED = 'permit_app_terminated';
+    const STATUS_DECLINED = 'permit_app_declined';
+
+    const ALL_STATUSES = [
+        self::STATUS_CANCELLED,
+        self::STATUS_NOT_YET_SUBMITTED,
+        self::STATUS_UNDER_CONSIDERATION,
+        self::STATUS_WITHDRAWN,
+        self::STATUS_AWAITING_FEE,
+        self::STATUS_FEE_PAID,
+        self::STATUS_UNSUCCESSFUL,
+        self::STATUS_ISSUED,
+        self::STATUS_ISSUING,
+        self::STATUS_VALID,
+        self::STATUS_EXPIRED,
+        self::STATUS_TERMINATED,
+        self::STATUS_DECLINED,
+    ];
 
     const ACTIVE_STATUSES = [
         self::STATUS_NOT_YET_SUBMITTED,

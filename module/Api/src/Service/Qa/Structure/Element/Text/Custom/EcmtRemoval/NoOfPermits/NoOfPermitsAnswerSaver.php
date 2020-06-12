@@ -2,13 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits;
 
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 
 class NoOfPermitsAnswerSaver implements AnswerSaverInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     /** @var GenericAnswerFetcher */
     private $genericAnswerFetcher;
 
@@ -40,16 +42,17 @@ class NoOfPermitsAnswerSaver implements AnswerSaverInterface
     /**
      * Write the number of permits required to persistent storage and cancel/create fees as appropriate
      *
-     * @param ApplicationStepEntity $applicationStepEntity
-     * @param IrhpApplicationEntity $irhpApplicationEntity
+     * @param QaContext $qaContext
      * @param array $postData
      */
-    public function save(
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity,
-        array $postData
-    ) {
-        $permitsRequired = $this->genericAnswerFetcher->fetch($applicationStepEntity, $postData);
+    public function save(QaContext $qaContext, array $postData)
+    {
+        $permitsRequired = $this->genericAnswerFetcher->fetch(
+            $qaContext->getApplicationStepEntity(),
+            $postData
+        );
+
+        $irhpApplicationEntity = $qaContext->getQaEntity();
         $this->answerWriter->write($irhpApplicationEntity, $permitsRequired);
         $this->feeCreator->create($irhpApplicationEntity, $permitsRequired);
     }

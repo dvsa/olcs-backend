@@ -3,12 +3,15 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorInterface;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class NoOfPermitsGenerator implements QuestionTextGeneratorInterface
 {
+    use IrhpApplicationOnlyTrait;
+
     /** @var QuestionTextGenerator */
     private $questionTextGenerator;
 
@@ -34,9 +37,9 @@ class NoOfPermitsGenerator implements QuestionTextGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate(QuestionTextGeneratorContext $context)
+    public function generate(QaContext $qaContext)
     {
-        $irhpApplicationEntity = $context->getIrhpApplicationEntity();
+        $irhpApplicationEntity = $qaContext->getQaEntity();
 
         $applicationFee = $this->feeTypeRepo->getLatestByProductReference(
             $irhpApplicationEntity->getApplicationFeeProductReference()
@@ -46,7 +49,7 @@ class NoOfPermitsGenerator implements QuestionTextGeneratorInterface
             $irhpApplicationEntity->getIssueFeeProductReference()
         );
 
-        $questionText = $this->questionTextGenerator->generate($context);
+        $questionText = $this->questionTextGenerator->generate($qaContext);
         $additionalGuidanceTranslateableText = $questionText->getAdditionalGuidance()->getTranslateableText();
 
         $additionalGuidanceTranslateableText->getParameter(0)->setValue($applicationFee->getFixedValue());

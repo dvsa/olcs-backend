@@ -35,6 +35,17 @@ class IrhpPermit extends AbstractIrhpPermit
     const STATUS_TERMINATED         = 'irhp_permit_terminated';
     const STATUS_EXPIRED            = 'irhp_permit_expired';
 
+    const ALL_STATUSES = [
+        self::STATUS_PENDING,
+        self::STATUS_AWAITING_PRINTING,
+        self::STATUS_PRINTING,
+        self::STATUS_PRINTED,
+        self::STATUS_ERROR,
+        self::STATUS_CEASED,
+        self::STATUS_TERMINATED,
+        self::STATUS_EXPIRED,
+    ];
+
     public static $readyToPrintStatuses = [
         self::STATUS_PENDING,
         self::STATUS_AWAITING_PRINTING,

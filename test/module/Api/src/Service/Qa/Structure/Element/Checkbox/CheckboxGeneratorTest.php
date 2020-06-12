@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Checkbox;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox\Checkbox;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox\CheckboxFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox\CheckboxGenerator;
@@ -61,16 +60,12 @@ class CheckboxGeneratorTest extends MockeryTestCase
         $applicationStepEntity->shouldReceive('getDecodedOptionSource')
             ->andReturn($options);
 
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getAnswer')
-            ->with($applicationStepEntity)
-            ->andReturn($answerValue);
-
         $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
         $elementGeneratorContext->shouldReceive('getApplicationStepEntity')
             ->andReturn($applicationStepEntity);
-        $elementGeneratorContext->shouldReceive('getIrhpApplicationEntity')
-            ->andReturn($irhpApplicationEntity);
+        $elementGeneratorContext->shouldReceive('getAnswerValue')
+            ->withNoArgs()
+            ->andReturn($answerValue);
 
         $translateableTextGenerator = m::mock(TranslateableTextGenerator::class);
         $translateableTextGenerator->shouldReceive('generate')

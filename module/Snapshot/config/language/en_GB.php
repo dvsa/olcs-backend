@@ -1,6 +1,13 @@
 <?php
 // @codingStandardsIgnoreFile
 return [
+    'journey_multiple' => 'Multiple journeys',
+    'journey_single' => 'Single journeys',
+    'permits.bilateral.norway.period.1' => '1 January 2021 and 30 September 2021',
+    'permits.bilateral.norway.period.2' => '1 October 2021 and 31 January 2022',
+    'qanda.bilaterals.cabotage.answer.cabotage-only' => 'I only need permits for cabotage',
+    'qanda.bilaterals.cabotage.answer.standard-only' => 'No, I only need standard permits',
+    'qanda.bilaterals.cabotage.answer.standard-and-cabotage' => 'I need standard and cabotage permits',
     'tachograph_analyser.tach_internal' => 'In-house, using software on your own PC',
     'tachograph_analyser.tach_external' => 'By sending to an external analysis bureau/company',
     'tachograph_analyser.tach_na' => 'Not applicable',
@@ -391,11 +398,17 @@ return [
     'permits.page.international.journey.question' => 'In the last 12 months, what percentage of international trips did you make using this licence?',
     'permits.page.sectors.question' => 'Select one sector you mainly transport goods in using this licence',
     'permits.snapshot.number.required' => 'Total number of permits required',
-    'permits.snapshot.title' => 'Application for %s permits',
+    'permits.snapshot.title' => 'Application for %s',
     'permits.snapshot.declaration' => 'I declare that the statements and information provided are true and that my application is correct. I understand that it is an offence to make a false declaration to obtain a permit.',
     'permits.irhp.countries.transporting' => 'Countries transporting goods to',
-    'permits.irhp.application.question.countries' => 'Select the country you are transporting goods to',
+    'permits.irhp.application.question.countries' => 'Countries selected',
     'permits.irhp.application.question.no-of-permits' => 'How many permits do you require?',
+    'permits.irhp.application.question.country' => 'Questions answered for',
+    'permits.page.bilateral.which-period-required' =>'Period for which you need permits',
+    'qanda.bilaterals.permit-usage.question' => 'What do you need to use your permits for?',
+    'qanda.bilaterals.permit-usage.question.single-option' => 'Permit usage',
+    'qanda.bilaterals.cabotage.question' => 'Do you need to carry out cabotage?',
+    'qanda.bilaterals.number-of-permits.question' => 'How many permits do you need?',
 
     'qanda.ecmt-removal.removal-eligibility.question' => 'Removal permits can only be used for removal operations using specialised equipment and staff',
     'qanda.ecmt-removal.cabotage.question' => 'Removal permits do not allow you to carry out cabotage',
@@ -446,6 +459,11 @@ return [
     'qanda.ecmt-short-term.cabotage.checkbox.summary-answer' => 'I confirm that I will not undertake cabotage journeys with an short term ECMT permit',
     'qanda.ecmt-short-term.certificates.checkbox.summary-answer' => 'I understand that I must obtain and carry the appropriate ECMT Certificate of Compliance and Certificate of Roadworthiness for each vehicle and trailer I intend to use with this permit.',
     'qanda.ecmt-short-term.emissions.checkbox.summary-answer' => 'I confirm that I will only use my ECMT permits with vehicles that are environmentally compliant with the minimum Euro emissions standards that the permit allows.',
+
+    'qanda.bilateral.no-of-permits.journey_multiple.standard' => '%s Standard multiple journey permits',
+    'qanda.bilateral.no-of-permits.journey_multiple.cabotage' => '%s Cabotage multiple journey permits',
+    'qanda.bilateral.no-of-permits.journey_single.standard' => '%s Standard single journey permits',
+    'qanda.bilateral.no-of-permits.journey_single.cabotage' => '%s Cabotage single journey permits',
 
     'qanda.common.no-of-permits.emissions-category.line' => '%s permits for %s minimum emission standard',
     'qanda.common.no-of-permits.emissions-category.euro5' => 'Euro 5',

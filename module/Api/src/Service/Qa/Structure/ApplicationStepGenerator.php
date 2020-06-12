@@ -2,9 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextFactory;
 
@@ -47,21 +45,19 @@ class ApplicationStepGenerator
     /**
      * Build and return an ApplicationStep instance using the appropriate data sources
      *
-     * @param ApplicationStepEntity $applicationStepEntity
-     * @param IrhpApplicationEntity $irhpApplicationEntity
+     * @param QaContext $qaContext
      *
      * @return ApplicationStep
      */
-    public function generate(ApplicationStepEntity $applicationStepEntity, IrhpApplicationEntity $irhpApplicationEntity)
+    public function generate(QaContext $qaContext)
     {
+        $applicationStepEntity = $qaContext->getApplicationStepEntity();
+
         $formControlStrategy = $this->formControlStrategyProvider->get($applicationStepEntity);
         $validatorList = $this->validatorListGenerator->generate($applicationStepEntity);
 
-        $elementGeneratorContext = $this->elementGeneratorContextFactory->create(
-            $validatorList,
-            $applicationStepEntity,
-            $irhpApplicationEntity
-        );
+        $elementGeneratorContext = $this->elementGeneratorContextFactory->create($validatorList, $qaContext);
+        $applicationStepEntity = $qaContext->getApplicationStepEntity();
 
         return $this->applicationStepFactory->create(
             $formControlStrategy->getFrontendType(),

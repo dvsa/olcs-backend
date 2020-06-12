@@ -1060,10 +1060,11 @@ class IrhpApplicationTest extends RepositoryTestCase
             ->with(
                 'select ' .
                 'concat (l.lic_no, \' / \', ia.id) as applicationRef, ' .
-                'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0)) as permitsRequired, ' .
+                'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0) + ifnull(ipa.required_standard, 0) + ifnull(ipa.required_cabotage, 0)) as permitsRequired, ' .
                 'ia.id as id, ' .
                 'ia.irhp_permit_type_id as typeId, ' .
                 'ia.status as statusId, ' .
+                'ia.date_received as dateReceived, ' .
                 'srd.description as statusDescription, ' .
                 'trd.description as typeDescription, ' .
                 'ips.period_name_key as periodNameKey, ' .
@@ -1102,76 +1103,6 @@ class IrhpApplicationTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchInternalIssuedPermitsSummary()
-    {
-        $rows = [
-            ['data1'],
-            ['data2'],
-            ['data3'],
-        ];
-
-        $licenceId = 14;
-
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
-            ->andReturn($rows);
-
-        $connection = m::mock(Connection::class);
-        $connection->shouldReceive('executeQuery')
-            ->with(
-                'select ' .
-                'concat (l.lic_no, \' / \', ia.id) as applicationRef, ' .
-                'ia.id as id, ' .
-                'ia.irhp_permit_type_id as typeId, ' .
-                'ia.status as statusId, ' .
-                'l.id as licenceId, ' .
-                'l.lic_no as licNo, ' .
-                'srd.description as statusDescription, ' .
-                'trd.description as typeDescription, ' .
-                'count(ip.id) as validPermitCount ' .
-                'from ' .
-                'irhp_application ia ' .
-                'inner join licence l on ia.licence_id = l.id ' .
-                'inner join ref_data srd on ia.status = srd.id ' .
-                'left join irhp_permit_application ipa on ipa.irhp_application_id = ia.id ' .
-                'left join irhp_permit ip on ip.irhp_permit_application_id = ipa.id ' .
-                'inner join irhp_permit_type ipt on ia.irhp_permit_type_id = ipt.id ' .
-                'inner join ref_data trd on ipt.name = trd.id ' .
-                'where l.`id` = :filterByColumnValue ' .
-                'and ia.status in (:applicationStatus1, :applicationStatus2, :applicationStatus3) ' .
-                'and (' .
-                '    ia.irhp_permit_type_id in (:permitType1, :permitType2) ' .
-                '    or ' .
-                '    ip.status in (:permitStatus1, :permitStatus2, :permitStatus3, :permitStatus4, :permitStatus5)' .
-                ') ' .
-                'group by ia.id ' .
-                'order by `applicationRef`',
-                [
-                    'filterByColumnValue' => $licenceId,
-                    'applicationStatus1' => IrhpInterface::STATUS_VALID,
-                    'applicationStatus2' => IrhpInterface::STATUS_EXPIRED,
-                    'applicationStatus3' => IrhpInterface::STATUS_TERMINATED,
-                    'permitType1' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
-                    'permitType2' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
-                    'permitStatus1' => IrhpPermit::STATUS_PENDING,
-                    'permitStatus2' => IrhpPermit::STATUS_AWAITING_PRINTING,
-                    'permitStatus3' => IrhpPermit::STATUS_PRINTING,
-                    'permitStatus4' => IrhpPermit::STATUS_PRINTED,
-                    'permitStatus5' => IrhpPermit::STATUS_ERROR,
-                ]
-            )
-            ->once()
-            ->andReturn($statement);
-
-        $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
-
-        $this->assertEquals(
-            $rows,
-            $this->sut->fetchInternalIssuedPermitsSummary($licenceId)
-        );
-    }
-
     public function testFetchInternalApplicationsSummary()
     {
         $rows = [
@@ -1181,6 +1112,7 @@ class IrhpApplicationTest extends RepositoryTestCase
         ];
 
         $licenceId = 14;
+        $status = null;
 
         $statement = m::mock(Statement::class);
         $statement->shouldReceive('fetchAll')
@@ -1192,10 +1124,11 @@ class IrhpApplicationTest extends RepositoryTestCase
             ->with(
                 'select ' .
                 'concat (l.lic_no, \' / \', ia.id) as applicationRef, ' .
-                'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0)) as permitsRequired, ' .
+                'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0) + ifnull(ipa.required_standard, 0) + ifnull(ipa.required_cabotage, 0)) as permitsRequired, ' .
                 'ia.id as id, ' .
                 'ia.irhp_permit_type_id as typeId, ' .
                 'ia.status as statusId, ' .
+                'ia.date_received as dateReceived, ' .
                 'srd.description as statusDescription, ' .
                 'trd.description as typeDescription, ' .
                 'ips.period_name_key as periodNameKey, ' .
@@ -1211,18 +1144,24 @@ class IrhpApplicationTest extends RepositoryTestCase
                 'left join irhp_permit_window ipw on ipa.irhp_permit_window_id = ipw.id ' .
                 'left join irhp_permit_stock ips on ipw.irhp_permit_stock_id = ips.id ' .
                 'where l.`id` = :filterByColumnValue ' .
-                'and ia.status in (:applicationStatus1, :applicationStatus2, :applicationStatus3, :applicationStatus4, :applicationStatus5, :applicationStatus6, :applicationStatus7, :applicationStatus8) ' .
-                'group by ia.id',
+                'and ia.status in (:applicationStatus1, :applicationStatus2, :applicationStatus3, :applicationStatus4, :applicationStatus5, :applicationStatus6, :applicationStatus7, :applicationStatus8, :applicationStatus9, :applicationStatus10, :applicationStatus11, :applicationStatus12, :applicationStatus13) ' .
+                'group by ia.id '.
+                'order by ia.`id` DESC',
                 [
                     'filterByColumnValue' => $licenceId,
-                    'applicationStatus1' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-                    'applicationStatus2' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
-                    'applicationStatus3' => IrhpInterface::STATUS_AWAITING_FEE,
-                    'applicationStatus4' => IrhpInterface::STATUS_FEE_PAID,
-                    'applicationStatus5' => IrhpInterface::STATUS_ISSUING,
-                    'applicationStatus6' => IrhpInterface::STATUS_CANCELLED,
-                    'applicationStatus7' => IrhpInterface::STATUS_WITHDRAWN,
-                    'applicationStatus8' => IrhpInterface::STATUS_UNSUCCESSFUL,
+                    'applicationStatus1' => IrhpInterface::STATUS_CANCELLED,
+                    'applicationStatus2' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                    'applicationStatus3' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                    'applicationStatus4' => IrhpInterface::STATUS_WITHDRAWN,
+                    'applicationStatus5' => IrhpInterface::STATUS_AWAITING_FEE,
+                    'applicationStatus6' => IrhpInterface::STATUS_FEE_PAID,
+                    'applicationStatus7' => IrhpInterface::STATUS_UNSUCCESSFUL,
+                    'applicationStatus8' => IrhpInterface::STATUS_ISSUED,
+                    'applicationStatus9' => IrhpInterface::STATUS_ISSUING,
+                    'applicationStatus10' => IrhpInterface::STATUS_VALID,
+                    'applicationStatus11' => IrhpInterface::STATUS_EXPIRED,
+                    'applicationStatus12' => IrhpInterface::STATUS_TERMINATED,
+                    'applicationStatus13' => IrhpInterface::STATUS_DECLINED,
                 ]
             )
             ->once()
@@ -1232,7 +1171,67 @@ class IrhpApplicationTest extends RepositoryTestCase
 
         $this->assertEquals(
             $rows,
-            $this->sut->fetchInternalApplicationsSummary($licenceId)
+            $this->sut->fetchInternalApplicationsSummary($licenceId, $status)
+        );
+    }
+
+    public function testFetchInternalApplicationsSummaryWithStatus()
+    {
+        $rows = [
+            ['data1'],
+            ['data2'],
+            ['data3'],
+        ];
+
+        $licenceId = 14;
+        $status = IrhpInterface::STATUS_NOT_YET_SUBMITTED;
+
+        $statement = m::mock(Statement::class);
+        $statement->shouldReceive('fetchAll')
+            ->once()
+            ->andReturn($rows);
+
+        $connection = m::mock(Connection::class);
+        $connection->shouldReceive('executeQuery')
+            ->with(
+                'select ' .
+                'concat (l.lic_no, \' / \', ia.id) as applicationRef, ' .
+                'sum(ifnull(ipa.permits_required, 0) + ifnull(ipa.required_euro5, 0) + ifnull(ipa.required_euro6, 0) + ifnull(ipa.required_standard, 0) + ifnull(ipa.required_cabotage, 0)) as permitsRequired, ' .
+                'ia.id as id, ' .
+                'ia.irhp_permit_type_id as typeId, ' .
+                'ia.status as statusId, ' .
+                'ia.date_received as dateReceived, ' .
+                'srd.description as statusDescription, ' .
+                'trd.description as typeDescription, ' .
+                'ips.period_name_key as periodNameKey, ' .
+                'ips.valid_to as stockValidTo, ' .
+                'l.id as licenceId ' .
+                'from ' .
+                'irhp_application ia ' .
+                'inner join licence l on ia.licence_id = l.id ' .
+                'inner join ref_data srd on ia.status = srd.id ' .
+                'left join irhp_permit_application ipa on ipa.irhp_application_id = ia.id ' .
+                'inner join irhp_permit_type ipt on ia.irhp_permit_type_id = ipt.id ' .
+                'inner join ref_data trd on ipt.name = trd.id ' .
+                'left join irhp_permit_window ipw on ipa.irhp_permit_window_id = ipw.id ' .
+                'left join irhp_permit_stock ips on ipw.irhp_permit_stock_id = ips.id ' .
+                'where l.`id` = :filterByColumnValue ' .
+                'and ia.status in (:applicationStatus1) ' .
+                'group by ia.id '.
+                'order by ia.`id` DESC',
+                [
+                    'filterByColumnValue' => $licenceId,
+                    'applicationStatus1' => $status,
+                ]
+            )
+            ->once()
+            ->andReturn($statement);
+
+        $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
+
+        $this->assertEquals(
+            $rows,
+            $this->sut->fetchInternalApplicationsSummary($licenceId, $status)
         );
     }
 }

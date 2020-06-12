@@ -2,10 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSummaryProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -32,6 +33,15 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
         );
     }
 
+    public function testShouldIncludeSlug()
+    {
+        $qaEntity = m::mock(QaEntityInterface::class);
+
+        $this->assertTrue(
+            $this->noOfPermitsAnswerSummaryProvider->shouldIncludeSlug($qaEntity)
+        );
+    }
+
     /**
      * @dataProvider dpSnapshot
      */
@@ -41,8 +51,6 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
         $validityYear = 2025;
         $requiredEuro5 = 5;
         $requiredEuro6 = 7;
-
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
 
         $irhpPermitStockEntity = m::mock(IrhpPermitStockEntity::class);
         $irhpPermitStockEntity->shouldReceive('getPeriodNameKey')
@@ -68,6 +76,11 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($irhpPermitApplicationEntity);
 
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($irhpApplicationEntity);
+
         $expectedTemplateVariables = [
             'validityYear' => $validityYear,
             'periodNameKey' => $periodNameKey,
@@ -83,11 +96,7 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
             ]
         ];
 
-        $templateVariables = $this->noOfPermitsAnswerSummaryProvider->getTemplateVariables(
-            $applicationStepEntity,
-            $irhpApplicationEntity,
-            $isSnapshot
-        );
+        $templateVariables = $this->noOfPermitsAnswerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
 
         $this->assertEquals($expectedTemplateVariables, $templateVariables);
     }

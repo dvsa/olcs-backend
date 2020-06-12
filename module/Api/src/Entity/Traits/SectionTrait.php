@@ -99,7 +99,7 @@ trait SectionTrait
     {
         $this->sectionCompletion = [];
 
-        if ($this->getIrhpPermitType()->isApplicationPathEnabled()) {
+        if ($this->isApplicationPathEnabled()) {
             // q&a
             $data = $this->getQuestionAnswerData();
 
@@ -172,7 +172,13 @@ trait SectionTrait
         // validate the field itself
         $validator = $section['validator'];
 
-        $this->sectionCompletion[$field] = $this->$validator($field)
+        if ($validator == SectionableInterface::VALIDATOR_ALWAYS_TRUE) {
+            $validatorResponse = true;
+        } else {
+            $validatorResponse = $this->$validator($field);
+        }
+
+        $this->sectionCompletion[$field] = $validatorResponse
             ? SectionableInterface::SECTION_COMPLETION_COMPLETED
             : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
     }

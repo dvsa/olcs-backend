@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Generic\Answer as Entity;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Mockery as m;
 use RuntimeException;
 
@@ -39,6 +40,20 @@ class AnswerEntityTest extends EntityTester
         $this->assertInstanceOf($this->entityClass, $entity);
         $this->assertSame($questionText, $entity->getQuestionText());
         $this->assertSame($irhpApplication, $entity->getIrhpApplication());
+        $this->assertNull($entity->getIrhpPermitApplication());
+    }
+
+    public function testCreateNewForIrhpPermitApplication()
+    {
+        $questionText = m::mock(QuestionText::class);
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+
+        $entity = $this->entityClass::createNewForIrhpPermitApplication($questionText, $irhpPermitApplication);
+
+        $this->assertInstanceOf($this->entityClass, $entity);
+        $this->assertSame($questionText, $entity->getQuestionText());
+        $this->assertNull($entity->getIrhpApplication());
+        $this->assertSame($irhpPermitApplication, $entity->getIrhpPermitApplication());
     }
 
     /**

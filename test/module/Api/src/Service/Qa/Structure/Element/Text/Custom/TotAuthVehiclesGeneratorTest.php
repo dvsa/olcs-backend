@@ -34,7 +34,7 @@ class TotAuthVehiclesGeneratorTest extends MockeryTestCase
             ->andReturn($validator);
 
         $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
-        $elementGeneratorContext->shouldReceive('getIrhpApplicationEntity->getLicence->getTotAuthVehicles')
+        $elementGeneratorContext->shouldReceive('getQaEntity->getLicence->getTotAuthVehicles')
             ->andReturn($totAuthVehicles);
         $elementGeneratorContext->shouldReceive('getValidatorList')
             ->andReturn($validatorList);

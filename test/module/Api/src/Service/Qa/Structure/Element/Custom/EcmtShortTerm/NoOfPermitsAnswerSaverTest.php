@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicati
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdater;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\FieldNames;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerFetcher;
@@ -51,6 +52,14 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
         $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
             ->andReturn($irhpPermitApplication);
 
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($applicationStep);
+        $qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($irhpApplication);
+
         $conditionalFeeUpdater = m::mock(ConditionalFeeUpdater::class);
         $conditionalFeeUpdater->shouldReceive('updateFees')
             ->with($irhpApplication, $oldTotal)
@@ -77,6 +86,6 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
             $conditionalFeeUpdater
         );
 
-        $noOfPermitsAnswerSaver->save($applicationStep, $irhpApplication, $postData);
+        $noOfPermitsAnswerSaver->save($qaContext, $postData);
     }
 }

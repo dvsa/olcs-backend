@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -28,6 +30,7 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
         $this->mockedSmServices = [
+            'QaContextFactory' => m::mock(QaContextFactory::class),
             'QaSupplementedApplicationStepsProvider' => m::mock(SupplementedApplicationStepsProvider::class)
         ];
 
@@ -55,9 +58,15 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
 
         $applicationStep1 = m::mock(ApplicationStep::class);
 
+        $qaContext1 = m::mock(QaContext::class);
+
+        $this->mockedSmServices['QaContextFactory']->shouldReceive('create')
+            ->with($applicationStep1, $irhpApplication)
+            ->andReturn($qaContext1);
+
         $formControlStrategy1 = m::mock(FormControlStrategyInterface::class);
         $formControlStrategy1->shouldReceive('saveFormData')
-            ->with($applicationStep1, $irhpApplication, $postData)
+            ->with($qaContext1, $postData)
             ->once()
             ->ordered()
             ->globally();
@@ -70,9 +79,15 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
 
         $applicationStep2 = m::mock(ApplicationStep::class);
 
+        $qaContext2 = m::mock(QaContext::class);
+
+        $this->mockedSmServices['QaContextFactory']->shouldReceive('create')
+            ->with($applicationStep2, $irhpApplication)
+            ->andReturn($qaContext2);
+
         $formControlStrategy2 = m::mock(FormControlStrategyInterface::class);
         $formControlStrategy2->shouldReceive('saveFormData')
-            ->with($applicationStep2, $irhpApplication, $postData)
+            ->with($qaContext2, $postData)
             ->once()
             ->ordered()
             ->globally();

@@ -2,11 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 
 class GenericAnswerSaver implements AnswerSaverInterface
 {
+    use AnyTrait;
+
     /** @var BaseAnswerSaver */
     private $baseAnswerSaver;
 
@@ -25,8 +27,8 @@ class GenericAnswerSaver implements AnswerSaverInterface
     /**
      * {@inheritdoc}
      */
-    public function save(ApplicationStep $applicationStep, IrhpApplication $irhpApplication, array $postData)
+    public function save(QaContext $qaContext, array $postData)
     {
-        $this->baseAnswerSaver->save($applicationStep, $irhpApplication, $postData);
+        $this->baseAnswerSaver->save($qaContext, $postData);
     }
 }

@@ -5,7 +5,11 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Answer;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
+use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -13,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
@@ -35,9 +40,41 @@ use RuntimeException;
  *    }
  * )
  */
-class IrhpPermitApplication extends AbstractIrhpPermitApplication implements OrganisationProviderInterface
+class IrhpPermitApplication extends AbstractIrhpPermitApplication implements OrganisationProviderInterface, QaEntityInterface
 {
     use TieredProductReference;
+
+    const BILATERAL_STANDARD_REQUIRED = 'standard';
+    const BILATERAL_CABOTAGE_REQUIRED = 'cabotage';
+
+    const BILATERAL_REQUIRED_KEYS = [
+        self::BILATERAL_STANDARD_REQUIRED,
+        self::BILATERAL_CABOTAGE_REQUIRED,
+    ];
+
+    const BILATERAL_APPLICATION_FEE_KEY = 'BILATERAL_APPLICATION_FEE_KEY';
+    const BILATERAL_ISSUE_FEE_KEY = 'BILATERAL_ISSUE_FEE_KEY';
+
+    const BILATERAL_FEE_PRODUCT_REFS_TYPE_1 = [
+        self::BILATERAL_APPLICATION_FEE_KEY => FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
+        self::BILATERAL_ISSUE_FEE_KEY => FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF,
+    ];
+
+    const BILATERAL_FEE_PRODUCT_REFS_TYPE_2 = [
+        self::BILATERAL_APPLICATION_FEE_KEY => FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF,
+        self::BILATERAL_ISSUE_FEE_KEY => FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF,
+    ];
+
+    const BILATERAL_FEE_PRODUCT_REFS = [
+        RefData::JOURNEY_SINGLE => [
+            self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+            self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+        ],
+        RefData::JOURNEY_MULTIPLE => [
+            self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_1,
+            self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+        ],
+    ];
 
     const MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
         'Jan' => FeeType::FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF,
@@ -56,6 +93,8 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
 
     const REQUESTED_PERMITS_KEY = 'requestedPermits';
     const RANGE_ENTITY_KEY = 'rangeEntity';
+
+    const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers.';
 
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
@@ -128,6 +167,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
             'euro5PermitsAwarded' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO5_REF),
             'euro6PermitsAwarded' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO6_REF),
             'validPermits' => $this->countValidPermits(),
+            'permitsRequired' => $this->countPermitsRequired(),
             'relatedApplication' => isset($relatedApplication) ? $relatedApplication->serialize(
                 [
                     'licence' => [
@@ -407,7 +447,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     {
         if ($this->irhpApplication->getIrhpPermitType()->isEcmtRemoval()) {
             return new DateTime(
-                $this->getAnswerValueByQuestionId(Question::QUESTION_ID_REMOVAL_PERMIT_START_DATE)
+                $this->irhpApplication->getAnswerValueByQuestionId(Question::QUESTION_ID_REMOVAL_PERMIT_START_DATE)
             );
         }
 
@@ -435,6 +475,411 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getAnswerValueByQuestionId($id)
     {
-        return $this->irhpApplication->getAnswerValueByQuestionId($id);
+        return $this->getActiveApplicationPath()
+            ->getAnswerValueByQuestionId($id, $this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createAnswer(QuestionText $questionText)
+    {
+        return Answer::createNewForIrhpPermitApplication($questionText, $this);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotYetSubmitted()
+    {
+        return $this->irhpApplication->isNotYetSubmitted();
+    }
+
+    /**
+     * Get the application path locked on datetime
+     *
+     * @return \DateTime
+     */
+    public function getApplicationPathLockedOn()
+    {
+        return $this->irhpApplication->getApplicationPathLockedOn();
+    }
+
+    /**
+     * Get the active application path
+     *
+     * @return ApplicationPath|null
+     */
+    public function getActiveApplicationPath()
+    {
+        return $this->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getApplicationPathGroup()
+            ->getActiveApplicationPath($this->getApplicationPathLockedOn());
+    }
+
+    /**
+     * Get an answer to the given application step
+     *
+     * @return mixed|null
+     */
+    public function getAnswer(ApplicationStep $applicationStep)
+    {
+        $question = $applicationStep->getQuestion();
+        $applicationPathLockedOn = $this->getApplicationPathLockedOn();
+
+        if ($question->isCustom()) {
+            $formControlType = $question->getFormControlType();
+            switch ($formControlType) {
+                case Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY:
+                case Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE:
+                    return $question->getStandardAnswer($this, $applicationPathLockedOn);
+            }
+
+            throw new RuntimeException(
+                sprintf(
+                    'Unable to retrieve answer status for form control type %s',
+                    $formControlType
+                )
+            );
+        }
+
+        return $question->getStandardAnswer($this, $applicationPathLockedOn);
+    }
+
+    /**
+     * Reset the checked answers section to a value representing 'not completed'
+     */
+    public function resetCheckAnswers()
+    {
+        if ($this->irhpApplication->canBeUpdated()) {
+            $this->checkedAnswers = false;
+        }
+    }
+
+    /**
+     * Return the entity name in camel case
+     *
+     * @return string
+     */
+    public function getCamelCaseEntityName()
+    {
+        return 'irhpPermitApplication';
+    }
+
+    /**
+     * Executed on submission of an application step
+     */
+    public function onSubmitApplicationStep()
+    {
+        $this->resetCheckAnswers();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAdditionalQaViewData(ApplicationStep $applicationStep)
+    {
+        $country = $this->irhpPermitWindow->getIrhpPermitStock()->getCountry();
+
+        return [
+            'previousStepSlug' => $applicationStep->getPreviousStepSlug(),
+            'countryName' => $country->getCountryDesc(),
+            'countryCode' => $country->getId()
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isApplicationPathEnabled()
+    {
+        return $this->irhpApplication->getIrhpPermitType()->isIrhpPermitApplicationPathEnabled();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRepositoryName()
+    {
+        return 'IrhpPermitApplication';
+    }
+
+    /**
+     * Returns the selection made on the bilateral cabotage page (or the default selection of standard only if the
+     * journey doesn't contain a cabotage page)
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    public function getBilateralCabotageSelection()
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+    
+        $cabotageOnlyAnswer = $this->getAnswerValueByQuestionId(Question::QUESTION_ID_BILATERAL_CABOTAGE_ONLY);
+        if (!is_null($cabotageOnlyAnswer)) {
+            return $cabotageOnlyAnswer;
+        }
+
+        $standardAndCabotageAnswer = $this->getAnswerValueByQuestionId(
+            Question::QUESTION_ID_BILATERAL_STANDARD_AND_CABOTAGE
+        );
+
+        if (!is_null($standardAndCabotageAnswer)) {
+            return $standardAndCabotageAnswer;
+        }
+
+        return Answer::BILATERAL_STANDARD_ONLY;
+    }
+
+    /**
+     * Returns the selection made on the bilateral permit usage page
+     *
+     * @return string
+     */
+    public function getBilateralPermitUsageSelection()
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        return $this->getAnswerValueByQuestionId(Question::QUESTION_ID_BILATERAL_PERMIT_USAGE);
+    }
+
+    /**
+     * Update required permits for a bilateral application
+     *
+     * @param array $required
+     */
+    public function updateBilateralRequired(array $required)
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        if (!$this->irhpApplication->canBeUpdated()) {
+            throw new RuntimeException(__FUNCTION__ . ' called when application in unexpected state');
+        }
+
+        $inputArrayKeys = array_keys($required);
+        if ($inputArrayKeys != self::BILATERAL_REQUIRED_KEYS) {
+            throw new RuntimeException('Unexpected or missing array keys passed to ' . __FUNCTION__);
+        }
+
+        $this->requiredStandard = $required[self::BILATERAL_STANDARD_REQUIRED];
+        $this->requiredCabotage = $required[self::BILATERAL_CABOTAGE_REQUIRED];
+    }
+
+    /**
+     * Clear required permits for a bilateral application
+     */
+    public function clearBilateralRequired()
+    {
+        $this->updateBilateralRequired(
+            $this->getDefaultBilateralRequired()
+        );
+    }
+
+    /**
+     * Get an array in an empty/default state for use with updateBilateralRequired
+     *
+     * @return array
+     */
+    public function getDefaultBilateralRequired()
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        return array_fill_keys(self::BILATERAL_REQUIRED_KEYS, null);
+    }
+
+    /**
+     * Get required permits for a bilateral application
+     *
+     * @return array
+     */
+    public function getBilateralRequired()
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        return [
+            self::BILATERAL_STANDARD_REQUIRED => $this->requiredStandard,
+            self::BILATERAL_CABOTAGE_REQUIRED => $this->requiredCabotage,
+        ];
+    }
+
+    /**
+     * Get required permits for a bilateral application, including only types where a quantity is specified
+     *
+     * @return array
+     */
+    public function getFilteredBilateralRequired()
+    {
+        return array_filter(
+            $this->getBilateralRequired()
+        );
+    }
+
+    /**
+     * Get a key value array containing product references and quantities for use in fee creation
+     *
+     * @return array
+     */
+    public function getBilateralFeeProductRefsAndQuantities()
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        $bilateralRequired = $this->getBilateralRequired();
+        $permitUsageSelection = $this->getBilateralPermitUsageSelection();
+
+        $productRefsAndQuantities = [];
+        foreach ($bilateralRequired as $standardOrCabotage => $quantity) {
+            if ($quantity) {
+                $productReferences = self::BILATERAL_FEE_PRODUCT_REFS[$permitUsageSelection][$standardOrCabotage];
+
+                $applicationFeeProductReference = $productReferences[self::BILATERAL_APPLICATION_FEE_KEY];
+                if (isset($productRefsAndQuantities[$applicationFeeProductReference])) {
+                    $productRefsAndQuantities[$applicationFeeProductReference] += $quantity;
+                } else {
+                    $productRefsAndQuantities[$applicationFeeProductReference] = $quantity;
+                }
+
+                $issueFeeProductReference = $productReferences[self::BILATERAL_ISSUE_FEE_KEY];
+                if (isset($productRefsAndQuantities[$issueFeeProductReference])) {
+                    $productRefsAndQuantities[$issueFeeProductReference] += $quantity;
+                } else {
+                    $productRefsAndQuantities[$issueFeeProductReference] = $quantity;
+                }
+            }
+        }
+
+        return $productRefsAndQuantities;
+    }
+
+    /**
+     * Get the bilateral fee product reference in the context of this application
+     *
+     * @param string $standardOrCabotage
+     * @param string $feeTypeKey
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    public function getBilateralFeeProductReference($standardOrCabotage, $feeTypeKey)
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        $permitUsage = $this->getBilateralPermitUsageSelection();
+        return self::BILATERAL_FEE_PRODUCT_REFS[$permitUsage][$standardOrCabotage][$feeTypeKey];
+    }
+
+    /**
+     * Get the bilateral fee per permit
+     *
+     * @param FeeType $applicationFeeType
+     * @param FeeType $issueFeeType
+     *
+     * @return int
+     *
+     * @throws RuntimeException
+     */
+    public function getBilateralFeePerPermit(FeeType $applicationFeeType, FeeType $issueFeeType)
+    {
+        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
+
+        return $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
+    }
+
+    /**
+     * Throws an exception if the associated irhp application is not of type bilateral
+     *
+     * @param string $methodName
+     *
+     * @throws RuntimeException
+     */
+    private function throwRuntimeExceptionIfNotBilateral($methodName)
+    {
+        if (!$this->irhpApplication->isBilateral()) {
+            throw new RuntimeException($methodName . ' is applicable only to bilateral applications');
+        }
+    }
+
+    /**
+     * Get outstanding fees
+     *
+     * @return array
+     */
+    public function getOutstandingFees()
+    {
+        $fees = [];
+        foreach ($this->getFees() as $fee) {
+            if ($fee->isOutstanding()) {
+                $fees[] = $fee;
+            }
+        }
+
+        return $fees;
+    }
+
+    /**
+     * @param IrhpPermitWindow $irpPermitWindow
+     */
+    public function updateIrhpPermitWindow(IrhpPermitWindow $irhpPermitWindow)
+    {
+        $this->irhpPermitWindow = $irhpPermitWindow;
+    }
+
+    /**
+     * Whether this application is associated with the bilateral cabotage only application path group
+     *
+     * @return bool
+     */
+    public function isAssociatedWithBilateralCabotageOnlyApplicationPathGroup()
+    {
+        return $this->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getApplicationPathGroup()
+            ->isBilateralCabotageOnly();
+    }
+
+    /**
+     * Update checkedAnswers to true
+     *
+     * @throws ForbiddenException
+     */
+    public function updateCheckAnswers()
+    {
+        if (!$this->canCheckAnswers()) {
+            throw new ForbiddenException(self::ERR_CANT_CHECK_ANSWERS);
+        }
+        return $this->checkedAnswers = true;
+    }
+
+    /**
+     * Whether checkedAnswers can be updated
+     *
+     * @return bool
+     */
+    public function canCheckAnswers()
+    {
+        return $this->irhpApplication->isBilateral() && $this->irhpApplication->canBeUpdated();
+    }
+
+    /**
+     * Get the type-appropriate number of permits required by this application
+     *
+     * @return int|null
+     */
+    public function countPermitsRequired()
+    {
+        if ($this->irhpApplication->isBilateral()) {
+            $permitsRequired = 0;
+
+            $bilateralRequired = $this->getFilteredBilateralRequired();
+            foreach ($bilateralRequired as $quantity) {
+                $permitsRequired += $quantity;
+            }
+
+            return $permitsRequired;
+        }
+
+        return parent::getPermitsRequired();
     }
 }

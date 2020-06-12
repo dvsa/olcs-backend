@@ -2,12 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
+use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AlwaysIncludeSlugTrait;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class RestrictedCountriesAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
+    use AlwaysIncludeSlugTrait, IrhpApplicationOnlyTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -19,12 +22,10 @@ class RestrictedCountriesAnswerSummaryProvider implements AnswerSummaryProviderI
     /**
      * {@inheritdoc}
      */
-    public function getTemplateVariables(
-        ApplicationStepEntity $applicationStepEntity,
-        IrhpApplicationEntity $irhpApplicationEntity,
-        $isSnapshot
-    ) {
-        $hasRestrictedCountries = $irhpApplicationEntity->getAnswer($applicationStepEntity);
+    public function getTemplateVariables(QaContext $qaContext, $isSnapshot)
+    {
+        $irhpApplicationEntity = $qaContext->getQaEntity();
+        $hasRestrictedCountries = $qaContext->getAnswerValue();
 
         $countryNames = [];
         if ($hasRestrictedCountries) {

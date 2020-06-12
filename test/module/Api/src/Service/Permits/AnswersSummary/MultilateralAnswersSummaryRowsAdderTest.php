@@ -39,7 +39,7 @@ class MultilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getValidityYear')
             ->withNoArgs()
             ->andReturn($irhpPermitApplication1ValidityYear);
-        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication1->shouldReceive('countPermitsRequired')
             ->withNoArgs()
             ->andReturn($irhpPermitApplication1PermitsRequired);
 
@@ -49,7 +49,7 @@ class MultilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
         $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getValidityYear')
             ->withNoArgs()
             ->andReturn($irhpPermitApplication2ValidityYear);
-        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication2->shouldReceive('countPermitsRequired')
             ->withNoArgs()
             ->andReturn($irhpPermitApplication2PermitsRequired);
 

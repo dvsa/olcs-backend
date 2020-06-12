@@ -22,6 +22,41 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterface
 {
+    const BILATERAL_TYPE_STANDARD_SINGLE = 'standard.single';
+    const BILATERAL_TYPE_STANDARD_MULTIPLE = 'standard.multiple';
+    const BILATERAL_TYPE_CABOTAGE_SINGLE = 'cabotage.single';
+    const BILATERAL_TYPE_CABOTAGE_MULTIPLE = 'cabotage.multiple';
+
+    const BILATERAL_TYPES = [
+        RefData::JOURNEY_SINGLE => [
+            0 => self::BILATERAL_TYPE_STANDARD_SINGLE,
+            1 => self::BILATERAL_TYPE_CABOTAGE_SINGLE,
+        ],
+        RefData::JOURNEY_MULTIPLE => [
+            0 => self::BILATERAL_TYPE_STANDARD_MULTIPLE,
+            1 => self::BILATERAL_TYPE_CABOTAGE_MULTIPLE,
+        ],
+    ];
+
+    const BILATERAL_TYPES_CRITERIA = [
+        self::BILATERAL_TYPE_STANDARD_SINGLE => [
+            'journey' => RefData::JOURNEY_SINGLE,
+            'cabotage' => false,
+        ],
+        self::BILATERAL_TYPE_STANDARD_MULTIPLE => [
+            'journey' => RefData::JOURNEY_MULTIPLE,
+            'cabotage' => false,
+        ],
+        self::BILATERAL_TYPE_CABOTAGE_SINGLE => [
+            'journey' => RefData::JOURNEY_SINGLE,
+            'cabotage' => true,
+        ],
+        self::BILATERAL_TYPE_CABOTAGE_MULTIPLE => [
+            'journey' => RefData::JOURNEY_MULTIPLE,
+            'cabotage' => true,
+        ],
+    ];
+
     /**
      * Create
      *
@@ -33,6 +68,8 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
      * @param int $reserve
      * @param int $replacement
      * @param array $countries
+     * @param RefData $journey
+     * @param int $cabotage
      *
      * @return IrhpPermitRange
      */
@@ -44,7 +81,9 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $rangeTo,
         $reserve,
         $replacement,
-        $countries
+        $countries,
+        $journey,
+        $cabotage
     ) {
         $instance = new self;
 
@@ -56,6 +95,8 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $instance->ssReserve = $reserve;
         $instance->lostReplacement = $replacement;
         $instance->countrys = $countries;
+        $instance->journey = $journey;
+        $instance->cabotage = $cabotage;
 
         return $instance;
     }
@@ -71,6 +112,8 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
      * @param int $reserve
      * @param int $replacement
      * @param array $countries
+     * @param RefData $journey
+     * @param int $cabotage
      *
      * @return IrhpPermitRange
      */
@@ -82,7 +125,9 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $rangeTo,
         $reserve,
         $replacement,
-        $countries
+        $countries,
+        $journey,
+        $cabotage
     ) {
         $this->irhpPermitStock = $permitStock;
         $this->emissionsCategory = $emissionsCategory;
@@ -92,6 +137,8 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $this->ssReserve = $reserve;
         $this->lostReplacement = $replacement;
         $this->countrys = $countries;
+        $this->journey = $journey;
+        $this->cabotage = $cabotage;
 
         return $this;
     }
@@ -127,5 +174,25 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
     public function hasCountries()
     {
         return count($this->countrys) > 0;
+    }
+
+    /**
+     * Whether this range is a cabotage one
+     *
+     * @return bool
+     */
+    public function isCabotage()
+    {
+        return $this->cabotage;
+    }
+
+    /**
+     * Whether this range is a standard one
+     *
+     * @return bool
+     */
+    public function isStandard()
+    {
+        return !$this->cabotage;
     }
 }

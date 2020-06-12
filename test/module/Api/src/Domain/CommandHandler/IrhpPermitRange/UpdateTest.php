@@ -36,7 +36,8 @@ class UpdateTest extends CommandHandlerTestCase
         $this->refData = [
             RefData::EMISSIONS_CATEGORY_EURO5_REF,
             RefData::EMISSIONS_CATEGORY_EURO6_REF,
-            RefData::EMISSIONS_CATEGORY_NA_REF
+            RefData::EMISSIONS_CATEGORY_NA_REF,
+            RefData::JOURNEY_SINGLE,
         ];
 
         parent::initReferences();
@@ -45,7 +46,7 @@ class UpdateTest extends CommandHandlerTestCase
     /**
      * @dataProvider dpShortTermAnnualTypeCombinations
      */
-    public function testHandleCommand($isEcmtShortTerm, $isEcmtAnnual)
+    public function testHandleCommand($isEcmtShortTerm, $isEcmtAnnual, $isBilateral)
     {
         $id = 1;
         $cmdData = [
@@ -56,12 +57,15 @@ class UpdateTest extends CommandHandlerTestCase
             'toNo' => 100,
             'ssReserve' => 0,
             'lostReplacement' => 0,
-            'countrys' => []
+            'countrys' => [],
+            'journey' => RefData::JOURNEY_SINGLE,
+            'cabotage' => '0',
         ];
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')->andReturn($isEcmtShortTerm);
         $irhpPermitType->shouldReceive('isEcmtAnnual')->andReturn($isEcmtAnnual);
+        $irhpPermitType->shouldReceive('isBilateral')->andReturn($isBilateral);
 
         $stock = m::mock(IrhpPermitStock::class)->makePartial();
         $stock->shouldReceive('getIrhpPermitType')->andReturn($irhpPermitType);
@@ -76,7 +80,18 @@ class UpdateTest extends CommandHandlerTestCase
             ->andReturn($stock);
 
         $entity->shouldReceive('update')
-            ->with($stock, $this->refData[RefData::EMISSIONS_CATEGORY_EURO6_REF], 'UK', '1', '100', '0', '0', [])
+            ->with(
+                $stock,
+                $this->refData[RefData::EMISSIONS_CATEGORY_EURO6_REF],
+                'UK',
+                '1',
+                '100',
+                '0',
+                '0',
+                [],
+                $this->refData[RefData::JOURNEY_SINGLE],
+                0
+            )
             ->andReturn(m::mock(IrhpPermitRange::class));
 
         $entity->shouldReceive('getId')
@@ -122,7 +137,9 @@ class UpdateTest extends CommandHandlerTestCase
             'toNo' => '100',
             'isReserve' => '0',
             'isReplacement' => '0',
-            'countrys' => []
+            'countrys' => [],
+            'journey' => RefData::JOURNEY_SINGLE,
+            'cabotage' => '0',
         ];
 
         $entity = m::mock(PermitRangeEntity::class);
@@ -149,9 +166,61 @@ class UpdateTest extends CommandHandlerTestCase
     }
 
     /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandBilateralNoJourney()
+    {
+        $cmdData = [
+            'irhpPermitStock' => '1',
+            'emissionsCategory' => RefData::EMISSIONS_CATEGORY_EURO6_REF,
+            'prefix' => 'UK',
+            'fromNo' => '1',
+            'toNo' => '100',
+            'isReserve' => '0',
+            'isReplacement' => '0',
+            'countrys' => [],
+            'cabotage' => '0',
+        ];
+
+        $entity = m::mock(PermitRangeEntity::class);
+
+        $command = UpdateCmd::create($cmdData);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')->andReturn(false);
+        $irhpPermitType->shouldReceive('isBilateral')->andReturn(true);
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getIrhpPermitType')->andReturn($irhpPermitType);
+
+        $this->repoMap['IrhpPermitStock']
+            ->shouldReceive('fetchById')
+            ->andReturn($irhpPermitStock);
+
+        $this->repoMap['IrhpPermitRange']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($entity);
+
+        $this->repoMap['IrhpPermitRange']
+            ->shouldReceive('findOverlappingRangesByType')
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['fromNo'],
+                $cmdData['toNo'],
+                $entity
+            )
+            ->andReturn([]);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
      * @dataProvider dpShortTermAnnualTypeCombinations
      */
-    public function testHandleCommandBadEcmtEmissionsCategory($isEcmtShortTerm, $isEcmtAnnual)
+    public function testHandleCommandBadEcmtEmissionsCategory($isEcmtShortTerm, $isEcmtAnnual, $isBilateral)
     {
         $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
         $cmdData = [
@@ -162,7 +231,9 @@ class UpdateTest extends CommandHandlerTestCase
             'toNo' => '100',
             'isReserve' => '0',
             'isReplacement' => '0',
-            'countrys' => []
+            'countrys' => [],
+            'journey' => RefData::JOURNEY_SINGLE,
+            'cabotage' => '0',
         ];
 
         $command = UpdateCmd::create($cmdData);
@@ -170,6 +241,7 @@ class UpdateTest extends CommandHandlerTestCase
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtShortTerm')->andReturn($isEcmtShortTerm);
         $irhpPermitType->shouldReceive('isEcmtAnnual')->andReturn($isEcmtAnnual);
+        $irhpPermitType->shouldReceive('isBilateral')->andReturn($isBilateral);
 
         $irhpPermitStock = m::mock(IrhpPermitStock::class);
         $irhpPermitStock->shouldReceive('getIrhpPermitType')->andReturn($irhpPermitType);
@@ -202,8 +274,8 @@ class UpdateTest extends CommandHandlerTestCase
     public function dpShortTermAnnualTypeCombinations()
     {
         return [
-            [true, false],
-            [false, true],
+            [true, false, false],
+            [false, true, false],
         ];
     }
 }

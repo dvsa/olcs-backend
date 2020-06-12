@@ -1257,6 +1257,12 @@ return array(
                 'property' => 'fee'
             )
         ),
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
+                'property' => 'fee'
+            )
+        ),
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(
@@ -2294,6 +2300,13 @@ return array(
         'irhp_application_id' => array(
             'inversedBy' => array(
                 'entity' => 'IrhpApplication',
+                'property' => 'answer',
+                'indexBy' => 'question_text_id',
+            )
+        ),
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
                 'property' => 'answer',
                 'indexBy' => 'question_text_id',
             )

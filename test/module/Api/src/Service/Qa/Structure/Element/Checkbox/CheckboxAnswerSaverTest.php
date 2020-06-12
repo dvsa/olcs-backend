@@ -4,10 +4,10 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Checkbox;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox\CheckboxAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -22,7 +22,7 @@ class CheckboxAnswerSaverTest extends MockeryTestCase
 
     private $applicationStep;
 
-    private $irhpApplication;
+    private $qaContext;
 
     private $genericAnswerWriter;
 
@@ -35,10 +35,11 @@ class CheckboxAnswerSaverTest extends MockeryTestCase
         $this->fieldsetName = 'fields123';
 
         $this->applicationStep = m::mock(ApplicationStep::class);
-        $this->applicationStep->shouldReceive('getFieldsetName')
-            ->andReturn($this->fieldsetName);
 
-        $this->irhpApplication = m::mock(IrhpApplication::class);
+        $this->qaContext = m::mock(QaContext::class);
+        $this->qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($this->applicationStep);
 
         $this->genericAnswerWriter = m::mock(GenericAnswerWriter::class);
 
@@ -56,13 +57,13 @@ class CheckboxAnswerSaverTest extends MockeryTestCase
         ];
 
         $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->applicationStep, $this->irhpApplication, true);
+            ->with($this->qaContext, true);
 
         $this->genericAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $postData)
             ->andReturn('4');
 
-        $this->checkboxAnswerSaver->save($this->applicationStep, $this->irhpApplication, $postData);
+        $this->checkboxAnswerSaver->save($this->qaContext, $postData);
     }
 
     public function testSaveUnchecked()
@@ -73,12 +74,12 @@ class CheckboxAnswerSaverTest extends MockeryTestCase
         ];
 
         $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->applicationStep, $this->irhpApplication, false);
+            ->with($this->qaContext, false);
 
         $this->genericAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $postData)
             ->andThrow(new NotFoundException());
 
-        $this->checkboxAnswerSaver->save($this->applicationStep, $this->irhpApplication, $postData);
+        $this->checkboxAnswerSaver->save($this->qaContext, $postData);
     }
 }

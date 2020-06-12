@@ -30,7 +30,8 @@ final class InternalApplicationsSummary extends AbstractQueryHandler implements 
     public function handleQuery(QueryInterface $query)
     {
         return $this->getRepo()->fetchInternalApplicationsSummary(
-            $query->getLicence()
+            $query->getLicence(),
+            $query->getStatus()
         );
     }
 }

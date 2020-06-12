@@ -19,6 +19,8 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\Fee\RecommendWaive as RecommendWaiveCmd;
 use Dvsa\Olcs\Transfer\Command\Fee\ApproveWaive as ApproveWaiveCmd;
@@ -70,6 +72,12 @@ class CreateFeeTest extends CommandHandlerTestCase
             IrfoPsvAuth::class => [
                 66 => m::mock(IrfoPsvAuth::class)
             ],
+            IrhpApplication::class => [
+                77 => m::mock(IrhpApplication::class)
+            ],
+            IrhpPermitApplication::class => [
+                88 => m::mock(IrhpPermitApplication::class)
+            ],
         ];
 
         parent::initReferences();
@@ -85,6 +93,8 @@ class CreateFeeTest extends CommandHandlerTestCase
             'application' => 22,
             'licence' => 33,
             'busReg' => 44,
+            'irhpApplication' => 77,
+            'irhpPermitApplication' => 88,
             'invoicedDate' => '2015-01-01',
             'description' => 'Some fee',
         ];
@@ -131,6 +141,8 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertSame($this->references[Application::class][22], $savedFee->getApplication());
         $this->assertSame($this->references[BusReg::class][44], $savedFee->getBusReg());
         $this->assertSame($this->references[Task::class][11], $savedFee->getTask());
+        $this->assertSame($this->references[IrhpApplication::class][77], $savedFee->getIrhpApplication());
+        $this->assertSame($this->references[IrhpPermitApplication::class][88], $savedFee->getIrhpPermitApplication());
         $this->assertEquals(10.5, $savedFee->getNetAmount());
         $this->assertEquals(10.5, $savedFee->getGrossAmount());
         $this->assertEquals(0, $savedFee->getVatAmount());

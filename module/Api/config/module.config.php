@@ -26,8 +26,10 @@ return [
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
-            'QaCommonCurrentDateTimeFactory' =>
-                ApiSrv\Qa\Common\CurrentDateTimeFactory::class,
+            'CommonCurrentDateTimeFactory' =>
+                ApiSrv\Common\CurrentDateTimeFactory::class,
+            'CqrsCommandCreator' => ApiSrv\Cqrs\CommandCreator::class,
+            'QaContextFactory' => ApiSrv\Qa\QaContextFactory::class,
             'QaCommonDateTimeFactory' =>
                 ApiSrv\Qa\Common\DateTimeFactory::class,
             'QaCommonDateIntervalFactory' =>
@@ -50,9 +52,6 @@ return [
             'QaValidatorListFactory' => ApiSrv\Qa\Structure\ValidatorListFactory::class,
             'QaElementGeneratorContextFactory' => ApiSrv\Qa\Structure\Element\ElementGeneratorContextFactory::class,
             'QaNamedAnswerFetcher' => ApiSrv\Qa\Structure\Element\NamedAnswerFetcher::class,
-            'QaQuestionTextGeneratorContextFactory' =>
-                ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory::class,
-            'QaCommandCreator' => ApiSrv\Qa\Cqrs\CommandCreator::class,
             'QaEcmtShortTermNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
             'QaEcmtShortTermEmissionsCategoryFactory' =>
@@ -71,6 +70,19 @@ return [
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
             'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
             'QaOptionFactory' => ApiSrv\Qa\Structure\Element\Options\OptionFactory::class,
+
+            'QaBilateralCabotageOnlyElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyFactory::class,
+            'QaBilateralStandardAndCabotageElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageFactory::class,
+            'QaBilateralNoOfPermitsElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsFactory::class,
+            'QaBilateralNoOfPermitsTextFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsTextFactory::class,
+            'QaBilateralNoOfPermitsAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSummaryProvider::class,
+            'QaBilateralPermitUsageAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageAnswerSummaryProvider::class,
 
             'PermitsAnswersSummaryFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryFactory::class,
             'PermitsAnswersSummaryRowFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryRowFactory::class,
@@ -95,6 +107,23 @@ return [
                 ApiSrv\Permits\CandidatePermits\ApggCandidatePermitFactory::class,
 
             'PermitsCheckableCreateTaskCommandFactory' => ApiSrv\Permits\Checkable\CreateTaskCommandFactory::class,
+
+            'PermitsMultilateralFeeBreakdownGenerator' =>
+                ApiSrv\Permits\FeeBreakdown\MultilateralFeeBreakdownGenerator::class,
+    
+            'PermitsAllocateBilateralCriteriaFactory' => ApiSrv\Permits\Allocate\BilateralCriteriaFactory::class,
+            'PermitsAllocateEmissionsStandardCriteriaFactory' =>
+                ApiSrv\Permits\Allocate\EmissionsStandardCriteriaFactory::class,
+    
+            'PermitsBilateralInternalBilateralRequiredGenerator'
+                => ApiSrv\Permits\Bilateral\Internal\BilateralRequiredGenerator::class,
+            'PermitsBilateralInternalIrhpPermitApplicationFactory'
+                => ApiSrv\Permits\Bilateral\Internal\IrhpPermitApplicationFactory::class,
+            'PermitsBilateralInternalPermitUsageSelectionGenerator'
+                => ApiSrv\Permits\Bilateral\Internal\PermitUsageSelectionGenerator::class,
+
+            'PermitsBilateralMetadataCurrentFieldValuesGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\CurrentFieldValuesGenerator::class,
         ],
         'abstract_factories' => [
             \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
@@ -205,7 +234,8 @@ return [
             'QaGenericAnswerFetcher' => ApiSrv\Qa\Structure\Element\GenericAnswerFetcherFactory::class,
             'QaApplicationAnswersClearer' => ApiSrv\Qa\AnswerSaver\ApplicationAnswersClearerFactory::class,
             
-            'QaApplicationStepObjectsProvider' => ApiSrv\Qa\ApplicationStepObjectsProviderFactory::class,
+            'QaContextGenerator' => ApiSrv\Qa\QaContextGeneratorFactory::class,
+            'QaEntityProvider' => ApiSrv\Qa\QaEntityProviderFactory::class,
             'QaFormControlStrategyProvider' => ApiSrv\Qa\FormControlStrategyProviderFactory::class,
             'QaCheckboxFormControlStrategy' => ApiSrv\Qa\Strategy\CheckboxFormControlStrategyFactory::class,
             'QaTextFormControlStrategy' => ApiSrv\Qa\Strategy\TextFormControlStrategyFactory::class,
@@ -232,6 +262,14 @@ return [
                 => ApiSrv\Qa\Strategy\CommonCertificatesFormControlStrategyFactory::class,
             'QaEcmtShortTermEarliestPermitDateFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtShortTermEarliestPermitDateFormControlStrategyFactory::class,
+            'QaBilateralPermitUsageFormControlStrategy'
+                => ApiSrv\Qa\Strategy\BilateralPermitUsageFormControlStrategyFactory::class,
+            'QaBilateralCabotageOnlyFormControlStrategy'
+                => ApiSrv\Qa\Strategy\BilateralCabotageOnlyFormControlStrategyFactory::class,
+            'QaBilateralStandardAndCabotageFormControlStrategy'
+                => ApiSrv\Qa\Strategy\BilateralStandardAndCabotageFormControlStrategyFactory::class,
+            'QaBilateralNoOfPermitsFormControlStrategy'
+                => ApiSrv\Qa\Strategy\BilateralNoOfPermitsFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
@@ -243,6 +281,10 @@ return [
                 => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
             'QaCommonCertificatesQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\Common\CertificatesGeneratorFactory::class,
+            'QaBilateralPermitUsageQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\Bilateral\PermitUsageGeneratorFactory::class,
+            'QaBilateralCabotageQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\Bilateral\CabotageGeneratorFactory::class,
 
             'QaSelfservePageGenerator' => ApiSrv\Qa\Structure\SelfservePageGeneratorFactory::class,
             'QaFormFragmentGenerator' => ApiSrv\Qa\Structure\FormFragmentGeneratorFactory::class,
@@ -311,18 +353,41 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateGeneratorFactory::class,
             'QaCertRoadworthinessMotExpiryDateElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\CertRoadworthiness\MotExpiryDateGeneratorFactory::class,
+            'QaBilateralPermitUsageGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageGeneratorFactory::class,
 
+            'QaBilateralCabotageOnlyElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyGeneratorFactory::class,
+            'QaBilateralCabotageOnlyAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyAnswerSaverFactory::class,
+            'QaBilateralStandardAndCabotageElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageGeneratorFactory::class,
+            'QaBilateralStandardAndCabotageAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageAnswerSaverFactory::class,
+            'QaBilateralNoOfPermitsElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsGeneratorFactory::class,
+            'QaBilateralNoOfPermitsAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSaverFactory::class,
+            'QaBilateralNoOfPermitsUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsUpdaterFactory::class,
+            'QaBilateralNoOfPermitsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerClearerFactory::class,
+    
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
 
             'PermitsAnswersSummaryGenerator' =>
                 ApiSrv\Permits\AnswersSummary\AnswersSummaryGeneratorFactory::class,
+            'PermitsIpaAnswersSummaryGenerator' =>
+                ApiSrv\Permits\AnswersSummary\IpaAnswersSummaryGeneratorFactory::class,
             'PermitsHeaderAnswersSummaryRowsAdder' =>
                 ApiSrv\Permits\AnswersSummary\HeaderAnswersSummaryRowsAdderFactory::class,
             'QaAnswersSummaryRowGenerator' =>
                 ApiSrv\Qa\AnswersSummary\AnswersSummaryRowGeneratorFactory::class,
             'PermitsBilateralAnswersSummaryRowsAdder' =>
                 ApiSrv\Permits\AnswersSummary\BilateralAnswersSummaryRowsAdderFactory::class,
+            'PermitsBilateralIpaAnswersSummaryRowsAdder' =>
+                ApiSrv\Permits\AnswersSummary\BilateralIpaAnswersSummaryRowsAdderFactory::class,
             'PermitsMultilateralAnswersSummaryRowsAdder' =>
                 ApiSrv\Permits\AnswersSummary\MultilateralAnswersSummaryRowsAdderFactory::class,
             'QaAnswersSummaryRowsAdder' =>
@@ -330,6 +395,10 @@ return [
             'QaRadioAnswerSummaryProvider' =>
                 ApiSrv\Qa\Structure\Element\Radio\RadioAnswerSummaryProviderFactory::class,
 
+            'PermitsBilateralApplicationCountryRemover' =>
+                ApiSrv\Permits\Bilateral\ApplicationCountryRemoverFactory::class,
+            'PermitsBilateralApplicationFeesClearer' =>
+                ApiSrv\Permits\Bilateral\ApplicationFeesClearerFactory::class,
             'PermitsShortTermEcmtWindowAvailabilityChecker' =>
                 ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
             'PermitsShortTermEcmtStockAvailabilityChecker' =>
@@ -376,7 +445,36 @@ return [
                 => ApiSrv\Permits\Checkable\CheckedValueUpdaterFactory::class,
             'PermitsCheckableCreateTaskCommandGenerator'
                 => ApiSrv\Permits\Checkable\CreateTaskCommandGeneratorFactory::class,
+    
+            'PermitsBilateralFeeBreakdownGenerator'
+                => ApiSrv\Permits\FeeBreakdown\BilateralFeeBreakdownGeneratorFactory::class,
 
+            'PermitsAllocateIrhpPermitAllocator' => ApiSrv\Permits\Allocate\IrhpPermitAllocatorFactory::class,
+
+            'PermitsBilateralInternalApplicationCountryUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\ApplicationCountryUpdaterFactory::class,
+            'PermitsBilateralInternalApplicationUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\ApplicationUpdaterFactory::class,
+            'PermitsBilateralInternalCabotageAnswerUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\CabotageAnswerUpdaterFactory::class,
+            'PermitsBilateralInternalExistingIrhpPermitApplicationHandler'
+                => ApiSrv\Permits\Bilateral\Internal\ExistingIrhpPermitApplicationHandlerFactory::class,
+            'PermitsBilateralInternalIrhpPermitApplicationCreator'
+                => ApiSrv\Permits\Bilateral\Internal\IrhpPermitApplicationCreatorFactory::class,
+            'PermitsBilateralInternalOtherAnswersUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\OtherAnswersUpdaterFactory::class,
+            'PermitsBilateralInternalPermitUsageAnswerUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\PermitUsageAnswerUpdaterFactory::class,
+
+            'PermitsBilateralMetadataCountryGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\CountryGeneratorFactory::class,
+            'PermitsBilateralMetadataPeriodArrayGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\PeriodArrayGeneratorFactory::class,
+            'PermitsBilateralMetadataPeriodGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\PeriodGeneratorFactory::class,
+            'PermitsBilateralMetadataFieldsGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\FieldsGeneratorFactory::class,
+    
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
         ],

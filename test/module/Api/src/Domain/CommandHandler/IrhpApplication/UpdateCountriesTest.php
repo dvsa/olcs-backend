@@ -3,8 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateCountries;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
@@ -12,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries as UpdateCountriesCmd;
 use Mockery as m;
 
@@ -24,9 +27,69 @@ class UpdateCountriesTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
         $this->sut = m::mock(UpdateCountries::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
+        $this->mockedSmServices = [
+            'QaApplicationAnswersClearer' => m::mock(ApplicationAnswersClearer::class),
+        ];
+
         parent::setUp();
     }
 
+    protected function initReferences()
+    {
+        $this->references = [
+            Country::class => [
+                'DE' => m::mock(Country::class),
+                'FR' => m::mock(Country::class),
+                'NL' => m::mock(Country::class),
+            ]
+        ];
+
+        parent::initReferences();
+    }
+
+    public function testHandleCommandWhenCannotUpdate()
+    {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectExceptionMessage('IRHP application cannot be updated.');
+
+        $id = 1;
+        $countries = [];
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('canUpdateCountries')
+            ->never()
+            ->shouldReceive('setCountrys')
+            ->never();
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->never()
+            ->shouldReceive('saveOnFlush')
+            ->never()
+            ->shouldReceive('flushAll')
+            ->never();
+
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByCountry')
+            ->never();
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
+            ->never()
+            ->shouldReceive('deleteOnFlush')
+            ->never();
+
+        $command = UpdateCountriesCmd::create(
+            [
+                'id' => $id,
+                'countries' => $countries,
+            ]
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @expectedExceptionMessage IRHP application cannot be updated.
+     */
     public function testHandleCommandWhenCannotUpdate()
     {
         $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
@@ -83,9 +146,6 @@ class UpdateCountriesTest extends CommandHandlerTestCase
         $window2->shouldReceive('getId')
             ->andReturn(102);
 
-        $irhpPermitApp1 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApp2 = m::mock(IrhpPermitApplication::class);
-
         $existingIrhpPermitApplications = [];
         $openWindows = [$window1, $window2];
 
@@ -100,16 +160,16 @@ class UpdateCountriesTest extends CommandHandlerTestCase
             ->andReturn($existingIrhpPermitApplications)
             ->shouldReceive('resetCheckAnswersAndDeclaration')
             ->withNoArgs()
+            ->once()
+            ->shouldReceive('setCountrys')
+            ->withArgs(function ($arg) {
+                return $arg instanceof ArrayCollection
+                    && $arg->count() == 3
+                    && $arg->contains($this->references[Country::class]['DE'])
+                    && $arg->contains($this->references[Country::class]['FR'])
+                    && $arg->contains($this->references[Country::class]['NL']);
+            })
             ->once();
-
-        $this->sut->shouldReceive('createIrhpPermitApplication')
-            ->with($irhpApplication, $window1)
-            ->once()
-            ->andReturn($irhpPermitApp1)
-            ->shouldReceive('createIrhpPermitApplication')
-            ->with($irhpApplication, $window2)
-            ->once()
-            ->andReturn($irhpPermitApp2);
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($id)
@@ -131,13 +191,7 @@ class UpdateCountriesTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($openWindows);
 
-        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
-            ->with($irhpPermitApp1)
-            ->once()
-            ->shouldReceive('saveOnFlush')
-            ->with($irhpPermitApp2)
-            ->once()
-            ->shouldReceive('deleteOnFlush')
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('deleteOnFlush')
             ->never();
 
         $command = UpdateCountriesCmd::create(
@@ -175,8 +229,6 @@ class UpdateCountriesTest extends CommandHandlerTestCase
         $window3->shouldReceive('getId')
             ->andReturn(103);
 
-        $irhpPermitApp1 = m::mock(IrhpPermitApplication::class);
-
         $irhpPermitApp2 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApp2->shouldReceive('getId')
             ->andReturn(202)
@@ -203,18 +255,16 @@ class UpdateCountriesTest extends CommandHandlerTestCase
             ->andReturn($existingIrhpPermitApplications)
             ->shouldReceive('resetCheckAnswersAndDeclaration')
             ->withNoArgs()
-            ->once();
-
-        $this->sut->shouldReceive('createIrhpPermitApplication')
-            ->with($irhpApplication, $window1)
             ->once()
-            ->andReturn($irhpPermitApp1)
-            ->shouldReceive('createIrhpPermitApplication')
-            ->with($irhpApplication, $window2)
-            ->never()
-            ->shouldReceive('createIrhpPermitApplication')
-            ->with($irhpApplication, $window3)
-            ->never();
+            ->shouldReceive('setCountrys')
+            ->withArgs(function ($arg) {
+                return $arg instanceof ArrayCollection
+                    && $arg->count() == 3
+                    && $arg->contains($this->references[Country::class]['DE'])
+                    && $arg->contains($this->references[Country::class]['FR'])
+                    && $arg->contains($this->references[Country::class]['NL']);
+            })
+            ->once();
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($id)
@@ -237,16 +287,10 @@ class UpdateCountriesTest extends CommandHandlerTestCase
             ->andReturn($openWindows);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
-            ->with($irhpPermitApp1)
-            ->once()
-            ->shouldReceive('saveOnFlush')
             ->with($irhpPermitApp2)
             ->never()
             ->shouldReceive('saveOnFlush')
             ->with($irhpPermitApp3)
-            ->never()
-            ->shouldReceive('deleteOnFlush')
-            ->with($irhpPermitApp1)
             ->never()
             ->shouldReceive('deleteOnFlush')
             ->with($irhpPermitApp2)
@@ -256,6 +300,10 @@ class UpdateCountriesTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($irhpPermitApp3)
             ->shouldReceive('deleteOnFlush')
+            ->with($irhpPermitApp3)
+            ->once();
+
+        $this->mockedSmServices['QaApplicationAnswersClearer']->shouldReceive('clear')
             ->with($irhpPermitApp3)
             ->once();
 

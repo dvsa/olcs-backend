@@ -3,10 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\AnswerSaver;
 
 use Dvsa\Olcs\Api\Domain\Repository\Answer as AnswerRepository;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Generic\Question;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -20,34 +20,35 @@ class GenericAnswerProviderTest extends MockeryTestCase
     public function testGet()
     {
         $questionId = 43;
-        $irhpApplicationId = 124;
+        $qaEntityId = 124;
+        $qaEntityCamelCaseEntityName = 'EntityName';
 
-        $question = m::mock(Question::class);
-        $question->shouldReceive('getId')
+        $qaEntity = m::mock(QaEntityInterface::class);
+        $qaEntity->shouldReceive('getId')
+            ->andReturn($qaEntityId);
+        $qaEntity->shouldReceive('getCamelCaseEntityName')
+            ->andReturn($qaEntityCamelCaseEntityName);
+
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getQaEntity')
+            ->withNoArgs()
+            ->andReturn($qaEntity);
+        $qaContext->shouldReceive('getApplicationStepEntity->getQuestion->getId')
+            ->withNoArgs()
             ->andReturn($questionId);
-        $question->shouldReceive('isCustom')
-            ->andReturn(false);
-
-        $applicationStep = m::mock(ApplicationStep::class);
-        $applicationStep->shouldReceive('getQuestion')
-            ->andReturn($question);
-
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('getId')
-            ->andReturn($irhpApplicationId);
 
         $answer = m::mock(Answer::class);
 
         $answerRepo = m::mock(AnswerRepository::class);
-        $answerRepo->shouldReceive('fetchByQuestionIdAndIrhpApplicationId')
-            ->with($questionId, $irhpApplicationId)
+        $answerRepo->shouldReceive('fetchByQuestionIdAndEntityTypeAndId')
+            ->with($questionId, $qaEntityCamelCaseEntityName, $qaEntityId)
             ->andReturn($answer);
 
         $genericAnswerProvider = new GenericAnswerProvider($answerRepo);
 
         $this->assertSame(
             $answer,
-            $genericAnswerProvider->get($applicationStep, $irhpApplication)
+            $genericAnswerProvider->get($qaContext)
         );
     }
 }

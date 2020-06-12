@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
@@ -128,6 +129,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(true)
+            ->shouldReceive('isOverviewAccessible')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true)
             ->shouldReceive('isSubmittedForConsideration')
             ->once()
             ->withNoArgs()
@@ -210,6 +215,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
                 'isNotYetSubmitted' => true,
+                'isOverviewAccessible' => true,
                 'isSubmittedForConsideration' => false,
                 'isValid' => false,
                 'isFeePaid' => false,
@@ -884,6 +890,73 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpIsOverviewAccessible
+     */
+    public function testIsOverviewAccessible($isNotYetSubmitted, $expected)
+    {
+        $this->sut->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->sut->shouldReceive('isNotYetSubmitted')
+            ->withNoArgs()
+            ->andReturn($isNotYetSubmitted);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->isOverviewAccessible()
+        );
+    }
+
+    public function dpIsOverviewAccessible()
+    {
+        return [
+            [true, true],
+            [false, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsOverviewAccessibleBilateral
+     */
+    public function testIsOverviewAccessibleBilateral($isNotYetSubmitted, $countries, $expected)
+    {
+        $this->sut->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setCountrys($countries);
+
+        $this->sut->shouldReceive('isNotYetSubmitted')
+            ->withNoArgs()
+            ->andReturn($isNotYetSubmitted);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->isOverviewAccessible()
+        );
+    }
+
+    public function dpIsOverviewAccessibleBilateral()
+    {
+        $emptyCountries = new ArrayCollection();
+
+        $populatedCountries = new ArrayCollection(
+            [
+                m::mock(Country::class),
+                m::mock(Country::class)
+            ]
+        );
+
+        return [
+            [false, $emptyCountries, false],
+            [false, $populatedCountries, false],
+            [true, $emptyCountries, false],
+            [true, $populatedCountries, true],
+        ];
+    }
+
+    /**
      * @dataProvider dpIsSubmittedForConsideration
      */
     public function testIsSubmittedForConsideration($irhpPermitTypeId, $status, $expected)
@@ -997,10 +1070,36 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testHasCheckedAnswers()
     {
+        $this->sut->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturn(false);
+
         $this->assertFalse($this->sut->hasCheckedAnswers());
 
         $this->sut->setCheckedAnswers(true);
         $this->assertTrue($this->sut->hasCheckedAnswers());
+    }
+
+    /**
+     * @dataProvider dpHasCheckedAnswersBilateral
+     */
+    public function testHasCheckedAnswersBilateral($checkedAnswers)
+    {
+        $this->sut->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setCheckedAnswers($checkedAnswers);
+
+        $this->assertFalse($this->sut->hasCheckedAnswers());
+    }
+
+    public function dpHasCheckedAnswersBilateral()
+    {
+        return [
+            [true],
+            [false],
+        ];
     }
 
     public function testHasMadeDeclaration()
@@ -1774,12 +1873,12 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestGetSectionCompletion
+     * @dataProvider dpTestGetSectionCompletionMultilateral
      */
-    public function testGetSectionCompletion($data, $expected)
+    public function testGetSectionCompletionMultilateral($data, $expected)
     {
         $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
-        $irhpPermitType->setId($data['irhpPermitTypeId']);
+        $irhpPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
 
         $this->sut->setIrhpPermitType($irhpPermitType);
         $this->sut->setLicence($data['licence']);
@@ -1790,7 +1889,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertSame($expected, $this->sut->getSectionCompletion());
     }
 
-    public function dpTestGetSectionCompletion()
+    public function dpTestGetSectionCompletionMultilateral()
     {
         $licence = m::mock(Licence::class);
         $irhpPermitAppWithoutPermits = m::mock(IrhpPermitApplication::class)->makePartial();
@@ -1799,167 +1898,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitAppWithPermits->setPermitsRequired(10);
 
         return [
-            'Bilateral - no data set' => [
+            'No data set' => [
                 'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                    'licence' => null,
-                    'irhpPermitApplications' => new ArrayCollection(),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'countries' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 0,
-                    'allCompleted' => false,
-                ],
-            ],
-            'Bilateral - licence set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'countries' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 1,
-                    'allCompleted' => false,
-                ],
-            ],
-            'Bilateral - IRHP permit apps with all apps without permits required set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithoutPermits,
-                            $irhpPermitAppWithoutPermits
-                        ]
-                    ),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 2,
-                    'allCompleted' => false,
-                ],
-            ],
-            'Bilateral - IRHP permit apps with one app without permits required set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithoutPermits
-                        ]
-                    ),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 2,
-                    'allCompleted' => false,
-                ],
-            ],
-            'Bilateral - IRHP permit apps with all apps with permits required set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithPermits
-                        ]
-                    ),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 3,
-                    'allCompleted' => false,
-                ],
-            ],
-            'Bilateral - checked answers set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithPermits
-                        ]
-                    ),
-                    'checkedAnswers' => true,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'totalSections' => 5,
-                    'totalCompleted' => 4,
-                    'allCompleted' => false,
-                ],
-            ],
-            'Bilateral - declaration set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithPermits
-                        ]
-                    ),
-                    'checkedAnswers' => true,
-                    'declaration' => true,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'totalSections' => 5,
-                    'totalCompleted' => 5,
-                    'allCompleted' => true,
-                ],
-            ],
-            'Multilateral - no data set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                     'licence' => null,
                     'irhpPermitApplications' => new ArrayCollection(),
                     'checkedAnswers' => false,
@@ -1975,9 +1915,8 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'Multilateral - licence set' => [
+            'Licence set' => [
                 'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(),
                     'checkedAnswers' => false,
@@ -1993,9 +1932,8 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'Multilateral - IRHP permit apps with all apps without permits required set' => [
+            'IRHP permit apps with all apps without permits required set' => [
                 'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -2016,9 +1954,8 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'Multilateral - IRHP permit apps with one app without permits required set' => [
+            'IRHP permit apps with one app without permits required set' => [
                 'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -2039,9 +1976,8 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'Multilateral - IRHP permit apps with all apps with permits required set' => [
+            'IRHP permit apps with all apps with permits required set' => [
                 'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -2062,9 +1998,8 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'Multilateral - checked answers set' => [
+            'Checked answers set' => [
                 'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -2085,9 +2020,8 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'Multilateral - declaration set' => [
+            'Declaration set' => [
                 'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -2108,6 +2042,97 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => true,
                 ],
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetSectionCompletionBilateral
+     */
+    public function testGetSectionCompletionBilateral($data, $expected)
+    {
+        $this->sut->shouldReceive('canBeSubmitted')
+            ->withNoArgs()
+            ->andReturn($data['canBeSubmitted']);
+
+        $this->sut->shouldReceive('getBilateralCountriesAndStatuses')
+            ->withNoArgs()
+            ->andReturn($data['countries']);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
+        $irhpPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $this->sut->setIrhpPermitType($irhpPermitType);
+        $this->sut->setDeclaration($data['declaration']);
+
+        $this->assertSame($expected, $this->sut->getSectionCompletion());
+    }
+
+    public function dpTestGetSectionCompletionBilateral()
+    {
+        $incompleteCountries = [
+            [
+                Entity::COUNTRY_PROPERTY_STATUS => SectionableInterface::SECTION_COMPLETION_COMPLETED
+            ],
+            [
+                Entity::COUNTRY_PROPERTY_STATUS => SectionableInterface::SECTION_COMPLETION_INCOMPLETE
+            ],
+        ];
+
+        $completedCountries = [
+            [
+                Entity::COUNTRY_PROPERTY_STATUS => SectionableInterface::SECTION_COMPLETION_COMPLETED
+            ],
+            [
+                Entity::COUNTRY_PROPERTY_STATUS => SectionableInterface::SECTION_COMPLETION_COMPLETED
+            ],
+        ];
+
+        return [
+            'Countries not completed' => [
+                'data' => [
+                    'countries' => $incompleteCountries,
+                    'declaration' => false,
+                    'canBeSubmitted' => false,
+                ],
+                'expected' => [
+                    'countries' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'submitAndPay' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 3,
+                    'totalCompleted' => 0,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Countries completed, declaration not set' => [
+                'data' => [
+                    'countries' => $completedCountries,
+                    'declaration' => false,
+                    'canBeSubmitted' => false,
+                ],
+                'expected' => [
+                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'submitAndPay' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 3,
+                    'totalCompleted' => 1,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Countries completed, declaration set' => [
+                'data' => [
+                    'countries' => $completedCountries,
+                    'declaration' => true,
+                    'canBeSubmitted' => true,
+                ],
+                'expected' => [
+                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'submitAndPay' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'totalSections' => 3,
+                    'totalCompleted' => 3,
+                    'allCompleted' => true,
+                ],
+            ]
         ];
     }
 
@@ -2337,10 +2362,9 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpCanCheckAnswersForNonApplicationPathEnabled
+     * @dataProvider dpCanCheckAnswersForMultilateral
      */
-    public function testCanCheckAnswersForNonApplicationPathEnabled(
-        $irhpPermitTypeId,
+    public function testCanCheckAnswersForMultilateral(
         $status,
         $permitsRequired,
         $expected
@@ -2348,7 +2372,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->sut->setStatus(new RefData($status));
 
         $irhpPermitType = new IrhpPermitType();
-        $irhpPermitType->setId($irhpPermitTypeId);
+        $irhpPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
         $this->sut->setIrhpPermitType($irhpPermitType);
 
         $licence = m::mock(Licence::class);
@@ -2364,65 +2388,30 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertEquals($expected, $this->sut->canCheckAnswers());
     }
 
-    public function dpCanCheckAnswersForNonApplicationPathEnabled()
+    public function dpCanCheckAnswersForMultilateral()
     {
         return [
-            'Bilateral - not yet submitted - permits required set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Not yet submitted - permits required set' => [
                 'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
                 'permitsRequired' => 10,
                 'expected' => true,
             ],
-            'Bilateral - not yet submitted - permits required not set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Not yet submitted - permits required not set' => [
                 'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
                 'permitsRequired' => null,
                 'expected' => false,
             ],
-            'Bilateral - under consideration - permits required set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Under consideration - permits required set' => [
                 'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
                 'permitsRequired' => 10,
                 'expected' => true,
             ],
-            'Bilateral - withdrawn - permits required set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Withdrawn - permits required set' => [
                 'status' => IrhpInterface::STATUS_WITHDRAWN,
                 'permitsRequired' => 10,
                 'expected' => false,
             ],
-            'Bilateral - cancelled - permits required set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-                'status' => IrhpInterface::STATUS_CANCELLED,
-                'permitsRequired' => 10,
-                'expected' => false,
-            ],
-            'Multilateral - not yet submitted - permits required set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-                'permitsRequired' => 10,
-                'expected' => true,
-            ],
-            'Multilateral - not yet submitted - permits required not set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-                'permitsRequired' => null,
-                'expected' => false,
-            ],
-            'Multilateral - under consideration - permits required set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
-                'permitsRequired' => 10,
-                'expected' => true,
-            ],
-            'Multilateral - withdrawn - permits required set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_WITHDRAWN,
-                'permitsRequired' => 10,
-                'expected' => false,
-            ],
-            'Multilateral - cancelled - permits required set' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+            'Cancelled - permits required set' => [
                 'status' => IrhpInterface::STATUS_CANCELLED,
                 'permitsRequired' => 10,
                 'expected' => false,
@@ -2430,9 +2419,23 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testUpdateCheckAnswers()
+    public function testCanCheckAnswersForBilateral()
+    {
+        $this->sut->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->assertFalse(
+            $this->sut->canCheckAnswers()
+        );
+    }
+
+    public function testUpdateCheckAnswersNotBilateral()
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
         $irhpApplication->shouldReceive('canCheckAnswers')
             ->once()
             ->andReturn(true);
@@ -2442,15 +2445,28 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertTrue($irhpApplication->getCheckedAnswers());
     }
 
-    public function testUpdateCheckAnswersException()
+    public function testUpdateCheckAnswersNotBilateralException()
     {
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage(Entity::ERR_CANT_CHECK_ANSWERS);
 
         $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
         $irhpApplication->shouldReceive('canCheckAnswers')
             ->once()
             ->andReturn(false);
+
+        $irhpApplication->updateCheckAnswers();
+    }
+
+    public function testUpdateCheckAnswers()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
 
         $irhpApplication->updateCheckAnswers();
     }
@@ -2601,10 +2617,9 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpCanMakeDeclarationForNonApplicationPathEnabled
+     * @dataProvider dpCanMakeDeclarationForMultilateral
      */
-    public function testCanMakeDeclarationForNonApplicationPathEnabled(
-        $irhpPermitTypeId,
+    public function testCanMakeDeclarationForMultilateral(
         $status,
         $permitsRequired,
         $checkedAnswers,
@@ -2613,7 +2628,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->sut->setStatus(new RefData($status));
 
         $irhpPermitType = new IrhpPermitType();
-        $irhpPermitType->setId($irhpPermitTypeId);
+        $irhpPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
         $this->sut->setIrhpPermitType($irhpPermitType);
 
         $licence = m::mock(Licence::class);
@@ -2630,93 +2645,96 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertEquals($expected, $this->sut->canMakeDeclaration());
     }
 
-    public function dpCanMakeDeclarationForNonApplicationPathEnabled()
+    public function dpCanMakeDeclarationForMultilateral()
     {
         return [
-            'Bilateral - not yet submitted - permits required set - answers checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Not yet submitted - permits required set - answers checked' => [
                 'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
                 'permitsRequired' => 10,
                 'checkedAnswers' => true,
                 'expected' => true,
             ],
-            'Bilateral - not yet submitted - permits required set - answers not checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Not yet submitted - permits required set - answers not checked' => [
                 'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
                 'permitsRequired' => 10,
                 'checkedAnswers' => null,
                 'expected' => false,
             ],
-            'Bilateral - not yet submitted - permits required not set - answers not checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Not yet submitted - permits required not set - answers not checked' => [
                 'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
                 'permitsRequired' => null,
                 'checkedAnswers' => null,
                 'expected' => false,
             ],
-            'Bilateral - under consideration - permits required set - answers checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Under consideration - permits required set - answers checked' => [
                 'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
                 'permitsRequired' => 10,
                 'checkedAnswers' => true,
                 'expected' => true,
             ],
-            'Bilateral - withdrawn - permits required set - answers checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Withdrawn - permits required set - answers checked' => [
                 'status' => IrhpInterface::STATUS_WITHDRAWN,
                 'permitsRequired' => 10,
                 'checkedAnswers' => true,
                 'expected' => false,
             ],
-            'Bilateral - cancelled - permits required set - answers checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            'Cancelled - permits required set - answers checked' => [
                 'status' => IrhpInterface::STATUS_CANCELLED,
                 'permitsRequired' => 10,
                 'checkedAnswers' => true,
                 'expected' => false,
             ],
-            'Multilateral - not yet submitted - permits required set - answers checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-                'permitsRequired' => 10,
-                'checkedAnswers' => true,
-                'expected' => true,
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanMakeDeclarationForBilateral
+     */
+    public function testCanMakeDeclarationForBilateral($countriesAndStatuses, $canBeUpdated, $expected)
+    {
+        $irhpPermitType = new IrhpPermitType();
+        $irhpPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->sut->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturn($canBeUpdated);
+
+        $this->sut->shouldReceive('getBilateralCountriesAndStatuses')
+            ->withNoArgs()
+            ->andReturn($countriesAndStatuses);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->canMakeDeclaration()
+        );
+    }
+
+    public function dpCanMakeDeclarationForBilateral()
+    {
+        $incompleteCountries = [
+            [
+                Entity::COUNTRY_PROPERTY_STATUS => SectionableInterface::SECTION_COMPLETION_COMPLETED
             ],
-            'Multilateral - not yet submitted - permits required set - answers not checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-                'permitsRequired' => 10,
-                'checkedAnswers' => null,
-                'expected' => false,
+            [
+                Entity::COUNTRY_PROPERTY_STATUS => SectionableInterface::SECTION_COMPLETION_INCOMPLETE
             ],
-            'Multilateral - not yet submitted - permits required not set - answers not checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-                'permitsRequired' => null,
-                'checkedAnswers' => null,
-                'expected' => false,
+        ];
+
+        $completedCountries = [
+            [
+                Entity::COUNTRY_PROPERTY_STATUS => SectionableInterface::SECTION_COMPLETION_COMPLETED
             ],
-            'Multilateral - under consideration - permits required set - answers checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
-                'permitsRequired' => 10,
-                'checkedAnswers' => true,
-                'expected' => true,
+            [
+                Entity::COUNTRY_PROPERTY_STATUS => SectionableInterface::SECTION_COMPLETION_COMPLETED
             ],
-            'Multilateral - withdrawn - permits required set - answers checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_WITHDRAWN,
-                'permitsRequired' => 10,
-                'checkedAnswers' => true,
-                'expected' => false,
-            ],
-            'Multilateral - cancelled - permits required set - answers checked' => [
-                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-                'status' => IrhpInterface::STATUS_CANCELLED,
-                'permitsRequired' => 10,
-                'checkedAnswers' => true,
-                'expected' => false,
-            ],
+        ];
+
+        return [
+            [$incompleteCountries, false, false],
+            [$incompleteCountries, true, false],
+            [$completedCountries, false, false],
+            [$completedCountries, true, true],
         ];
     }
 
@@ -2759,10 +2777,15 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function dpTestGetPermitsRequired()
     {
-        $irhpPermitAppWithoutPermits = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitAppWithoutPermits = m::mock(IrhpPermitApplication::class);
+        $irhpPermitAppWithoutPermits->shouldReceive('countPermitsRequired')
+            ->withNoArgs()
+            ->andReturn(0);
 
-        $irhpPermitAppWithPermits = m::mock(IrhpPermitApplication::class)->makePartial();
-        $irhpPermitAppWithPermits->setPermitsRequired(10);
+        $irhpPermitAppWithPermits = m::mock(IrhpPermitApplication::class);
+        $irhpPermitAppWithPermits->shouldReceive('countPermitsRequired')
+            ->withNoArgs()
+            ->andReturn(10);
 
         return [
             'One Irhp Permit Application, 0 permits required' => [
@@ -2847,13 +2870,13 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication1->shouldReceive('getIssueFeeProductReference')
             ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
-        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication1->shouldReceive('countPermitsRequired')
             ->andReturn($stock1QuantityBefore);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication2->shouldReceive('getIssueFeeProductReference')
             ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
-        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication2->shouldReceive('countPermitsRequired')
             ->andReturn($stock2QuantityBefore);
 
         $irhpApplication->setIrhpPermitApplications(
@@ -2865,13 +2888,13 @@ class IrhpApplicationEntityTest extends EntityTester
         $updatedIrhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
         $updatedIrhpPermitApplication1->shouldReceive('getIssueFeeProductReference')
             ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
-        $updatedIrhpPermitApplication1->shouldReceive('getPermitsRequired')
+        $updatedIrhpPermitApplication1->shouldReceive('countPermitsRequired')
             ->andReturn($stock1QuantityAfter);
 
         $updatedIrhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
         $updatedIrhpPermitApplication2->shouldReceive('getIssueFeeProductReference')
             ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
-        $updatedIrhpPermitApplication2->shouldReceive('getPermitsRequired')
+        $updatedIrhpPermitApplication2->shouldReceive('countPermitsRequired')
             ->andReturn($stock2QuantityAfter);
 
         $irhpApplication->setIrhpPermitApplications(
@@ -3044,37 +3067,37 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication1->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_1');
-        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication1->shouldReceive('countPermitsRequired')
             ->andReturn(7);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication2->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_2');
-        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication2->shouldReceive('countPermitsRequired')
             ->andReturn(3);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication3->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_2');
-        $irhpPermitApplication3->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication3->shouldReceive('countPermitsRequired')
             ->andReturn(0);
 
         $irhpPermitApplication4 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication4->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_3');
-        $irhpPermitApplication4->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication4->shouldReceive('countPermitsRequired')
             ->andReturn(0);
 
         $irhpPermitApplication5 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication5->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_4');
-        $irhpPermitApplication5->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication5->shouldReceive('countPermitsRequired')
             ->andReturn(5);
 
         $irhpPermitApplication6 = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication6->shouldReceive('getIssueFeeProductReference')
             ->andReturn('PRODUCT_REFERENCE_4');
-        $irhpPermitApplication6->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication6->shouldReceive('countPermitsRequired')
             ->andReturn(6);
 
         $irhpApplication = m::mock(Entity::class)->makePartial();
@@ -3111,27 +3134,29 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertEquals(new DateTime($dateString), $irhpApplication->getDateReceived());
     }
 
-    public function testClearAnswers()
+    public function testClearAnswersCanBeUpdated()
     {
-        $entity = m::mock(Entity::class)->makePartial();
+        $this->sut->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnTrue();
 
-        $this->assertFalse($entity->hasCheckedAnswers());
-        $this->assertFalse($entity->hasMadeDeclaration());
+        $this->sut->shouldReceive('resetCheckAnswersAndDeclaration')
+            ->withNoArgs()
+            ->once();
 
-        $entity->setCheckedAnswers(true);
-        $entity->setDeclaration(true);
+        $this->sut->clearAnswers();
+    }
 
-        $this->assertTrue($entity->hasCheckedAnswers());
-        $this->assertTrue($entity->hasMadeDeclaration());
+    public function testClearAnswersCannotBeUpdated()
+    {
+        $this->sut->shouldReceive('canBeUpdated')
+            ->withNoArgs()
+            ->andReturnFalse();
 
-        $entity
-            ->shouldReceive('canBeUpdated')
-            ->andReturn(true);
+        $this->sut->shouldReceive('resetCheckAnswersAndDeclaration')
+            ->never();
 
-        $entity->clearAnswers();
-
-        $this->assertFalse($entity->hasCheckedAnswers());
-        $this->assertFalse($entity->hasMadeDeclaration());
+        $this->sut->clearAnswers();
     }
 
     public function testUpdateLicence()
@@ -3338,10 +3363,104 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('isBilateral')->withNoArgs()->andReturn(true);
         $irhpPermitType->shouldReceive('isMultilateral')->withNoArgs()->andReturn(false);
 
-        $licence = m::mock(Licence::class);
-        $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $this->sut->setIrhpPermitType($irhpPermitType);
 
-        $this->assertEquals([], $entity->getQuestionAnswerData());
+        $countryIT = m::mock(Country::class);
+        $countryIT->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn('IT');
+        $countryIT->shouldReceive('getCountryDesc')
+            ->withNoArgs()
+            ->andReturn('Italy');
+
+        $countryFR = m::mock(Country::class);
+        $countryFR->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn('FR');
+        $countryFR->shouldReceive('getCountryDesc')
+            ->withNoArgs()
+            ->andReturn('France');
+
+        $countryDE = m::mock(Country::class);
+        $countryDE->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn('DE');
+        $countryDE->shouldReceive('getCountryDesc')
+            ->withNoArgs()
+            ->andReturn('Germany');
+
+        $this->sut->setCountrys(
+            new ArrayCollection([$countryIT, $countryFR, $countryDE])
+        );
+
+        $irhpPermitApplicationIT = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplicationIT->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn('IT');
+        $irhpPermitApplicationIT->shouldReceive('getCheckedAnswers')
+            ->withNoArgs()
+            ->andReturnTrue();
+        $irhpPermitApplicationIT->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturnNull();
+
+
+        $irhpPermitApplicationDE = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplicationDE->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn('DE');
+        $irhpPermitApplicationDE->shouldReceive('getCheckedAnswers')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $irhpPermitApplicationDE->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(3322);
+
+        $this->sut->setIrhpPermitApplications(
+            new ArrayCollection([$irhpPermitApplicationIT, $irhpPermitApplicationDE])
+        );
+
+        $expectedCountriesAndStatuses = [
+            [
+                'countryCode' => 'FR',
+                'countryName' => 'France',
+                'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                'irhpPermitApplication' => null
+            ],
+            [
+                'countryCode' => 'DE',
+                'countryName' => 'Germany',
+                'status' => SectionableInterface::SECTION_COMPLETION_INCOMPLETE,
+                'irhpPermitApplication' => 3322
+            ],
+            [
+                'countryCode' => 'IT',
+                'countryName' => 'Italy',
+                'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                'irhpPermitApplication' => null
+            ],
+        ];
+
+        $expectedSectionCompletion = [
+            'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+            'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+            'submitAndPay' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+            'totalSections' => 3,
+            'totalCompleted' => 2,
+            'allCompleted' => false,
+        ];
+
+        $this->sut->shouldReceive('getSectionCompletion')
+            ->withNoArgs()
+            ->andReturn($expectedSectionCompletion);
+
+        $expected = [
+            'countries' => $expectedCountriesAndStatuses,
+            'reviewAndSubmit' => $expectedSectionCompletion,
+        ];
+
+        $this->assertEquals($expected, $this->sut->getQuestionAnswerData());
     }
 
     public function testGetQuestionAnswerMultilateral()
@@ -3394,9 +3513,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive(
-            'getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath'
-        )->once()->with($createdOn)->andReturn(null);
+        $irhpPermitApplication->shouldReceive('getActiveApplicationPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturnNull();
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
@@ -3421,9 +3541,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $applicationPath->shouldReceive('getApplicationSteps')->once()->withNoArgs()->andReturn($applicationSteps);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive(
-            'getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath'
-        )->once()->with($data['createdOn'])->andReturn($applicationPath);
+        $irhpPermitApplication->shouldReceive('getActiveApplicationPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($applicationPath);
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
@@ -3451,7 +3572,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question1Text->shouldReceive('getTranslationKeyFromQuestionKey')->withNoArgs()->andReturn('q1-key');
         $question1Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q1-type');
 
-        $question1 = m::mock(Question::class);
+        $question1 = m::mock(Question::class)->makePartial();
         $question1->shouldReceive('getQuestion')->withNoArgs()->andReturn($question1);
         $question1->shouldReceive('getActiveQuestionText')->with($createdOn)->andReturn($question1Text);
         $question1->shouldReceive('getSlug')->withNoArgs()->andReturn('q1-slug');
@@ -3461,6 +3582,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $step1->shouldReceive('getQuestion')->withNoArgs()->andReturn($question1);
 
         $answer1 = m::mock(Answer::class);
+        $answer1->shouldReceive('getQuestionText')->withNoArgs()->andReturn($question1Text);
         $answer1->shouldReceive('getValue')->withNoArgs()->andReturn('q1-answer');
 
         // q2
@@ -3471,7 +3593,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question2Text->shouldReceive('getTranslationKeyFromQuestionKey')->withNoArgs()->andReturn('q2-key');
         $question2Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q2-type');
 
-        $question2 = m::mock(Question::class);
+        $question2 = m::mock(Question::class)->makePartial();
         $question2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
         $question2->shouldReceive('getActiveQuestionText')->with($createdOn)->andReturn($question2Text);
         $question2->shouldReceive('getSlug')->withNoArgs()->andReturn('q2-slug');
@@ -3481,6 +3603,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $step2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
 
         $answer2 = m::mock(Answer::class);
+        $answer2->shouldReceive('getQuestionText')->withNoArgs()->andReturn($question2Text);
         $answer2->shouldReceive('getValue')->withNoArgs()->andReturn('q2-answer');
 
         return [
@@ -3828,7 +3951,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $permitsRequired = 47;
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getPermitsRequired')
+        $irhpPermitApplication->shouldReceive('countPermitsRequired')
             ->andReturn($permitsRequired);
 
         $question = m::mock(Question::class);
@@ -4064,7 +4187,7 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         $createdOn = new DateTime();
 
-        $question = m::mock(Question::class);
+        $question = m::mock(Question::class)->makePartial();
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(false);
         $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn(null);
 
@@ -4088,7 +4211,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $questionText = m::mock(QuestionText::class);
         $questionText->shouldReceive('getId')->withNoArgs()->once()->andReturn($questionTextId);
 
-        $question = m::mock(Question::class);
+        $question = m::mock(Question::class)->makePartial();
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn($isCustom);
         $question->shouldReceive('getFormControlType')->withNoArgs()->andReturn($formControlType);
         $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn($questionText);
@@ -4112,9 +4235,9 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $questionTextId = 1;
         $questionText = m::mock(QuestionText::class);
-        $questionText->shouldReceive('getId')->withNoArgs()->once()->andReturn($questionTextId);
+        $questionText->shouldReceive('getId')->withNoArgs()->andReturn($questionTextId);
 
-        $question = m::mock(Question::class);
+        $question = m::mock(Question::class)->makePartial();
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn($isCustom);
         $question->shouldReceive('getFormControlType')->withNoArgs()->andReturn($formControlType);
         $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn($questionText);
@@ -4124,6 +4247,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $answer = m::mock(Answer::class);
         $answer->shouldReceive('getValue')->withNoArgs()->once()->andReturn($answer);
+        $answer->shouldReceive('getQuestionText')->withNoArgs()->andReturn($questionText);
 
         $entity = $this->createNewEntity();
         $entity->setCreatedOn($createdOn);
@@ -4561,59 +4685,24 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetAnswerValueByQuestionId()
     {
-        $answer = 'qanda answer';
-
-        $applicationSteps = $this->getAnswerValueByQuestionIdApplicationSteps();
+        $questionId = 47;
+        $answerValue = 'answer value';
 
         $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getActiveApplicationPath->getApplicationSteps')
+
+        $activeApplicationPath = m::mock(ApplicationPath::class);
+        $activeApplicationPath->shouldReceive('getAnswerValueByQuestionId')
+            ->with($questionId, $entity)
+            ->andReturn($answerValue);
+
+        $entity->shouldReceive('getActiveApplicationPath')
             ->withNoArgs()
-            ->once()
-            ->andReturn($applicationSteps);
-        $entity->shouldReceive('getAnswer')
-            ->with($applicationSteps[1], false)
-            ->once()
-            ->andReturn($answer);
+            ->andReturn($activeApplicationPath);
 
         $this->assertEquals(
-            $answer,
-            $entity->getAnswerValueByQuestionId(40)
+            $answerValue,
+            $entity->getAnswerValueByQuestionId($questionId)
         );
-    }
-
-    public function testGetAnswerValueByQuestionIdNull()
-    {
-        $applicationSteps = $this->getAnswerValueByQuestionIdApplicationSteps();
-
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getActiveApplicationPath->getApplicationSteps')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($applicationSteps);
-
-        $this->assertNull(
-            $entity->getAnswerValueByQuestionId(50)
-        );
-    }
-
-    private function getAnswerValueByQuestionIdApplicationSteps()
-    {
-        $applicationStep1 = m::mock(ApplicationStep::class);
-        $applicationStep1->shouldReceive('getQuestion->getId')
-            ->withNoArgs()
-            ->andReturn(38);
-
-        $applicationStep2 = m::mock(ApplicationStep::class);
-        $applicationStep2->shouldReceive('getQuestion->getId')
-            ->withNoArgs()
-            ->andReturn(40);
-
-        $applicationStep3 = m::mock(ApplicationStep::class);
-        $applicationStep3->shouldReceive('getQuestion->getId')
-            ->withNoArgs()
-            ->andReturn(42);
-
-        return new ArrayCollection([$applicationStep1, $applicationStep2, $applicationStep3]);
     }
 
     /**
@@ -5589,62 +5678,23 @@ class IrhpApplicationEntityTest extends EntityTester
      */
     public function testGetMotExpiryDate($isTrailer, $questionId)
     {
-        $expiryDate = date('Y-m-d');
-        $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->expects()->isCertificateOfRoadworthiness()->withNoArgs()->andReturnTrue();
-        $irhpPermitType->expects()->isCertificateOfRoadworthinessTrailer()->withNoArgs()->andReturn($isTrailer);
-        $createdOn = '2018-12-25';
+        $expiryDate = '2020-08-01';
 
-        $entity = $this->createNewEntity(null, null, $irhpPermitType);
-        $entity->setCreatedOn($createdOn);
-
-        $formControlType = new RefData(Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE);
-        $activeQuestionTextId = 1111;
-        $activeQuestionText = m::mock(QuestionText::class);
-        $activeQuestionText->expects('getId')->withNoArgs()->andReturn($activeQuestionTextId);
-
-        $answer = m::mock(Answer::class);
-        $answer->expects('getValue')->withNoArgs()->andReturn($expiryDate);
-        $answers = new ArrayCollection([$activeQuestionTextId => $answer]);
-
-        $question2 = m::mock(Question::class);
-        $question2->expects('getId')->andReturn($questionId);
-        $question2->expects('isCustom')->withNoArgs()->andReturnTrue();
-        $question2->expects('getFormControlType')->andReturn($formControlType);
-        $question2->expects('getActiveQuestionText')
-            ->with(m::type(DateTime::class))
-            ->andReturn($activeQuestionText);
-
-        $applicationStep1 = m::mock(ApplicationStep::class);
-        $applicationStep1->shouldReceive('getQuestion->getId')
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isCertificateOfRoadworthiness')
             ->withNoArgs()
-            ->andReturn(888888);
-
-        $applicationStep2 = m::mock(ApplicationStep::class);
-        $applicationStep2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
-        $applicationStep2->shouldReceive('getQuestion->getId')
+            ->andReturnTrue();
+        $entity->shouldReceive('isCertificateOfRoadworthinessTrailer')
             ->withNoArgs()
-            ->andReturn($questionId);
+            ->andReturn($isTrailer);
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with($questionId)
+            ->andReturn($expiryDate);
 
-        $applicationStep3 = m::mock(ApplicationStep::class);
-        $applicationStep3->shouldReceive('getQuestion->getId')
-            ->withNoArgs()
-            ->andReturn(999999);
-
-        $applicationSteps = new ArrayCollection([$applicationStep1, $applicationStep2, $applicationStep3]);
-
-        $applicationPath = m::mock(ApplicationPath::class);
-        $applicationPath->expects('getApplicationSteps')->withNoArgs()->andReturn($applicationSteps);
-
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->expects('getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath')
-            ->with(m::type(DateTime::class))
-            ->andReturn($applicationPath);
-
-        $entity->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
-        $entity->setAnswers($answers);
-
-        self::assertEquals($expiryDate, $entity->getMotExpiryDate());
+        $this->assertEquals(
+            $expiryDate,
+            $entity->getMotExpiryDate()
+        );
     }
 
     public function dpTestGetMotExpiryDate()
@@ -6094,6 +6144,221 @@ class IrhpApplicationEntityTest extends EntityTester
                 $validTo,
                 new DateTime('first day of December next year')
             ],
+        ];
+    }
+
+    public function testOnSubmitApplicationStep()
+    {
+        $this->sut->shouldReceive('resetCheckAnswersAndDeclaration')
+            ->withNoArgs()
+            ->once();
+
+        $this->sut->onSubmitApplicationStep();
+    }
+
+    public function testGetAdditionalQaViewData()
+    {
+        $applicationRef = 'OB12345 / 100001';
+
+        $this->sut->shouldReceive('getApplicationRef')
+            ->withNoArgs()
+            ->andReturn($applicationRef);
+
+        $applicationStep = m::mock(ApplicationStep::class);
+
+        $expected = [
+            'applicationReference' => $applicationRef
+        ];
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->getAdditionalQaViewData($applicationStep)
+        );
+    }
+
+    /**
+     * @dataProvider dpIsApplicationPathEnabled
+     */
+    public function testIsApplicationPathEnabled($isEnabled)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isApplicationPathEnabled')
+            ->withNoArgs()
+            ->andReturn($isEnabled);
+
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $isEnabled,
+            $this->sut->isApplicationPathEnabled()
+        );
+    }
+
+    public function dpIsApplicationPathEnabled()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    public function testGetRepositoryName()
+    {
+        $this->assertEquals(
+            'IrhpApplication',
+            $this->sut->getRepositoryName()
+        );
+    }
+
+    /**
+     * @dataProvider dpGetIrhpPermitApplicationIdForCountry
+     */
+    public function testGetIrhpPermitApplicationIdForCountry($result, $countryCode)
+    {
+        $countries = [
+            [
+                'countryCode' => 'FR',
+                'countryName' => 'France',
+                'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                'irhpPermitApplication' => null
+            ],
+            [
+                'countryCode' => 'DE',
+                'countryName' => 'Germany',
+                'status' => SectionableInterface::SECTION_COMPLETION_INCOMPLETE,
+                'irhpPermitApplication' => 3322
+            ],
+            [
+                'countryCode' => 'IT',
+                'countryName' => 'Italy',
+                'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                'irhpPermitApplication' => null
+            ]
+        ];
+
+        $this->sut->shouldReceive('getBilateralCountriesAndStatuses')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($countries);
+
+        $countryEntity =  m::mock(Country::class);
+
+        $countryEntity->shouldReceive('getId')->atMost(3)->withNoArgs()->andReturn($countryCode);
+        $this->assertEquals($result, $this->sut->getIrhpPermitApplicationIdForCountry($countryEntity));
+    }
+
+    public function dpGetIrhpPermitApplicationIdForCountry()
+    {
+        return [
+            [null, 'NO'],
+            [3322, 'DE'],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetIrhpPermitApplicationsByCountryName
+     */
+    public function testGetIrhpPermitApplicationsByCountryName($irhpPermitApplications, $expected)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturnTrue();
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $entity->setIrhpPermitApplications($irhpPermitApplications);
+
+        $this->assertEquals($expected->getValues(), $entity->getIrhpPermitApplicationsByCountryName()->getValues());
+    }
+
+    public function dpGetIrhpPermitApplicationsByCountryName()
+    {
+        $irhpPermitApplicationA = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplicationA->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getCountryDesc')
+            ->withNoArgs()
+            ->andReturn('A');
+
+        $irhpPermitApplicationB = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplicationB->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getCountryDesc')
+            ->withNoArgs()
+            ->andReturn('B');
+
+        $irhpPermitApplicationC = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplicationC->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getCountryDesc')
+            ->withNoArgs()
+            ->andReturn('C');
+
+        return [
+            [
+                new ArrayCollection([$irhpPermitApplicationA, $irhpPermitApplicationB, $irhpPermitApplicationB, $irhpPermitApplicationC]),
+                new ArrayCollection([$irhpPermitApplicationA, $irhpPermitApplicationB, $irhpPermitApplicationB, $irhpPermitApplicationC])
+            ],
+            [
+                new ArrayCollection([$irhpPermitApplicationC, $irhpPermitApplicationB, $irhpPermitApplicationB, $irhpPermitApplicationA]),
+                new ArrayCollection([$irhpPermitApplicationA, $irhpPermitApplicationB, $irhpPermitApplicationB, $irhpPermitApplicationC])
+            ],
+        ];
+    }
+
+    public function testGetIrhpPermitApplicationsByCountryNameForUnsupportedType()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'Cannot get IrhpPermitApplications by country name for irhpPermitType ' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT
+        );
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity
+            ->shouldReceive('isBilateral')
+            ->andReturnFalse()
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT);
+
+        $entity->getIrhpPermitApplicationsByCountryName();
+    }
+
+    /**
+     * @dataProvider dpGetIrhpPermitApplicationByStockCountryId
+     */
+    public function testGetIrhpPermitApplicationByStockCountryId($irhpPermitApplications, $countryId, $expected)
+    {
+        $entity = $this->createNewEntity();
+        $entity->setIrhpPermitApplications($irhpPermitApplications);
+
+        $this->assertSame(
+            $expected,
+            $entity->getIrhpPermitApplicationByStockCountryId($countryId)
+        );
+    }
+
+    public function dpGetIrhpPermitApplicationByStockCountryId()
+    {
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn('FR');
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn('DE');
+
+        $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn('CH');
+
+        $irhpPermitApplications = new ArrayCollection(
+            [
+                $irhpPermitApplication1,
+                $irhpPermitApplication2,
+                $irhpPermitApplication3
+            ]
+        );
+
+        return [
+            [$irhpPermitApplications, 'FR', $irhpPermitApplication1],
+            [$irhpPermitApplications, 'DE', $irhpPermitApplication2],
+            [$irhpPermitApplications, 'CH', $irhpPermitApplication3],
+            [$irhpPermitApplications, 'NO', null],
         ];
     }
 }

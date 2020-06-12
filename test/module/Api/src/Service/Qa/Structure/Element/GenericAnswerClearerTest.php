@@ -5,8 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\Answer as AnswerRepository;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerClearer;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Mockery as m;
@@ -19,9 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class GenericAnswerClearerTest extends MockeryTestCase
 {
-    private $applicationStep;
-
-    private $irhpApplication;
+    private $qaContext;
 
     private $genericAnswerProvider;
 
@@ -31,9 +28,7 @@ class GenericAnswerClearerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->applicationStep = m::mock(ApplicationStep::class);
-
-        $this->irhpApplication = m::mock(IrhpApplication::class);
+        $this->qaContext = m::mock(QaContext::class);
 
         $this->genericAnswerProvider = m::mock(GenericAnswerProvider::class);
 
@@ -49,26 +44,30 @@ class GenericAnswerClearerTest extends MockeryTestCase
     {
         $answer = m::mock(Answer::class);
 
+        $this->qaContext->shouldReceive('getQaEntity->getAnswers->remove')
+            ->with($answer)
+            ->once();
+
         $this->genericAnswerProvider->shouldReceive('get')
-            ->with($this->applicationStep, $this->irhpApplication)
+            ->with($this->qaContext)
             ->andReturn($answer);
 
         $this->answerRepo->shouldReceive('delete')
             ->with($answer)
             ->once();
 
-        $this->genericAnswerClearer->clear($this->applicationStep, $this->irhpApplication);
+        $this->genericAnswerClearer->clear($this->qaContext);
     }
 
     public function testClearDeleteNotRequired()
     {
         $this->genericAnswerProvider->shouldReceive('get')
-            ->with($this->applicationStep, $this->irhpApplication)
+            ->with($this->qaContext)
             ->andThrow(new NotFoundException());
 
         $this->answerRepo->shouldReceive('delete')
             ->never();
 
-        $this->genericAnswerClearer->clear($this->applicationStep, $this->irhpApplication);
+        $this->genericAnswerClearer->clear($this->qaContext);
     }
 }
