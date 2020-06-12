@@ -18,6 +18,8 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 {
     protected $mockOpenAmUserService;
 
+    protected $mockConsole;
+
     public function setUp()
     {
         $this->sut = new PopulateLastLoginFromOpenAm();
@@ -26,6 +28,8 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $this->mockRepo('Document', Repository\Document::class);
 
         $this->mockOpenAmUserService = m::mock(User::class);
+
+        $this->mockConsole = m::mock();
 
         $this->mockedSmServices = [
             UserInterface::class => $this->mockOpenAmUserService
@@ -45,14 +49,21 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $params = [
             'isLiveRun' => true,
             'batchSize' => $batchSize,
-            'progressBar' => $this->makeProgressBar()
+            'progressBar' => $this->makeProgressBar(),
+            'console' => $this->mockConsole
         ];
 
         $expectedOutputMessages = [
+            "This run will try to process 4 users",
             "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
+            "[Batch 1] Sending updates to database",
+            "[Batch 1] Update complete",
             "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
-            "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'"
+            "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'",
+            "[Batch 2] Sending updates to database",
+            "[Batch 2] Update complete",
+            "Processed 4 users"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -68,12 +79,23 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
         $params = [
             'isLiveRun' => true,
-            'batchSize' => $batchSize
+            'batchSize' => $batchSize,
+            'console' => $this->mockConsole
         ];
 
         $expectedOutputMessages = [
+            "This run will try to process 4 users",
             "[Batch 1] Unable to process batch. Error : Exception from OpenAM",
-            "[Batch 2] Unable to process batch. Error : Exception from OpenAM"
+            "[Batch 1] Users not processed : [
+    \"loginId-1\",
+    \"loginId-2\"
+]",
+            "[Batch 2] Unable to process batch. Error : Exception from OpenAM",
+            "[Batch 2] Users not processed : [
+    \"loginId-3\",
+    \"loginId-4\"
+]",
+            "Processed 4 users"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -91,12 +113,21 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
         $params = [
             'isLiveRun' => true,
-            'batchSize' => $batchSize
+            'batchSize' => $batchSize,
+            'console' => $this->mockConsole
         ];
 
         $expectedOutputMessages = [
+            "This run will try to process 4 users",
+            "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] Could not find user 'loginId-2' in OpenAM",
-            "[Batch 2] Could not find user 'loginId-4' in OpenAM"
+            "[Batch 1] Sending updates to database",
+            "[Batch 1] Update complete",
+            "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
+            "[Batch 2] Could not find user 'loginId-4' in OpenAM",
+            "[Batch 2] Sending updates to database",
+            "[Batch 2] Update complete",
+            "Processed 4 users"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -114,11 +145,20 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $params = [
             'isLiveRun' => true,
             'batchSize' => $batchSize,
+            'console' => $this->mockConsole
         ];
 
         $expectedOutputMessages = [
+            "This run will try to process 4 users",
+            "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] No last login time found for user 'loginId-2'",
-            "[Batch 2] No last login time found for user 'loginId-4'"
+            "[Batch 1] Sending updates to database",
+            "[Batch 1] Update complete",
+            "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-01 10:00:00'",
+            "[Batch 2] No last login time found for user 'loginId-4'",
+            "[Batch 2] Sending updates to database",
+            "[Batch 2] Update complete",
+            "Processed 4 users"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -136,14 +176,21 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $params = [
             'isLiveRun' => true,
             'batchSize' => $batchSize,
-            'limit' => 4
+            'limit' => 4,
+            'console' => $this->mockConsole
         ];
 
         $expectedOutputMessages = [
+            "This run will try to process 4 users",
             "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
+            "[Batch 1] Sending updates to database",
+            "[Batch 1] Update complete",
             "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
-            "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'"
+            "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'",
+            "[Batch 2] Sending updates to database",
+            "[Batch 2] Update complete",
+            "Processed 4 users"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -162,12 +209,17 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $params = [
             'isLiveRun' => true,
             'batchSize' => $batchSize,
-            'limit' => $limit
+            'limit' => $limit,
+            'console' => $this->mockConsole
         ];
 
         $expectedOutputMessages = [
+            "Limiting run to process 2 users",
             "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
-            "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'"
+            "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
+            "[Batch 1] Sending updates to database",
+            "[Batch 1] Update complete",
+            "Processed 2 users"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -188,16 +240,21 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $params = [
             'isLiveRun' => false,
             'batchSize' => $batchSize,
-            'progressBar' => $this->makeProgressBar()
+            'progressBar' => $this->makeProgressBar(),
+            'console' => $this->mockConsole
         ];
 
         $expectedOutputMessages = [
+            "This run will try to process 4 users",
             "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
             "[Batch 1] Dry run mode. Skipping database update",
+            "[Batch 1] Update complete",
             "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
             "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'",
-            "[Batch 2] Dry run mode. Skipping database update"
+            "[Batch 2] Dry run mode. Skipping database update",
+            "[Batch 2] Update complete",
+            "Processed 4 users"
         ];
 
         $this->runCommandAndAssertOutput($params, $expectedOutputMessages);
@@ -209,13 +266,19 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
      */
     protected function runCommandAndAssertOutput(array $params, array $expectedMessages): void
     {
-        $result = $this->sut->handleCommand(PopulateLastLoginFromOpenAmCmd::create($params))->toArray();
+        $this->mockConsole->shouldReceive("writeLine")
+            ->with(m::on(function ($param) use ($expectedMessages) {
 
-        $messages = $result["messages"];
+                foreach ($expectedMessages as $expectedMessage) {
+                    if (empty($param) || strpos($param, $expectedMessage)) {
+                        return true;
+                    }
+                }
 
-        foreach ($expectedMessages as $expectedMessage) {
-            $this->assertContains($expectedMessage, $messages);
-        }
+                return false;
+            }));
+
+        $this->sut->handleCommand(PopulateLastLoginFromOpenAmCmd::create($params))->toArray();
     }
 
     /**

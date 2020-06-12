@@ -580,6 +580,8 @@ class BatchController extends AbstractCliController
             $params['progressBar'] = $progressBar;
         }
 
+        $params['console'] = $this->getConsole();
+
         $this->handleExitStatus(
             $this->handleCommand([PopulateLastLoginFromOpenAm::create($params)])
         );
