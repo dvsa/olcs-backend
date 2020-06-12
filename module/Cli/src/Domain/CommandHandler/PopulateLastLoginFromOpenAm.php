@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Zend\Console\Adapter\AdapterInterface as ConsoleAdapter;
 
 final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implements OpenAmUserAwareInterface
 {
@@ -17,6 +18,11 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
     const DEFAULT_BATCH_SIZE = 50;
 
     protected $repoServiceName = 'User';
+
+    /**
+     * @var ConsoleAdapter
+     */
+    protected $console;
 
     /**
      * Handle command
@@ -32,9 +38,12 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
         $batchSize = $this->getBatchSize($command);
         $limit = $command->getLimit();
         $progressBar = $command->getProgressBar();
+        $this->console = $command->getConsole();
 
         $iterableResult = $this->getRepo()->fetchUsersWithoutLastLoginTime();
         $numberOfUsersToProcess = $this->getNumberOfUsersToProcess($command);
+
+        $this->output("");
 
         if ($progressBar) {
             $progressBar->start($numberOfUsersToProcess);
@@ -58,8 +67,8 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
                 try {
                     $this->processBatch($batchedUsers, $batchNumber, $isLiveRun);
                 } catch (\Exception $exception) {
-                    $this->result->addMessage("[Batch $batchNumber] Unable to process batch. Error : " . $exception->getMessage());
-                    $this->result->addMessage("[Batch $batchNumber] Users not processed : " . $this->getLoginIds($batchedUsers));
+                    $this->output("[Batch $batchNumber] Unable to process batch. Error : " . $exception->getMessage());
+                    $this->output("[Batch $batchNumber] Users not processed : " . $this->getLoginIds($batchedUsers));
                     continue;
                 } finally {
                     $batchedUsers = [];
@@ -76,7 +85,8 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
             $progressBar->finish();
         }
 
-        $this->result->addMessage("Processed $totalCount users");
+        $this->output("");
+        $this->output("Processed $totalCount users");
 
         return $this->result;
     }
@@ -102,9 +112,9 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
                 if (!empty($lastLoginTime)) {
                     $user->setLastLoginAt($lastLoginTime);
                     $this->getRepo()->saveOnFlush($user);
-                    $this->result->addMessage("[Batch $batchNumber] Setting last login time for user '{$user->getLoginId()}' to '$lastLoginTime'");
+                    $this->output("[Batch $batchNumber] Setting last login time for user '{$user->getLoginId()}' to '$lastLoginTime'");
                 } else {
-                    $this->result->addMessage("[Batch $batchNumber] No last login time found for user '{$user->getLoginId()}'");
+                    $this->output("[Batch $batchNumber] No last login time found for user '{$user->getLoginId()}'");
                 }
 
                 unset($users[$pid]);
@@ -119,11 +129,12 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
      *
      * @param array $users
      * @param int $batchNumber
+     * @throws \Exception
      */
     private function reportAnomalies(array $users, int $batchNumber)
     {
         foreach ($users as $user) {
-            $this->result->addMessage("[Batch $batchNumber] Could not find user '{$user->getLoginId()}' in OpenAM");
+            $this->output("[Batch $batchNumber] Could not find user '{$user->getLoginId()}' in OpenAM");
         }
     }
 
@@ -153,10 +164,10 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
         $numberOfUsersToProcess = $this->getRepo()->fetchUsersCountWithoutLastLoginTime();
         $limit = $command->getLimit();
         if ($limit > 0 && $limit < $numberOfUsersToProcess) {
-            $this->result->addMessage("Limiting run to process $limit users");
+            $this->output("Limiting run to process $limit users");
             $numberOfUsersToProcess = $limit;
         } else {
-            $this->result->addMessage("This run will try to process $numberOfUsersToProcess users");
+            $this->output("This run will try to process $numberOfUsersToProcess users");
         }
 
         return $numberOfUsersToProcess;
@@ -171,6 +182,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
      */
     protected function processBatch(array $batchedUsers, int $batchNumber, bool $isLiveRun): void
     {
+        $this->output("");
         $openAmResult = $this->getOpenAmUser()->fetchUsers(array_keys($batchedUsers));
 
         $unprocessedUsers = $this->updateUsers($openAmResult, $batchedUsers, $batchNumber);
@@ -180,15 +192,16 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
         }
 
         if ($isLiveRun) {
-            $this->result->addMessage("[Batch $batchNumber] Sending updates to database");
+            $this->output("[Batch $batchNumber] Sending updates to database");
             $this->getRepo()->flushAll();
         } else {
-            $this->result->addMessage("[Batch $batchNumber] Dry run mode. Skipping database update");
+            $this->output("[Batch $batchNumber] Dry run mode. Skipping database update");
         }
 
         $this->getRepo()->clear();
 
-        $this->result->addMessage("[Batch $batchNumber] Update complete");
+        $this->output("[Batch $batchNumber] Update complete");
+        $this->output("");
     }
 
     /**
@@ -203,5 +216,20 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
         }
 
         return json_encode($loginIds, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * @param $message
+     * @throws \Exception
+     */
+    protected function output($message)
+    {
+        if ($this->console) {
+            if ($message != "") {
+                $message = (new \DateTime())->format(\DateTime::W3C) . ' ' . $message;
+            }
+
+            $this->console->writeLine($message);
+        }
     }
 }
