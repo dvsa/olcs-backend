@@ -50,7 +50,7 @@ class UpdateCountriesTest extends CommandHandlerTestCase
     public function testHandleCommandWhenCannotUpdate()
     {
         $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
-        $this->expectExceptionMessage('IRHP application cannot be updated.');
+        $this->expectExceptionMessage('At least one country must be selected.');
 
         $id = 1;
         $countries = [];
@@ -63,53 +63,6 @@ class UpdateCountriesTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->never()
-            ->shouldReceive('saveOnFlush')
-            ->never()
-            ->shouldReceive('flushAll')
-            ->never();
-
-        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByCountry')
-            ->never();
-
-        $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
-            ->never()
-            ->shouldReceive('deleteOnFlush')
-            ->never();
-
-        $command = UpdateCountriesCmd::create(
-            [
-                'id' => $id,
-                'countries' => $countries,
-            ]
-        );
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage IRHP application cannot be updated.
-     */
-    public function testHandleCommandWhenCannotUpdate()
-    {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
-        $this->expectExceptionMessage('IRHP application cannot be updated.');
-
-        $id = 1;
-        $countries = ['DE', 'FR', 'NL'];
-
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('canUpdateCountries')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(false)
-            ->shouldReceive('getIrhpPermitApplications')
-            ->never();
-
-        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
-            ->with($id)
-            ->once()
-            ->andReturn($irhpApplication)
             ->shouldReceive('saveOnFlush')
             ->never()
             ->shouldReceive('flushAll')
