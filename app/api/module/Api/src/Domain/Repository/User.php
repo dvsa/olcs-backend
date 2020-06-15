@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr;
@@ -394,5 +395,30 @@ class User extends AbstractRepository
         $qb->andWhere($qb->expr()->isNull($this->alias . '.lastLoginAt'));
 
         return $qb->getQuery()->iterate();
+    }
+
+    /**
+     * @param Entity $user
+     * @param DateTime $lastLoginAt
+     * @param Entity $lastModifiedBy
+     * @return mixed
+     * @throws \Exception
+     */
+    public function updateLastLogin(Entity $user, DateTime $lastLoginAt, Entity $lastModifiedBy)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb
+            ->update(Entity::class, 'u')
+            ->set('u.lastLoginAt', ':lastLoginAt')
+            ->set('u.lastModifiedOn', ':lastModifiedOn')
+            ->set('u.lastModifiedBy', ':lastModifiedBy')
+            ->andWhere($qb->expr()->eq('u.id', ':id'))
+            ->setParameter('lastLoginAt', $lastLoginAt)
+            ->setParameter('id', $user->getId())
+            ->setParameter('lastModifiedBy', $lastModifiedBy->getId())
+            ->setParameter('lastModifiedOn', new DateTime());
+
+        return $qb->getQuery()->execute();
     }
 }
