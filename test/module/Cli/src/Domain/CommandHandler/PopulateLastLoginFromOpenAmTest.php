@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use ArrayIterator;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Service\OpenAm\User;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Cli\Domain\Command\PopulateLastLoginFromOpenAm as PopulateLastLoginFromOpenAmCmd;
@@ -13,10 +14,13 @@ use Exception;
 use Mockery as m;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
+use ZfcRbac\Service\AuthorizationService;
 
 class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 {
     protected $mockOpenAmUserService;
+
+    protected $mockAuthService;
 
     protected $mockConsole;
 
@@ -28,12 +32,19 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $this->mockRepo('Document', Repository\Document::class);
 
         $this->mockOpenAmUserService = m::mock(User::class);
-
+        $this->mockAuthService = m::mock(AuthorizationService::class);
         $this->mockConsole = m::mock();
 
         $this->mockedSmServices = [
-            UserInterface::class => $this->mockOpenAmUserService
+            UserInterface::class => $this->mockOpenAmUserService,
+            AuthorizationService::class => $this->mockAuthService
         ];
+
+        $mockSystemUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
+        $this->repoMap['User']
+            ->shouldReceive('fetchById')
+            ->with(PidIdentityProvider::SYSTEM_TEAM)
+            ->andReturn($mockSystemUser);
 
         parent::setUp();
     }
@@ -43,7 +54,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $totalNumberOfUsers = 4;
         $batchSize = 2;
 
-        $this->mockUserRepoThatSavesAllUsers($totalNumberOfUsers, $batchSize);
+        $this->mockUserRepoThatSavesAllUsers($totalNumberOfUsers);
         $this->mockOpenAMWithUsers();
 
         $params = [
@@ -57,11 +68,9 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
             "This run will try to process 4 users",
             "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
-            "[Batch 1] Sending updates to database",
             "[Batch 1] Update complete",
             "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
             "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'",
-            "[Batch 2] Sending updates to database",
             "[Batch 2] Update complete",
             "Processed 4 users"
         ];
@@ -121,11 +130,9 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
             "This run will try to process 4 users",
             "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] Could not find user 'loginId-2' in OpenAM",
-            "[Batch 1] Sending updates to database",
             "[Batch 1] Update complete",
             "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
             "[Batch 2] Could not find user 'loginId-4' in OpenAM",
-            "[Batch 2] Sending updates to database",
             "[Batch 2] Update complete",
             "Processed 4 users"
         ];
@@ -152,11 +159,9 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
             "This run will try to process 4 users",
             "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] No last login time found for user 'loginId-2'",
-            "[Batch 1] Sending updates to database",
             "[Batch 1] Update complete",
             "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-01 10:00:00'",
             "[Batch 2] No last login time found for user 'loginId-4'",
-            "[Batch 2] Sending updates to database",
             "[Batch 2] Update complete",
             "Processed 4 users"
         ];
@@ -169,7 +174,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $totalNumberOfUsers = 4;
         $batchSize = 2;
 
-        $this->mockUserRepoThatSavesAllUsers($totalNumberOfUsers, $batchSize);
+        $this->mockUserRepoThatSavesAllUsers($totalNumberOfUsers);
 
         $this->mockOpenAMWithUsers();
 
@@ -184,11 +189,9 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
             "This run will try to process 4 users",
             "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
-            "[Batch 1] Sending updates to database",
             "[Batch 1] Update complete",
             "[Batch 2] Setting last login time for user 'loginId-3' to '2020-01-02 10:00:00'",
             "[Batch 2] Setting last login time for user 'loginId-4' to '2020-01-02 11:00:00'",
-            "[Batch 2] Sending updates to database",
             "[Batch 2] Update complete",
             "Processed 4 users"
         ];
@@ -217,7 +220,6 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
             "Limiting run to process 2 users",
             "[Batch 1] Setting last login time for user 'loginId-1' to '2020-01-01 10:00:00'",
             "[Batch 1] Setting last login time for user 'loginId-2' to '2020-01-01 11:00:00'",
-            "[Batch 1] Sending updates to database",
             "[Batch 1] Update complete",
             "Processed 2 users"
         ];
@@ -232,8 +234,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 
         $this->mockUserRepoWithUsers($totalNumberOfUsers);
 
-        $this->repoMap['User']->shouldReceive('saveOnFlush')->times($totalNumberOfUsers);
-        $this->repoMap['User']->shouldReceive('flushAll')->never();
+        $this->repoMap['User']->shouldReceive('updateLastLogin')->never();
 
         $this->mockOpenAMWithUsers();
 
@@ -312,12 +313,13 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
      * @param int $totalNumberOfUsers
      * @param int $batchSize
      */
-    protected function mockUserRepoThatSavesAllUsers(int $totalNumberOfUsers, int $batchSize): void
+    protected function mockUserRepoThatSavesAllUsers(int $totalNumberOfUsers): void
     {
         $this->mockUserRepoWithUsers($totalNumberOfUsers);
 
-        $this->repoMap['User']->shouldReceive('saveOnFlush')->times($totalNumberOfUsers);
-        $this->repoMap['User']->shouldReceive('flushAll')->times($batchSize);
+        $this->repoMap['User']
+            ->shouldReceive('updateLastLogin')
+            ->times($totalNumberOfUsers);
     }
 
     /**
@@ -329,8 +331,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
     {
         $this->mockUserRepoWithUsers($totalNumberOfUsers);
 
-        $this->repoMap['User']->shouldReceive('saveOnFlush')->times($usersSaved);
-        $this->repoMap['User']->shouldReceive('flushAll')->times($batchSize);
+        $this->repoMap['User']->shouldReceive('updateLastLogin')->times($usersSaved);
     }
 
     /**
@@ -373,8 +374,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $this->repoMap['User']->shouldReceive('fetchUsersWithoutLastLoginTime')
             ->andReturn($this->iterableListOfUsers($totalNumberOfUsers));
 
-        $this->repoMap['User']->shouldReceive('saveOnFlush')->times($limit);
-        $this->repoMap['User']->shouldReceive('flushAll')->times(1);
+        $this->repoMap['User']->shouldReceive('updateLastLogin')->times($limit);
         $this->repoMap['User']->shouldReceive('clear')->times(1);
     }
 
