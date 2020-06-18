@@ -3,8 +3,8 @@
 return [
     'journey_multiple' => 'Multiple journeys',
     'journey_single' => 'Single journeys',
-    'permits.bilateral.norway.period.1' => '1 January 2021 and 30 September 2021',
-    'permits.bilateral.norway.period.2' => '1 October 2021 and 31 January 2022',
+    'permits.bilateral.norway.period.1' => '1 January 2021 to 30 September 2021',
+    'permits.bilateral.norway.period.2' => '1 October 2021 to 31 January 2022',
     'qanda.bilaterals.cabotage.answer.cabotage-only' => 'I only need permits for cabotage',
     'qanda.bilaterals.cabotage.answer.standard-only' => 'No, I only need standard permits',
     'qanda.bilaterals.cabotage.answer.standard-and-cabotage' => 'I need standard and cabotage permits',
