@@ -28,7 +28,7 @@ class SelfservePageGeneratorTest extends MockeryTestCase
     {
         $selfservePage = m::mock(SelfservePage::class);
 
-        $questionShortKey = 'How will you use the permits';
+        $questionKey = 'How will you use the permits';
 
         $additionalQaViewData = [
             'property1' => 'value1',
@@ -42,9 +42,9 @@ class SelfservePageGeneratorTest extends MockeryTestCase
         $questionText = m::mock(QuestionText::class);
 
         $questionTextEntity = m::mock(QuestionTextEntity::class);
-        $questionTextEntity->shouldReceive('getQuestionShortKey')
+        $questionTextEntity->shouldReceive('getTranslationKeyFromQuestionKey')
             ->withNoArgs()
-            ->andReturn($questionShortKey);
+            ->andReturn($questionKey);
 
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
         $applicationStepEntity->shouldReceive('getQuestion->getActiveQuestionText')
@@ -69,7 +69,7 @@ class SelfservePageGeneratorTest extends MockeryTestCase
 
         $selfservePageFactory = m::mock(SelfservePageFactory::class);
         $selfservePageFactory->shouldReceive('create')
-            ->with($questionShortKey, $additionalQaViewData, $applicationStep, $questionText, $nextStepSlug)
+            ->with($questionKey, $additionalQaViewData, $applicationStep, $questionText, $nextStepSlug)
             ->andReturn($selfservePage);
        
         $applicationStepGenerator = m::mock(ApplicationStepGenerator::class);
