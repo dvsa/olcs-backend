@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  */
 class DeletePrinterTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeletePrinter();
         $this->mockRepo('Printer', PrinterRepo::class);

@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreatePerson();
         $this->mockRepo('Person', PersonRepo::class);

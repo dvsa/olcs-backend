@@ -34,7 +34,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
  */
 class NotTakenUpApplicationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Application', ApplicationRepo::class);

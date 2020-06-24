@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Query\Application\TaxiPhv as Query;
  */
 class TaxiPhvTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

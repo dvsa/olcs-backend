@@ -22,7 +22,7 @@ use Mockery as m;
  */
 class ReviewTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('TransportManagerApplication', Repo::class);

@@ -25,7 +25,7 @@ use Dvsa\Olcs\Email\Data\Message;
  */
 class SendContinuationNotSoughtTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('SystemParameter', Repo::class);

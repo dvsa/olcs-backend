@@ -18,7 +18,7 @@ use Mockery as m;
  */
 class ByIdsTest extends QueryPartialTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ByIds();
 

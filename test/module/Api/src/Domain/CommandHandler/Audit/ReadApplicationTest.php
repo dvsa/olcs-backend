@@ -25,7 +25,7 @@ class ReadApplicationTest extends CommandHandlerTestCase
     /** @var  \Dvsa\Olcs\Transfer\Command\Audit\ReadApplication  */
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadApplication();
         $this->mockRepo('ApplicationReadAudit', Repository\ApplicationReadAudit::class);

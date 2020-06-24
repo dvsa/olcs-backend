@@ -41,7 +41,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
     /** @var  m\MockInterface*/
     private $mockTmaRepo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SubmitApplication();
 

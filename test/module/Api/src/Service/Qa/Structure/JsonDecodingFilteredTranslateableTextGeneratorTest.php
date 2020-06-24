@@ -19,7 +19,7 @@ class JsonDecodingFilteredTranslateableTextGeneratorTest extends MockeryTestCase
 
     private $jsonDecodingFilteredTranslateableTextGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filteredTranslateableTextGenerator = m::mock(FilteredTranslateableTextGenerator::class);
 

@@ -13,7 +13,7 @@ use Mockery as m;
 
 class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
 

@@ -18,7 +18,7 @@ class UpdateTest extends CommandHandlerTestCase
 {
     protected $refData = [FeatureToggleEntity::ACTIVE_STATUS];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateHandler();
         $this->mockRepo('FeatureToggle', FeatureToggleRepo::class);

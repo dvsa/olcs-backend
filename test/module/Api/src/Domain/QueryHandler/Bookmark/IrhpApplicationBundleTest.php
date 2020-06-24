@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class IrhpApplicationBundleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new IrhpApplicationBundle();
         $this->mockRepo('IrhpApplication', Repo::class);

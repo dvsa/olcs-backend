@@ -23,7 +23,7 @@ class ResponseTest extends MockeryTestCase
     /** @var  HttpResponse */
     private $response;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->response = new HttpResponse();
 

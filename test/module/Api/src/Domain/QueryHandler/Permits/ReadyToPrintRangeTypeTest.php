@@ -10,7 +10,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
 class ReadyToPrintRangeTypeTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadyToPrintRangeType();
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);

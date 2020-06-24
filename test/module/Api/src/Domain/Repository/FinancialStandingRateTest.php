@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate;
  */
 class FinancialStandingRateTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(RateRepo::class);
     }

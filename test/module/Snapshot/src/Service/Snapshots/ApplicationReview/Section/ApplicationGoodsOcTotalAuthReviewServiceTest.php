@@ -19,7 +19,7 @@ class ApplicationGoodsOcTotalAuthReviewServiceTest extends \PHPUnit\Framework\Te
 {
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ApplicationGoodsOcTotalAuthReviewService();
     }

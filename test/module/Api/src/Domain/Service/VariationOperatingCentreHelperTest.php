@@ -39,7 +39,7 @@ class VariationOperatingCentreHelperTest extends MockeryTestCase
      */
     protected $locRepo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->aocRepo = m::mock();
         $this->locRepo = m::mock();

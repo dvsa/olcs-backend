@@ -26,7 +26,7 @@ class InitialLoadTest extends CommandHandlerTestCase
 {
     protected $mockApi;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockApi = m::mock(CompaniesHouseApi::class);
         $this->mockedSmServices = [

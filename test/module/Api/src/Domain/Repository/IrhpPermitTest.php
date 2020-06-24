@@ -24,7 +24,7 @@ use PDO;
  */
 class IrhpPermitTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(IrhpPermit::class);
     }

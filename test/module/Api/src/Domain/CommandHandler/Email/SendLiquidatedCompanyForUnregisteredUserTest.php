@@ -17,7 +17,7 @@ class SendLiquidatedCompanyForUnregisteredUserTest extends CommandHandlerTestCas
     /** @var CommandInterface|SendLiquidatedCompanyForUnregisteredUser */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SendLiquidatedCompanyForUnregisteredUser();
 

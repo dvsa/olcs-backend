@@ -36,7 +36,7 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
      */
     private $mockStmt;
 
-    public function setUp()
+    public function setUp(): void
     {
         //  mock repos
         $this->mockRepo('DataDvaNi', Repository\DataDvaNi::class);

@@ -21,7 +21,7 @@ use Doctrine\ORM\Query as DoctrineQuery;
  */
 class TeamListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Team', TeamRepo::class);

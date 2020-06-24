@@ -16,7 +16,7 @@ class ByNumberTest extends QueryHandlerTestCase
 
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         /**
          * @var ByNumber

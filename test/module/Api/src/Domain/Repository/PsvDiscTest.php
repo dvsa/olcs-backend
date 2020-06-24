@@ -23,7 +23,7 @@ use Doctrine\DBAL\Connection;
  */
 class PsvDiscTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->activeStatuses = [
             LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,

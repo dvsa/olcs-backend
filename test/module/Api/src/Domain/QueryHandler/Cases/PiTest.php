@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class PiTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Pi();
         $this->mockRepo('Pi', PiRepo::class);

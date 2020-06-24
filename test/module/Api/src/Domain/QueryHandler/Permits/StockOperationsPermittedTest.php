@@ -18,7 +18,7 @@ use Mockery as m;
 
 class StockOperationsPermittedTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(StockOperationsPermittedHandler::class)
             ->makePartial()

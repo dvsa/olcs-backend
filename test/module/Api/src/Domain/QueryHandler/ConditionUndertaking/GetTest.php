@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertaking
  */
 class GetTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);

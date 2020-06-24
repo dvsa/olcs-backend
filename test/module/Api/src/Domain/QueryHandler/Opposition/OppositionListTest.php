@@ -17,7 +17,7 @@ class OppositionListTest extends QueryHandlerTestCase
     /** @var  OppositionList */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new OppositionList();
         $this->mockRepo('Opposition', OppositionRepo::class);

@@ -22,7 +22,7 @@ class UpdateConditionsUndertakingsStatusTest extends AbstractUpdateStatusTestCas
 {
     protected $section = 'ConditionsUndertakings';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateConditionsUndertakingsStatus();
         $this->command = Cmd::create(['id' => 111]);

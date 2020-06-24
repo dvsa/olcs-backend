@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\ChangeOfEntity as ChangeOfEntityEntity;
  */
 class CreateChangeOfEntityTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('ChangeOfEntity', ChangeOfEntityRepo::class);

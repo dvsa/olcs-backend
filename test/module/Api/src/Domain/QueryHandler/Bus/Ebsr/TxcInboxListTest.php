@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
  */
 class TxcInboxListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TxcInboxList();
         $this->mockRepo('TxcInbox', TxcInboxRepo::class);

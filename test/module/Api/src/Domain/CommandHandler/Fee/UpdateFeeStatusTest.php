@@ -16,7 +16,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class UpdateFeeStatusTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),

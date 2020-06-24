@@ -15,7 +15,7 @@ use Dvsa\Olcs\Transfer\Query\TranslationKey\GetList;
  */
 class TranslationKeyTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

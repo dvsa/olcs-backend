@@ -19,7 +19,7 @@ class WithRefDataTest extends QueryPartialTestCase
     /** @var m\Mock */
     private $with;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->em = m::mock(EntityManagerInterface::class);
         // Cannot mock With as it is Final

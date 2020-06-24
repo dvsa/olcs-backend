@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
  */
 class Schedule41ApproveTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Schedule41Approve();
         $this->mockRepo('Application', Application::class);

@@ -24,7 +24,7 @@ class AbstractSectionTest extends MockeryTestCase
     /** @var  \Zend\View\Renderer\PhpRenderer | m\MockInterface */
     private $mockViewRenderer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
         $this->mockViewRenderer = m::mock(\Zend\View\Renderer\PhpRenderer::class);

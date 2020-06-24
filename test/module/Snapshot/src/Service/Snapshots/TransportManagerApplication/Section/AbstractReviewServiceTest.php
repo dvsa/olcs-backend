@@ -20,7 +20,7 @@ class AbstractReviewServiceTest extends MockeryTestCase
     /** @var AbstractReviewServiceStub */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(AbstractReviewServiceStub::class)->makePartial();
     }

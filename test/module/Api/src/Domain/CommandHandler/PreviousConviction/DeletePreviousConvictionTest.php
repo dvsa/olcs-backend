@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as PrevConvictionEntity;
  */
 class DeletePreviousConvictionTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeletePreviousConviction();
         $this->mockRepo('PreviousConviction', PreviousConviction::class);

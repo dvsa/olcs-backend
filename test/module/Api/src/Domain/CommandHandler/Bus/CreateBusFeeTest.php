@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
  */
 class CreateBusFeeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateBusFee();
         $this->mockRepo('Bus', BusRepo::class);

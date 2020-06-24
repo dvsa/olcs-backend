@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class ProceedToStatusTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProceedToStatusHandler();
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);

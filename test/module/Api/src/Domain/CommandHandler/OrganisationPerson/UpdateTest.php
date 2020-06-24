@@ -28,7 +28,7 @@ class UpdateTest extends CommandHandlerTestCase
     /** @var  Entity\Organisation\Organisation */
     private $mockOrg;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler\OrganisationPerson\Update();
 

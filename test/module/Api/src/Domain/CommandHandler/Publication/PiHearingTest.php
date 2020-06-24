@@ -43,7 +43,7 @@ class PiHearingTest extends CommandHandlerTestCase
     protected $trafficArea2 = 'N'; //NI
     protected $trafficArea3 = 'D';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PiHearing();
         $this->mockRepo('Publication', PublicationRepo::class);

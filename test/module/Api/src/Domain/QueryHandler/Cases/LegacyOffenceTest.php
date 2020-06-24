@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
  */
 class LegacyOffenceTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new LegacyOffence();
         $this->mockRepo('LegacyOffence', LegacyOffenceRepo::class);

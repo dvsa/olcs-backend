@@ -26,7 +26,7 @@ class ApplicationAnswersClearerTest extends MockeryTestCase
 
     private $applicationAnswersClearer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->supplementedApplicationStepsProvider = m::mock(SupplementedApplicationStepsProvider::class);
 

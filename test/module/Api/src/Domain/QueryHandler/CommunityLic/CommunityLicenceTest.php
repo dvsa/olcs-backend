@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class CommunityLicenceTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommunityLicence();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);

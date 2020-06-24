@@ -41,7 +41,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
     protected $trafficAreaValidator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->addressService = m::mock();
         $this->adminAreaTrafficAreaRepo = m::mock();

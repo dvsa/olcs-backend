@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  */
 class UpdateOperatingCentresTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Licence', Repository\Licence::class);

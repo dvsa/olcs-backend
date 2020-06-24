@@ -19,7 +19,7 @@ class ApplicationTypeOfLicenceReviewServiceTest extends \PHPUnit\Framework\TestC
 {
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ApplicationTypeOfLicenceReviewService();
     }

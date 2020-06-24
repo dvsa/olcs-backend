@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class IrfoDetailsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new IrfoDetails();
         $this->mockRepo('Organisation', OrganisationRepo::class);

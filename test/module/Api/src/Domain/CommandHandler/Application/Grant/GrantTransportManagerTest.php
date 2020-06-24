@@ -32,7 +32,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class GrantTransportManagerTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GrantTransportManager();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

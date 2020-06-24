@@ -24,7 +24,7 @@ use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
  */
 class TransportManagerTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);

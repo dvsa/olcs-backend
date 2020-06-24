@@ -49,7 +49,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
      */
     private $mockStmt;
 
-    public function setUp()
+    public function setUp(): void
     {
         //  mock repos
         $this->mockRepo('DataGovUk', Repository\DataGovUk::class);

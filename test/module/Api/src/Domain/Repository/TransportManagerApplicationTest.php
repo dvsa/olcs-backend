@@ -20,7 +20,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
     /** @var  m\MockInterface */
     private $mockQb;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\TransportManagerApplication::class, true);
 

@@ -13,7 +13,7 @@ use Mockery as m;
  */
 class GetListTestActive extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler\System\InfoMessage\GetListActive();
         $this->mockRepo('SystemInfoMessage', Repository\SystemInfoMessage::class);

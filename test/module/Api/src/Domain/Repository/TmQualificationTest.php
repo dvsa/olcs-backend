@@ -19,7 +19,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 class TmQualificationTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(TmQualificationRepo::class);
     }

@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
  */
 class DeleteComplaintTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteComplaint();
         $this->mockRepo('Complaint', Complaint::class);

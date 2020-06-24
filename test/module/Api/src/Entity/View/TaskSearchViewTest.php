@@ -23,7 +23,7 @@ class TaskSearchViewTest extends \PHPUnit\Framework\TestCase
      */
     protected $testData;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testData = [
             'actionDate' => '2014-11-26',

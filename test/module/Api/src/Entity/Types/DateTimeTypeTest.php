@@ -18,7 +18,7 @@ class DateTimeTypeTest extends \PHPUnit\Framework\TestCase
     /** @var  AbstractPlatform */
     private $mockPlatform;
 
-    public function setup()
+    public function setUp(): void
     {
         DateTimeType::overrideType('datetime', DateTimeType::class);
         $this->sut = DateTimeType::getType('datetime');

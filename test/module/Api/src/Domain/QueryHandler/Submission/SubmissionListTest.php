@@ -20,7 +20,7 @@ class SubmissionListTest extends QueryHandlerTestCase
     /**
      * Set up test
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SubmissionList();
         $this->mockRepo('Submission', SubmissionRepo::class);

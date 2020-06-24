@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class OtherLicenceTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new OtherLicence();
         $this->mockRepo('OtherLicence', OtherLicenceRepo::class);

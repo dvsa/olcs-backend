@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 class ApplicationBundleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ApplicationBundle();
         $this->mockRepo('Application', Repository\Application::class);

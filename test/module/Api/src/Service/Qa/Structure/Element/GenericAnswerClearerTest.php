@@ -26,7 +26,7 @@ class GenericAnswerClearerTest extends MockeryTestCase
 
     private $genericAnswerClearer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->qaContext = m::mock(QaContext::class);
 

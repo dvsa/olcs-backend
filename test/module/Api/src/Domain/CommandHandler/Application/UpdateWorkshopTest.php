@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\Workshop\UpdateWorkshop as WorkshopUpdateWorkshop
  */
 class UpdateWorkshopTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateWorkshop();
         $this->mockRepo('Application', Application::class);

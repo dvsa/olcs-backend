@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  */
 class PsvLicenceVehicleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PsvLicenceVehicle();
         $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);

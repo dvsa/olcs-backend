@@ -13,7 +13,7 @@ class ImapTest extends TestCase
 {
     private $imapService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->imapService = new ImapService();
     }

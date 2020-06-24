@@ -29,7 +29,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class CreateDocumentSpecificTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateDocumentSpecific();
         $this->mockRepo('Document', Document::class);

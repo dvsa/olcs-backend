@@ -17,7 +17,7 @@ class PluginManagerTest extends MockeryTestCase
     /** @var  PluginManager */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PluginManager();
     }

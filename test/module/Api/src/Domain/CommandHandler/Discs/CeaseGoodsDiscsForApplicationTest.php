@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication as Cmd;
  */
 class CeaseGoodsDiscsForApplicationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CeaseGoodsDiscsForApplication();
         $this->mockRepo('GoodsDisc', DiscRepo::class);

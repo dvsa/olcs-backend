@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision as Repo;
  */
 class TmCaseDecisionTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

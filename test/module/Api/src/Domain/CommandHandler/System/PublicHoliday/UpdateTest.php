@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Handler();
         $this->mockRepo('PublicHoliday', Repository\PublicHoliday::class);

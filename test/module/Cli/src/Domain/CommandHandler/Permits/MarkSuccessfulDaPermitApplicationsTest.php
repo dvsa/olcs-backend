@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class MarkSuccessfulDaPermitApplicationsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new MarkSuccessfulDaPermitApplicationsHandler();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);

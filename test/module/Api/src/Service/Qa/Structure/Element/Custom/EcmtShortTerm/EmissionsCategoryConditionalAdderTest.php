@@ -36,7 +36,7 @@ class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
 
     private $stockId;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->emissionsCategoryFactory = m::mock(EmissionsCategoryFactory::class);
         $this->emissionsCategoryAvailabilityCounter = m::mock(EmissionsCategoryAvailabilityCounter::class);

@@ -26,7 +26,7 @@ class GrantabilityCheckerTest extends MockeryTestCase
 
     private $grantabilityChecker;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpApplication = m::mock(IrhpApplication::class);
 

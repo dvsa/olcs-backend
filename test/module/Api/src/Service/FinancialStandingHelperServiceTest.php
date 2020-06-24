@@ -29,7 +29,7 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
 
     private $repoMap = [];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repoMap['FinancialStandingRate'] = m::mock();
         $this->repoMap['Organisation'] = m::mock();
@@ -42,7 +42,7 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
         // Create service with mocked dependencies
         $this->sut = $this->createService();
 
-        return parent::setUp();
+        parent::setUp();
     }
 
     private function createService()

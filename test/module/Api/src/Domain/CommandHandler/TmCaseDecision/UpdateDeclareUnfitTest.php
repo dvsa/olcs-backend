@@ -24,7 +24,7 @@ use Mockery as m;
  */
 class UpdateDeclareUnfitTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateDeclareUnfit();
         $this->mockRepo('TmCaseDecision', TmCaseDecision::class);

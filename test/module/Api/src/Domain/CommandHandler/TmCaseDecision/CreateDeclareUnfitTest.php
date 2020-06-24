@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
  */
 class CreateDeclareUnfitTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateDeclareUnfit();
         $this->mockRepo('TmCaseDecision', TmCaseDecision::class);

@@ -23,7 +23,7 @@ class CompanyProfileTest extends CompaniesHouseConsumerTestCase
         ]
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CompanyProfile();
         $this->mockRepo('CompaniesHouseCompany', CompaniesHouseCompany::class);

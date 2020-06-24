@@ -31,7 +31,7 @@ class BusRegEntityTest extends EntityTester
     /** @var Entity */
     protected $entity;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->entity = $this->instantiate($this->entityClass);
     }

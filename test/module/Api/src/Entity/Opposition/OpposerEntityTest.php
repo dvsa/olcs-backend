@@ -31,7 +31,7 @@ class OpposerEntityTest extends EntityTester
     /** @var  Entity */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockCd = m::mock(ContactDetails::class);
         $this->opposerType = new RefData('OPPOSER_TYPE');

@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class ReadIrhpApplicationTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadIrhpApplication();
         $this->mockRepo('IrhpApplicationReadAudit', Repository\IrhpApplicationReadAudit::class);

@@ -20,7 +20,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class PrintPermitsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PrintPermitsHandler();
         $this->mockRepo('Queue', QueueRepo::class);

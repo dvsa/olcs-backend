@@ -36,7 +36,7 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
 
     private $noOfPermitsAnswerSaver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $defaultBilateralRequired = [
             IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,

@@ -48,7 +48,11 @@ class SuccessfulCandidatePermitsGenerator
  
         $successfulCandidatePermits = [];
 
-        while ((list($key, $candidatePermit) = each($candidatePermits)) && $quotaRemaining) {
+        foreach ($candidatePermits as $candidatePermit) {
+            if (!$quotaRemaining) {
+                break;
+            }
+
             $candidatePermitId = $candidatePermit[self::ID_KEY];
             $requestedEmissionsCategory = $candidatePermit[self::EMISSIONS_CATEGORY_KEY];
 

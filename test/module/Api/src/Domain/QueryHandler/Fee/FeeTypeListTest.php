@@ -33,7 +33,7 @@ class FeeTypeListTest extends QueryHandlerTestCase
 
     const ORG_ID = 9999;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('FeeType', Repository\FeeType::class);

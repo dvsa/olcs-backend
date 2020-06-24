@@ -19,7 +19,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class CreateIrfoPermitStockTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateIrfoPermitStock();
         $this->mockRepo('IrfoPermitStock', IrfoPermitStock::class);

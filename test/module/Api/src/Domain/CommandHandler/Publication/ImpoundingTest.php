@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedImpounding as UnpublishedImpo
  */
 class ImpoundingTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Impounding();
         $this->mockRepo('Publication', PublicationRepo::class);

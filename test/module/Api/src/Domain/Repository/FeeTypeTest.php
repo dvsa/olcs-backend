@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
  */
 class FeeTypeTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class, true);
     }

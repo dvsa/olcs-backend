@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
  */
 class CreateForTmTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('OtherLicence', OtherLicence::class);

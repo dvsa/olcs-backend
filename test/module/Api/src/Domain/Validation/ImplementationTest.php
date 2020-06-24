@@ -31,7 +31,7 @@ class ImplementationTest extends MockeryTestCase
      */
     private $validationManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $moduleDir = __DIR__ . '/../../../../../../module';
 

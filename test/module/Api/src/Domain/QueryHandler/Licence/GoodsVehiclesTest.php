@@ -29,7 +29,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class GoodsVehiclesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GoodsVehicles();
         $this->mockRepo('Licence', LicenceRepo::class);

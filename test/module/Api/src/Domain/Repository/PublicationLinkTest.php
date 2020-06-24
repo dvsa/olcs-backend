@@ -39,7 +39,7 @@ class PublicationLinkTest extends RepositoryTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(PublicationLinkRepo::class);
     }

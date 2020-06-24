@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class BusNoticePeriodTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new BusNoticePeriodList();
         $this->mockRepo('BusNoticePeriod', BusNoticePeriodRepo::class);

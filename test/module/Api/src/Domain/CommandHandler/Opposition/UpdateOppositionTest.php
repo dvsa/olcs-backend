@@ -35,7 +35,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  */
 class UpdateOppositionTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateOpposition();
         $this->mockRepo('Opposition', OppositionRepo::class);

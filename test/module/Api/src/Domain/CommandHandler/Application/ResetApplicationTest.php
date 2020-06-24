@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
  */
 class ResetApplicationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ResetApplication();
         $this->mockRepo('Application', Application::class);

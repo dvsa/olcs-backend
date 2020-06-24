@@ -17,7 +17,7 @@ use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
  */
 class PeopleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Organisation', \Dvsa\Olcs\Api\Domain\Repository\Organisation::class);

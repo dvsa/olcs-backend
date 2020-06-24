@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  */
 class CreatePreviousConvictionTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreatePreviousConviction();
         $this->mockRepo('PreviousConviction', PreviousConviction::class);

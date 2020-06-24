@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class ConditionUndertakingListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ConditionUndertakingList();
         $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);

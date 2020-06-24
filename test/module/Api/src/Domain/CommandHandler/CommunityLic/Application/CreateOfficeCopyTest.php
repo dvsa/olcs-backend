@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
  */
 class CreateOfficeCopyTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateOfficeCopy();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);

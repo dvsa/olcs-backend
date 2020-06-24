@@ -16,7 +16,7 @@ class BusRegSearchViewTest extends MockeryTestCase
     /** @var array */
     protected $testData;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testData = [
             'id' => 15,

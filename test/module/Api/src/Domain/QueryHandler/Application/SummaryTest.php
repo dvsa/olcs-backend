@@ -23,7 +23,7 @@ class SummaryTest extends QueryHandlerTestCase
     /** @var m\MockInterface */
     private $mockFeeRepo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Summary();
         $this->mockRepo('Application', Repository\Application::class);

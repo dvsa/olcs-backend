@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 
 class ProcessPackTestCase extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('Bus', BusRepo::class);
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);

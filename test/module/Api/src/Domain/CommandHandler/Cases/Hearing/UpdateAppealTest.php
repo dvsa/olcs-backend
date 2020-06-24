@@ -18,7 +18,7 @@ class UpdateAppealTest extends CommandHandlerTestCase
     /** @var  UpdateAppeal */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateAppeal();
 

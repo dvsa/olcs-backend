@@ -18,7 +18,7 @@ use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
  */
 class LicenceExternalUserTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Licence();
         $this->mockRepo('Licence', Repository\Licence::class);

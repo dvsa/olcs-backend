@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
  */
 class InterimConditionsUndertakingsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new InterimConditionsUndertakings();
         $this->mockRepo('Application', Repo::class);

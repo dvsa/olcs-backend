@@ -27,7 +27,7 @@ abstract class AbstractReviveFromUnsuccessfulTest extends CommandHandlerTestCase
 
     protected $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo($this->applicationRepoServiceName, $this->applicationRepoClass);
         $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);

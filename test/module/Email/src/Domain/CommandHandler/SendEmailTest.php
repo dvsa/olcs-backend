@@ -25,7 +25,7 @@ class SendEmailTest extends CommandHandlerTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SendEmail();
         $this->mockRepo('Document', DocumentRepo::class);

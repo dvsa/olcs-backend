@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class InitialiseScopeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(InitialiseScopeHandler::class)
             ->makePartial()

@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
  */
 class ConditionsUndertakingsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ConditionsUndertakings();
         $this->mockRepo('Licence', Repo::class);

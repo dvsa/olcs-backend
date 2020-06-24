@@ -29,7 +29,7 @@ class NamingServiceTest extends MockeryTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $config = [
             'document_share' => [

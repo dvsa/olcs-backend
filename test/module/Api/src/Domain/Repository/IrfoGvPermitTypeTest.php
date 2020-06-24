@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class IrfoGvPermitTypeTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

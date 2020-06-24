@@ -30,7 +30,7 @@ class CreateHearingTest extends CommandHandlerTestCase
 {
     protected $cases;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateHearing();
         $this->mockRepo('PiHearing', PiHearingRepo::class);

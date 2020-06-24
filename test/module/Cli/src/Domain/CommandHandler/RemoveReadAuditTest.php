@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  */
 class RemoveReadAuditTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new RemoveReadAudit();
         $this->mockRepo('ApplicationReadAudit', Repository\ApplicationReadAudit::class);

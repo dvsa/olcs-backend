@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class CreateApplicationFeeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateApplicationFee();
         $this->mockRepo('Application', Application::class);

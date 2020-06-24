@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim as Cmd;
  */
 class InForceInterimTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new InForceInterim();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

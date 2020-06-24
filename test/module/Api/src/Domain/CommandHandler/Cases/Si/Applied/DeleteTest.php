@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class DeleteTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeletePenalty();
         $this->mockRepo('SiPenalty', SiPenaltyRepo::class);

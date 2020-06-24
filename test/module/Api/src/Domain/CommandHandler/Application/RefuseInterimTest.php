@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\Application\RefuseInterim as Cmd;
  */
 class RefuseInterimTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new RefuseInterim();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

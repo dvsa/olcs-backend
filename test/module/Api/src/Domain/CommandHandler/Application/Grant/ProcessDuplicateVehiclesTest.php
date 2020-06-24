@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessDuplicateVehicles as C
  */
 class ProcessDuplicateVehiclesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Application', Repository\Application::class);

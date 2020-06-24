@@ -22,7 +22,7 @@ use SAML2\Utilities\ArrayCollection;
  */
 class OrganisationTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Organisation();
         $this->mockRepo('Organisation', OrganisationRepo::class);

@@ -34,7 +34,7 @@ use Mockery as m;
  */
 class CreateUnlicensedTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateUnlicensed();
         $this->mockRepo('Licence', LicenceRepo::class);

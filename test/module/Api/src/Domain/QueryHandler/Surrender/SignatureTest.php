@@ -12,7 +12,7 @@ use Mockery as m;
 
 class SignatureTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QryHandler();
         $this->mockRepo('Surrender', Surrender::class);

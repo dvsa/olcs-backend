@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);

@@ -21,7 +21,7 @@ class AddressesTest extends QueryHandlerTestCase
     /** @var  Addresses */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Addresses();
 

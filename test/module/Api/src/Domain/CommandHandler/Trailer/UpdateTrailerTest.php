@@ -27,7 +27,7 @@ use Dvsa\Olcs\Transfer\Command\Trailer\UpdateTrailer as Cmd;
  */
 class UpdateTrailerTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateTrailer();
         $this->mockRepo('Trailer', TrailerRepo::class);

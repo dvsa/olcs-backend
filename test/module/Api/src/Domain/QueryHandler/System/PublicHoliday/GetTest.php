@@ -13,7 +13,7 @@ use Mockery as m;
  */
 class GetTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler\System\PublicHoliday\Get();
         $this->mockRepo('PublicHoliday', Repository\PublicHoliday::class);

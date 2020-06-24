@@ -22,7 +22,7 @@ use Doctrine\ORM\Query;
  */
 class EbsrSubmissionListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new EbsrSubmissionList();
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);

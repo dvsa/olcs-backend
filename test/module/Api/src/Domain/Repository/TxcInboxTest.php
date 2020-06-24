@@ -17,7 +17,7 @@ class TxcInboxTest extends RepositoryTestCase
     /** @var  Repo */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

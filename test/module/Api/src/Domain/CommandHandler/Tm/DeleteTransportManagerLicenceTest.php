@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence as Cmd;
  */
 class DeleteTransportManagerLicenceTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteTransportManagerLicence();
         $this->mockRepo('TransportManagerLicence', TransportManagerLicenceRepo::class);

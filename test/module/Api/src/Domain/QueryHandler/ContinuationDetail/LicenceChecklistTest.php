@@ -17,7 +17,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
     /** @var  LicenceChecklist */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new LicenceChecklist();
 

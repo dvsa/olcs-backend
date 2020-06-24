@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Cqrs;
 
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 use Dvsa\Olcs\Transfer\Command\Fee\CreateFee;
@@ -29,6 +30,6 @@ class CommandCreatorTest extends MockeryTestCase
         $commandCreator = new CommandCreator();
         $command = $commandCreator->create(CreateFee::class, $parameters);
         $this->assertInstanceOf(CreateFee::class, $command);
-        $this->assertArraySubset($parameters, $command->getArrayCopy());
+        Assert::assertArraySubset($parameters, $command->getArrayCopy());
     }
 }

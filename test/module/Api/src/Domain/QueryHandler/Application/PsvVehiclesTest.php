@@ -18,7 +18,7 @@ use Doctrine\ORM\Query;
  */
 class PsvVehiclesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PsvVehicles();
         $this->mockRepo('Application', Repository\Application::class);

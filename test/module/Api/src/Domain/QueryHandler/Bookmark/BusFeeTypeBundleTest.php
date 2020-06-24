@@ -27,7 +27,7 @@ class BusFeeTypeBundleTest extends QueryHandlerTestCase
         LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new BusFeeTypeBundle();
         $this->mockRepo('Bus', BusRepo::class);

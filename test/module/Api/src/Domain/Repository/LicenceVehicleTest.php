@@ -25,7 +25,7 @@ class LicenceVehicleTest extends RepositoryTestCase
     /** @var  LicenceVehicleRepo */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(LicenceVehicleRepo::class);
     }

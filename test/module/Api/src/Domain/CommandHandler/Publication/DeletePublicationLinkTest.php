@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
  */
 class DeletePublicationLinkTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeletePublicationLink();
         $this->mockRepo('PublicationLink', PublicationLinkRepo::class);

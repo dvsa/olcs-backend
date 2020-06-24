@@ -17,7 +17,7 @@ class AbstractFactoryTest extends MockeryTestCase
     /** @var  \Zend\ServiceManager\ServiceManager | m\MockInterface */
     private $mockSm;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockSl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
 

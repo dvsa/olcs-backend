@@ -12,7 +12,7 @@ class CurrentDiscsReviewServiceTest extends MockeryTestCase
     /** @var CurrentDiscsReviewService review service */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CurrentDiscsReviewService();
     }

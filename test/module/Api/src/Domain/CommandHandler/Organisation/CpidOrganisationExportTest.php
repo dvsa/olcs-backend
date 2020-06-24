@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 class CpidOrganisationExportTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CpidOrganisationExport();
 

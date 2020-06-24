@@ -3,6 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\TcSignature;
+use Dvsa\Olcs\Api\Service\Document\Parser\ParserInterface;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 
 /**
  * TC Signature test
@@ -33,18 +36,18 @@ class TcSignatureTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $fileMock = $this->createPartialMock('\stdClass', ['getContent']);
+        $fileMock = $this->createPartialMock(File::class, ['getContent']);
         $fileMock->expects($this->once())
             ->method('getContent')
             ->willReturn('content');
 
-        $fileStoreMock = $this->createPartialMock('\stdClass', ['read']);
+        $fileStoreMock = $this->createPartialMock(DocumentStoreInterface::class, ['read', 'write', 'remove']);
         $fileStoreMock->expects($this->once())
             ->method('read')
             ->with('/templates/Image/' . $image . '.jpg')
             ->willReturn($fileMock);
 
-        $parserMock = $this->createPartialMock('\stdClass', ['renderImage']);
+        $parserMock = $this->createPartialMock(ParserInterface::class, ['renderImage', 'replace', 'getFileExtension', 'extractTokens']);
         $parserMock->expects($this->once())
             ->method('renderImage')
             ->with('content', $bookmark::CONTAINER_WIDTH, $bookmark::CONTAINER_HEIGHT, 'jpeg')

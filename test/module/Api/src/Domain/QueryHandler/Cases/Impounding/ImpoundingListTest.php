@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class ImpoundingListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ImpoundingList();
         $this->mockRepo('Impounding', ImpoundingRepo::class);

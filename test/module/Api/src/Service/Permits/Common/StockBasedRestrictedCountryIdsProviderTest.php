@@ -29,7 +29,7 @@ class StockBasedRestrictedCountryIdsProviderTest extends MockeryTestCase
 
     private $typeBasedRestrictedCountriesProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitStock = m::mock(IrhpPermitStock::class);
 

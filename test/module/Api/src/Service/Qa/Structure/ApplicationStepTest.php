@@ -29,7 +29,7 @@ class ApplicationStepTest extends MockeryTestCase
 
     private $applicationStep;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->elementRepresentation = ['elementRepresentation'];
         $this->validatorListRepresentation = ['validatorListRepresentation'];

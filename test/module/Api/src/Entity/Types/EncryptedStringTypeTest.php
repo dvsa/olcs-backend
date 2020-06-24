@@ -17,7 +17,7 @@ class EncryptedStringTypeTest extends \PHPUnit\Framework\TestCase
      */
     private $sut;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!EncryptedStringType::hasType(EncryptedStringType::TYPE)) {
             EncryptedStringType::addType(EncryptedStringType::TYPE, EncryptedStringType::class);

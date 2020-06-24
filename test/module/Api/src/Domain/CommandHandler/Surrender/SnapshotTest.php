@@ -17,7 +17,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class SnapshotTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Snapshot();
         $this->mockRepo('Surrender', Repository\Surrender::class);

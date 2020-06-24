@@ -29,7 +29,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class UpdateAddressesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateAddresses();
         $this->mockRepo('Application', Application::class);

@@ -71,7 +71,7 @@ class QueryHandlerTestCase extends MockeryTestCase
     /** @var array  */
     protected $commands = [];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
 
@@ -179,7 +179,7 @@ class QueryHandlerTestCase extends MockeryTestCase
         return isset($this->references[$class][$id]) ? $this->references[$class][$id] : null;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->assertCommandData();
 

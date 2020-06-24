@@ -24,7 +24,7 @@ use Mockery as m;
  */
 class SendTmUserCreatedTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('User', UserRepo::class);

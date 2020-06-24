@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreatePsvVehicleListForDiscs();
         $this->mockRepo('Licence', LicenceRepo::class);

@@ -42,7 +42,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     protected $options;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->options = m::mock()
             ->shouldReceive('getDomain')
@@ -74,7 +74,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         // Create service with mocked dependencies
         $this->sut = $this->createService($this->cpmsClient, $this->feesHelper, $config);
 
-        return parent::setUp();
+        parent::setUp();
     }
 
     private function createService($api, $feesHelper, $config = [])

@@ -17,7 +17,7 @@ class DataRetentionTest extends RepositoryTestCase
     /** @var DataRetention */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(DataRetention::class, true);
     }

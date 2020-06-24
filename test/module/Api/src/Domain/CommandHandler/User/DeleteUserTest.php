@@ -27,7 +27,7 @@ class DeleteUserTest extends CommandHandlerTestCase
     /** @var UserEntity|m\Mock */
     private $userEntity;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('User', UserRepo::class);

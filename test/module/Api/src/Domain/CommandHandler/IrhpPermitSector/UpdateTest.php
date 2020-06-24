@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Command\IrhpPermitSector\Update as UpdateCmd;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateHandler();
         $this->mockRepo('IrhpPermitSectorQuota', PermitSectorQuotaRepo::class);

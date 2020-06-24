@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
  */
 class ViOcViewTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(ViOcViewRepo::class);
     }

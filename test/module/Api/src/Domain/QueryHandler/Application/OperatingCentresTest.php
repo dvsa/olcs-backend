@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  */
 class OperatingCentresTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Application', Repository\Application::class);

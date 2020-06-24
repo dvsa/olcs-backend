@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ConditionUndertaking;
 
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ConditionUndertaking\GetList as QueryHandler;
@@ -18,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertaking
  */
 class GetListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);
@@ -71,7 +72,7 @@ class GetListTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertArraySubset(['id' => 324], $result['result'][0]);
+        Assert::assertArraySubset(['id' => 324], $result['result'][0]);
         $this->assertSame(1, $result['count']);
     }
 
@@ -104,7 +105,7 @@ class GetListTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertArraySubset(['id' => 324], $result['result'][0]);
+        Assert::assertArraySubset(['id' => 324], $result['result'][0]);
         $this->assertSame(1, $result['count']);
     }
 
@@ -133,7 +134,7 @@ class GetListTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertArraySubset(['id' => 324], $result['result'][0]);
+        Assert::assertArraySubset(['id' => 324], $result['result'][0]);
         $this->assertSame(1, $result['count']);
     }
 }

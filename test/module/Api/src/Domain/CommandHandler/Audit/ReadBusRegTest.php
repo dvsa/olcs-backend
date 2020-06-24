@@ -26,7 +26,7 @@ class ReadBusRegTest extends CommandHandlerTestCase
     /** @var \Dvsa\Olcs\Transfer\Command\Audit\ReadBusReg */
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadBusReg();
         $this->mockRepo('BusRegReadAudit', Repository\BusRegReadAudit::class);

@@ -22,7 +22,7 @@ class PrintJobTest extends CommandHandlerTestCase
     /** @var m\MockInterface | \Dvsa\Olcs\Api\Entity\User\User */
     private $mockUser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(CommandHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);

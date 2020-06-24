@@ -18,7 +18,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 class ContinuationTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

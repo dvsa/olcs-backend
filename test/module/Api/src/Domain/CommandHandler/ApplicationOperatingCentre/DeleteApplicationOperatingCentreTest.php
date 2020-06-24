@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\DeleteApplicationOpe
  */
 class DeleteApplicationOperatingCentreTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteApplicationOperatingCentre();
         $this->mockRepo('ApplicationOperatingCentre', ConditionUndertakingRepo::class);

@@ -12,7 +12,7 @@ use DateTime;
  */
 class IrhpPermitTypeTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(IrhpPermitType::class);
     }

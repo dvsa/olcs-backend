@@ -24,7 +24,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class DocumentsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Document', DocumentRepo::class);

@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary as Entity;
  */
 class CompanySubsidiaryTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CompanySubsidiary();
         $this->mockRepo('CompanySubsidiary', CompanySubsidiaryRepo::class);

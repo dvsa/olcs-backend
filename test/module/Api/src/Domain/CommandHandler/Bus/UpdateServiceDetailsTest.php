@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 class UpdateServiceDetailsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateServiceDetails();
         $this->mockRepo('Bus', BusRepo::class);

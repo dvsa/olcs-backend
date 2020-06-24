@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class CloseExpiredWindowsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CloseExpiredWindowsHandler();
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);

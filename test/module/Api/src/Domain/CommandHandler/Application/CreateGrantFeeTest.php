@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee as Cmd;
  */
 class CreateGrantFeeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateGrantFee();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

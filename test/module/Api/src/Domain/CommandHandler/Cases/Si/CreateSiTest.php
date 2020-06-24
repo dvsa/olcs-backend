@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class CreateSiTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('SeriousInfringement', SiRepo::class);

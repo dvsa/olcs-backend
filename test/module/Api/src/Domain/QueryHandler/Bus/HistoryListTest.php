@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class HistoryListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new HistoryList();
         $this->mockRepo('BusRegHistory', Repository\BusRegHistory::class);

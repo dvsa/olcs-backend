@@ -18,7 +18,7 @@ class TransportManagerReadAuditTest extends AbstractReadAuditTest
     /** @var TransportManagerReadAudit|m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(TransportManagerReadAudit::class, true);
     }

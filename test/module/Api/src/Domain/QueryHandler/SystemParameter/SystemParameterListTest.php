@@ -21,7 +21,7 @@ use Doctrine\ORM\Query as DoctrineQuery;
  */
 class SystemParameterListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('SystemParameter', SystemParameterRepo::class);

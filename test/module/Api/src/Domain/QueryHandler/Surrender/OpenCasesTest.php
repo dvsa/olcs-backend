@@ -12,7 +12,7 @@ use Mockery as m;
 class OpenCasesTest extends QueryHandlerTestCase
 {
     protected $sut;
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QryHandler();
         $this->mockRepo('Cases', Cases::class);

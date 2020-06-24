@@ -22,7 +22,7 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
     /** @var CommandHandler\TransportManagerApplication\UpdateForResponsibilities */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler\TransportManagerApplication\UpdateForResponsibilities();
 

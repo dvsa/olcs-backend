@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
  */
 class DeleteWorkshopTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteWorkshop();
         $this->mockRepo('Workshop', Workshop::class);

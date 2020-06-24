@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Publication\PiDecision as PublishDecisionCmd;
  */
 class UpdateTmDecisionTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateTmDecision();
         $this->mockRepo('Pi', PiRepo::class);

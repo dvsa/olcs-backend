@@ -21,7 +21,7 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
     /** @var CommandHandler\Application\DeleteOperatingCentres  */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler\Application\DeleteOperatingCentres();
         $this->mockRepo('Application', Repository\Application::class);

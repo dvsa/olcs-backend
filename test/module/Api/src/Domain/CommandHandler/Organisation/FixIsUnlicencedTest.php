@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Organisation\FixIsIrfo as Cmd;
  */
 class FixIsUnlicencedTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new FixIsUnlicenced();
         $this->mockRepo('Organisation', Organisation::class);

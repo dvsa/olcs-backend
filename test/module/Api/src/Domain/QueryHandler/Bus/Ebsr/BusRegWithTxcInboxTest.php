@@ -29,7 +29,7 @@ class BusRegWithTxcInboxTest extends QueryHandlerTestCase
     /**
      * Set up repos and services
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new BusRegWithTxcInbox();
         $this->mockRepo('TxcInbox', TxcInboxRepo::class);

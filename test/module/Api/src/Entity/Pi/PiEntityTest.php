@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class PiEntityTest extends EntityTester
 {
-    public function setUp()
+    public function setUp(): void
     {
         /** @var \Dvsa\Olcs\Api\Entity\Pi\Pi entity */
         $this->entity = $this->instantiate($this->entityClass);

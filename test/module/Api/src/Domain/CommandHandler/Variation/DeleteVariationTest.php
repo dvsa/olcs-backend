@@ -22,7 +22,7 @@ use Mockery as m;
 
 class DeleteVariationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('Application', ApplicationRepository::class);
         $this->sut = new Sut();
