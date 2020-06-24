@@ -28,7 +28,7 @@ class SelfservePageTest extends MockeryTestCase
 
     private $selfservePage;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->title = 'title';
 

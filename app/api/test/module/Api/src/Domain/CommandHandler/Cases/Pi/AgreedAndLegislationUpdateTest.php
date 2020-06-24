@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  */
 class AgreedAndLegislationUpdateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AgreedAndLegislationUpdate();
         $this->mockRepo('Pi', PiRepo::class);

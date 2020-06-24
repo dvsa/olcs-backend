@@ -31,7 +31,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
     /** @var  m\MockInterface | BusRegEntity */
     private $mockBusReg;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GrantBusReg();
         $this->mockRepo('Bus', Repository\Bus::class);

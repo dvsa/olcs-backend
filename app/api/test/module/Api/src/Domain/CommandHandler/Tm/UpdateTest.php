@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Update();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);

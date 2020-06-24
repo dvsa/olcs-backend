@@ -25,7 +25,7 @@ class GeneratorTest extends MockeryTestCase
 
     protected $services;
 
-    public function setUp()
+    public function setUp(): void
     {
         $sm = m::mock(ServiceLocatorInterface::class);
 

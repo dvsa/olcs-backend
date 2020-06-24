@@ -30,7 +30,7 @@ use Mockery as m;
  */
 class PayFeeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PayFee();
         $this->mockRepo('Fee', FeeRepo::class);

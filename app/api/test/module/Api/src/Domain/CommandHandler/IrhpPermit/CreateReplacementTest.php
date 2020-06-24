@@ -21,7 +21,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class CreateReplacementTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateReplacementHandler();
         $this->mockRepo('IrhpPermit', PermitRangeRepo::class);

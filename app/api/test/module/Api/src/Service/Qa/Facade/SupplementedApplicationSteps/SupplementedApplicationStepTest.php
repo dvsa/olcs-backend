@@ -21,7 +21,7 @@ class SupplementedApplicationStepTest extends MockeryTestCase
 
     private $supplementedApplicationStep;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->applicationStep = m::mock(ApplicationStep::class);
 

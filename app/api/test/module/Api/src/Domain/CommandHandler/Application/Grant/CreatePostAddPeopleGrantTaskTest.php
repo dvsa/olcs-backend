@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreatePostAddPeopleGrantTask();
         $this->mockRepo('Application', ApplicationRepository::class);

@@ -21,7 +21,7 @@ use Zend\Mvc\Router\RouteMatch;
  */
 class PayloadValidationListenerTest extends MockeryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->annotationBuilder = m::mock(AnnotationBuilder::class);
 

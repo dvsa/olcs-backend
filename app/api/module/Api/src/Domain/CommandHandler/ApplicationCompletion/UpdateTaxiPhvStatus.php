@@ -24,7 +24,7 @@ final class UpdateTaxiPhvStatus extends AbstractUpdateStatus
 
     protected function isSectionValid(Application $application)
     {
-        return count($application->getLicence()->getPrivateHireLicences()) > 0 &&
+        return !$application->getLicence()->getPrivateHireLicences()->isEmpty() &&
             $application->getLicence()->getTrafficArea() !== null;
     }
 }

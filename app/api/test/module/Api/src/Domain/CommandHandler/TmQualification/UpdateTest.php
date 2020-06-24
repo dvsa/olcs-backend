@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TmQualificationUpdate();
         $this->mockRepo('TmQualification', TmQualificationRepo::class);

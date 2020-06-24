@@ -16,7 +16,7 @@ class TaskTest extends RepositoryTestCase
     /** @var m\MockInterface | Repository\Task */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\Task::class);
     }

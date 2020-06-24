@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases;
  */
 class CreateComplaintTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateComplaint();
         $this->mockRepo('Complaint', Complaint::class);

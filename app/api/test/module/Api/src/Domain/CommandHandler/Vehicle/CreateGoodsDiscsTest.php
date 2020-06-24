@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
  */
 class CreateGoodsDiscsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateGoodsDiscs();
         $this->mockRepo('GoodsDisc', GoodsDiscRepo::class);

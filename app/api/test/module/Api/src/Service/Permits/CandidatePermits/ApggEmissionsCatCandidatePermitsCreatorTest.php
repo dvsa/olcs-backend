@@ -34,7 +34,7 @@ class ApggEmissionsCatCandidatePermitsCreatorTest extends MockeryTestCase
 
     private $apggEmissionsCatCandidatePermitsCreator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 

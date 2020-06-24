@@ -26,7 +26,7 @@ class UpdateTest extends CommandHandlerTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateCommandHandler();
         $this->mockRepo('ProhibitionDefect', ProhibitionDefect::class);

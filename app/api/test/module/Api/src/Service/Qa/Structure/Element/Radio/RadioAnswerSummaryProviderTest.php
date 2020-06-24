@@ -25,7 +25,7 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
 
     private $radioAnswerSummaryProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $decodedOptionSourceSource = [
             'name' => 'database',

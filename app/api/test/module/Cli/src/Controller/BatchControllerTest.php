@@ -40,7 +40,7 @@ class BatchControllerTest extends MockeryTestCase
     /** @var m\MockInterface */
     private $mockQueryHandler;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockCommandHandler = m::mock(CommandHandlerManager::class);
         $this->mockQueryHandler = m::mock(QueryHandlerManager::class);

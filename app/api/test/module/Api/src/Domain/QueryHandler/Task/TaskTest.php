@@ -15,7 +15,7 @@ use Dvsa\Olcs\Transfer\Query\Task\Task as Qry;
  */
 class TaskTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Task();
         $this->mockRepo('Task', TaskRepo::class);

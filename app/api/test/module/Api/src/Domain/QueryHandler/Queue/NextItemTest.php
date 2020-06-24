@@ -23,7 +23,7 @@ use Mockery as m;
  */
 class NextItemTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new NextItem();
         $this->mockRepo('Queue', QueueRepo::class);

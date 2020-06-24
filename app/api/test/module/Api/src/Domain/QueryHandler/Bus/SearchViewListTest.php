@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
  */
 class SearchViewListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(SearchViewListQueryHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('BusRegSearchView', BusRegSearchView::class);

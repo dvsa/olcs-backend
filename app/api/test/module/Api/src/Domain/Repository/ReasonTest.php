@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Reason as Repo;
  */
 class ReasonTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

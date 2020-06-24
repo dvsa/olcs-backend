@@ -27,7 +27,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class PublicationTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(PublicationRepo::class, true);
     }

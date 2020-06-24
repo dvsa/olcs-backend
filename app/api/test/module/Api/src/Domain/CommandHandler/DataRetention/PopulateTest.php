@@ -19,7 +19,7 @@ class PopulateTest extends CommandHandlerTestCase
 {
     private $mockedConnection;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Populate();
         $this->mockRepo('DataRetentionRule', DataRetentionRule::class);

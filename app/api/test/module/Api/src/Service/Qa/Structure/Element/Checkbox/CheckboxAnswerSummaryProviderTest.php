@@ -16,7 +16,7 @@ class CheckboxAnswerSummaryProviderTest extends MockeryTestCase
 {
     private $checkboxAnswerSummaryProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->checkboxAnswerSummaryProvider = new CheckboxAnswerSummaryProvider();
     }

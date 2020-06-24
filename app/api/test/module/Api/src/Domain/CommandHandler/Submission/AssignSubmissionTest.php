@@ -56,7 +56,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         ]
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AssignSubmission();
         $this->mockRepo('Submission', SubmissionRepo::class);

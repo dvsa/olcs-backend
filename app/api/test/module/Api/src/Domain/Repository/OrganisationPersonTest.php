@@ -16,7 +16,7 @@ class OrganisationPersonTest extends RepositoryTestCase
     /** @var OrganisationPersonRepo  */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(OrganisationPersonRepo::class);
     }

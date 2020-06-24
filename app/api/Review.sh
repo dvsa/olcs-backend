@@ -27,7 +27,6 @@ PHPCS="vendor/bin/phpcs"
 PHPUNIT="vendor/bin/phpunit"
 PHPCOV="vendor/bin/phpcov"
 PHPMD="vendor/bin/phpmd"
-DEVTOOLS="${DIR}"
 
 # this parses the 'project name' from the git remote url
 PROJECT=$(git remote -v | head -n1 | awk '{print $2}' | sed 's/.*\///' | sed 's/\.git//');

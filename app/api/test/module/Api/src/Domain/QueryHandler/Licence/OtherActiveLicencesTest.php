@@ -23,7 +23,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class OtherActiveLicencesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new OtherActiveLicences();
         $this->mockRepo('Licence', LicenceRepo::class);

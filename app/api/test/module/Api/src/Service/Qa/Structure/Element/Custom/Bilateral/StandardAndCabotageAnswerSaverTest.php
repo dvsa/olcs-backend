@@ -34,7 +34,7 @@ class StandardAndCabotageAnswerSaverTest extends MockeryTestCase
 
     private $standardAndCabotageAnswerSaver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->postData = [
             'key1' => 'value1',

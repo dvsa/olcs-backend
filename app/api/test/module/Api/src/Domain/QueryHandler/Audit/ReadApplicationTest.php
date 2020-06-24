@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class ReadApplicationTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadApplication();
         $this->mockRepo('ApplicationReadAudit', Repository\ApplicationReadAudit::class);

@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
  */
 class HistoryTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new History();
         $this->mockRepo('EventHistory', Repository\EventHistory::class);

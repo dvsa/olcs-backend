@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
  */
 class UpdateDeclarationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateDeclaration();
         $this->mockRepo('Application', Application::class);

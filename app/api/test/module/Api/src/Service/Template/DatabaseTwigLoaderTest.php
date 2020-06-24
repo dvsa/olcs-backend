@@ -24,7 +24,7 @@ class DatabaseTwigLoaderTest extends MockeryTestCase
     /** @var DatabaseTemplateFetcher */
     private $databaseTemplateFetcher;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->databaseTemplateFetcher = m::mock(DatabaseTemplateFetcher::class);
         $this->sut = new DatabaseTwigLoader($this->databaseTemplateFetcher);

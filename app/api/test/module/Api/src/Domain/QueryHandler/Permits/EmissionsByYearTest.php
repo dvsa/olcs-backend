@@ -15,7 +15,7 @@ use DateTime;
 
 class EmissionsByYearTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new EmissionsByYear();
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);

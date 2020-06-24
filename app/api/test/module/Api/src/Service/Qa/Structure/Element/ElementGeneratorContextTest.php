@@ -27,7 +27,7 @@ class ElementGeneratorContextTest extends MockeryTestCase
 
     private $elementGeneratorContext;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->validatorList = m::mock(ValidatorList::class);
 

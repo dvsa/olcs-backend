@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class AnnualTestHistoryTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AnnualTestHistory();
         $this->mockRepo('Cases', CasesRepo::class);

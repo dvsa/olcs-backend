@@ -20,7 +20,7 @@ use Dvsa\Olcs\Transfer\Query\Cases\ProposeToRevoke\ProposeToRevokeByCase as Qry;
  */
 class ProposeToRevokeByCaseTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProposeToRevokeByCase();
         $this->mockRepo('ProposeToRevoke', ProposeToRevokeRepo::class);

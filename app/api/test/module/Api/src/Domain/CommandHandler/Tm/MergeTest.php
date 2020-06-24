@@ -18,7 +18,7 @@ use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
  */
 class MergeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('TransportManager', \Dvsa\Olcs\Api\Domain\Repository\TransportManager::class);

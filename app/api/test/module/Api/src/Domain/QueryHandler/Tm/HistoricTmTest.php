@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Tm\HistoricTm as HistoricTmEntity;
  */
 class HistoricTmTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('HistoricTm', HistoricTmRepo::class);

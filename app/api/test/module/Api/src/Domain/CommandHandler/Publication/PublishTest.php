@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 class PublishTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Publish();
         $this->mockRepo('Publication', PublicationRepo::class);

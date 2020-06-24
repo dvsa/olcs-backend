@@ -33,7 +33,7 @@ class ForCpWithCountriesAndMultipleMatchingRangesProviderTest extends MockeryTes
 
     private $rangesProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $rangeEntity1Id = 47;
         $rangeEntity1 = m::mock(IrhpPermitRange::class);

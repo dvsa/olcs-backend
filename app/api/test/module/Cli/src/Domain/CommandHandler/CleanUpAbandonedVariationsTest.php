@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class CleanUpAbandonedVariationsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Application', Application::class);

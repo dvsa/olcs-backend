@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class GetRuleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('DataRetentionRule', DataRetentionRuleRepo::class);

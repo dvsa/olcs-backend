@@ -25,7 +25,7 @@ class ReadLicenceTest extends CommandHandlerTestCase
     /** @var  \Dvsa\Olcs\Transfer\Command\Audit\ReadLicence */
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadLicence();
         $this->mockRepo('LicenceReadAudit', Repository\LicenceReadAudit::class);

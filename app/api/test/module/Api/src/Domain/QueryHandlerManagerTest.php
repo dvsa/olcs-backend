@@ -33,7 +33,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
     private $vhm;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->vhm = m::mock(ValidationHandlerManager::class)->makePartial();
 

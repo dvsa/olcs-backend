@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class RegistrationHistoryListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(RegistrationHistoryList::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('Bus', BusRepo::class);

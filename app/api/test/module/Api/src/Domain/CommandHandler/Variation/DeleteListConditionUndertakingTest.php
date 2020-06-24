@@ -21,7 +21,7 @@ class DeleteListConditionUndertakingTest extends CommandHandlerTestCase
     const CU_ID_1 = 9001;
     const CU_ID_2 = 9002;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteListConditionUndertaking();
         $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);

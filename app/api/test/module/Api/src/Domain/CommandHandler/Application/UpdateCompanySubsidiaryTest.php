@@ -22,7 +22,7 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
     /** @var  UpdateCompanySubsidiary|m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(UpdateCompanySubsidiary::class . '[update, updateApplicationCompetition]')
             ->makePartial()

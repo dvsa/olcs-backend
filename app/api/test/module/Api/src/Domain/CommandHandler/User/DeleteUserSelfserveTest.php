@@ -26,7 +26,7 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockAuth;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteUserSelfserve();
         $this->mockRepo('User', Repository\User::class);

@@ -28,7 +28,7 @@ use Mockery as m;
  */
 class GenerateSlaTargetDateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Pi', PiRepo::class);

@@ -19,7 +19,7 @@ class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase
 {
     /** @var DeleteContactDetailsAndAddressTraitStub $sut */
     protected $sut;
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteContactDetailsAndAddressTraitStub();
         $this->mockRepo('Address', AddressRepo::class);

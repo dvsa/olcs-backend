@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\UploadEvidence;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre as ApplicationOperatingCentreRepo;
@@ -18,7 +19,7 @@ use Mockery as m;
  */
 class UploadEvidenceTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UploadEvidence();
         $this->mockRepo('Application', ApplicationRepo::class);
@@ -62,7 +63,7 @@ class UploadEvidenceTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertArraySubset(
+        Assert::assertArraySubset(
             [
                 'financialEvidence' => [
                     'canAdd' => true,

@@ -34,7 +34,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
 {
     const NATURE_OF_BUSINESS = 'testnob';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SaveOperator();
         $this->mockRepo('Organisation', OrganisationRepo::class);

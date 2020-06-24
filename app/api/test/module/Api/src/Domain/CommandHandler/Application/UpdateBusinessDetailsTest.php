@@ -20,7 +20,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
     /** @var UpdateBusinessDetails  */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateBusinessDetails();
 

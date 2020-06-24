@@ -28,7 +28,7 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockAuthSrv;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(UpdateCompanySubsidiary::class . '[update, createTask]')
             ->makePartial()

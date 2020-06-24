@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 class CreateIrfoPsvAuthTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateIrfoPsvAuth();
         $this->mockRepo('IrfoPsvAuth', IrfoPsvAuth::class);

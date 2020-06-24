@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
  */
 class UpdateTradingNamesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateTradingNames();
         $this->mockRepo('Organisation', Organisation::class);

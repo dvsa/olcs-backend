@@ -16,7 +16,7 @@ class SystemInfoMessageTest extends RepositoryTestCase
     /** @var  Repository\SystemInfoMessage */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\SystemInfoMessage::class);
     }

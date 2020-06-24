@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\EbsrSubmission as Qry;
  */
 class EbsrSubmissionTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new EbsrSubmission();
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);

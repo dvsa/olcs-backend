@@ -35,7 +35,7 @@ class IrhpGeneratorTest extends MockeryTestCase
      */
     protected $answersSummaryGenerator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->answersSummaryGenerator = m::mock(AnswersSummaryGenerator::class);
 

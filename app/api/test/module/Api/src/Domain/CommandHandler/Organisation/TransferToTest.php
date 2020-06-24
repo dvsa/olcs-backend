@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  */
 class TransferToTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TransferTo();
         $this->mockRepo('Organisation', \Dvsa\Olcs\Api\Domain\Repository\Organisation::class);

@@ -22,7 +22,7 @@ class Text2Test extends MockeryTestCase
      */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new \Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text2();
 

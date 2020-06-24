@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  */
 class UpdateLicenceStatusRuleTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateLicenceStatusRule();
         $this->mockRepo('LicenceStatusRule', StatusRuleRepo::class);

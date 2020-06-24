@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
  */
 class UpdateEnvironmentalComplaintTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateEnvironmentalComplaint();
         $this->mockRepo('Complaint', Complaint::class);

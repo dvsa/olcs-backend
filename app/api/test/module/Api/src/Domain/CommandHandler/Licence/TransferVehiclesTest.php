@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
  */
 class TransferVehiclesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TransferVehicles();
         $this->mockRepo('Licence', LicenceRepo::class);

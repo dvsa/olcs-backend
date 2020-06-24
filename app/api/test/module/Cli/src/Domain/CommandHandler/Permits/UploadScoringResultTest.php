@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class UploadScoringResultTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UploadScoringResultHandler();
 

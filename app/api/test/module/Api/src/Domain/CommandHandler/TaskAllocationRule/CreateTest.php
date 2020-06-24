@@ -21,7 +21,7 @@ class CreateTest extends CommandHandlerTestCase
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('TaskAllocationRule', \Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule::class);

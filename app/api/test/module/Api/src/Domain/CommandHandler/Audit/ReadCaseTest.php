@@ -25,7 +25,7 @@ class ReadCaseTest extends CommandHandlerTestCase
     /** @var \Dvsa\Olcs\Transfer\Command\Audit\ReadCase */
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadCase();
         $this->mockRepo('CasesReadAudit', Repository\CasesReadAudit::class);

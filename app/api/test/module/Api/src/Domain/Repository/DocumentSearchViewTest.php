@@ -15,7 +15,7 @@ use Mockery as m;
 class DocumentSearchViewTest extends RepositoryTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(DocumentSearchViewRepo::class, true);
     }

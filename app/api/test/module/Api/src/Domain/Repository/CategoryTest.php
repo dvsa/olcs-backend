@@ -11,7 +11,7 @@ use Mockery as m;
  */
 class CategoryTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(\Dvsa\Olcs\Api\Domain\Repository\Category::class, true);
     }

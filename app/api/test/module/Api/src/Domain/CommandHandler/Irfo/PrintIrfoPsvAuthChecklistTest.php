@@ -24,7 +24,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('IrfoPsvAuth', IrfoPsvAuth::class);

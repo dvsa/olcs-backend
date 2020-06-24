@@ -16,7 +16,7 @@ class PermitUsageSelectionGeneratorTest extends MockeryTestCase
 {
     private $permitUsageSelectionGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->permitUsageSelectionGenerator = new PermitUsageSelectionGenerator();
     }

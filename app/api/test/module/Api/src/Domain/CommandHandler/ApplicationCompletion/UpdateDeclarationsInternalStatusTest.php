@@ -15,7 +15,7 @@ class UpdateDeclarationsInternalStatusTest extends AbstractUpdateStatusTestCase
 {
     protected $section = 'DeclarationsInternal';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateDeclarationsInternalStatus();
         $this->command = Cmd::create(['id' => 111]);

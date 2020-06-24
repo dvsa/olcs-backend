@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class IrhpPermitJurisdictionQuotaTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(IrhpPermitJurisdictionQuota::class);
     }

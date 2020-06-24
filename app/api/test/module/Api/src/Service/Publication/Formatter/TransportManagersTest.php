@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Publication\Formatter\TransportManagers as Formatter;
  */
 class TransportManagersTest extends MockeryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
     }
 

@@ -28,7 +28,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class UpdateBusinessTypeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateBusinessType();
         $this->mockRepo('Organisation', Organisation::class);

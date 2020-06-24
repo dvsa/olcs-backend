@@ -38,7 +38,7 @@ trait ValidationHelperTestCaseTrait
      */
     protected $auth;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
         $this->auth = m::mock(AuthorizationService::class);

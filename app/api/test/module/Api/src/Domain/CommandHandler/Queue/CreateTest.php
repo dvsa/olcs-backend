@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Create();
         $this->mockRepo('Queue', Repo::class);

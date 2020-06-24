@@ -21,7 +21,7 @@ class PublicationGeneratorTest extends MockeryTestCase
     /** @var ServiceLocatorInterface|m\MockInterface */
     private $mockProcessMngr;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockCtxMngr = m::mock(Publication\Context\PluginManager::class);
         $this->mockProcessMngr = m::mock(Publication\Process\PluginManager::class);

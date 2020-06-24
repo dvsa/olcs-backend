@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
  */
 class FStandingCapitalReservesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new FStandingCapitalReserves();
         $this->mockRepo('Application', ApplicationRepo::class);

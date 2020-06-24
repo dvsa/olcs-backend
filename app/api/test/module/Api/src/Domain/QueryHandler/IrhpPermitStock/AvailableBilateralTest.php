@@ -11,7 +11,7 @@ use Mockery as m;
 
 class AvailableBilateralTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AvailableBilateral();
         $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);

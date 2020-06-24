@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVa
  */
 class RestoreOperatingCentreTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new RestoreOperatingCentre();
         $this->mockRepo('Application', Repository\Application::class);

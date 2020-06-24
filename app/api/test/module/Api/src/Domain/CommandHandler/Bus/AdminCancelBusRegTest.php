@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 class AdminCancelBusRegTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AdminCancelBusReg();
         $this->mockRepo('Bus', BusRepo::class);

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\QueryPartial\ById;
  */
 class ByIdTest extends QueryPartialTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ById();
 

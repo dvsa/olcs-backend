@@ -13,7 +13,7 @@ use Mockery as m;
  */
 class GetAuthRequestTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GetAuthRequest();
         $this->mockRepo('SystemParameter', \Dvsa\Olcs\Api\Domain\Repository\SystemParameter::class);

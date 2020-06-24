@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
  */
 class PublicationLinkListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PublicationLinkList();
         $this->mockRepo('PublicationLink', PublicationLinkRepo::class);

@@ -30,7 +30,7 @@ class CheckboxAnswerSaverTest extends MockeryTestCase
 
     private $checkboxAnswerSaver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fieldsetName = 'fields123';
 

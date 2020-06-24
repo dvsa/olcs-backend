@@ -17,7 +17,7 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
     /** @var  Repository\CompaniesHouseAlert | m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\CompaniesHouseAlert::class, true);
     }

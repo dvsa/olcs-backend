@@ -21,7 +21,7 @@ class QaContextTest extends MockeryTestCase
 
     private $qaContext;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->applicationStep = m::mock(ApplicationStep::class);
 

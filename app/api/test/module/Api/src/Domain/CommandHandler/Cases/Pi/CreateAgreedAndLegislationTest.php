@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
  */
 class CreateAgreedAndLegislationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateAgreedAndLegislation();
         $this->mockRepo('Pi', PiRepo::class);

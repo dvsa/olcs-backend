@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class DiscNumberingTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('DiscSequence', DiscSequenceRepo::class);

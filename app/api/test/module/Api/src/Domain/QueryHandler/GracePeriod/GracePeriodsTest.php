@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class GracePeriodsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GracePeriods();
         $this->mockRepo('GracePeriod', \Dvsa\Olcs\Api\Domain\Repository\GracePeriod::class);

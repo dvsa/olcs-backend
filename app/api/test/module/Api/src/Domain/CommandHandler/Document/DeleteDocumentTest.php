@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate;
  */
 class DeleteDocumentTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteDocument();
         $this->mockRepo('Document', Document::class);

@@ -32,7 +32,7 @@ class QaEntityProviderTest extends MockeryTestCase
 
     private $qaEntityProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpApplication = m::mock(IrhpApplication::class);
 

@@ -20,7 +20,7 @@ class CompaniesHouseVsOlcsDiffsTest extends MockeryTestCase
     /** @var CompaniesHouseVsOlcsDiffs */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockStmt = m::mock(Statement::class);
 

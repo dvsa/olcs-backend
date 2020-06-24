@@ -59,7 +59,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
     /** @var int */
     protected $permitAppId;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->permitAppId = 77;
 

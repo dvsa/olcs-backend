@@ -27,7 +27,7 @@ use Dvsa\Olcs\Transfer\Command\GracePeriod\DeleteGracePeriod as Cmd;
  */
 class DeleteGracePeriodTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteGracePeriod();
         $this->mockRepo('GracePeriod', GracePeriodRepo::class);

@@ -15,7 +15,7 @@ class DocumentSearchViewTest extends \PHPUnit\Framework\TestCase
     /**  @var array */
     protected $testData;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testData = [
             'id' => 'unit_Id',

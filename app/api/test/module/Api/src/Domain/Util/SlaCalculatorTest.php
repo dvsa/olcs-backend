@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Repository\PublicHoliday as PublicHolidayRepo;
  */
 class SlaCalculatorTest extends MockeryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->publicHolidayRepo = m::mock(PublicHolidayRepo::class);
 

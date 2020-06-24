@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCmd;
  */
 class GenerateBatchTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GenerateBatch();
         $this->mockRepo('CommunityLic', Repository\CommunityLic::class);

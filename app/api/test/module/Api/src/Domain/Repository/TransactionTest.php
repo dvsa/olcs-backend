@@ -19,7 +19,7 @@ class TransactionTest extends RepositoryTestCase
     /** @var  TransactionRepo */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(TransactionRepo::class);
     }

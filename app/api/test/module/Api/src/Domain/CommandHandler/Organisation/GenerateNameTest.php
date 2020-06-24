@@ -33,7 +33,7 @@ class GenerateNameTest extends CommandHandlerTestCase
     /** @var  Entity\Application\Application | m\MockInterface */
     private $mockApp;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GenerateName();
 

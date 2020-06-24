@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTarg
  */
 class UpdateSlaTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateSla();
         $this->mockRepo('Pi', PiRepo::class);

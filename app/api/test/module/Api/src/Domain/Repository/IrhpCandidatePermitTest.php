@@ -18,7 +18,7 @@ use Mockery as m;
  */
 class IrhpCandidatePermitTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(IrhpCandidatePermit::class);
     }

@@ -28,7 +28,7 @@ class IrhpPermitTypeEntityTest extends EntityTester
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(Entity::class)->makePartial();
     }

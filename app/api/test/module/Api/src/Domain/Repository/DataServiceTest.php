@@ -17,7 +17,7 @@ class DataServiceTest extends RepositoryTestCase
     /** @var Repository\DataService | m\MockInterface  */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\DataService::class);
     }

@@ -35,7 +35,7 @@ class ForCpWithNoCountriesProviderTest extends MockeryTestCase
 
     private $forCpWithNoCountriesProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->result = new Result();
 

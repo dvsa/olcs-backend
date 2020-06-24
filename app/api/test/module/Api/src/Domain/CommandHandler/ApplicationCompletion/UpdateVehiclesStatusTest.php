@@ -22,7 +22,7 @@ class UpdateVehiclesStatusTest extends AbstractUpdateStatusTestCase
 {
     protected $section = 'Vehicles';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateVehiclesStatus();
         $this->command = Cmd::create(['id' => 111]);

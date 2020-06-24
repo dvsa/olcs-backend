@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntit
  */
 class CreateConditionUndertakingTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateConditionUndertaking();
         $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);

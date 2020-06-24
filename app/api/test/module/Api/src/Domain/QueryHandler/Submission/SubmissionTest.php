@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class SubmissionTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Submission();
         $this->mockRepo('Submission', SubmissionRepo::class);

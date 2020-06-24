@@ -31,7 +31,7 @@ class Schedule41Test extends CommandHandlerTestCase
     protected $licence;
     protected $loc;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Schedule41();
         $this->mockRepo('Application', ApplicationRepo::class);

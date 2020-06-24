@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
  */
 class HearingTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Hearing();
         $this->mockRepo('PiHearing', PiHearingRepo::class);

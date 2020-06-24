@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class BusRegBrowseListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new BusRegBrowseList();
         $this->mockRepo('BusRegBrowseView', BusRegBrowseViewRepo::class);

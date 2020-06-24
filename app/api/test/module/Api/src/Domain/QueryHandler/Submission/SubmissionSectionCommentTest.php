@@ -17,7 +17,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
  */
 class SubmissionSectionCommentTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SubmissionSectionComment();
         $this->mockRepo('SubmissionSectionComment', SubmissionSectionCommentRepo::class);

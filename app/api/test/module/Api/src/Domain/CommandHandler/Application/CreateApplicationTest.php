@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
  */
 class CreateApplicationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateApplication();
         $this->mockRepo('Application', Application::class);

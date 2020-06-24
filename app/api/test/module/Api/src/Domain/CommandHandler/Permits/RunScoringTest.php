@@ -21,7 +21,7 @@ use Mockery as m;
 
 class RunScoringTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('IrhpPermitStock', IrhpPermitStock::class);
 

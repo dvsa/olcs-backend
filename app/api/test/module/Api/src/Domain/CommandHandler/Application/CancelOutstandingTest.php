@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CancelOutstandingFees;
  */
 class CancelOutstandingTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CancelOutstandingFees();
         $this->mockRepo('Fee', \Dvsa\Olcs\Api\Domain\Repository\Fee::class);

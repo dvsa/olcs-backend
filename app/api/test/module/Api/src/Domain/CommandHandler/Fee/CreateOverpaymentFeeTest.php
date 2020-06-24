@@ -31,7 +31,7 @@ class CreateOverpaymentFeeTest extends CommandHandlerTestCase
 
     protected $mockFeesHelperService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockFeesHelperService = m::mock(FeesHelper::class);
         $this->mockedSmServices = [

@@ -22,7 +22,7 @@ class UpdateTest extends CommandHandlerTestCase
 {
     use ProcessDateTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(UpdateHandler::class)->makePartial();
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);

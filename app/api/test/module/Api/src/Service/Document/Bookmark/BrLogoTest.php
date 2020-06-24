@@ -3,6 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\BrLogo;
+use Dvsa\Olcs\Api\Service\Document\Parser\ParserInterface;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 
 /**
  * Br Logo test
@@ -35,17 +38,17 @@ class BrLogoTest extends \PHPUnit\Framework\TestCase
             'AAAA/9oACAEBAAA/AKpgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/9k='
         );
 
-        $fileMock = $this->createPartialMock('\stdClass', ['getContent']);
+        $fileMock = $this->createPartialMock(File::class, ['getContent']);
         $fileMock->expects($this->exactly(!empty($image) ? 1 : 0))
             ->method('getContent')
             ->willReturn($content);
 
-        $fileStoreMock = $this->createPartialMock('\stdClass', ['read']);
+        $fileStoreMock = $this->createPartialMock(DocumentStoreInterface::class, ['read', 'write', 'remove']);
         $fileStoreMock->expects($this->exactly(!empty($image) ? 1 : 0))
             ->method('read')
             ->willReturn($fileMock);
 
-        $parserMock = $this->createPartialMock('\stdClass', ['renderImage']);
+        $parserMock = $this->createPartialMock(ParserInterface::class, ['renderImage', 'replace', 'getFileExtension', 'extractTokens']);
         $parserMock->expects($this->exactly(!empty($image) ? 1 : 0))
             ->method('renderImage')
             ->with($content, 100, $bookmark::CONTAINER_HEIGHT, 'jpeg')

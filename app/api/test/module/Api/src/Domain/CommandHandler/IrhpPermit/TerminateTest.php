@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class TerminateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CmdHandler();
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);

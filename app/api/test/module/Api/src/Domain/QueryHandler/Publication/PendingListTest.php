@@ -24,7 +24,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class PendingListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PendingList();
         $this->mockRepo('Publication', PublicationRepo::class);

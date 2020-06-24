@@ -25,7 +25,7 @@ class ReprintTest extends CommandHandlerTestCase
     /** @var Reprint */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Reprint();
 

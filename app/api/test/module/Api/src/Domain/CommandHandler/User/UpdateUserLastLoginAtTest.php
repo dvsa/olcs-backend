@@ -18,7 +18,7 @@ class UpdateUserLastLoginAtTest extends CommandHandlerTestCase
     /** @var UpdateUserLastLoginAt|m\Mock sut */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('User', User::class);

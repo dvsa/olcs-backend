@@ -19,7 +19,7 @@ class S3ClientFactoryTest extends TestCase
 
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new S3ClientFactory();
 

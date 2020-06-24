@@ -31,7 +31,7 @@ class ProcessInspectionRequestEmailTest extends CommandHandlerTestCase
 
     protected $logWriter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessInspectionRequestEmail();
 

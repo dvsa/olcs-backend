@@ -24,7 +24,7 @@ class DeleteTest extends CommandHandlerTestCase
     /**
      * set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteHandler();
         $this->mockRepo('TransportManagerLicence', TmlRepo::class);

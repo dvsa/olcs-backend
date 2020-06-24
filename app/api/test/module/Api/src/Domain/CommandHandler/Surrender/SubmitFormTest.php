@@ -24,7 +24,7 @@ class SubmitFormTest extends CommandHandlerTestCase
     /** @var Sut */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->refData = [];

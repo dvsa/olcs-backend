@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Query\User\RoleList as Qry;
  */
 class RoleListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new RoleList();
         $this->mockRepo('Role', RoleRepo::class);

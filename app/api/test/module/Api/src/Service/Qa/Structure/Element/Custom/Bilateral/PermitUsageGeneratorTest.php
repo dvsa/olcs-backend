@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\PermitUsageGenerator;
@@ -23,7 +22,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class PermitUsageGeneratorTest extends MockeryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->answerValue = RefData::JOURNEY_SINGLE;
 
@@ -113,12 +112,11 @@ class PermitUsageGeneratorTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
-     * @expectedExceptionMessage Permit usage not found
-     */
     public function testGenerateWithEmptyPermitUsageList()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+        $this->expectExceptionMessage('Permit usage not found');
+
         $returnedOptions = [];
 
         $this->irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getPermitUsageList')

@@ -48,7 +48,7 @@ class CreateTaskTest extends CommandHandlerTestCase
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateTask();
 

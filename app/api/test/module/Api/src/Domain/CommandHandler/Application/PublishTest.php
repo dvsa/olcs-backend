@@ -24,7 +24,7 @@ use Mockery as m;
  */
 class PublishTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new \Dvsa\Olcs\Api\Domain\CommandHandler\Application\Publish();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

@@ -58,7 +58,7 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb = null;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

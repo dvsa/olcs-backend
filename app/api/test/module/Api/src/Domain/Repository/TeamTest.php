@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Team as TeamRepo;
  */
 class TeamTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(TeamRepo::class);
     }

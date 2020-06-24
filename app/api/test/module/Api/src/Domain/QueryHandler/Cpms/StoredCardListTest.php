@@ -17,7 +17,7 @@ class StoredCardListTest extends QueryHandlerTestCase
 {
     protected $mockCpmsService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockCpmsService = m::mock(CpmsHelper::class);
 

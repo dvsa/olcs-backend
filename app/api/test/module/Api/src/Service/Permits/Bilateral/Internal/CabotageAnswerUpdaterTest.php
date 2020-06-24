@@ -38,7 +38,7 @@ class CabotageAnswerUpdaterTest extends MockeryTestCase
 
     private $cabotageAnswerUpdater;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->qaContext = m::mock(QaContext::class);
 

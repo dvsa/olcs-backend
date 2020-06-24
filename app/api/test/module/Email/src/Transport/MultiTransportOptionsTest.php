@@ -20,7 +20,7 @@ class MultiTransportOptionsTest extends MockeryTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new MultiTransportOptions([], new S3FileOptions([], new S3Client([
             'region' => 'eu-west-1',

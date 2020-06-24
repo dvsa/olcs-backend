@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class StoreSubmissionSnapshotTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new StoreSubmissionSnapshot();
         $this->mockRepo('Submission', Repository\Submission::class);

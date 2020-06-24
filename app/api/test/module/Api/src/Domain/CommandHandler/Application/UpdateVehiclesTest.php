@@ -25,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateVehicles as Cmd;
  */
 class UpdateVehiclesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateVehicles();
         $this->mockRepo('Application', ApplicationRepo::class);

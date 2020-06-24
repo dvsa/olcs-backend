@@ -26,7 +26,7 @@ class ByIdTest extends QueryHandlerTestCase
         'countrys'
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(IrhpApplicationByIdHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);

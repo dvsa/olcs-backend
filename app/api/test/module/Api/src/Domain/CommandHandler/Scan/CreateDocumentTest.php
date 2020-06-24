@@ -23,7 +23,7 @@ class CreateDocumentTest extends CommandHandlerTestCase
 {
     private $validPdf = '%PDF-1.2';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Scan', \Dvsa\Olcs\Api\Domain\Repository\Scan::class);

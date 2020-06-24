@@ -31,7 +31,7 @@ use Dvsa\Olcs\Api\Domain\Command\InspectionRequest\SendInspectionRequest as Send
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Create();
         $this->mockRepo('InspectionRequest', InspectionRequestRepo::class);

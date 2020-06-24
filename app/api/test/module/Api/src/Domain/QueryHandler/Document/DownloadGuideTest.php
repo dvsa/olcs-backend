@@ -19,7 +19,7 @@ class DownloadGuideTest extends QueryHandlerTestCase
     /** @var  m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(DownloadGuide::class . '[download, setIsInline]')
             ->shouldAllowMockingProtectedMethods();

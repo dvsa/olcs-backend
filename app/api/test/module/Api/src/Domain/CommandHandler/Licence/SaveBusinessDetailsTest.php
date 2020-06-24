@@ -32,7 +32,7 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockLicenceEntity;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SaveBusinessDetails();
 

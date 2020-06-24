@@ -27,7 +27,7 @@ class TaskAllocationRuleTest extends RepositoryTestCase
     /**
      * Set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(TaskAllocationRuleRepo::class);
     }

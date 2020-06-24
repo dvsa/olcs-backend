@@ -16,7 +16,7 @@ class DateAnswerSummaryProviderTest extends MockeryTestCase
 {
     private $dateAnswerSummaryProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->dateAnswerSummaryProvider = new DateAnswerSummaryProvider();
     }

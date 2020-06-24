@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  */
 class CloseSubmissionTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CloseSubmission();
         $this->mockRepo('Submission', SubmissionRepo::class);

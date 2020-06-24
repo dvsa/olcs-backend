@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class GetListByLicenceTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(Handler::class)
             ->makePartial()

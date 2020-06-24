@@ -11,7 +11,7 @@ use Dvsa\Olcs\Transfer\Query\Licence\LicenceWithCorrespondenceCd as Qry;
 class LicenceWithCorrespondenceCdTest extends QueryHandlerTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new LicenceWithCorrespondenceCd();
         $this->mockRepo('Licence', Repository\Licence::class);

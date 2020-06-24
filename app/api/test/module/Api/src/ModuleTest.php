@@ -22,7 +22,7 @@ class ModuleTest extends MockeryTestCase
     /** @var  Module */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(Module::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }

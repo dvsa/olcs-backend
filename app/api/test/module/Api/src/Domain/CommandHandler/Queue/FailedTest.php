@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class FailedTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Failed();
         $this->mockRepo('Queue', Repository\Queue::class);

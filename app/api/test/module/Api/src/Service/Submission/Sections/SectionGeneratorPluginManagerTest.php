@@ -16,7 +16,7 @@ class SectionGeneratorPluginManagerTest extends MockeryTestCase
     /** @var  SectionGeneratorPluginManager */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $mockCfg = m::mock(ConfigInterface::class)
             ->shouldReceive('configureServiceManager')

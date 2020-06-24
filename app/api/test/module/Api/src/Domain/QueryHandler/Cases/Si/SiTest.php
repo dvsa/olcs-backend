@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Query\Cases\Si\Si as Qry;
  */
 class SiTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SiHandler();
         $this->mockRepo('SeriousInfringement', SiRepo::class);

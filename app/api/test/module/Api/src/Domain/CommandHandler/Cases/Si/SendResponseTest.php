@@ -22,7 +22,7 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File;
  */
 class SendResponseTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SendResponse();
         $this->mockRepo('ErruRequest', ErruRequestRepo::class);

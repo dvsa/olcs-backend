@@ -19,7 +19,7 @@ class AwsCredentialsProviderFactoryTest extends TestCase
 
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sm = Bootstrap::getServiceManager();
         $this->sut = new AwsCredentialsProviderFactory();

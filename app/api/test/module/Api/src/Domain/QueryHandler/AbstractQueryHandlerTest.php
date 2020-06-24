@@ -24,7 +24,7 @@ class AbstractQueryHandlerTest extends QueryHandlerTestCase
     /** @var AuthorizationService */
     protected $authorizationService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AbstractQueryHandlerStub();
 

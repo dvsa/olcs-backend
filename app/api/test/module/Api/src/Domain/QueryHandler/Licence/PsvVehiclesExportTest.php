@@ -18,7 +18,7 @@ use Doctrine\ORM\Query;
  */
 class PsvVehiclesExportTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PsvVehiclesExport();
         $this->mockRepo('LicenceVehicle', LicenceVehicle::class);

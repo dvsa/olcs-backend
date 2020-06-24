@@ -29,7 +29,7 @@ class TranslateableTextTest extends MockeryTestCase
 
     private $translateableText;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->key = 'translateableTextKey';
 

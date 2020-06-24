@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 class CreateProposeToRevokeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateProposeToRevoke();
         $this->mockRepo('ProposeToRevoke', ProposeToRevoke::class);

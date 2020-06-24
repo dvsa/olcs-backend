@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntit
  */
 class DeleteTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Delete();
         $this->mockRepo('ConditionUndertaking', ConditionUndertaking::class);

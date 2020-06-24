@@ -14,7 +14,7 @@ class WithBusRegTest extends QueryPartialTestCase
     /** @var m\Mock */
     private $with;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Cannot mock With as it is Final
         $this->with = new With();

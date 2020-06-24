@@ -36,7 +36,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
 
     private $emailCommandLookup;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('FeeType', FeeType::class);
         $this->mockRepo('IrhpPermitStock', IrhpPermitStock::class);

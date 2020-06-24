@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class UpdateTrailersTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateTrailers();
         $this->mockRepo('Licence', Repository\Licence::class);

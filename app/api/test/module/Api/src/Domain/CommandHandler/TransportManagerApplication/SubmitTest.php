@@ -32,7 +32,7 @@ class SubmitTest extends CommandHandlerTestCase
 
     protected $applicationId = 234;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo(

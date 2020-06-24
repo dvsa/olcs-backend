@@ -24,7 +24,7 @@ class QueryPartialTestCase extends MockeryTestCase
      */
     protected $qb;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->qb = m::mock(QueryBuilder::class)->makePartial();
 

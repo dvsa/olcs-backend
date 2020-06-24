@@ -18,7 +18,7 @@ class GetDetailsTest extends QueryHandlerTestCase
     /** @var  QueryHandler\TransportManagerApplication\GetDetails  */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler\TransportManagerApplication\GetDetails();
 

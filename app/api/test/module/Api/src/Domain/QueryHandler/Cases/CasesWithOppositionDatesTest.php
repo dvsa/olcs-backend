@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Query\Cases\CasesWithOppositionDates as Qry;
  */
 class CasesWithOppositionDatesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Cases', Cases::class);

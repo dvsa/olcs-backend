@@ -13,7 +13,7 @@ class SurrenderTest extends RepositoryTestCase
     /** @var Surrender */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Surrender::class);
     }

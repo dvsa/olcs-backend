@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\FinancialStandingRate as Repo;
  */
 class FinancialStandingRateListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('FinancialStandingRate', Repo::class);

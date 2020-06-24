@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class SuspendTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Suspend();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);

@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
  */
 class ApplicationInspectionRequestListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('InspectionRequest', InspectionRequestRepo::class);

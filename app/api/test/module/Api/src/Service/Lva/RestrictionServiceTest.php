@@ -15,7 +15,7 @@ class RestrictionServiceTest extends \PHPUnit\Framework\TestCase
     /**
      * Setup the helper
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->helper = new RestrictionService();
     }

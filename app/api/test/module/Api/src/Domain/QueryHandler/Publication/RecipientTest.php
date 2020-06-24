@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Query\Publication\Recipient as Qry;
  */
 class RecipientTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Recipient();
         $this->mockRepo('Recipient', RecipientRepo::class);

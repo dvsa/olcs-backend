@@ -12,7 +12,7 @@ class SubCategoryTest extends RepositoryTestCase
 {
     const CATEGORY = 90001;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(\Dvsa\Olcs\Api\Domain\Repository\SubCategory::class, true);
     }

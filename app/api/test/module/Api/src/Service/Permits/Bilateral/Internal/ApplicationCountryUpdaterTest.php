@@ -34,7 +34,7 @@ class ApplicationCountryUpdaterTest extends MockeryTestCase
 
     private $applicationCountryUpdater;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpApplication = m::mock(IrhpApplication::class);
 

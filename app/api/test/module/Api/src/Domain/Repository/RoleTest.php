@@ -15,7 +15,7 @@ class RoleTest extends RepositoryTestCase
     /** @var  Repository\Role */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\Role::class);
     }

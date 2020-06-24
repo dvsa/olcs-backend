@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity;
  */
 class LetterTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Letter();
         $this->mockRepo('Document', Repository\Document::class);

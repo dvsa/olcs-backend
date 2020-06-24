@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class CompaniesHouseCompanyTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(CompaniesHouseCompanyRepo::class);
     }

@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 
 class ProcessPackFailedTest extends ProcessPackTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessPackFailed();
         parent::setUp();

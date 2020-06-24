@@ -26,7 +26,7 @@ use Mockery as m;
  */
 class UnlicensedVehiclesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(VehiclesQueryHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('Organisation', OrganisationRepo::class);

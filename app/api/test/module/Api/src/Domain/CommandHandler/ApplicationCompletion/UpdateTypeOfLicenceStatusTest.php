@@ -23,7 +23,7 @@ class UpdateTypeOfLicenceStatusTest extends AbstractUpdateStatusTestCase
 {
     protected $section = 'TypeOfLicence';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateTypeOfLicenceStatus();
         $this->command = Cmd::create(['id' => 111]);

@@ -42,7 +42,7 @@ class TextGeneratorTest extends MockeryTestCase
 
     private $textGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->answerValue = '456';
 

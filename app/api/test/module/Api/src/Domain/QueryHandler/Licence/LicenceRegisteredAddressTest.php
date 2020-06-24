@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Query\Licence\LicenceRegisteredAddress as Qry;
  */
 class LicenceRegisteredAddressTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('Licence', LicenceRepo::class);

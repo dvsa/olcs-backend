@@ -28,7 +28,7 @@ class PermitUsageGeneratorTest extends MockeryTestCase
 
     private $permitUsageGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 

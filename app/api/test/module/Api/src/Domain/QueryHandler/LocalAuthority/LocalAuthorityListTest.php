@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class LocalAuthorityListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new LocalAuthorityList();
         $this->mockRepo('LocalAuthority', LocalAuthorityRepo::class);

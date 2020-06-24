@@ -20,7 +20,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new RemoveDeletedDocuments();
         $this->mockRepo('DocumentToDelete', Repository\DocumentToDelete::class);

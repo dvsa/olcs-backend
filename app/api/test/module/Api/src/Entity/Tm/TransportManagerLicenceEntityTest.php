@@ -29,7 +29,7 @@ class TransportManagerLicenceEntityTest extends EntityTester
     /** @var  Entity */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockLic  = m::mock(Entities\Licence\Licence::class);
         $this->mockTm  = m::mock(Entities\Tm\TransportManager::class);

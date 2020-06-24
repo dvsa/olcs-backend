@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Command\User\DeletePartner as Cmd;
  */
 class DeletePartnerTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeletePartner();
         $this->mockRepo('Partner', PartnerRepo::class);

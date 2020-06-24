@@ -28,7 +28,7 @@ use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
  */
 class ValidateApplicationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ValidateApplication();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

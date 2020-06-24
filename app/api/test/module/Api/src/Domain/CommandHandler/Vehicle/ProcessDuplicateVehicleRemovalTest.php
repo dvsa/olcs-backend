@@ -23,7 +23,7 @@ use Dvsa\Olcs\Email\Service\TemplateRenderer;
  */
 class ProcessDuplicateVehicleRemovalTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessDuplicateVehicleRemoval();
 

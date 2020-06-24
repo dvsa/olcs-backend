@@ -25,7 +25,7 @@ class DisqualificationEntityTest extends EntityTester
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Entity(m::mock(\Dvsa\Olcs\Api\Entity\Organisation\Organisation::class));
 

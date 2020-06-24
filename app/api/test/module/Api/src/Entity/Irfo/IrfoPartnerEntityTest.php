@@ -24,7 +24,7 @@ class IrfoPartnerEntityTest extends EntityTester
     /** @var  Organisation */
     private $mockOrg;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

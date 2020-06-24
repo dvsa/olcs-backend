@@ -26,7 +26,7 @@ class DownloadReportTest extends CommandHandlerTestCase
 {
     protected $mockApi;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockCpmsService = m::mock(CpmsHelper::class);
 

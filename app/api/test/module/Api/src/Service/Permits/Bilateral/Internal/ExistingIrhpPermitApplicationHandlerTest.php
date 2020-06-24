@@ -67,7 +67,7 @@ class ExistingIrhpPermitApplicationHandlerTest extends MockeryTestCase
 
     private $existingIrhpPermitApplicationHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $this->irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getId')

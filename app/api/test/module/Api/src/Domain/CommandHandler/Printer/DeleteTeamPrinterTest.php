@@ -20,7 +20,7 @@ use Dvsa\Olcs\Transfer\Command\TeamPrinter\DeleteTeamPrinter as Cmd;
  */
 class DeleteTeamPrinterTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteTeamPrinter();
         $this->mockRepo('TeamPrinter', TeamPrinterRepo::class);

@@ -14,7 +14,7 @@ class CorrespondenceTest extends RepositoryTestCase
     /** @var  Repository\Correspondence */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\Correspondence::class, true);
     }

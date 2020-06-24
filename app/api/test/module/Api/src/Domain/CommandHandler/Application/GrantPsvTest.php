@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleConditio
  */
 class GrantPsvTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GrantPsv();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

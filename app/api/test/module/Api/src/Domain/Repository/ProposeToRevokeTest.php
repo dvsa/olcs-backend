@@ -14,7 +14,7 @@ class ProposeToRevokeTest extends RepositoryTestCase
     /** @var  Repository\ProposeToRevoke */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\ProposeToRevoke::class);
     }

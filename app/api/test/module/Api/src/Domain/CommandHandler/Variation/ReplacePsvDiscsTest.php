@@ -26,7 +26,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\ReplacePsvDiscs as LicenceReplacePsvDiscs
  */
 class ReplacePsvDiscsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReplacePsvDiscs();
         $this->mockRepo('Application', Application::class);

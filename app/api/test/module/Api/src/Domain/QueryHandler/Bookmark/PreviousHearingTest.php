@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Pi\PiHearing as Entity;
  */
 class PreviousHearingTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PreviousHearing();
         $this->mockRepo('PiHearing', Repo::class);

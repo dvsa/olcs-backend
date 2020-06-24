@@ -23,7 +23,7 @@ use Mockery as m;
  */
 class OutstandingFeesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new OutstandingFees();
         $this->mockRepo('Application', ApplicationRepo::class);

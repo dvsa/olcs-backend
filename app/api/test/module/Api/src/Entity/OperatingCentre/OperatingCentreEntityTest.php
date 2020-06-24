@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\OperatingCentre;
 
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as Entity;
@@ -81,20 +82,21 @@ class OperatingCentreEntityTest extends EntityTester
 
         $application = $this->createPartialMock(
             ApplicationEntity::class,
-            ['getIsWithdrawn', 'getStatus', 'getId']
+            ['getStatus', 'getId']
         );
         $application->expects($this->once())->method('getStatus')->will($this->returnSelf());
         $application->expects($this->once())->method('getId')->will($this->returnValue($status));
 
+        $case = $this->createMock(Cases::class);
+        $case->expects($this->once())->method('getApplication')->will($this->returnValue($application));
+
         $opposition = $this->createPartialMock(
             OppositionEntity::class,
-            ['getIsWithdrawn', 'getCase', 'getApplication']
+            ['getIsWithdrawn', 'getCase']
         );
 
         $opposition->expects($this->once())->method('getIsWithdrawn')->will($this->returnValue(false));
-        $opposition->expects($this->once())->method('getCase')->will($this->returnSelf());
-        $opposition->expects($this->once())
-                   ->method('getApplication')->will($this->returnValue($application));
+        $opposition->expects($this->once())->method('getCase')->will($this->returnValue($case));
 
         $oppositions = [];
         $oppositions[] = $opposition;
@@ -111,20 +113,21 @@ class OperatingCentreEntityTest extends EntityTester
 
         $application = $this->createPartialMock(
             ApplicationEntity::class,
-            ['getIsWithdrawn', 'getStatus', 'getId']
+            ['getStatus', 'getId']
         );
         $application->expects($this->once())->method('getStatus')->will($this->returnSelf());
         $application->expects($this->once())->method('getId')->will($this->returnValue($status));
 
+        $case = $this->createMock(Cases::class);
+        $case->expects($this->once())->method('getApplication')->will($this->returnValue($application));
+
         $opposition = $this->createPartialMock(
             OppositionEntity::class,
-            ['getIsWithdrawn', 'getCase', 'getApplication']
+            ['getIsWithdrawn', 'getCase']
         );
 
         $opposition->expects($this->once())->method('getIsWithdrawn')->will($this->returnValue(false));
-        $opposition->expects($this->once())->method('getCase')->will($this->returnSelf());
-        $opposition->expects($this->once())
-            ->method('getApplication')->will($this->returnValue($application));
+        $opposition->expects($this->once())->method('getCase')->will($this->returnValue($case));
 
         $oppositions = [];
         $oppositions[] = $opposition;

@@ -26,7 +26,7 @@ class CreatorTest extends MockeryTestCase
 
     private $user;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->user = m::mock(UserEntity::class);
 

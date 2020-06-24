@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('Licence', Repo::class);

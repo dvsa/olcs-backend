@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class MarkSuccessfulSectorPermitApplicationsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new MarkSuccessfulSectorPermitApplicationsHandler();
         $this->mockRepo('IrhpPermitSectorQuota', IrhpPermitSectorQuotaRepo::class);

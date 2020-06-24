@@ -22,7 +22,7 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
 
     protected $additionalSize = 2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Batch();
 

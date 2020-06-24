@@ -21,7 +21,7 @@ class PrintLetterTest extends CommandHandlerTestCase
     const LIC_ID = 9999;
     const BUS_REG_ID = 7777;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PrintLetter();
 

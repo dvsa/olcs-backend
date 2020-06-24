@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 class UpdateSafetyTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateSafety();
         $this->mockRepo('Application', Application::class);

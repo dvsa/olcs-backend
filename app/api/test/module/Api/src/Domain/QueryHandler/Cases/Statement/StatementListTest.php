@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class StatementListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new StatementList();
         $this->mockRepo('Statement', StatementRepo::class);

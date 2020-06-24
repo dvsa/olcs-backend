@@ -32,7 +32,7 @@ class DocumentGeneratorTest extends MockeryTestCase
     /** @var  m\MockInterface */
     protected $documentRepo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DocumentGenerator();
 

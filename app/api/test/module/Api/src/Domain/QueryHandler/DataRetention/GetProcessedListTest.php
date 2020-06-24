@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
  */
 class GetProcessedListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GetProcessedList();
         $this->mockRepo('DataRetention', Repository\DataRetention::class);

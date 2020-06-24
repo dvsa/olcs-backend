@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\People;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
@@ -20,7 +21,7 @@ class PeopleTest extends QueryHandlerTestCase
     /** @var  People */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new People();
 
@@ -81,7 +82,7 @@ class PeopleTest extends QueryHandlerTestCase
             ->getMock();
 
         $response = $this->sut->handleQuery($query);
-        $this->assertArraySubset(
+        Assert::assertArraySubset(
             [
                 'id' => 111,
                 'hasInforceLicences' => false,

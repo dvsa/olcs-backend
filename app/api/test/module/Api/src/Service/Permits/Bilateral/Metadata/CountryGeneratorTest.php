@@ -33,7 +33,7 @@ class CountryGeneratorTest extends MockeryTestCase
 
     private $countryGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->countryId = 47;
 
