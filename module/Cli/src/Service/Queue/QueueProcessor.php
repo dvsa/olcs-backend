@@ -12,6 +12,7 @@ use Doctrine\DBAL\DBALException;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as NextQueueItemQry;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
@@ -58,12 +59,15 @@ class QueueProcessor implements ServiceLocatorAwareInterface
         try {
             return $consumer->processMessage($item);
         } catch (\Doctrine\ORM\ORMException $e) {
+            Logger::logException($e, \Zend\Log\Logger::ERR);
             // rethrow ORMException which can cause Entity Manager to close
             throw $e;
         } catch (DBALException $e) {
+            Logger::logException($e, \Zend\Log\Logger::ERR);
             // rethrow DBALException which can cause Entity Manager to close
             throw $e;
         } catch (\Exception $e) {
+            Logger::logException($e, \Zend\Log\Logger::ERR);
             return $consumer->failed($item, $e->getMessage());
         }
     }
