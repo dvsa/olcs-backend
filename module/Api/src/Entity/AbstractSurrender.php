@@ -3,13 +3,13 @@
 namespace Dvsa\Olcs\Api\Entity;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
 use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
-use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
-use JsonSerializable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -36,8 +36,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="surrender_status_index", columns={"status"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="surrender_id_uindex", columns={"id"}),
- *        @ORM\UniqueConstraint(name="uk_licence_id", columns={"licence_id"})
+ *        @ORM\UniqueConstraint(name="surrender_id_uindex", columns={"id"})
  *    }
  * )
  */
@@ -173,7 +172,7 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
