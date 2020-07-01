@@ -14,7 +14,6 @@ interface IrhpInterface
     const STATUS_AWAITING_FEE = 'permit_app_awaiting';
     const STATUS_FEE_PAID = 'permit_app_fee_paid';
     const STATUS_UNSUCCESSFUL = 'permit_app_unsuccessful';
-    const STATUS_ISSUED = 'permit_app_issued';
     const STATUS_ISSUING = 'permit_app_issuing';
     const STATUS_VALID = 'permit_app_valid';
     const STATUS_EXPIRED = 'permit_app_expired';
@@ -29,7 +28,6 @@ interface IrhpInterface
         self::STATUS_AWAITING_FEE,
         self::STATUS_FEE_PAID,
         self::STATUS_UNSUCCESSFUL,
-        self::STATUS_ISSUED,
         self::STATUS_ISSUING,
         self::STATUS_VALID,
         self::STATUS_EXPIRED,
