@@ -295,7 +295,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, true],
         ];
@@ -320,7 +319,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -345,7 +343,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, true],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -370,7 +367,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, true],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -395,7 +391,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, true],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -420,7 +415,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, true],
             [IrhpInterface::STATUS_FEE_PAID, true],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, true],
             [IrhpInterface::STATUS_VALID, false],
             [IrhpInterface::STATUS_EXPIRED, false],
@@ -465,7 +459,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE],
             [IrhpInterface::STATUS_FEE_PAID],
             [IrhpInterface::STATUS_UNSUCCESSFUL],
-            [IrhpInterface::STATUS_ISSUED],
             [IrhpInterface::STATUS_ISSUING],
             [IrhpInterface::STATUS_VALID],
         ];
@@ -490,7 +483,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -568,7 +560,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -593,7 +584,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -618,7 +608,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -725,11 +714,6 @@ class IrhpApplicationEntityTest extends EntityTester
                 Entity::ERR_CANT_WITHDRAW
             ],
             [
-                IrhpInterface::STATUS_ISSUED,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
-                Entity::ERR_CANT_WITHDRAW
-            ],
-            [
                 IrhpInterface::STATUS_ISSUING,
                 WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
                 Entity::ERR_CANT_WITHDRAW
@@ -761,11 +745,6 @@ class IrhpApplicationEntityTest extends EntityTester
             ],
             [
                 IrhpInterface::STATUS_UNSUCCESSFUL,
-                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
-                Entity::ERR_CANT_DECLINE
-            ],
-            [
-                IrhpInterface::STATUS_ISSUED,
                 WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
                 Entity::ERR_CANT_DECLINE
             ],
@@ -883,7 +862,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -988,7 +966,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_ISSUED, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_ISSUING, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpInterface::STATUS_VALID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_CANCELLED, false],
@@ -998,7 +975,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_ISSUED, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_ISSUING, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_VALID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_CANCELLED, false],
@@ -1008,7 +984,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_ISSUED, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_ISSUING, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_VALID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_CANCELLED, false],
@@ -1018,7 +993,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_ISSUED, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_ISSUING, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_VALID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_CANCELLED, false],
@@ -1028,7 +1002,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_ISSUED, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_ISSUING, false],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_VALID, false],
         ];
@@ -1062,7 +1035,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
         ];
@@ -1130,7 +1102,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_AWAITING_FEE],
             [IrhpInterface::STATUS_FEE_PAID],
             [IrhpInterface::STATUS_UNSUCCESSFUL],
-            [IrhpInterface::STATUS_ISSUED],
             [IrhpInterface::STATUS_ISSUING],
             [IrhpInterface::STATUS_VALID],
             [IrhpInterface::STATUS_EXPIRED],
@@ -4540,8 +4511,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_FEE_PAID, false, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, true, false],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false, false],
-            [IrhpInterface::STATUS_ISSUED, true, false],
-            [IrhpInterface::STATUS_ISSUED, false, false],
             [IrhpInterface::STATUS_ISSUING, true, false],
             [IrhpInterface::STATUS_ISSUING, false, false],
             [IrhpInterface::STATUS_EXPIRED, true, false],
@@ -5933,11 +5902,6 @@ class IrhpApplicationEntityTest extends EntityTester
             ],
             [
                 RefData::BUSINESS_PROCESS_APSG,
-                IrhpInterface::STATUS_ISSUED,
-                false
-            ],
-            [
-                RefData::BUSINESS_PROCESS_APSG,
                 IrhpInterface::STATUS_ISSUING,
                 false
             ],
@@ -5984,11 +5948,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [
                 RefData::BUSINESS_PROCESS_APGG,
                 IrhpInterface::STATUS_UNSUCCESSFUL,
-                false
-            ],
-            [
-                RefData::BUSINESS_PROCESS_APGG,
-                IrhpInterface::STATUS_ISSUED,
                 false
             ],
             [

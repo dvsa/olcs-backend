@@ -1144,7 +1144,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 'left join irhp_permit_window ipw on ipa.irhp_permit_window_id = ipw.id ' .
                 'left join irhp_permit_stock ips on ipw.irhp_permit_stock_id = ips.id ' .
                 'where l.`id` = :filterByColumnValue ' .
-                'and ia.status in (:applicationStatus1, :applicationStatus2, :applicationStatus3, :applicationStatus4, :applicationStatus5, :applicationStatus6, :applicationStatus7, :applicationStatus8, :applicationStatus9, :applicationStatus10, :applicationStatus11, :applicationStatus12, :applicationStatus13) ' .
+                'and ia.status in (:applicationStatus1, :applicationStatus2, :applicationStatus3, :applicationStatus4, :applicationStatus5, :applicationStatus6, :applicationStatus7, :applicationStatus8, :applicationStatus9, :applicationStatus10, :applicationStatus11, :applicationStatus12) ' .
                 'group by ia.id '.
                 'order by ia.`id` DESC',
                 [
@@ -1156,12 +1156,11 @@ class IrhpApplicationTest extends RepositoryTestCase
                     'applicationStatus5' => IrhpInterface::STATUS_AWAITING_FEE,
                     'applicationStatus6' => IrhpInterface::STATUS_FEE_PAID,
                     'applicationStatus7' => IrhpInterface::STATUS_UNSUCCESSFUL,
-                    'applicationStatus8' => IrhpInterface::STATUS_ISSUED,
-                    'applicationStatus9' => IrhpInterface::STATUS_ISSUING,
-                    'applicationStatus10' => IrhpInterface::STATUS_VALID,
-                    'applicationStatus11' => IrhpInterface::STATUS_EXPIRED,
-                    'applicationStatus12' => IrhpInterface::STATUS_TERMINATED,
-                    'applicationStatus13' => IrhpInterface::STATUS_DECLINED,
+                    'applicationStatus8' => IrhpInterface::STATUS_ISSUING,
+                    'applicationStatus9' => IrhpInterface::STATUS_VALID,
+                    'applicationStatus10' => IrhpInterface::STATUS_EXPIRED,
+                    'applicationStatus11' => IrhpInterface::STATUS_TERMINATED,
+                    'applicationStatus12' => IrhpInterface::STATUS_DECLINED,
                 ]
             )
             ->once()
