@@ -118,6 +118,27 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     protected $id;
 
     /**
+     * Irhp permit range attribute
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="irhpPermitRanges",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="irhp_permit_range_attribute",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="irhp_permit_range_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="irhp_permit_range_attribute_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $irhpPermitRangeAttributes;
+
+    /**
      * Irhp permit stock
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
@@ -239,6 +260,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
      */
     public function initCollections()
     {
+        $this->irhpPermitRangeAttributes = new ArrayCollection();
         $this->countrys = new ArrayCollection();
         $this->irhpCandidatePermits = new ArrayCollection();
         $this->irhpPermits = new ArrayCollection();
@@ -425,6 +447,69 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the irhp permit range attribute
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRangeAttributes collection being set as the value
+     *
+     * @return IrhpPermitRange
+     */
+    public function setIrhpPermitRangeAttributes($irhpPermitRangeAttributes)
+    {
+        $this->irhpPermitRangeAttributes = $irhpPermitRangeAttributes;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit range attributes
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitRangeAttributes()
+    {
+        return $this->irhpPermitRangeAttributes;
+    }
+
+    /**
+     * Add a irhp permit range attributes
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRangeAttributes collection being added
+     *
+     * @return IrhpPermitRange
+     */
+    public function addIrhpPermitRangeAttributes($irhpPermitRangeAttributes)
+    {
+        if ($irhpPermitRangeAttributes instanceof ArrayCollection) {
+            $this->irhpPermitRangeAttributes = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitRangeAttributes->toArray(),
+                    $irhpPermitRangeAttributes->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitRangeAttributes->contains($irhpPermitRangeAttributes)) {
+            $this->irhpPermitRangeAttributes->add($irhpPermitRangeAttributes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit range attributes
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRangeAttributes collection being removed
+     *
+     * @return IrhpPermitRange
+     */
+    public function removeIrhpPermitRangeAttributes($irhpPermitRangeAttributes)
+    {
+        if ($this->irhpPermitRangeAttributes->contains($irhpPermitRangeAttributes)) {
+            $this->irhpPermitRangeAttributes->removeElement($irhpPermitRangeAttributes);
+        }
+
+        return $this;
     }
 
     /**

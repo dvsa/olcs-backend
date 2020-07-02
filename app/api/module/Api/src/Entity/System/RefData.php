@@ -99,6 +99,10 @@ class RefData extends AbstractRefData
     const JOURNEY_SINGLE = 'journey_single';
     const JOURNEY_MULTIPLE = 'journey_multiple';
 
+    // standard/cabotage
+    const STD_OR_CAB_STANDARD = 'std_or_cab_standard';
+    const STD_OR_CAB_CABOTAGE = 'std_or_cab_cabotage';
+
     /**
      * RefData constructor.
      *
