@@ -2328,4 +2328,26 @@ return array(
             ]
         ],
     ],
+    'irhp_permit_request' => array(
+        'irhp_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpApplication',
+                'property' => 'irhpPermitRequest',
+            )
+        ),
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
+                'property' => 'irhpPermitRequest',
+            )
+        ),
+    ),
+    'irhp_permit_request_attribute' => array(
+        'irhp_permit_request_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitRequest',
+                'property' => 'irhpPermitRequestAttribute',
+            )
+        ),
+    ),
 );

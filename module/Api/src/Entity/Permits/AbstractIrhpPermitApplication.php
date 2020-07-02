@@ -260,6 +260,18 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     protected $irhpPermits;
 
     /**
+     * Irhp permit request
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRequest",
+     *     mappedBy="irhpPermitApplication"
+     * )
+     */
+    protected $irhpPermitRequests;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -280,6 +292,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
         $this->fees = new ArrayCollection();
         $this->irhpCandidatePermits = new ArrayCollection();
         $this->irhpPermits = new ArrayCollection();
+        $this->irhpPermitRequests = new ArrayCollection();
     }
 
     /**
@@ -943,6 +956,69 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     {
         if ($this->irhpPermits->contains($irhpPermits)) {
             $this->irhpPermits->removeElement($irhpPermits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit request
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRequests collection being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setIrhpPermitRequests($irhpPermitRequests)
+    {
+        $this->irhpPermitRequests = $irhpPermitRequests;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit requests
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitRequests()
+    {
+        return $this->irhpPermitRequests;
+    }
+
+    /**
+     * Add a irhp permit requests
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRequests collection being added
+     *
+     * @return IrhpPermitApplication
+     */
+    public function addIrhpPermitRequests($irhpPermitRequests)
+    {
+        if ($irhpPermitRequests instanceof ArrayCollection) {
+            $this->irhpPermitRequests = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitRequests->toArray(),
+                    $irhpPermitRequests->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitRequests->contains($irhpPermitRequests)) {
+            $this->irhpPermitRequests->add($irhpPermitRequests);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit requests
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRequests collection being removed
+     *
+     * @return IrhpPermitApplication
+     */
+    public function removeIrhpPermitRequests($irhpPermitRequests)
+    {
+        if ($this->irhpPermitRequests->contains($irhpPermitRequests)) {
+            $this->irhpPermitRequests->removeElement($irhpPermitRequests);
         }
 
         return $this;
