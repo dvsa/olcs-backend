@@ -33,8 +33,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_stock_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uniqueRange",
-     *     columns={"irhp_permit_stock_id","from_no","to_no","cabotage"})
+ *        @ORM\UniqueConstraint(name="uniqueRange", columns={"irhp_permit_stock_id","prefix","from_no","to_no"})
  *    }
  * )
  */

@@ -37,8 +37,15 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
      */
     public function handleCommand(CommandInterface $command): Result
     {
-        if ($this->numberOfOverlappingRanges($command->getIrhpPermitStock(), $command->getFromNo(), $command->getToNo()) !== 0) {
-            throw new ValidationException(['This Permit Number Range overlaps with another for this stock']);
+        $numberOfOverlappingRanges = $this->numberOfOverlappingRanges(
+            $command->getIrhpPermitStock(),
+            $command->getPrefix(),
+            $command->getFromNo(),
+            $command->getToNo()
+        );
+
+        if ($numberOfOverlappingRanges !== 0) {
+            throw new ValidationException(['This Permit Number Range overlaps with another for this stock with the same prefix']);
         }
 
         $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());

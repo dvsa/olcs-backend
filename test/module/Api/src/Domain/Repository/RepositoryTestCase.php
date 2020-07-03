@@ -99,6 +99,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->isNull')
             ->andReturnUsing([$this, 'mockExprIsNull']);
 
+        $this->qb->shouldReceive('expr->between')
+            ->andReturnUsing([$this, 'mockExprBetween']);
+
         $this->qb->shouldReceive('expr->in')
             ->andReturnUsing([$this, 'mockExprIn']);
 
@@ -302,6 +305,14 @@ class RepositoryTestCase extends MockeryTestCase
         $value = $this->formatValue($value);
 
         return $field . ' > ' . $value;
+    }
+
+    public function mockExprBetween($field, $from, $to)
+    {
+        $from = $this->formatValue($from);
+        $to = $this->formatValue($to);
+
+        return $field . ' BETWEEN ' . $from . ' AND ' . $to;
     }
 
     public function mockExprIn($field, $value)

@@ -156,6 +156,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->shouldReceive('findOverlappingRangesByType')
             ->with(
                 $cmdData['irhpPermitStock'],
+                $cmdData['prefix'],
                 $cmdData['fromNo'],
                 $cmdData['toNo'],
                 $entity
@@ -208,6 +209,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->shouldReceive('findOverlappingRangesByType')
             ->with(
                 $cmdData['irhpPermitStock'],
+                $cmdData['prefix'],
                 $cmdData['fromNo'],
                 $cmdData['toNo'],
                 $entity
@@ -262,6 +264,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->shouldReceive('findOverlappingRangesByType')
             ->with(
                 $cmdData['irhpPermitStock'],
+                $cmdData['prefix'],
                 $cmdData['fromNo'],
                 $cmdData['toNo'],
                 $entity

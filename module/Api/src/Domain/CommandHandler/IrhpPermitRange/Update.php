@@ -43,8 +43,16 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
          */
         $range = $this->getRepo()->fetchUsingId($command);
 
-        if ($this->numberOfOverlappingRanges($command->getIrhpPermitStock(), $command->getFromNo(), $command->getToNo(), $range) !== 0) {
-            throw new ValidationException(['This Permit Number Range overlaps with another for this stock']);
+        $numberOfOverlappingRanges = $this->numberOfOverlappingRanges(
+            $command->getIrhpPermitStock(),
+            $command->getPrefix(),
+            $command->getFromNo(),
+            $command->getToNo(),
+            $range
+        );
+
+        if ($numberOfOverlappingRanges !== 0) {
+            throw new ValidationException(['This Permit Number Range overlaps with another for this stock with the same prefix']);
         }
 
         $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());

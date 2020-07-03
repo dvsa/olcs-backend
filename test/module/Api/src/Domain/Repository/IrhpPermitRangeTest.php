@@ -328,4 +328,85 @@ class IrhpPermitRangeTest extends RepositoryTestCase
 
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFindOverlappingRangesByType()
+    {
+        $irhpPermitStockId = 1;
+        $prefix = 'UK';
+        $from = 100;
+        $to = 199;
+
+        $results = ['RESULTS'];
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn($results)
+                ->getMock()
+        );
+        $this->assertEquals(
+            $results,
+            $this->sut->findOverlappingRangesByType(
+                $irhpPermitStockId,
+                $prefix,
+                $from,
+                $to
+            )
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'OR m.fromNo BETWEEN [['.$from.']] AND [['.$to.']] '
+            . 'OR m.toNo BETWEEN [['.$from.']] AND [['.$to.']] '
+            . 'OR [['.$from.']] BETWEEN m.fromNo AND m.toNo '
+            . 'AND m.irhpPermitStock = [['.$irhpPermitStockId.']] '
+            . 'AND m.prefix = [['.$prefix.']]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFindOverlappingRangesByTypeWithRange()
+    {
+        $irhpPermitStockId = 1;
+        $irhpPermitRangeId = 2;
+        $prefix = 'UK';
+        $from = 100;
+        $to = 199;
+
+        $results = ['RESULTS'];
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn($results)
+                ->getMock()
+        );
+        $this->assertEquals(
+            $results,
+            $this->sut->findOverlappingRangesByType(
+                $irhpPermitStockId,
+                $prefix,
+                $from,
+                $to,
+                $irhpPermitRangeId
+            )
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'OR m.fromNo BETWEEN [['.$from.']] AND [['.$to.']] '
+            . 'OR m.toNo BETWEEN [['.$from.']] AND [['.$to.']] '
+            . 'OR [['.$from.']] BETWEEN m.fromNo AND m.toNo '
+            . 'AND m.irhpPermitStock = [['.$irhpPermitStockId.']] '
+            . 'AND m.prefix = [['.$prefix.']] '
+            . 'AND m.id != [['.$irhpPermitRangeId.']]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }
