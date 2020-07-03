@@ -59,15 +59,16 @@ class IrhpPermitRange extends AbstractRepository
     }
 
     /**
-     * Fetch Overlapping Ranges by Permit Stock ID, proposed Start value and proposed End value
+     * Fetch Overlapping Ranges by Permit Stock ID, proposed perfix, start and end value
      *
      * @param IrhpPermitStock $irhpPermitStock
+     * @param string $proposedPrefix
      * @param int $proposedStartValue
      * @param int $proposedEndValue
      * @param null $irhpPermitRange
      * @return array
      */
-    public function findOverlappingRangesByType($irhpPermitStock, $proposedStartValue, $proposedEndValue, $irhpPermitRange = null)
+    public function findOverlappingRangesByType($irhpPermitStock, $proposedPrefix, $proposedStartValue, $proposedEndValue, $irhpPermitRange = null)
     {
         $doctrineQb = $this->createQueryBuilder();
         $doctrineQb
@@ -75,7 +76,9 @@ class IrhpPermitRange extends AbstractRepository
             ->orWhere($doctrineQb->expr()->between($this->alias . '.toNo', ':fromNo', ':toNo'))
             ->orWhere($doctrineQb->expr()->between(':fromNo', $this->alias . '.fromNo', $this->alias .'.toNo'))
             ->andWhere($doctrineQb->expr()->eq($this->alias . '.irhpPermitStock', ':irhpPermitStock'))
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.prefix', ':prefix'))
             ->setParameter('irhpPermitStock', $irhpPermitStock)
+            ->setParameter('prefix', $proposedPrefix)
             ->setParameter('fromNo', $proposedStartValue)
             ->setParameter('toNo', $proposedEndValue);
 
