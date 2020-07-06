@@ -4,26 +4,21 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
-class CabotageOnly implements ElementInterface
+class ThirdCountry implements ElementInterface
 {
     /** @var string|null */
     private $yesNo;
-
-    /** @var string */
-    private $countryName;
 
     /**
      * Create instance
      *
      * @param string|null $yesNo
-     * @param string $countryName
      *
-     * @return CabotageOnly
+     * @return ThirdCountry
      */
-    public function __construct($yesNo, $countryName)
+    public function __construct($yesNo)
     {
         $this->yesNo = $yesNo;
-        $this->countryName = $countryName;
     }
 
     /**
@@ -33,7 +28,6 @@ class CabotageOnly implements ElementInterface
     {
         return [
             'yesNo' => $this->yesNo,
-            'countryName' => $this->countryName,
         ];
     }
 }

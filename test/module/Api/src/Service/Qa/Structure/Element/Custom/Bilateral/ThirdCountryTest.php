@@ -2,33 +2,28 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\CabotageOnly;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\ThirdCountry;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * CabotageOnlyTest
+ * ThirdCountryTest
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class CabotageOnlyTest extends MockeryTestCase
+class ThirdCountryTest extends MockeryTestCase
 {
     /**
      * @dataProvider dpGetRepresentation
      */
     public function testGetRepresentation($yesNo)
     {
-        $countryName = 'Germany';
+        $thirdCountry = new ThirdCountry($yesNo);
 
-        $cabotageOnly = new CabotageOnly($yesNo, $countryName);
-
-        $expectedRepresentation = [
-            'yesNo' => $yesNo,
-            'countryName' => $countryName,
-        ];
+        $expectedRepresentation = ['yesNo' => $yesNo];
 
         $this->assertEquals(
             $expectedRepresentation,
-            $cabotageOnly->getRepresentation()
+            $thirdCountry->getRepresentation()
         );
     }
 
