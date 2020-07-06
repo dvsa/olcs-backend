@@ -465,6 +465,9 @@ return [
     'qanda.bilateral.no-of-permits.journey_single.standard' => '%s Standard single journey permits',
     'qanda.bilateral.no-of-permits.journey_single.cabotage' => '%s Cabotage single journey permits',
 
+    'qanda.bilaterals.third-country.question' => 'Are you transporting goods from Turkey to a third-country?',
+    'qanda.bilaterals.third-country.yes-answer' => 'Yes',
+
     'qanda.common.no-of-permits.emissions-category.line' => '%s permits for %s minimum emission standard',
     'qanda.common.no-of-permits.emissions-category.euro5' => 'Euro 5',
     'qanda.common.no-of-permits.emissions-category.euro6' => 'Euro 6',

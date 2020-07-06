@@ -5,21 +5,19 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class CabotageOnlyAnswerSaverFactory implements FactoryInterface
+class ThirdCountryGeneratorFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return CabotageOnlyAnswerSaver
+     * @return ThirdCountryGenerator
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new CabotageOnlyAnswerSaver(
-            $serviceLocator->get('QaGenericAnswerFetcher'),
-            $serviceLocator->get('QaGenericAnswerWriter'),
-            $serviceLocator->get('QaBilateralClientReturnCodeHandler')
+        return new ThirdCountryGenerator(
+            $serviceLocator->get('QaBilateralThirdCountryElementFactory')
         );
     }
 }
