@@ -379,8 +379,6 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
-        $qb->shouldReceive('expr->between')->once();
-
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
                 ->shouldReceive('getResult')
@@ -403,8 +401,9 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitRanges ipr '
             . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT . ']] '
             . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] AND '
-            . ' AND ips.hiddenSs != 1';
+            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] '
+            . 'AND ips.validTo BETWEEN [[3000-01-01T00:00:00+00:00]] AND [[3000-12-31T23:59:59+00:00]] '
+            . 'AND ips.hiddenSs != 1';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
