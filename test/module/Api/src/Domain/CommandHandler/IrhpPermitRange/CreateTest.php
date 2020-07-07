@@ -76,6 +76,13 @@ class CreateTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitStock);
 
         $this->repoMap['IrhpPermitRange']->shouldReceive('findOverlappingRangesByType')
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['prefix'],
+                $cmdData['fromNo'],
+                $cmdData['toNo'],
+                null
+            )
             ->andReturn([]);
 
         $this->repoMap['IrhpPermitRange']
@@ -126,6 +133,13 @@ class CreateTest extends CommandHandlerTestCase
             ->andReturn(m::mock(IrhpPermitStock::class));
 
         $this->repoMap['IrhpPermitRange']->shouldReceive('findOverlappingRangesByType')
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['prefix'],
+                $cmdData['fromNo'],
+                $cmdData['toNo'],
+                null
+            )
             ->andReturn(['overlappingPermitRange']);
 
         $this->sut->handleCommand($command);
@@ -163,6 +177,13 @@ class CreateTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitStock);
 
         $this->repoMap['IrhpPermitRange']->shouldReceive('findOverlappingRangesByType')
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['prefix'],
+                $cmdData['fromNo'],
+                $cmdData['toNo'],
+                null
+            )
             ->andReturn([]);
 
         $this->sut->handleCommand($command);
@@ -203,6 +224,13 @@ class CreateTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitStock);
 
         $this->repoMap['IrhpPermitRange']->shouldReceive('findOverlappingRangesByType')
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['prefix'],
+                $cmdData['fromNo'],
+                $cmdData['toNo'],
+                null
+            )
             ->andReturn([]);
 
         $this->sut->handleCommand($command);
