@@ -2,12 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\ThirdCountryAnswerSaver;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\ClientReturnCodeHandler;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\CountryDeletingAnswerSaver;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -18,78 +15,21 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class ThirdCountryAnswerSaverTest extends MockeryTestCase
 {
-    private $postData;
-
-    private $applicationStep;
-
-    private $qaContext;
-
-    private $genericAnswerFetcher;
-
-    private $genericAnswerWriter;
-
-    private $clientReturnCodeHandler;
-
-    private $thirdCountryAnswerSaver;
-
-    public function setUp(): void
+    public function testSave()
     {
-        $this->postData = [
+        $postData = [
             'key1' => 'value1',
             'key2' => 'value2',
         ];
 
-        $this->applicationStep = m::mock(ApplicationStep::class);
+        $qaContext = m::mock(QaContext::class);
 
-        $this->qaContext = m::mock(QaContext::class);
-        $this->qaContext->shouldReceive('getApplicationStepEntity')
-            ->withNoArgs()
-            ->andReturn($this->applicationStep);
-
-        $this->genericAnswerFetcher = m::mock(GenericAnswerFetcher::class);
-
-        $this->genericAnswerWriter = m::mock(GenericAnswerWriter::class);
-
-        $this->clientReturnCodeHandler = m::mock(ClientReturnCodeHandler::class);
-
-        $this->thirdCountryAnswerSaver = new ThirdCountryAnswerSaver(
-            $this->genericAnswerFetcher,
-            $this->genericAnswerWriter,
-            $this->clientReturnCodeHandler
-        );
-    }
-
-    public function testSaveCabotageRequired()
-    {
-        $this->genericAnswerFetcher->shouldReceive('fetch')
-            ->with($this->applicationStep, $this->postData)
-            ->andReturn('Y');
-
-        $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->qaContext, 'qanda.bilaterals.third-country.yes-answer')
+        $countryDeletingAnswerSaver = m::mock(CountryDeletingAnswerSaver::class);
+        $countryDeletingAnswerSaver->shouldReceive('save')
+            ->with($qaContext, $postData, 'qanda.bilaterals.third-country.yes-answer')
             ->once();
 
-        $this->assertNull(
-            $this->thirdCountryAnswerSaver->save($this->qaContext, $this->postData)
-        );
-    }
-
-    public function testSaveNoCabotageRequired()
-    {
-        $clientReturnCode = 'RETURN_CODE';
-
-        $this->genericAnswerFetcher->shouldReceive('fetch')
-            ->with($this->applicationStep, $this->postData)
-            ->andReturn('N');
-
-        $this->clientReturnCodeHandler->shouldReceive('handle')
-            ->with($this->qaContext)
-            ->once()
-            ->andReturn($clientReturnCode);
-
-        $this->assertEquals(
-            $clientReturnCode,
-            $this->thirdCountryAnswerSaver->save($this->qaContext, $this->postData)
-        );
+        $thirdCountryAnswerSaver = new ThirdCountryAnswerSaver($countryDeletingAnswerSaver);
+        $thirdCountryAnswerSaver->save($qaContext, $postData);
     }
 }
