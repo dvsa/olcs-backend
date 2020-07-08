@@ -16,13 +16,15 @@ class EcmtRemovalNoOfPermitsFormControlStrategyFactory implements FactoryInterfa
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'text',
-            $serviceLocator->get('QaTotAuthVehiclesTextElementGenerator'),
-            $serviceLocator->get('QaEcmtRemovalNoOfPermitsAnswerSaver'),
-            $serviceLocator->get('QaEcmtRemovalNoOfPermitsAnswerClearer'),
-            $serviceLocator->get('QaEcmtRemovalNoOfPermitsQuestionTextGenerator'),
-            $serviceLocator->get('QaGenericAnswerSummaryProvider')
+            $mainServiceLocator->get('QaTotAuthVehiclesTextElementGenerator'),
+            $mainServiceLocator->get('QaEcmtRemovalNoOfPermitsAnswerSaver'),
+            $mainServiceLocator->get('QaEcmtRemovalNoOfPermitsAnswerClearer'),
+            $mainServiceLocator->get('QaEcmtRemovalNoOfPermitsQuestionTextGenerator'),
+            $mainServiceLocator->get('QaGenericAnswerSummaryProvider')
         );
     }
 }

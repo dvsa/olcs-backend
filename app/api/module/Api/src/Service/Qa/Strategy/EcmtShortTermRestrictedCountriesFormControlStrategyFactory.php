@@ -16,13 +16,15 @@ class EcmtShortTermRestrictedCountriesFormControlStrategyFactory implements Fact
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'ecmt_st_restricted_countries',
-            $serviceLocator->get('QaEcmtShortTermRestrictedCountriesElementGenerator'),
-            $serviceLocator->get('QaEcmtShortTermRestrictedCountriesAnswerSaver'),
-            $serviceLocator->get('QaEcmtShortTermRestrictedCountriesAnswerClearer'),
-            $serviceLocator->get('QaEcmtShortTermRestrictedCountriesQuestionTextGenerator'),
-            $serviceLocator->get('QaEcmtShortTermRestrictedCountriesAnswerSummaryProvider')
+            $mainServiceLocator->get('QaEcmtShortTermRestrictedCountriesElementGenerator'),
+            $mainServiceLocator->get('QaEcmtShortTermRestrictedCountriesAnswerSaver'),
+            $mainServiceLocator->get('QaEcmtShortTermRestrictedCountriesAnswerClearer'),
+            $mainServiceLocator->get('QaEcmtShortTermRestrictedCountriesQuestionTextGenerator'),
+            $mainServiceLocator->get('QaEcmtShortTermRestrictedCountriesAnswerSummaryProvider')
         );
     }
 }

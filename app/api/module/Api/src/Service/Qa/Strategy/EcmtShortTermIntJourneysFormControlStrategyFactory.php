@@ -16,13 +16,15 @@ class EcmtShortTermIntJourneysFormControlStrategyFactory implements FactoryInter
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'ecmt_st_international_journeys',
-            $serviceLocator->get('QaEcmtShortTermIntJourneysElementGenerator'),
-            $serviceLocator->get('QaEcmtShortTermIntJourneysAnswerSaver'),
-            $serviceLocator->get('QaEcmtShortTermIntJourneysAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaRadioAnswerSummaryProvider')
+            $mainServiceLocator->get('QaEcmtShortTermIntJourneysElementGenerator'),
+            $mainServiceLocator->get('QaEcmtShortTermIntJourneysAnswerSaver'),
+            $mainServiceLocator->get('QaEcmtShortTermIntJourneysAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaRadioAnswerSummaryProvider')
         );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
+use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
@@ -12,7 +13,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePage;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -82,15 +82,15 @@ class SelfservePageGeneratorTest extends MockeryTestCase
             ->with($qaContext)
             ->andReturn($questionText);
 
-        $formControlStrategyProvider = m::mock(FormControlStrategyProvider::class);
-        $formControlStrategyProvider->shouldReceive('get')
+        $formControlServiceManager = m::mock(FormControlServiceManager::class);
+        $formControlServiceManager->shouldReceive('getByApplicationStep')
             ->with($applicationStepEntity)
             ->andReturn($formControlStrategy);
 
         $selfservePageGenerator = new SelfservePageGenerator(
             $selfservePageFactory,
             $applicationStepGenerator,
-            $formControlStrategyProvider
+            $formControlServiceManager
         );
 
         $this->assertSame(

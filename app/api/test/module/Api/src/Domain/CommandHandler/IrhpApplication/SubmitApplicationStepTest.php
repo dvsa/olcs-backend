@@ -6,12 +6,12 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplicationStep as Sut;
+use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationStep as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -48,7 +48,7 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             'QaContextGenerator' => m::mock(QaContextGenerator::class),
-            'QaFormControlStrategyProvider' => m::mock(FormControlStrategyProvider::class)
+            'FormControlServiceManager' => m::mock(FormControlServiceManager::class)
         ];
 
         $this->applicationStepEntity = m::mock(ApplicationStepEntity::class);
@@ -82,7 +82,7 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
             ->once()
             ->andReturn(self::DESTINATION_NAME);
 
-        $this->mockedSmServices['QaFormControlStrategyProvider']->shouldReceive('get')
+        $this->mockedSmServices['FormControlServiceManager']->shouldReceive('getByApplicationStep')
             ->with($this->applicationStepEntity)
             ->andReturn($this->formControlStrategy);
 

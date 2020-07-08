@@ -4,9 +4,11 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
+use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service as ApiSrv;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
+use Dvsa\Olcs\Api\Service\Qa\Strategy as QaStrategy;
 
 return [
     'router' => [
@@ -148,6 +150,7 @@ return [
             'DomainValidatorManager' => \Dvsa\Olcs\Api\Domain\ValidatorManagerFactory::class,
             'QueryPartialServiceManager' => \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::class,
             'RepositoryServiceManager' => \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::class,
+            'FormControlServiceManager' => \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::class,
             'DbQueryServiceManager' => \Dvsa\Olcs\Api\Domain\DbQueryServiceManagerFactory::class,
             'QueryBuilder' => \Dvsa\Olcs\Api\Domain\QueryBuilderFactory::class,
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
@@ -236,41 +239,6 @@ return [
             
             'QaContextGenerator' => ApiSrv\Qa\QaContextGeneratorFactory::class,
             'QaEntityProvider' => ApiSrv\Qa\QaEntityProviderFactory::class,
-            'QaFormControlStrategyProvider' => ApiSrv\Qa\FormControlStrategyProviderFactory::class,
-            'QaCheckboxFormControlStrategy' => ApiSrv\Qa\Strategy\CheckboxFormControlStrategyFactory::class,
-            'QaTextFormControlStrategy' => ApiSrv\Qa\Strategy\TextFormControlStrategyFactory::class,
-            'QaRadioFormControlStrategy' => ApiSrv\Qa\Strategy\RadioFormControlStrategyFactory::class,
-            'QaEcmtRemovalNoOfPermitsFormControlStrategy'
-                => ApiSrv\Qa\Strategy\EcmtRemovalNoOfPermitsFormControlStrategyFactory::class,
-            'QaEcmtRemovalPermitStartDateFormControlStrategy'
-                => ApiSrv\Qa\Strategy\EcmtRemovalPermitStartDateFormControlStrategyFactory::class,
-            'QaEcmtShortTermNoOfPermitsFormControlStrategy'
-                => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
-            'QaEcmtShortTermPermitUsageFormControlStrategy'
-                => ApiSrv\Qa\Strategy\EcmtShortTermPermitUsageFormControlStrategyFactory::class,
-            'QaEcmtShortTermIntJourneysFormControlStrategy'
-                => ApiSrv\Qa\Strategy\EcmtShortTermIntJourneysFormControlStrategyFactory::class,
-            'QaEcmtShortTermRestrictedCountriesFormControlStrategy'
-                => ApiSrv\Qa\Strategy\EcmtShortTermRestrictedCountriesFormControlStrategyFactory::class,
-            'QaEcmtShortTermAnnualTripsAbroadFormControlStrategy'
-                => ApiSrv\Qa\Strategy\EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory::class,
-            'QaEcmtShortTermSectorsFormControlStrategy'
-                => ApiSrv\Qa\Strategy\EcmtShortTermSectorsFormControlStrategyFactory::class,
-            'QaCertRoadworthinessMotExpiryDateFormControlStrategy'
-                => ApiSrv\Qa\Strategy\CertRoadworthinessMotExpiryDateFormControlStrategyFactory::class,
-            'QaCommonCertificatesFormControlStrategy'
-                => ApiSrv\Qa\Strategy\CommonCertificatesFormControlStrategyFactory::class,
-            'QaEcmtShortTermEarliestPermitDateFormControlStrategy'
-                => ApiSrv\Qa\Strategy\EcmtShortTermEarliestPermitDateFormControlStrategyFactory::class,
-            'QaBilateralPermitUsageFormControlStrategy'
-                => ApiSrv\Qa\Strategy\BilateralPermitUsageFormControlStrategyFactory::class,
-            'QaBilateralCabotageOnlyFormControlStrategy'
-                => ApiSrv\Qa\Strategy\BilateralCabotageOnlyFormControlStrategyFactory::class,
-            'QaBilateralStandardAndCabotageFormControlStrategy'
-                => ApiSrv\Qa\Strategy\BilateralStandardAndCabotageFormControlStrategyFactory::class,
-            'QaBilateralNoOfPermitsFormControlStrategy'
-                => ApiSrv\Qa\Strategy\BilateralNoOfPermitsFormControlStrategyFactory::class,
-
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
             'QaFilteredTranslateableTextGenerator' => ApiSrv\Qa\Structure\FilteredTranslateableTextGeneratorFactory::class,
@@ -353,6 +321,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateGeneratorFactory::class,
             'QaCertRoadworthinessMotExpiryDateElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\CertRoadworthiness\MotExpiryDateGeneratorFactory::class,
+            'QaBilateralPermitUsageAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageAnswerSaverFactory::class,
             'QaBilateralPermitUsageGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageGeneratorFactory::class,
 
@@ -725,6 +695,45 @@ return [
             'MessageFailures' => RepositoryFactory::class,
             'TranslationKeyText' => RepositoryFactory::class,
             'Language' => RepositoryFactory::class
+        ]
+    ],
+    \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [
+        'factories' => [
+            Question::FORM_CONTROL_TYPE_CHECKBOX => QaStrategy\CheckboxFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_TYPE_TEXT => QaStrategy\TextFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_TYPE_RADIO => QaStrategy\RadioFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS =>
+                QaStrategy\EcmtRemovalNoOfPermitsFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE =>
+                QaStrategy\EcmtRemovalPermitStartDateFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS =>
+                QaStrategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_PERMIT_USAGE =>
+                QaStrategy\EcmtShortTermPermitUsageFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS =>
+                QaStrategy\EcmtShortTermIntJourneysFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES =>
+                QaStrategy\EcmtShortTermRestrictedCountriesFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD =>
+                QaStrategy\EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS =>
+                QaStrategy\EcmtShortTermSectorsFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE =>
+                QaStrategy\EcmtShortTermEarliestPermitDateFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS =>
+                QaStrategy\TextFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE =>
+                QaStrategy\CertRoadworthinessMotExpiryDateFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_COMMON_CERTIFICATES =>
+                QaStrategy\CommonCertificatesFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_BILATERAL_PERMIT_USAGE =>
+                QaStrategy\BilateralPermitUsageFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY =>
+                QaStrategy\BilateralCabotageOnlyFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE =>
+                QaStrategy\BilateralStandardAndCabotageFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_BILATERAL_NO_OF_PERMITS =>
+                QaStrategy\BilateralNoOfPermitsFormControlStrategyFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

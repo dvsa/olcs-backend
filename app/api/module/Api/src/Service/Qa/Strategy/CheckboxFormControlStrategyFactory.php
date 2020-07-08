@@ -16,13 +16,15 @@ class CheckboxFormControlStrategyFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'checkbox',
-            $serviceLocator->get('QaCheckboxElementGenerator'),
-            $serviceLocator->get('QaGenericAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaCheckboxAnswerSummaryProvider')
+            $mainServiceLocator->get('QaCheckboxElementGenerator'),
+            $mainServiceLocator->get('QaGenericAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaCheckboxAnswerSummaryProvider')
         );
     }
 }
