@@ -468,6 +468,9 @@ return [
     'qanda.bilaterals.third-country.question' => 'Are you transporting goods from Turkey to a third-country?',
     'qanda.bilaterals.third-country.yes-answer' => 'Yes',
 
+    'qanda.bilaterals.emissions-standards.question' => 'Which vehicle euro emission standard will you use?',
+    'qanda.bilaterals.emissions-standards.euro3-or-euro4' => 'Euro 3 or Euro 4',
+
     'qanda.common.no-of-permits.emissions-category.line' => '%s permits for %s minimum emission standard',
     'qanda.common.no-of-permits.emissions-category.euro5' => 'Euro 5',
     'qanda.common.no-of-permits.emissions-category.euro6' => 'Euro 6',

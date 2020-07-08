@@ -79,6 +79,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageFactory::class,
             'QaBilateralThirdCountryElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\ThirdCountryFactory::class,
+            'QaBilateralEmissionsStandardsElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\EmissionsStandardsFactory::class,
             'QaBilateralNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsFactory::class,
             'QaBilateralNoOfPermitsTextFactory' =>
@@ -327,6 +329,8 @@ return [
             'QaBilateralPermitUsageGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageGeneratorFactory::class,
 
+            'QaBilateralCountryDeletingAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\CountryDeletingAnswerSaverFactory::class,
             'QaBilateralCabotageOnlyElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyGeneratorFactory::class,
             'QaBilateralCabotageOnlyAnswerSaver' =>
@@ -339,6 +343,10 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\ThirdCountryGeneratorFactory::class,
             'QaBilateralThirdCountryAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\ThirdCountryAnswerSaverFactory::class,
+            'QaBilateralEmissionsStandardsElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\EmissionsStandardsGeneratorFactory::class,
+            'QaBilateralEmissionsStandardsAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\EmissionsStandardsAnswerSaverFactory::class,
             'QaBilateralNoOfPermitsElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsGeneratorFactory::class,
             'QaBilateralClientReturnCodeHandler' =>
@@ -743,6 +751,8 @@ return [
                 QaStrategy\BilateralNoOfPermitsFormControlStrategyFactory::class,
             Question::FORM_CONTROL_BILATERAL_THIRD_COUNTRY =>
                 QaStrategy\BilateralThirdCountryFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_BILATERAL_EMISSIONS_STANDARDS =>
+                QaStrategy\BilateralEmissionsStandardsFormControlStrategyFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

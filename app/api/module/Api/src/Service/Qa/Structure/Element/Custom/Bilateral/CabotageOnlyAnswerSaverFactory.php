@@ -17,9 +17,7 @@ class CabotageOnlyAnswerSaverFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new CabotageOnlyAnswerSaver(
-            $serviceLocator->get('QaGenericAnswerFetcher'),
-            $serviceLocator->get('QaGenericAnswerWriter'),
-            $serviceLocator->get('QaBilateralClientReturnCodeHandler')
+            $serviceLocator->get('QaBilateralCountryDeletingAnswerSaver')
         );
     }
 }

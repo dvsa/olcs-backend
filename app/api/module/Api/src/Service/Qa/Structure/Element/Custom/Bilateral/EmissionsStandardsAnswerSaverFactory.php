@@ -5,18 +5,18 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ThirdCountryAnswerSaverFactory implements FactoryInterface
+class EmissionsStandardsAnswerSaverFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return ThirdCountryAnswerSaver
+     * @return EmissionsStandardsAnswerSaver
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new ThirdCountryAnswerSaver(
+        return new EmissionsStandardsAnswerSaver(
             $serviceLocator->get('QaBilateralCountryDeletingAnswerSaver')
         );
     }

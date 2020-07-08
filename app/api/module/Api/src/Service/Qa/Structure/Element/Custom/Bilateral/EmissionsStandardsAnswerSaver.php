@@ -2,12 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
-use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
-class CabotageOnlyAnswerSaver implements AnswerSaverInterface
+class EmissionsStandardsAnswerSaver implements AnswerSaverInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
@@ -19,7 +18,7 @@ class CabotageOnlyAnswerSaver implements AnswerSaverInterface
      *
      * @param CountryDeletingAnswerSaver $countryDeletingAnswerSaver
      *
-     * @return CabotageOnlyAnswerSaver
+     * @return EmissionsStandardsAnswerSaver
      */
     public function __construct(CountryDeletingAnswerSaver $countryDeletingAnswerSaver)
     {
@@ -34,7 +33,7 @@ class CabotageOnlyAnswerSaver implements AnswerSaverInterface
         return $this->countryDeletingAnswerSaver->save(
             $qaContext,
             $postData,
-            Answer::BILATERAL_CABOTAGE_ONLY
+            'qanda.bilaterals.emissions-standards.euro3-or-euro4'
         );
     }
 }
