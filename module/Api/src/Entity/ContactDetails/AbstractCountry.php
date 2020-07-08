@@ -133,6 +133,15 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $isMemberState = 0;
 
     /**
+     * Is permit state
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_permit_state", nullable=false, options={"default": 0})
+     */
+    protected $isPermitState = 0;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -516,6 +525,30 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     public function getIsMemberState()
     {
         return $this->isMemberState;
+    }
+
+    /**
+     * Set the is permit state
+     *
+     * @param boolean $isPermitState new value being set
+     *
+     * @return Country
+     */
+    public function setIsPermitState($isPermitState)
+    {
+        $this->isPermitState = $isPermitState;
+
+        return $this;
+    }
+
+    /**
+     * Get the is permit state
+     *
+     * @return boolean
+     */
+    public function getIsPermitState()
+    {
+        return $this->isPermitState;
     }
 
     /**
