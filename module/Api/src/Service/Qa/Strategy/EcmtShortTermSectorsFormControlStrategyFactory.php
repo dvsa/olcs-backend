@@ -16,13 +16,15 @@ class EcmtShortTermSectorsFormControlStrategyFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'radio',
-            $serviceLocator->get('QaRadioElementGenerator'),
-            $serviceLocator->get('QaEcmtShortTermSectorsAnswerSaver'),
-            $serviceLocator->get('QaEcmtShortTermSectorsAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaRadioAnswerSummaryProvider')
+            $mainServiceLocator->get('QaRadioElementGenerator'),
+            $mainServiceLocator->get('QaEcmtShortTermSectorsAnswerSaver'),
+            $mainServiceLocator->get('QaEcmtShortTermSectorsAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaRadioAnswerSummaryProvider')
         );
     }
 }

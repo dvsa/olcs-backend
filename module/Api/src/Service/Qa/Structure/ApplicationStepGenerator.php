@@ -2,14 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
+use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextFactory;
 
 class ApplicationStepGenerator
 {
-    /** @var FormControlStrategyProvider */
-    private $formControlStrategyProvider;
+    /** @var FormControlServiceManager */
+    private $formControlServiceManager;
 
     /** @var ApplicationStepFactory */
     private $applicationStepFactory;
@@ -23,7 +23,7 @@ class ApplicationStepGenerator
     /**
      * Create service instance
      *
-     * @param FormControlStrategyProvider $formControlStrategyProvider
+     * @param FormControlServiceManager $formControlServiceManager
      * @param ApplicationStepFactory $applicationStepFactory
      * @param ValidatorListGenerator $validatorListGenerator
      * @param ElementGeneratorContextFactory $elementGeneratorContextFactory
@@ -31,12 +31,12 @@ class ApplicationStepGenerator
      * @return ApplicationStepGenerator
      */
     public function __construct(
-        FormControlStrategyProvider $formControlStrategyProvider,
+        FormControlServiceManager $formControlServiceManager,
         ApplicationStepFactory $applicationStepFactory,
         ValidatorListGenerator $validatorListGenerator,
         ElementGeneratorContextFactory $elementGeneratorContextFactory
     ) {
-        $this->formControlStrategyProvider = $formControlStrategyProvider;
+        $this->formControlServiceManager = $formControlServiceManager;
         $this->applicationStepFactory = $applicationStepFactory;
         $this->validatorListGenerator = $validatorListGenerator;
         $this->elementGeneratorContextFactory = $elementGeneratorContextFactory;
@@ -53,7 +53,7 @@ class ApplicationStepGenerator
     {
         $applicationStepEntity = $qaContext->getApplicationStepEntity();
 
-        $formControlStrategy = $this->formControlStrategyProvider->get($applicationStepEntity);
+        $formControlStrategy = $this->formControlServiceManager->getByApplicationStep($applicationStepEntity);
         $validatorList = $this->validatorListGenerator->generate($applicationStepEntity);
 
         $elementGeneratorContext = $this->elementGeneratorContextFactory->create($validatorList, $qaContext);

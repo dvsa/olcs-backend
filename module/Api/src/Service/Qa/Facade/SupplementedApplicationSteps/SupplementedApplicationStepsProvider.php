@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps;
 
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
+use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 class SupplementedApplicationStepsProvider
 {
-    /** @var FormControlStrategyProvider */
-    private $formControlStrategyProvider;
+    /** @var FormControlServiceManager */
+    private $formControlServiceManager;
 
     /** @var SupplementedApplicationStepFactory */
     private $supplementedApplicationStepFactory;
@@ -16,16 +16,16 @@ class SupplementedApplicationStepsProvider
     /**
      * Create service instance
      *
-     * @param FormControlStrategyProvider $formControlStrategyProvider
+     * @param FormControlServiceManager $formControlServiceManager
      * @param SupplementedApplicationStepFactory $supplementedApplicationStepFactory
      *
      * @return SupplementedApplicationStepsProvider
      */
     public function __construct(
-        FormControlStrategyProvider $formControlStrategyProvider,
+        FormControlServiceManager $formControlServiceManager,
         SupplementedApplicationStepFactory $supplementedApplicationStepFactory
     ) {
-        $this->formControlStrategyProvider = $formControlStrategyProvider;
+        $this->formControlServiceManager = $formControlServiceManager;
         $this->supplementedApplicationStepFactory = $supplementedApplicationStepFactory;
     }
 
@@ -45,7 +45,7 @@ class SupplementedApplicationStepsProvider
         foreach ($applicationPath->getApplicationSteps() as $applicationStep) {
             $supplementedApplicationSteps[] = $this->supplementedApplicationStepFactory->create(
                 $applicationStep,
-                $this->formControlStrategyProvider->get($applicationStep)
+                $this->formControlServiceManager->getByApplicationStep($applicationStep)
             );
         }
 

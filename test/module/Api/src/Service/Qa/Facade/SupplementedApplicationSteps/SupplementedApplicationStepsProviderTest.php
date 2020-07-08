@@ -3,10 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Facade\SubmittedApplicationSteps;
 
 use DateTime;
+use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory;
@@ -42,11 +42,11 @@ class SupplementedApplicationStepsProviderTest extends MockeryTestCase
         $formControlStrategy1 = m::mock(FormControlStrategyInterface::class);
         $formControlStrategy2 = m::mock(FormControlStrategyInterface::class);
 
-        $formControlStrategyProvider = m::mock(FormControlStrategyProvider::class);
-        $formControlStrategyProvider->shouldReceive('get')
+        $formControlServiceManager = m::mock(FormControlServiceManager::class);
+        $formControlServiceManager->shouldReceive('getByApplicationStep')
             ->with($applicationStep1)
             ->andReturn($formControlStrategy1);
-        $formControlStrategyProvider->shouldReceive('get')
+        $formControlServiceManager->shouldReceive('getByApplicationStep')
             ->with($applicationStep2)
             ->andReturn($formControlStrategy2);
 
@@ -62,7 +62,7 @@ class SupplementedApplicationStepsProviderTest extends MockeryTestCase
             ->andReturn($supplementedApplicationStep2);
 
         $supplementedApplicationStepsProvider = new SupplementedApplicationStepsProvider(
-            $formControlStrategyProvider,
+            $formControlServiceManager,
             $supplementedApplicationStepFactory
         );
 

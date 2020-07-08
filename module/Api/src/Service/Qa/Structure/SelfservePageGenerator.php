@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
+use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class SelfservePageGenerator
@@ -13,26 +13,26 @@ class SelfservePageGenerator
     /** @var ApplicationStepGenerator */
     private $applicationStepGenerator;
 
-    /** @var FormControlStrategyProvider */
-    private $formControlStrategyProvider;
+    /** @var FormControlServiceManager */
+    private $formControlServiceManager;
 
     /**
      * Create service instance
      *
      * @param SelfservePageFactory $selfservePageFactory
      * @param ApplicationStepGenerator $applicationStepGenerator
-     * @param FormControlStrategyProvider $formControlStrategyProvider
+     * @param FormControlServiceManager $formControlServiceManager
      *
      * @return SelfservePageGenerator
      */
     public function __construct(
         SelfservePageFactory $selfservePageFactory,
         ApplicationStepGenerator $applicationStepGenerator,
-        FormControlStrategyProvider $formControlStrategyProvider
+        FormControlServiceManager $formControlServiceManager
     ) {
         $this->selfservePageFactory = $selfservePageFactory;
         $this->applicationStepGenerator = $applicationStepGenerator;
-        $this->formControlStrategyProvider = $formControlStrategyProvider;
+        $this->formControlServiceManager = $formControlServiceManager;
     }
 
     /**
@@ -47,7 +47,7 @@ class SelfservePageGenerator
         $applicationStepEntity = $qaContext->getApplicationStepEntity();
         $qaEntity = $qaContext->getQaEntity();
 
-        $formControlStrategy = $this->formControlStrategyProvider->get($applicationStepEntity);
+        $formControlStrategy = $this->formControlServiceManager->getByApplicationStep($applicationStepEntity);
 
         $selfservePage = $this->selfservePageFactory->create(
             $applicationStepEntity->getQuestion()->getActiveQuestionText()->getTranslationKeyFromQuestionKey(),

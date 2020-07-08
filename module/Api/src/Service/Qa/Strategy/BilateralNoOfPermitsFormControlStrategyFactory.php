@@ -16,13 +16,15 @@ class BilateralNoOfPermitsFormControlStrategyFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'bilateral_number_of_permits',
-            $serviceLocator->get('QaBilateralNoOfPermitsElementGenerator'),
-            $serviceLocator->get('QaBilateralNoOfPermitsAnswerSaver'),
-            $serviceLocator->get('QaBilateralNoOfPermitsAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaBilateralNoOfPermitsAnswerSummaryProvider')
+            $mainServiceLocator->get('QaBilateralNoOfPermitsElementGenerator'),
+            $mainServiceLocator->get('QaBilateralNoOfPermitsAnswerSaver'),
+            $mainServiceLocator->get('QaBilateralNoOfPermitsAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaBilateralNoOfPermitsAnswerSummaryProvider')
         );
     }
 }

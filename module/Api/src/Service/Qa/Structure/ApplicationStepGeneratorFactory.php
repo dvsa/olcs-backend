@@ -17,7 +17,7 @@ class ApplicationStepGeneratorFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new ApplicationStepGenerator(
-            $serviceLocator->get('QaFormControlStrategyProvider'),
+            $serviceLocator->get('FormControlServiceManager'),
             $serviceLocator->get('QaApplicationStepFactory'),
             $serviceLocator->get('QaValidatorListGenerator'),
             $serviceLocator->get('QaElementGeneratorContextFactory')

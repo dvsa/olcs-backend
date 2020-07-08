@@ -16,13 +16,15 @@ class EcmtShortTermEarliestPermitDateFormControlStrategyFactory implements Facto
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
         return new BaseFormControlStrategy(
             'ecmt_st_earliest_permit_date',
-            $serviceLocator->get('QaDateElementGenerator'),
-            $serviceLocator->get('QaDateAnswerSaver'),
-            $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator'),
-            $serviceLocator->get('QaDateAnswerSummaryProvider')
+            $mainServiceLocator->get('QaDateElementGenerator'),
+            $mainServiceLocator->get('QaDateAnswerSaver'),
+            $mainServiceLocator->get('QaGenericAnswerClearer'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
+            $mainServiceLocator->get('QaDateAnswerSummaryProvider')
         );
     }
 }

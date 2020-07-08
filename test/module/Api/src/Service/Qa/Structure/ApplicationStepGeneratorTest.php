@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep;
@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorListGenerator;
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -61,8 +60,8 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
             ->with($elementGeneratorContext)
             ->andReturn($element);
 
-        $formControlStrategyProvider = m::mock(FormControlStrategyProvider::class);
-        $formControlStrategyProvider->shouldReceive('get')
+        $formControlServiceManager = m::mock(FormControlServiceManager::class);
+        $formControlServiceManager->shouldReceive('getByApplicationStep')
             ->with($applicationStepEntity)
             ->andReturn($formControlStrategy);
 
@@ -86,7 +85,7 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
             ->andReturn($elementGeneratorContext);
 
         $applicationStepGenerator = new ApplicationStepGenerator(
-            $formControlStrategyProvider,
+            $formControlServiceManager,
             $applicationStepFactory,
             $validatorListGenerator,
             $elementGeneratorContextFactory

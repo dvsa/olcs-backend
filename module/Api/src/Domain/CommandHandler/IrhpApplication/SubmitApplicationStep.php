@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationStep as SubmitApplicationStepCmd;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -25,8 +25,8 @@ class SubmitApplicationStep extends AbstractCommandHandler implements Transactio
     /** @var QaContextGenerator */
     private $qaContextGenerator;
 
-    /** @var FormControlStrategyProvider */
-    private $formControlStrategyProvider;
+    /** @var FormControlServiceManager */
+    private $formControlServiceManager;
 
     /**
      * Create service
@@ -40,7 +40,7 @@ class SubmitApplicationStep extends AbstractCommandHandler implements Transactio
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         $this->qaContextGenerator = $mainServiceLocator->get('QaContextGenerator');
-        $this->formControlStrategyProvider = $mainServiceLocator->get('QaFormControlStrategyProvider');
+        $this->formControlServiceManager = $mainServiceLocator->get('FormControlServiceManager');
 
         return parent::createService($serviceLocator);
     }
@@ -60,7 +60,7 @@ class SubmitApplicationStep extends AbstractCommandHandler implements Transactio
             $command->getSlug()
         );
 
-        $formControlStrategy = $this->formControlStrategyProvider->get(
+        $formControlStrategy = $this->formControlServiceManager->getByApplicationStep(
             $qaContext->getApplicationStepEntity()
         );
 
