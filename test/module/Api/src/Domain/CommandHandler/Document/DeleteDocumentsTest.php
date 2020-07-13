@@ -21,7 +21,7 @@ use Dvsa\Olcs\Transfer\Command\Document\DeleteDocuments as Cmd;
  */
 class DeleteDocumentsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteDocuments();
 

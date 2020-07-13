@@ -26,7 +26,7 @@ class AbstractControllerTest extends MockeryTestCase
      */
     protected $logWriter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->response = m::mock('\Zend\Http\Response')->makePartial();
 

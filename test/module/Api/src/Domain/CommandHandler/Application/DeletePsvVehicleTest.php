@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as VehicleCmd;
  */
 class DeletePsvVehicleTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeletePsvVehicle();
         $this->mockRepo('Application', ApplicationRepo::class);

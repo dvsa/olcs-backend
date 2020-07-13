@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
  */
 class InspectionRequestTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('InspectionRequest', InspectionRequestRepo::class);

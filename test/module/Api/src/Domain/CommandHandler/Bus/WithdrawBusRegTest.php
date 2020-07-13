@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
  */
 class WithdrawBusRegTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new WithdrawBusReg();
         $this->mockRepo('Bus', BusRepo::class);

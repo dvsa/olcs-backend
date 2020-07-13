@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle as Cmd;
  */
 class RemoveLicenceVehicleTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new RemoveLicenceVehicle();
         $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);

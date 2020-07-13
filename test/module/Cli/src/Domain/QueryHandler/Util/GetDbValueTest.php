@@ -26,7 +26,7 @@ class GetDbValueTest extends QueryHandlerTestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GetDbValue();
         $this->mockRepo('GetDbValue', \Dvsa\Olcs\Api\Domain\Repository\GetDbValue::class);

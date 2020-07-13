@@ -46,7 +46,7 @@ class GenericAnswerWriterTest extends MockeryTestCase
 
     private $genericAnswerWriter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->questionId = 43;
 

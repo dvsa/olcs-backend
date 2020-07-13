@@ -24,7 +24,7 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
         ]
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessInsolvencyDlq();
         $this->mockRepo('MessageFailures', MessageFailures::class);

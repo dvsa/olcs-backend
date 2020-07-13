@@ -25,7 +25,7 @@ use Mockery as m;
  */
 class SendUsernameMultipleTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('Licence', LicenceRepo::class);

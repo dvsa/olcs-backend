@@ -35,7 +35,7 @@ class SectionAccessServiceTest extends MockeryTestCase
     /** @var  m\MockInterface */
     private $authService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRestrictionHelper = m::mock(RestrictionService::class);
 

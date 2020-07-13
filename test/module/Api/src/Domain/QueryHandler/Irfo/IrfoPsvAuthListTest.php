@@ -13,7 +13,7 @@ use Mockery as m;
  */
 class IrfoPsvAuthListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new  QueryHandler\Irfo\IrfoPsvAuthList();
         $this->mockRepo('IrfoPsvAuth', Repository\IrfoPsvAuth::class);

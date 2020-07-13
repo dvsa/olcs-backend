@@ -14,7 +14,7 @@ class OperatorLicenceReviewServiceTest extends MockeryTestCase
     /** @var OperatorLicenceReviewService review service */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new OperatorLicenceReviewService();
     }

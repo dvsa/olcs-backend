@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class BusServiceTypeTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

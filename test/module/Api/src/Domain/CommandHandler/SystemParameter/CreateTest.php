@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\System\SystemParameter;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Create();
         $this->mockRepo('SystemParameter', SystemParameterRepo::class);

@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class RefDataTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

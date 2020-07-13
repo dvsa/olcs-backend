@@ -27,7 +27,7 @@ class SQSControllerTest extends MockeryTestCase
     protected $event;
     protected $console;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->request = m::mock('Zend\Console\Request');
 

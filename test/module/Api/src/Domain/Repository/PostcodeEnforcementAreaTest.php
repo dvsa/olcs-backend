@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Repository\PostcodeEnforcementArea as PostcodeEnforceme
  */
 class PostcodeEnforcementAreaTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(PostcodeEnforcementAreaRepo::class);
     }

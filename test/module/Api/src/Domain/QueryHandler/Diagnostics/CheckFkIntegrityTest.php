@@ -17,7 +17,7 @@ class CheckFkIntegrityTest extends QueryHandlerTestCase
     /** @var m\MockInterface|PDO */
     private $mockPdo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $mockDoctrineEntityManager = m::mock(EntityManager::class);
         $this->mockedSmServices['DoctrineOrmEntityManager'] = $mockDoctrineEntityManager;
@@ -28,7 +28,7 @@ class CheckFkIntegrityTest extends QueryHandlerTestCase
             ->andReturn($this->mockPdo);
 
         $this->sut = new CheckFkIntegrity();
-        return parent::setUp();
+        parent::setUp();
     }
 
     public function testQuery()

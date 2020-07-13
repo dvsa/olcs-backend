@@ -31,7 +31,7 @@ class ReputeUrlTest extends QueryHandlerTestCase
         ]
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReputeUrl();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);

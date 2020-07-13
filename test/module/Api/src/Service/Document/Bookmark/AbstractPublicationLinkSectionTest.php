@@ -30,7 +30,7 @@ class AbstractPublicationLinkSectionTest extends MockeryTestCase
         );
 
         $bookmarkSnippets = $sut->getBookmarkSnippets();
-        static::assertInternalType('array', $bookmarkSnippets);
+        static::assertIsArray($bookmarkSnippets);
     }
 
     public function testGetBookmarkSnippetsByClass()

@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate as Entity;
  */
 class FStandingAdditionalVehTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new FStandingAdditionalVeh();
         $this->mockRepo('FinancialStandingRate', Repo::class);

@@ -16,7 +16,7 @@ class ConditionUndertakingTest extends RepositoryTestCase
     /** @var Repository\ConditionUndertaking | m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\ConditionUndertaking::class, true);
     }

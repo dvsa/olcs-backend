@@ -21,7 +21,7 @@ class ViTnmViewTest extends \PHPUnit\Framework\TestCase
      */
     protected $testData;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testData = [
             'id' => 1,

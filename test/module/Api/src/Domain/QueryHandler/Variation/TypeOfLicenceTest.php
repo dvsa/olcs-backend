@@ -24,7 +24,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class TypeOfLicenceTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TypeOfLicence();
         $this->mockRepo('Application', ApplicationRepo::class);

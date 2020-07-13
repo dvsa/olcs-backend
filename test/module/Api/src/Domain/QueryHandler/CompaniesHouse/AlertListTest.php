@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class AlertListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AlertList();
         $this->mockRepo('CompaniesHouseAlert', Repository\CompaniesHouseAlert::class);

@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(CreateHandler::class)->makePartial();
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);

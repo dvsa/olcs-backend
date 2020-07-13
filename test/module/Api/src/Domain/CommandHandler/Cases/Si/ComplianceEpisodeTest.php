@@ -46,7 +46,7 @@ use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXml as ComplianceEpisodeXm
  */
 class ComplianceEpisodeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ComplianceEpisode();
         $this->mockRepo('Cases', CasesRepo::class);

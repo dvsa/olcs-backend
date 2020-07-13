@@ -28,7 +28,7 @@ class DocumentEntityTest extends EntityTester
     /** @var  Entity | m\MockInterface */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         /** @var Entity $entity */
         $this->sut = m::mock(Entity::class)->makePartial();

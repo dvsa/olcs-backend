@@ -25,7 +25,7 @@ class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestC
      */
     protected $feesHelperService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->feesHelperService = m::mock();
 

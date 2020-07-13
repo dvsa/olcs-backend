@@ -44,7 +44,7 @@ abstract class BaseAbstractDbQueryTestCase extends MockeryTestCase
     abstract protected function getSut();
     abstract protected function getExpectedQuery();
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->connection = m::mock(Connection::class);
         $this->em = m::mock(EntityManager::class);

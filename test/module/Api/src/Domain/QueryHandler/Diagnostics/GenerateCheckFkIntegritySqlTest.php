@@ -16,7 +16,7 @@ class GenerateCheckFkIntegritySqlTest extends QueryHandlerTestCase
     /** @var PDO|m\MockInterface */
     private $mockPdo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GenerateCheckFkIntegritySql();
         $mockDoctrineEntityManager = m::mock(EntityManager::class);
@@ -37,7 +37,7 @@ class GenerateCheckFkIntegritySqlTest extends QueryHandlerTestCase
             }
         );
 
-        return parent::setUp();
+        parent::setUp();
     }
 
     public function testQuery()
@@ -142,7 +142,7 @@ class GenerateCheckFkIntegritySqlTest extends QueryHandlerTestCase
     {
         $this->expectConstraintsQuery($constraints);
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessageRegExp('/BAD`CHAR/');
+        $this->expectExceptionMessageMatches('/BAD`CHAR/');
         $this->sut->handleQuery(GenerateCheckFkIntegritySqlCmd::create([]));
     }
 

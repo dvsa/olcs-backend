@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class CloseTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CloseHandler();
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);

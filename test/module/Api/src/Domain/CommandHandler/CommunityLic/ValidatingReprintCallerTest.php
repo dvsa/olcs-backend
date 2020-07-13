@@ -17,7 +17,7 @@ use RuntimeException;
 
 class ValidatingReprintCallerTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ValidatingReprintCaller();
 

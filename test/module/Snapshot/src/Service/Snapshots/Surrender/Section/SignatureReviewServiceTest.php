@@ -19,7 +19,7 @@ class SignatureReviewServiceTest extends MockeryTestCase
 
     protected $sm;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SignatureReviewService();
         $this->sm = Bootstrap::getServiceManager();

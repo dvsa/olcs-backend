@@ -19,7 +19,7 @@ abstract class AbstractMultiDeleteCommandHandlerTest extends CommandHandlerTestC
     protected $repoClass = 'changeMe';
     protected $entityClass = 'changeMe';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo($this->repoServiceName, $this->repoClass);
         $this->sut = new $this->sutClass();

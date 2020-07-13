@@ -15,7 +15,7 @@ class AbstractReviewServiceTest extends MockeryTestCase
     /** @var  ServiceManager|\Mockery\MockInterface */
     protected $sm;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sm = Bootstrap::getServiceManager();
         $this->sut = new AbstractReviewServiceStub();

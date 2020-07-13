@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateHandler();
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);

@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "ext-intl": "*",
         "aws/aws-sdk-php": "^3.99",
         "beberlei/doctrineextensions": "^1.0",
@@ -49,7 +49,6 @@
         "twig/twig": "^2.0",
         "zendframework/zend-cache": "^2.5",
         "zendframework/zend-console": "^2.5",
-        "zendframework/zend-db": "^2.5",
         "zendframework/zend-eventmanager": "^2.5",
         "zendframework/zend-filter": "^2.5",
         "zendframework/zend-http": "^2.5",
@@ -73,13 +72,7 @@
         "zf-commons/zfc-rbac": "~2.5.0"
     },
     "require-dev": {
-        "olcs/olcs-devtools": "~4.206.0",
-        "mikey179/vfsstream": "~1.4.0",
-        "phpstan/phpstan": "^0.12",
-        "phpstan/phpstan-mockery": "^0.12.0",
-        "phpstan/phpstan-doctrine": "^0.12.0",
-        "mockery/mockery": "1.2.4",
-        "johnkary/phpunit-speedtrap": "^3.0"
+        "olcs/olcs-devtools": "~4.206.0"
     },
     "autoload": {
         "classmap": [
@@ -104,7 +97,7 @@
         "preferred-install": "dist",
         "secure-http": false,
         "platform": {
-            "php": "7.1.16"
+            "php": "7.2.31"
         },
         "sort-packages": true
     },

@@ -41,7 +41,7 @@ abstract class AbstractUpdateStatusTestCase extends CommandHandlerTestCase
 
     protected $section;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('Application', Application::class);
 

@@ -16,7 +16,7 @@ class TranslateableTextParameterTest extends MockeryTestCase
 
     private $formatter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->value = 'value';
 

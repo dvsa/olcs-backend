@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
  */
 class CeaseActiveDiscsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CeaseActiveDiscs();
         $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);

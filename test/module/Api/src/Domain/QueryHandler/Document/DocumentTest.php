@@ -21,7 +21,7 @@ use Dvsa\Olcs\Transfer\Query\Document\Document as Qry;
  */
 class DocumentTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Document();
         $this->mockRepo('Document', DocumentRepo::class);

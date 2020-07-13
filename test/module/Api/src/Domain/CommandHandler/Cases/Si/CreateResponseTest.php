@@ -28,7 +28,7 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
  */
 class CreateResponseTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateResponse();
         $this->mockRepo('Cases', CasesRepo::class);

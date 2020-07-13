@@ -26,7 +26,7 @@ class OrganisationTest extends RepositoryTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class, true);
     }

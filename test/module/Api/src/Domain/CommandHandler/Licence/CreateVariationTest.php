@@ -28,7 +28,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class CreateVariationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateVariation();
         $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);

@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class ExpireTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ExpireHandler();
         $this->mockRepo('Bus', BusRepo::class);

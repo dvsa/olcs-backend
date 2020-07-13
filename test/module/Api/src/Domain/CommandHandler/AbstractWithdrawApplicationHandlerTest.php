@@ -18,7 +18,7 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
     protected $withdrawStatus = IrhpInterface::STATUS_WITHDRAWN;
     protected $emails = []; //map a withdraw status to a confirmation email
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo($this->repoServiceName, $this->entityClass);
         $this->sut = new $this->sutClass();

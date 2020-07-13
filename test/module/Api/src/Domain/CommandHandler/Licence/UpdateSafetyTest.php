@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  */
 class UpdateSafetyTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateSafety();
         $this->mockRepo('Licence', Licence::class);

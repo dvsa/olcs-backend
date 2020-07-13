@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\System\TranslationKeyText as TranslationKeyTextEntity;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateHandler();
         $this->mockRepo('TranslationKeyText', TranslationKeyTextRepo::class);

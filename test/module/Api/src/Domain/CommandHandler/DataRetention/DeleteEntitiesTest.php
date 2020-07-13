@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\DataRetention\DeleteEntities as Cmd;
  */
 class DeleteEntitiesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteEntities();
         $this->mockRepo('DataRetention', Repository\DataRetention::class);

@@ -20,7 +20,7 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
     /** @var  \Zend\ServiceManager\ServiceManager */
     protected $sm;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sm = Bootstrap::getServiceManager();
 

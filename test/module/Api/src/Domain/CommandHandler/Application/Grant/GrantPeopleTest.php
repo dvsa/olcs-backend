@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCmd
  */
 class GrantPeopleTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GrantPeople();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

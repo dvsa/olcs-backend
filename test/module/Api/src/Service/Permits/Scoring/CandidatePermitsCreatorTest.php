@@ -41,7 +41,7 @@ class CandidatePermitsCreatorTest extends MockeryTestCase
 
     private $irhpCandidatePermitFactory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 

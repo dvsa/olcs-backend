@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class PublishTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Publish();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

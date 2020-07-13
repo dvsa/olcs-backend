@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
  */
 class CreateCommunityLicenceTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateCmdHandler();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);

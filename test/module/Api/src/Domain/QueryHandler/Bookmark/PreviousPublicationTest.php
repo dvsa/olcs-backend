@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as Entity;
  */
 class PreviousPublicationTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PreviousPublication();
         $this->mockRepo('PublicationLink', Repo::class);

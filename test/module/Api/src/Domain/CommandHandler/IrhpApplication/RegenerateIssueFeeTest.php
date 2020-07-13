@@ -18,7 +18,7 @@ use Mockery as m;
 
 class RegenerateIssueFeeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('FeeType', FeeTypeRepo::class);

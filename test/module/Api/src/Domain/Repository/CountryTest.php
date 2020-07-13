@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class CountryTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Country::class);
     }

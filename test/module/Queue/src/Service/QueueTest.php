@@ -20,7 +20,7 @@ class QueueTest extends TestCase
     /** @var  m\MockInterface|\Zend\Log\Logger */
     protected $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->queue = m::mock(SqsClient::class);
         $this->sut = new Queue($this->queue);

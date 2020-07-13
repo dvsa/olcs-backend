@@ -19,7 +19,7 @@ class QueryBuilderTest extends MockeryTestCase
     /** @var  m\MockInterface */
     private $mockQueryPartialSrvMngr;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockQueryPartialSrvMngr = m::mock(QueryPartialServiceManager::class);
 

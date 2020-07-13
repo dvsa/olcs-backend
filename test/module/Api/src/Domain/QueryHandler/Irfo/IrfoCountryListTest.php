@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class IrfoCountryListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler\Irfo\IrfoCountryList();
         $this->mockRepo('IrfoCountry', Repository\IrfoCountry::class);

@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class AssignItemsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AssignItems();
         $this->mockRepo('DataRetention', Repository\DataRetention::class);

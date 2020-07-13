@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Command\SystemParameter\UpdateSystemParameter as Cmd;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new \Dvsa\Olcs\Api\Domain\CommandHandler\SystemParameter\Update();
         $this->mockRepo('SystemParameter', \Dvsa\Olcs\Api\Domain\Repository\SystemParameter::class);

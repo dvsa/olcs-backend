@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
  */
 class UpdateAnnualTestHistoryTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateAnnualTestHistory();
         $this->mockRepo('Cases', CasesRepo::class);

@@ -19,7 +19,7 @@ class ValidatorTest extends MockeryTestCase
 
     private $params;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->rule = 'Between';
 

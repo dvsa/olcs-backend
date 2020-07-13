@@ -19,7 +19,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class ResetIrfoGvPermitTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ResetIrfoGvPermit();
         $this->mockRepo('IrfoGvPermit', IrfoGvPermit::class);

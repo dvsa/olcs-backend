@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Delete as DeleteQueueCmd;
  */
 class CompleteTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Complete();
         $this->mockRepo('Queue', Repo::class);

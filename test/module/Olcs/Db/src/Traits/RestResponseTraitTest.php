@@ -48,7 +48,6 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
      */
     public function testRespond($input, $expected)
     {
-        $expectedCode = $expected['code'];
         $expectedContent = json_encode(
             array(
                 'Response' => array(
@@ -61,7 +60,7 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
         );
 
         $mockResponse = $this->createPartialMock(
-            '\stdClass',
+            Response::class,
             array(
                 'setStatusCode',
                 'setContent',

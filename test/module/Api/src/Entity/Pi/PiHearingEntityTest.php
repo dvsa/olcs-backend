@@ -31,7 +31,7 @@ class PiHearingEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function setUp()
+    public function setUp(): void
     {
         /** @var \Dvsa\Olcs\Api\Entity\Pi\PiHearing entity */
         $this->entity = $this->instantiate($this->entityClass);

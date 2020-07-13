@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\DeleteConditionUnder
  */
 class Schedule41RefuseTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Schedule41Refuse();
         $this->mockRepo('Application', Application::class);

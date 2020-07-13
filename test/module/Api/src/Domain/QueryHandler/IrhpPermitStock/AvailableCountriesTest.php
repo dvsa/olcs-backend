@@ -13,7 +13,7 @@ use Mockery as m;
 
 class AvailableCountriesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AvailableCountries();
         $this->mockRepo('Country', CountryRepo::class);

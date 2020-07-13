@@ -11,7 +11,7 @@ use Mockery as m;
 
 class ReadyToPrintStockTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadyToPrintStock();
         $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);

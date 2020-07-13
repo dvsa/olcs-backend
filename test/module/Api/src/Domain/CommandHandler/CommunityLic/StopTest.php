@@ -33,7 +33,7 @@ use Mockery as m;
  */
 class StopTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Stop();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);

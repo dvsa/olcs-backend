@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class ByTransportManagerTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ByTransportManager();
         $this->mockRepo('Cases', CasesRepo::class);

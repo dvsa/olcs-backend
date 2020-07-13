@@ -30,7 +30,7 @@ class CasesEntityTest extends EntityTester
     /** @var  \Dvsa\Olcs\Api\Entity\Cases\Cases */
     protected $entity;
 
-    public function setUp()
+    public function setUp(): void
     {
         /** @var \Dvsa\Olcs\Api\Entity\Cases\Cases entity */
         $this->entity = $this->instantiate($this->entityClass);

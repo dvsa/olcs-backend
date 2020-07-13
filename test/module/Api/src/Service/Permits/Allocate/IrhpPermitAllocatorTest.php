@@ -26,7 +26,7 @@ class IrhpPermitAllocatorTest extends MockeryTestCase
 
     private $irhpPermitAllocator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitRepo = m::mock(IrhpPermitRepository::class);
 

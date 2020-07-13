@@ -25,7 +25,7 @@ class DbQueryServiceManagerTest extends MockeryTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $config = m::mock(ConfigInterface::class);
         $config->shouldReceive('configureServiceManager')->with(m::type(DbQueryServiceManager::class));

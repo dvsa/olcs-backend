@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\System\Language as LanguageEntity;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateHandler();
         $this->mockRepo('TranslationKey', TranslationKeyRepo::class);

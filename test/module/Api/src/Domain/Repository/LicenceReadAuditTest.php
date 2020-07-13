@@ -18,7 +18,7 @@ class LicenceReadAuditTest extends AbstractReadAuditTest
     /** @var LicenceReadAudit|m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(LicenceReadAudit::class, true);
     }

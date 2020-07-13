@@ -16,7 +16,7 @@ class TypeOfLicenceReviewServiceTest extends MockeryTestCase
     /** @var  TypeOfLicence review service */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TypeOfLicenceReviewService();
     }

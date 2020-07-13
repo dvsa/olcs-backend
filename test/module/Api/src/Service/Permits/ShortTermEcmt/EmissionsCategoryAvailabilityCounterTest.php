@@ -36,7 +36,7 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
 
     private $emissionsCategoryAvailabilityCounter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->connection = m::mock(Connection::class);
 

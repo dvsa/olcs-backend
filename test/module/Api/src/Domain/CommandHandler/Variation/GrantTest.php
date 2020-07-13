@@ -34,7 +34,7 @@ use Mockery as m;
  */
 class GrantTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Grant();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

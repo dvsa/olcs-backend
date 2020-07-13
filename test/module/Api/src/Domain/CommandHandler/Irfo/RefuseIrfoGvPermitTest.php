@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class RefuseIrfoGvPermitTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('IrfoGvPermit', IrfoGvPermitRepo::class);

@@ -33,7 +33,7 @@ class UploadTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockUploader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Upload();
 

@@ -11,7 +11,7 @@ class DocmanFileTest extends TestCase
 {
     protected $vfs;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->vfs = vfsStream::setup('temp');
     }

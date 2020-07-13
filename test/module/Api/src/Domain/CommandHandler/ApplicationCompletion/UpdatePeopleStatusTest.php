@@ -7,7 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ApplicationCompletion;
 
-use Doctrine\ORM\Query;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdatePeopleStatus as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdatePeopleStatus;
 use Mockery as m;
@@ -28,7 +28,7 @@ class UpdatePeopleStatusTest extends AbstractUpdateStatusTestCase
 
     protected $section = 'People';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdatePeopleStatus();
         $this->command = Cmd::create(['id' => 111]);
@@ -42,6 +42,7 @@ class UpdatePeopleStatusTest extends AbstractUpdateStatusTestCase
 
     public function testHandleCommandWithChange()
     {
+        $this->organisation->setOrganisationPersons(new ArrayCollection());
         $this->applicationCompletion->setPeopleStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
@@ -49,6 +50,7 @@ class UpdatePeopleStatusTest extends AbstractUpdateStatusTestCase
 
     public function testHandleCommandWithoutChange()
     {
+        $this->organisation->setOrganisationPersons(new ArrayCollection());
         $this->applicationCompletion->setPeopleStatus(ApplicationCompletionEntity::STATUS_INCOMPLETE);
 
         $this->expectStatusUnchanged(ApplicationCompletionEntity::STATUS_INCOMPLETE);
@@ -58,7 +60,7 @@ class UpdatePeopleStatusTest extends AbstractUpdateStatusTestCase
     {
         $this->applicationCompletion->setPeopleStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
-        $this->organisation->setOrganisationPersons(['foo']);
+        $this->organisation->setOrganisationPersons(new ArrayCollection(['foo']));
 
         $aop1 = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
         $aop1->setAction('D');

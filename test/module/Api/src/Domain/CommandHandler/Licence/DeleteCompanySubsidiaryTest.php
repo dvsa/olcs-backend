@@ -28,7 +28,7 @@ class DeleteCompanySubsidiaryTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockAuthSrv;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(DeleteCompanySubsidiary::class . '[delete, createTask]')
             ->makePartial()

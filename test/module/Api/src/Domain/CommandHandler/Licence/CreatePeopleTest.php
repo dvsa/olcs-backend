@@ -21,7 +21,7 @@ class CreatePeopleTest extends CommandHandlerTestCase
     /** @var  CommandHandler */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
 

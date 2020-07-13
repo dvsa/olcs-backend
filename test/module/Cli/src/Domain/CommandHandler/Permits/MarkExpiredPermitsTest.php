@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class MarkExpiredPermitsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new MarkExpiredPermits();
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);

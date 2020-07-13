@@ -33,7 +33,7 @@ class ApplicationTest extends RepositoryTestCase
     /** @var Repository\Application | m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\Application::class);
     }

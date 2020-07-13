@@ -16,7 +16,7 @@ abstract class AbstractUpdateCommandHandlerTest extends CommandHandlerTestCase
 
     private $commandValue = 'commandValue';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo($this->repoServiceName, $this->entityClass);
         $this->sut = new $this->sutClass();

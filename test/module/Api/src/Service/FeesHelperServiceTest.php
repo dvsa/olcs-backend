@@ -43,7 +43,7 @@ class FeesHelperServiceTest extends MockeryTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Mock the repos
         $this->applicationRepo = m::mock();
@@ -59,7 +59,7 @@ class FeesHelperServiceTest extends MockeryTestCase
             $this->feeTypeRepo
         );
 
-        return parent::setUp();
+        parent::setUp();
     }
 
     private function createService($applicationRepo, $irhpApplicationRepo, $feeRepo, $feeTypeRepo)

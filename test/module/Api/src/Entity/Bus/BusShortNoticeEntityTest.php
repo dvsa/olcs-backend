@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class BusShortNoticeEntityTest extends EntityTester
 {
-    public function setUp()
+    public function setUp(): void
     {
         /** @var Entity */
         $this->entity = $this->instantiate($this->entityClass);

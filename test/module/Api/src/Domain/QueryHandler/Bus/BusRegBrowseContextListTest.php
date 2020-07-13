@@ -13,7 +13,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
  */
 class BusRegBrowseContextListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new BusRegBrowseContextList();
         $this->mockRepo('BusRegBrowseView', BusRegBrowseViewRepo::class);

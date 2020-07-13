@@ -2,12 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\People;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\Licence\People as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
 
@@ -19,7 +20,7 @@ class PeopleTest extends QueryHandlerTestCase
     /** @var People */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new People();
         $this->mockRepo('Licence', Repository\Licence::class);
@@ -61,7 +62,7 @@ class PeopleTest extends QueryHandlerTestCase
             ->andReturn([$mockOp]);
 
         $response = $this->sut->handleQuery($query);
-        $this->assertArraySubset(
+        Assert::assertArraySubset(
             [
                 'id' => 432,
                 'hasInforceLicences' => false,

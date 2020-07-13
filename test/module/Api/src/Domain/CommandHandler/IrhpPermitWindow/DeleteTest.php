@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as PermitWindowEntity;
  */
 class DeleteTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteHandler;
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);

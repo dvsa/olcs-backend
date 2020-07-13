@@ -27,7 +27,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
     /** @var  m\MockInterface | Licence */
     private $mockLic;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockCat =  m::mock(Category::class);
         $this->mockSubCat = m::mock(SubCategory::class);

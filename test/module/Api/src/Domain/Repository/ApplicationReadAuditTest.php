@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class ApplicationReadAuditTest extends AbstractReadAuditTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(ApplicationReadAudit::class, true);
     }

@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVa
  */
 class DeleteOperatingCentreTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteOperatingCentre();
         $this->mockRepo('Application', Repository\Application::class);

@@ -18,7 +18,7 @@ use Mockery as m;
  */
 class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('FinancialStandingRate', Repo::class);

@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  */
 class HandleOcVariationFeesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Application', Repository\Application::class);

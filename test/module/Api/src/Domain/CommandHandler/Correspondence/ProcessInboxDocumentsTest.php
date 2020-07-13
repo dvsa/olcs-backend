@@ -33,7 +33,7 @@ class ProcessInboxDocumentsTest extends CommandHandlerTestCase
     /** @var ProcessInboxDocuments  */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessInboxDocuments();
         $this->mockRepo('CorrespondenceInbox', Repository\CorrespondenceInbox::class);

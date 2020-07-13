@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
  */
 class GetTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('TrafficArea', Repo::class);

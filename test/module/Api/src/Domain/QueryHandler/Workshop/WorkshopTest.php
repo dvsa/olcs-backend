@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class WorkshopTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Workshop();
         $this->mockRepo('Workshop', WorkshopRepo::class);

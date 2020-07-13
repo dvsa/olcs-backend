@@ -25,7 +25,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class UpdateUserSelfserveTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('User', User::class);

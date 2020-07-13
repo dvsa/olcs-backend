@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType as Cmd;
  */
 class ChangeBusinessTypeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ChangeBusinessType();
         $this->mockRepo('Organisation', Repository\Organisation::class);

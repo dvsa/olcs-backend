@@ -9,7 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
  */
 class SubCategoryDescriptionTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(\Dvsa\Olcs\Api\Domain\Repository\SubCategoryDescription::class, true);
     }

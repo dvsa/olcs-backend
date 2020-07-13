@@ -34,7 +34,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
     private $expectedMessages;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->sut = new SubmitApplication();

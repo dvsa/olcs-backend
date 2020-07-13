@@ -22,7 +22,7 @@ use Mockery as m;
  */
 class InterimRefundsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new InterimRefunds();
         $this->mockRepo('Fee', Fee::class);

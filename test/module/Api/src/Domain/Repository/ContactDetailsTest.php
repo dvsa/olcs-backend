@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
  */
 class ContactDetailsTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

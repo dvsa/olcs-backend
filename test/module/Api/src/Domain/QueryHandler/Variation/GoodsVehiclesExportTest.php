@@ -22,7 +22,7 @@ class GoodsVehiclesExportTest extends QueryHandlerTestCase
     /** @var GoodsVehiclesExport|m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(GoodsVehiclesExport::class . '[getData]')
             ->shouldAllowMockingProtectedMethods();

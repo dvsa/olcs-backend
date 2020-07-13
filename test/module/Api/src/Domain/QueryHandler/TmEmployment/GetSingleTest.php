@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class GetSingleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('TmEmployment', \Dvsa\Olcs\Api\Domain\Repository\TmEmployment::class);

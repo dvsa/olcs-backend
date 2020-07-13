@@ -42,7 +42,7 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
     private $irhpPermitStock;
     private $irhpPermitApplication;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

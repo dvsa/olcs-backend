@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
  */
 class TaskDetailsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TaskDetails();
         $this->mockRepo('TaskSearchView', Repo::class);

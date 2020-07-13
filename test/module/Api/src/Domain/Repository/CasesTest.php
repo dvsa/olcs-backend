@@ -28,7 +28,7 @@ class CasesTest extends RepositoryTestCase
     /** @var  \Dvsa\Olcs\Transfer\Query\QueryInterface | m\MockInterface */
     private $mockQi;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\Cases::class, true);
 

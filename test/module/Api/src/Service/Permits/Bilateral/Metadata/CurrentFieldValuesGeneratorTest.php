@@ -22,7 +22,7 @@ class CurrentFieldValuesGeneratorTest extends MockeryTestCase
 
     private $currentFieldValuesGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 

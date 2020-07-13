@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateHandler();
         $this->mockRepo('IrhpPermitRange', PermitRangeRepo::class);
@@ -145,11 +145,10 @@ class CreateTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandBilateralNoJourney()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $cmdData = [
             'irhpPermitStock' => '1',
             'emissionsCategory' => RefData::EMISSIONS_CATEGORY_EURO5_REF,

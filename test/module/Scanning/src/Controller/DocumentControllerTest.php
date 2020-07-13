@@ -25,7 +25,7 @@ class DocumentControllerTest extends MockeryTestCase
      */
     private $request;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sm = \OlcsTest\Bootstrap::getServiceManager();
         $this->request  = m::mock('\Zend\Http\Request')->makePartial();

@@ -25,7 +25,7 @@ class CompareTest extends CommandHandlerTestCase
     /** @var  CompaniesHouseApi | m\MockInterface */
     protected $mockApi;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockApi = m::mock(CompaniesHouseApi::class);
         $this->mockedSmServices = [

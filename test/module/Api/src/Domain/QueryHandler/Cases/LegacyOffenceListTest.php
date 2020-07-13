@@ -22,7 +22,7 @@ use Mockery as m;
  */
 class LegacyOffenceListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new LegacyOffenceList();
         $this->mockRepo('LegacyOffence', LegacyOffenceRepo::class);

@@ -13,7 +13,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
     /** @var  \org\bovigo\vfs\vfsStreamDirectory */
     private $vfs;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->vfs = vfsStream::setup('temp');
     }

@@ -20,7 +20,7 @@ use RuntimeException;
  */
 class IrhpPermitApplicationTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(IrhpPermitApplication::class);
     }

@@ -13,7 +13,7 @@ use Mockery as m;
 
 class QueueRunScoringTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('IrhpPermitStock', IrhpPermitStock::class);
 

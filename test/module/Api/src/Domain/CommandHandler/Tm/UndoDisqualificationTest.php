@@ -21,7 +21,7 @@ use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
  */
 class UndoDisqualificationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UndoDisqualification();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);

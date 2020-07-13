@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class PaginatedRegistrationHistoryListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(PaginatedRegistrationHistoryList::class)
             ->makePartial()->shouldAllowMockingProtectedMethods();

@@ -25,7 +25,7 @@ class SearchTest extends MockeryTestCase
     /** @var  m\MockInterface | \Dvsa\Olcs\Api\Entity\User\User */
     private $mockUser;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SearchService();
 

@@ -37,7 +37,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     /** @var Entity\Licence\Licence | m\MockInterface */
     private $mockLic;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateGoodsVehicle();
 

@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\System\IrhpPermitStock as PermitStockEntity;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateHandler();
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);

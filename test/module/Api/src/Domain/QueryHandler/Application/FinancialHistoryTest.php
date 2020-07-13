@@ -23,7 +23,7 @@ use Doctrine\ORM\Query;
  */
 class FinancialHistoryTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new FinancialHistory();
         $this->mockRepo('Application', ApplicationRepo::class);

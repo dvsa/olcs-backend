@@ -52,7 +52,7 @@ class GeneratorTest extends MockeryTestCase
 
     protected $niTranslation;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Generator();
         $this->sm = Bootstrap::getServiceManager();

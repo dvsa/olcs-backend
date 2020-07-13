@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class CloseAlertsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CloseAlerts();
         $this->mockRepo('CompaniesHouseAlert', AlertRepo::class);

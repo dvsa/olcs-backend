@@ -20,7 +20,7 @@ class BatchVehicleListGeneratorForGoodsDiscsTest extends CommandHandlerTestCase
 {
     protected $batchSize = 180;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Batch();
 

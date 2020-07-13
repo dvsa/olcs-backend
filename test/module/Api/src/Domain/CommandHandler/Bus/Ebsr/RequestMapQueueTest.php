@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
  */
 class RequestMapQueueTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new RequestMapQueue();
         $this->mockRepo('Bus', BusRepo::class);

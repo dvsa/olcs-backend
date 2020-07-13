@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
  */
 class Schedule41ResetTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Schedule41Reset();
         $this->mockRepo('Application', Application::class);

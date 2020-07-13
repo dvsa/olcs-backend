@@ -15,7 +15,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
  */
 class ReviewTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Review();
         $this->mockRepo('ContinuationDetail', ContinuationDetailRepo::class);

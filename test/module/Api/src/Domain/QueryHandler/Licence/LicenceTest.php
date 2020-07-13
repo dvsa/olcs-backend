@@ -2,18 +2,18 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\Licence;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\Licence\Licence as Qry;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
 
 /**
  * Licence Test
@@ -22,7 +22,7 @@ use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
  */
 class LicenceTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Licence();
         $this->mockRepo('Licence', Repository\Licence::class);
@@ -246,7 +246,7 @@ class LicenceTest extends QueryHandlerTestCase
             'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
         ];
 
-        $this->assertArraySubset($expectedResult, $result->serialize());
+        Assert::assertArraySubset($expectedResult, $result->serialize());
     }
 
     public function testHandleQueryShowExpiryWarningDataProvider()
@@ -337,7 +337,7 @@ class LicenceTest extends QueryHandlerTestCase
             'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
         ];
 
-        $this->assertArraySubset($expected, $result->serialize());
+        Assert::assertArraySubset($expected, $result->serialize());
     }
 
     public function dptestHandleQuery()

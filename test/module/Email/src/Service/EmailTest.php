@@ -30,7 +30,7 @@ class EmailTest extends MockeryTestCase
      */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Email();
     }
@@ -153,8 +153,8 @@ class EmailTest extends MockeryTestCase
                         "html content";
 
                     //test part one (this is a generated multipart message body, so we check both parts are included)
-                    $this->assertContains($expectedPlainText, $messagePart->getRawContent());
-                    $this->assertContains($expectedHtml, $messagePart->getRawContent());
+                    $this->assertStringContainsString($expectedPlainText, $messagePart->getRawContent());
+                    $this->assertStringContainsString($expectedHtml, $messagePart->getRawContent());
                     $this->assertInstanceOf(ZendMimePart::class, $messagePart);
 
                     //test part two (the first attachment)

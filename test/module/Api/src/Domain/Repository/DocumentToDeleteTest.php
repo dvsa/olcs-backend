@@ -20,7 +20,7 @@ class DocumentToDeleteTest extends RepositoryTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(DocumentToDelete::class);
         $this->mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);

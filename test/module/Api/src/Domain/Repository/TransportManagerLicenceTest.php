@@ -14,7 +14,7 @@ class TransportManagerLicenceTest extends RepositoryTestCase
     /** @var  Repository\TransportManagerLicence */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\TransportManagerLicence::class, true);
     }

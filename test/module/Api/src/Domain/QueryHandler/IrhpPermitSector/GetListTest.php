@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpPermitSector;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitSector\GetList as QueryHandler;
@@ -15,7 +16,7 @@ use Dvsa\Olcs\Transfer\Query\IrhpPermitSector\GetList as ListQuery;
  */
 class GetListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('IrhpPermitSectorQuota', PermitSectorQuotaRepo::class);
@@ -51,6 +52,6 @@ class GetListTest extends QueryHandlerTestCase
             ]
         ];
 
-        $this->assertArraySubset($expected, $result);
+        Assert::assertArraySubset($expected, $result);
     }
 }

@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion;
 
-use Doctrine\ORM\Query;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
@@ -31,7 +29,7 @@ final class UpdateTransportManagersStatus extends AbstractUpdateStatus
         ];
 
         if (in_array($application->getLicenceType()->getId(), $requiredTransportManager)
-            && count($application->getTransportManagers()) === 0) {
+            && $application->getTransportManagers()->isEmpty()) {
             return false;
         }
 

@@ -20,7 +20,7 @@ use Dvsa\Olcs\Address\Service\AddressInterface;
  */
 class GetAddressTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GetAddress();
         $this->mockedSmServices['AddressService'] = m::mock(AddressInterface::class);

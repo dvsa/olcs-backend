@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class UpdateReputeNotLostTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateReputeNotLost();
         $this->mockRepo('TmCaseDecision', TmCaseDecision::class);

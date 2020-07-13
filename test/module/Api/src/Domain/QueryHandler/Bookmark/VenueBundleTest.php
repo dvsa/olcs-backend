@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Venue as Entity;
  */
 class VenueBundleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new VenueBundle();
         $this->mockRepo('Venue', Repo::class);

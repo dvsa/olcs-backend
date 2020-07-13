@@ -20,7 +20,7 @@ class ExportToCsvTest extends MockeryTestCase
     /** @var  \org\bovigo\vfs\vfsStreamDirectory */
     private $vfs;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->vfs = vfsStream::setup('root');
 

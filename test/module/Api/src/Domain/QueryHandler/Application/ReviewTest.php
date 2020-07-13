@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  */
 class ReviewTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Review();
         $this->mockRepo('Application', ApplicationRepo::class);

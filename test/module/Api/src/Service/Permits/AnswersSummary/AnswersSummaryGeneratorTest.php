@@ -31,7 +31,7 @@ class AnswersSummaryGeneratorTest extends MockeryTestCase
 
     private $customRowsAdderForType2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpApplication = m::mock(IrhpApplication::class);
 

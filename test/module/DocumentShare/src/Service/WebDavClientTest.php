@@ -34,7 +34,7 @@ class WebDavClientTest extends MockeryTestCase
     /** @var  m\MockInterface|\Zend\Log\Logger */
     private $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockFileSystem = m::mock(FilesystemInterface::class);
 

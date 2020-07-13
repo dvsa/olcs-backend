@@ -22,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class DeleteTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteHandler;
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);

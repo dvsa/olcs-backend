@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class SiListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('SeriousInfringement', \Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement::class);

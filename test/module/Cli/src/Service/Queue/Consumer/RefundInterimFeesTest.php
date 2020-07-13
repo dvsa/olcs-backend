@@ -28,7 +28,7 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
      */
     private $item;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sm = Bootstrap::getServiceManager();
 

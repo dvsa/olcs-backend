@@ -25,7 +25,7 @@ class CertificatesGeneratorTest extends MockeryTestCase
 
     private $questionTextGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
 

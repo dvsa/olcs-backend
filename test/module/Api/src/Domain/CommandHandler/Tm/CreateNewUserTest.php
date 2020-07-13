@@ -41,7 +41,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateNewUser();
         $this->mockRepo('User', Repository\User::class);

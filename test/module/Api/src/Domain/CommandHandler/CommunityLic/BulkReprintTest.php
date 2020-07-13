@@ -16,7 +16,7 @@ class BulkReprintTest extends CommandHandlerTestCase
 {
     private $mockFileUploader;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('Document', DocumentRepo::class);
 

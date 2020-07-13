@@ -68,7 +68,7 @@ abstract class AbstractQueryByIdHandlerTest extends QueryHandlerTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new $this->sutClass();
         $this->mockRepo($this->sutRepo, $this->repoClass);

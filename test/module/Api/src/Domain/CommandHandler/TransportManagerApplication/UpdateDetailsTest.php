@@ -23,7 +23,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
     /** @var  CommandHandler\TransportManagerApplication\UpdateDetails */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler\TransportManagerApplication\UpdateDetails();
         $this->mockRepo('TransportManagerApplication', TransportManagerApplication::class);

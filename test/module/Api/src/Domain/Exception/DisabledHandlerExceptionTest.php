@@ -14,6 +14,6 @@ class DisabledHandlerExceptionTest extends \PHPUnit\Framework\TestCase
     {
         $className = get_class(new \stdClass());
         $sut = new DisabledHandlerException($className);
-        $this->assertContains($className, $sut->getMessage());
+        $this->assertStringContainsString($className, $sut->getMessage());
     }
 }

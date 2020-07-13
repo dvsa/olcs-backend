@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class BusRegReadAuditTest extends AbstractReadAuditTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(BusRegReadAudit::class, true);
     }

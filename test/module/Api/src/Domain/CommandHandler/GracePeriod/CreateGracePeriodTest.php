@@ -28,7 +28,7 @@ use Dvsa\Olcs\Transfer\Command\GracePeriod\CreateGracePeriod as Cmd;
  */
 class CreateGracePeriodTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateGracePeriod();
         $this->mockRepo('GracePeriod', GracePeriodRepo::class);

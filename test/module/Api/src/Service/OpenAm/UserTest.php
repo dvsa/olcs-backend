@@ -21,7 +21,7 @@ class UserTest extends MockeryTestCase
     /** @var  User */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRandom = m::mock(Generator::class)
             ->shouldReceive('toUpper')->andReturn('A')

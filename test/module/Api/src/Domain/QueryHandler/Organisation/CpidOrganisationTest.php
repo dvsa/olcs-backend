@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
  */
 class CpidOrganisationTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CpidOrganisation();
         $this->mockRepo('Organisation', Organisation::class);

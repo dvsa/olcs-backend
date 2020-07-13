@@ -11,7 +11,7 @@ use Mockery as m;
 
 class InsolvencyPractitionerTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new InsolvencyPractitioner();
         $this->mockRepo('CompaniesHouseInsolvencyPractitioner', CompaniesHouseInsolvencyPractitioner::class);

@@ -31,7 +31,7 @@ class TransactioningCommandHandlerTest extends MockeryTestCase
      */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->wrapped = m::mock(CommandHandlerInterface::class);
         $this->repo = m::mock(TransactionManagerInterface::class);

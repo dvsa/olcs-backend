@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class StayListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new StayList();
         $this->mockRepo('Stay', StayRepo::class);

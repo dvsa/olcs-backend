@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdatePenalty();
         $this->mockRepo('SiPenalty', SiPenaltyRepo::class);

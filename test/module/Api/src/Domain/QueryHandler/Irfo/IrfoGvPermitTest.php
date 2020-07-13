@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Query\Irfo\IrfoGvPermit as Qry;
  */
 class IrfoGvPermitTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('IrfoGvPermit', IrfoGvPermitRepo::class);

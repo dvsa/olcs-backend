@@ -33,7 +33,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         ]
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessInsolvency();
         $this->mockRepo('CompaniesHouseCompany', CompaniesHouseCompany::class);

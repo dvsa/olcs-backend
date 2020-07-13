@@ -34,7 +34,7 @@ class HeaderAnswersSummaryRowsAdderTest extends MockeryTestCase
 
     private $headerAnswersSummaryRowsAdder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->licence = m::mock(LicenceEntity::class);
         $this->licence->shouldReceive('getLicNo')

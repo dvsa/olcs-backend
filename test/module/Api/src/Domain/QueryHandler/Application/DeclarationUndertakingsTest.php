@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class DeclarationUndertakingsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeclarationUndertakings();
         $this->mockRepo('Application', ApplicationRepo::class);

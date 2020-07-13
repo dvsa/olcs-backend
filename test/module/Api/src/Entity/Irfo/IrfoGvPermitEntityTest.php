@@ -25,7 +25,7 @@ class IrfoGvPermitEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function setUp()
+    public function setUp(): void
     {
         /** @var Entity entity */
         $this->entity = $this->instantiate($this->entityClass);

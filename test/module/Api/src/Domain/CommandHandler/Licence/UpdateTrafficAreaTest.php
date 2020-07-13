@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
  */
 class UpdateTrafficAreaTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Licence', LicenceRepo::class);

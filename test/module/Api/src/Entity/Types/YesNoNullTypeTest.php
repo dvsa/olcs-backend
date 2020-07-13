@@ -18,7 +18,7 @@ class YesNoNullTypeTest extends \PHPUnit\Framework\TestCase
 {
     private $type;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!YesNoNullType::hasType('yesnonull')) {
             YesNoNullType::addType('yesnonull', YesNoNullType::class);

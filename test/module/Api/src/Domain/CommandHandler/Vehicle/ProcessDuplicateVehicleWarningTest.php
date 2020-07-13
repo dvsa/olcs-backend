@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Command\Vehicle\ProcessDuplicateVehicleWarning as Cmd;
  */
 class ProcessDuplicateVehicleWarningTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessDuplicateVehicleWarning();
 

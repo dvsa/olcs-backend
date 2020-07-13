@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as Licence;
  */
 class TaxiPhvTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);

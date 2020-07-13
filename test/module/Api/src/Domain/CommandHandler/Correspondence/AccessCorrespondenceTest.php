@@ -27,7 +27,7 @@ use Dvsa\Olcs\Transfer\Command\Correspondence\AccessCorrespondence as Cmd;
  */
 class AccessCorrespondenceTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AccessCorrespondence();
         $this->mockRepo('Correspondence', CorrespondenceRepo::class);

@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class LicenceTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new \Dvsa\Olcs\Api\Domain\CommandHandler\Publication\Licence();
         $this->mockRepo('Publication', PublicationRepo::class);

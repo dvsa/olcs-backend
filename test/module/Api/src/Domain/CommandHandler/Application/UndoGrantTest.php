@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UndoCancelAllInterimFees as UndoCmd
  */
 class UndoGrantTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UndoGrant();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

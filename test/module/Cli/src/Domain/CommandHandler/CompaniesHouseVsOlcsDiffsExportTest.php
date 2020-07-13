@@ -22,7 +22,7 @@ class CompaniesHouseVsOlcsDiffsExportTest extends CommandHandlerTestCase
     /** @var  string */
     private $tmpPath;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CompaniesHouseVsOlcsDiffsExport;
 

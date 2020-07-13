@@ -17,7 +17,7 @@ class CorrespondencesTest extends QueryHandlerTestCase
 {
     const ORG_ID = 9999;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Correspondences();
 

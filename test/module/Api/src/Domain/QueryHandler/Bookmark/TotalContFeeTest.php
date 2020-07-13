@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as Entity;
  */
 class TotalContFeeTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TotalContFee();
         $this->mockRepo('FeeType', Repo::class);

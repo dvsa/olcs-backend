@@ -29,7 +29,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class ApproveWaiveTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ApproveWaive();
         $this->mockRepo('Fee', FeeRepo::class);

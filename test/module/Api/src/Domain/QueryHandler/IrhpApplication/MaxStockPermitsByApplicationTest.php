@@ -13,7 +13,7 @@ use Mockery as m;
 
 class MaxStockPermitsByApplicationTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(MaxStockPermitsByApplication::class)
             ->makePartial()

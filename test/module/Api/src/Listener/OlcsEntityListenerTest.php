@@ -40,7 +40,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
     /** @var  PidIdentityProvider */
     private $mockPidIdentityProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockMeta = m::mock(\Doctrine\ORM\Mapping\ClassMetadata::class);
         $this->mockUow = m::mock(\Doctrine\ORM\UnitOfWork::class);

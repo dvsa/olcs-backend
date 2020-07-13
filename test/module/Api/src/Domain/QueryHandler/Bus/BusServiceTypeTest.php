@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class BusServiceTypeTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new BusServiceTypeList();
         $this->mockRepo('BusServiceType', BusServiceTypeRepo::class);

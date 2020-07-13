@@ -17,7 +17,7 @@ class DateTypeTest extends MockeryTestCase
     /** @var  AbstractPlatform | m\MockInterface */
     private $mockPlatform;
 
-    public function setUp()
+    public function setUp(): void
     {
         DateType::overrideType('datetime', DateType::class);
         $this->sut = DateType::getType('datetime');

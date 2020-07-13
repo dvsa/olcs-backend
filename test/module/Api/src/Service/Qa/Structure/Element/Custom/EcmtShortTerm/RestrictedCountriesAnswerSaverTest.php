@@ -47,7 +47,7 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
 
     private $restrictedCountriesAnswerSaver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->applicationStep = m::mock(ApplicationStepEntity::class);
 

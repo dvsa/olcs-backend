@@ -18,7 +18,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class ResetS4Test extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ResetS4();
         $this->mockRepo('S4', S4::class);

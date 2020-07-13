@@ -25,7 +25,7 @@ class FinanceReviewServiceTest extends MockeryTestCase
     /** @var  ServiceLocatorInterface */
     private $serviceManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->serviceManager = Bootstrap::getServiceManager();
 

@@ -13,7 +13,7 @@ use Mockery as m;
  */
 class IrhpApplicationReadAuditTest extends AbstractReadAuditTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(IrhpApplicationReadAudit::class, true);
     }

@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class RangesByIrhpApplicationTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new RangesByIrhpApplicationHandler();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);

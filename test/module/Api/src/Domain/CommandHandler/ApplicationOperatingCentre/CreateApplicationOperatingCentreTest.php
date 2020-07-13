@@ -22,7 +22,7 @@ class CreateApplicationOperatingCentreTest extends CommandHandlerTestCase
 {
     protected $s4;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateApplicationOperatingCentre();
         $this->mockRepo('ApplicationOperatingCentre', ApplicationOperatingCentreRepo::class);

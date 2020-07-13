@@ -31,7 +31,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  */
 class CreateStatementTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateStatement();
         $this->mockRepo('Statement', StatementRepo::class);

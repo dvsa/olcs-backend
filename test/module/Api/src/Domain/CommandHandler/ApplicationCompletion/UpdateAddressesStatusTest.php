@@ -21,7 +21,7 @@ class UpdateAddressesStatusTest extends AbstractUpdateStatusTestCase
 {
     protected $section = 'Addresses';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateAddressesStatus();
         $this->command = Cmd::create(['id' => 111]);

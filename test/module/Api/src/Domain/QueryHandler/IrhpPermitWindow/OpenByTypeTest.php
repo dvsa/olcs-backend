@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpPermitWindow;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitWindow\OpenByType as QueryHandler;
@@ -16,7 +17,7 @@ use Dvsa\Olcs\Transfer\Query\IrhpPermitWindow\OpenByType as ListQuery;
  */
 class OpenByTypeTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);
@@ -48,6 +49,6 @@ class OpenByTypeTest extends QueryHandlerTestCase
             ]
         ];
 
-        $this->assertArraySubset($expected, $result);
+        Assert::assertArraySubset($expected, $result);
     }
 }

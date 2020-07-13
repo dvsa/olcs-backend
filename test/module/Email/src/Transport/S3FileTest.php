@@ -28,7 +28,7 @@ class S3FileTest extends MockeryTestCase
      */
     protected $path;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->path = vfsStream::setup('path');
     }

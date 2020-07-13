@@ -39,7 +39,7 @@ class BaseFormControlStrategyTest extends MockeryTestCase
 
     private $baseFormControlStrategy;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->frontendType = 'checkbox';
 

@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 class UploadEvidenceTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UploadEvidence();
         $this->mockRepo('Application', ApplicationRepo::class);

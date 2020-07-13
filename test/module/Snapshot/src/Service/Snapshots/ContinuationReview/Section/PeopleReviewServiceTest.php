@@ -21,7 +21,7 @@ class PeopleReviewServiceTest extends MockeryTestCase
 
     protected $mockTranslator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PeopleReviewService();
 

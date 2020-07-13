@@ -30,7 +30,7 @@ class BaseAnswerSaverTest extends MockeryTestCase
 
     private $baseAnswerSaver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $fieldsetName = 'fields456';
 

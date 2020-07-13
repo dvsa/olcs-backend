@@ -13,7 +13,7 @@ use Mockery as m;
  */
 class TaskSearchViewTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(TaskSearchViewRepo::class, true);
     }

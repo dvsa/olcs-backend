@@ -11,7 +11,7 @@ use Dvsa\Olcs\Transfer\Query\DocTemplate\FullList as FullDocTemplateList;
  */
 class DocTemplateSearchViewTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(DocTemplateSearchViewRepo::class, true);
     }

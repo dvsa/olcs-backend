@@ -16,7 +16,7 @@ use Mockery as m;
 
 class FeePerPermitTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new FeePerPermit();
 

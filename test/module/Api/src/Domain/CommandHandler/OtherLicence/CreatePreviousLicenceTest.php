@@ -22,7 +22,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class CreatePreviousLicenceTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('OtherLicence', OtherLicence::class);

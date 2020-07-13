@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class AppealTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Appeal();
         $this->mockRepo('Appeal', AppealRepo::class);

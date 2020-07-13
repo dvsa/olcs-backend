@@ -21,7 +21,7 @@ use Mockery as m;
  */
 class PublishedListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PublishedList();
         $this->mockRepo('Publication', PublicationRepo::class);

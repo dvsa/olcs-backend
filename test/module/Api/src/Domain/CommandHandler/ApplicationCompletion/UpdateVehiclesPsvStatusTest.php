@@ -26,7 +26,7 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 {
     protected $section = 'VehiclesPsv';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateVehiclesPsvStatus();
         $this->command = Cmd::create(['id' => 111]);

@@ -33,7 +33,7 @@ class PermitUsageAnswerSaverTest extends MockeryTestCase
 
     private $permitUsageAnswerSaver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->qaContext = m::mock(QaContext::class);
 

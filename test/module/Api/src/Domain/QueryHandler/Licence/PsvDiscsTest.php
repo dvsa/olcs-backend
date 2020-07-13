@@ -22,7 +22,7 @@ use Dvsa\Olcs\Transfer\Query\Licence\PsvDiscs as Qry;
  */
 class PsvDiscsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PsvDiscs();
         $this->mockRepo('Licence', LicenceRepo::class);

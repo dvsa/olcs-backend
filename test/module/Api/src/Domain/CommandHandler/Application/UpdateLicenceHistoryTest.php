@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
  */
 class UpdateLicenceHistoryTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateLicenceHistory();
         $this->mockRepo('Application', Application::class);
