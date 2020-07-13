@@ -41,7 +41,7 @@ class UpdatePeriodTest extends CommandHandlerTestCase
 
     public $irhpPermitApplicationEntity;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);

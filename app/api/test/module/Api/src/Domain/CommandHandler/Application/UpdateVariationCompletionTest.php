@@ -31,7 +31,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
     /** @var  VariationOperatingCentreHelper */
     protected $vocHelper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->updateHelper = m::mock();
         $this->vocHelper = m::mock();

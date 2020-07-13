@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
  */
 class CancelIrfoPsvAuthFeesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('Fee', FeeRepo::class);

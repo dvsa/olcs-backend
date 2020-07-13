@@ -22,7 +22,7 @@ class UpdateTest extends CommandHandlerTestCase
 {
     use ProcessDateTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateHandler();
         $this->mockRepo('IrhpPermitRange', PermitRangeRepo::class);
@@ -166,11 +166,10 @@ class UpdateTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     */
     public function testHandleCommandBilateralNoJourney()
     {
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+
         $cmdData = [
             'irhpPermitStock' => '1',
             'emissionsCategory' => RefData::EMISSIONS_CATEGORY_EURO6_REF,

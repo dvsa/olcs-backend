@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class PublicationPoliceDataEntityTest extends EntityTester
 {
-    public function setUp()
+    public function setUp(): void
     {
         /** @var \Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData entity */
         $this->entity = $this->instantiate($this->entityClass);

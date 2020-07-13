@@ -9,7 +9,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
 class GoodsDiscCountTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QryHandler();
         $this->mockRepo('GoodsDisc', GoodsDisc::class);

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
  */
 class ContactDetailsListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ContactDetailsList();
         $this->mockRepo('ContactDetails', Repo::class);

@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
  */
 class SafetyTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Safety();
         $this->mockRepo('Licence', Repository\Licence::class);

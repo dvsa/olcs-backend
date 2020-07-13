@@ -43,7 +43,7 @@ class ApplicationEntityTest extends EntityTester
     /** @var  Licence */
     private $licence;
 
-    public function setUp()
+    public function setUp(): void
     {
         $organisation = new Organisation();
 
@@ -1105,7 +1105,7 @@ class ApplicationEntityTest extends EntityTester
 
         $result = $this->entity->getVariationCompletion();
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
 
         $this->assertEquals(1, $result['operating_centres']);
         $this->assertEquals(2, $result['addresses']);

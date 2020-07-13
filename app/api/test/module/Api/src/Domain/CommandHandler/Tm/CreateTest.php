@@ -31,7 +31,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateTransportManager();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);

@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as DocTemplateEntity;
  */
 class CreateNextPublicationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateNextPublication();
         $this->mockRepo('Publication', PublicationRepo::class);

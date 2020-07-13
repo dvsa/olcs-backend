@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class CreateVariationTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateVariation();
         $this->mockRepo('Bus', BusRepo::class);

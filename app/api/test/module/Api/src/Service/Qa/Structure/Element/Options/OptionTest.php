@@ -16,7 +16,7 @@ class OptionTest extends MockeryTestCase
 
     private $label;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->value = '2';
         $this->label = 'Food';

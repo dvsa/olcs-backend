@@ -22,7 +22,7 @@ class UpdateFinancialHistoryStatusTest extends AbstractUpdateStatusTestCase
 {
     protected $section = 'FinancialHistory';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateFinancialHistoryStatus();
         $this->command = Cmd::create(['id' => 111]);

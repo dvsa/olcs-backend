@@ -25,7 +25,7 @@ class TranslateableTextParameterGeneratorTest extends MockeryTestCase
 
     private $translateableTextParameterGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->optionsValue = 'optionsValue';
         $this->optionsFormatter = 'optionsFormatter';

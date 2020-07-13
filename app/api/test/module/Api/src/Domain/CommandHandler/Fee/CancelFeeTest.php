@@ -25,7 +25,7 @@ use Mockery as m;
  */
 class CancelFeeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CancelFee();
         $this->mockRepo('Fee', Fee::class);

@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs as Cmd;
  */
 class CeasePsvDiscsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CeasePsvDiscs();
         $this->mockRepo('PsvDisc', DiscRepo::class);

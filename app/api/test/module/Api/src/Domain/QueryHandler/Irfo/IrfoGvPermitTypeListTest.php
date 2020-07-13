@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class IrfoGvPermitTypeListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler\Irfo\IrfoGvPermitTypeList();
         $this->mockRepo('IrfoGvPermitType', Repository\IrfoGvPermitType::class);

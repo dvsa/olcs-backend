@@ -18,7 +18,7 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
 {
     private $noOfPermitsAnswerSummaryProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->noOfPermitsAnswerSummaryProvider = new NoOfPermitsAnswerSummaryProvider();
     }

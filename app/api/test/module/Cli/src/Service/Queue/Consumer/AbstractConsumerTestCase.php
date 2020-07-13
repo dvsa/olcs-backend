@@ -24,7 +24,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
     protected $chm;
     protected $consumerClass = 'override_me';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sm = Bootstrap::getServiceManager();
 

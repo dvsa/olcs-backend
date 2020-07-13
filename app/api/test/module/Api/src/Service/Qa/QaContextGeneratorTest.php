@@ -37,7 +37,7 @@ class QaContextGeneratorTest extends MockeryTestCase
 
     private $qaContextGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->qaEntity = m::mock(QaEntityInterface::class);
 

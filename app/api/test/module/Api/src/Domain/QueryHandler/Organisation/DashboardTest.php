@@ -22,7 +22,7 @@ class DashboardTest extends QueryHandlerTestCase
     /** @var  Dashboard | m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Dashboard();
 

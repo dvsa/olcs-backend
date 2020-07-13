@@ -26,7 +26,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as LicenceCmd;
  */
 class CreateVehicleListDocumentTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateVehicleListDocument();
         $this->mockRepo('Application', ApplicationRepo::class);

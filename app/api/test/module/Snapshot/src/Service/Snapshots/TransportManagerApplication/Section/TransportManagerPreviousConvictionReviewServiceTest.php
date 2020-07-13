@@ -26,7 +26,7 @@ class TransportManagerPreviousConvictionReviewServiceTest extends MockeryTestCas
 
     protected $sm;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TransportManagerApplication\Section\TransportManagerPreviousConvictionReviewService();
 

@@ -19,7 +19,7 @@ class ApplicationPsvOcTotalAuthReviewServiceTest extends \PHPUnit\Framework\Test
 {
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ApplicationPsvOcTotalAuthReviewService();
     }

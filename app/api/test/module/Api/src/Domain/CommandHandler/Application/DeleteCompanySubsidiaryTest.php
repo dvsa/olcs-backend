@@ -19,7 +19,7 @@ class DeleteCompanySubsidiaryTest extends CommandHandlerTestCase
     /** @var DeleteCompanySubsidiary|m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(DeleteCompanySubsidiary::class . '[delete, updateApplicationCompetition]')
             ->makePartial()

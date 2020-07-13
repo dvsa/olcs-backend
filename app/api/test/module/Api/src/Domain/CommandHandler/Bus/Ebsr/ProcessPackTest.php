@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 class ProcessPackTest extends ProcessPackTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessPack();
         parent::setUp();

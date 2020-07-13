@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 class UpdateSection26Test extends CommandHandlerTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Vehicle', \Dvsa\Olcs\Api\Domain\Repository\Vehicle::class);

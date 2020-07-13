@@ -17,15 +17,18 @@ class SubmissionSectionCommentTest extends RepositoryTestCase
     /** @var SubmissionSectionComment  */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(SubmissionSectionComment::class);
     }
 
-    public function testIsExist()
+    /**
+     * @dataProvider dpTestIsExistsProvider
+     */
+    public function testIsExist($queryResult, $exists)
     {
         $qb = $this->createMockQb('QUERY');
-        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(1);
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn($queryResult);
 
         $this->mockCreateQueryBuilder($qb);
 
@@ -35,7 +38,7 @@ class SubmissionSectionCommentTest extends RepositoryTestCase
             'submissionSection' => self::SUBMISSION_SECTION,
         ];
 
-        static::assertTrue($this->sut->isExist(Cmd::create($data)));
+        static::assertEquals($exists, $this->sut->isExist(Cmd::create($data)));
 
         //  check query
         $expect = 'QUERY ' .
@@ -44,5 +47,14 @@ class SubmissionSectionCommentTest extends RepositoryTestCase
             'LIMIT 1';
 
         static::assertEquals($expect, $this->query);
+    }
+
+    public function dpTestIsExistsProvider()
+    {
+        return [
+            [['data'], true],
+            [[], false],
+            [null, false],
+        ];
     }
 }

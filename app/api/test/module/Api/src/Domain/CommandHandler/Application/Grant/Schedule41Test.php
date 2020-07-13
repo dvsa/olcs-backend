@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class Schedule41Test extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new \Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\Schedule41();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

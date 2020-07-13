@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\PiDefinition as Repo;
  */
 class PiDefinitionTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

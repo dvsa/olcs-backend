@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateTmQualification();
         $this->mockRepo('TmQualification', TmQualificationRepo::class);

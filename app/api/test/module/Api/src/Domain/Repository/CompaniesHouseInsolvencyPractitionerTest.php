@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseInsolvencyPractitioner as Inso
 
 class CompaniesHouseInsolvencyPractitionerTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(InsolvencyPractitionerRepository::class);
     }

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Query\Language\GetList as ListQuery;
  */
 class GetListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         parent::setUp();

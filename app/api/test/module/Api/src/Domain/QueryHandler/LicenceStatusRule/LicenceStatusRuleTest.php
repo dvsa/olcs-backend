@@ -13,7 +13,7 @@ use Mockery as m;
  */
 class LicenceStatusRuleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler\LicenceStatusRule\LicenceStatusRule();
         $this->mockRepo('LicenceStatusRule', Repository\LicenceStatusRule::class);

@@ -22,7 +22,7 @@ use Mockery as m;
  */
 class ChangeOfEntityTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ChangeOfEntity();
         $this->mockRepo('ChangeOfEntity', ChangeOfEntityRepo::class);

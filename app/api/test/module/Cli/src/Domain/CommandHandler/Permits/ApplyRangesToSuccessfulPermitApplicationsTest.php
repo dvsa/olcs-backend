@@ -27,7 +27,7 @@ use Mockery as m;
  */
 class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(ApplyRangesToSuccessfulPermitApplicationsHandler::class)
             ->makePartial()

@@ -43,7 +43,7 @@ class UpdateSubmissionTest extends CommandHandlerTestCase
         ]
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateSubmission();
         $this->mockRepo('Submission', SubmissionRepo::class);

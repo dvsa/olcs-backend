@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
  */
 class CloseCaseTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CloseCase();
         $this->mockRepo('Cases', CasesRepo::class);

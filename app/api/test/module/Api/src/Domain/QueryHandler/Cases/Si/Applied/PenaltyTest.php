@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Query\Cases\Si\Applied\Penalty as Qry;
  */
 class PenaltyTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PenaltyHandler();
         $this->mockRepo('SiPenalty', SiPenaltyRepo::class);

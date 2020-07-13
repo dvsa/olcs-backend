@@ -27,7 +27,7 @@ class TranslateableTextGeneratorTest extends MockeryTestCase
 
     private $translateableTextGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->optionsKey = 'optionsKey';
 

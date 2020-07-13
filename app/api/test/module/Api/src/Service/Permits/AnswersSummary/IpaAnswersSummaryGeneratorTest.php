@@ -27,7 +27,7 @@ class IpaAnswersSummaryGeneratorTest extends MockeryTestCase
 
     private $customRowsAdderForType2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 

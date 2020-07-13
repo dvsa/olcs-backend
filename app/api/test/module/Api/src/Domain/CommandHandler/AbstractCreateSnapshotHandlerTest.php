@@ -27,7 +27,7 @@ abstract class AbstractCreateSnapshotHandlerTest extends CommandHandlerTestCase
     protected $documentLinkId = 'changeMe';
     protected $generatorClass = SnapshotGeneratorInterface::class;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo($this->repoServiceName, $this->repoClass);
         $this->sut = new $this->sutClass();

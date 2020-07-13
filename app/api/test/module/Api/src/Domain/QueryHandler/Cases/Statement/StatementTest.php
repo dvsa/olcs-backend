@@ -8,6 +8,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Statement;
 
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Statement\Statement;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
@@ -24,7 +25,7 @@ use Mockery as m;
  */
 class StatementTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Statement();
         $this->mockRepo('Statement', StatementRepo::class);
@@ -40,7 +41,7 @@ class StatementTest extends QueryHandlerTestCase
         /** @var Result $result */
         $result = $this->sut->handleQuery($query);
         $this->assertInstanceOf(Result::class, $result);
-        $this->assertArraySubset(
+        Assert::assertArraySubset(
             [
                 'DUMMY_STATEMENT_KEY' => 'DUMMY_STATEMENT_VALUE'
             ],
@@ -57,7 +58,7 @@ class StatementTest extends QueryHandlerTestCase
         /** @var Result $result */
         $result = $this->sut->handleQuery($query);
 
-        $this->assertArraySubset(
+        Assert::assertArraySubset(
             ['assignedCaseworker' => null],
             $result->serialize(),
             true
@@ -79,7 +80,7 @@ class StatementTest extends QueryHandlerTestCase
         /** @var Result $result */
         $result = $this->sut->handleQuery($query);
 
-        $this->assertArraySubset(
+        Assert::assertArraySubset(
             ['assignedCaseworker' => ['id' => 'DUMMY_USER_ID']],
             $result->serialize(),
             true

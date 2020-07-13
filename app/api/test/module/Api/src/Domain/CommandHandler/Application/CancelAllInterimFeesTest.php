@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CancelAllInterimFees;
  */
 class CancelAllInterimFeesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CancelAllInterimFees();
         $this->mockRepo('Fee', \Dvsa\Olcs\Api\Domain\Repository\Fee::class);

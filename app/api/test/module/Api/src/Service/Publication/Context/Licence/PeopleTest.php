@@ -20,7 +20,7 @@ class PeopleTest extends MockeryTestCase
      */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new \Dvsa\Olcs\Api\Service\Publication\Context\Licence\People(
             m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class)

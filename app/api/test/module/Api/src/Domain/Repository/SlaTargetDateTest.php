@@ -25,7 +25,7 @@ class SlaTargetDateTest extends RepositoryTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repository\SlaTargetDate::class);
     }

@@ -32,7 +32,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class FinancialEvidenceTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new FinancialEvidence();
         $this->mockRepo('Application', ApplicationRepo::class);
@@ -40,8 +40,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
         $mockedAuth = m::mock(AuthorizationService::class)->makePartial();
         $this->mockedSmServices[AuthorizationService::class] = $mockedAuth;
 
-
-        return parent::setUp();
+        parent::setUp();
     }
 
     public function testHandleQuery()

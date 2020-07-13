@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
  */
 class SurrenderTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Licence', Licence::class);

@@ -35,7 +35,7 @@ use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
  */
 class SaveAddressesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SaveAddresses();
         $this->mockRepo('Licence', Licence::class);

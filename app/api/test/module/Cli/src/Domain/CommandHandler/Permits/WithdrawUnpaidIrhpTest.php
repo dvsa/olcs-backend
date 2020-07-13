@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class WithdrawUnpaidIrhpTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new WithdrawUnpaidIrhpHandler();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);

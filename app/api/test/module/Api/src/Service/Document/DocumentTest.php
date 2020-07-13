@@ -21,7 +21,7 @@ class DocumentTest extends TestCase
     /** @var  Document */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Document();
     }

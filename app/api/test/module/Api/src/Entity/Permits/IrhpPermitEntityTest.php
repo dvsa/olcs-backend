@@ -62,7 +62,7 @@ class IrhpPermitEntityTest extends EntityTester
      */
     protected $irhpCandidatePermit;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->issueDate = m::mock(DateTime::class);
         $this->status = new RefData();

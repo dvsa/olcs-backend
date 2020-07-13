@@ -30,7 +30,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class TmNominatedTaskTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new TmNominatedTask();
         $this->mockRepo('Licence', Repository\Licence::class);

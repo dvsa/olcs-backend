@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefusedBySn;
  */
 class RefuseBusRegByShortNoticeTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new RefuseBusRegByShortNotice();
         $this->mockRepo('Bus', BusRepo::class);

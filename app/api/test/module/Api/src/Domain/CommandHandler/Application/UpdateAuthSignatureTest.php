@@ -15,7 +15,7 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateAuthSignature as Cmd;
  */
 class UpdateAuthSignatureTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateAuthSignature();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity;
  */
 class HearingBundleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new HearingBundle();
         $this->mockRepo('Hearing', Repository\Hearing::class);

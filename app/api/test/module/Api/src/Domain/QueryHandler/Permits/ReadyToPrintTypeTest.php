@@ -11,7 +11,7 @@ use Mockery as m;
 
 class ReadyToPrintTypeTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadyToPrintType();
         $this->mockRepo('IrhpPermitType', IrhpPermitTypeRepo::class);

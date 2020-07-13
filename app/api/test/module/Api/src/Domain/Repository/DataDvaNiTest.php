@@ -20,7 +20,7 @@ class DataDvaNiTest extends MockeryTestCase
     /** @var DataDvaNi */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockStmt = m::mock(Statement::class)
             ->shouldReceive('execute')->once()->andReturn(true)

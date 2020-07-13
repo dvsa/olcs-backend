@@ -24,7 +24,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockAuthSrv;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateBusinessDetails();
 

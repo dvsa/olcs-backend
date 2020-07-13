@@ -24,7 +24,7 @@ class TextTest extends MockeryTestCase
 
     private $labelTranslateableText;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->hintTranslateableTextRepresentation = ['hintTranslateableTextRepresentation'];
 

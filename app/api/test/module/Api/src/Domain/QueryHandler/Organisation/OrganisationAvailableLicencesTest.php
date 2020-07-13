@@ -23,7 +23,7 @@ use Mockery as m;
 
 class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new OrganisationAvailableLicences();
         $this->mockRepo('Organisation', OrganisationRepo::class);

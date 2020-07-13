@@ -25,7 +25,7 @@ use Mockery as m;
  */
 class GeneratePermitDocumentTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);

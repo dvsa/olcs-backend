@@ -7,8 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion;
 
-use Doctrine\ORM\Query;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
@@ -32,7 +30,7 @@ final class UpdateConvictionsPenaltiesStatus extends AbstractUpdateStatus
             return false;
         }
 
-        if ($application->getPrevConviction() === 'Y' && count($application->getPreviousConvictions()) < 1) {
+        if ($application->getPrevConviction() === 'Y' && $application->getPreviousConvictions()->isEmpty()) {
             return false;
         }
 

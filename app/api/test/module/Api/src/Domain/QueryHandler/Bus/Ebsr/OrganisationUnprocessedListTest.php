@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
  */
 class OrganisationUnprocessedListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new OrganisationUnprocessedList();
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);

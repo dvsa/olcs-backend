@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspension as CommunityLicSuspen
  */
 class CommunityLicSuspensionTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(CommunityLicSuspensionRepo::class);
     }

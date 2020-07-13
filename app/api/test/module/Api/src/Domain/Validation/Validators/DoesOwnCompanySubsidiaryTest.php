@@ -23,7 +23,7 @@ class DoesOwnCompanySubsidiaryTest extends AbstractValidatorsTestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DoesOwnCompanySubsidiary();
 

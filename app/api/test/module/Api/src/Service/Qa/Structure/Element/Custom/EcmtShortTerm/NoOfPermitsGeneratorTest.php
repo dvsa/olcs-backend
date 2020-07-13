@@ -34,7 +34,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
 
     private $noOfPermitsGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpApplication = m::mock(IrhpApplicationEntity::class);
 

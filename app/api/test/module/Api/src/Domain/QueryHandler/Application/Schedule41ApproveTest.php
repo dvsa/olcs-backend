@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 class Schedule41ApproveTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new \Dvsa\Olcs\Api\Domain\QueryHandler\Application\Schedule41Approve();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);

@@ -11,7 +11,7 @@ use Mockery as m;
 
 class EcmtPermitFeesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new EcmtPermitFees();
         $this->mockRepo('FeeType', FeeTypeRepo::class);

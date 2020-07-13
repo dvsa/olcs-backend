@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\QueryPartial\Paginate;
  */
 class PaginateTest extends QueryPartialTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Paginate();
 

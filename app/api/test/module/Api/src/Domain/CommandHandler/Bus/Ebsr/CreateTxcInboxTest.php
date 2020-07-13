@@ -22,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class CreateTxcInboxTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateTxcInbox();
         $this->mockRepo('Bus', BusRepo::class);

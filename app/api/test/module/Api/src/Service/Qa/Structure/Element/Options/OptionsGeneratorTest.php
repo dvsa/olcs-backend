@@ -26,7 +26,7 @@ class OptionsGeneratorTest extends MockeryTestCase
 
     private $optionsGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->directSource = m::mock(SourceInterface::class);
 

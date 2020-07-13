@@ -29,7 +29,7 @@ class GoodsDiscTest extends RepositoryTestCase
 
     protected $activeStatuses;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->activeStatuses = [
             LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,

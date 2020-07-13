@@ -23,7 +23,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class UpdateGoodsVehicleTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateGoodsVehicle();
         $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);

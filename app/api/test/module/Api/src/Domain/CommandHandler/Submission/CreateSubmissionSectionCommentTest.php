@@ -21,7 +21,7 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
     /** @var CreateSubmissionSectionComment */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateSubmissionSectionComment();
 

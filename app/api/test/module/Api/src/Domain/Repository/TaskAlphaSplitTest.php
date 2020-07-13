@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TaskAlphaSplit as TaskAlphaSplitRepo;
  */
 class TaskAlphaSplitTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(TaskAlphaSplitRepo::class);
     }

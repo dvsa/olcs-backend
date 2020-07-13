@@ -21,7 +21,7 @@ class PrintLetterTest extends QueryHandlerTestCase
     /** @var  m\MockInterface */
     private $mockPrintLetterSrv;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PrintLetter();
 

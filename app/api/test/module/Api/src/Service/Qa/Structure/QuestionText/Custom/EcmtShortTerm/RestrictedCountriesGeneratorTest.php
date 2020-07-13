@@ -30,7 +30,7 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
 
     private $restrictedCountriesGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
 

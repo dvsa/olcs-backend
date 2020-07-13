@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class ComplaintTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Complaint();
         $this->mockRepo('Complaint', ComplaintRepo::class);

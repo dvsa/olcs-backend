@@ -28,7 +28,7 @@ class SuccessfulCandidatePermitsFacadeTest extends MockeryTestCase
 
     private $successfulCandidatePermitsFacade;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->candidatePermits = [
             [

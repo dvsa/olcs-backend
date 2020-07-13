@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  */
 class CreateStayTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateStay();
         $this->mockRepo('Stay', StayEntity::class);

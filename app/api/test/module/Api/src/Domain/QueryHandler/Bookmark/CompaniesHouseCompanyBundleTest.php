@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompaniesHouseC
 
 class CompaniesHouseCompanyBundleTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CompaniesHouseCompanyBundle();
         $this->mockRepo('CompaniesHouseCompany', CompaniesHouseCompany::class);

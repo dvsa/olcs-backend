@@ -16,7 +16,7 @@ class GenericAnswerSummaryProviderTest extends MockeryTestCase
 {
     private $genericAnswerSummaryProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->genericAnswerSummaryProvider = new GenericAnswerSummaryProvider();
     }

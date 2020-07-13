@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntit
  */
 class DeleteConditionUndertakingS4Test extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteConditionUndertakingS4();
         $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);

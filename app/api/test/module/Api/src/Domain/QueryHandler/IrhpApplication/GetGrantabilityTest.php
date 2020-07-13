@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class GetGrantabilityTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GetGrantabilityHandler();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);

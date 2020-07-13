@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  */
 class CreateViExtractFilesTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateViExtractFiles();
         $this->mockRepo('ViOcView', Repository\ViOcView::class);

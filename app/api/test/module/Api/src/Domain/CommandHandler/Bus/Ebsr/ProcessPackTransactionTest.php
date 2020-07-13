@@ -35,7 +35,7 @@ use org\bovigo\vfs\vfsStream;
 
 class ProcessPackTransactionTest extends ProcessPackTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessPackTransaction();
         parent::setUp();

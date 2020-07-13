@@ -20,7 +20,7 @@ use Mockery as m;
  */
 class UnlicensedBusinessDetailsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = m::mock(BusinessDetailsQueryHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('Organisation', OrganisationRepo::class);

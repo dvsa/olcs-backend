@@ -25,7 +25,7 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
     /** @var m\MockInterface  */
     protected $mockContentStoreCli;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ContentStoreFileUploader();
 

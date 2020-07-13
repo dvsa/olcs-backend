@@ -29,7 +29,7 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
 
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 

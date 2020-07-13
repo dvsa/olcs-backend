@@ -38,7 +38,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
     protected $templatePath;
     protected $templatePaths;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessRequestMap();
         $this->mockRepo('Bus', BusRepo::class);

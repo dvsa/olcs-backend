@@ -22,7 +22,7 @@ class AddressTest extends MockeryTestCase
     /**  @var Address */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = m::mock(Client::class);
 

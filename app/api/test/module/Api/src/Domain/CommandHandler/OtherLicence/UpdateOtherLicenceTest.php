@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  */
 class UpdateOtherLicenceTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateOtherLicence();
         $this->mockRepo('OtherLicence', OtherLicenceRepo::class);

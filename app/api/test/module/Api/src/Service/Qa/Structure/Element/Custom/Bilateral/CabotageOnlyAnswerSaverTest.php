@@ -37,7 +37,7 @@ class CabotageOnlyAnswerSaverTest extends MockeryTestCase
 
     private $cabotageOnlyAnswerSaver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->postData = [
             'key1' => 'value1',

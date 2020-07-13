@@ -17,7 +17,7 @@ class SendPtrNotificationForUnregisteredUserTest extends CommandHandlerTestCase
     /** @var CommandInterface|SendPtrNotificationForUnregisteredUser */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new SendPtrNotificationForUnregisteredUser();
 

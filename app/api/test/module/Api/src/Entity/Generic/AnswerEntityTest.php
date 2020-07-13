@@ -25,7 +25,7 @@ class AnswerEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->entity = $this->instantiate($this->entityClass);
     }

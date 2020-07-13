@@ -23,7 +23,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class UpdateTxcInboxPdfTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateTxcInboxPdf();
         $this->mockRepo('TxcInbox', TxcInboxRepo::class);

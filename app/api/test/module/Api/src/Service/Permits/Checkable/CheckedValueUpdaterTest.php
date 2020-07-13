@@ -22,7 +22,7 @@ class CheckedValueUpdaterTest extends MockeryTestCase
 
     private $checkedValueUpdater;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->checkableApplication = m::mock(CheckableApplicationInterface::class);
 

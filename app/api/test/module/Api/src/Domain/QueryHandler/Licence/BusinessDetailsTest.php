@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Query\Licence\BusinessDetails as Qry;
  */
 class BusinessDetailsTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new BusinessDetails();
         $this->mockRepo('Organisation', OrganisationRepo::class);

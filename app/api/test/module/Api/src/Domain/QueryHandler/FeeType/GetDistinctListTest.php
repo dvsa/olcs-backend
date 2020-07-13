@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Query\FeeType\GetDistinctList as ListQuery;
  */
 class GetDistinctListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('FeeType', FeeTypeRepo::class);

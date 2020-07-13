@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
  */
 class ConfirmPrintingTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ConfirmPrinting();
         $this->mockRepo('DiscSequence', DiscSequenceRepo::class);

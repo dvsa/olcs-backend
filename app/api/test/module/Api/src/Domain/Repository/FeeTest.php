@@ -24,7 +24,7 @@ class FeeTest extends RepositoryTestCase
     /** @var   FeeRepo */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(FeeRepo::class, true);
     }
@@ -761,7 +761,7 @@ class FeeTest extends RepositoryTestCase
             ->with($irfoPsvAuthId, FeeTypeEntity::FEE_TYPE_IRFOPSVAPP)
             ->andReturn(['foo']);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'foo',
             $this->sut->fetchApplicationFeeByPsvAuthId($irfoPsvAuthId)
         );

@@ -18,7 +18,7 @@ use Mockery as m;
  */
 class ByApplicationTest extends QueryPartialTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ByApplication();
 

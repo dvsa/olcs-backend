@@ -22,7 +22,7 @@ class S3FileOptionsFactoryTest extends MockeryTestCase
 
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sm = Bootstrap::getServiceManager();
         $this->sut = new S3FileOptionsFactory();

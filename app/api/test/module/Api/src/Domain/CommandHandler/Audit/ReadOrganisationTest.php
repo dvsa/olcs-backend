@@ -25,7 +25,7 @@ class ReadOrganisationTest extends CommandHandlerTestCase
     /** @var  \Dvsa\Olcs\Transfer\Command\Audit\ReadOrganisation */
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadOrganisation();
         $this->mockRepo('OrganisationReadAudit', Repository\OrganisationReadAudit::class);

@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  */
 class CreateFullTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateHandler();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);

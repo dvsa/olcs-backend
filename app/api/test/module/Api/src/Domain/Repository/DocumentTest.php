@@ -27,7 +27,7 @@ use Mockery as m;
  */
 class DocumentTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(DocumentRepo::class);
     }

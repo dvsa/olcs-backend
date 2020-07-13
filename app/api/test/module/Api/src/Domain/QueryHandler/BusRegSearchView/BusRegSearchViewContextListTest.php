@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity
  */
 class BusRegSearchViewContextListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new BusRegSearchViewContextList();
         $this->mockRepo('BusRegSearchView', Repository\BusRegSearchView::class);

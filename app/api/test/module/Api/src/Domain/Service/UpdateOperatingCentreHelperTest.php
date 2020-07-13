@@ -29,7 +29,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
 
     protected $authService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateOperatingCentreHelper();
 

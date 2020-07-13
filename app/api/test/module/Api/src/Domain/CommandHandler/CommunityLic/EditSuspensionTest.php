@@ -23,7 +23,7 @@ use Doctrine\ORM\Query;
  */
 class EditSuspensionTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new EditSuspension();
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);

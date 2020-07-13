@@ -13,7 +13,7 @@ class CanManageUserTest extends AbstractHandlerTestCase
 {
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Sut();
 

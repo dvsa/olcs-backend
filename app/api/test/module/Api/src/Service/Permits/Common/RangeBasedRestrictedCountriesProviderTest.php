@@ -33,7 +33,7 @@ class RangeBasedRestrictedCountriesProviderTest extends MockeryTestCase
 
     private $typeBasedRestrictedCountriesProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitRange = m::mock(IrhpPermitRange::class);
 

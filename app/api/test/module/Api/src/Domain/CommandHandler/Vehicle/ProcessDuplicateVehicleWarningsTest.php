@@ -26,7 +26,7 @@ class ProcessDuplicateVehicleWarningsTest extends CommandHandlerTestCase
 {
     protected $dto;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ProcessDuplicateVehicleWarnings();
         $this->dto = \Dvsa\Olcs\Api\Domain\Command\Vehicle\ProcessDuplicateVehicleWarnings::create([]);

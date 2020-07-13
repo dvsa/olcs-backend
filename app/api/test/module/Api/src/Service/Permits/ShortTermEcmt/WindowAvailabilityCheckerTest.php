@@ -27,7 +27,7 @@ class WindowAvailabilityCheckerTest extends MockeryTestCase
 
     private $stockAvailabilityChecker;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->now = m::mock(DateTime::class);
 

@@ -25,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Workshop\DeleteWorkshop as WorkshopDeleteWorkshop
  */
 class DeleteWorkshopTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteWorkshop();
         $this->mockRepo('Application', Application::class);

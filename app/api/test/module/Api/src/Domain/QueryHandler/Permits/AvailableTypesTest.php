@@ -21,7 +21,7 @@ class AvailableTypesTest extends QueryHandlerTestCase
 
     private $irhpPermitTypes;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new AvailableTypes();
         $this->mockRepo('IrhpPermitType', IrhpPermitTypeRepo::class);

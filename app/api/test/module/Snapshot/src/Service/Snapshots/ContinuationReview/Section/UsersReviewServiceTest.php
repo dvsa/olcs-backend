@@ -17,7 +17,7 @@ class UsersReviewServiceTest extends MockeryTestCase
     /** @var UsersReviewService review service */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $mockTranslator = m::mock(Translate::class)
             ->shouldReceive('translate')

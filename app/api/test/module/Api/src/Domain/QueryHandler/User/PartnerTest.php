@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Query\User\Partner as Qry;
  */
 class PartnerTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Partner();
         $this->mockRepo('Partner', PartnerRepo::class);

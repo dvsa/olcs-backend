@@ -11,7 +11,7 @@ use Mockery as m;
 
 class ReadyToPrintCountryTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadyToPrintCountry();
         $this->mockRepo('Country', CountryRepo::class);

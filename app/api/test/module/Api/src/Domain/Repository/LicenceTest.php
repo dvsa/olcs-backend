@@ -30,7 +30,7 @@ class LicenceTest extends RepositoryTestCase
     /** @var LicenceRepo | m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(LicenceRepo::class, true);
     }

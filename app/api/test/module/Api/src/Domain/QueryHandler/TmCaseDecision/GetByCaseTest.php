@@ -17,7 +17,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
  */
 class GetByCaseTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GetByCase();
         $this->mockRepo('TmCaseDecision', TmCaseDecisionRepo::class);

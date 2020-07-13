@@ -17,7 +17,7 @@ class PermitsAvailableTest extends QueryHandlerTestCase
 
     private $query;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PermitsAvailable();
 

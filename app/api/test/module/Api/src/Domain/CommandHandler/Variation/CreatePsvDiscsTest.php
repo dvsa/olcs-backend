@@ -26,7 +26,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs as LicenceCreatePsvDiscs;
  */
 class CreatePsvDiscsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreatePsvDiscs();
         $this->mockRepo('Application', Application::class);

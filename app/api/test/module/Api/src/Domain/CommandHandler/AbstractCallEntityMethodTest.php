@@ -14,7 +14,7 @@ abstract class AbstractCallEntityMethodTest extends CommandHandlerTestCase
     protected $entityClass = 'changeMe';
     protected $sutClass = 'changeMe';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo($this->repoServiceName, $this->entityClass);
         $this->sut = new $this->sutClass();

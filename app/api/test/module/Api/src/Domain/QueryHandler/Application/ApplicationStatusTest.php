@@ -19,7 +19,7 @@ class ApplicationStatusTest extends QueryHandlerTestCase
     /** @var  Repository\DataService | m\MockInterface */
     private $mockDataSrvRepo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QueryHandler\DataService\ApplicationStatus();
 

@@ -18,7 +18,7 @@ class UpdateLicenceTypeTest extends MockeryTestCase
 
     protected $auth;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateLicenceType();
         $this->auth = m::mock(AuthorizationService::class);

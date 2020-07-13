@@ -18,7 +18,7 @@ class CreateTest extends CommandHandlerTestCase
 {
     protected $refData = [FeatureToggleEntity::ACTIVE_STATUS];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateHandler();
         $this->mockRepo('FeatureToggle', FeatureToggleRepo::class);

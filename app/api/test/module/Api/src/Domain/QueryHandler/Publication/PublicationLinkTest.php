@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class PublicationLinkTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PublicationLink();
         $this->mockRepo('PublicationLink', PublicationLinkRepo::class);

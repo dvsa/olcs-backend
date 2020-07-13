@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository\CommunityLicWithdrawalReason as CommunityLic
  */
 class CommunityLicWithdrawalReasonTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(CommunityLicWithdrawalReasonRepo::class);
     }

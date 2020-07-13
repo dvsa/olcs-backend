@@ -18,7 +18,7 @@ class GrantDirectorChangeTest extends CommandHandlerTestCase
 {
     const TEST_VARIATION_ID = 'TEST_VARIATION_ID';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GrantDirectorChange();
 

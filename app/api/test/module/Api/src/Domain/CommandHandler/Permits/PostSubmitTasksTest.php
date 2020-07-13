@@ -22,7 +22,7 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
 
     private $irhpApplication;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 

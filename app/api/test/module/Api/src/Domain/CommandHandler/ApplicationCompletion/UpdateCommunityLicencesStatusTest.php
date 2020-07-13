@@ -22,7 +22,7 @@ class UpdateCommunityLicencesStatusTest extends AbstractUpdateStatusTestCase
 {
     protected $section = 'CommunityLicences';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateCommunityLicencesStatus();
         $this->command = Cmd::create(['id' => 111]);

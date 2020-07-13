@@ -15,7 +15,7 @@ use Mockery as m;
 
 class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRepo('IrhpPermitApplication', IrhpPermitApplicationRepo::class);
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);

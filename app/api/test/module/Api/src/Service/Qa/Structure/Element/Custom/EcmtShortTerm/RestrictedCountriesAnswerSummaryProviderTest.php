@@ -23,7 +23,7 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
 
     private $restrictedCountriesAnswerSummaryProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
 

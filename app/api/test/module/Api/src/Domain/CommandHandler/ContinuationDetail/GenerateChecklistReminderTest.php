@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class GenerateChecklistReminderTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('ContinuationDetail', Repository\ContinuationDetail::class);

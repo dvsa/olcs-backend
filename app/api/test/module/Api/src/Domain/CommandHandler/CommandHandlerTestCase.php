@@ -73,7 +73,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     /** @var  m\MockInterface | TransactionManagerInterface */
     protected $mockTransationMngr;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
         $this->queryHandler = m::mock(QueryHandlerManager::class);
@@ -189,7 +189,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->initRefdata = false;
         $this->assertCommandData();

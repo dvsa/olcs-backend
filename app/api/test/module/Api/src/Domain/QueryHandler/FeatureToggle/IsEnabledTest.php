@@ -15,7 +15,7 @@ class IsEnabledTest extends QueryHandlerTestCase
 {
     protected $qry;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new IsEnabledHandler();
         $this->qry = IsEnabledQry::create(['ids' => ['toggle1', 'toggle2']]);

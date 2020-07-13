@@ -11,7 +11,7 @@ use \Mockery as m;
 
 class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CanAccessLicenceForSurrender();
         parent::setUp();

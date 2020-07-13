@@ -20,7 +20,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
     /**
      * Setup the helper
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->sectionAccessService = m::mock();
 

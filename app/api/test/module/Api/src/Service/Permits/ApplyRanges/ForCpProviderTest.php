@@ -39,7 +39,7 @@ class ForCpProviderTest extends MockeryTestCase
 
     private $forCpProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->result = new Result();
 

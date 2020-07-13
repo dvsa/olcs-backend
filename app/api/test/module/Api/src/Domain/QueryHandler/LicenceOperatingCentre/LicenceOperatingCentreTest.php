@@ -36,7 +36,7 @@ class LicenceOperatingCentreTest extends QueryHandlerTestCase
         ]
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new LicenceOperatingCentre();
         $this->mockRepo('LicenceOperatingCentre', \Dvsa\Olcs\Api\Domain\Repository\LicenceOperatingCentre::class);

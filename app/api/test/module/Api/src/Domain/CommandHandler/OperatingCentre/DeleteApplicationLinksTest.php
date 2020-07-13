@@ -23,7 +23,7 @@ use Mockery as m;
  */
 class DeleteApplicationLinksTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('ApplicationOperatingCentre', Repository\ApplicationOperatingCentre::class);

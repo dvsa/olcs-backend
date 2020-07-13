@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreateHandler();
         $this->mockRepo('IrhpPermitRange', PermitRangeRepo::class);

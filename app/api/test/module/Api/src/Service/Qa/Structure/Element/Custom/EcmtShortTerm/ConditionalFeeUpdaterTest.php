@@ -26,7 +26,7 @@ class ConditionalFeeUpdaterTest extends MockeryTestCase
 
     private $conditionalFeeUpdater;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->feeUpdater = m::mock(FeeUpdater::class);
 

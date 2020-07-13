@@ -15,7 +15,7 @@ use Doctrine\ORM\Query;
  */
 class DocumentListTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DocumentList();
         $this->mockRepo('DocumentSearchView', Repo::class);

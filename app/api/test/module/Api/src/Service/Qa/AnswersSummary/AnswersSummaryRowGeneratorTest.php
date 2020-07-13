@@ -42,7 +42,7 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
 
     private $answersSummaryRowGenerator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->formControlStrategy = m::mock(FormControlStrategyInterface::class);
 

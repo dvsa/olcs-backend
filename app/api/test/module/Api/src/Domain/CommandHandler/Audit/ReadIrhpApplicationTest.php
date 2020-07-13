@@ -26,7 +26,7 @@ class ReadIrhpApplicationTest extends CommandHandlerTestCase
     /** @var  ReadIrhpApplicationCommand */
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadIrhpApplication();
         $this->mockRepo('IrhpApplicationReadAudit', Repository\IrhpApplicationReadAudit::class);

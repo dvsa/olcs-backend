@@ -23,7 +23,7 @@ use Doctrine\ORM\Query;
  */
 class InspectionRequestTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(InspectionRequestRepo::class, true);
     }

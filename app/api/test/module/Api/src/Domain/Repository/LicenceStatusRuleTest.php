@@ -22,7 +22,7 @@ use Doctrine\DBAL\LockMode;
  */
 class LicenceStatusRuleTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

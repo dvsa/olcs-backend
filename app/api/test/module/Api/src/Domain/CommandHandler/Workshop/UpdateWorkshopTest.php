@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Workshop as WorkshopEntity;
  */
 class UpdateWorkshopTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateWorkshop();
         $this->mockRepo('Workshop', Workshop::class);

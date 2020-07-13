@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Command\Publication\DeleteRecipient as Cmd;
  */
 class DeleteRecipientTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new DeleteRecipient();
         $this->mockRepo('Recipient', RecipientRepo::class);

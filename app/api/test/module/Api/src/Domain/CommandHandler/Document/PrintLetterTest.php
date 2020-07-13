@@ -32,7 +32,7 @@ class PrintLetterTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockPrintSrv;
 
-    public function setUp()
+    public function setUp(): void
     {
         /** @var Entity\Licence\Licence $mockLicE */
         $mockLicE = m::mock(Entity\Licence\Licence::class)->makePartial();

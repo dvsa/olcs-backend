@@ -25,7 +25,7 @@ class ReadTransportManagerTest extends CommandHandlerTestCase
     /** @var  \Dvsa\Olcs\Transfer\Command\Audit\ReadTransportManager */
     private $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReadTransportManager();
         $this->mockRepo('TransportManagerReadAudit', Repository\TransportManagerReadAudit::class);

@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
  */
 class GenerateLicenceNumberTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new GenerateLicenceNumber();
         $this->mockRepo('Application', Application::class);

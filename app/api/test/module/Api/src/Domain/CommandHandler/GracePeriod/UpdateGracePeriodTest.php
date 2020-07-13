@@ -27,7 +27,7 @@ use Dvsa\Olcs\Transfer\Command\GracePeriod\UpdateGracePeriod as Cmd;
  */
 class UpdateGracePeriodTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateGracePeriod();
         $this->mockRepo('GracePeriod', GracePeriodRepo::class);

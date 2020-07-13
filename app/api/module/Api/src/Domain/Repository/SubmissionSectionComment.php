@@ -30,6 +30,6 @@ class SubmissionSectionComment extends AbstractRepository
             ->setParameter('SUBMISSION_SECTION', $cmd->getSubmissionSection())
             ->setMaxResults(1);
 
-        return (count($qb->getQuery()->getResult()) !== 0);
+        return !empty($qb->getQuery()->getResult());
     }
 }

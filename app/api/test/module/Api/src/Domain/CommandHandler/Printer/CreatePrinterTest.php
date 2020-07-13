@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\PrintScan\Printer as PrinterEntity;
  */
 class CreatePrinterTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CreatePrinter();
         $this->mockRepo('Printer', PrinterRepo::class);

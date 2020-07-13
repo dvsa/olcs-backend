@@ -20,7 +20,7 @@ use Dvsa\Olcs\Transfer\Query\EnvironmentalComplaint\EnvironmentalComplaint as Qr
  */
 class EnvironmentalComplaintTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new EnvironmentalComplaint();
         $this->mockRepo('Complaint', ComplaintRepo::class);

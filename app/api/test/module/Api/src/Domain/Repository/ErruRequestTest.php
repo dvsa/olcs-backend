@@ -22,7 +22,7 @@ use Doctrine\ORM\Query\Expr\Comparison;
  */
 class ErruRequestTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(ErruRequestRepo::class, true);
     }

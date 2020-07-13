@@ -26,7 +26,7 @@ class UpdatePeopleTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockLicRepo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdatePeople();
 

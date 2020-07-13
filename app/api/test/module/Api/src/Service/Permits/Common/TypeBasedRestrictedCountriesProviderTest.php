@@ -22,7 +22,7 @@ class TypeBasedRestrictedCountriesProviderTest extends MockeryTestCase
 
     private $typeBasedRestrictedCountriesProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->config = [
             'permits' => [

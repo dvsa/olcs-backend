@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  */
 class UpdateApplicationCompletionTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateApplicationCompletion();
         $this->mockRepo('Application', Application::class);

@@ -21,7 +21,7 @@ use Dvsa\Olcs\Transfer\Query\Licence\Trailers as Qry;
  */
 class TrailersTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Trailers();
         $this->mockRepo('Licence', Repository\Licence::class);

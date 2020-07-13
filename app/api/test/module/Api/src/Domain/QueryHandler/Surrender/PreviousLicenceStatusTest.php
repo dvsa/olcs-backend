@@ -11,7 +11,7 @@ class PreviousLicenceStatusTest extends QueryHandlerTestCase
 {
     const LICENCE_STATUS = 'lic_sts';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new QryHandler();
         $this->mockRepo('EventHistory', EventHistory::class);

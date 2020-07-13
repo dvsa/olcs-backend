@@ -23,7 +23,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
     /** @var ContinuationDetail */
     private $continuationDetail;
 
-    public function setUp()
+    public function setUp(): void
     {
         $serviceManager = Bootstrap::getServiceManager();
 

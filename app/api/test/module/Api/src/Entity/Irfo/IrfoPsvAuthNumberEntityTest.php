@@ -23,7 +23,7 @@ class IrfoPsvAuthNumberEntityTest extends EntityTester
     /** @var  IrfoPsvAuth */
     private $mockIrfoPsvAuth;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

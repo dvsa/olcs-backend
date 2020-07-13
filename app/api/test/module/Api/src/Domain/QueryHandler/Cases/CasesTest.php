@@ -25,7 +25,7 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class CasesTest extends QueryHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Cases();
         $this->mockRepo('Cases', CasesRepo::class);

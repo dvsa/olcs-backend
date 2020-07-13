@@ -20,7 +20,7 @@ class FilteredTranslateableTextTest extends MockeryTestCase
 
     private $filteredTranslateableText;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filter = 'htmlEscape';
 

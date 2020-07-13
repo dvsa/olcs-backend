@@ -18,7 +18,7 @@ class CasesReadAuditTest extends AbstractReadAuditTest
     /** @var CasesReadAudit|m\MockInterface */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(CasesReadAudit::class, true);
     }

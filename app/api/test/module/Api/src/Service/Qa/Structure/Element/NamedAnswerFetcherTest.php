@@ -21,7 +21,7 @@ class NamedAnswerFetcherTest extends MockeryTestCase
 
     private $namedAnswerFetcher;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fieldsetName = 'fields123';
 

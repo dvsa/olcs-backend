@@ -19,7 +19,7 @@ class SystemParameterTest extends RepositoryTestCase
     /** @var  SystemParameterRepo */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(SystemParameterRepo::class);
     }

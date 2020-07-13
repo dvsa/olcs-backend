@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 class UpdateFinancialEvidenceTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new UpdateFinancialEvidence();
         $this->mockRepo('Application', Application::class);

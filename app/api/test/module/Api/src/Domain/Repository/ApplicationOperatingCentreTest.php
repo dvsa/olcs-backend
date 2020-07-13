@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Complaint;
  */
 class ApplicationOperatingCentreTest extends RepositoryTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }

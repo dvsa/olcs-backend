@@ -13,7 +13,7 @@ class MessageBuilderFactoryTest extends TestCase
     protected $mockSl;
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockSl = m::mock(ServiceLocatorInterface::class);
         $this->sut = new MessageBuilderFactory();

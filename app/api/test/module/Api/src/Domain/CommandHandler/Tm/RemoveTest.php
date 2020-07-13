@@ -23,7 +23,7 @@ use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
  */
 class RemoveTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Remove();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);

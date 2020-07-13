@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
  */
 class CloseTest extends CommandHandlerTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new Close();
         $this->mockRepo('Pi', PiRepo::class);

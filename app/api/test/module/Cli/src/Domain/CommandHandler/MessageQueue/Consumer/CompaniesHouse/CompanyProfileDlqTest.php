@@ -24,7 +24,7 @@ class CompanyProfileDlqTest extends CompaniesHouseConsumerTestCase
         ]
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new CompanyProfileDlq();
         $this->mockRepo('MessageFailures', MessageFailures::class);

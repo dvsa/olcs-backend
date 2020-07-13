@@ -20,7 +20,7 @@ class CpidOrganisationExportTest extends MockeryTestCase
 {
     protected $queueEntity = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         $user = new Entity\User\User('pid', 'type');
         $user->setId(1);

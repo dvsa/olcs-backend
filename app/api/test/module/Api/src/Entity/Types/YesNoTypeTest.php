@@ -18,7 +18,7 @@ class YesNoTypeTest extends \PHPUnit\Framework\TestCase
 {
     private $type;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!YesNoType::hasType('yesno')) {
             YesNoType::addType('yesno', YesNoType::class);
