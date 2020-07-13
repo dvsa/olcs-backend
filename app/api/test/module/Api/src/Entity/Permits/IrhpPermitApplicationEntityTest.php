@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
@@ -927,8 +928,8 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     public function dpGetAnswerWithStandardAnswer()
     {
         return [
-            [true, Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY],
-            [true, Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE],
+            [false, Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY],
+            [false, Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE],
         ];
     }
 
@@ -1341,21 +1342,27 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         ];
     }
 
-    /**
-     * @dataProvider dpGetBilateralFeeProductRefsAndQuantities
-     */
-    public function testGetBilateralFeeProductRefsAndQuantities(
-        $bilateralRequired,
-        $permitUsageSelection,
-        $expectedProductRefsAndQuantities
-    ) {
+    public function testGetBilateralFeeProductRefsAndQuantitiesStandardOnly()
+    {
+        $countryId = Country::ID_FRANCE;
+
+        $bilateralRequired = [
+            Entity::BILATERAL_STANDARD_REQUIRED => 6,
+            Entity::BILATERAL_CABOTAGE_REQUIRED => null
+        ];
+
         $entity = m::mock(Entity::class)->makePartial();
         $entity->shouldReceive('getBilateralRequired')
             ->withNoArgs()
             ->andReturn($bilateralRequired);
-        $entity->shouldReceive('getBilateralPermitUsageSelection')
+        $entity->shouldReceive('getBilateralFeeProductReferences')
+            ->with($countryId, Entity::BILATERAL_STANDARD_REQUIRED)
+            ->andReturn(['PRODUCT_REF_ABC', 'PRODUCT_REF_DEF']);
+
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry->getId')
             ->withNoArgs()
-            ->andReturn($permitUsageSelection);
+            ->andReturn($countryId);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('isBilateral')
@@ -1363,6 +1370,12 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             ->andReturnTrue();
 
         $entity->setIrhpApplication($irhpApplication);
+        $entity->setIrhpPermitWindow($irhpPermitWindow);
+
+        $expectedProductRefsAndQuantities = [
+            'PRODUCT_REF_ABC' => 6,
+            'PRODUCT_REF_DEF' => 6,
+        ];
 
         $this->assertEquals(
             $expectedProductRefsAndQuantities,
@@ -1370,78 +1383,90 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         );
     }
 
-    public function dpGetBilateralFeeProductRefsAndQuantities()
+    public function testGetBilateralFeeProductRefsAndQuantitiesCabotageOnly()
     {
-        return [
-            'single - cabotage only' => [
-                'bilateralRequired' => [
-                    Entity::BILATERAL_STANDARD_REQUIRED => null,
-                    Entity::BILATERAL_CABOTAGE_REQUIRED => 5
-                ],
-                'permitUsageSelection' => RefData::JOURNEY_SINGLE,
-                'expectedProductRefsAndQuantities' => [
-                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 5,
-                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 5,
-                ],
-            ],
-            'single - standard and cabotage' => [
-                'bilateralRequired' => [
-                    Entity::BILATERAL_STANDARD_REQUIRED => 7,
-                    Entity::BILATERAL_CABOTAGE_REQUIRED => 5
-                ],
-                'permitUsageSelection' => RefData::JOURNEY_SINGLE,
-                'expectedProductRefsAndQuantities' => [
-                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 12,
-                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 12,
-                ],
-            ],
-            'single - standard only' => [
-                'bilateralRequired' => [
-                    Entity::BILATERAL_STANDARD_REQUIRED => 7,
-                    Entity::BILATERAL_CABOTAGE_REQUIRED => null
-                ],
-                'permitUsageSelection' => RefData::JOURNEY_SINGLE,
-                'expectedProductRefsAndQuantities' => [
-                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 7,
-                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 7,
-                ],
-            ],
-            'multiple - cabotage only' => [
-                'bilateralRequired' => [
-                    Entity::BILATERAL_STANDARD_REQUIRED => null,
-                    Entity::BILATERAL_CABOTAGE_REQUIRED => 9
-                ],
-                'permitUsageSelection' => RefData::JOURNEY_MULTIPLE,
-                'expectedProductRefsAndQuantities' => [
-                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 9,
-                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 9,
-                ],
-            ],
-            'multiple - standard and cabotage' => [
-                'bilateralRequired' => [
-                    Entity::BILATERAL_STANDARD_REQUIRED => 3,
-                    Entity::BILATERAL_CABOTAGE_REQUIRED => 4
-                ],
-                'permitUsageSelection' => RefData::JOURNEY_MULTIPLE,
-                'expectedProductRefsAndQuantities' => [
-                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF => 3,
-                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF => 3,
-                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF => 4,
-                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF => 4,
-                ],
-            ],
-            'multiple - standard only' => [
-                'bilateralRequired' => [
-                    Entity::BILATERAL_STANDARD_REQUIRED => 6,
-                    Entity::BILATERAL_CABOTAGE_REQUIRED => null
-                ],
-                'permitUsageSelection' => RefData::JOURNEY_MULTIPLE,
-                'expectedProductRefsAndQuantities' => [
-                    FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF => 6,
-                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF => 6,
-                ],
-            ],
+        $countryId = Country::ID_GERMANY;
+
+        $bilateralRequired = [
+            Entity::BILATERAL_STANDARD_REQUIRED => null,
+            Entity::BILATERAL_CABOTAGE_REQUIRED => 8
         ];
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getBilateralRequired')
+            ->withNoArgs()
+            ->andReturn($bilateralRequired);
+        $entity->shouldReceive('getBilateralFeeProductReferences')
+            ->with($countryId, Entity::BILATERAL_CABOTAGE_REQUIRED)
+            ->andReturn(['PRODUCT_REF_ABC', 'PRODUCT_REF_DEF']);
+
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn($countryId);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity->setIrhpApplication($irhpApplication);
+        $entity->setIrhpPermitWindow($irhpPermitWindow);
+
+        $expectedProductRefsAndQuantities = [
+            'PRODUCT_REF_ABC' => 8,
+            'PRODUCT_REF_DEF' => 8,
+        ];
+
+        $this->assertEquals(
+            $expectedProductRefsAndQuantities,
+            $entity->getBilateralFeeProductRefsAndQuantities()
+        );
+    }
+
+    public function testGetBilateralFeeProductRefsAndQuantitiesStandardAndCabotage()
+    {
+        $countryId = Country::ID_BELARUS;
+
+        $bilateralRequired = [
+            Entity::BILATERAL_STANDARD_REQUIRED => 7,
+            Entity::BILATERAL_CABOTAGE_REQUIRED => 5
+        ];
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getBilateralRequired')
+            ->withNoArgs()
+            ->andReturn($bilateralRequired);
+        $entity->shouldReceive('getBilateralFeeProductReferences')
+            ->with($countryId, Entity::BILATERAL_STANDARD_REQUIRED)
+            ->andReturn(['PRODUCT_REF_ABC', 'PRODUCT_REF_DEF']);
+        $entity->shouldReceive('getBilateralFeeProductReferences')
+            ->with($countryId, Entity::BILATERAL_CABOTAGE_REQUIRED)
+            ->andReturn(['PRODUCT_REF_DEF', 'PRODUCT_REF_GHI']);
+
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn($countryId);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity->setIrhpApplication($irhpApplication);
+        $entity->setIrhpPermitWindow($irhpPermitWindow);
+
+        $expectedProductRefsAndQuantities = [
+            'PRODUCT_REF_ABC' => 7,
+            'PRODUCT_REF_DEF' => 12,
+            'PRODUCT_REF_GHI' => 5
+        ];
+
+        $this->assertEquals(
+            $expectedProductRefsAndQuantities,
+            $entity->getBilateralFeeProductRefsAndQuantities()
+        );
     }
 
     public function testGetBilateralFeeProductRefsAndQuantitiesNotBilateral()
@@ -1460,9 +1485,9 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpGetBilateralFeeProductReference
+     * @dataProvider dpGetBilateralFeeProductReferences
      */
-    public function testGetBilateralFeeProductReference($permitUsage, $standardOrCabotage, $feeTypeKey, $expected)
+    public function testGetBilateralFeeProductReferences($countryId, $permitUsage, $standardOrCabotage, $expected)
     {
         $entity = m::mock(Entity::class)->makePartial();
         $entity->shouldReceive('getBilateralPermitUsageSelection')
@@ -1478,68 +1503,129 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->assertEquals(
             $expected,
-            $entity->getBilateralFeeProductReference($standardOrCabotage, $feeTypeKey)
+            $entity->getBilateralFeeProductReferences($countryId, $standardOrCabotage)
         );
     }
 
-    public function dpGetBilateralFeeProductReference()
+    public function dpGetBilateralFeeProductReferences()
     {
         return [
             [
+                Country::ID_NORWAY,
                 RefData::JOURNEY_SINGLE,
                 Entity::BILATERAL_STANDARD_REQUIRED,
-                Entity::BILATERAL_APPLICATION_FEE_KEY,
-                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF
+                Entity::BILATERAL_FEE_PRODUCT_REFS_TYPE_2
             ],
             [
-                RefData::JOURNEY_SINGLE,
-                Entity::BILATERAL_STANDARD_REQUIRED,
-                Entity::BILATERAL_ISSUE_FEE_KEY,
-                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF
-            ],
-            [
+                Country::ID_NORWAY,
                 RefData::JOURNEY_SINGLE,
                 Entity::BILATERAL_CABOTAGE_REQUIRED,
-                Entity::BILATERAL_APPLICATION_FEE_KEY,
-                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF
+                Entity::BILATERAL_FEE_PRODUCT_REFS_TYPE_2
             ],
             [
+                Country::ID_NORWAY,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_FEE_PRODUCT_REFS_TYPE_1
+            ],
+            [
+                Country::ID_NORWAY,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_FEE_PRODUCT_REFS_TYPE_2
+            ],
+            [
+                Country::ID_BELARUS,
                 RefData::JOURNEY_SINGLE,
-                Entity::BILATERAL_CABOTAGE_REQUIRED,
-                Entity::BILATERAL_ISSUE_FEE_KEY,
-                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF
-            ],
-            [
-                RefData::JOURNEY_MULTIPLE,
                 Entity::BILATERAL_STANDARD_REQUIRED,
-                Entity::BILATERAL_APPLICATION_FEE_KEY,
-                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF
+                [
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+                ]
             ],
             [
-                RefData::JOURNEY_MULTIPLE,
+                Country::ID_GEORGIA,
+                RefData::JOURNEY_SINGLE,
                 Entity::BILATERAL_STANDARD_REQUIRED,
-                Entity::BILATERAL_ISSUE_FEE_KEY,
-                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF
+                [
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+                ]
             ],
             [
-                RefData::JOURNEY_MULTIPLE,
-                Entity::BILATERAL_CABOTAGE_REQUIRED,
-                Entity::BILATERAL_APPLICATION_FEE_KEY,
-                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF
+                Country::ID_RUSSIA,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                [
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+                ]
             ],
             [
-                RefData::JOURNEY_MULTIPLE,
-                Entity::BILATERAL_CABOTAGE_REQUIRED,
-                Entity::BILATERAL_ISSUE_FEE_KEY,
-                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF
+                Country::ID_RUSSIA,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                [
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+                ]
             ],
+            [
+                Country::ID_TUNISIA,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                [
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+                ]
+            ],
+            [
+                Country::ID_TURKEY,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                [
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+                ]
+            ],
+            [
+                Country::ID_UKRAINE,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                [
+                    FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+                ]
+            ],
+            [
+                Country::ID_KAZAKHSTAN,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                []
+            ]
         ];
     }
 
-    public function testGetBilateralFeeProductReferenceNotBilateral()
+    public function testGetBilateralFeeProductReferencesFeeNotFound()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('getBilateralFeeProductReference is applicable only to bilateral applications');
+        $this->expectExceptionMessage('No bilateral fee configuration found: IT/journey_single/standard');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getBilateralPermitUsageSelection')
+            ->withNoArgs()
+            ->andReturn(RefData::JOURNEY_SINGLE);
+
+        $entity->setIrhpApplication($irhpApplication);
+
+        $entity->getBilateralFeeProductReferences(
+            Country::ID_ITALY,
+            Entity::BILATERAL_STANDARD_REQUIRED
+        );
+    }
+
+    public function testGetBilateralFeeProductReferencesNotBilateral()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getBilateralFeeProductReferences is applicable only to bilateral applications');
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('isBilateral')
@@ -1548,10 +1634,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->sut->setIrhpApplication($irhpApplication);
 
-        $this->sut->getBilateralFeeProductReference(
-            Entity::BILATERAL_STANDARD_REQUIRED,
-            Entity::BILATERAL_ISSUE_FEE_KEY
-        );
+        $this->sut->getBilateralFeeProductReferences(Country::ID_GERMANY, Entity::BILATERAL_STANDARD_REQUIRED);
     }
 
     public function testGetBilateralFeePerPermit()
@@ -1573,9 +1656,11 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             ->withNoArgs()
             ->andReturn(13);
 
+        $feeTypes = [$applicationFeeType, $issueFeeType];
+
         $this->assertEquals(
             18,
-            $this->sut->getBilateralFeePerPermit($applicationFeeType, $issueFeeType)
+            $this->sut->getBilateralFeePerPermit($feeTypes)
         );
     }
 
@@ -1591,10 +1676,9 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->sut->setIrhpApplication($irhpApplication);
 
-        $this->sut->getBilateralFeePerPermit(
-            m::mock(FeeType::class),
-            m::mock(FeeType::class)
-        );
+        $feeTypes = [m::mock(FeeType::class)];
+
+        $this->sut->getBilateralFeePerPermit($feeTypes);
     }
 
     public function testGetOutstandingFees()
