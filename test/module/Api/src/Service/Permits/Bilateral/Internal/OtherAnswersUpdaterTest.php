@@ -2,11 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\Bilateral\Internal;
 
+use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\CabotageAnswerUpdater;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ApplicationPathAnswersUpdaterInterface;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ApplicationPathAnswersUpdaterProvider;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\GenericAnswerUpdater;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\OtherAnswersUpdater;
-use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\PermitUsageAnswerUpdater;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -19,8 +21,12 @@ class OtherAnswersUpdaterTest extends MockeryTestCase
 {
     public function testUpdate()
     {
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $applicationPathGroupId = 67;
 
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getActiveApplicationPath->getApplicationPathGroup->getId')
+            ->withNoArgs()
+            ->andReturn($applicationPathGroupId);
         $irhpPermitApplication->shouldReceive('updateCheckAnswers')
             ->withNoArgs()
             ->once();
@@ -32,17 +38,22 @@ class OtherAnswersUpdaterTest extends MockeryTestCase
 
         $permitUsageSelection = RefData::JOURNEY_SINGLE;
 
-        $permitUsageAnswerUpdater = m::mock(PermitUsageAnswerUpdater::class);
-        $permitUsageAnswerUpdater->shouldReceive('update')
-            ->with($irhpPermitApplication, $permitUsageSelection)
+        $genericAnswerUpdater = m::mock(GenericAnswerUpdater::class);
+        $genericAnswerUpdater->shouldReceive('update')
+            ->with($irhpPermitApplication, Question::QUESTION_ID_BILATERAL_PERMIT_USAGE, $permitUsageSelection)
             ->once();
 
-        $cabotageAnswerUpdater = m::mock(CabotageAnswerUpdater::class);
-        $cabotageAnswerUpdater->shouldReceive('update')
+        $applicationPathAnswersUpdater = m::mock(ApplicationPathAnswersUpdaterInterface::class);
+        $applicationPathAnswersUpdater->shouldReceive('update')
             ->with($irhpPermitApplication, $bilateralRequired)
             ->once();
 
-        $otherAnswersUpdater = new OtherAnswersUpdater($permitUsageAnswerUpdater, $cabotageAnswerUpdater);
+        $applicationPathAnswersUpdaterProvider = m::mock(ApplicationPathAnswersUpdaterProvider::class);
+        $applicationPathAnswersUpdaterProvider->shouldReceive('getByApplicationPathGroupId')
+            ->with($applicationPathGroupId)
+            ->andReturn($applicationPathAnswersUpdater);
+
+        $otherAnswersUpdater = new OtherAnswersUpdater($genericAnswerUpdater, $applicationPathAnswersUpdaterProvider);
         $otherAnswersUpdater->update($irhpPermitApplication, $bilateralRequired, $permitUsageSelection);
     }
 }

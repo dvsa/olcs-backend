@@ -127,6 +127,8 @@ return [
                 => ApiSrv\Permits\Bilateral\Internal\IrhpPermitApplicationFactory::class,
             'PermitsBilateralInternalPermitUsageSelectionGenerator'
                 => ApiSrv\Permits\Bilateral\Internal\PermitUsageSelectionGenerator::class,
+            'PermitsBilateralInternalNullApplicationPathAnswersUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\NullApplicationPathAnswersUpdater::class,
 
             'PermitsBilateralMetadataCurrentFieldValuesGenerator'
                 => ApiSrv\Permits\Bilateral\Metadata\CurrentFieldValuesGenerator::class,
@@ -440,16 +442,24 @@ return [
                 => ApiSrv\Permits\Bilateral\Internal\ApplicationCountryUpdaterFactory::class,
             'PermitsBilateralInternalApplicationUpdater'
                 => ApiSrv\Permits\Bilateral\Internal\ApplicationUpdaterFactory::class,
-            'PermitsBilateralInternalCabotageAnswerUpdater'
-                => ApiSrv\Permits\Bilateral\Internal\CabotageAnswerUpdaterFactory::class,
+            'PermitsBilateralInternalGenericAnswerUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\GenericAnswerUpdaterFactory::class,
             'PermitsBilateralInternalExistingIrhpPermitApplicationHandler'
                 => ApiSrv\Permits\Bilateral\Internal\ExistingIrhpPermitApplicationHandlerFactory::class,
             'PermitsBilateralInternalIrhpPermitApplicationCreator'
                 => ApiSrv\Permits\Bilateral\Internal\IrhpPermitApplicationCreatorFactory::class,
             'PermitsBilateralInternalOtherAnswersUpdater'
                 => ApiSrv\Permits\Bilateral\Internal\OtherAnswersUpdaterFactory::class,
-            'PermitsBilateralInternalPermitUsageAnswerUpdater'
-                => ApiSrv\Permits\Bilateral\Internal\PermitUsageAnswerUpdaterFactory::class,
+            'PermitsBilateralInternalApplicationPathAnswersUpdaterProvider'
+                => ApiSrv\Permits\Bilateral\Internal\ApplicationPathAnswersUpdaterProviderFactory::class,
+            'PermitsBilateralInternalCabotageOnlyApplicationPathAnswersUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\CabotageOnlyApplicationPathAnswersUpdaterFactory::class,
+            'PermitsBilateralInternalStandardAndCabotageApplicationPathAnswersUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\StandardAndCabotageApplicationPathAnswersUpdaterFactory::class,
+            'PermitsBilateralInternalTurkeyApplicationPathAnswersUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\TurkeyApplicationPathAnswersUpdaterFactory::class,
+            'PermitsBilateralInternalUkraineApplicationPathAnswersUpdater'
+                => ApiSrv\Permits\Bilateral\Internal\UkraineApplicationPathAnswersUpdaterFactory::class,
 
             'PermitsBilateralMetadataCountryGenerator'
                 => ApiSrv\Permits\Bilateral\Metadata\CountryGeneratorFactory::class,

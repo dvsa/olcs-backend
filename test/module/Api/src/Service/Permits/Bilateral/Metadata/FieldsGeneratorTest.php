@@ -255,6 +255,38 @@ class FieldsGeneratorTest extends MockeryTestCase
                     ]
                 ]
             ],
+            'turkey' => [
+                ApplicationPathGroup::BILATERALS_TURKEY_ID,
+                $singleOnlyPermitUsageList,
+                [
+                    RefData::JOURNEY_SINGLE => [
+                        IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => 17
+                    ]
+                ],
+                [
+                    [
+                        'journey' => RefData::JOURNEY_SINGLE,
+                        'cabotage' => IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED,
+                        'value' => 17
+                    ]
+                ]
+            ],
+            'ukraine' => [
+                ApplicationPathGroup::BILATERALS_UKRAINE_ID,
+                $singleOnlyPermitUsageList,
+                [
+                    RefData::JOURNEY_SINGLE => [
+                        IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => 17
+                    ]
+                ],
+                [
+                    [
+                        'journey' => RefData::JOURNEY_SINGLE,
+                        'cabotage' => IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED,
+                        'value' => 17
+                    ]
+                ]
+            ],
         ];
     }
 }

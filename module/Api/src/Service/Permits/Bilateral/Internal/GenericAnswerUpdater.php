@@ -2,12 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
-use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 
-class PermitUsageAnswerUpdater
+class GenericAnswerUpdater
 {
     /** @var QaContextFactory */
     private $qaContextFactory;
@@ -21,7 +20,7 @@ class PermitUsageAnswerUpdater
      * @param QaContextFactory $qaContextFactory
      * @param GenericAnswerWriter $genericAnswerWriter
      *
-     * @return PermitUsageAnswerUpdater
+     * @return GenericAnswerUpdater
      */
     public function __construct(QaContextFactory $qaContextFactory, GenericAnswerWriter $genericAnswerWriter)
     {
@@ -30,18 +29,22 @@ class PermitUsageAnswerUpdater
     }
 
     /**
-     * Create or update the answer value representing the permit usage selection
+     * Write an answer to a question in the context of the specified application and it's associated application
+     * path
      *
      * @param IrhpPermitApplication $irhpPermitApplication
-     * @param string $permitUsageSelection
+     * @param int $questionId
+     * @param string $answerValue
      */
-    public function update(IrhpPermitApplication $irhpPermitApplication, $permitUsageSelection)
+    public function update(IrhpPermitApplication $irhpPermitApplication, $questionId, $answerValue)
     {
-        $applicationStep = $irhpPermitApplication->getActiveApplicationPath()
-            ->getApplicationStepByQuestionId(Question::QUESTION_ID_BILATERAL_PERMIT_USAGE);
+        $applicationPath = $irhpPermitApplication->getActiveApplicationPath();
 
-        $qaContext = $this->qaContextFactory->create($applicationStep, $irhpPermitApplication);
+        $qaContext = $this->qaContextFactory->create(
+            $applicationPath->getApplicationStepByQuestionId($questionId),
+            $irhpPermitApplication
+        );
 
-        $this->genericAnswerWriter->write($qaContext, $permitUsageSelection);
+        $this->genericAnswerWriter->write($qaContext, $answerValue);
     }
 }

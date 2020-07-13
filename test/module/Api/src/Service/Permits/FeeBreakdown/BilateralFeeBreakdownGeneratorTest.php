@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Permits\FeeBreakdown;
 
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
@@ -23,6 +24,7 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
         $feeTypeRepo = m::mock(FeeTypeRepository::class);
 
         $bilateralPermitUsageSelection1 = RefData::JOURNEY_SINGLE;
+        $countryId1 = 'ES';
         $countryDesc1 = 'Spain';
         $filteredBilateralRequired1 = [
             IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => 5,
@@ -59,32 +61,53 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
         $irhpPermitApplication1->shouldReceive('getBilateralPermitUsageSelection')
             ->withNoArgs()
             ->andReturn($bilateralPermitUsageSelection1);
-        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getCountryDesc')
+        $country1 = m::mock(Country::class);
+        $country1->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($countryId1);
+        $country1->shouldReceive('getCountryDesc')
             ->withNoArgs()
             ->andReturn($countryDesc1);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry')
+            ->withNoArgs()
+            ->andReturn($country1);
         $irhpPermitApplication1->shouldReceive('getFilteredBilateralRequired')
             ->withNoArgs()
             ->andReturn($filteredBilateralRequired1);
+
         $irhpPermitApplication1->shouldReceive('getBilateralFeePerPermit')
-            ->with($applicationFeeType1StandardApplication, $applicationFeeType1StandardIssue)
-            ->andReturn($feePerPermit1Standard);
-        $irhpPermitApplication1->shouldReceive('getBilateralFeePerPermit')
-            ->with($applicationFeeType1CabotageApplication, $applicationFeeType1CabotageIssue)
-            ->andReturn($feePerPermit1Cabotage);
-        $irhpPermitApplication1->shouldReceive('getBilateralFeeProductReference')
-            ->with(IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED, IrhpPermitApplication::BILATERAL_APPLICATION_FEE_KEY)
-            ->andReturn($productReference1StandardApplication);
-        $irhpPermitApplication1->shouldReceive('getBilateralFeeProductReference')
-            ->with(IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED, IrhpPermitApplication::BILATERAL_ISSUE_FEE_KEY)
-            ->andReturn($productReference1StandardIssue);
-        $irhpPermitApplication1->shouldReceive('getBilateralFeeProductReference')
-            ->with(IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED, IrhpPermitApplication::BILATERAL_APPLICATION_FEE_KEY)
-            ->andReturn($productReference1CabotageApplication);
-        $irhpPermitApplication1->shouldReceive('getBilateralFeeProductReference')
-            ->with(IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED, IrhpPermitApplication::BILATERAL_ISSUE_FEE_KEY)
-            ->andReturn($productReference1CabotageIssue);
+            ->andReturnUsing(function ($feeTypes) use (
+                $applicationFeeType1StandardApplication,
+                $applicationFeeType1StandardIssue,
+                $feePerPermit1Standard,
+                $applicationFeeType1CabotageApplication,
+                $applicationFeeType1CabotageIssue,
+                $feePerPermit1Cabotage
+            ) {
+                $this->assertCount(2, $feeTypes);
+                $this->assertArrayHasKey(0, $feeTypes);
+                $this->assertArrayHasKey(1, $feeTypes);
+
+                if ($feeTypes[0] === $applicationFeeType1StandardApplication &&
+                    $feeTypes[1] === $applicationFeeType1StandardIssue) {
+                    return $feePerPermit1Standard;
+                } elseif ($feeTypes[0] === $applicationFeeType1CabotageApplication &&
+                    $feeTypes[1] === $applicationFeeType1CabotageIssue) {
+                    return $feePerPermit1Cabotage;
+                }
+
+                throw new \Exception('Unexpected parameters');
+            });
+
+        $irhpPermitApplication1->shouldReceive('getBilateralFeeProductReferences')
+            ->with($countryId1, IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED)
+            ->andReturn([$productReference1StandardApplication, $productReference1StandardIssue]);
+        $irhpPermitApplication1->shouldReceive('getBilateralFeeProductReferences')
+            ->with($countryId1, IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED)
+            ->andReturn([$productReference1CabotageApplication, $productReference1CabotageIssue]);
 
         $bilateralPermitUsageSelection2 = RefData::JOURNEY_MULTIPLE;
+        $countryId2 = 'NO';
         $countryDesc2 = 'Norway';
         $filteredBilateralRequired2 = [
             IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => 12,
@@ -108,21 +131,38 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
         $irhpPermitApplication2->shouldReceive('getBilateralPermitUsageSelection')
             ->withNoArgs()
             ->andReturn($bilateralPermitUsageSelection2);
-        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getCountryDesc')
+        $country2 = m::mock(Country::class);
+        $country2->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($countryId2);
+        $country2->shouldReceive('getCountryDesc')
             ->withNoArgs()
             ->andReturn($countryDesc2);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry')
+            ->withNoArgs()
+            ->andReturn($country2);
         $irhpPermitApplication2->shouldReceive('getFilteredBilateralRequired')
             ->withNoArgs()
             ->andReturn($filteredBilateralRequired2);
+
         $irhpPermitApplication2->shouldReceive('getBilateralFeePerPermit')
-            ->with($applicationFeeType2StandardApplication, $applicationFeeType2StandardIssue)
-            ->andReturn($feePerPermit2Standard);
-        $irhpPermitApplication2->shouldReceive('getBilateralFeeProductReference')
-            ->with(IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED, IrhpPermitApplication::BILATERAL_APPLICATION_FEE_KEY)
-            ->andReturn($productReference2StandardApplication);
-        $irhpPermitApplication2->shouldReceive('getBilateralFeeProductReference')
-            ->with(IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED, IrhpPermitApplication::BILATERAL_ISSUE_FEE_KEY)
-            ->andReturn($productReference2StandardIssue);
+            ->andReturnUsing(function ($feeTypes) use (
+                $applicationFeeType2StandardApplication,
+                $applicationFeeType2StandardIssue,
+                $feePerPermit2Standard
+            ) {
+                $this->assertCount(2, $feeTypes);
+                $this->assertArrayHasKey(0, $feeTypes);
+                $this->assertArrayHasKey(1, $feeTypes);
+                $this->assertSame($applicationFeeType2StandardApplication, $feeTypes[0]);
+                $this->assertSame($applicationFeeType2StandardIssue, $feeTypes[1]);
+
+                return $feePerPermit2Standard;
+            });
+
+        $irhpPermitApplication2->shouldReceive('getBilateralFeeProductReferences')
+            ->with($countryId2, IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED)
+            ->andReturn([$productReference2StandardApplication, $productReference2StandardIssue]);
 
         $irhpPermitApplications = [$irhpPermitApplication1, $irhpPermitApplication2];
 

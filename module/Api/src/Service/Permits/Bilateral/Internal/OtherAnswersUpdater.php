@@ -2,30 +2,31 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
+use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 
 class OtherAnswersUpdater
 {
-    /** @var PermitUsageAnswerUpdater */
-    private $permitUsageAnswerUpdater;
+    /** @var GenericAnswerUpdater */
+    private $genericAnswerUpdater;
 
-    /** @var CabotageAnswerUpdater */
-    private $cabotageAnswerUpdater;
+    /** @var ApplicationPathAnswersUpdaterProvider */
+    private $applicationPathAnswersUpdaterProvider;
 
     /**
      * Create service instance
      *
-     * @param PermitUsageAnswerUpdater $permitUsageAnswerUpdater
-     * @param CabotageAnswerUpdater $cabotageAnswerUpdater
+     * @param GenericAnswerUpdater $genericAnswerUpdater
+     * @param ApplicationPathAnswersUpdaterProvider $applicationPathAnswersUpdaterProvider
      *
      * @return OtherAnswersUpdater
      */
     public function __construct(
-        PermitUsageAnswerUpdater $permitUsageAnswerUpdater,
-        CabotageAnswerUpdater $cabotageAnswerUpdater
+        GenericAnswerUpdater $genericAnswerUpdater,
+        ApplicationPathAnswersUpdaterProvider $applicationPathAnswersUpdaterProvider
     ) {
-        $this->permitUsageAnswerUpdater = $permitUsageAnswerUpdater;
-        $this->cabotageAnswerUpdater = $cabotageAnswerUpdater;
+        $this->genericAnswerUpdater = $genericAnswerUpdater;
+        $this->applicationPathAnswersUpdaterProvider = $applicationPathAnswersUpdaterProvider;
     }
 
     /**
@@ -40,8 +41,21 @@ class OtherAnswersUpdater
         array $bilateralRequired,
         $permitUsageSelection
     ) {
-        $this->permitUsageAnswerUpdater->update($irhpPermitApplication, $permitUsageSelection);
-        $this->cabotageAnswerUpdater->update($irhpPermitApplication, $bilateralRequired);
+        $this->genericAnswerUpdater->update(
+            $irhpPermitApplication,
+            Question::QUESTION_ID_BILATERAL_PERMIT_USAGE,
+            $permitUsageSelection
+        );
+
+        $applicationPathGroupId = $irhpPermitApplication->getActiveApplicationPath()
+            ->getApplicationPathGroup()
+            ->getId();
+
+        $applicationPathAnswersUpdater = $this->applicationPathAnswersUpdaterProvider
+            ->getByApplicationPathGroupId($applicationPathGroupId);
+
+        $applicationPathAnswersUpdater->update($irhpPermitApplication, $bilateralRequired);
+
         $irhpPermitApplication->updateCheckAnswers();
     }
 }

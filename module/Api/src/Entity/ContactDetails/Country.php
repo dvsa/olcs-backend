@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Country extends AbstractCountry
 {
     const ID_AUSTRIA = 'AT';
+    const ID_BELARUS = 'BY';
     const ID_BELGIUM = 'BE';
     const ID_BULGARIA = 'BG';
     const ID_CROATIA = 'HR';
@@ -27,12 +28,14 @@ class Country extends AbstractCountry
     const ID_ESTONIA = 'EE';
     const ID_FINLAND = 'FI';
     const ID_FRANCE = 'FR';
+    const ID_GEORGIA = 'GE';
     const ID_GERMANY = 'DE';
     const ID_GREECE = 'GR';
     const ID_HUNGARY = 'HU';
     const ID_ICELAND = 'IS';
     const ID_IRELAND = 'IE';
     const ID_ITALY = 'IT';
+    const ID_KAZAKHSTAN = 'KZ';
     const ID_LATVIA = 'LV';
     const ID_LIECHTENSTEIN = 'LI';
     const ID_LITHUANIA = 'LT';
@@ -43,8 +46,12 @@ class Country extends AbstractCountry
     const ID_POLAND = 'PL';
     const ID_PORTUGAL = 'PT';
     const ID_ROMANIA = 'RO';
+    const ID_RUSSIA = 'RU';
     const ID_SLOVAKIA = 'SK';
     const ID_SLOVENIA = 'SI';
     const ID_SPAIN = 'ES';
     const ID_SWEDEN = 'SE';
+    const ID_TUNISIA = 'TN';
+    const ID_TURKEY = 'TR';
+    const ID_UKRAINE = 'UA';
 }

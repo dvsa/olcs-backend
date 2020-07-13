@@ -70,7 +70,7 @@ class StandardAndCabotageAnswerSaverTest extends MockeryTestCase
             ->andReturn('N');
 
         $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->qaContext, Answer::BILATERAL_STANDARD_ONLY, Question::QUESTION_TYPE_STRING)
+            ->with($this->qaContext, Answer::BILATERAL_STANDARD_ONLY)
             ->once()
             ->globally()
             ->ordered();
@@ -92,7 +92,7 @@ class StandardAndCabotageAnswerSaverTest extends MockeryTestCase
             ->andReturn($answerValue);
 
         $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->qaContext, $answerValue, Question::QUESTION_TYPE_STRING)
+            ->with($this->qaContext, $answerValue)
             ->once()
             ->globally()
             ->ordered();
