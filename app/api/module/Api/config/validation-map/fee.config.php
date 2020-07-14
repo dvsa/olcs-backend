@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
 return [
     CommandHandler\Fee\CreateOverpaymentFee::class => IsInternalUser::class,
     CommandHandler\Fee\ResetFees::class => IsInternalUser::class,
-    QueryHandler\Fee\IrhpBilateralByCountry::class => NotIsAnonymousUser::class,
     QueryHandler\Fee\Fee::class => CanAccessFeeWithId::class,
     QueryHandler\Fee\InterimRefunds::class => IsInternalUser::class,
     CommandHandler\Fee\UpdateFeeStatus::class => IsSystemUser::class
