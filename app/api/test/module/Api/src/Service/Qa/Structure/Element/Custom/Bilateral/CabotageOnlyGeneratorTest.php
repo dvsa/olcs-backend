@@ -55,7 +55,7 @@ class CabotageOnlyGeneratorTest extends MockeryTestCase
     public function dpGenerate()
     {
         return [
-            ['string_value', true],
+            ['string_value', 'Y'],
             [null, null],
         ];
     }
