@@ -32,7 +32,7 @@ class ThirdCountryAnswerSaverTest extends MockeryTestCase
 
     private $thirdCountryAnswerSaver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->postData = [
             'key1' => 'value1',

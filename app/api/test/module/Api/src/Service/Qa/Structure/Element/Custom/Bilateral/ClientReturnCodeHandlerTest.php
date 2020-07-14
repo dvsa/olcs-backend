@@ -26,7 +26,7 @@ class ClientReturnCodeHandlerTest extends MockeryTestCase
 
     private $clientReturnCodeHandler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 
