@@ -7,7 +7,7 @@ class CabotageOnlyFactory
     /**
      * Create and return a CabotageOnly instance
      *
-     * @param bool|null $yesNo
+     * @param string|null $yesNo
      * @param string $countryName
      *
      * @return CabotageOnly

@@ -2,23 +2,21 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
-use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyAnswerSaver;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\ThirdCountryAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\ClientReturnCodeHandler;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * CabotageOnlyAnswerSaverTest
+ * ThirdCountryAnswerSaverTest
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class CabotageOnlyAnswerSaverTest extends MockeryTestCase
+class ThirdCountryAnswerSaverTest extends MockeryTestCase
 {
     private $postData;
 
@@ -32,9 +30,9 @@ class CabotageOnlyAnswerSaverTest extends MockeryTestCase
 
     private $clientReturnCodeHandler;
 
-    private $cabotageOnlyAnswerSaver;
+    private $thirdCountryAnswerSaver;
 
-    public function setUp(): void
+    public function setUp()
     {
         $this->postData = [
             'key1' => 'value1',
@@ -54,7 +52,7 @@ class CabotageOnlyAnswerSaverTest extends MockeryTestCase
 
         $this->clientReturnCodeHandler = m::mock(ClientReturnCodeHandler::class);
 
-        $this->cabotageOnlyAnswerSaver = new CabotageOnlyAnswerSaver(
+        $this->thirdCountryAnswerSaver = new ThirdCountryAnswerSaver(
             $this->genericAnswerFetcher,
             $this->genericAnswerWriter,
             $this->clientReturnCodeHandler
@@ -68,11 +66,11 @@ class CabotageOnlyAnswerSaverTest extends MockeryTestCase
             ->andReturn('Y');
 
         $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->qaContext, Answer::BILATERAL_CABOTAGE_ONLY, Question::QUESTION_TYPE_STRING)
+            ->with($this->qaContext, 'qanda.bilaterals.third-country.yes-answer')
             ->once();
 
         $this->assertNull(
-            $this->cabotageOnlyAnswerSaver->save($this->qaContext, $this->postData)
+            $this->thirdCountryAnswerSaver->save($this->qaContext, $this->postData)
         );
     }
 
@@ -91,7 +89,7 @@ class CabotageOnlyAnswerSaverTest extends MockeryTestCase
 
         $this->assertEquals(
             $clientReturnCode,
-            $this->cabotageOnlyAnswerSaver->save($this->qaContext, $this->postData)
+            $this->thirdCountryAnswerSaver->save($this->qaContext, $this->postData)
         );
     }
 }

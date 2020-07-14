@@ -77,6 +77,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyFactory::class,
             'QaBilateralStandardAndCabotageElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageFactory::class,
+            'QaBilateralThirdCountryElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\ThirdCountryFactory::class,
             'QaBilateralNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsFactory::class,
             'QaBilateralNoOfPermitsTextFactory' =>
@@ -278,7 +280,6 @@ return [
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerClearerFactory::class,
             'QaEcmtRemovalNoOfPermitsFeeCreator' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\FeeCreatorFactory::class,
-            'QaEcmtShortTermNoOfPermitsFormControlStrategy' => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
             'QaEcmtShortTermNoOfPermitsAnswerFetcher' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerFetcherFactory::class,
             'QaEcmtShortTermNoOfPermitsAnswerSaver' =>
@@ -334,8 +335,14 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageGeneratorFactory::class,
             'QaBilateralStandardAndCabotageAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageAnswerSaverFactory::class,
+            'QaBilateralThirdCountryElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\ThirdCountryGeneratorFactory::class,
+            'QaBilateralThirdCountryAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\ThirdCountryAnswerSaverFactory::class,
             'QaBilateralNoOfPermitsElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsGeneratorFactory::class,
+            'QaBilateralClientReturnCodeHandler' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\ClientReturnCodeHandlerFactory::class,
             'QaBilateralNoOfPermitsAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSaverFactory::class,
             'QaBilateralNoOfPermitsUpdater' =>
@@ -734,6 +741,8 @@ return [
                 QaStrategy\BilateralStandardAndCabotageFormControlStrategyFactory::class,
             Question::FORM_CONTROL_BILATERAL_NO_OF_PERMITS =>
                 QaStrategy\BilateralNoOfPermitsFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_BILATERAL_THIRD_COUNTRY =>
+                QaStrategy\BilateralThirdCountryFormControlStrategyFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
