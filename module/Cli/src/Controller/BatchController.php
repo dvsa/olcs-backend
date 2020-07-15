@@ -9,7 +9,6 @@ use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Enqueue;
 use Dvsa\Olcs\Cli\Domain\Command\PopulateLastLoginFromOpenAm;
 use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
-use Dvsa\Olcs\Cli\Domain\Query\DataRetention\TableChecks;
 use Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile;
 use Dvsa\Olcs\Transfer\Command as TransferCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -65,10 +64,30 @@ class BatchController extends AbstractCliController
             return $this->handleExitStatus($this->handleCommand([Command\DataRetention\Populate::create([])]));
         }
 
+        $limit = $this->params('limit');
         if ($this->params('delete')) {
-            $limit = $this->params('limit');
             $dto = Command\DataRetention\DeleteEntities::create(['limit' => $limit]);
             return $this->handleExitStatus($this->handleCommand([$dto]));
+        }
+
+        if ($this->params('precheck')) {
+            if (!is_numeric($limit) || $limit < 1 || $limit != round($limit)) {
+                $consoleModel = new ConsoleModel();
+                $consoleModel->setResult("\nYou must specify a positive integer limit with --limit=x\n\n");
+                $consoleModel->setErrorLevel(1);
+                return($consoleModel);
+            }
+            return $this->handleExitStatus($this->handleCommand([Command\DataRetention\Precheck::create(['limit' => $limit])]));
+        }
+
+        if ($this->params('postcheck')) {
+            $result = $this->handleQuery(Query\DataRetention\Postcheck::create([]));
+
+            $consoleModel = new ConsoleModel();
+            $consoleModel->setResult(json_encode($result, JSON_PRETTY_PRINT));
+
+            $consoleModel->setErrorLevel(0);
+            return $consoleModel;
         }
     }
 
@@ -532,32 +551,6 @@ class BatchController extends AbstractCliController
                 $this->handleCommand([CliCommand\Permits\WithdrawUnpaidIrhp::create([])])
             );
         }
-    }
-
-    /**
-     * Execute query handler to check table rows pre/post DR jobs
-     *
-     * @return ConsoleModel
-     */
-    public function drTableCheckAction()
-    {
-        $isPostCheck = $this->params('postcheck') ? true : false;
-        $queryParams = ['isPostCheck' => $isPostCheck];
-
-        $result = $this->handleQuery(TableChecks::create($queryParams));
-
-        $consoleModel = new ConsoleModel();
-        $consoleModel->setResult(json_encode($result, JSON_PRETTY_PRINT));
-
-        $consoleModel->setErrorLevel(0);
-
-        if ($this->params('postcheck')
-            && (is_array($result['tableRowCountCheck']) || is_array($result['undeletedRecordsCheck']))
-        ) {
-            $consoleModel->setErrorLevel(1);
-        }
-
-        return $consoleModel;
     }
 
     /**

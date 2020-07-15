@@ -592,6 +592,7 @@ return [
     TransferQuery\DataRetention\RuleAdmin::class => QueryHandler\DataRetention\RuleAdmin::class,
     TransferQuery\DataRetention\Records::class => QueryHandler\DataRetention\Records::class,
     TransferQuery\DataRetention\GetProcessedList::class => QueryHandler\DataRetention\GetProcessedList::class,
+    Query\DataRetention\Postcheck::class => QueryHandler\DataRetention\Postcheck::class,
 
     // Sla Target Dates
     TransferQuery\System\SlaTargetDate::class => QueryHandler\System\SlaTargetDate::class,
@@ -700,5 +701,4 @@ return [
     TransferQuery\TranslationKey\GetList::class => QueryHandler\TranslationKey\GetList::class,
     TransferQuery\Language\GetList::class => QueryHandler\Language\GetList::class,
 
-    QueryCli\DataRetention\TableChecks::class => QueryHandlerCli\DataRetention\TableChecks::class,
 ];
