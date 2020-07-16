@@ -2,19 +2,18 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
-use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyAnswerSaver;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\EmissionsStandardsAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\CountryDeletingAnswerSaver;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * CabotageOnlyAnswerSaverTest
+ * EmissionsStandardsAnswerSaverTest
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class CabotageOnlyAnswerSaverTest extends MockeryTestCase
+class EmissionsStandardsAnswerSaverTest extends MockeryTestCase
 {
     public function testSave()
     {
@@ -27,10 +26,10 @@ class CabotageOnlyAnswerSaverTest extends MockeryTestCase
 
         $countryDeletingAnswerSaver = m::mock(CountryDeletingAnswerSaver::class);
         $countryDeletingAnswerSaver->shouldReceive('save')
-            ->with($qaContext, $postData, Answer::BILATERAL_CABOTAGE_ONLY)
+            ->with($qaContext, $postData, 'qanda.bilaterals.emissions-standards.euro3-or-euro4')
             ->once();
 
-        $cabotageOnlyAnswerSaver = new CabotageOnlyAnswerSaver($countryDeletingAnswerSaver);
-        $cabotageOnlyAnswerSaver->save($qaContext, $postData);
+        $emissionsStandardsAnswerSaver = new EmissionsStandardsAnswerSaver($countryDeletingAnswerSaver);
+        $emissionsStandardsAnswerSaver->save($qaContext, $postData);
     }
 }
