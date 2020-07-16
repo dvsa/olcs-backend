@@ -5,19 +5,21 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ThirdCountryAnswerSaverFactory implements FactoryInterface
+class CountryDeletingAnswerSaverFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return ThirdCountryAnswerSaver
+     * @return CountryDeletingAnswerSaver
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new ThirdCountryAnswerSaver(
-            $serviceLocator->get('QaBilateralCountryDeletingAnswerSaver')
+        return new CountryDeletingAnswerSaver(
+            $serviceLocator->get('QaGenericAnswerFetcher'),
+            $serviceLocator->get('QaGenericAnswerWriter'),
+            $serviceLocator->get('QaBilateralClientReturnCodeHandler')
         );
     }
 }
