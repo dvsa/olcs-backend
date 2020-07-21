@@ -759,61 +759,109 @@ class OrganisationEntityTest extends EntityTester
         $this->assertNull($organisation->getAllowedOperatorLocation());
     }
 
-    public function testIsMlh()
+    /**
+     * When there is one valid licence and no new apps, we can exit early, this is not MLH
+     */
+    public function testIsMlhOneValidAndNoNewLicences()
     {
-        $mockValidLicence = m::mock(LicenceEntity::class)
-            ->shouldReceive('getStatus')
-            ->andReturn(new RefData(LicenceEntity::LICENCE_STATUS_VALID))
-            ->shouldReceive('getGoodsOrPsv')
-            ->andReturn(new RefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE))
-            ->getMock();
-        $mockLicences = new ArrayCollection();
-        $mockLicences->add($mockValidLicence);
+        $organisation = new Entity();
+        $mockLicence1 = m::mock(LicenceEntity::class);
+        $mockLicence1->expects('getStatus')->withNoArgs()->times(2)->andReturn(LicenceEntity::LICENCE_STATUS_VALID);
+        $mockLicence1->expects('getGoodsOrPsv')->withNoArgs()->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $mockLicence2 = m::mock(LicenceEntity::class);
+        $mockLicence2->expects('getStatus')->withNoArgs()->times(2)->andReturn(LicenceEntity::LICENCE_STATUS_CURTAILED);
+        $mockLicence2->expects('getGoodsOrPsv')->withNoArgs()->andReturn(LicenceEntity::LICENCE_CATEGORY_PSV);
 
-        $mockNewApplication = m::mock(ApplicationEntity::class)
-            ->shouldReceive('isGoods')
-            ->andReturn(true)
-            ->once()
-            ->getMock();
-        $mockNewApplications = new ArrayCollection();
-        $mockNewApplications->add($mockNewApplication);
+        $organisation->setLicences(new ArrayCollection([$mockLicence1, $mockLicence2]));
 
-        $mockOutstandingLicence = m::mock(LicenceEntity::class)
-            ->shouldReceive('getStatus')
-            ->andReturn(new RefData(LicenceEntity::LICENCE_STATUS_GRANTED))
-            ->shouldReceive('getApplications')
-            ->andReturn($mockNewApplications)
-            ->once()
-            ->getMock();
-        $mockLicences->add($mockOutstandingLicence);
+        $this->assertFalse($organisation->isMlh());
+    }
 
-        $organisation = m::mock(Entity::class)->makePartial();
-        $organisation->shouldReceive('getLicences')
-            ->andReturn($mockLicences)
-            ->twice()
-            ->getMock();
+    /**
+     * When there are no valid licences and one new app, we can exit early, this is not MLH
+     */
+    public function testIsMlhNoValidAndOneNewLicence()
+    {
+        $organisation = new Entity();
+        $mockLicence1 = m::mock(LicenceEntity::class);
+        $mockLicence1->expects('getStatus')->withNoArgs()->times(2)->andReturn(LicenceEntity::LICENCE_STATUS_GRANTED);
+        $mockLicence2 = m::mock(LicenceEntity::class);
+        $mockLicence2->expects('getStatus')->withNoArgs()->times(2)->andReturn(LicenceEntity::LICENCE_STATUS_CURTAILED);
+        $mockLicence2->expects('getGoodsOrPsv')->withNoArgs()->andReturn(LicenceEntity::LICENCE_CATEGORY_PSV);
+
+        $organisation->setLicences(new ArrayCollection([$mockLicence1, $mockLicence2]));
+
+        $this->assertFalse($organisation->isMlh());
+    }
+
+    /**
+     * There are no new apps and no existing valid licences, this is not MLH
+     */
+    public function testIsMlhNoValidNoNewLicences()
+    {
+        $organisation = new Entity();
+        $organisation->setLicences(new ArrayCollection());
+        $this->assertFalse($organisation->isMlh());
+    }
+
+    /**
+     * When there are two valid licences, we can exit early, this is MLH without needing additional checks
+     */
+    public function testIsMlhTwoValidLicences()
+    {
+        $organisation = new Entity();
+        $mockValidLicence1 = m::mock(LicenceEntity::class);
+        $mockValidLicence1->expects('getStatus')->withNoArgs()->andReturn(LicenceEntity::LICENCE_STATUS_VALID);
+        $mockValidLicence1->expects('getGoodsOrPsv')
+            ->withNoArgs()
+            ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $mockValidLicence2 = m::mock(LicenceEntity::class);
+        $mockValidLicence2->expects('getStatus')->withNoArgs()->andReturn(LicenceEntity::LICENCE_STATUS_CURTAILED);
+        $mockValidLicence2->expects('getGoodsOrPsv')
+            ->withNoArgs()
+            ->andReturn(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
+
+        $organisation->setLicences(new ArrayCollection([$mockValidLicence1, $mockValidLicence2]));
 
         $this->assertTrue($organisation->isMlh());
     }
 
-    public function testNonMlh()
+    /**
+     * When there are no valid licences and three new apps, the last two are goods, this is MLH
+     */
+    public function testIsMlhNoValidOneNewInvalidLicenceTwoNewValidLicences()
     {
-        $mockValidLicence = m::mock(LicenceEntity::class)
-            ->shouldReceive('getStatus')
-            ->andReturn(new RefData(LicenceEntity::LICENCE_STATUS_VALID))
-            ->shouldReceive('getGoodsOrPsv')
-            ->andReturn(new RefData(LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE))
-            ->getMock();
-        $mockLicences = new ArrayCollection();
-        $mockLicences->add($mockValidLicence);
+        $organisation = new Entity();
 
-        $organisation = m::mock(Entity::class)->makePartial();
-        $organisation->shouldReceive('getLicences')
-            ->andReturn($mockLicences)
-            ->twice()
-            ->getMock();
+        $psvApp = m::mock(ApplicationEntity::class);
+        $psvApp->expects('isGoods')->withNoArgs()->andReturn(false);
+        $goodsApp1 = m::mock(ApplicationEntity::class);
+        $goodsApp1->expects('isGoods')->withNoArgs()->andReturn(true);
+        $goodsApp2 = m::mock(ApplicationEntity::class);
+        $goodsApp2->expects('isGoods')->withNoArgs()->andReturn(true);
 
-        $this->assertFalse($organisation->isMlh());
+        $mockLicence1 = m::mock(LicenceEntity::class);
+        $mockLicence1->expects('getStatus')->withNoArgs()->times(2)->andReturn(LicenceEntity::LICENCE_STATUS_GRANTED);
+        $mockLicence1->expects('getApplications')->withNoArgs()->andReturn(new ArrayCollection([$psvApp]));
+
+        $mockLicence2 = m::mock(LicenceEntity::class);
+        $mockLicence2->expects('getStatus')->withNoArgs()->times(2)->andReturn(LicenceEntity::LICENCE_STATUS_GRANTED);
+        $mockLicence2->expects('getApplications')->withNoArgs()->andReturn(new ArrayCollection());
+
+        $mockLicence3 = m::mock(LicenceEntity::class);
+        $mockLicence3->expects('getStatus')->withNoArgs()->times(2)->andReturn(LicenceEntity::LICENCE_STATUS_GRANTED);
+        $mockLicence3->expects('getApplications')->withNoArgs()->andReturn(new ArrayCollection([$goodsApp1]));
+
+        $mockLicence4 = m::mock(LicenceEntity::class);
+        $mockLicence4->expects('getStatus')
+            ->withNoArgs()
+            ->times(2)
+            ->andReturn(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION);
+        $mockLicence4->expects('getApplications')->withNoArgs()->andReturn(new ArrayCollection([$goodsApp2]));
+
+        $organisation->setLicences(new ArrayCollection([$mockLicence1, $mockLicence2, $mockLicence3, $mockLicence4]));
+
+        $this->assertTrue($organisation->isMlh());
     }
 
     public function testHasUnlicencedLicences()
