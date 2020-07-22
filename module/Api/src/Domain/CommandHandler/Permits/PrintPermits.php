@@ -11,9 +11,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -24,12 +21,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 final class PrintPermits extends AbstractCommandHandler implements
     AuthAwareInterface,
     ConfigAwareInterface,
-    TransactionedInterface,
-    ToggleRequiredInterface
+    TransactionedInterface
 {
-    use AuthAwareTrait, ConfigAwareTrait, ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
+    use AuthAwareTrait, ConfigAwareTrait;
 
     protected $repoServiceName = 'Queue';
 

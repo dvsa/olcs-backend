@@ -11,9 +11,6 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulSectorPermitApplications;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulRemainingPermitApplications;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplications;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\InitialiseScope;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
@@ -27,13 +24,9 @@ use Olcs\Logging\Log\Logger;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterface
+class RunScoring extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
     protected $repoServiceName = 'IrhpPermitStock';
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     /** @var int */
     private $stockId;

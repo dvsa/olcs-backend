@@ -5,9 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
@@ -18,12 +15,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class CreateDefaultIrhpPermitApplications extends AbstractCommandHandler implements ToggleRequiredInterface
+class CreateDefaultIrhpPermitApplications extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['IrhpPermitApplication', 'IrhpPermitWindow'];

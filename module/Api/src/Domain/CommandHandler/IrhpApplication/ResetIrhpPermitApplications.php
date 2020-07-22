@@ -5,9 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication\Delete as DeleteIrhpPermitApplicationCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
@@ -20,12 +17,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class ResetIrhpPermitApplications extends AbstractCommandHandler implements ToggleRequiredInterface
+class ResetIrhpPermitApplications extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['IrhpPermitApplication'];

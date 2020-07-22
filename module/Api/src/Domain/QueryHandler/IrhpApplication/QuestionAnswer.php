@@ -4,21 +4,15 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\QuestionAnswer as QuestionAnswerQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Retrieve a question/answer data for a given IRHP application
  */
-final class QuestionAnswer extends AbstractQueryHandler implements ToggleRequiredInterface
+final class QuestionAnswer extends AbstractQueryHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
 
     /**

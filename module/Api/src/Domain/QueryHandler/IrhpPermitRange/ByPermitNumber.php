@@ -8,17 +8,11 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitRange;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Query\IrhpPermitRange\ByPermitNumber as ByPermitNumberQry;
 
-class ByPermitNumber extends AbstractQueryHandler implements ToggleRequiredInterface
+class ByPermitNumber extends AbstractQueryHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermitRange';
 
     /**

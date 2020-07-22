@@ -6,24 +6,16 @@ use DateTime;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\CountryGenerator;
 use Dvsa\Olcs\Api\Domain\Query\IrhpApplication\BilateralMetadata as BilateralMetadataQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Bilateral metadata
  */
-class BilateralMetadata extends AbstractQueryHandler implements ToggleRequiredInterface
+class BilateralMetadata extends AbstractQueryHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['Country'];

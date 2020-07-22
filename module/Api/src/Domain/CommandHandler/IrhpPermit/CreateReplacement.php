@@ -7,8 +7,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Create an IRHP Permit
@@ -17,9 +15,6 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
  */
 final class CreateReplacement extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermit';
     protected $extraRepos = ['IrhpPermitRange'];
 

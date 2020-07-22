@@ -4,23 +4,15 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\FeePerPermit as FeePerPermitQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Fee per permit
  */
-class FeePerPermit extends AbstractQueryHandler implements ToggleRequiredInterface
+class FeePerPermit extends AbstractQueryHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['FeeType'];

@@ -3,10 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Zend\I18n\Translator\Translator;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -16,12 +13,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler implements ToggleRequiredInterface
+class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler
 {
-    use ToggleAwareTrait;
     use PermitEmailTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $template = 'ecmt-short-term-app-successful';
     protected $subject = 'email.ecmt.short.term.response.subject';

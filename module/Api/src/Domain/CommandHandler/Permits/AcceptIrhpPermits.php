@@ -6,27 +6,19 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits as AcceptIrhpPermitsCmd;
 
 /**
  * Accept a granted/awarded IRHP application
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-final class AcceptIrhpPermits extends AbstractCommandHandler implements ToggleRequiredInterface
+final class AcceptIrhpPermits extends AbstractCommandHandler
 {
     use QueueAwareTrait;
-    use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
 
     /**

@@ -4,24 +4,16 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites as CheckAcceptScoringPrerequisitesQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Check accept scoring prerequisites
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class CheckAcceptScoringPrerequisites extends AbstractQueryHandler implements ToggleRequiredInterface
+class CheckAcceptScoringPrerequisites extends AbstractQueryHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpPermitRange';
 
     protected $extraRepos = ['IrhpPermit', 'IrhpApplication'];

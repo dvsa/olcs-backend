@@ -3,21 +3,16 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Send ECMT short term app submitted email
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class SendEcmtShortTermAppSubmitted extends AbstractEcmtShortTermEmailHandler implements ToggleRequiredInterface
+class SendEcmtShortTermAppSubmitted extends AbstractEcmtShortTermEmailHandler
 {
-    use ToggleAwareTrait;
     use PermitEmailTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $template = 'ecmt-short-term-app-submitted';
     protected $subject = 'email.ecmt.short.term.response.subject';

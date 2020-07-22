@@ -3,22 +3,14 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\Query\Permits\DeviationData as DeviationDataQuery;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Initialise Scope
  */
-class InitialiseScope extends ScoringCommandHandler implements ToggleRequiredInterface
+class InitialiseScope extends ScoringCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpCandidatePermit';
 
     protected $extraRepos = ['IrhpApplication'];

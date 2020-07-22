@@ -7,11 +7,8 @@ use Dvsa\Olcs\Api\Domain\Query\Permits\QueueRunScoringPermitted as QueueRunScori
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -19,15 +16,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class QueueRunScoring extends AbstractCommandHandler implements ToggleRequiredInterface
+class QueueRunScoring extends AbstractCommandHandler
 {
     use QueueAwareTrait;
 
-    use ToggleAwareTrait;
-
     protected $repoServiceName = 'IrhpPermitStock';
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     /**
      * Handle command
