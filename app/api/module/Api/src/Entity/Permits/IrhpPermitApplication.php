@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
@@ -52,28 +53,46 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         self::BILATERAL_CABOTAGE_REQUIRED,
     ];
 
-    const BILATERAL_APPLICATION_FEE_KEY = 'BILATERAL_APPLICATION_FEE_KEY';
-    const BILATERAL_ISSUE_FEE_KEY = 'BILATERAL_ISSUE_FEE_KEY';
-
     const BILATERAL_FEE_PRODUCT_REFS_TYPE_1 = [
-        self::BILATERAL_APPLICATION_FEE_KEY => FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
-        self::BILATERAL_ISSUE_FEE_KEY => FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF,
+        FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
+        FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF,
     ];
 
     const BILATERAL_FEE_PRODUCT_REFS_TYPE_2 = [
-        self::BILATERAL_APPLICATION_FEE_KEY => FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF,
-        self::BILATERAL_ISSUE_FEE_KEY => FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF,
+        FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF,
+        FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF,
+    ];
+
+    const BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD = [
+        RefData::JOURNEY_SINGLE => [
+            self::BILATERAL_STANDARD_REQUIRED => [
+                FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU,
+            ]
+        ]
     ];
 
     const BILATERAL_FEE_PRODUCT_REFS = [
-        RefData::JOURNEY_SINGLE => [
-            self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
-            self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+        Country::ID_NORWAY => [
+            RefData::JOURNEY_SINGLE => [
+                self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+                self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+            ],
+            RefData::JOURNEY_MULTIPLE => [
+                self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_1,
+                self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+            ],
         ],
-        RefData::JOURNEY_MULTIPLE => [
-            self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_1,
-            self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
-        ],
+        Country::ID_BELARUS => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
+        Country::ID_GEORGIA => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
+        Country::ID_RUSSIA => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
+        Country::ID_TUNISIA => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
+        Country::ID_TURKEY => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
+        Country::ID_UKRAINE => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
+        Country::ID_KAZAKHSTAN => [
+            RefData::JOURNEY_SINGLE => [
+                self::BILATERAL_STANDARD_REQUIRED => []
+            ]
+        ]
     ];
 
     const MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
@@ -526,24 +545,12 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     public function getAnswer(ApplicationStep $applicationStep)
     {
         $question = $applicationStep->getQuestion();
-        $applicationPathLockedOn = $this->getApplicationPathLockedOn();
 
         if ($question->isCustom()) {
-            $formControlType = $question->getFormControlType();
-            switch ($formControlType) {
-                case Question::FORM_CONTROL_BILATERAL_CABOTAGE_ONLY:
-                case Question::FORM_CONTROL_BILATERAL_CABOTAGE_STD_AND_CABOTAGE:
-                    return $question->getStandardAnswer($this, $applicationPathLockedOn);
-            }
-
-            throw new RuntimeException(
-                sprintf(
-                    'Unable to retrieve answer status for form control type %s',
-                    $formControlType
-                )
-            );
+            throw new RuntimeException('Unable to retrieve answer status for custom form control types');
         }
 
+        $applicationPathLockedOn = $this->getApplicationPathLockedOn();
         return $question->getStandardAnswer($this, $applicationPathLockedOn);
     }
 
@@ -726,25 +733,19 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
 
         $bilateralRequired = $this->getBilateralRequired();
-        $permitUsageSelection = $this->getBilateralPermitUsageSelection();
+        $countryId = $this->irhpPermitWindow->getIrhpPermitStock()->getCountry()->getId();
 
         $productRefsAndQuantities = [];
         foreach ($bilateralRequired as $standardOrCabotage => $quantity) {
             if ($quantity) {
-                $productReferences = self::BILATERAL_FEE_PRODUCT_REFS[$permitUsageSelection][$standardOrCabotage];
+                $productReferences = $this->getBilateralFeeProductReferences($countryId, $standardOrCabotage);
 
-                $applicationFeeProductReference = $productReferences[self::BILATERAL_APPLICATION_FEE_KEY];
-                if (isset($productRefsAndQuantities[$applicationFeeProductReference])) {
-                    $productRefsAndQuantities[$applicationFeeProductReference] += $quantity;
-                } else {
-                    $productRefsAndQuantities[$applicationFeeProductReference] = $quantity;
-                }
-
-                $issueFeeProductReference = $productReferences[self::BILATERAL_ISSUE_FEE_KEY];
-                if (isset($productRefsAndQuantities[$issueFeeProductReference])) {
-                    $productRefsAndQuantities[$issueFeeProductReference] += $quantity;
-                } else {
-                    $productRefsAndQuantities[$issueFeeProductReference] = $quantity;
+                foreach ($productReferences as $productReference) {
+                    if (isset($productRefsAndQuantities[$productReference])) {
+                        $productRefsAndQuantities[$productReference] += $quantity;
+                    } else {
+                        $productRefsAndQuantities[$productReference] = $quantity;
+                    }
                 }
             }
         }
@@ -753,38 +754,55 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
-     * Get the bilateral fee product reference in the context of this application
+     * Get an array of bilateral fee product references in the context of this application for the specified country
+     * and standard/cabotage value
      *
+     * @param string $countryId
      * @param string $standardOrCabotage
-     * @param string $feeTypeKey
      *
-     * @return string
+     * @return array
      *
      * @throws RuntimeException
      */
-    public function getBilateralFeeProductReference($standardOrCabotage, $feeTypeKey)
+    public function getBilateralFeeProductReferences($countryId, $standardOrCabotage)
     {
         $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
 
         $permitUsage = $this->getBilateralPermitUsageSelection();
-        return self::BILATERAL_FEE_PRODUCT_REFS[$permitUsage][$standardOrCabotage][$feeTypeKey];
+
+        if (!isset(self::BILATERAL_FEE_PRODUCT_REFS[$countryId][$permitUsage][$standardOrCabotage])) {
+            $message = sprintf(
+                'No bilateral fee configuration found: %s/%s/%s',
+                $countryId,
+                $permitUsage,
+                $standardOrCabotage
+            );
+
+            throw new RuntimeException($message);
+        }
+
+        return self::BILATERAL_FEE_PRODUCT_REFS[$countryId][$permitUsage][$standardOrCabotage];
     }
 
     /**
      * Get the bilateral fee per permit
      *
-     * @param FeeType $applicationFeeType
-     * @param FeeType $issueFeeType
+     * @param array $feeTypes
      *
      * @return int
      *
      * @throws RuntimeException
      */
-    public function getBilateralFeePerPermit(FeeType $applicationFeeType, FeeType $issueFeeType)
+    public function getBilateralFeePerPermit(array $feeTypes)
     {
         $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
 
-        return $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
+        $feePerPermit = 0;
+        foreach ($feeTypes as $feeType) {
+            $feePerPermit += $feeType->getFixedValue();
+        }
+
+        return $feePerPermit;
     }
 
     /**

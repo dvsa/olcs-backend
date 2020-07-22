@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Service\Permits\FeeBreakdown;
 
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -45,6 +44,7 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
 
         foreach ($irhpPermitApplications as $irhpPermitApplication) {
             $permitUsage = $irhpPermitApplication->getBilateralPermitUsageSelection();
+
             $countryName = $irhpPermitApplication->getIrhpPermitWindow()
                 ->getIrhpPermitStock()
                 ->getCountry()
@@ -52,19 +52,7 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
 
             $bilateralRequired = $irhpPermitApplication->getFilteredBilateralRequired();
             foreach ($bilateralRequired as $standardOrCabotage => $quantity) {
-                $applicationFeeType = $this->getFeeType(
-                    $irhpPermitApplication,
-                    $standardOrCabotage,
-                    IrhpPermitApplication::BILATERAL_APPLICATION_FEE_KEY
-                );
-
-                $issueFeeType = $this->getFeeType(
-                    $irhpPermitApplication,
-                    $standardOrCabotage,
-                    IrhpPermitApplication::BILATERAL_ISSUE_FEE_KEY
-                );
-
-                $feePerPermit = $irhpPermitApplication->getBilateralFeePerPermit($applicationFeeType, $issueFeeType);
+                $feePerPermit = $this->getFeePerPermit($irhpPermitApplication, $standardOrCabotage);
                 $total = $feePerPermit * $quantity;
 
                 $rows[] = [
@@ -80,19 +68,28 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
     }
 
     /**
-     * Get the fee type associated with the specified parameters
+     * Get the fee amount per permit
      *
      * @param IrhpPermitApplication $irhpPermitApplication
      * @param string $standardOrCabotage
-     * @param string $feeTypeKey
      *
-     * @return FeeType
+     * @return int
      */
-    private function getFeeType(IrhpPermitApplication $irhpPermitApplication, $standardOrCabotage, $feeTypeKey)
+    public function getFeePerPermit(IrhpPermitApplication $irhpPermitApplication, $standardOrCabotage)
     {
-        $productReference = $irhpPermitApplication->getBilateralFeeProductReference($standardOrCabotage, $feeTypeKey);
+        $countryId = $irhpPermitApplication->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getCountry()
+            ->getId();
 
-        return $this->feeTypeRepo->getLatestByProductReference($productReference);
+        $feeTypes = [];
+        $productReferences = $irhpPermitApplication->getBilateralFeeProductReferences($countryId, $standardOrCabotage);
+
+        foreach ($productReferences as $productReference) {
+            $feeTypes[] = $this->feeTypeRepo->getLatestByProductReference($productReference);
+        }
+
+        return $irhpPermitApplication->getBilateralFeePerPermit($feeTypes);
     }
 
     /**
