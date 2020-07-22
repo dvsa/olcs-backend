@@ -5,20 +5,14 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitWindow;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Open Windows by Permit Type
  *
  * @author Andy Newton
  */
-class OpenByType extends AbstractQueryHandler implements ToggleRequiredInterface
+class OpenByType extends AbstractQueryHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitWindow';
     protected $bundle = ['irhpPermitStock' => ['irhpPermitType' => ['name'], 'country']];
 

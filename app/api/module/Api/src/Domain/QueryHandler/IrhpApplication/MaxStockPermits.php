@@ -3,21 +3,14 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\MaxStockPermits as MaxStockPermitsQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Get maximum permitted permits by stock id
  */
-final class MaxStockPermits extends AbstractQueryHandler implements ToggleRequiredInterface
+final class MaxStockPermits extends AbstractQueryHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpPermit';
 
     protected $extraRepos = ['Licence', 'IrhpPermitStock'];

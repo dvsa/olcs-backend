@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitSector;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors as SectorsEntity;
@@ -14,8 +13,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitSectorQuota as IrhpPermitSectorQuotaRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as StockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Sectors as SectorsRepo;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\Permits\Sectors;
 
 /**
@@ -23,11 +20,8 @@ use Dvsa\Olcs\Transfer\Query\Permits\Sectors;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-final class Create extends AbstractCommandHandler implements ToggleRequiredInterface
+final class Create extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitSectorQuota';
     protected $extraRepos = ['IrhpPermitStock', 'Sectors'];
 

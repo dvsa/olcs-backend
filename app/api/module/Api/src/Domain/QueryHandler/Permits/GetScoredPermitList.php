@@ -3,30 +3,24 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Get a list of scored irhp candidate permit records and associated data
  */
-class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequiredInterface
+class GetScoredPermitList extends AbstractQueryHandler
 {
-    use ToggleAwareTrait, CandidatePermitCreationTrait;
+    use CandidatePermitCreationTrait;
 
     const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = [
         TrafficArea::SCOTTISH_TRAFFIC_AREA_CODE,
         TrafficArea::WELSH_TRAFFIC_AREA_CODE,
         TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
     ];
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'Country';
 

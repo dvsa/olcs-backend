@@ -5,9 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitType as IrhpPermitTypeRepo;
 use Dvsa\Olcs\Transfer\Query\Permits\AvailableTypes as AvailableTypesQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\WindowAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use DateTime;
@@ -16,12 +13,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * Available types
  */
-class AvailableTypes extends AbstractQueryHandler implements ToggleRequiredInterface
+class AvailableTypes extends AbstractQueryHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpPermitType';
 
     /** @var WindowAvailabilityChecker */

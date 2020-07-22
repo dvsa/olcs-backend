@@ -5,9 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -15,11 +12,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-final class UpdateCheckAnswers extends AbstractCommandHandler implements ToggleRequiredInterface
+final class UpdateCheckAnswers extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $extraRepos = ['IrhpPermitApplication'];
 

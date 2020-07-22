@@ -2,15 +2,9 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Withdraw as WithdrawCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\IrhpInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\WithdrawUnpaidIrhp as WithdrawUnpaidIrhpCmd;
@@ -21,12 +15,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-final class WithdrawUnpaidIrhp extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
+final class WithdrawUnpaidIrhp extends AbstractCommandHandler implements TransactionedInterface
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpApplication';
 
     /**
