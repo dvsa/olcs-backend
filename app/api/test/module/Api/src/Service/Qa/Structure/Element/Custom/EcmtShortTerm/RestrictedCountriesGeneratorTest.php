@@ -6,7 +6,8 @@ use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Answer as AnswerEntity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
+use Dvsa\Olcs\Api\Service\Permits\Common\PermitTypeConfig;
+use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedPermitTypeConfigProvider;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
@@ -32,6 +33,7 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
         $irhpPermitStockId = 43;
 
         $restrictedCountryIds = ['GR', 'HU', 'IT', 'RU'];
+        $restrictedCountriesQuestionKey = 'restricted.countries.question.key';
 
         $yesNo = m::mock(AnswerEntity::class);
         $yesNo->shouldReceive('getValue')
@@ -107,7 +109,7 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
 
         $restrictedCountriesFactory = m::mock(RestrictedCountriesFactory::class);
         $restrictedCountriesFactory->shouldReceive('create')
-            ->with($yesNoValue)
+            ->with($yesNoValue, $restrictedCountriesQuestionKey)
             ->andReturn($restrictedCountries);
 
         $greeceCountry = m::mock(Country::class);
@@ -142,17 +144,25 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
             ->with($qaContext)
             ->andReturn($yesNo);
 
-        $stockBasedRestrictedCountryIdsProvider = m::mock(StockBasedRestrictedCountryIdsProvider::class);
-        $stockBasedRestrictedCountryIdsProvider->shouldReceive('getIds')
-            ->with($irhpPermitStockId)
+        $permitTypeConfig = m::mock(PermitTypeConfig::class);
+        $permitTypeConfig->shouldReceive('getRestrictedCountriesQuestionKey')
+            ->withNoArgs()
+            ->andReturn($restrictedCountriesQuestionKey);
+        $permitTypeConfig->shouldReceive('getRestrictedCountryIds')
+            ->withNoArgs()
             ->andReturn($restrictedCountryIds);
+
+        $stockBasedPermitTypeConfigProvider = m::mock(StockBasedPermitTypeConfigProvider::class);
+        $stockBasedPermitTypeConfigProvider->shouldReceive('getPermitTypeConfig')
+            ->with($irhpPermitStockId)
+            ->andReturn($permitTypeConfig);
 
         $restrictedCountriesGenerator = new RestrictedCountriesGenerator(
             $restrictedCountriesFactory,
             $restrictedCountryFactory,
             $countryRepo,
             $genericAnswerProvider,
-            $stockBasedRestrictedCountryIdsProvider
+            $stockBasedPermitTypeConfigProvider
         );
 
         $this->assertSame(

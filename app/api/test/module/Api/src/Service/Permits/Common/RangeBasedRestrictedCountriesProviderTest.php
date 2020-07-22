@@ -9,8 +9,9 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepository
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Service\Permits\Common\PermitTypeConfig;
 use Dvsa\Olcs\Api\Service\Permits\Common\RangeBasedRestrictedCountriesProvider;
-use Dvsa\Olcs\Api\Service\Permits\Common\TypeBasedRestrictedCountriesProvider;
+use Dvsa\Olcs\Api\Service\Permits\Common\TypeBasedPermitTypeConfigProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -21,43 +22,12 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class RangeBasedRestrictedCountriesProviderTest extends MockeryTestCase
 {
-    private $irhpPermitRangeId = 42;
-
-    private $irhpPermitRange;
-
-    private $irhpPermitRangeRepo;
-
-    private $countryRepo;
-
-    private $rangeBasedRestrictedCountriesProvider;
-
-    private $typeBasedRestrictedCountriesProvider;
-
-    public function setUp(): void
-    {
-        $this->irhpPermitRange = m::mock(IrhpPermitRange::class);
-
-        $this->irhpPermitRangeRepo = m::mock(IrhpPermitRangeRepository::class);
-        $this->irhpPermitRangeRepo->shouldReceive('fetchById')
-            ->with($this->irhpPermitRangeId)
-            ->once()
-            ->andReturn($this->irhpPermitRange);
-
-        $this->countryRepo = m::mock(CountryRepository::class);
-
-        $this->typeBasedRestrictedCountriesProvider = m::mock(TypeBasedRestrictedCountriesProvider::class);
-
-        $this->rangeBasedRestrictedCountriesProvider = new RangeBasedRestrictedCountriesProvider(
-            $this->irhpPermitRangeRepo,
-            $this->typeBasedRestrictedCountriesProvider,
-            $this->countryRepo
-        );
-
-        parent::setUp();
-    }
-
     public function testGetList()
     {
+        $irhpPermitRangeId = 42;
+
+        $irhpPermitRange = m::mock(IrhpPermitRange::class);
+
         $restrictedCountryIds = ['AT', 'GR', 'HU', 'IT', 'RU'];
         $rangeIncludedCountries = [
             m::mock(Country::class)->shouldReceive('getId')->andReturn('GR')->getMock(),
@@ -73,34 +43,53 @@ class RangeBasedRestrictedCountriesProviderTest extends MockeryTestCase
 
         $irhpPermitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
 
-        $this->irhpPermitRange->shouldReceive('getIrhpPermitStock->getIrhpPermitType->getId')
+        $irhpPermitRange->shouldReceive('getIrhpPermitStock->getIrhpPermitType->getId')
             ->withNoArgs()
             ->once()
             ->andReturn($irhpPermitTypeId);
-        $this->irhpPermitRange->shouldReceive('getCountrys')
+        $irhpPermitRange->shouldReceive('getCountrys')
             ->withNoArgs()
             ->once()
             ->andReturn(new ArrayCollection($rangeIncludedCountries));
 
-        $this->typeBasedRestrictedCountriesProvider->shouldReceive('getIds')
-            ->with($irhpPermitTypeId)
+        $irhpPermitRangeRepo = m::mock(IrhpPermitRangeRepository::class);
+        $irhpPermitRangeRepo->shouldReceive('fetchById')
+            ->with($irhpPermitRangeId)
             ->once()
+            ->andReturn($irhpPermitRange);
+
+        $permitTypeConfig = m::mock(PermitTypeConfig::class);
+        $permitTypeConfig->shouldReceive('getRestrictedCountryIds')
+            ->withNoArgs()
             ->andReturn($restrictedCountryIds);
 
-        $this->countryRepo->shouldReceive('fetchByIds')
+        $typeBasedPermitTypeConfigProvider = m::mock(TypeBasedPermitTypeConfigProvider::class);
+        $typeBasedPermitTypeConfigProvider->shouldReceive('getPermitTypeConfig')
+            ->with($irhpPermitTypeId)
+            ->once()
+            ->andReturn($permitTypeConfig);
+
+        $countryRepo = m::mock(CountryRepository::class);
+        $countryRepo->shouldReceive('fetchByIds')
             ->with($constrainedCountryIds, Query::HYDRATE_ARRAY)
             ->once()
             ->andReturn($constrainedCountries);
 
+        $rangeBasedRestrictedCountriesProvider = new RangeBasedRestrictedCountriesProvider(
+            $irhpPermitRangeRepo,
+            $typeBasedPermitTypeConfigProvider,
+            $countryRepo
+        );
+
         $this->assertEquals(
             $constrainedCountries,
-            $this->rangeBasedRestrictedCountriesProvider->getList($this->irhpPermitRangeId)
+            $rangeBasedRestrictedCountriesProvider->getList($irhpPermitRangeId)
         );
 
         // 2nd call for the same range should return results already calculated
         $this->assertEquals(
             $constrainedCountries,
-            $this->rangeBasedRestrictedCountriesProvider->getList($this->irhpPermitRangeId)
+            $rangeBasedRestrictedCountriesProvider->getList($irhpPermitRangeId)
         );
     }
 }
