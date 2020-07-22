@@ -26,6 +26,8 @@ class ApplicationPathGroup extends AbstractApplicationPathGroup
     const BILATERALS_CABOTAGE_PERMITS_ONLY_ID = 10;
     const BILATERALS_STANDARD_PERMITS_ONLY_ID = 11;
     const BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID = 12;
+    const BILATERALS_TURKEY_ID = 13;
+    const BILATERALS_UKRAINE_ID = 14;
 
     /**
      * Get an active application path

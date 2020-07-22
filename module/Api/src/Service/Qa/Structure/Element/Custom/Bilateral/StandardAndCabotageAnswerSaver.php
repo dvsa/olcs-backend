@@ -56,6 +56,6 @@ class StandardAndCabotageAnswerSaver implements AnswerSaverInterface
             );
         }
 
-        $this->genericAnswerWriter->write($qaContext, $answerValue, Question::QUESTION_TYPE_STRING);
+        $this->genericAnswerWriter->write($qaContext, $answerValue);
     }
 }

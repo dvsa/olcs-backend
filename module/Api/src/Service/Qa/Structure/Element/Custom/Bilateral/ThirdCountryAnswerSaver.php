@@ -8,6 +8,8 @@ use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
 class ThirdCountryAnswerSaver implements AnswerSaverInterface
 {
+    const YES_ANSWER = 'qanda.bilaterals.third-country.yes-answer';
+
     use IrhpPermitApplicationOnlyTrait;
 
     /** @var CountryDeletingAnswerSaver */
@@ -33,7 +35,7 @@ class ThirdCountryAnswerSaver implements AnswerSaverInterface
         return $this->countryDeletingAnswerSaver->save(
             $qaContext,
             $postData,
-            'qanda.bilaterals.third-country.yes-answer'
+            self::YES_ANSWER
         );
     }
 }

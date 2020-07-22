@@ -5,20 +5,19 @@ namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class OtherAnswersUpdaterFactory implements FactoryInterface
+class TurkeyApplicationPathAnswersUpdaterFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return OtherAnswersUpdater
+     * @return TurkeyApplicationPathAnswersUpdater
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new OtherAnswersUpdater(
-            $serviceLocator->get('PermitsBilateralInternalGenericAnswerUpdater'),
-            $serviceLocator->get('PermitsBilateralInternalApplicationPathAnswersUpdaterProvider')
+        return new TurkeyApplicationPathAnswersUpdater(
+            $serviceLocator->get('PermitsBilateralInternalGenericAnswerUpdater')
         );
     }
 }

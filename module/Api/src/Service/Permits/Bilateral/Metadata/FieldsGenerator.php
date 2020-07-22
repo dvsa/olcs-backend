@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use RuntimeException;
 
 class FieldsGenerator
 {
@@ -43,6 +44,8 @@ class FieldsGenerator
                 ];
                 break;
             case ApplicationPathGroup::BILATERALS_STANDARD_PERMITS_ONLY_ID:
+            case ApplicationPathGroup::BILATERALS_TURKEY_ID:
+            case ApplicationPathGroup::BILATERALS_UKRAINE_ID:
                 $cabotageOptions = [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED
                 ];

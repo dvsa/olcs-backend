@@ -62,6 +62,7 @@ class FeeType extends AbstractFeeType
     // TODO: product reference truncated to fit table, needs to be resolved somehow before merge
     const FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF = 'IRHP_GV_PERMIT_BILATERAL_SINGL';
     const FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF = 'IRHP_GV_PERMIT_MULTILAT_ANN';
+    const FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU = 'IRFO_GV_SINGLE_J_PERMIT_FEE';
 
     const COST_CENTRE_REF_TYPE_LICENSING = 'TA';
     const COST_CENTRE_REF_TYPE_IRFO = 'IR';
