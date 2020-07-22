@@ -397,6 +397,11 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             }
         )->count();
 
+        //if there is more than one valid licence we can skip other checks
+        if ($totalValidLicences > 1) {
+            return true;
+        }
+
         /** @var ArrayCollection $newLicences */
         $newLicences = $this->getLicences()->filter(
             function ($element) {
@@ -410,17 +415,26 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             }
         );
 
-        $totalLicencesWithNewGoodsApplications = 0;
+        //if the number of valid licences, added to the number of potential remaining licences is less than one
+        //then we can return false and skip the other checks
+        if (($totalValidLicences + $newLicences->count()) <= 1) {
+            return false;
+        }
 
         /** @var LicenceEntity $licence */
         foreach ($newLicences as $licence) {
             $applications = $licence->getApplications();
             if ($applications->count() > 0 && $applications->first()->isGoods()) {
-                $totalLicencesWithNewGoodsApplications++;
+                $totalValidLicences++;
+            }
+
+            //if there is more than one valid licence we can skip the remaining checks
+            if ($totalValidLicences > 1) {
+                return true;
             }
         }
 
-        return (bool)(($totalValidLicences + $totalLicencesWithNewGoodsApplications) > 1);
+        return false;
     }
 
     /**
