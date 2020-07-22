@@ -17,6 +17,7 @@ class RestrictedCountriesTest extends MockeryTestCase
     public function testGetRepresentation()
     {
         $yesNo = 'yesNo';
+        $questionKey = 'question.key';
 
         $restrictedCountry1Representation = [
             'code' => 'GR',
@@ -40,13 +41,14 @@ class RestrictedCountriesTest extends MockeryTestCase
 
         $expectedRepresentation = [
             'yesNo' => $yesNo,
+            'questionKey' => $questionKey,
             'countries' => [
                 $restrictedCountry1Representation,
                 $restrictedCountry2Representation
             ]
         ];
 
-        $restrictedCountries = new RestrictedCountries($yesNo);
+        $restrictedCountries = new RestrictedCountries($yesNo, $questionKey);
         $restrictedCountries->addRestrictedCountry($restrictedCountry1);
         $restrictedCountries->addRestrictedCountry($restrictedCountry2);
 

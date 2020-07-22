@@ -8,11 +8,12 @@ class RestrictedCountriesFactory
      * Create and return a RestrictedCountries instance
      *
      * @param bool|null $yesNo
+     * @param string $questionKey
      *
      * @return RestrictedCountries
      */
-    public function create($yesNo)
+    public function create($yesNo, $questionKey)
     {
-        return new RestrictedCountries($yesNo);
+        return new RestrictedCountries($yesNo, $questionKey);
     }
 }

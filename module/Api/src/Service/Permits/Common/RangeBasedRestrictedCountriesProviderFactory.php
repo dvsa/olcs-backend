@@ -20,7 +20,7 @@ class RangeBasedRestrictedCountriesProviderFactory implements FactoryInterface
 
         return new RangeBasedRestrictedCountriesProvider(
             $repoServiceManager->get('IrhpPermitRange'),
-            $serviceLocator->get('PermitsCommonTypeBasedRestrictedCountriesProvider'),
+            $serviceLocator->get('PermitsCommonTypeBasedPermitTypeConfigProvider'),
             $repoServiceManager->get('Country')
         );
     }

@@ -2,11 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\Common;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
+use Dvsa\Olcs\Api\Service\Permits\Common\PermitTypeConfig;
 use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
-use Dvsa\Olcs\Api\Service\Permits\Common\TypeBasedRestrictedCountriesProvider;
+use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedPermitTypeConfigProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -17,54 +15,28 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class StockBasedRestrictedCountryIdsProviderTest extends MockeryTestCase
 {
-    private $restrictedCountryIds = ['HU' ,'RU', 'IT'];
-
-    private $irhpPermitStockId = 42;
-
-    private $irhpPermitStock;
-
-    private $irhpPermitStockRepo;
-
-    private $stockBasedRestrictedCountryIdsProvider;
-
-    private $typeBasedRestrictedCountriesProvider;
-
-    public function setUp(): void
-    {
-        $this->irhpPermitStock = m::mock(IrhpPermitStock::class);
-
-        $this->irhpPermitStockRepo = m::mock(IrhpPermitStockRepository::class);
-        $this->irhpPermitStockRepo->shouldReceive('fetchById')
-            ->with($this->irhpPermitStockId)
-            ->once()
-            ->andReturn($this->irhpPermitStock);
-
-        $this->typeBasedRestrictedCountriesProvider = m::mock(TypeBasedRestrictedCountriesProvider::class);
-
-        $this->stockBasedRestrictedCountryIdsProvider = new StockBasedRestrictedCountryIdsProvider(
-            $this->irhpPermitStockRepo,
-            $this->typeBasedRestrictedCountriesProvider
-        );
-
-        parent::setUp();
-    }
-
     public function testGetIds()
     {
-        $irhpPermitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
+        $irhpPermitStockId = 67;
 
-        $this->irhpPermitStock->shouldReceive('getIrhpPermitType->getId')
-            ->withNoArgs()
-            ->andReturn($irhpPermitTypeId);
+        $restrictedCountryIds = ['ES', 'FR', 'DE'];
 
-        $this->typeBasedRestrictedCountriesProvider->shouldReceive('getIds')
-            ->with($irhpPermitTypeId)
-            ->once()
-            ->andReturn($this->restrictedCountryIds);
+        $permitTypeConfig = m::mock(PermitTypeConfig::class);
+        $permitTypeConfig->shouldReceive('getRestrictedCountryIds')
+            ->andReturn($restrictedCountryIds);
+
+        $stockBasedPermitTypeConfigProvider = m::mock(StockBasedPermitTypeConfigProvider::class);
+        $stockBasedPermitTypeConfigProvider->shouldReceive('getPermitTypeConfig')
+            ->with($irhpPermitStockId)
+            ->andReturn($permitTypeConfig);
+
+        $stockBasedRestrictedCountryIdsProvider = new StockBasedRestrictedCountryIdsProvider(
+            $stockBasedPermitTypeConfigProvider
+        );
 
         $this->assertEquals(
-            $this->restrictedCountryIds,
-            $this->stockBasedRestrictedCountryIdsProvider->getIds($this->irhpPermitStockId)
+            $restrictedCountryIds,
+            $stockBasedRestrictedCountryIdsProvider->getIds($irhpPermitStockId)
         );
     }
 }
