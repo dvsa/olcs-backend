@@ -19,8 +19,7 @@ class ApplicationStepGeneratorFactory implements FactoryInterface
         return new ApplicationStepGenerator(
             $serviceLocator->get('FormControlServiceManager'),
             $serviceLocator->get('QaApplicationStepFactory'),
-            $serviceLocator->get('QaValidatorListGenerator'),
-            $serviceLocator->get('QaElementGeneratorContextFactory')
+            $serviceLocator->get('QaElementGeneratorContextGenerator')
         );
     }
 }

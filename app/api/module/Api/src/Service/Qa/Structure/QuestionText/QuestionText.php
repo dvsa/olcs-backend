@@ -10,6 +10,9 @@ class QuestionText
     private $question;
 
     /** @var FilteredTranslateableText|null */
+    private $questionSummary;
+
+    /** @var FilteredTranslateableText|null */
     private $details;
 
     /** @var FilteredTranslateableText|null */
@@ -22,6 +25,7 @@ class QuestionText
      * Create instance
      *
      * @param FilteredTranslateableText $question (optional)
+     * @param FilteredTranslateableText $questionSummary (optional)
      * @param FilteredTranslateableText $details (optional)
      * @param FilteredTranslateableText $guidance (optional)
      * @param FilteredTranslateableText $additionalGuidance (optional)
@@ -30,11 +34,13 @@ class QuestionText
      */
     public function __construct(
         ?FilteredTranslateableText $question = null,
+        ?FilteredTranslateableText $questionSummary = null,
         ?FilteredTranslateableText $details = null,
         ?FilteredTranslateableText $guidance = null,
         ?FilteredTranslateableText $additionalGuidance = null
     ) {
         $this->question = $question;
+        $this->questionSummary = $questionSummary;
         $this->details = $details;
         $this->guidance = $guidance;
         $this->additionalGuidance = $additionalGuidance;
@@ -74,6 +80,16 @@ class QuestionText
     public function getQuestion()
     {
         return $this->question;
+    }
+
+    /**
+     * Get the embedded FilteredTranslateableText instance representing the question summary
+     *
+     * @return FilteredTranslateableText|null
+     */
+    public function getQuestionSummary()
+    {
+        return $this->questionSummary;
     }
 
     /**

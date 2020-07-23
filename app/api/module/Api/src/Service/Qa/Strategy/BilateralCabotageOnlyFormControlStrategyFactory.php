@@ -24,7 +24,7 @@ class BilateralCabotageOnlyFormControlStrategyFactory implements FactoryInterfac
             $mainServiceLocator->get('QaBilateralCabotageOnlyAnswerSaver'),
             $mainServiceLocator->get('QaGenericAnswerClearer'),
             $mainServiceLocator->get('QaBilateralCabotageQuestionTextGenerator'),
-            $mainServiceLocator->get('QaGenericAnswerSummaryProvider')
+            $mainServiceLocator->get('QaBilateralCabotageOnlyAnswerSummaryProvider')
         );
     }
 }

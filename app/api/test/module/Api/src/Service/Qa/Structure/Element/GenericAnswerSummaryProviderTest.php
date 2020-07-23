@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element;
 
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerSummaryProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -41,7 +42,13 @@ class GenericAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($answerValue);
 
-        $templateVariables = $this->genericAnswerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
+        $element = m::mock(ElementInterface::class);
+
+        $templateVariables = $this->genericAnswerSummaryProvider->getTemplateVariables(
+            $qaContext,
+            $element,
+            $isSnapshot
+        );
 
         $this->assertEquals(
             ['answer' => $answerValue],
