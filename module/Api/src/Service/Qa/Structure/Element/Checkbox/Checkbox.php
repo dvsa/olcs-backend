@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
 
 class Checkbox implements ElementInterface
 {
+    const LABEL_KEY = 'label';
+
     /** @var TranslateableText $label */
     private $label;
 
@@ -38,7 +40,7 @@ class Checkbox implements ElementInterface
     public function getRepresentation()
     {
         return [
-            'label' => $this->label->getRepresentation(),
+            self::LABEL_KEY => $this->label->getRepresentation(),
             'notCheckedMessage' => $this->notCheckedMessage->getRepresentation(),
             'checked' => ($this->checked ? true : false)
         ];

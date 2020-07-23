@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\PermitUsageAnswerSummaryProvider;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -69,7 +70,9 @@ class PermitUsageAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($answer);
 
-        $templateVariables = $this->sut->getTemplateVariables($qaContext, $isSnapshot);
+        $element = m::mock(ElementInterface::class);
+
+        $templateVariables = $this->sut->getTemplateVariables($qaContext, $element, $isSnapshot);
 
         $this->assertEquals(
             ['answer' => $answer],

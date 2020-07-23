@@ -22,11 +22,13 @@ class QuestionTextGeneratorTest extends MockeryTestCase
     public function testGenerate()
     {
         $questionKey = '{"questionKeyJson"}';
+        $questionSummaryKey = '{"questionSummaryKeyJson"}';
         $detailsKey = '{"detailsKeyJson"}';
         $guidanceKey = '{"guidanceKeyJson"}';
         $additionalGuidanceKey = '{"additionalGuidanceKeyJson"}';
 
         $transformedQuestionKey = m::mock(FilteredTranslateableText::class);
+        $transformedQuestionSummaryKey = m::mock(FilteredTranslateableText::class);
         $transformedDetailsKey = m::mock(FilteredTranslateableText::class);
         $transformedGuidanceKey = m::mock(FilteredTranslateableText::class);
         $transformedAdditionalGuidanceKey = m::mock(FilteredTranslateableText::class);
@@ -36,6 +38,8 @@ class QuestionTextGeneratorTest extends MockeryTestCase
         $questionTextEntity = m::mock(QuestionTextEntity::class);
         $questionTextEntity->shouldReceive('getQuestionKey')
             ->andReturn($questionKey);
+        $questionTextEntity->shouldReceive('getQuestionSummaryKey')
+            ->andReturn($questionSummaryKey);
         $questionTextEntity->shouldReceive('getDetailsKey')
             ->andReturn($detailsKey);
         $questionTextEntity->shouldReceive('getGuidanceKey')
@@ -47,6 +51,7 @@ class QuestionTextGeneratorTest extends MockeryTestCase
         $questionTextFactory->shouldReceive('create')
             ->with(
                 $transformedQuestionKey,
+                $transformedQuestionSummaryKey,
                 $transformedDetailsKey,
                 $transformedGuidanceKey,
                 $transformedAdditionalGuidanceKey
@@ -59,6 +64,9 @@ class QuestionTextGeneratorTest extends MockeryTestCase
         $jsonDecodingFilteredTranslateableTextGenerator->shouldReceive('generate')
             ->with($questionKey)
             ->andReturn($transformedQuestionKey);
+        $jsonDecodingFilteredTranslateableTextGenerator->shouldReceive('generate')
+            ->with($questionSummaryKey)
+            ->andReturn($transformedQuestionSummaryKey);
         $jsonDecodingFilteredTranslateableTextGenerator->shouldReceive('generate')
             ->with($detailsKey)
             ->andReturn($transformedDetailsKey);

@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\RadioAnswerSummaryProvider;
 use Mockery as m;
@@ -20,6 +21,8 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
     private $applicationStepEntity;
 
     private $qaContext;
+
+    private $element;
 
     private $optionsGenerator;
 
@@ -61,6 +64,8 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($this->applicationStepEntity);
 
+        $this->element = m::mock(ElementInterface::class);
+
         $this->optionsGenerator = m::mock(OptionsGenerator::class);
         $this->optionsGenerator->shouldReceive('generate')
             ->with($decodedOptionSourceSource)
@@ -88,7 +93,11 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($qaAnswer);
 
-        $templateVariables = $this->radioAnswerSummaryProvider->getTemplateVariables($this->qaContext, $isSnapshot);
+        $templateVariables = $this->radioAnswerSummaryProvider->getTemplateVariables(
+            $this->qaContext,
+            $this->element,
+            $isSnapshot
+        );
 
         $this->assertEquals(
             ['answer' => 'item2Label'],
@@ -110,7 +119,7 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($qaAnswer);
 
-        $this->radioAnswerSummaryProvider->getTemplateVariables($this->qaContext, $isSnapshot);
+        $this->radioAnswerSummaryProvider->getTemplateVariables($this->qaContext, $this->element, $isSnapshot);
     }
 
     public function dpSnapshot()

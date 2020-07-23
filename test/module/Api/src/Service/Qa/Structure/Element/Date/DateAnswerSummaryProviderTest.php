@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\DateAnswerSummaryProvider;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -41,7 +42,9 @@ class DateAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($qaAnswer);
 
-        $templateVariables = $this->dateAnswerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
+        $element = m::mock(ElementInterface::class);
+
+        $templateVariables = $this->dateAnswerSummaryProvider->getTemplateVariables($qaContext, $element, $isSnapshot);
 
         $this->assertEquals(
             ['answer' => '02/05/2020'],

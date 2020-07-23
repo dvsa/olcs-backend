@@ -1,9 +1,11 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
+namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Checkbox;
 
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox\Checkbox;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox\CheckboxAnswerSummaryProvider;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -32,17 +34,27 @@ class CheckboxAnswerSummaryProviderTest extends MockeryTestCase
     /**
      * @dataProvider dpGetTemplateVariables
      */
-    public function testGetTemplateVariables($isSnapshot, $qaAnswer, $expectedAnswerValue)
+    public function testGetTemplateVariables($isSnapshot)
     {
-        $qaContext = m::mock(QaContext::class);
-        $qaContext->shouldReceive('getAnswerValue')
-            ->withNoArgs()
-            ->andReturn($qaAnswer);
+        $labelKey = 'label.key';
 
-        $templateVariables = $this->checkboxAnswerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
+        $representation = [
+            Checkbox::LABEL_KEY => [
+                'key' => $labelKey
+            ]
+        ];
+
+        $qaContext = m::mock(QaContext::class);
+
+        $element = m::mock(ElementInterface::class);
+        $element->shouldReceive('getRepresentation')
+            ->withNoArgs()
+            ->andReturn($representation);
+
+        $templateVariables = $this->checkboxAnswerSummaryProvider->getTemplateVariables($qaContext, $element, $isSnapshot);
 
         $this->assertEquals(
-            ['answer' => $expectedAnswerValue],
+            ['answer' => $labelKey],
             $templateVariables
         );
     }
@@ -50,10 +62,8 @@ class CheckboxAnswerSummaryProviderTest extends MockeryTestCase
     public function dpGetTemplateVariables()
     {
         return [
-            [true, true, 'Yes'],
-            [false, true, 'Yes'],
-            [true, false, 'No'],
-            [false, false, 'No'],
+            [true],
+            [false],
         ];
     }
 }

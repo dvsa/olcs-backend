@@ -19,6 +19,7 @@ class QuestionTextTest extends MockeryTestCase
      */
     public function testGenerate(
         $questionFilteredTranslateableText,
+        $questionSummaryTranslateableText,
         $detailsFilteredTranslateableText,
         $guidanceFilteredTranslateableText,
         $additionalGuidanceFilteredTranslateableText,
@@ -26,6 +27,7 @@ class QuestionTextTest extends MockeryTestCase
     ) {
         $questionText = new QuestionText(
             $questionFilteredTranslateableText,
+            $questionSummaryTranslateableText,
             $detailsFilteredTranslateableText,
             $guidanceFilteredTranslateableText,
             $additionalGuidanceFilteredTranslateableText
@@ -48,6 +50,8 @@ class QuestionTextTest extends MockeryTestCase
         $questionFilteredTranslateableText->shouldReceive('getRepresentation')
             ->andReturn($questionRepresentation);
 
+        $questionSummaryFilteredTranslateableText = m::mock(FilteredTranslateableText::class);
+
         $detailsFilteredTranslateableText = m::mock(FilteredTranslateableText::class);
         $detailsFilteredTranslateableText->shouldReceive('getRepresentation')
             ->andReturn($detailsRepresentation);
@@ -63,6 +67,7 @@ class QuestionTextTest extends MockeryTestCase
         return [
             'All values present' => [
                 $questionFilteredTranslateableText,
+                $questionSummaryFilteredTranslateableText,
                 $detailsFilteredTranslateableText,
                 $guidanceFilteredTranslateableText,
                 $additionalGuidanceFilteredTranslateableText,
@@ -75,6 +80,7 @@ class QuestionTextTest extends MockeryTestCase
             ],
             'Some values missing 1' => [
                 $questionFilteredTranslateableText,
+                $questionSummaryFilteredTranslateableText,
                 $detailsFilteredTranslateableText,
                 null,
                 null,
@@ -83,7 +89,8 @@ class QuestionTextTest extends MockeryTestCase
                     'details' => $detailsRepresentation,
                 ]
             ],
-            'All values present' => [
+            'Some values missing 2' => [
+                null,
                 null,
                 null,
                 $guidanceFilteredTranslateableText,
@@ -104,6 +111,7 @@ class QuestionTextTest extends MockeryTestCase
             $questionFilteredTranslateableText,
             m::mock(FilteredTranslateableText::class),
             m::mock(FilteredTranslateableText::class),
+            m::mock(FilteredTranslateableText::class),
             m::mock(FilteredTranslateableText::class)
         );
 
@@ -113,11 +121,30 @@ class QuestionTextTest extends MockeryTestCase
         );
     }
 
+    public function testGetQuestionSummary()
+    {
+        $questionSummaryFilteredTranslateableText = m::mock(FilteredTranslateableText::class);
+
+        $questionText = new QuestionText(
+            m::mock(FilteredTranslateableText::class),
+            $questionSummaryFilteredTranslateableText,
+            m::mock(FilteredTranslateableText::class),
+            m::mock(FilteredTranslateableText::class),
+            m::mock(FilteredTranslateableText::class)
+        );
+
+        $this->assertSame(
+            $questionSummaryFilteredTranslateableText,
+            $questionText->getQuestionSummary()
+        );
+    }
+
     public function testGetGuidance()
     {
         $guidanceFilteredTranslateableText = m::mock(FilteredTranslateableText::class);
 
         $questionText = new QuestionText(
+            m::mock(FilteredTranslateableText::class),
             m::mock(FilteredTranslateableText::class),
             m::mock(FilteredTranslateableText::class),
             $guidanceFilteredTranslateableText,
@@ -135,6 +162,7 @@ class QuestionTextTest extends MockeryTestCase
         $additionalGuidanceFilteredTranslateableText = m::mock(FilteredTranslateableText::class);
 
         $questionText = new QuestionText(
+            m::mock(FilteredTranslateableText::class),
             m::mock(FilteredTranslateableText::class),
             m::mock(FilteredTranslateableText::class),
             m::mock(FilteredTranslateableText::class),

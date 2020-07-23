@@ -48,15 +48,18 @@ class RestrictedCountriesGenerator implements QuestionTextGeneratorInterface
         $translationKeyFragment = $translationKeyFragmentMappings[$irhpPermitTypeId];
 
         $questionKey = sprintf('qanda.%s.restricted-countries.question', $translationKeyFragment);
+        $questionSummaryKey = sprintf('qanda.%s.restricted-countries.question-summary', $translationKeyFragment);
         $applicationPathGroupId = $irhpApplicationEntity->getAssociatedStock()->getApplicationPathGroup()->getId();
         if ($applicationPathGroupId == ApplicationPathGroup::ECMT_SHORT_TERM_2020_APSG_WITHOUT_SECTORS_ID) {
             $questionKey = 'qanda.ecmt-short-term.restricted-countries.question.ecmt-short-term-2020-apsg-without-sectors';
+            $questionSummaryKey = 'qanda.ecmt-short-term.restricted-countries.question-summary.ecmt-short-term-2020-apsg-without-sectors';
         }
 
         $guidanceKey = sprintf('qanda.%s.restricted-countries.guidance', $translationKeyFragment);
 
         $questionText = $this->questionTextGenerator->generate($qaContext);
         $questionText->getQuestion()->getTranslateableText()->setKey($questionKey);
+        $questionText->getQuestionSummary()->getTranslateableText()->setKey($questionSummaryKey);
         $questionText->getGuidance()->getTranslateableText()->setKey($guidanceKey);
 
         return $questionText;
