@@ -72,6 +72,7 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
         $expectedBundle = [
             'replaces',
             'irhpPermitRange' => [
+                'journey',
                 'irhpPermitStock' => ['country', 'irhpPermitType'],
                 'emissionsCategory',
             ],
@@ -208,6 +209,7 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
         $expectedBundle = [
             'replaces',
             'irhpPermitRange' => [
+                'journey',
                 'irhpPermitStock' => ['country', 'irhpPermitType'],
                 'emissionsCategory',
             ],
@@ -272,6 +274,7 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
         $expectedBundle = [
             'replaces',
             'irhpPermitRange' => [
+                'journey',
                 'irhpPermitStock' => ['country', 'irhpPermitType'],
                 'emissionsCategory',
             ],
