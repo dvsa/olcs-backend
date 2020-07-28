@@ -3,22 +3,15 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\BilateralCountryAccessible as BilateralCountryAccessibleQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Bilateral country accessible
  */
-final class BilateralCountryAccessible extends AbstractQueryHandler implements ToggleRequiredInterface
+final class BilateralCountryAccessible extends AbstractQueryHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpApplication';
 
     /**

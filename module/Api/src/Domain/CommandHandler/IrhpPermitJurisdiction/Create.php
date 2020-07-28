@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitJurisdiction;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -13,19 +12,14 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdictionQuota as IrhpPermitJurisdictionQuotaRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as StockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Create IRHP permit devolved quotas (called as a side effect of stock creation)
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-final class Create extends AbstractCommandHandler implements ToggleRequiredInterface
+final class Create extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitJurisdictionQuota';
     protected $extraRepos = ['IrhpPermitStock', 'TrafficArea'];
 

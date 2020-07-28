@@ -3,24 +3,18 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Delete an IRHP Permit Stock
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-final class Delete extends AbstractCommandHandler implements ToggleRequiredInterface
+final class Delete extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
     protected $extraRepos = ['IrhpPermitJurisdictionQuota', 'IrhpPermitSectorQuota'];
 

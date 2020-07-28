@@ -3,13 +3,10 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitJurisdiction;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitJurisdiction\Update as UpdateJurisdictionCmd;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdictionQuota as IrhpPermitJurisdictionQuotaRepo;
 
 /**
@@ -17,11 +14,8 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdictionQuota as IrhpPermitJur
  *
  * @author Scott Callaway
  */
-final class Update extends AbstractCommandHandler implements ToggleRequiredInterface
+final class Update extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitJurisdictionQuota';
 
     /**

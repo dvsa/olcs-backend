@@ -5,12 +5,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -22,11 +19,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-final class SubmitApplication extends AbstractCommandHandler implements ToggleRequiredInterface
+final class SubmitApplication extends AbstractCommandHandler
 {
-    use QueueAwareTrait, ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
+    use QueueAwareTrait;
 
     protected $repoServiceName = 'IrhpApplication';
 

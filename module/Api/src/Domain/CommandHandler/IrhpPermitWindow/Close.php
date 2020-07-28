@@ -5,10 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\CancelApplication as CancelIrhpApplication;
@@ -16,11 +13,8 @@ use Dvsa\Olcs\Transfer\Command\IrhpApplication\CancelApplication as CancelIrhpAp
 /**
  * Close IRHP Permit Window
  */
-final class Close extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
+final class Close extends AbstractCommandHandler implements TransactionedInterface
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermitWindow';
     protected $extraRepos = ['IrhpApplication'];
 

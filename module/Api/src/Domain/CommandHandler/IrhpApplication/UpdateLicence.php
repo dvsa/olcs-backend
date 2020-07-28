@@ -9,27 +9,21 @@ use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\ResetIrhpPermitApplications;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Update IRHP Application Licence
  */
-final class UpdateLicence extends AbstractCommandHandler implements ToggleRequiredInterface, AuthAwareInterface
+final class UpdateLicence extends AbstractCommandHandler implements AuthAwareInterface
 {
-    use ToggleAwareTrait;
     use AuthAwareTrait;
 
     const LICENCE_INVALID_MSG = 'Licence ID %s with number %s is unable to make an IRHP application';
     const LICENCE_ORG_MSG = 'Licence does not belong to this organisation';
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['Licence'];

@@ -9,13 +9,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -27,11 +24,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-final class Grant extends AbstractCommandHandler implements ToggleRequiredInterface, TransactionedInterface
+final class Grant extends AbstractCommandHandler implements TransactionedInterface
 {
-    use QueueAwareTrait, ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
+    use QueueAwareTrait;
 
     protected $repoServiceName = 'IrhpApplication';
 

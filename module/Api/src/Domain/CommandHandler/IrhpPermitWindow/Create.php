@@ -4,26 +4,20 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as WindowEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Create as CreateWindowCmd;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Create an IRHP Permit Window
  *
  * @author Andy Newton
  */
-class Create extends AbstractCommandHandler implements ToggleRequiredInterface
+class Create extends AbstractCommandHandler
 {
     use IrhpPermitWindowTrait;
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
 
     protected $repoServiceName = 'IrhpPermitWindow';
     protected $extraRepos = ['IrhpPermitStock'];

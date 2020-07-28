@@ -8,23 +8,16 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkExpiredPermits as MarkExpiredPermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Mark expired permits
  */
-class MarkExpiredPermits extends AbstractCommandHandler implements ToggleRequiredInterface
+class MarkExpiredPermits extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
     const MSG_CERT_EXPIRED = 'Roadworthiness certificate ID %d with MOT expiry %s has been expired';
     const MSG_CERT_NOT_EXPIRED = 'Roadworthiness certificate ID %d with MOT expiry %s was not expired';
     const MSG_CERT_NUM_EXPIRED = '%d certificates have been expired out of %d checked';
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpPermit';
 

@@ -8,13 +8,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateCandidatePermits as AllocateCandidatePermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpApplicationPermits as AllocateIrhpApplicationPermitsCmd;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\BilateralCriteriaFactory;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteriaFactory;
@@ -29,11 +25,9 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implements ToggleRequiredInterface
+final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
 {
-    use QueueAwareTrait, ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
+    use QueueAwareTrait;
 
     protected $repoServiceName = 'IrhpApplication';
 
