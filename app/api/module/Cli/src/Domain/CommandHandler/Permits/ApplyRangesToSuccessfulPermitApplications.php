@@ -3,14 +3,10 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Cli\Domain\Command\ApplyRangesToSuccessfulPermitApplications
     as ApplyRangesToSuccessfulPermitApplicationsCommand;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use RuntimeException;
@@ -22,16 +18,12 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler implements TransactionedInterface, ToggleRequiredInterface
+class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler implements TransactionedInterface
 {
-    use ToggleAwareTrait;
-
     const ENTITY_KEY = 'entity';
     const COUNTRY_IDS_KEY = 'countryIds';
     const EMISSIONS_CATEGORY_KEY = 'emissionsCategory';
     const PERMITS_REMAINING_KEY = 'permitsRemaining';
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpCandidatePermit';
 

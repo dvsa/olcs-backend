@@ -6,10 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot as IrhpApplicatio
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\IrhpCandidatePermitsCreator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -19,11 +16,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequiredInterface
+final class PostSubmitTasks extends AbstractCommandHandler
 {
-    use QueueAwareTrait, ToggleAwareTrait;
+    use QueueAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
 
     /** @var IrhpCandidatePermitsCreator */

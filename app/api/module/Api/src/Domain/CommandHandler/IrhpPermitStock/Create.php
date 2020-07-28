@@ -4,9 +4,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitJurisdiction\Create as CreateDevolvedQuotasCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateSectorQuotasCmd;
@@ -19,12 +16,10 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-final class Create extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
+final class Create extends AbstractCommandHandler implements TransactionedInterface
 {
-    use ToggleAwareTrait;
     use IrhpPermitStockTrait;
 
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
 
     /**

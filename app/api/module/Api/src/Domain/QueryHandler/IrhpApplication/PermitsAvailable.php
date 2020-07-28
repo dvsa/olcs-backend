@@ -3,10 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\PermitsAvailable as PermitsAvailableQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -15,14 +12,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * PermitsAvailable
  */
-class PermitsAvailable extends AbstractQueryHandler implements ToggleRequiredInterface
+class PermitsAvailable extends AbstractQueryHandler
 {
     /** @var StockAvailabilityChecker */
     private $stockAvailabilityChecker;
-
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpApplication';
 

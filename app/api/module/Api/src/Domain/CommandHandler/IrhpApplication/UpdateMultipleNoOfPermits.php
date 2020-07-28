@@ -6,10 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateIssueFee as RegenerateIssueFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateApplicationFee as RegenerateApplicationFeeCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits as UpdateMultipleNoOfPermitsCmd;
@@ -22,14 +19,8 @@ use RuntimeException;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
-    ToggleRequiredInterface,
-    TransactionedInterface
+class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements TransactionedInterface
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['IrhpPermitApplication'];

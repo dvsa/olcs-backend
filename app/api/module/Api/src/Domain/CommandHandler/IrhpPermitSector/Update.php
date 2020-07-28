@@ -3,13 +3,10 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitSector;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitSector\Update as UpdateSectorCmd;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitSectorQuota as IrhpPermitSectorQuotaRepo;
 
 /**
@@ -17,11 +14,8 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitSectorQuota as IrhpPermitSectorQuo
  *
  * @author Scott Callaway
  */
-final class Update extends AbstractCommandHandler implements ToggleRequiredInterface
+final class Update extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitSectorQuota';
 
     /**

@@ -6,21 +6,14 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Abstract Revive Application from unsuccessful state
  */
-abstract class AbstractReviveFromUnsuccessful extends AbstractCommandHandler implements ToggleRequiredInterface, TransactionedInterface
+abstract class AbstractReviveFromUnsuccessful extends AbstractCommandHandler implements TransactionedInterface
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'changeMe';
 
     protected $extraRepos = ['IrhpCandidatePermit'];

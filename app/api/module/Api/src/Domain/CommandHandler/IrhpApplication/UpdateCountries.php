@@ -9,14 +9,11 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -24,14 +21,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * Update countries
  */
-class UpdateCountries extends AbstractCommandHandler implements
-    ToggleRequiredInterface,
-    TransactionedInterface
+class UpdateCountries extends AbstractCommandHandler implements TransactionedInterface
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
-
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitApplication'];

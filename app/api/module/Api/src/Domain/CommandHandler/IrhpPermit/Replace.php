@@ -18,18 +18,12 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Query\IrhpPermit\ByPermitNumber;
 use Dvsa\Olcs\Api\Domain\Query\IrhpPermitRange\ByPermitNumber as RangeByPermitNumber;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
-class Replace extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
+class Replace extends AbstractCommandHandler implements TransactionedInterface
 {
-    use ToggleAwareTrait;
-
-    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermit';
 
     /**

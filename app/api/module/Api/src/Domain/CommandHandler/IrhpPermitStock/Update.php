@@ -4,25 +4,20 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as StockEntity;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Update an IRHP Permit Stock
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-final class Update extends AbstractCommandHandler implements ToggleRequiredInterface
+final class Update extends AbstractCommandHandler
 {
-    use ToggleAwareTrait;
     use IrhpPermitStockTrait;
 
-    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
     protected $extraRepos = ['IrhpPermitType'];
 
