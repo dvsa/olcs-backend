@@ -95,7 +95,7 @@ class Module implements ConsoleUsageProviderInterface
                 "(optional) save result to specified file.\n" .
                 'By default, result will be saved to "<csv-path>-res.csv" file'
             ],
-            'data-retention-rule <populate|delete> [--limit] [--verbose|-v]' =>
+            'data-retention-rule <populate|delete|precheck|postcheck> [--limit] [--verbose|-v]' =>
                 'Run the data retention rules',
             [
                 '<populate|delete>',
@@ -104,12 +104,6 @@ class Module implements ConsoleUsageProviderInterface
             [
                 '--limit',
                 'Number of data retention records to process (NB only applicable when deleting)'
-            ],
-            'dr-checks <precheck|postcheck>' =>
-                'Run the DR pre or post checks',
-            [
-                '<precheck|postcheck>',
-                '\'precheck\' can be run after the data-retention-rule populate has complete and before the delete phase. \'postcheck\' should be run once delete is complete.',
             ],
             'digital-continuation-reminders [--verbose|-v]' => 'Generate/Send checklists for digital continuations',
             'create-psv-licence-surrender-tasks [--verbose|-v] [--dryrun|-d]' =>
