@@ -38,15 +38,6 @@ return [
                         ],
                     ],
                 ],
-                'dr-checks' => [
-                    'options' => [
-                        'route' => 'dr-checks (precheck|postcheck)',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'drTableCheck',
-                        ],
-                    ],
-                ],
                 'licence-status-rules' => [
                     'options' => [
                         'route' => 'licence-status-rules [--verbose|-v]',
@@ -250,7 +241,7 @@ return [
                 ],
                 'data-retention-rule' => [
                     'options' => [
-                        'route' => 'data-retention-rule (populate|delete) [--limit=] [--verbose|-v]',
+                        'route' => 'data-retention-rule (populate|delete|precheck|postcheck) [--limit=] [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'dataRetentionRule',
