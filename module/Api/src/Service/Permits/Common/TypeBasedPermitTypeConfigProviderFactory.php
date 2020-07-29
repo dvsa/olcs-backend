@@ -5,18 +5,18 @@ namespace Dvsa\Olcs\Api\Service\Permits\Common;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class TypeBasedRestrictedCountriesProviderFactory implements FactoryInterface
+class TypeBasedPermitTypeConfigProviderFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return TypeBasedRestrictedCountriesProvider
+     * @return TypeBasedPermitTypeConfigProvider
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new TypeBasedRestrictedCountriesProvider(
+        return new TypeBasedPermitTypeConfigProvider(
             $serviceLocator->get('Config')
         );
     }

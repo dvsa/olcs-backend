@@ -21,7 +21,7 @@ class RestrictedCountriesGeneratorFactory implements FactoryInterface
             $serviceLocator->get('QaEcmtShortTermRestrictedCountryFactory'),
             $serviceLocator->get('RepositoryServiceManager')->get('Country'),
             $serviceLocator->get('QaGenericAnswerProvider'),
-            $serviceLocator->get('PermitsCommonStockBasedRestrictedCountryIdsProvider')
+            $serviceLocator->get('PermitsCommonStockBasedPermitTypeConfigProvider')
         );
     }
 }

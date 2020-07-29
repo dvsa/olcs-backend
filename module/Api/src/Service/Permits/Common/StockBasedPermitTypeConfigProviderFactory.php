@@ -5,19 +5,20 @@ namespace Dvsa\Olcs\Api\Service\Permits\Common;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class StockBasedRestrictedCountryIdsProviderFactory implements FactoryInterface
+class StockBasedPermitTypeConfigProviderFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return StockBasedRestrictedCountryIdsProvider
+     * @return StockBasedPermitTypeConfigProvider
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new StockBasedRestrictedCountryIdsProvider(
-            $serviceLocator->get('PermitsCommonStockBasedPermitTypeConfigProvider')
+        return new StockBasedPermitTypeConfigProvider(
+            $serviceLocator->get('RepositoryServiceManager')->get('IrhpPermitStock'),
+            $serviceLocator->get('PermitsCommonTypeBasedPermitTypeConfigProvider')
         );
     }
 }
