@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepository;
-use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
+use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedPermitTypeConfigProvider;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
@@ -26,8 +26,8 @@ class RestrictedCountriesGenerator implements ElementGeneratorInterface
     /** @var GenericAnswerProvider */
     private $genericAnswerProvider;
 
-    /** @var StockBasedRestrictedCountryIdsProvider */
-    private $stockBasedRestrictedCountryIdsProvider;
+    /** @var StockBasedPermitTypeConfigProvider */
+    private $stockBasedPermitTypeConfigProvider;
 
     /**
      * Create service instance
@@ -36,7 +36,7 @@ class RestrictedCountriesGenerator implements ElementGeneratorInterface
      * @param RestrictedCountryFactory $restrictedCountryFactory
      * @param CountryRepository $countryRepo
      * @param GenericAnswerProvider $genericAnswerProvider
-     * @param StockBasedRestrictedCountryIdsProvider
+     * @param StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider
      *
      * @return RestrictedCountriesGenerator
      */
@@ -45,13 +45,13 @@ class RestrictedCountriesGenerator implements ElementGeneratorInterface
         RestrictedCountryFactory $restrictedCountryFactory,
         CountryRepository $countryRepo,
         GenericAnswerProvider $genericAnswerProvider,
-        StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider
+        StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider
     ) {
         $this->restrictedCountriesFactory = $restrictedCountriesFactory;
         $this->restrictedCountryFactory = $restrictedCountryFactory;
         $this->countryRepo = $countryRepo;
         $this->genericAnswerProvider = $genericAnswerProvider;
-        $this->stockBasedRestrictedCountryIdsProvider = $stockBasedRestrictedCountryIdsProvider;
+        $this->stockBasedPermitTypeConfigProvider = $stockBasedPermitTypeConfigProvider;
     }
 
     /**
@@ -68,14 +68,19 @@ class RestrictedCountriesGenerator implements ElementGeneratorInterface
         } catch (NotFoundException $e) {
         }
 
-        $restrictedCountries = $this->restrictedCountriesFactory->create($yesNo);
-
         $irhpPermitStockId = $irhpApplication->getFirstIrhpPermitApplication()
             ->getIrhpPermitWindow()
             ->getIrhpPermitStock()
             ->getId();
 
-        $restrictedCountryIds = $this->stockBasedRestrictedCountryIdsProvider->getIds($irhpPermitStockId);
+        $permitTypeConfig = $this->stockBasedPermitTypeConfigProvider->getPermitTypeConfig($irhpPermitStockId);
+
+        $restrictedCountries = $this->restrictedCountriesFactory->create(
+            $yesNo,
+            $permitTypeConfig->getRestrictedCountriesQuestionKey()
+        );
+
+        $restrictedCountryIds = $permitTypeConfig->getRestrictedCountryIds();
 
         foreach ($restrictedCountryIds as $countryId) {
             $country = $this->countryRepo->fetchById($countryId);

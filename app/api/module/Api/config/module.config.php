@@ -417,10 +417,12 @@ return [
                 => ApiSrv\Permits\ApplyRanges\StockBasedForCpProviderFactoryFactory::class,
             'PermitsCommonStockBasedRestrictedCountryIdsProvider'
                 => ApiSrv\Permits\Common\StockBasedRestrictedCountryIdsProviderFactory::class,
+            'PermitsCommonStockBasedPermitTypeConfigProvider'
+                => ApiSrv\Permits\Common\StockBasedPermitTypeConfigProviderFactory::class,
             'PermitsCommonRangeBasedRestrictedCountriesProvider'
                 => ApiSrv\Permits\Common\RangeBasedRestrictedCountriesProviderFactory::class,
-            'PermitsCommonTypeBasedRestrictedCountriesProvider'
-                => ApiSrv\Permits\Common\TypeBasedRestrictedCountriesProviderFactory::class,
+            'PermitsCommonTypeBasedPermitTypeConfigProvider'
+                => ApiSrv\Permits\Common\TypeBasedPermitTypeConfigProviderFactory::class,
             'PermitsCandidatePermitsApggCandidatePermitsCreator'
                 => ApiSrv\Permits\CandidatePermits\ApggCandidatePermitsCreatorFactory::class,
             'PermitsCandidatePermitsApggEmissionsCatCandidatePermitsCreator'
@@ -832,10 +834,12 @@ return [
     'permits' => [
         'types' => [
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT => [
-                'restricted_countries' => ['AT', 'GR', 'HU', 'IT', 'RU'],
+                'restricted_country_ids' => ['AT', 'GR', 'HU', 'IT', 'RU'],
+                'restricted_countries_question_key' => 'qanda.ecmt-annual.restricted-countries.question',
             ],
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => [
-                'restricted_countries' => ['GR', 'HU', 'IT', 'RU'],
+                'restricted_country_ids' => ['GR', 'HU', 'IT', 'RU'],
+                'restricted_countries_question_key' => 'qanda.ecmt-short-term.restricted-countries.question',
             ],
         ]
     ],

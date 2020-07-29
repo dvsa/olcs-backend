@@ -5,15 +5,15 @@ namespace Dvsa\Olcs\Api\Service\Permits\Common;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
-use Dvsa\Olcs\Api\Service\Permits\Common\TypeBasedRestrictedCountriesProvider;
+use Dvsa\Olcs\Api\Service\Permits\Common\TypeBasedPermitTypeConfigProvider;
 
 class RangeBasedRestrictedCountriesProvider
 {
     /** @var IrhpPermitRangeRepo */
     private $irhpPermitRangeRepo;
 
-    /** @var TypeBasedRestrictedCountriesProvider */
-    private $typeBasedRestrictedCountriesProvider;
+    /** @var TypeBasedPermitTypeConfigProvider */
+    private $typeBasedPermitTypeConfigProvider;
 
     /** @var CountryRepo */
     private $countryRepo;
@@ -25,18 +25,18 @@ class RangeBasedRestrictedCountriesProvider
      * Create service instance
      *
      * @param IrhpPermitRangeRepo $irhpPermitRangeRepo
-     * @param TypeBasedRestrictedCountriesProvider $typeBasedRestrictedCountriesProvider
+     * @param TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider
      * @param CountryRepo $countryRepo
      *
      * @return RangeBasedRestrictedCountriesProvider
      */
     public function __construct(
         IrhpPermitRangeRepo $irhpPermitRangeRepo,
-        TypeBasedRestrictedCountriesProvider $typeBasedRestrictedCountriesProvider,
+        TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider,
         CountryRepo $countryRepo
     ) {
         $this->irhpPermitRangeRepo = $irhpPermitRangeRepo;
-        $this->typeBasedRestrictedCountriesProvider = $typeBasedRestrictedCountriesProvider;
+        $this->typeBasedPermitTypeConfigProvider = $typeBasedPermitTypeConfigProvider;
         $this->countryRepo = $countryRepo;
     }
 
@@ -73,7 +73,8 @@ class RangeBasedRestrictedCountriesProvider
 
         // get ids of restricted countries based on type
         $irhpPermitTypeId = $irhpPermitRange->getIrhpPermitStock()->getIrhpPermitType()->getId();
-        $restrictedCountryIds = $this->typeBasedRestrictedCountriesProvider->getIds($irhpPermitTypeId);
+        $permitTypeConfig = $this->typeBasedPermitTypeConfigProvider->getPermitTypeConfig($irhpPermitTypeId);
+        $restrictedCountryIds = $permitTypeConfig->getRestrictedCountryIds();
 
         // get ids of countries included in the range
         $includedCountryIds = array_map(

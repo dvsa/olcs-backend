@@ -9,6 +9,9 @@ class RestrictedCountries implements ElementInterface
     /** @var bool|null */
     private $yesNo;
 
+    /** @var string */
+    private $questionKey;
+
     /** @var array */
     private $restrictedCountries = [];
 
@@ -16,12 +19,14 @@ class RestrictedCountries implements ElementInterface
      * Create instance
      *
      * @param bool|null $yesNo
+     * @param string $questionKey
      *
      * @return RestrictedCountries
      */
-    public function __construct($yesNo)
+    public function __construct($yesNo, $questionKey)
     {
         $this->yesNo = $yesNo;
+        $this->questionKey = $questionKey;
     }
 
     /**
@@ -37,6 +42,7 @@ class RestrictedCountries implements ElementInterface
 
         return [
             'yesNo' => $this->yesNo,
+            'questionKey' => $this->questionKey,
             'countries' => $restrictedCountriesRepresentations
         ];
     }
