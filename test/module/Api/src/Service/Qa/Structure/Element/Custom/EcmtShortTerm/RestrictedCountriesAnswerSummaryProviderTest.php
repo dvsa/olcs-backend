@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerSummaryProvider;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -21,6 +22,8 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
 
     private $qaContext;
 
+    private $element;
+
     private $restrictedCountriesAnswerSummaryProvider;
 
     public function setUp(): void
@@ -28,6 +31,8 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
         $this->irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
 
         $this->qaContext = m::mock(QaContext::class);
+
+        $this->element = m::mock(ElementInterface::class);
 
         $this->restrictedCountriesAnswerSummaryProvider = new RestrictedCountriesAnswerSummaryProvider();
     }
@@ -87,6 +92,7 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
 
         $templateVariables = $this->restrictedCountriesAnswerSummaryProvider->getTemplateVariables(
             $this->qaContext,
+            $this->element,
             $isSnapshot
         );
 
@@ -114,6 +120,7 @@ class RestrictedCountriesAnswerSummaryProviderTest extends MockeryTestCase
 
         $templateVariables = $this->restrictedCountriesAnswerSummaryProvider->getTemplateVariables(
             $this->qaContext,
+            $this->element,
             $isSnapshot
         );
 

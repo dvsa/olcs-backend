@@ -44,6 +44,9 @@ class QuestionTextGenerator implements QuestionTextGeneratorInterface
                 $questionTextEntity->getQuestionKey()
             ),
             $this->jsonDecodingFilteredTranslateableTextGenerator->generate(
+                $questionTextEntity->getQuestionSummaryKey()
+            ),
+            $this->jsonDecodingFilteredTranslateableTextGenerator->generate(
                 $questionTextEntity->getDetailsKey()
             ),
             $this->jsonDecodingFilteredTranslateableTextGenerator->generate(

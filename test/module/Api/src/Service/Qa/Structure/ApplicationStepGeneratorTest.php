@@ -10,9 +10,8 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextFactory;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
-use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorListGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -50,8 +49,12 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
             ->andReturn($applicationStepEntity);
 
         $element = m::mock(ElementInterface::class);
+        $validatorList = m::mock(ValidatorList::class);
 
         $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
+        $elementGeneratorContext->shouldReceive('getValidatorList')
+            ->withNoArgs()
+            ->andReturn($validatorList);
 
         $formControlStrategy = m::mock(FormControlStrategyInterface::class);
         $formControlStrategy->shouldReceive('getFrontendType')
@@ -67,28 +70,21 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
 
         $applicationStep = m::mock(ApplicationStep::class);
 
-        $validatorList = m::mock(ValidatorList::class);
 
         $applicationStepFactory = m::mock(ApplicationStepFactory::class);
         $applicationStepFactory->shouldReceive('create')
             ->with($frontendType, $fieldsetName, $questionShortKey, $element, $validatorList)
             ->andReturn($applicationStep);
 
-        $validatorListGenerator = m::mock(ValidatorListGenerator::class);
-        $validatorListGenerator->shouldReceive('generate')
-            ->with($applicationStepEntity)
-            ->andReturn($validatorList);
-
-        $elementGeneratorContextFactory = m::mock(ElementGeneratorContextFactory::class);
-        $elementGeneratorContextFactory->shouldReceive('create')
-            ->with($validatorList, $qaContext)
+        $elementGeneratorContextGenerator = m::mock(ElementGeneratorContextGenerator::class);
+        $elementGeneratorContextGenerator->shouldReceive('generate')
+            ->with($qaContext)
             ->andReturn($elementGeneratorContext);
 
         $applicationStepGenerator = new ApplicationStepGenerator(
             $formControlServiceManager,
             $applicationStepFactory,
-            $validatorListGenerator,
-            $elementGeneratorContextFactory
+            $elementGeneratorContextGenerator
         );
 
         $this->assertSame(

@@ -51,6 +51,7 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
         $irhpPermitTypeId,
         $applicationPathGroupId,
         $expectedQuestionKey,
+        $expectedQuestionSummaryKey,
         $expectedGuidanceKey
     ) {
         $this->irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
@@ -65,6 +66,11 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
             ->with($expectedQuestionKey)
             ->once();
 
+        $questionSummaryTranslateableText = m::mock(TranslateableText::class);
+        $questionSummaryTranslateableText->shouldReceive('setKey')
+            ->with($expectedQuestionSummaryKey)
+            ->once();
+
         $guidanceTranslateableText = m::mock(TranslateableText::class);
         $guidanceTranslateableText->shouldReceive('setKey')
             ->with($expectedGuidanceKey)
@@ -74,6 +80,9 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
         $questionText->shouldReceive('getQuestion->getTranslateableText')
             ->withNoArgs()
             ->andReturn($questionTranslateableText);
+        $questionText->shouldReceive('getQuestionSummary->getTranslateableText')
+            ->withNoArgs()
+            ->andReturn($questionSummaryTranslateableText);
         $questionText->shouldReceive('getGuidance->getTranslateableText')
             ->withNoArgs()
             ->andReturn($guidanceTranslateableText);
@@ -95,24 +104,28 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
                 IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT,
                 self::ECMT_ANNUAL_APP_PATH_GROUP_ID,
                 'qanda.ecmt-annual.restricted-countries.question',
+                'qanda.ecmt-annual.restricted-countries.question-summary',
                 'qanda.ecmt-annual.restricted-countries.guidance',
             ],
             [
                 IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 ApplicationPathGroupEntity::ECMT_SHORT_TERM_2020_APSG_WITHOUT_SECTORS_ID,
                 'qanda.ecmt-short-term.restricted-countries.question.ecmt-short-term-2020-apsg-without-sectors',
+                'qanda.ecmt-short-term.restricted-countries.question-summary.ecmt-short-term-2020-apsg-without-sectors',
                 'qanda.ecmt-short-term.restricted-countries.guidance',
             ],
             [
                 IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 ApplicationPathGroupEntity::ECMT_SHORT_TERM_2020_APSG_WITH_SECTORS_ID,
                 'qanda.ecmt-short-term.restricted-countries.question',
+                'qanda.ecmt-short-term.restricted-countries.question-summary',
                 'qanda.ecmt-short-term.restricted-countries.guidance',
             ],
             [
                 IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 ApplicationPathGroupEntity::ECMT_SHORT_TERM_2020_APGG,
                 'qanda.ecmt-short-term.restricted-countries.question',
+                'qanda.ecmt-short-term.restricted-countries.question-summary',
                 'qanda.ecmt-short-term.restricted-countries.guidance',
             ],
         ];

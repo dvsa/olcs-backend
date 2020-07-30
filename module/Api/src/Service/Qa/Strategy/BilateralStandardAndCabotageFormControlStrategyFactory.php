@@ -24,7 +24,7 @@ class BilateralStandardAndCabotageFormControlStrategyFactory implements FactoryI
             $mainServiceLocator->get('QaBilateralStandardAndCabotageAnswerSaver'),
             $mainServiceLocator->get('QaGenericAnswerClearer'),
             $mainServiceLocator->get('QaBilateralCabotageQuestionTextGenerator'),
-            $mainServiceLocator->get('QaGenericAnswerSummaryProvider')
+            $mainServiceLocator->get('QaBilateralStandardAndCabotageAnswerSummaryProvider')
         );
     }
 }

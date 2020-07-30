@@ -13,6 +13,9 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -40,6 +43,8 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
 
     private $qaContextFactory;
 
+    private $elementGeneratorContextGenerator;
+
     private $answersSummaryRowGenerator;
 
     public function setUp(): void
@@ -66,10 +71,13 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
 
         $this->qaContextFactory = m::mock(QaContextFactory::class);
 
+        $this->elementGeneratorContextGenerator = m::mock(ElementGeneratorContextGenerator::class);
+
         $this->answersSummaryRowGenerator = new AnswersSummaryRowGenerator(
             $this->answersSummaryRowFactory,
             $this->viewRenderer,
-            $this->qaContextFactory
+            $this->qaContextFactory,
+            $this->elementGeneratorContextGenerator
         );
     }
 
@@ -132,6 +140,8 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
 
         $qaContext = m::mock(QaContext::class);
 
+        $element = m::mock(ElementInterface::class);
+
         $this->qaContextFactory->shouldReceive('create')
             ->with($applicationStepEntity, $this->qaEntity)
             ->once()
@@ -141,7 +151,7 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($templateName);
         $this->answerSummaryProvider->shouldReceive('getTemplateVariables')
-            ->with($qaContext, $isSnapshot)
+            ->with($qaContext, $element, $isSnapshot)
             ->andReturn($templateVariables);
         $this->answerSummaryProvider->shouldReceive('supports')
             ->with($this->qaEntity)
@@ -151,13 +161,22 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
             ->andReturn($shouldIncludeSlug);
 
         $questionText = m::mock(QuestionText::class);
-        $questionText->shouldReceive('getQuestion->getTranslateableText->getKey')
+        $questionText->shouldReceive('getQuestionSummary->getTranslateableText->getKey')
             ->withNoArgs()
             ->andReturn($questionTranslationKey);
+
+        $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
 
         $this->formControlStrategy->shouldReceive('getQuestionText')
             ->with($qaContext)
             ->andReturn($questionText);
+        $this->formControlStrategy->shouldReceive('getElement')
+            ->with($elementGeneratorContext)
+            ->andReturn($element);
+
+        $this->elementGeneratorContextGenerator->shouldReceive('generate')
+            ->with($qaContext)
+            ->andReturn($elementGeneratorContext);
 
         $this->supplementedApplicationStep->shouldReceive('getApplicationStep')
             ->withNoArgs()

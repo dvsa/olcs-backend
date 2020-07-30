@@ -1,0 +1,8 @@
+<?php
+
+echo $this->escapeHtml($this->translate($yesNo, 'snapshot'));
+
+if ($additionalInfo) {
+    ?><br><?php echo $this->escapeHtml($this->translate($additionalInfo, 'snapshot'));
+}
+
