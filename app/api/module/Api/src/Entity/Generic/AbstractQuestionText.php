@@ -166,6 +166,15 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $questionShortKey;
 
     /**
+     * Question summary key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="question_summary_key", length=255, nullable=true)
+     */
+    protected $questionSummaryKey;
+
+    /**
      * Version
      *
      * @var int
@@ -500,6 +509,30 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     public function getQuestionShortKey()
     {
         return $this->questionShortKey;
+    }
+
+    /**
+     * Set the question summary key
+     *
+     * @param string $questionSummaryKey new value being set
+     *
+     * @return QuestionText
+     */
+    public function setQuestionSummaryKey($questionSummaryKey)
+    {
+        $this->questionSummaryKey = $questionSummaryKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the question summary key
+     *
+     * @return string
+     */
+    public function getQuestionSummaryKey()
+    {
+        return $this->questionSummaryKey;
     }
 
     /**

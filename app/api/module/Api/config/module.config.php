@@ -75,8 +75,12 @@ return [
 
             'QaBilateralCabotageOnlyElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyFactory::class,
+            'QaBilateralCabotageOnlyAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\CabotageOnlyAnswerSummaryProvider::class,
             'QaBilateralStandardAndCabotageElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageFactory::class,
+            'QaBilateralStandardAndCabotageAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageAnswerSummaryProvider::class,
             'QaBilateralThirdCountryElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\ThirdCountryFactory::class,
             'QaBilateralEmissionsStandardsElementFactory' =>
@@ -244,6 +248,8 @@ return [
             'QaApplicationAnswersClearer' => ApiSrv\Qa\AnswerSaver\ApplicationAnswersClearerFactory::class,
             
             'QaContextGenerator' => ApiSrv\Qa\QaContextGeneratorFactory::class,
+            'QaElementGeneratorContextGenerator'
+                => ApiSrv\Qa\Structure\Element\ElementGeneratorContextGeneratorFactory::class,
             'QaEntityProvider' => ApiSrv\Qa\QaEntityProviderFactory::class,
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,

@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowFactory;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextGenerator;
 use RuntimeException;
 use Zend\View\Renderer\RendererInterface;
 
@@ -22,23 +23,29 @@ class AnswersSummaryRowGenerator
     /** @var QaContextFactory */
     private $qaContextFactory;
 
+    /** @var ElementGeneratorContextGenerator */
+    private $elementGeneratorContextGenerator;
+
     /**
      * Create service instance
      *
      * @param AnswersSummaryRowFactory $answersSummaryRowFactory
      * @param RendererInterface $viewRenderer
      * @param QaContextFactory $qaContextFactory
+     * @param ElementGeneratorContextGenerator $elementGeneratorContextGenerator
      *
      * @return AnswersSummaryRowGenerator
      */
     public function __construct(
         AnswersSummaryRowFactory $answersSummaryRowFactory,
         RendererInterface $viewRenderer,
-        QaContextFactory $qaContextFactory
+        QaContextFactory $qaContextFactory,
+        ElementGeneratorContextGenerator $elementGeneratorContextGenerator
     ) {
         $this->answersSummaryRowFactory = $answersSummaryRowFactory;
         $this->viewRenderer = $viewRenderer;
         $this->qaContextFactory = $qaContextFactory;
+        $this->elementGeneratorContextGenerator = $elementGeneratorContextGenerator;
     }
 
     /**
@@ -70,9 +77,14 @@ class AnswersSummaryRowGenerator
         $applicationStep = $supplementedApplicationStep->getApplicationStep();
         $qaContext = $this->qaContextFactory->create($applicationStep, $qaEntity);
         $questionText = $formControlStrategy->getQuestionText($qaContext);
+        $elementGeneratorContext = $this->elementGeneratorContextGenerator->generate($qaContext);
 
         $templatePath = self::TEMPLATE_DIRECTORY . $answerSummaryProvider->getTemplateName();
-        $templateVariables = $answerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
+        $templateVariables = $answerSummaryProvider->getTemplateVariables(
+            $qaContext,
+            $formControlStrategy->getElement($elementGeneratorContext),
+            $isSnapshot
+        );
 
         $question = $applicationStep->getQuestion();
         $formattedAnswer = $this->viewRenderer->render($templatePath, $templateVariables);
@@ -80,7 +92,7 @@ class AnswersSummaryRowGenerator
         $slug = (!$isSnapshot && $answerSummaryProvider->shouldIncludeSlug($qaEntity)) ? $question->getSlug() : null;
 
         return $this->answersSummaryRowFactory->create(
-            $questionText->getQuestion()->getTranslateableText()->getKey(),
+            $questionText->getQuestionSummary()->getTranslateableText()->getKey(),
             $formattedAnswer,
             $slug
         );

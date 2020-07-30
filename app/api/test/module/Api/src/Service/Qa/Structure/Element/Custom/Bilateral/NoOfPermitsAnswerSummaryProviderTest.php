@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSummaryProvider;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -60,7 +61,13 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($irhpPermitApplicationEntity);
 
-        $templateVariables = $this->noOfPermitsAnswerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
+        $element = m::mock(ElementInterface::class);
+
+        $templateVariables = $this->noOfPermitsAnswerSummaryProvider->getTemplateVariables(
+            $qaContext,
+            $element,
+            $isSnapshot
+        );
 
         $this->assertEquals($expectedTemplateVariables, $templateVariables);
     }

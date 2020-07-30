@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSummaryProvider;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -81,6 +82,8 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($irhpApplicationEntity);
 
+        $element = m::mock(ElementInterface::class);
+
         $expectedTemplateVariables = [
             'validityYear' => $validityYear,
             'periodNameKey' => $periodNameKey,
@@ -96,7 +99,11 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
             ]
         ];
 
-        $templateVariables = $this->noOfPermitsAnswerSummaryProvider->getTemplateVariables($qaContext, $isSnapshot);
+        $templateVariables = $this->noOfPermitsAnswerSummaryProvider->getTemplateVariables(
+            $qaContext,
+            $element,
+            $isSnapshot
+        );
 
         $this->assertEquals($expectedTemplateVariables, $templateVariables);
     }

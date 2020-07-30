@@ -1,19 +1,16 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date;
+namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
-use DateTime;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AlwaysIncludeSlugTrait;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
-use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
-class DateAnswerSummaryProvider implements AnswerSummaryProviderInterface
+class CabotageOnlyAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
-    use AlwaysIncludeSlugTrait, AnyTrait;
-
-    const DATE_FORMAT = 'd/m/Y';
+    use AlwaysIncludeSlugTrait, IrhpPermitApplicationOnlyTrait;
 
     /**
      * {@inheritdoc}
@@ -28,12 +25,6 @@ class DateAnswerSummaryProvider implements AnswerSummaryProviderInterface
      */
     public function getTemplateVariables(QaContext $qaContext, ElementInterface $element, $isSnapshot)
     {
-        $dateTime = new DateTime(
-            $qaContext->getAnswerValue()
-        );
-
-        return [
-            'answer' => $dateTime->format(self::DATE_FORMAT)
-        ];
+        return ['answer' => 'qanda.bilaterals.cabotage.yes-answer'];
     }
 }
