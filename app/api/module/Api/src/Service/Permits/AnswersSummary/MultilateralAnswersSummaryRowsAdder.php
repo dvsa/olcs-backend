@@ -53,7 +53,7 @@ class MultilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInte
         );
 
         $answersSummaryRow = $this->answersSummaryRowFactory->create(
-            'permits.irhp.application.question.no-of-permits',
+            'permits.irhp.application.question.no-of-permits.question-summary',
             $formattedAnswer,
             'no-of-permits'
         );

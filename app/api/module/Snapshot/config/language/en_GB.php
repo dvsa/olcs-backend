@@ -403,6 +403,7 @@ return [
     'permits.irhp.countries.transporting' => 'Countries transporting goods to',
     'permits.irhp.application.question.countries' => 'Countries selected',
     'permits.irhp.application.question.no-of-permits' => 'How many permits do you require?',
+    'permits.irhp.application.question.no-of-permits.question-summary' => 'Number of permits',
     'permits.irhp.application.question.country' => 'Questions answered for',
     'permits.page.bilateral.which-period-required' =>'Period for which you need permits',
     'qanda.bilaterals.permit-usage.question-summary' => 'Permit usage',
