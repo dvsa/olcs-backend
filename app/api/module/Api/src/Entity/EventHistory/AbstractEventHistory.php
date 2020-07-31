@@ -21,6 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_event_history_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_event_history_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_event_history_case_id", columns={"case_id"}),
+ *        @ORM\Index(name="ix_event_history_entity_pk", columns={"entity_pk"}),
+ *        @ORM\Index(name="ix_event_history_entity_type", columns={"entity_type"}),
  *        @ORM\Index(name="ix_event_history_event_history_type_id", columns={"event_history_type_id"}),
  *        @ORM\Index(name="ix_event_history_irhp_application_id", columns={"irhp_application_id"}),
  *        @ORM\Index(name="ix_event_history_licence_id", columns={"licence_id"}),
