@@ -89,8 +89,7 @@ class HeaderAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
 
         return $this->answersSummaryRowFactory->create(
             'permits.check-answers.page.question.licence',
-            $formattedAnswer,
-            'licence'
+            $formattedAnswer
         );
     }
 }

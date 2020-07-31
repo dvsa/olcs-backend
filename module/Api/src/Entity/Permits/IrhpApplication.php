@@ -125,16 +125,12 @@ class IrhpApplication extends AbstractIrhpApplication implements
             ],
         ],
         IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL => [
-            'licence' => [
-                'validator' => 'fieldIsNotNull',
-            ],
             'permitsRequired' => [
                 'validator' => 'permitsRequiredPopulated',
             ],
             'checkedAnswers' => [
                 'validator' => 'fieldIsAgreed',
                 'validateIf' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                 ],
             ],
@@ -270,25 +266,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return [];
         }
 
-        // licence
-        $answer = $this->licence->getLicNo();
-        $status = !empty($answer)
-            ? SectionableInterface::SECTION_COMPLETION_COMPLETED
-            : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
-        $question = 'section.name.application/licence';
-
-        $data = [
-            'custom-licence' => [
-                'section' => 'licence',
-                'slug' => 'custom-licence',
-                'questionShort' => 'section.name.application/licence',
-                'question' => $question,
-                'questionType' => Question::QUESTION_TYPE_STRING,
-                'answer' =>  $answer,
-                'status' => $status,
-            ]
-        ];
-        $previousQuestionStatus = $status;
+        $previousQuestionStatus = SectionableInterface::SECTION_COMPLETION_COMPLETED;
 
         // the Q&A solution
         $activeApplicationPath = $this->getActiveApplicationPath();
@@ -1129,27 +1107,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
             $this->declaration = false;
             $this->checkedAnswers = false;
         }
-    }
-
-    /**
-     * Reset application answers - sets properties to null, or calls individual update methods in more important cases
-     */
-    public function clearAnswers()
-    {
-        if ($this->canBeUpdated()) {
-            $this->resetCheckAnswersAndDeclaration();
-        }
-    }
-
-    /**
-     * @param Licence $licence
-     *
-     * @return void
-     */
-    public function updateLicence(Licence $licence)
-    {
-        $this->licence = $licence;
-        $this->clearAnswers();
     }
 
     /**
