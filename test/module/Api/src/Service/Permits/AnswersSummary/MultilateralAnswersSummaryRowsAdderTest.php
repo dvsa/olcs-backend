@@ -65,7 +65,11 @@ class MultilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
 
         $answersSummaryRowFactory = m::mock(AnswersSummaryRowFactory::class);
         $answersSummaryRowFactory->shouldReceive('create')
-            ->with('permits.irhp.application.question.no-of-permits', $formattedAnswer, 'no-of-permits')
+            ->with(
+                'permits.irhp.application.question.no-of-permits.question-summary',
+                $formattedAnswer,
+                'no-of-permits'
+            )
             ->once()
             ->andReturn($answersSummaryRow);
 
