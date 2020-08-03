@@ -50,12 +50,18 @@ class SendContinuationNotSoughtTest extends CommandHandlerTestCase
         $command = Command::create($dtoData);
 
         $emailList = 'cns@example.com';
+        $ccList = 'ccemail1@email.com, ccemail2@email.com';
 
         $this->repoMap['SystemParameter']
             ->shouldReceive('fetchValue')
             ->with(SystemParameter::CNS_EMAIL_LIST)
             ->once()
             ->andReturn($emailList);
+
+        $this->repoMap['SystemParameter']
+            ->expects('fetchValue')
+            ->with(SystemParameter::CNS_EMAIL_LIST_CC)
+            ->andReturn($ccList);
 
         $this->mockedSmServices[TemplateRenderer::class]
             ->shouldReceive('renderBody')
@@ -76,18 +82,30 @@ class SendContinuationNotSoughtTest extends CommandHandlerTestCase
             ->with('email.cns.subject')
             ->andReturn('CNS EMAIL FROM %s TO %s');
 
-        $result = new Result();
+        $resultOfEmailSend = 'result of email send';
+        $emailSendResult = new Result();
+        $emailSendResult->addMessage($resultOfEmailSend);
+
         $data = [
             'to' => 'cns@example.com',
+            'cc' => [
+                'ccemail1@email.com',
+                'ccemail2@email.com',
+            ],
             'locale' => 'en_GB',
             'subject' => 'CNS EMAIL FROM %s TO %s',
             'subjectVariables' => ['10/08/2015', '10/09/2015']
         ];
 
-        $this->expectedSideEffect(SendEmail::class, $data, $result);
+        $this->expectedSideEffect(SendEmail::class, $data, $emailSendResult);
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertEquals(['Continuation Not Sought email sent'], $result->getMessages());
+        $expectedMessages = [
+            0 => $resultOfEmailSend,
+            1 => 'Continuation Not Sought email sent to: ' . $emailList . ' and CC to ' . $ccList,
+        ];
+
+        $this->assertEquals($expectedMessages, $result->getMessages());
     }
 }
