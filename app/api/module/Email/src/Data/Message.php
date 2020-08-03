@@ -266,6 +266,25 @@ class Message
     }
 
     /**
+     * Set the message cc field from a comma separated list of addresses
+     *
+     * @param string|null $listString comma separated list of addresses
+     *
+     * @return Message
+     */
+    public function setCcFromString(?string $listString): Message
+    {
+        $listArray = [];
+
+        //convert the cc string into a suitable array
+        if (isset($listString)) {
+            $listArray = array_filter(array_map('trim', explode(',', $listString)));
+        }
+
+        return $this->setCc($listArray);
+    }
+
+    /**
      * Set cc email addresses
      *
      * @param array $cc [addr1, addr2, etc]

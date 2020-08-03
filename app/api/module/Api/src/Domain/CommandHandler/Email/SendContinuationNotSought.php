@@ -47,9 +47,11 @@ final class SendContinuationNotSought extends AbstractCommandHandler implements
         $startDate->sub(new \DateInterval('P1M')); // -1 month
 
         $to = $this->getRepo('SystemParameter')->fetchValue(SystemParameter::CNS_EMAIL_LIST);
+        $cc = $this->getRepo('SystemParameter')->fetchValue(SystemParameter::CNS_EMAIL_LIST_CC);
 
         $subject = $this->translate('email.cns.subject');
         $message = new EmailMessage($to, $subject);
+        $message->setCcFromString($cc);
         $message->setSubjectVariables(
             [
                 $startDate->format(self::DATE_FORMAT),
@@ -57,20 +59,20 @@ final class SendContinuationNotSought extends AbstractCommandHandler implements
             ]
         );
 
-        $this->sendEmailTemplate(
-            $message,
-            'continuation-not-sought',
-            [
-               'startDate' => $startDate->format(self::DATE_FORMAT),
-               'endDate' => $endDate->format(self::DATE_FORMAT),
-               'licences' => $licences,
-            ]
+        $this->result->merge(
+            $this->sendEmailTemplate(
+                $message,
+                'continuation-not-sought',
+                [
+                    'startDate' => $startDate->format(self::DATE_FORMAT),
+                    'endDate' => $endDate->format(self::DATE_FORMAT),
+                    'licences' => $licences,
+                ]
+            )
         );
 
-        $result = new Result();
+        $this->result->addMessage('Continuation Not Sought email sent to: ' . $to . ' and CC to ' . $cc);
 
-        $result->addMessage('Continuation Not Sought email sent');
-
-        return $result;
+        return $this->result;
     }
 }

@@ -30,6 +30,26 @@ class MessageTest extends MockeryTestCase
         $this->assertSame($expected, $this->sut->getTo());
     }
 
+    public function testCcFromString()
+    {
+        $input = '   test1@test.com,  test2@test.com,test3@test.com, test4@test.com,   ';
+        $expected = [
+            'test1@test.com',
+            'test2@test.com',
+            'test3@test.com',
+            'test4@test.com',
+        ];
+
+        $this->sut->setCcFromString($input);
+        $this->assertSame($expected, $this->sut->getCc());
+    }
+
+    public function testCcFromStringWithEmpty()
+    {
+        $this->sut->setCcFromString('');
+        $this->assertSame([], $this->sut->getCc());
+    }
+
     public function testCc()
     {
         $value = [' ABCDEFG '];
