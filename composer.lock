@@ -2295,12 +2295,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.75",
+            "version": "4.206.76",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.75/olcs-olcs-transfer-4.206.75.zip",
-                "reference": "437249e4c21502f06bc0a6fd254f3cf749fb81b8",
-                "shasum": "437249e4c21502f06bc0a6fd254f3cf749fb81b8"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.76/olcs-olcs-transfer-4.206.76.zip",
+                "reference": "d1f77d48d8897ec81c64e686ddf81b05e15e4c38",
+                "shasum": "d1f77d48d8897ec81c64e686ddf81b05e15e4c38"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2362,7 +2362,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2020-07-22T07:11:53+00:00"
+            "time": "2020-08-04T09:25:18+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -7052,12 +7052,12 @@
         },
         {
             "name": "olcs/olcs-devtools",
-            "version": "4.206.3",
+            "version": "4.206.4",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-devtools/4.206.3/olcs-olcs-devtools-4.206.3.zip",
-                "reference": "c0014baf71258ef968f4608085604a78c36e6740",
-                "shasum": "c0014baf71258ef968f4608085604a78c36e6740"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-devtools/4.206.4/olcs-olcs-devtools-4.206.4.zip",
+                "reference": "e5e23d846bd46329309a93d36d3b42072251b0cf",
+                "shasum": "e5e23d846bd46329309a93d36d3b42072251b0cf"
             },
             "require": {
                 "brianium/paratest": "^3.0",
@@ -7096,7 +7096,7 @@
                 }
             },
             "description": "Dev tools",
-            "time": "2020-07-12T23:56:24+00:00"
+            "time": "2020-07-28T10:26:39+00:00"
         },
         {
             "name": "pdepend/pdepend",
