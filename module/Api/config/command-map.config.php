@@ -1023,10 +1023,6 @@ return [
     TransferCommand\IrhpApplication\Create::class =>
         CommandHandler\IrhpApplication\Create::class,
 
-    // Transfer - IRHP Update Licence
-    TransferCommand\IrhpApplication\UpdateLicence::class =>
-        CommandHandler\IrhpApplication\UpdateLicence::class,
-
     // Transfer - IRHP Permit Stock
     TransferCommand\IrhpPermitStock\Create::class =>
         CommandHandler\IrhpPermitStock\Create::class,
@@ -1145,12 +1141,10 @@ return [
     TransferCommand\IrhpApplication\CreateFull::class => CommandHandler\IrhpApplication\CreateFull::class,
     TransferCommand\IrhpApplication\UpdateFull::class => CommandHandler\IrhpApplication\UpdateFull::class,
     Command\IrhpApplication\CreateDefaultIrhpPermitApplications::class => CommandHandler\IrhpApplication\CreateDefaultIrhpPermitApplications::class,
-    Command\IrhpApplication\ResetIrhpPermitApplications::class => CommandHandler\IrhpApplication\ResetIrhpPermitApplications::class,
     Command\IrhpApplication\Expire::class => CommandHandler\IrhpApplication\Expire::class,
     TransferCommand\IrhpApplication\UpdatePeriod::class => CommandHandler\IrhpApplication\UpdatePeriod::class,
 
     // Irhp Permit Application
-    Command\IrhpPermitApplication\Delete::class => CommandHandler\IrhpPermitApplication\Delete::class,
     Command\IrhpPermitApplication\CreateForIrhpApplication::class => CommandHandler\IrhpPermitApplication\CreateForIrhpApplication::class,
     Command\IrhpPermitApplication\UpdateIrhpPermitWindow::class => CommandHandler\IrhpPermitApplication\UpdateIrhpPermitWindow::class,
 

@@ -75,7 +75,7 @@ class HeaderAnswersSummaryRowsAdderTest extends MockeryTestCase
         $answersSummaryRow = m::mock(AnswersSummaryRow::class);
 
         $this->answersSummaryRowFactory->shouldReceive('create')
-            ->with('permits.check-answers.page.question.licence', $formattedAnswer, 'licence')
+            ->with('permits.check-answers.page.question.licence', $formattedAnswer)
             ->once()
             ->andReturn($answersSummaryRow);
 
@@ -124,7 +124,7 @@ class HeaderAnswersSummaryRowsAdderTest extends MockeryTestCase
             ->once()
             ->andReturn($permitTypeAnswersSummaryRow);
         $this->answersSummaryRowFactory->shouldReceive('create')
-            ->with('permits.check-answers.page.question.licence', $licenceFormattedAnswer, 'licence')
+            ->with('permits.check-answers.page.question.licence', $licenceFormattedAnswer)
             ->once()
             ->andReturn($licenceAnswersSummaryRow);
 

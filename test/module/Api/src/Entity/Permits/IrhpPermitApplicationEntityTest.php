@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
@@ -444,23 +443,6 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertTrue($this->sut->hasPermitsRequired());
     }
 
-    public function testGetRelatedOrganisationIrhp()
-    {
-        $org = m::mock(Organisation::class);
-        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('getRelatedOrganisation')->once()->withNoArgs()->andReturn($org);
-
-        $entity = Entity::createNewForIrhpApplication($irhpApplication, $irhpPermitWindow);
-
-        $this->assertSame($org, $entity->getRelatedOrganisation());
-    }
-
-    public function testGetRelatedValuesWhenNothingIsLinked()
-    {
-        $this->assertNull($this->sut->getRelatedOrganisation());
-    }
-
     public function testGetIssueFeeProductReferenceBilateral()
     {
         $irhpPermitApplication = m::mock(Entity::class)->makePartial();
@@ -626,16 +608,6 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $entity = m::mock(Entity::class)->makePartial();
         $entity->getRequiredPermitsByEmissionsCategory(RefData::EMISSIONS_CATEGORY_NA_REF);
-    }
-
-    public function testUpdateLicence()
-    {
-        $licence = m::mock(Licence::class);
-        $entity = m::mock(Entity::class)->makePartial();
-
-        $entity->updateLicence($licence);
-
-        $this->assertSame($licence, $entity->getLicence());
     }
 
     public function testGetRangesWithCandidatePermitCounts()

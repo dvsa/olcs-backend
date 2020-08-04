@@ -1852,7 +1852,6 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
 
         $this->sut->setIrhpPermitType($irhpPermitType);
-        $this->sut->setLicence($data['licence']);
         $this->sut->setIrhpPermitApplications($data['irhpPermitApplications']);
         $this->sut->setCheckedAnswers($data['checkedAnswers']);
         $this->sut->setDeclaration($data['declaration']);
@@ -1862,7 +1861,6 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function dpTestGetSectionCompletionMultilateral()
     {
-        $licence = m::mock(Licence::class);
         $irhpPermitAppWithoutPermits = m::mock(IrhpPermitApplication::class)->makePartial();
 
         $irhpPermitAppWithPermits = m::mock(IrhpPermitApplication::class)->makePartial();
@@ -1871,41 +1869,21 @@ class IrhpApplicationEntityTest extends EntityTester
         return [
             'No data set' => [
                 'data' => [
-                    'licence' => null,
                     'irhpPermitApplications' => new ArrayCollection(),
                     'checkedAnswers' => false,
                     'declaration' => false,
                 ],
                 'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 4,
+                    'totalSections' => 3,
                     'totalCompleted' => 0,
-                    'allCompleted' => false,
-                ],
-            ],
-            'Licence set' => [
-                'data' => [
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 4,
-                    'totalCompleted' => 1,
                     'allCompleted' => false,
                 ],
             ],
             'IRHP permit apps with all apps without permits required set' => [
                 'data' => [
-                    'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
                             $irhpPermitAppWithoutPermits,
@@ -1916,18 +1894,16 @@ class IrhpApplicationEntityTest extends EntityTester
                     'declaration' => false,
                 ],
                 'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 4,
-                    'totalCompleted' => 1,
+                    'totalSections' => 3,
+                    'totalCompleted' => 0,
                     'allCompleted' => false,
                 ],
             ],
             'IRHP permit apps with one app without permits required set' => [
                 'data' => [
-                    'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
                             $irhpPermitAppWithPermits,
@@ -1938,18 +1914,16 @@ class IrhpApplicationEntityTest extends EntityTester
                     'declaration' => false,
                 ],
                 'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 4,
-                    'totalCompleted' => 1,
+                    'totalSections' => 3,
+                    'totalCompleted' => 0,
                     'allCompleted' => false,
                 ],
             ],
             'IRHP permit apps with all apps with permits required set' => [
                 'data' => [
-                    'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
                             $irhpPermitAppWithPermits,
@@ -1960,18 +1934,16 @@ class IrhpApplicationEntityTest extends EntityTester
                     'declaration' => false,
                 ],
                 'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 4,
-                    'totalCompleted' => 2,
+                    'totalSections' => 3,
+                    'totalCompleted' => 1,
                     'allCompleted' => false,
                 ],
             ],
             'Checked answers set' => [
                 'data' => [
-                    'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
                             $irhpPermitAppWithPermits,
@@ -1982,18 +1954,16 @@ class IrhpApplicationEntityTest extends EntityTester
                     'declaration' => false,
                 ],
                 'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'declaration' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'totalSections' => 4,
-                    'totalCompleted' => 3,
+                    'totalSections' => 3,
+                    'totalCompleted' => 2,
                     'allCompleted' => false,
                 ],
             ],
             'Declaration set' => [
                 'data' => [
-                    'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
                             $irhpPermitAppWithPermits,
@@ -2004,12 +1974,11 @@ class IrhpApplicationEntityTest extends EntityTester
                     'declaration' => true,
                 ],
                 'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'totalSections' => 4,
-                    'totalCompleted' => 4,
+                    'totalSections' => 3,
+                    'totalCompleted' => 3,
                     'allCompleted' => true,
                 ],
             ],
@@ -3105,50 +3074,6 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertEquals(new DateTime($dateString), $irhpApplication->getDateReceived());
     }
 
-    public function testClearAnswersCanBeUpdated()
-    {
-        $this->sut->shouldReceive('canBeUpdated')
-            ->withNoArgs()
-            ->andReturnTrue();
-
-        $this->sut->shouldReceive('resetCheckAnswersAndDeclaration')
-            ->withNoArgs()
-            ->once();
-
-        $this->sut->clearAnswers();
-    }
-
-    public function testClearAnswersCannotBeUpdated()
-    {
-        $this->sut->shouldReceive('canBeUpdated')
-            ->withNoArgs()
-            ->andReturnFalse();
-
-        $this->sut->shouldReceive('resetCheckAnswersAndDeclaration')
-            ->never();
-
-        $this->sut->clearAnswers();
-    }
-
-    public function testUpdateLicence()
-    {
-        $entity = m::mock(Entity::class)->makePartial();
-
-        $licenceA = m::mock(Licence::class);
-        $entity->setLicence($licenceA);
-
-        $this->assertEquals($licenceA, $entity->getLicence());
-
-        $entity
-            ->shouldReceive('canBeUpdated')
-            ->andReturn(true);
-
-        $licenceB = m::mock(Licence::class);
-        $entity->updateLicence($licenceB);
-
-        $this->assertEquals($licenceB, $entity->getLicence());
-    }
-
     /**
      * @dataProvider dptestIsReadyForIssuing
      */
@@ -3448,18 +3373,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetQuestionAnswerDataWithoutActiveApplicationPath()
     {
-        $licNo = 'ABC123';
-
         $expected = [
-            'custom-licence' => [
-                'section' => 'licence',
-                'slug' => 'custom-licence',
-                'questionShort' => 'section.name.application/licence',
-                'question' => 'section.name.application/licence',
-                'questionType' => Question::QUESTION_TYPE_STRING,
-                'answer' => $licNo,
-                'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-            ],
             'custom-check-answers' => [
                 'section' => 'checkedAnswers',
                 'slug' => 'custom-check-answers',
@@ -3480,9 +3394,6 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $createdOn = new DateTime();
 
-        $licence = m::mock(Licence::class);
-        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
-
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('getActiveApplicationPath')
             ->withNoArgs()
@@ -3493,7 +3404,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
 
-        $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
         $entity->addIrhpPermitApplications($irhpPermitApplication);
         $entity->setCreatedOn($createdOn);
 
@@ -3505,9 +3416,6 @@ class IrhpApplicationEntityTest extends EntityTester
      */
     public function testGetQuestionAnswerDataWithActiveApplicationPath($data, $applicationSteps, $expected)
     {
-        $licence = m::mock(Licence::class);
-        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($data['licNo']);
-
         $applicationPath = m::mock(ApplicationPath::class);
         $applicationPath->shouldReceive('getApplicationSteps')->once()->withNoArgs()->andReturn($applicationSteps);
 
@@ -3521,7 +3429,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
 
-        $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
         $entity->addIrhpPermitApplications($irhpPermitApplication);
         $entity->setAnswers($data['answers']);
         $entity->setCreatedOn($data['createdOn']);
@@ -3578,9 +3486,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $answer2->shouldReceive('getValue')->withNoArgs()->andReturn('q2-answer');
 
         return [
-            'licence not set' => [
+           'q1 not answered' => [
                 'data' => [
-                    'licNo' => '',
                     'answers' => new ArrayCollection([]),
                     'checkedAnswers' => 0,
                     'declaration' => 0,
@@ -3588,71 +3495,6 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    'custom-licence' => [
-                        'section' => 'licence',
-                        'slug' => 'custom-licence',
-                        'questionShort' => 'section.name.application/licence',
-                        'question' => 'section.name.application/licence',
-                        'questionType' => Question::QUESTION_TYPE_STRING,
-                        'answer' => '',
-                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    ],
-                    'q1-slug' => [
-                        'section' => 'q1-slug',
-                        'slug' => 'q1-slug',
-                        'questionShort' => 'q1-short-key',
-                        'question' => 'q1-key',
-                        'questionType' => 'q1-type',
-                        'answer' => null,
-                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    ],
-                    'q2-slug' => [
-                        'section' => 'q2-slug',
-                        'slug' => 'q2-slug',
-                        'questionShort' => 'q2-short-key',
-                        'question' => 'q2-key',
-                        'questionType' => 'q2-type',
-                        'answer' => null,
-                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    ],
-                    'custom-check-answers' => [
-                        'section' => 'checkedAnswers',
-                        'slug' => 'custom-check-answers',
-                        'questionShort' => 'section.name.application/check-answers',
-                        'question' => 'section.name.application/check-answers',
-                        'answer' => null,
-                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    ],
-                    'custom-declaration' => [
-                        'section' => 'declaration',
-                        'slug' => 'custom-declaration',
-                        'questionShort' => 'section.name.application/declaration',
-                        'question' => 'section.name.application/declaration',
-                        'answer' => null,
-                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    ],
-                ],
-                false,
-            ],
-            'licence set' => [
-                'data' => [
-                    'licNo' => 'OB1234567',
-                    'answers' => new ArrayCollection([]),
-                    'checkedAnswers' => 0,
-                    'declaration' => 0,
-                    'createdOn' => $createdOn,
-                ],
-                'applicationSteps' => new ArrayCollection([$step1, $step2]),
-                'expected' => [
-                    'custom-licence' => [
-                        'section' => 'licence',
-                        'slug' => 'custom-licence',
-                        'questionShort' => 'section.name.application/licence',
-                        'question' => 'section.name.application/licence',
-                        'questionType' => Question::QUESTION_TYPE_STRING,
-                        'answer' => 'OB1234567',
-                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    ],
                     'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
@@ -3692,7 +3534,6 @@ class IrhpApplicationEntityTest extends EntityTester
             ],
             'q1 answered' => [
                 'data' => [
-                    'licNo' => 'OB1234567',
                     'answers' => new ArrayCollection([$question1TextId => $answer1]),
                     'checkedAnswers' => 0,
                     'declaration' => 0,
@@ -3700,15 +3541,6 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    'custom-licence' => [
-                        'section' => 'licence',
-                        'slug' => 'custom-licence',
-                        'questionShort' => 'section.name.application/licence',
-                        'question' => 'section.name.application/licence',
-                        'questionType' => Question::QUESTION_TYPE_STRING,
-                        'answer' => 'OB1234567',
-                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    ],
                     'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
@@ -3748,7 +3580,6 @@ class IrhpApplicationEntityTest extends EntityTester
             ],
             'q2 answered' => [
                 'data' => [
-                    'licNo' => 'OB1234567',
                     'answers' => new ArrayCollection([$question1TextId => $answer1, $question2TextId => $answer2]),
                     'checkedAnswers' => 0,
                     'declaration' => 0,
@@ -3756,15 +3587,6 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    'custom-licence' => [
-                        'section' => 'licence',
-                        'slug' => 'custom-licence',
-                        'questionShort' => 'section.name.application/licence',
-                        'question' => 'section.name.application/licence',
-                        'questionType' => Question::QUESTION_TYPE_STRING,
-                        'answer' => 'OB1234567',
-                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    ],
                     'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
@@ -3804,7 +3626,6 @@ class IrhpApplicationEntityTest extends EntityTester
             ],
             'answers checked' => [
                 'data' => [
-                    'licNo' => 'OB1234567',
                     'answers' => new ArrayCollection([$question1TextId => $answer1, $question2TextId => $answer2]),
                     'checkedAnswers' => 1,
                     'declaration' => 0,
@@ -3812,15 +3633,6 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    'custom-licence' => [
-                        'section' => 'licence',
-                        'slug' => 'custom-licence',
-                        'questionShort' => 'section.name.application/licence',
-                        'question' => 'section.name.application/licence',
-                        'questionType' => Question::QUESTION_TYPE_STRING,
-                        'answer' => 'OB1234567',
-                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    ],
                     'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
@@ -3860,7 +3672,6 @@ class IrhpApplicationEntityTest extends EntityTester
             ],
             'declaration set' => [
                 'data' => [
-                    'licNo' => 'OB1234567',
                     'answers' => new ArrayCollection([$question1TextId => $answer1, $question2TextId => $answer2]),
                     'checkedAnswers' => 1,
                     'declaration' => 1,
@@ -3868,15 +3679,6 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    'custom-licence' => [
-                        'section' => 'licence',
-                        'slug' => 'custom-licence',
-                        'questionShort' => 'section.name.application/licence',
-                        'question' => 'section.name.application/licence',
-                        'questionType' => Question::QUESTION_TYPE_STRING,
-                        'answer' => 'OB1234567',
-                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    ],
                     'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
