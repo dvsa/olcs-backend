@@ -47,16 +47,10 @@ final class SendInternationalGoods extends AbstractCommandHandler implements Ema
 
         //this will give us a comma separated string, the email service expects an array
         $ccList = $repo->fetchValue(SystemParameter::INTERNATIONAL_GV_REPORT_EMAIL_CC);
-        $ccArray = [];
-
-        //convert the cc string into a suitable array
-        if (isset($ccList)) {
-            $ccArray = array_map('trim', explode(',', $ccList));
-        }
 
         $message = new Message($email, self::EMAIL_SUBJECT);
         $message->setDocs([$command->getId()]);
-        $message->setCc($ccArray);
+        $message->setCcFromString($ccList);
 
         $this->sendEmailTemplate($message, self::EMAIL_TEMPLATE);
 
