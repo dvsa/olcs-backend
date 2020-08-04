@@ -12,8 +12,6 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -41,7 +39,7 @@ use RuntimeException;
  *    }
  * )
  */
-class IrhpPermitApplication extends AbstractIrhpPermitApplication implements OrganisationProviderInterface, QaEntityInterface
+class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaEntityInterface
 {
     use TieredProductReference;
 
@@ -287,18 +285,6 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
-     * Get related organisation
-     *
-     * @return Organisation|null
-     */
-    public function getRelatedOrganisation()
-    {
-        $relatedApplication = $this->irhpApplication;
-
-        return isset($relatedApplication) ? $relatedApplication->getRelatedOrganisation() : null;
-    }
-
-    /**
      * Has valid permits
      *
      * @return bool
@@ -387,16 +373,6 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         }
 
         throw new RuntimeException('Unsupported emissions category for getRequiredPermitsByEmissionsCategory');
-    }
-
-    /**
-     * Set licence associated with application
-     *
-     * @param Licence $licence
-     */
-    public function updateLicence(Licence $licence)
-    {
-        $this->licence = $licence;
     }
 
     /**

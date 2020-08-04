@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 
 return [
     CommandHandler\IrhpApplication\Create::class => CanAccessLicenceWithLicence::class,
-    CommandHandler\IrhpApplication\UpdateLicence::class => CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\CreateFull::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\UpdateFull::class => CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\StoreSnapshot::class => IsSideEffect::class,

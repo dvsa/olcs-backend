@@ -149,5 +149,4 @@ return [
     CommandHandler\IrhpPermitJurisdiction\Create::class                               => IsSideEffect::class,
     CommandHandler\IrhpPermitSector\Create::class                                     => IsSideEffect::class,
     CommandHandler\IrhpApplication\CreateDefaultIrhpPermitApplications::class         => IsSideEffect::class,
-    CommandHandler\IrhpApplication\ResetIrhpPermitApplications::class                 => IsSideEffect::class,
 ];
