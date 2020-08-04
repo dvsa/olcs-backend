@@ -54,18 +54,18 @@ return [
             'QaValidatorListFactory' => ApiSrv\Qa\Structure\ValidatorListFactory::class,
             'QaElementGeneratorContextFactory' => ApiSrv\Qa\Structure\Element\ElementGeneratorContextFactory::class,
             'QaNamedAnswerFetcher' => ApiSrv\Qa\Structure\Element\NamedAnswerFetcher::class,
-            'QaEcmtShortTermNoOfPermitsElementFactory' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
-            'QaEcmtShortTermEmissionsCategoryFactory' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryFactory::class,
-            'QaEcmtShortTermRestrictedCountriesElementFactory' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesFactory::class,
-            'QaEcmtShortTermRestrictedCountryFactory' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountryFactory::class,
-            'QaEcmtShortTermIntJourneysElementFactory' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysFactory::class,
-            'QaEcmtShortTermAnnualTripsAbroadElementFactory' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadFactory::class,
+            'QaEcmtNoOfPermitsElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsFactory::class,
+            'QaEcmtEmissionsCategoryFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\EmissionsCategoryFactory::class,
+            'QaEcmtRestrictedCountriesElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\RestrictedCountriesFactory::class,
+            'QaEcmtRestrictedCountryFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\RestrictedCountryFactory::class,
+            'QaEcmtIntJourneysElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\IntJourneysFactory::class,
+            'QaEcmtAnnualTripsAbroadElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\AnnualTripsAbroadFactory::class,
             'QaCommonDateWithThresholdElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Common\DateWithThresholdFactory::class,
             'QaSupplementedApplicationStepFactory' =>
@@ -102,10 +102,10 @@ return [
                 ApiSrv\Qa\Structure\Element\Checkbox\CheckboxAnswerSummaryProvider::class,
             'QaDateAnswerSummaryProvider' =>
                 ApiSrv\Qa\Structure\Element\Date\DateAnswerSummaryProvider::class,
-            'QaEcmtShortTermNoOfPermitsAnswerSummaryProvider' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSummaryProvider::class,
-            'QaEcmtShortTermRestrictedCountriesAnswerSummaryProvider' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerSummaryProvider::class,
+            'QaEcmtNoOfPermitsAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsAnswerSummaryProvider::class,
+            'QaEcmtRestrictedCountriesAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\RestrictedCountriesAnswerSummaryProvider::class,
 
             'PermitsScoringSuccessfulCandidatePermitsLogger' =>
                 ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsLogger::class,
@@ -256,9 +256,9 @@ return [
             'QaFilteredTranslateableTextGenerator' => ApiSrv\Qa\Structure\FilteredTranslateableTextGeneratorFactory::class,
             'QaQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorFactory::class,
             'QaEcmtRemovalNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtRemovalNoOfPermitsGeneratorFactory::class,
-            'QaEcmtShortTermNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
-            'QaEcmtShortTermRestrictedCountriesQuestionTextGenerator'
-                => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
+            'QaEcmtNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\Ecmt\NoOfPermitsGeneratorFactory::class,
+            'QaEcmtRestrictedCountriesQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\Ecmt\RestrictedCountriesGeneratorFactory::class,
             'QaCommonCertificatesQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\Common\CertificatesGeneratorFactory::class,
             'QaBilateralPermitUsageQuestionTextGenerator'
@@ -290,40 +290,40 @@ return [
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerClearerFactory::class,
             'QaEcmtRemovalNoOfPermitsFeeCreator' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\FeeCreatorFactory::class,
-            'QaEcmtShortTermNoOfPermitsAnswerFetcher' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerFetcherFactory::class,
-            'QaEcmtShortTermNoOfPermitsAnswerSaver' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSaverFactory::class,
-            'QaEcmtShortTermNoOfPermitsAnswerClearer' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerClearerFactory::class,
-            'QaEcmtShortTermNoOfPermitsElementGenerator' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
-            'QaEcmtShortTermEmissionsCategoryConditionalAdder' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryConditionalAdderFactory::class,
-            'QaEcmtShortTermConditionalFeeUpdater' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdaterFactory::class,
-            'QaEcmtShortTermFeeUpdater' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\FeeUpdaterFactory::class,
-            'QaEcmtShortTermIntJourneysAnswerSaver' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerSaverFactory::class,
-            'QaEcmtShortTermIntJourneysAnswerClearer' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerClearerFactory::class,
-            'QaEcmtShortTermIntJourneysElementGenerator' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysGeneratorFactory::class,
-            'QaEcmtShortTermAnnualTripsAbroadElementGenerator' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadGeneratorFactory::class,
-            'QaEcmtShortTermRestrictedCountriesAnswerSaver' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerSaverFactory::class,
-            'QaEcmtShortTermRestrictedCountriesAnswerClearer' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerClearerFactory::class,
-            'QaEcmtShortTermRestrictedCountriesElementGenerator' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
-            'QaEcmtShortTermAnnualTripsAbroadAnswerSaver' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadAnswerSaverFactory::class,
-            'QaEcmtShortTermSectorsAnswerSaver' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerSaverFactory::class,
-            'QaEcmtShortTermSectorsAnswerClearer' =>
-                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerClearerFactory::class,
+            'QaEcmtNoOfPermitsAnswerFetcher' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsAnswerFetcherFactory::class,
+            'QaEcmtNoOfPermitsAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsAnswerSaverFactory::class,
+            'QaEcmtNoOfPermitsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsAnswerClearerFactory::class,
+            'QaEcmtNoOfPermitsElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsGeneratorFactory::class,
+            'QaEcmtEmissionsCategoryConditionalAdder' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\EmissionsCategoryConditionalAdderFactory::class,
+            'QaEcmtConditionalFeeUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\ConditionalFeeUpdaterFactory::class,
+            'QaEcmtFeeUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\FeeUpdaterFactory::class,
+            'QaEcmtIntJourneysAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\IntJourneysAnswerSaverFactory::class,
+            'QaEcmtIntJourneysAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\IntJourneysAnswerClearerFactory::class,
+            'QaEcmtIntJourneysElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\IntJourneysGeneratorFactory::class,
+            'QaEcmtAnnualTripsAbroadElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\AnnualTripsAbroadGeneratorFactory::class,
+            'QaEcmtRestrictedCountriesAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\RestrictedCountriesAnswerSaverFactory::class,
+            'QaEcmtRestrictedCountriesAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\RestrictedCountriesAnswerClearerFactory::class,
+            'QaEcmtRestrictedCountriesElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\RestrictedCountriesGeneratorFactory::class,
+            'QaEcmtAnnualTripsAbroadAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\AnnualTripsAbroadAnswerSaverFactory::class,
+            'QaEcmtSectorsAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\SectorsAnswerSaverFactory::class,
+            'QaEcmtSectorsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\SectorsAnswerClearerFactory::class,
             'QaCommonCertificatesAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\Common\CertificatesAnswerSaverFactory::class,
             'QaCommonDateWithThresholdElementGenerator' =>
@@ -739,18 +739,18 @@ return [
                 QaStrategy\EcmtRemovalNoOfPermitsFormControlStrategyFactory::class,
             Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE =>
                 QaStrategy\EcmtRemovalPermitStartDateFormControlStrategyFactory::class,
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS =>
-                QaStrategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_PERMIT_USAGE =>
-                QaStrategy\EcmtShortTermPermitUsageFormControlStrategyFactory::class,
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS =>
-                QaStrategy\EcmtShortTermIntJourneysFormControlStrategyFactory::class,
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES =>
-                QaStrategy\EcmtShortTermRestrictedCountriesFormControlStrategyFactory::class,
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD =>
-                QaStrategy\EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory::class,
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS =>
-                QaStrategy\EcmtShortTermSectorsFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_NO_OF_PERMITS =>
+                QaStrategy\EcmtNoOfPermitsFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_PERMIT_USAGE =>
+                QaStrategy\EcmtPermitUsageFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_INTERNATIONAL_JOURNEYS =>
+                QaStrategy\EcmtIntJourneysFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_RESTRICTED_COUNTRIES =>
+                QaStrategy\EcmtRestrictedCountriesFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_ANNUAL_TRIPS_ABROAD =>
+                QaStrategy\EcmtAnnualTripsAbroadFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_SECTORS =>
+                QaStrategy\EcmtSectorsFormControlStrategyFactory::class,
             Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE =>
                 QaStrategy\EcmtShortTermEarliestPermitDateFormControlStrategyFactory::class,
             Question::FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS =>
