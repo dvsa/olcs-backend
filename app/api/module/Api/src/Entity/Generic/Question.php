@@ -27,12 +27,12 @@ class Question extends AbstractQuestion
     // Custom question types
     const FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS = 'form_control_ecmt_rem_no_permits';
     const FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE = 'form_control_ecmt_rem_per_st_dat';
-    const FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS = 'form_control_ecmt_st_no_permits';
-    const FORM_CONTROL_ECMT_SHORT_TERM_PERMIT_USAGE = 'form_control_ecmt_st_perm_usage';
-    const FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS = 'form_control_ecmt_st_int_journ';
-    const FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES = 'form_control_ecmt_st_rest_count';
-    const FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD = 'form_control_ecmt_st_ann_trips';
-    const FORM_CONTROL_ECMT_SHORT_TERM_SECTORS = 'form_control_ecmt_st_sectors';
+    const FORM_CONTROL_ECMT_NO_OF_PERMITS = 'form_control_ecmt_st_no_permits';
+    const FORM_CONTROL_ECMT_PERMIT_USAGE = 'form_control_ecmt_st_perm_usage';
+    const FORM_CONTROL_ECMT_INTERNATIONAL_JOURNEYS = 'form_control_ecmt_st_int_journ';
+    const FORM_CONTROL_ECMT_RESTRICTED_COUNTRIES = 'form_control_ecmt_st_rest_count';
+    const FORM_CONTROL_ECMT_ANNUAL_TRIPS_ABROAD = 'form_control_ecmt_st_ann_trips';
+    const FORM_CONTROL_ECMT_SECTORS = 'form_control_ecmt_st_sectors';
     const FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE = 'form_control_cert_road_mot_exp';
     const FORM_CONTROL_COMMON_CERTIFICATES = 'form_control_common_certificates';
     const FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE = 'form_control_ecmt_st_ear_per_dat';
@@ -52,7 +52,7 @@ class Question extends AbstractQuestion
     const QUESTION_TYPE_CUSTOM = 'question_type_custom';
 
     // Question ids
-    const QUESTION_ID_SHORT_TERM_ANNUAL_TRIPS_ABROAD = 10;
+    const QUESTION_ID_ECMT_ANNUAL_TRIPS_ABROAD = 10;
     const QUESTION_ID_REMOVAL_PERMIT_START_DATE = 13;
     const QUESTION_ID_ROADWORTHINESS_VEHICLE_MOT_EXPIRY = 20;
     const QUESTION_ID_ROADWORTHINESS_TRAILER_MOT_EXPIRY = 25;
