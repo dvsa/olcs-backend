@@ -24,7 +24,7 @@ class MotExpiryDateGeneratorTest extends MockeryTestCase
 
         $dateWithThresholdGenerator = m::mock(DateWithThresholdGenerator::class);
         $dateWithThresholdGenerator->shouldReceive('generate')
-            ->with($elementGeneratorContext, 'P13M')
+            ->with($elementGeneratorContext, 'P14M')
             ->once()
             ->andReturn($dateWithThreshold);
 
