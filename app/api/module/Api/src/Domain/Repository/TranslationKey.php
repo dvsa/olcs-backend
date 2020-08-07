@@ -24,11 +24,34 @@ class TranslationKey extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        if ($query instanceof GetList && ($query->getTranslatedText() != null)) {
-            $qb->select()
-                ->innerJoin($this->alias . '.translationKeyTexts', 'tkt')
-                ->andWhere('tkt.translatedText LIKE :translatedText')
-                ->setParameter('translatedText', '%' . $query->getTranslatedText() . '%');
+        if ($query instanceof GetList) {
+            if ($query->getTranslationSearch() != null) {
+                $qb->orWhere($this->alias . '.id LIKE :translationSearch')
+                    ->orWhere($this->alias . '.description LIKE :translationSearch')
+                    ->leftJoin($this->alias . '.translationKeyTexts', 'tkt')
+                    ->orWhere('tkt.translatedText LIKE :translationSearch')
+                    ->leftJoin($this->alias . '.translationKeyTagLinks', 'tktl')
+                    ->leftJoin('tktl.tag', 'tag')
+                    ->orWhere('tag.tag LIKE :translationSearch')
+                    ->leftJoin($this->alias . '.translationKeyCategoryLinks', 'tkcl')
+                    ->orWhere('tkcl.repository LIKE :translationSearch')
+                    ->orWhere('tkcl.path LIKE :translationSearch')
+                    ->setParameter('translationSearch', '%' . $query->getTranslationSearch() . '%');
+            }
+
+            if (!is_null($query->getCategory()) || !is_null($query->getSubCategory())) {
+                if (is_null($query->getTranslationSearch())) {
+                    $qb->leftJoin($this->alias . '.translationKeyCategoryLinks', 'tkcl');
+                }
+                if ($query->getCategory() != null) {
+                    $qb->andWhere('tkcl.category = :category')
+                        ->setParameter('category', $query->getCategory());
+                }
+                if ($query->getSubCategory() != null) {
+                    $qb->andWhere('tkcl.subCategory = :subCategory')
+                        ->setParameter('subCategory', $query->getSubCategory());
+                }
+            }
         }
     }
 }
