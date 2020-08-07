@@ -86,7 +86,11 @@ abstract class AbstractTranslationKeyTagLink implements BundleSerializableInterf
      *
      * @var \Dvsa\Olcs\Api\Entity\System\TranslationKey
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKey", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKey",
+     *     fetch="LAZY",
+     *     inversedBy="translationKeyTagLinks"
+     * )
      * @ORM\JoinColumn(name="translation_key_id", referencedColumnName="id", nullable=false)
      */
     protected $translationKey;
