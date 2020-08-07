@@ -13,6 +13,13 @@ class ReadyToPrint extends AbstractListQueryHandler
 
     protected $bundle = [
         'irhpPermitApplication',
-        'irhpPermitRange' => ['emissionsCategory'],
+        'irhpPermitRange' => [
+            'emissionsCategory',
+            'journey',
+            'irhpPermitStock' => [
+                'irhpPermitType' => ['name'],
+                'country',
+            ],
+        ],
     ];
 }
