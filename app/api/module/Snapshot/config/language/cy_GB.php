@@ -1,6 +1,7 @@
 <?php
 // @codingStandardsIgnoreFile
 return [
+    'header-vehicle-operator-licensing' => 'Trwyddedu Gweithredu Cerbydau',
     'tachograph_analyser.tach_internal' => 'In-house, using software on your own PC',
     'tachograph_analyser.tach_external' => 'By sending to an external analysis bureau/company',
     'tachograph_analyser.tach_na' => 'Amherthnasol',
