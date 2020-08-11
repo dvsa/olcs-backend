@@ -1210,4 +1210,9 @@ return [
     TransferCommand\TranslationKey\Update::class => CommandHandler\TranslationKey\Update::class,
     Command\TranslationKeyText\Create::class => CommandHandler\TranslationKeyText\Create::class,
     Command\TranslationKeyText\Update::class => CommandHandler\TranslationKeyText\Update::class,
+
+    //Replacement
+    TransferCommand\Replacement\Update::class => CommandHandler\Replacement\Update::class,
+    TransferCommand\Replacement\Create::class => CommandHandler\Replacement\Create::class,
+
 ];
