@@ -2,11 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Task;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Task\Task;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Task\Task;
+use Dvsa\Olcs\Api\Domain\Repository\EventHistory as EventHistoryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Transfer\Query\Task\Task as Qry;
+use Mockery as m;
 
 /**
  * Task Test

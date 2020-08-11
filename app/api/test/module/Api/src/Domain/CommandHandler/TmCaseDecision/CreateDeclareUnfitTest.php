@@ -5,20 +5,21 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TmCaseDecision;
 
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TmCaseDecision\CreateDeclareUnfit;
-use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as TmCaseDecisionEntity;
-use Dvsa\Olcs\Transfer\Command\TmCaseDecision\CreateDeclareUnfit as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\User as UserEntity;
-use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TmCaseDecision\CreateDeclareUnfit;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision as TmCaseDecisionRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as TmCaseDecisionEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\User as UserEntity;
+use Dvsa\Olcs\Transfer\Command\TmCaseDecision\CreateDeclareUnfit as Cmd;
+use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create DeclareUnfit Test
@@ -28,8 +29,8 @@ class CreateDeclareUnfitTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new CreateDeclareUnfit();
-        $this->mockRepo('TmCaseDecision', TmCaseDecision::class);
-        $this->mockRepo('TransportManager', TransportManager::class);
+        $this->mockRepo('TmCaseDecision', TmCaseDecisionRepo::class);
+        $this->mockRepo('TransportManager', TransportManagerRepo::class);
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),

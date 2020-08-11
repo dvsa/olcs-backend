@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PsvDisc;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PsvDisc\ConfirmPrinting;
-use Dvsa\Olcs\Api\Domain\Repository\DiscSequened as DiscSequenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\DiscSequence as DiscSequenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PsvDisc as PsvDiscRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;

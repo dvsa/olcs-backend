@@ -10,13 +10,13 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateSafety;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Application\UpdateSafety as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateSafety as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Update Safety Test
@@ -29,7 +29,7 @@ class UpdateSafetyTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateSafety();
         $this->mockRepo('Application', Application::class);
-        $this->mockRepo('Licence', \Dvsa\Olcs\Api\Entity\Licence\Licence::class);
+        $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
 
         parent::setUp();
     }

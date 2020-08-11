@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GoodsDisc;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GoodsDisc\ConfirmPrinting;
-use Dvsa\Olcs\Api\Domain\Repository\DiscSequened as DiscSequenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\DiscSequence as DiscSequenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;

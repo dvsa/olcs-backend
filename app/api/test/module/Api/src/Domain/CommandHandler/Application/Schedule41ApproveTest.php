@@ -10,12 +10,13 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Schedule41\ApproveS4;
-use Dvsa\Olcs\Api\Entity\Application\S4;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Schedule41Approve;
-use Dvsa\Olcs\Transfer\Command\Application\Schedule41Approve as Cmd;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\S4;
+use Dvsa\Olcs\Transfer\Command\Application\Schedule41Approve as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Class Schedule41ApproveTest
@@ -29,14 +30,9 @@ class Schedule41ApproveTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Schedule41Approve();
-        $this->mockRepo('Application', Application::class);
+        $this->mockRepo('Application', ApplicationRepo::class);
 
         parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        parent::initReferences();
     }
 
     /**

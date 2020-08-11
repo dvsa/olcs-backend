@@ -14,13 +14,14 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
 {
     protected $repoServiceName = 'changeMe';
     protected $entityClass = 'changeMe';
+    protected $repoClass = 'changeMe';
     protected $sutClass = 'changeMe';
     protected $withdrawStatus = IrhpInterface::STATUS_WITHDRAWN;
     protected $emails = []; //map a withdraw status to a confirmation email
 
     public function setUp(): void
     {
-        $this->mockRepo($this->repoServiceName, $this->entityClass);
+        $this->mockRepo($this->repoServiceName, $this->repoClass);
         $this->sut = new $this->sutClass();
 
         parent::setUp();
