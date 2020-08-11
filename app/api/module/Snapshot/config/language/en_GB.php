@@ -1,6 +1,8 @@
 <?php
 // @codingStandardsIgnoreFile
 return [
+    'header-vehicle-operator-licensing' => 'Vehicle Operator Licensing',
+    'header-gov.uk' => 'GOV.UK',
     'journey_multiple' => 'Multiple journeys',
     'journey_single' => 'Single journeys',
     'permits.bilateral.norway.period.1' => '1 January 2021 to 30 September 2021',
@@ -209,6 +211,7 @@ return [
     'review-vehicles' => 'Vehicles',
     'review-vehicles_declarations' => 'Vehicles declarations',
     'review-vehicles_psv' => 'Vehicles',
+    'review-page-title' => 'Review your application',
     'tm-review-main' => 'Your details',
     'tm-review-main-birthDate' => 'Date of birth',
     'tm-review-main-birthPlace' => 'Place of birth',
