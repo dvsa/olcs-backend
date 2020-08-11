@@ -727,7 +727,8 @@ return [
             'TranslationKey' => RepositoryFactory::class,
             'MessageFailures' => RepositoryFactory::class,
             'TranslationKeyText' => RepositoryFactory::class,
-            'Language' => RepositoryFactory::class
+            'Language' => RepositoryFactory::class,
+            'Replacement' => RepositoryFactory::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [
