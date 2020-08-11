@@ -7,18 +7,16 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateAddresses;
-
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-
-use Dvsa\Olcs\Transfer\Command\Application\UpdateAddresses as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateAddresses;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateAddresses as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Update Addresses test
@@ -30,7 +28,7 @@ class UpdateAddressesTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new UpdateAddresses();
-        $this->mockRepo('Application', Application::class);
+        $this->mockRepo('Application', ApplicationRepo::class);
 
         parent::setUp();
     }

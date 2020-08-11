@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\MessageQueue\Consumer\Companie
 
 use Dvsa\Olcs\Api\Domain\Command\Email\SendFailedOrganisationsList;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\MessageFailures as MessageFailuresRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\MessageFailures;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -27,7 +28,7 @@ class ProcessInsolvencyDlqTest extends CompaniesHouseConsumerTestCase
     public function setUp(): void
     {
         $this->sut = new ProcessInsolvencyDlq();
-        $this->mockRepo('MessageFailures', MessageFailures::class);
+        $this->mockRepo('MessageFailures', MessageFailuresRepo::class);
         $this->mockRepo('Organisation', OrganisationRepo::class);
     }
 

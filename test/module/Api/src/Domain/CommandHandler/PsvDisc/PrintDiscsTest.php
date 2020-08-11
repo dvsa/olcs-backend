@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\DiscSequence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PsvDisc\PrintDiscs;
-use Dvsa\Olcs\Api\Domain\Repository\DiscSequened as DiscSequenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\DiscSequence as DiscSequenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PsvDisc as PsvDiscRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\PsvDisc\PrintDiscs as Cmd;

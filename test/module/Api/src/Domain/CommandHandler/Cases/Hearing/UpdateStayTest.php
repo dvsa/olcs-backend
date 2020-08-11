@@ -7,16 +7,19 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Hearing;
 
-use Doctrine\ORM\Query;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\UpdateStay;
+use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Hearing\UpdateStay as Cmd;
-use Dvsa\Olcs\Api\Entity\Cases\Stay as StayEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Appeal as AppealEntity;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\UpdateStay;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository\Appeal as AppealRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Stay as StayRepo;
+use Dvsa\Olcs\Api\Entity\Cases\Appeal as AppealEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Stay as StayEntity;
+use Dvsa\Olcs\Transfer\Command\Cases\Hearing\UpdateStay as Cmd;
+use Mockery as m;
 
 /**
  * Update Stay Test
@@ -28,9 +31,9 @@ class UpdateStayTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new UpdateStay();
-        $this->mockRepo('Stay', StayEntity::class);
-        $this->mockRepo('Cases', CasesEntity::class);
-        $this->mockRepo('Appeal', AppealEntity::class);
+        $this->mockRepo('Stay', StayRepo::class);
+        $this->mockRepo('Cases', CasesRepo::class);
+        $this->mockRepo('Appeal', AppealRepo::class);
 
         $this->refData = [
             'stay_t_ut',

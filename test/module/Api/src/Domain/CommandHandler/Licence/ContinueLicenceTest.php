@@ -31,7 +31,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('Licence', LicenceEntity::class);
+        $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
         $this->mockRepo('GoodsDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
 
@@ -251,7 +251,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class,
-            ['id' => $licenceId], new Result()
+            ['id' => $licenceId],
+            new Result()
         );
 
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once()->andReturnUsing(
@@ -379,7 +380,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class,
-            ['id' => $licenceId], new Result()
+            ['id' => $licenceId],
+            new Result()
         );
 
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once()->andReturnUsing(

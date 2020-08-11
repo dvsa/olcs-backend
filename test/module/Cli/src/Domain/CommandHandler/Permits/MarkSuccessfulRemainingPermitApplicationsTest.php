@@ -25,7 +25,7 @@ class MarkSuccessfulRemainingPermitApplicationsTest extends CommandHandlerTestCa
     public function setUp(): void
     {
         $this->sut = new MarkSuccessfulRemainingPermitApplicationsHandler();
-        $this->mockRepo('IrhpApplication', IrhpApplication::class);
+        $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
 

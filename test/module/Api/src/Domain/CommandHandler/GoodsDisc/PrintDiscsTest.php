@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\DiscSequence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GoodsDisc\PrintDiscs;
-use Dvsa\Olcs\Api\Domain\Repository\DiscSequened as DiscSequenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\DiscSequence as DiscSequenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\GoodsDisc\PrintDiscs as Cmd;
@@ -93,7 +93,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
         $this->repoMap['GoodsDisc']
             ->shouldReceive('fetchDiscsToPrint')
-            ->with($niFlag, $licenceType, $maxResults * DiscSequence::DISCS_ON_PAGE )
+            ->with($niFlag, $licenceType, $maxResults * DiscSequence::DISCS_ON_PAGE)
             ->andReturn(['disc1'])
             ->once()
             ->getMock();
