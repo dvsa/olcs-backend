@@ -208,4 +208,7 @@ return [
     'TranslationKeyLocation' => 'System',
     'TranslationKeyTagLink' => 'System',
     'TranslationKeyText' => 'System',
+    'Replacement' => 'System',
+    'ReplacementCategoryLink' => 'System',
+    'ReplacementTagLink' => 'System',
 ];
