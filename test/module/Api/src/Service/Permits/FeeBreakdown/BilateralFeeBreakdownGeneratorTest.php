@@ -175,6 +175,12 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
 
         $expectedResult = [
             [
+                'countryName' => 'Norway',
+                'type' => 'permits.irhp.range.type.standard.multiple',
+                'quantity' => 12,
+                'total' => 360,
+            ],
+            [
                 'countryName' => 'Spain',
                 'type' => 'permits.irhp.range.type.standard.single',
                 'quantity' => 5,
@@ -185,12 +191,6 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
                 'type' => 'permits.irhp.range.type.cabotage.single',
                 'quantity' => 8,
                 'total' => 480,
-            ],
-            [
-                'countryName' => 'Norway',
-                'type' => 'permits.irhp.range.type.standard.multiple',
-                'quantity' => 12,
-                'total' => 360,
             ],
         ];
 
