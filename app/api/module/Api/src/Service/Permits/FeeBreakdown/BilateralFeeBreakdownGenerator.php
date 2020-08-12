@@ -64,7 +64,20 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
             }
         }
 
-        return $rows;
+        // sort the rows by country name, but leave the order of rows within each country unchanged
+        $distinctCountryNames = array_unique(array_column($rows, 'countryName'));
+        sort($distinctCountryNames);
+
+        $sortedRows = [];
+        foreach ($distinctCountryNames as $countryName) {
+            foreach ($rows as $row) {
+                if ($row['countryName'] == $countryName) {
+                    $sortedRows[] = $row;
+                }
+            }
+        }
+
+        return $sortedRows;
     }
 
     /**
