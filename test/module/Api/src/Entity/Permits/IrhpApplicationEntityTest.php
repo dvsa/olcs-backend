@@ -3748,7 +3748,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
         $question->shouldReceive('getFormControlType')->andReturn(
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS
+            Question::FORM_CONTROL_ECMT_NO_OF_PERMITS
         );
 
         $step = m::mock(ApplicationStep::class);
@@ -3831,7 +3831,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
         $question->shouldReceive('getFormControlType')->andReturn(
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS
+            Question::FORM_CONTROL_ECMT_INTERNATIONAL_JOURNEYS
         );
 
         $step = m::mock(ApplicationStep::class);
@@ -3858,7 +3858,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
         $question->shouldReceive('getFormControlType')->andReturn(
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS
+            Question::FORM_CONTROL_ECMT_INTERNATIONAL_JOURNEYS
         );
 
         $step = m::mock(ApplicationStep::class);
@@ -3880,7 +3880,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
         $question->shouldReceive('getFormControlType')->andReturn(
-            Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS
+            Question::FORM_CONTROL_ECMT_SECTORS
         );
 
         $step = m::mock(ApplicationStep::class);
@@ -4034,9 +4034,9 @@ class IrhpApplicationEntityTest extends EntityTester
         return [
             [false, null],
             [true, Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE],
-            [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD],
+            [true, Question::FORM_CONTROL_ECMT_ANNUAL_TRIPS_ABROAD],
             [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE],
-            [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES],
+            [true, Question::FORM_CONTROL_ECMT_RESTRICTED_COUNTRIES],
             [true, Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE],
             [true, Question::FORM_CONTROL_COMMON_CERTIFICATES],
         ];
@@ -4543,7 +4543,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->shouldReceive('calculateTotalPermitsRequired')
             ->andReturn(7);
         $entity->shouldReceive('getAnswerValueByQuestionId')
-            ->with(Question::QUESTION_ID_SHORT_TERM_ANNUAL_TRIPS_ABROAD)
+            ->with(Question::QUESTION_ID_ECMT_ANNUAL_TRIPS_ABROAD)
             ->andReturn(35);
 
         $this->assertEquals(
@@ -4573,7 +4573,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->shouldReceive('calculateTotalPermitsRequired')
             ->andReturn(0);
         $entity->shouldReceive('getAnswerValueByQuestionId')
-            ->with(Question::QUESTION_ID_SHORT_TERM_ANNUAL_TRIPS_ABROAD)
+            ->with(Question::QUESTION_ID_ECMT_ANNUAL_TRIPS_ABROAD)
             ->andReturn(0);
 
         $entity->getPermitIntensityOfUse($emissionsCategoryId);

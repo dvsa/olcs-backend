@@ -743,6 +743,11 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
                 'business_process' => RefData::BUSINESS_PROCESS_AG,
                 'allocation_mode' => self::ALLOCATION_MODE_NONE,
             ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                'business_process' => RefData::BUSINESS_PROCESS_APGG,
+                'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
         ];
 
         foreach ($mappings as $mapping) {
