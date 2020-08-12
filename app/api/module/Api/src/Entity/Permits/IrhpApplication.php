@@ -380,17 +380,17 @@ class IrhpApplication extends AbstractIrhpApplication implements
             switch ($formControlType) {
                 case Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS:
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
-                case Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS:
+                case Question::FORM_CONTROL_ECMT_NO_OF_PERMITS:
                     return $this->getEcmtNoOfPermitsAnswer();
-                case Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS:
+                case Question::FORM_CONTROL_ECMT_INTERNATIONAL_JOURNEYS:
                     return $this->getInternationalJourneysAnswer();
-                case Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS:
-                    return $this->getEcmtShortTermSectorsAnswer();
+                case Question::FORM_CONTROL_ECMT_SECTORS:
+                    return $this->getEcmtSectorsAnswer();
                 case Question::FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS:
                     return $this->getEcmtAnnual2018NoOfPermitsAnswer();
-                case Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES:
+                case Question::FORM_CONTROL_ECMT_RESTRICTED_COUNTRIES:
                 case Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE:
-                case Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD:
+                case Question::FORM_CONTROL_ECMT_ANNUAL_TRIPS_ABROAD:
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE:
                 case Question::FORM_CONTROL_CERT_ROADWORTHINESS_MOT_EXPIRY_DATE:
                 case Question::FORM_CONTROL_COMMON_CERTIFICATES:
@@ -456,7 +456,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return int|null
      */
-    private function getEcmtShortTermSectorsAnswer()
+    private function getEcmtSectorsAnswer()
     {
         if (!is_null($this->sectors)) {
             return $this->sectors->getId();
@@ -1812,7 +1812,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         // question slug to derive the answer to the annual trips abroad question
 
         return $this->calculatePermitIntensityOfUse(
-            $this->getAnswerValueByQuestionId(Question::QUESTION_ID_SHORT_TERM_ANNUAL_TRIPS_ABROAD),
+            $this->getAnswerValueByQuestionId(Question::QUESTION_ID_ECMT_ANNUAL_TRIPS_ABROAD),
             $numberOfPermits
         );
     }
