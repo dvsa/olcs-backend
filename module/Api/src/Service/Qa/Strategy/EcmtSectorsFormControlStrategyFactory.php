@@ -19,7 +19,7 @@ class EcmtSectorsFormControlStrategyFactory implements FactoryInterface
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         return new BaseFormControlStrategy(
-            'radio',
+            'ecmt_sectors',
             $mainServiceLocator->get('QaRadioElementGenerator'),
             $mainServiceLocator->get('QaEcmtSectorsAnswerSaver'),
             $mainServiceLocator->get('QaEcmtSectorsAnswerClearer'),
