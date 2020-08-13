@@ -17,5 +17,28 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Replacement extends AbstractReplacement
 {
+    /**
+     * @param string $placeholder
+     * @param string $replacementText
+     * @return Replacement
+     */
+    public static function create(string $placeholder, string $replacementText)
+    {
+        $instance = new self;
+        $instance->placeholder = $placeholder;
+        $instance->replacementText = $replacementText;
+        return $instance;
+    }
 
+    /**
+     * @param string $placeholder
+     * @param string $replacementText
+     * @return $this
+     */
+    public function update(string $placeholder, string $replacementText)
+    {
+        $this->placeholder = $placeholder;
+        $this->replacementText = $replacementText;
+        return $this;
+    }
 }

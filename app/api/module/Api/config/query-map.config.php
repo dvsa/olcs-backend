@@ -701,4 +701,8 @@ return [
     TransferQuery\TranslationKey\GetList::class => QueryHandler\TranslationKey\GetList::class,
     TransferQuery\Language\GetList::class => QueryHandler\Language\GetList::class,
 
+    //Replacements
+    TransferQuery\Replacement\ById::class => QueryHandler\Replacement\ById::class,
+    TransferQuery\Replacement\GetList::class => QueryHandler\Replacement\GetList::class,
+
 ];
