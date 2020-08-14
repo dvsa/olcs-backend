@@ -3,7 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Radio;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\Radio;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\RadioFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\RadioGenerator;
@@ -40,10 +41,7 @@ class RadioGeneratorTest extends MockeryTestCase
             ]
         ];
 
-        $returnedOptions = [
-            'permit_app_uc' => 'Under Consideration',
-            'permit_app_nys' => 'Not Yet Submitted'
-        ];
+        $optionList = m::mock(OptionList::class);
 
         $options = [
             'notSelectedMessage' => $notSelectedMessageOptions,
@@ -56,7 +54,7 @@ class RadioGeneratorTest extends MockeryTestCase
 
         $radioFactory = m::mock(RadioFactory::class);
         $radioFactory->shouldReceive('create')
-            ->with($returnedOptions, $notSelectedMessageTranslateableText, $answerValue)
+            ->with($optionList, $notSelectedMessageTranslateableText, $answerValue)
             ->andReturn($radio);
 
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
@@ -70,17 +68,17 @@ class RadioGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($answerValue);
 
-        $optionsGenerator = m::mock(OptionsGenerator::class);
-        $optionsGenerator->shouldReceive('generate')
+        $optionListGenerator = m::mock(OptionListGenerator::class);
+        $optionListGenerator->shouldReceive('generate')
             ->with($sourceOptions)
-            ->andReturn($returnedOptions);
+            ->andReturn($optionList);
 
         $translateableTextGenerator = m::mock(TranslateableTextGenerator::class);
         $translateableTextGenerator->shouldReceive('generate')
             ->with($notSelectedMessageOptions)
             ->andReturn($notSelectedMessageTranslateableText);
 
-        $radioGenerator = new RadioGenerator($radioFactory, $optionsGenerator, $translateableTextGenerator);
+        $radioGenerator = new RadioGenerator($radioFactory, $optionListGenerator, $translateableTextGenerator);
 
         $this->assertSame(
             $radio,

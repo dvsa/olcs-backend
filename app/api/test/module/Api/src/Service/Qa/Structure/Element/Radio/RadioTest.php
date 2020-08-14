@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Radio;
 
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\Radio;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
 use Mockery as m;
@@ -23,6 +24,11 @@ class RadioTest extends MockeryTestCase
             'key2' => 'value2'
         ];
 
+        $optionList = m::mock(OptionList::class);
+        $optionList->shouldReceive('getRepresentation')
+            ->withNoArgs()
+            ->andReturn($optionsRepresentation);
+
         $notSelectedMessageTranslateableTextRepresentation = ['notSelectedMessageTranslateableTextRepresentation'];
 
         $notSelectedMessageTranslateableText = m::mock(TranslateableText::class);
@@ -30,7 +36,7 @@ class RadioTest extends MockeryTestCase
             ->andReturn($notSelectedMessageTranslateableTextRepresentation);
 
         $radio = new Radio(
-            $optionsRepresentation,
+            $optionList,
             $notSelectedMessageTranslateableText,
             $value
         );
