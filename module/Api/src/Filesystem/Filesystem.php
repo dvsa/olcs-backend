@@ -3,8 +3,11 @@
 namespace Dvsa\Olcs\Api\Filesystem;
 
 use Symfony\Component\Filesystem\Filesystem as BaseFileSystem;
-use Symfony\Component\Filesystem\LockHandler;
-use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Lock\Exception\LockAcquiringException;
+use Symfony\Component\Lock\Exception\LockConflictedException;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\LockInterface;
+use Symfony\Component\Lock\Store\FlockStore;
 
 /**
  * Class Filesystem
@@ -22,8 +25,8 @@ class Filesystem extends BaseFileSystem
      */
     public function createTmpDir($path, $prefix = '', $cleanup = true)
     {
-        $lock = new LockHandler(hash('sha256', $path));
-        $lock->lock(true);
+        $lock = $this->getLock($path);
+        $lock->acquire(true);
 
         do {
             $dirname = $path . DIRECTORY_SEPARATOR . uniqid($prefix);
@@ -48,7 +51,7 @@ class Filesystem extends BaseFileSystem
      */
     public function createTmpFile($path, $prefix = '', $cleanup = true)
     {
-        $lock = new LockHandler(hash('sha256', $path));
+        $lock = $this->getLock($path);
 
         // sometimes we are getting error trying to lock the file on pre-prod
         // if the fix below will not work we can try to put new LockHandler inside the try/catch block
@@ -56,18 +59,14 @@ class Filesystem extends BaseFileSystem
 
         do {
             try {
-                $locked = $lock->lock(true);
-            } catch (IOException $e) {
+                $lock->acquire(true);
+            } catch (LockConflictedException | LockAcquiringException $exception) {
                 if ($tryToLock === self::LOCK_TRIES) {
-                    throw $e;
+                    throw $exception;
                 }
             }
-
-            if ($locked) {
-                break;
-            }
             usleep(500);
-        } while ($tryToLock++ < self::LOCK_TRIES);
+        } while (!$lock->isAcquired() && $tryToLock++ < self::LOCK_TRIES);
 
         do {
             $filename = $path . DIRECTORY_SEPARATOR . uniqid($prefix);
@@ -94,5 +93,12 @@ class Filesystem extends BaseFileSystem
                 $this->remove($name);
             }
         );
+    }
+
+    protected function getLock($path): LockInterface
+    {
+        $store = new FlockStore();
+        $factory = new LockFactory($store);
+        return $factory->createLock($path);
     }
 }
