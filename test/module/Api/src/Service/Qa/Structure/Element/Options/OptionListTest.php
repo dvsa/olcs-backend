@@ -15,58 +15,82 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class OptionListTest extends MockeryTestCase
 {
+    const ITEM_1_VALUE = '1';
+    const ITEM_1_LABEL = 'Food';
+    const ITEM_1_HINT = 'Hint for the Food item';
+
+    const ITEM_2_VALUE = '3';
+    const ITEM_2_LABEL = 'Metals';
+    const ITEM_2_HINT = 'Hint for the Metals item';
+
+    private $option1;
+
+    private $option2;
+
+    private $optionFactory;
+
+    private $optionList;
+
+    public function setUp(): void
+    {
+        $this->option1 = m::mock(Option::class);
+
+        $this->option2 = m::mock(Option::class);
+
+        $this->optionFactory = m::mock(OptionFactory::class);
+        $this->optionFactory->shouldReceive('create')
+            ->with(self::ITEM_1_VALUE, self::ITEM_1_LABEL, self::ITEM_1_HINT)
+            ->once()
+            ->andReturn($this->option1);
+        $this->optionFactory->shouldReceive('create')
+            ->with(self::ITEM_2_VALUE, self::ITEM_2_LABEL, self::ITEM_2_HINT)
+            ->once()
+            ->andReturn($this->option2);
+
+        $this->optionList = new OptionList($this->optionFactory);
+        $this->optionList->add(self::ITEM_1_VALUE, self::ITEM_1_LABEL, self::ITEM_1_HINT);
+        $this->optionList->add(self::ITEM_2_VALUE, self::ITEM_2_LABEL, self::ITEM_2_HINT);
+    }
+
     public function testGetRepresentation()
     {
-        $item1Value = '1';
-        $item1Label = 'Food';
-        $item1Hint = 'Hint for the Food item';
-
-        $item2Value = '3';
-        $item2Label = 'Metals';
-        $item2Hint = 'Hint for the Metals item';
-
         $option1Representation = [
-            'value' => $item1Value,
-            'label' => $item1Label,
-            'hint' => $item1Hint,
+            'value' => self::ITEM_1_VALUE,
+            'label' => self::ITEM_1_LABEL,
+            'hint' => self::ITEM_1_HINT,
         ];
 
         $option2Representation = [
-            'value' => $item2Value,
-            'label' => $item2Label,
-            'hint' => $item2Hint,
+            'value' => self::ITEM_2_VALUE,
+            'label' => self::ITEM_2_LABEL,
+            'hint' => self::ITEM_2_HINT,
         ];
 
-        $option1 = m::mock(Option::class);
-        $option1->shouldReceive('getRepresentation')
+        $this->option1->shouldReceive('getRepresentation')
             ->andReturn($option1Representation);
         
-        $option2 = m::mock(Option::class);
-        $option2->shouldReceive('getRepresentation')
+        $this->option2->shouldReceive('getRepresentation')
             ->andReturn($option2Representation);
-
-        $optionFactory = m::mock(OptionFactory::class);
-        $optionFactory->shouldReceive('create')
-            ->with($item1Value, $item1Label, $item1Hint)
-            ->once()
-            ->andReturn($option1);
-        $optionFactory->shouldReceive('create')
-            ->with($item2Value, $item2Label, $item2Hint)
-            ->once()
-            ->andReturn($option2);
 
         $expectedRepresentation = [
             $option1Representation,
             $option2Representation,
         ];
 
-        $optionList = new OptionList($optionFactory);
-        $optionList->add($item1Value, $item1Label, $item1Hint);
-        $optionList->add($item2Value, $item2Label, $item2Hint);
-
         $this->assertEquals(
             $expectedRepresentation,
-            $optionList->getRepresentation()
+            $this->optionList->getRepresentation()
         );
+    }
+
+    public function testGetOptions()
+    {
+        $options = $this->optionList->getOptions();
+
+        $this->assertCount(2, $options);
+        $this->assertArrayHasKey(0, $options);
+        $this->assertSame($this->option1, $options[0]);
+        $this->assertArrayHasKey(1, $options);
+        $this->assertSame($this->option2, $options[1]);
     }
 }

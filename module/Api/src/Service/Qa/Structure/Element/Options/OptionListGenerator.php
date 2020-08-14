@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options;
 
 use RuntimeException;
 
-class OptionsGenerator
+class OptionListGenerator
 {
     /** @var array */
     private $sources = [];
@@ -21,7 +21,7 @@ class OptionsGenerator
      * @param OptionListFactory $optionListFactory
      * @param OptionFactory $optionFactory
      *
-     * @return OptionsGenerator
+     * @return OptionListGenerator
      */
     public function __construct(OptionListFactory $optionListFactory, OptionFactory $optionFactory)
     {
@@ -47,7 +47,7 @@ class OptionsGenerator
         $optionList = $this->optionListFactory->create($this->optionFactory);
         $this->sources[$sourceName]->populateOptionList($optionList, $data['options']);
 
-        return $optionList->getRepresentation();
+        return $optionList;
     }
 
     /**

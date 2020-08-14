@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AlwaysIncludeSlugTrait;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 use RuntimeException;
 
@@ -14,19 +14,19 @@ class RadioAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
     use AlwaysIncludeSlugTrait, AnyTrait;
 
-    /** @var OptionsGenerator */
-    private $optionsGenerator;
+    /** @var OptionListGenerator */
+    private $optionListGenerator;
 
     /**
      * Create service instance
      *
-     * @param OptionsGenerator $optionsGenerator
+     * @param OptionListGenerator $optionListGenerator
      *
      * @return RadioAnswerSummaryProvider
      */
-    public function __construct(OptionsGenerator $optionsGenerator)
+    public function __construct(OptionListGenerator $optionListGenerator)
     {
-        $this->optionsGenerator = $optionsGenerator;
+        $this->optionListGenerator = $optionListGenerator;
     }
 
     /**
@@ -44,12 +44,12 @@ class RadioAnswerSummaryProvider implements AnswerSummaryProviderInterface
     {
         $options = $qaContext->getApplicationStepEntity()->getDecodedOptionSource();
 
-        $radioOptions = $this->optionsGenerator->generate($options['source']);
+        $radioOptions = $this->optionListGenerator->generate($options['source'])->getOptions();
         $answerValue = $qaContext->getAnswerValue();
 
         foreach ($radioOptions as $radioOption) {
-            if ($radioOption['value'] == $answerValue) {
-                $answerLabel = $radioOption['label'];
+            if ($radioOption->getValue() == $answerValue) {
+                $answerLabel = $radioOption->getLabel();
                 return ['answer' => $answerLabel];
             }
         }

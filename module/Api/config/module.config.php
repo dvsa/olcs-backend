@@ -278,8 +278,9 @@ return [
                 => ApiSrv\Qa\Structure\JsonDecodingFilteredTranslateableTextGeneratorFactory::class,
             'QaValidatorGenerator' => ApiSrv\Qa\Structure\ValidatorGeneratorFactory::class,
             'QaValidatorListGenerator' => ApiSrv\Qa\Structure\ValidatorListGeneratorFactory::class,
-            'QaOptionsGenerator' => ApiSrv\Qa\Structure\Element\Options\OptionsGeneratorFactory::class,
+            'QaOptionListGenerator' => ApiSrv\Qa\Structure\Element\Options\OptionListGeneratorFactory::class,
             'QaRefDataOptionsSource' => ApiSrv\Qa\Structure\Element\Options\RefDataSourceFactory::class,
+            'QaEcmtPermitUsageRefDataOptionsSource' => ApiSrv\Qa\Structure\Element\Options\EcmtPermitUsageRefDataSourceFactory::class,
             'QaRepoQueryOptionsSource' => ApiSrv\Qa\Structure\Element\Options\RepoQuerySourceFactory::class,
 
             'QaEcmtRemovalNoOfPermitsAnswerWriter' =>

@@ -30,7 +30,7 @@ class Option
     }
 
     /**
-     * Get the representation of this element to be returned by the API endpoint
+     * Get the representation of this option to be returned by the API endpoint
      *
      * @return array
      */
@@ -46,5 +46,45 @@ class Option
         }
 
         return $representation;
+    }
+
+    /**
+     * Get the value of this option
+     *
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Get the label of this option
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * Set the label of this option
+     *
+     * @param string $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+    }
+
+    /**
+     * Set the hint of this option
+     *
+     * @param string $hint
+     */
+    public function setHint($hint)
+    {
+        $this->hint = $hint;
     }
 }
