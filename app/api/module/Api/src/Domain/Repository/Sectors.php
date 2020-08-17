@@ -33,7 +33,7 @@ class Sectors extends AbstractRepository
     public function fetchQaOptions()
     {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('s.id as value, s.name as label, s.description as hint')
+            ->select('s.id as value, s.nameKey as label, s.descriptionKey as hint')
             ->from(Entity::class, 's')
             ->orderBy('s.displayOrder', 'ASC')
             ->getQuery()
