@@ -429,7 +429,7 @@ return [
     'qanda.ecmt.cabotage.question-summary' => 'Cabotage',
     'qanda.ecmt.cabotage.checkbox.label' => 'I confirm that I will not undertake cabotage journeys using an ECMT permit.',
     'qanda.ecmt.emissions.question-summary' => 'Euro emission standard',
-    'qanda.ecmt.emissions.checkbox.label' => 'I confirm that I will only use my ECMT permits with vehicles that are environmentally compliant with the minimum Euro emissions standards that the permit allows.',
+    'qanda.ecmt.emissions.checkbox.label' => 'I confirm that I will only use my ECMT permits with vehicles that meet the minimum euro emissions standards allowed.',
     'qanda.ecmt.number-of-permits.question-summary' => 'Number of permits',
     'qanda.ecmt-short-term.restricted-countries.question-summary' => 'Transportation of goods to Greece, Hungary, Italy or Russia',
     'qanda.ecmt-short-term.restricted-countries.question-summary.ecmt-short-term-2020-apsg-without-sectors' => 'Transportation of goods to Greece, Hungary, Italy or Russia',
