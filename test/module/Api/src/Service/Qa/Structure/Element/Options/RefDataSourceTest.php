@@ -15,7 +15,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class RefDataSourceTest extends MockeryTestCase
 {
-    public function testGenerateOptions()
+    public function testPopulateOptionList()
     {
         $categoryId = 'permit_application_status';
 

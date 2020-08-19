@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 
@@ -15,8 +15,8 @@ class RadioGenerator implements ElementGeneratorInterface
     /** @var RadioFactory */
     private $radioFactory;
 
-    /** @var OptionsGenerator */
-    private $optionsGenerator;
+    /** @var OptionListGenerator */
+    private $optionListGenerator;
 
     /** @var TranslateableTextGenerator */
     private $translateableTextGenerator;
@@ -25,18 +25,18 @@ class RadioGenerator implements ElementGeneratorInterface
      * Create service instance
      *
      * @param RadioFactory $radioFactory
-     * @param OptionsGenerator $optionsGenerator
+     * @param OptionListGenerator $optionListGenerator
      * @param TranslateableTextGenerator $translateableTextGenerator
      *
      * @return RadioGenerator
      */
     public function __construct(
         RadioFactory $radioFactory,
-        OptionsGenerator $optionsGenerator,
+        OptionListGenerator $optionListGenerator,
         TranslateableTextGenerator $translateableTextGenerator
     ) {
         $this->radioFactory = $radioFactory;
-        $this->optionsGenerator = $optionsGenerator;
+        $this->optionListGenerator = $optionListGenerator;
         $this->translateableTextGenerator = $translateableTextGenerator;
     }
 
@@ -49,7 +49,7 @@ class RadioGenerator implements ElementGeneratorInterface
         $options = $applicationStepEntity->getDecodedOptionSource();
 
         return $this->radioFactory->create(
-            $this->optionsGenerator->generate($options['source']),
+            $this->optionListGenerator->generate($options['source']),
             $this->translateableTextGenerator->generate($options['notSelectedMessage']),
             $context->getAnswerValue()
         );

@@ -16,7 +16,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class RepoQuerySourceTest extends MockeryTestCase
 {
-    public function testGenerateOptions()
+    public function testPopulateOptionList()
     {
         $methodName = 'fetchSectorOptions';
         $repoName = 'Sector';

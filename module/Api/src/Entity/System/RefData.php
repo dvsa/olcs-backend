@@ -103,6 +103,11 @@ class RefData extends AbstractRefData
     const STD_OR_CAB_STANDARD = 'std_or_cab_standard';
     const STD_OR_CAB_CABOTAGE = 'std_or_cab_cabotage';
 
+    // ecmt permit usage
+    const ECMT_PERMIT_USAGE_BOTH = 'st_permit_usage_both';
+    const ECMT_PERMIT_USAGE_CROSS_TRADE_ONLY = 'st_permit_usage_cross_trade_only';
+    const ECMT_PERMIT_USAGE_TRANSIT_ONLY = 'st_permit_usage_transit_only';
+
     /**
      * RefData constructor.
      *

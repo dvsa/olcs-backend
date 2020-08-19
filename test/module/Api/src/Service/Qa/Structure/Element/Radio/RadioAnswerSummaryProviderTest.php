@@ -5,7 +5,8 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\Option;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\RadioAnswerSummaryProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -18,13 +19,15 @@ use RuntimeException;
  */
 class RadioAnswerSummaryProviderTest extends MockeryTestCase
 {
+    private $radioOption2;
+
     private $applicationStepEntity;
 
     private $qaContext;
 
     private $element;
 
-    private $optionsGenerator;
+    private $optionListGenerator;
 
     private $radioAnswerSummaryProvider;
 
@@ -39,20 +42,22 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
             'source' => $decodedOptionSourceSource
         ];
 
-        $radioOptions = [
-            [
-                'value' => 'item1Value',
-                'label' => 'item1Label'
-            ],
-            [
-                'value' => 'item2Value',
-                'label' => 'item2Label'
-            ],
-            [
-                'value' => 'item3Value',
-                'label' => 'item3Label'
-            ],
-        ];
+        $radioOption1 = m::mock(Option::class);
+        $radioOption1->shouldReceive('getValue')
+            ->withNoArgs()
+            ->andReturn('item1Value');
+
+        $this->radioOption2 = m::mock(Option::class);
+        $this->radioOption2->shouldReceive('getValue')
+            ->withNoArgs()
+            ->andReturn('item2Value');
+
+        $radioOption3 = m::mock(Option::class);
+        $radioOption3->shouldReceive('getValue')
+            ->withNoArgs()
+            ->andReturn('item3Value');
+
+        $radioOptions = [$radioOption1, $this->radioOption2, $radioOption3];
 
         $this->applicationStepEntity = m::mock(ApplicationStepEntity::class);
         $this->applicationStepEntity->shouldReceive('getDecodedOptionSource')
@@ -66,12 +71,17 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
 
         $this->element = m::mock(ElementInterface::class);
 
-        $this->optionsGenerator = m::mock(OptionsGenerator::class);
-        $this->optionsGenerator->shouldReceive('generate')
-            ->with($decodedOptionSourceSource)
+        $optionList = m::mock(OptionList::class);
+        $optionList->shouldReceive('getOptions')
+            ->withNoArgs()
             ->andReturn($radioOptions);
 
-        $this->radioAnswerSummaryProvider = new RadioAnswerSummaryProvider($this->optionsGenerator);
+        $this->optionListGenerator = m::mock(OptionListGenerator::class);
+        $this->optionListGenerator->shouldReceive('generate')
+            ->with($decodedOptionSourceSource)
+            ->andReturn($optionList);
+
+        $this->radioAnswerSummaryProvider = new RadioAnswerSummaryProvider($this->optionListGenerator);
     }
 
     public function testGetTemplateName()
@@ -88,6 +98,11 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
     public function testGetTemplateVariables($isSnapshot)
     {
         $qaAnswer = 'item2Value';
+        $item2Label = 'item2Label';
+
+        $this->radioOption2->shouldReceive('getLabel')
+            ->withNoArgs()
+            ->andReturn($item2Label);
 
         $this->qaContext->shouldReceive('getAnswerValue')
             ->withNoArgs()
@@ -100,7 +115,7 @@ class RadioAnswerSummaryProviderTest extends MockeryTestCase
         );
 
         $this->assertEquals(
-            ['answer' => 'item2Label'],
+            ['answer' => $item2Label],
             $templateVariables
         );
     }

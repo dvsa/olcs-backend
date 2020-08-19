@@ -3,31 +3,32 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
 
 class Radio implements ElementInterface
 {
-    /** @var array */
-    private $options;
+    /** @var OptionList */
+    private $optionList;
 
-    /** @var TranslateableText $notSelectedMessage */
+    /** @var TranslateableText */
     private $notSelectedMessage;
 
-    /** @var mixed $value */
+    /** @var mixed */
     private $value;
 
     /**
      * Create instance
      *
-     * @param array $options
+     * @param OptionList $optionList
      * @param TranslateableText $notSelectedMessage
      * @param mixed $value
      *
      * @return Radio
      */
-    public function __construct(array $options, TranslateableText $notSelectedMessage, $value)
+    public function __construct(OptionList $optionList, TranslateableText $notSelectedMessage, $value)
     {
-        $this->options = $options;
+        $this->optionList = $optionList;
         $this->notSelectedMessage = $notSelectedMessage;
         $this->value = $value;
     }
@@ -38,7 +39,7 @@ class Radio implements ElementInterface
     public function getRepresentation()
     {
         return [
-            'options' => $this->options,
+            'options' => $this->optionList->getRepresentation(),
             'notSelectedMessage' => $this->notSelectedMessage->getRepresentation(),
             'value' => $this->value
         ];
