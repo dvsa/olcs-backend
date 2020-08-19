@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Options;
 
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\SourceInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
@@ -12,11 +12,11 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RuntimeException;
 
 /**
- * OptionsGeneratorTest
+ * OptionListGeneratorTest
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class OptionsGeneratorTest extends MockeryTestCase
+class OptionListGeneratorTest extends MockeryTestCase
 {
     private $directSource;
 
@@ -24,7 +24,7 @@ class OptionsGeneratorTest extends MockeryTestCase
 
     private $optionFactory;
 
-    private $optionsGenerator;
+    private $optionListGenerator;
 
     public function setUp(): void
     {
@@ -34,17 +34,17 @@ class OptionsGeneratorTest extends MockeryTestCase
 
         $this->optionFactory = m::mock(OptionFactory::class);
         
-        $this->optionsGenerator = new OptionsGenerator($this->optionListFactory, $this->optionFactory);
+        $this->optionListGenerator = new OptionListGenerator($this->optionListFactory, $this->optionFactory);
 
-        $this->optionsGenerator->registerSource(
+        $this->optionListGenerator->registerSource(
             'refData',
             m::mock(SourceInterface::class)
         );
-        $this->optionsGenerator->registerSource(
+        $this->optionListGenerator->registerSource(
             'direct',
             $this->directSource
         );
-        $this->optionsGenerator->registerSource(
+        $this->optionListGenerator->registerSource(
             'other',
             m::mock(SourceInterface::class)
         );
@@ -63,20 +63,6 @@ class OptionsGeneratorTest extends MockeryTestCase
             'options' => $sourceOptions
         ];
 
-        $returnedOptions = [
-            [
-                'value' => '1',
-                'label' => 'Food',
-                'hint' => 'Hint for Food option',
-            ],
-            [
-                'value' => '2',
-                'label' => 'Minerals',
-                'hint' => 'Hint for Minerals option',
-            ]
-        ];
-
-
         $optionList = m::mock(OptionList::class);
 
         $this->optionListFactory->shouldReceive('create')
@@ -90,15 +76,9 @@ class OptionsGeneratorTest extends MockeryTestCase
             ->globally()
             ->ordered();
 
-        $optionList->shouldReceive('getRepresentation')
-            ->once()
-            ->globally()
-            ->ordered()
-            ->andReturn($returnedOptions);
-
         $this->assertEquals(
-            $returnedOptions,
-            $this->optionsGenerator->generate($data)
+            $optionList,
+            $this->optionListGenerator->generate($data)
         );
     }
 
@@ -115,6 +95,6 @@ class OptionsGeneratorTest extends MockeryTestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('No source found for name test');
 
-        $this->optionsGenerator->generate($data);
+        $this->optionListGenerator->generate($data);
     }
 }

@@ -1,23 +1,23 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio;
+namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class RadioAnswerSummaryProviderFactory implements FactoryInterface
+class EcmtPermitUsageRefDataSourceFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return RadioAnswerSummaryProvider
+     * @return EcmtPermitUsageRefDataSource
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new RadioAnswerSummaryProvider(
-            $serviceLocator->get('QaOptionListGenerator')
+        return new EcmtPermitUsageRefDataSource(
+            $serviceLocator->get('QaRefDataOptionsSource')
         );
     }
 }

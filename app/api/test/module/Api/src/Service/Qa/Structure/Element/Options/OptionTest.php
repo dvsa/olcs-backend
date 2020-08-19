@@ -54,4 +54,52 @@ class OptionTest extends MockeryTestCase
             $option->getRepresentation()
         );
     }
+
+    public function testGetValue()
+    {
+        $option = new Option($this->value, $this->label);
+
+        $this->assertEquals(
+            $this->value,
+            $option->getValue()
+        );
+    }
+
+    public function testGetLabel()
+    {
+        $option = new Option($this->value, $this->label);
+
+        $this->assertEquals(
+            $this->label,
+            $option->getLabel()
+        );
+    }
+
+    public function testSetLabel()
+    {
+        $newLabel = 'new label';
+
+        $option = new Option($this->value, $this->label);
+        $option->setLabel($newLabel);
+
+        $this->assertEquals(
+            $newLabel,
+            $option->getLabel()
+        );
+    }
+
+    public function testSetHint()
+    {
+        $newHint = 'new hint';
+
+        $option = new Option($this->value, $this->label, 'old hint');
+        $option->setHint($newHint);
+
+        $representation = $option->getRepresentation();
+
+        $this->assertEquals(
+            $newHint,
+            $representation['hint']
+        );
+    }
 }

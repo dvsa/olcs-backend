@@ -49,4 +49,14 @@ class OptionList
 
         return $representation;
     }
+
+    /**
+     * Get an array of the embedded Option instances
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
 }

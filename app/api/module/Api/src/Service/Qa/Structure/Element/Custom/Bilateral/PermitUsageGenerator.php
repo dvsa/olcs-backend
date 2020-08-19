@@ -73,7 +73,7 @@ class PermitUsageGenerator implements ElementGeneratorInterface
         }
 
         return $this->radioFactory->create(
-            $optionList->getRepresentation(),
+            $optionList,
             $this->translateableTextGenerator->generate($options['notSelectedMessage']),
             $context->getAnswerValue()
         );

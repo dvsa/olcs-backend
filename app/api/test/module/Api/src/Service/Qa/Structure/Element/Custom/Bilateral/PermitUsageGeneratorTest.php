@@ -85,10 +85,6 @@ class PermitUsageGeneratorTest extends MockeryTestCase
         $optionList->shouldReceive('add')
             ->with(RefData::JOURNEY_SINGLE, 'Single')
             ->once();
-        $optionList->shouldReceive('getRepresentation')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['REPRESENTATION']);
 
         $this->optionListFactory->shouldReceive('create')
             ->with($this->optionFactory)
@@ -99,7 +95,7 @@ class PermitUsageGeneratorTest extends MockeryTestCase
         $radio = m::mock(Radio::class);
 
         $this->radioFactory->shouldReceive('create')
-            ->with(['REPRESENTATION'], $notSelectedMessageTranslateableText, $this->answerValue)
+            ->with($optionList, $notSelectedMessageTranslateableText, $this->answerValue)
             ->andReturn($radio);
 
         $this->translateableTextGenerator->shouldReceive('generate')

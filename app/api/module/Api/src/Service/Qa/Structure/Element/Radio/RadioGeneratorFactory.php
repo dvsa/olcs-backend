@@ -18,7 +18,7 @@ class RadioGeneratorFactory implements FactoryInterface
     {
         return new RadioGenerator(
             $serviceLocator->get('QaRadioElementFactory'),
-            $serviceLocator->get('QaOptionsGenerator'),
+            $serviceLocator->get('QaOptionListGenerator'),
             $serviceLocator->get('QaTranslateableTextGenerator')
         );
     }
