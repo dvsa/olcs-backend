@@ -24,13 +24,13 @@ class SectorsTest extends RepositoryTestCase
         $result = [
             [
                 'value' => '1',
-                'label' => 'Chemicals',
-                'hint' => 'Chemical products, man-made fibres, rubber and plastic products, nuclear fuel'
+                'label' => 'sectors.chemicals.name',
+                'hint' => 'sectors.chemicals.description'
             ],
             [
                 'value' => '2',
-                'label' => 'Food products',
-                'hint' => 'Beverages and tobacco, products of agriculture, hunting and forests'
+                'label' => 'sectors.food-products.name',
+                'hint' => 'sectors.food-products.description'
             ],
         ];
 
@@ -38,7 +38,7 @@ class SectorsTest extends RepositoryTestCase
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
         $queryBuilder->shouldReceive('select')
-            ->with('s.id as value, s.name as label, s.description as hint')
+            ->with('s.id as value, s.nameKey as label, s.descriptionKey as hint')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('from')

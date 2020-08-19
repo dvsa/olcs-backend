@@ -58,6 +58,15 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     protected $description;
 
     /**
+     * Description key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description_key", length=255, nullable=true)
+     */
+    protected $descriptionKey;
+
+    /**
      * Display order
      *
      * @var int
@@ -96,6 +105,15 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="string", name="name", length=255, nullable=false)
      */
     protected $name;
+
+    /**
+     * Name key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="name_key", length=255, nullable=false)
+     */
+    protected $nameKey;
 
     /**
      * Sifting percentage
@@ -162,6 +180,30 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the description key
+     *
+     * @param string $descriptionKey new value being set
+     *
+     * @return Sectors
+     */
+    public function setDescriptionKey($descriptionKey)
+    {
+        $this->descriptionKey = $descriptionKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the description key
+     *
+     * @return string
+     */
+    public function getDescriptionKey()
+    {
+        return $this->descriptionKey;
     }
 
     /**
@@ -258,6 +300,30 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set the name key
+     *
+     * @param string $nameKey new value being set
+     *
+     * @return Sectors
+     */
+    public function setNameKey($nameKey)
+    {
+        $this->nameKey = $nameKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the name key
+     *
+     * @return string
+     */
+    public function getNameKey()
+    {
+        return $this->nameKey;
     }
 
     /**
