@@ -55,7 +55,8 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
 
     /**
      * @param IrhpPermitType $type
-     * @param Country $country
+     * @param Country|null $country
+     * @param RefData|null $permitCategory
      * @param int $quota
      * @param RefData $status
      * @param ApplicationPathGroup|null $applicationPathGroup
@@ -69,8 +70,9 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * @throws ValidationException
      */
     public static function create(
-        $type,
-        $country,
+        IrhpPermitType $type,
+        ?Country $country,
+        ?RefData $permitCategory,
         $quota,
         RefData $status,
         ?ApplicationPathGroup $applicationPathGroup,
@@ -80,12 +82,13 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         $validTo = null,
         $hiddenSs = false
     ) {
-        static::validateCountry($type, $country);
+        static::validateCountry($type, $country, $permitCategory);
 
         $instance = new self;
 
         $instance->irhpPermitType = $type;
         $instance->country = $country;
+        $instance->permitCategory = $permitCategory;
         $instance->validFrom = static::processDate($validFrom, 'Y-m-d');
         $instance->validTo = static::processDate($validTo, 'Y-m-d');
         $instance->initialStock = intval($quota) > 0 ? $quota : 0;
@@ -110,12 +113,21 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * @return $this
      * @throws ValidationException
      */
-    public function update($type, $country, $quota, $periodNameKey = null, $validFrom = null, $validTo = null, $hiddenSs = false)
-    {
-        static::validateCountry($type, $country);
+    public function update(
+        IrhpPermitType $type,
+        ?Country $country,
+        $permitCategory,
+        $quota,
+        $periodNameKey = null,
+        $validFrom = null,
+        $validTo = null,
+        $hiddenSs = false
+    ) {
+        static::validateCountry($type, $country, $permitCategory);
 
         $this->irhpPermitType = $type;
         $this->country = $country;
+        $this->permitCategory = $permitCategory;
         $this->validFrom = static::processDate($validFrom, 'Y-m-d');
         $this->validTo = static::processDate($validTo, 'Y-m-d');
         $this->initialStock = intval($quota) > 0 ? $quota : 0;
@@ -128,14 +140,26 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Enforces business logic that a Bilateral Permit MUST have a country specified
      *
-     * @param $type IrhpPermitType
-     * @param $country
+     * @param IrhpPermitType $type
+     * @param Country $country
+     * @param RefData|null $permitCategory
+     *
      * @throws ValidationException
      */
-    private static function validateCountry($type, $country)
+    private static function validateCountry(IrhpPermitType $type, ?Country $country, ?RefData $permitCategory)
     {
-        if ($type->getId() === IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL && $country === null) {
-            throw new ValidationException(['You must select a country for this permit type']);
+        if ($type->getId() === IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL) {
+            if (is_null($country)) {
+                throw new ValidationException(['You must select a country for this permit type']);
+            }
+
+            if ($country->getId() == Country::ID_MOROCCO) {
+                if (is_null($permitCategory)) {
+                    throw new ValidationException(['Permit category must be specified for Bilateral Morocco stocks']);
+                }
+            } elseif (!is_null($permitCategory)) {
+                throw new ValidationException(['Permit category is only applicable for Bilateral Morocco stocks']);
+            }
         }
     }
 

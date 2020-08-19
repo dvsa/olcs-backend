@@ -33,6 +33,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_type_id"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_stock_permit_category_ref_data_id",
+     *     columns={"permit_category"}),
  *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"})
  *    },
  *    uniqueConstraints={
@@ -156,6 +158,16 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      * @ORM\Column(type="string", name="period_name_key", length=255, nullable=true)
      */
     protected $periodNameKey;
+
+    /**
+     * Permit category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="permit_category", referencedColumnName="id", nullable=true)
+     */
+    protected $permitCategory;
 
     /**
      * Status
@@ -504,6 +516,30 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     public function getPeriodNameKey()
     {
         return $this->periodNameKey;
+    }
+
+    /**
+     * Set the permit category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $permitCategory entity being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setPermitCategory($permitCategory)
+    {
+        $this->permitCategory = $permitCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the permit category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getPermitCategory()
+    {
+        return $this->permitCategory;
     }
 
     /**

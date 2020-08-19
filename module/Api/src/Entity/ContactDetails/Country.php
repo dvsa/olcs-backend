@@ -41,6 +41,7 @@ class Country extends AbstractCountry
     const ID_LITHUANIA = 'LT';
     const ID_LUXEMBOURG = 'LU';
     const ID_MALTA = 'MT';
+    const ID_MOROCCO = 'MA';
     const ID_NETHERLANDS = 'NL';
     const ID_NORWAY = 'NO';
     const ID_POLAND = 'PL';
