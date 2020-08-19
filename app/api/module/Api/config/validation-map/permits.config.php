@@ -59,6 +59,7 @@ return [
     CommandHandler\IrhpApplication\Terminate::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\Withdraw::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Grant::class => IsInternalUser::class,
+    CommandHandler\IrhpApplication\ResetToNotYetSubmitted::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\ReviveFromWithdrawn::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\ReviveFromUnsuccessful::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\UpdateCountries::class => Permits\CanEditIrhpApplicationWithId::class,
