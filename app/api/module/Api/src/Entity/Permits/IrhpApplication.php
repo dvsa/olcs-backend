@@ -220,6 +220,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canBeGranted' => $this->canBeGranted(),
             'canBeDeclined' => $this->canBeDeclined(),
             'canBeSubmitted' => $this->canBeSubmitted(),
+            'canBeResetToNotYetSubmitted' => $this->canBeResetToNotYetSubmitted(),
             'canBeRevivedFromWithdrawn' => $this->canBeRevivedFromWithdrawn(),
             'canBeRevivedFromUnsuccessful' => $this->canBeRevivedFromUnsuccessful(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
@@ -2432,5 +2433,31 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return null;
+    }
+
+    /**
+     * Whether the permit application can be reset to NotYetSubmitted
+     *
+     * @return bool
+     */
+    public function canBeResetToNotYetSubmitted()
+    {
+        return $this->isValid() && $this->isCertificateOfRoadworthiness();
+    }
+
+    /**
+     * Reset to NotYetSubmitted
+     *
+     * @param RefData $status
+     *
+     * @throws ForbiddenException
+     */
+    public function resetToNotYetSubmitted(RefData $status)
+    {
+        if (!$this->canBeResetToNotYetSubmitted()) {
+            throw new ForbiddenException('Unable to reset this application to Not Yet Submitted');
+        }
+
+        $this->status = $status;
     }
 }
