@@ -97,6 +97,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('canBeResetToNotYetSubmitted')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('canBeRevivedFromWithdrawn')
             ->once()
             ->withNoArgs()
@@ -207,6 +211,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canBeGranted' => false,
                 'canBeDeclined' => false,
                 'canBeSubmitted' => false,
+                'canBeResetToNotYetSubmitted' => false,
                 'canBeRevivedFromWithdrawn' => false,
                 'canBeRevivedFromUnsuccessful' => false,
                 'hasOutstandingFees' => false,
@@ -5480,6 +5485,62 @@ class IrhpApplicationEntityTest extends EntityTester
                 Question::QUESTION_ID_ROADWORTHINESS_VEHICLE_MOT_EXPIRY,
             ],
         ];
+    }
+
+    /**
+     * @dataProvider dpCanBeResetToNotYetSubmitted
+     */
+    public function testCanBeResetToNotYetSubmitted($isValid, $isCertificateOfRoadworthiness, $expected)
+    {
+        $this->sut->shouldReceive('isValid')
+            ->withNoArgs()
+            ->andReturn($isValid);
+
+        $this->sut->shouldReceive('isCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturn($isCertificateOfRoadworthiness);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->canBeResetToNotYetSubmitted()
+        );
+    }
+
+    public function dpCanBeResetToNotYetSubmitted()
+    {
+        return [
+            [true, true, true],
+            [false, true, false],
+            [true, false, false],
+            [false, false, false],
+        ];
+    }
+
+    public function testResetToNotYetSubmitted()
+    {
+        $status = m::mock(RefData::class);
+
+        $this->sut->shouldReceive('canBeResetToNotYetSubmitted')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $this->sut->resetToNotYetSubmitted($status);
+
+        $this->assertSame($status, $this->sut->getStatus());
+    }
+
+    public function testResetToNotYetSubmittedException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Unable to reset this application to Not Yet Submitted');
+
+        $status = m::mock(RefData::class);
+
+        $this->sut->shouldReceive('canBeResetToNotYetSubmitted')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $this->sut->resetToNotYetSubmitted($status);
     }
 
     /**
