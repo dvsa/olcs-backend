@@ -23,7 +23,7 @@ class CommonCertificatesFormControlStrategyFactory implements FactoryInterface
             $mainServiceLocator->get('QaCheckboxElementGenerator'),
             $mainServiceLocator->get('QaCommonCertificatesAnswerSaver'),
             $mainServiceLocator->get('QaGenericAnswerClearer'),
-            $mainServiceLocator->get('QaCommonCertificatesQuestionTextGenerator'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
             $mainServiceLocator->get('QaCheckboxAnswerSummaryProvider')
         );
     }
