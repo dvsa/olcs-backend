@@ -3,21 +3,21 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText as Repo;
+use Dvsa\Olcs\Api\Domain\Repository\PartialMarkup as Repo;
 
 /**
- * TranslationKeyTextTest
+ * PartialMarkupTest
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class TranslationKeyTextTest extends RepositoryTestCase
+class PartialMarkupTest extends RepositoryTestCase
 {
     public function setUp(): void
     {
         $this->setUpSut(Repo::class);
     }
 
-    public function testFetchByParentLanguage()
+    public function testFetchByPartialLanguage()
     {
         $queryBuilder = $this->createMockQb('BLAH');
 
@@ -33,7 +33,7 @@ class TranslationKeyTextTest extends RepositoryTestCase
         self::assertEquals(['RESULTS'], $this->sut->fetchByParentLanguage(1, 2));
 
         $expectedQuery = 'BLAH '
-            . 'AND m.translationKey = [[1]] '
+            . 'AND m.partial = [[1]] '
             . 'AND m.language = [[2]]';
 
         self::assertEquals($expectedQuery, $this->query);

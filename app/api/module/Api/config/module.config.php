@@ -120,11 +120,11 @@ return [
 
             'PermitsMultilateralFeeBreakdownGenerator' =>
                 ApiSrv\Permits\FeeBreakdown\MultilateralFeeBreakdownGenerator::class,
-    
+
             'PermitsAllocateBilateralCriteriaFactory' => ApiSrv\Permits\Allocate\BilateralCriteriaFactory::class,
             'PermitsAllocateEmissionsStandardCriteriaFactory' =>
                 ApiSrv\Permits\Allocate\EmissionsStandardCriteriaFactory::class,
-    
+
             'PermitsBilateralInternalBilateralRequiredGenerator'
                 => ApiSrv\Permits\Bilateral\Internal\BilateralRequiredGenerator::class,
             'PermitsBilateralInternalIrhpPermitApplicationFactory'
@@ -246,7 +246,7 @@ return [
             'QaGenericAnswerWriter' => ApiSrv\Qa\AnswerSaver\GenericAnswerWriterFactory::class,
             'QaGenericAnswerFetcher' => ApiSrv\Qa\Structure\Element\GenericAnswerFetcherFactory::class,
             'QaApplicationAnswersClearer' => ApiSrv\Qa\AnswerSaver\ApplicationAnswersClearerFactory::class,
-            
+
             'QaContextGenerator' => ApiSrv\Qa\QaContextGeneratorFactory::class,
             'QaElementGeneratorContextGenerator'
                 => ApiSrv\Qa\Structure\Element\ElementGeneratorContextGeneratorFactory::class,
@@ -364,7 +364,7 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsUpdaterFactory::class,
             'QaBilateralNoOfPermitsAnswerClearer' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerClearerFactory::class,
-    
+
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
 
@@ -439,7 +439,7 @@ return [
                 => ApiSrv\Permits\Checkable\CheckedValueUpdaterFactory::class,
             'PermitsCheckableCreateTaskCommandGenerator'
                 => ApiSrv\Permits\Checkable\CreateTaskCommandGeneratorFactory::class,
-    
+
             'PermitsBilateralFeeBreakdownGenerator'
                 => ApiSrv\Permits\FeeBreakdown\BilateralFeeBreakdownGeneratorFactory::class,
 
@@ -476,7 +476,7 @@ return [
                 => ApiSrv\Permits\Bilateral\Metadata\PeriodGeneratorFactory::class,
             'PermitsBilateralMetadataFieldsGenerator'
                 => ApiSrv\Permits\Bilateral\Metadata\FieldsGeneratorFactory::class,
-    
+
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
         ],
@@ -728,6 +728,8 @@ return [
             'TranslationKeyText' => RepositoryFactory::class,
             'Language' => RepositoryFactory::class,
             'Replacement' => RepositoryFactory::class,
+            'Partial' => RepositoryFactory::class,
+            'PartialMarkup' => RepositoryFactory::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [

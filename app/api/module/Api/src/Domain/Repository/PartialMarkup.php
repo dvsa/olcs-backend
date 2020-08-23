@@ -3,29 +3,29 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Entity\System\TranslationKeyText as Entity;
+use Dvsa\Olcs\Api\Entity\System\PartialMarkup as Entity;
 
 /**
- * Translation Key Text
+ * Partial Markup
  */
-class TranslationKeyText extends AbstractRepository
+class PartialMarkup extends AbstractRepository
 {
     protected $entity = Entity::class;
 
     /**
-     * Fetch by translation key and language
+     * Fetch by partial and language
      *
-     * @param $translationKeyId
+     * @param $partial
      * @param $languageId
      * @return null|Entity
      */
-    public function fetchByParentLanguage($translationKeyId, $languageId)
+    public function fetchByParentLanguage($partialId, $languageId)
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->where($qb->expr()->eq($this->alias . '.translationKey', ':translationKey'))
+        $qb->where($qb->expr()->eq($this->alias . '.partial', ':partial'))
             ->andWhere($qb->expr()->eq($this->alias . '.language', ':language'))
-            ->setParameter('translationKey', $translationKeyId)
+            ->setParameter('partial', $partialId)
             ->setParameter('language', $languageId);
 
         return $qb->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
