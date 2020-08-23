@@ -1,23 +1,23 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TranslationKey;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Partial;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Update;
-use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Create;
+use Dvsa\Olcs\Api\Domain\Command\PartialMarkup\Update;
+use Dvsa\Olcs\Api\Domain\Command\PartialMarkup\Create;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TranslationKey\Update as UpdateHandler;
-use Dvsa\Olcs\Api\Domain\Repository\TranslationKey as TranslationKeyRepo;
-use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText as TranslationKeyTextRepo;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Partial\Update as UpdateHandler;
+use Dvsa\Olcs\Api\Domain\Repository\Partial as PartialRepo;
+use Dvsa\Olcs\Api\Domain\Repository\PartialMarkup as PartialMarkupRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Language as LanguageRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\TranslationKey\Update as UpdateCmd;
-use Dvsa\Olcs\Api\Entity\System\TranslationKey as TranslationKeyEntity;
-use Dvsa\Olcs\Api\Entity\System\TranslationKeyText as TranslationKeyTextEntity;
+use Dvsa\Olcs\Transfer\Command\PartialMarkup\Update as UpdateCmd;
+use Dvsa\Olcs\Api\Entity\System\Partial as PartialEntity;
+use Dvsa\Olcs\Api\Entity\System\PartialMarkup as PartialMarkupEntity;
 
 /**
- * Update TranslationKey Test
+ * Update Partial Test
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
@@ -26,8 +26,8 @@ class UpdateTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new UpdateHandler();
-        $this->mockRepo('TranslationKey', TranslationKeyRepo::class);
-        $this->mockRepo('TranslationKeyText', TranslationKeyTextRepo::class);
+        $this->mockRepo('Partial', PartialRepo::class);
+        $this->mockRepo('PartialMarkup', PartialMarkupRepo::class);
         $this->mockRepo('Language', LanguageRepo::class);
 
         parent::setUp();
@@ -37,10 +37,10 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $id = 'TEST_STR_ID';
         $translationsArray = [
-            'en_GB' => 'English',
-            'cy_GB' => 'Welsh',
-            'en_NI' => 'English (NI)',
-            'cy_NI' => 'Welsh (NI)'
+            'en_GB' => base64_encode('English'),
+            'cy_GB' => base64_encode('Welsh'),
+            'en_NI' => base64_encode('English (NI)'),
+            'cy_NI' => base64_encode('Welsh (NI)')
         ];
 
         $cmdData = [
@@ -50,35 +50,35 @@ class UpdateTest extends CommandHandlerTestCase
 
         $command = UpdateCmd::create($cmdData);
 
-        $entity = m::mock(TranslationKeyEntity::class);
+        $entity = m::mock(PartialEntity::class);
 
-        $tktEntity = m::mock(TranslationKeyTextEntity::class);
+        $tktEntity = m::mock(PartialMarkupEntity::class);
 
-        $this->repoMap['TranslationKey']
+        $this->repoMap['Partial']
             ->shouldReceive('fetchUsingId')
             ->with($command)
             ->once()
             ->andReturn($entity);
 
-        $this->repoMap['TranslationKeyText']
+        $this->repoMap['PartialMarkup']
             ->shouldReceive('fetchByParentLanguage')
             ->with($id, 2)
             ->once()
             ->andReturn(null);
 
-        $this->repoMap['TranslationKeyText']
+        $this->repoMap['PartialMarkup']
             ->shouldReceive('fetchByParentLanguage')
             ->with($id, 3)
             ->once()
             ->andReturn(null);
 
-        $this->repoMap['TranslationKeyText']
+        $this->repoMap['PartialMarkup']
             ->shouldReceive('fetchByParentLanguage')
             ->with($id, 4)
             ->once()
             ->andReturn(null);
 
-        $this->repoMap['TranslationKeyText']
+        $this->repoMap['PartialMarkup']
             ->shouldReceive('fetchByParentLanguage')
             ->with($id, 1)
             ->once()
@@ -98,9 +98,9 @@ class UpdateTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             Create::class,
             [
-                'translationKey' => $id,
+                'partial' => $id,
                 'language' => 2,
-                'translatedText' => $translationsArray['cy_GB']
+                'markup' => base64_decode($translationsArray['cy_GB'])
             ],
             new Result(),
             1
@@ -110,7 +110,7 @@ class UpdateTest extends CommandHandlerTestCase
             Update::class,
             [
                 'id' => 22,
-                'translatedText' => $translationsArray['en_GB']
+                'markup' => base64_decode($translationsArray['en_GB'])
             ],
             new Result(),
             1
@@ -119,9 +119,9 @@ class UpdateTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             Create::class,
             [
-                'translationKey' => $id,
+                'partial' => $id,
                 'language' => 3,
-                'translatedText' => $translationsArray['en_NI']
+                'markup' => base64_decode($translationsArray['en_NI'])
             ],
             new Result(),
             1
@@ -130,9 +130,9 @@ class UpdateTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             Create::class,
             [
-                'translationKey' => $id,
+                'partial' => $id,
                 'language' => 4,
-                'translatedText' => $translationsArray['cy_NI']
+                'markup' => base64_decode($translationsArray['cy_NI'])
             ],
             new Result(),
             1
@@ -142,7 +142,7 @@ class UpdateTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'TranslationKey' => 'TEST_STR_ID'
+                'Partial' => 'TEST_STR_ID'
             ],
             'messages' => [
                 'Translations Updated'
@@ -164,11 +164,11 @@ class UpdateTest extends CommandHandlerTestCase
             'translationsArray' => $translationsArray
         ];
 
-        $entity = m::mock(TranslationKeyEntity::class);
+        $entity = m::mock(PartialEntity::class);
 
         $command = UpdateCmd::create($cmdData);
 
-        $this->repoMap['TranslationKey']
+        $this->repoMap['Partial']
             ->shouldReceive('fetchUsingId')
             ->with($command)
             ->once()
