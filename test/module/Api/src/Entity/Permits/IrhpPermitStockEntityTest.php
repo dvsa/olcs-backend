@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
@@ -15,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteria;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\RangeMatchingCriteriaInterface;
+use Exception;
 use Mockery as m;
 use RuntimeException;
 
@@ -52,15 +55,26 @@ class IrhpPermitStockEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('getId')
             ->andReturn(3);
 
-        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, null, null, null, $validFrom, $validTo);
+        $entity = Entity::create(
+            $irhpPermitType,
+            null,
+            null,
+            $initialStock,
+            $status,
+            null,
+            null,
+            null,
+            $validFrom,
+            $validTo
+        );
 
-        $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
+        $this->assertSame($irhpPermitType, $entity->getIrhpPermitType());
         $this->assertEquals($expectedFrom, $entity->getValidFrom());
         $this->assertEquals($expectedTo, $entity->getValidTo());
         $this->assertEquals($initialStock, $entity->getInitialStock());
-        $this->assertEquals($status, $entity->getStatus());
+        $this->assertSame($status, $entity->getStatus());
 
-        $entity->update($irhpPermitType, null, $updateInitialStock, null, $updateValidFrom, $updateValidTo);
+        $entity->update($irhpPermitType, null, null, $updateInitialStock, null, $updateValidFrom, $updateValidTo);
 
         $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
         $this->assertEquals($updateExpectedTo, $entity->getValidTo());
@@ -90,21 +104,222 @@ class IrhpPermitStockEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('getId')
             ->andReturn(3);
 
-        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, $applicationPathGroup, $businessProcess, $periodNameKey, $validFrom, $validTo);
+        $entity = Entity::create(
+            $irhpPermitType,
+            null,
+            null,
+            $initialStock,
+            $status,
+            $applicationPathGroup,
+            $businessProcess,
+            $periodNameKey,
+            $validFrom,
+            $validTo
+        );
 
-        $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
+        $this->assertSame($irhpPermitType, $entity->getIrhpPermitType());
         $this->assertEquals($expectedFrom, $entity->getValidFrom());
         $this->assertEquals($expectedTo, $entity->getValidTo());
         $this->assertEquals($initialStock, $entity->getInitialStock());
-        $this->assertEquals($status, $entity->getStatus());
+        $this->assertSame($status, $entity->getStatus());
 
-        $entity->update($irhpPermitType, null, $updateInitialStock, $updatePeriodNameKey, $updateValidFrom, $updateValidTo);
+        $entity->update($irhpPermitType, null, null, $updateInitialStock, $updatePeriodNameKey, $updateValidFrom, $updateValidTo);
 
         $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
         $this->assertEquals($updateExpectedTo, $entity->getValidTo());
         $this->assertEquals($updateInitialStock, $entity->getInitialStock());
         $this->assertEquals($updatePeriodNameKey, $entity->getPeriodNameKey());
     }
+
+    public function testCreateUpdateAppPathBilateral()
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
+        $country = m::mock(Country::class);
+        $country->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_BELARUS);
+        $permitCategory = null;
+        $validFrom = '2019-01-01';
+        $expectedFrom = $this->processDate($validFrom, 'Y-m-d');
+        $validTo = '2019-02-01';
+        $expectedTo = $this->processDate($validTo, 'Y-m-d');
+        $initialStock = 1400;
+        $applicationPathGroup = m::mock(ApplicationPathGroup::class);
+        $businessProcess = m::mock(RefData::class);
+        $periodNameKey = 'initial.period.name.key';
+
+        $updateCountry = m::mock(Country::class);
+        $updateCountry->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_NORWAY);
+        $updatePermitCategory = null;
+        $updateValidFrom = '2019-02-01';
+        $updateExpectedFrom = $this->processDate($updateValidFrom, 'Y-m-d');
+        $updateValidTo = '2019-02-02';
+        $updateExpectedTo = $this->processDate($updateValidTo, 'Y-m-d');
+        $updateInitialStock = 1401;
+        $status = m::mock(RefData::class);
+        $updatePeriodNameKey = 'updated.period.name.key';
+
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $entity = Entity::create(
+            $irhpPermitType,
+            $country,
+            $permitCategory,
+            $initialStock,
+            $status,
+            $applicationPathGroup,
+            $businessProcess,
+            $periodNameKey,
+            $validFrom,
+            $validTo
+        );
+
+        $this->assertSame($irhpPermitType, $entity->getIrhpPermitType());
+        $this->assertSame($country, $entity->getCountry());
+        $this->assertSame($permitCategory, $entity->getPermitCategory());
+        $this->assertEquals($expectedFrom, $entity->getValidFrom());
+        $this->assertEquals($expectedTo, $entity->getValidTo());
+        $this->assertEquals($initialStock, $entity->getInitialStock());
+        $this->assertEquals($status, $entity->getStatus());
+
+        $entity->update(
+            $irhpPermitType,
+            $updateCountry,
+            $updatePermitCategory,
+            $updateInitialStock,
+            $updatePeriodNameKey,
+            $updateValidFrom,
+            $updateValidTo
+        );
+
+        $this->assertSame($updateCountry, $entity->getCountry());
+        $this->assertSame($updatePermitCategory, $entity->getPermitCategory());
+        $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
+        $this->assertEquals($updateExpectedTo, $entity->getValidTo());
+        $this->assertEquals($updateInitialStock, $entity->getInitialStock());
+        $this->assertEquals($updatePeriodNameKey, $entity->getPeriodNameKey());
+    }
+
+    /**
+     * @dataProvider dpBilateralMoroccoException
+     */
+    public function testCreateBilateralMoroccoException($countryId, $permitCategory, $expectedMessage)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $country = m::mock(Country::class);
+        $country->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($countryId);
+
+        $exceptionRaised = false;
+
+        try {
+            Entity::create(
+                $irhpPermitType,
+                $country,
+                $permitCategory,
+                1400,
+                m::mock(RefData::class),
+                m::mock(ApplicationPathGroup::class),
+                m::mock(RefData::class),
+                'initial.period.name.key',
+                '2019-01-01',
+                '2019-02-02'
+            );
+        } catch (Exception $e) {
+            $exceptionRaised = true;
+
+            $this->assertInstanceOf(ValidationException::class, $e);
+            $this->assertEquals(
+                [$expectedMessage],
+                $e->getMessages()
+            );
+        }
+
+        $this->assertTrue($exceptionRaised);
+    }
+
+    /**
+     * @dataProvider dpBilateralMoroccoException
+     */
+    public function testUpdateBilateralMoroccoException($countryId, $permitCategory, $expectedMessage)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $oldCountry = m::mock(Country::class);
+        $oldCountry->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_BELARUS);
+
+        $country = m::mock(Country::class);
+        $country->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($countryId);
+
+        $entity = Entity::create(
+            $irhpPermitType,
+            $oldCountry,
+            null,
+            1400,
+            m::mock(RefData::class),
+            m::mock(ApplicationPathGroup::class),
+            m::mock(RefData::class),
+            'initial.period.name.key',
+            '2019-01-01',
+            '2019-02-02'
+        );
+
+        $exceptionRaised = false;
+
+        try {
+            $entity->update(
+                $irhpPermitType,
+                $country,
+                $permitCategory,
+                1401,
+                'initial.period.name.key',
+                '2019-01-01',
+                '2019-02-02'
+            );
+        } catch (Exception $e) {
+            $exceptionRaised = true;
+
+            $this->assertInstanceOf(ValidationException::class, $e);
+            $this->assertEquals(
+                [$expectedMessage],
+                $e->getMessages()
+            );
+        }
+
+        $this->assertTrue($exceptionRaised);
+    }
+
+    public function dpBilateralMoroccoException()
+    {
+        return [
+            [
+                Country::ID_MOROCCO,
+                null,
+                'Permit category must be specified for Bilateral Morocco stocks'
+            ],
+            [
+                Country::ID_BELARUS,
+                m::mock(RefData::class),
+                'Permit category is only applicable for Bilateral Morocco stocks'
+            ],
+        ];
+    }
+
 
     public function testGetOpenWindowTrue()
     {
@@ -172,6 +387,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $stock = Entity::create(
             $irhpPermitType,
             null,
+            null,
             1400,
             $status,
             null,
@@ -200,6 +416,7 @@ class IrhpPermitStockEntityTest extends EntityTester
 
         $stock = Entity::create(
             $irhpPermitType,
+            null,
             null,
             1400,
             $status,
@@ -230,6 +447,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $stock = Entity::create(
             $irhpPermitType,
             null,
+            null,
             1400,
             $status,
             null,
@@ -254,6 +472,7 @@ class IrhpPermitStockEntityTest extends EntityTester
 
         $stock = Entity::create(
             $irhpPermitType,
+            null,
             null,
             1400,
             $status,
@@ -315,6 +534,7 @@ class IrhpPermitStockEntityTest extends EntityTester
 
         $stock = Entity::create(
             $irhpPermitType,
+            null,
             null,
             1400,
             $status,
@@ -1364,6 +1584,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
         $irhpStockEntity = Entity::create(
             $irhpPermitType,
+            null,
             null,
             1400,
             $status,

@@ -38,6 +38,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $stock = StockEntity::create(
             $references['irhpPermitType'],
             $references['country'],
+            $references['permitCategory'],
             $command->getInitialStock(),
             $this->getRepo()->getRefDataReference(StockEntity::STATUS_SCORING_NEVER_RUN),
             $references['applicationPathGroup'],

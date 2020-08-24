@@ -42,6 +42,7 @@ final class Update extends AbstractCommandHandler
         $stock->update(
             $references['irhpPermitType'],
             $references['country'],
+            $references['permitCategory'],
             $command->getInitialStock(),
             $command->getPeriodNameKey(),
             $command->getValidFrom(),
