@@ -259,8 +259,6 @@ return [
             'QaEcmtNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\Ecmt\NoOfPermitsGeneratorFactory::class,
             'QaEcmtRestrictedCountriesQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\Ecmt\RestrictedCountriesGeneratorFactory::class,
-            'QaCommonCertificatesQuestionTextGenerator'
-                => ApiSrv\Qa\Structure\QuestionText\Custom\Common\CertificatesGeneratorFactory::class,
             'QaBilateralPermitUsageQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\Bilateral\PermitUsageGeneratorFactory::class,
             'QaBilateralCabotageQuestionTextGenerator'
