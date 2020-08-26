@@ -125,7 +125,8 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
 
         $this->result
             ->addId('licenceVehicle', $licenceVehicle->getId())
-            ->addMessage('Licence Vehicle created');
+            ->addMessage('Licence Vehicle created')
+            ->setFlag('vrm', $vrm);
 
         return $this->result;
     }
@@ -160,7 +161,6 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         }
 
         if ($this->isGranted(Permission::INTERNAL_USER)) {
-
             $refs = [];
 
             /** @var LicenceEntity $otherLicence */
@@ -191,7 +191,6 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         }
 
         if ($this->isGranted(Permission::INTERNAL_USER)) {
-
             $refs = [];
 
             /** @var LicenceVehicle $duplicate */
@@ -280,10 +279,8 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         /** @var LicenceVehicle $licenceVehicle */
         foreach ($currentLicenceVehicles as $licenceVehicle) {
             $application = $licenceVehicle->getApplication();
-            if (
-                $licenceVehicle->getVehicle()->getVrm() === $vrm
-                &&
-                (
+            if ($licenceVehicle->getVehicle()->getVrm() === $vrm
+                && (
                     ($application !== null && $application->getId() === $applicationId)
                     || $licenceVehicle->getSpecifiedDate() !== null
                 )

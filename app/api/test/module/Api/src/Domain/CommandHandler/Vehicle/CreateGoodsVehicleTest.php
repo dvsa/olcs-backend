@@ -384,6 +384,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'messages' => [
                 'Vehicle created',
                 'Licence Vehicle created'
+            ],
+            'flags' => [
+                'vrm' => 'ABC123'
             ]
         ];
 
@@ -395,7 +398,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
@@ -462,6 +466,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'messages' => [
                 'Vehicle created',
                 'Licence Vehicle created'
+            ],
+            'flags' => [
+                'vrm' => 'ABC123'
             ]
         ];
 
@@ -476,7 +483,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
     }
@@ -543,6 +551,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'messages' => [
                 'Vehicle created',
                 'Licence Vehicle created'
+            ],
+            'flags' => [
+                'vrm' => 'ABC123'
             ]
         ];
 
@@ -557,7 +568,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
     }
@@ -632,6 +644,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'messages' => [
                 'Vehicle created',
                 'Licence Vehicle created'
+            ],
+            'flags' => [
+                'vrm' => 'ABC123'
             ]
         ];
 
@@ -646,7 +661,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
     }
@@ -718,6 +734,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'messages' => [
                 'Vehicle created',
                 'Licence Vehicle created'
+            ],
+            'flags' => [
+                'vrm' => 'ABC123'
             ]
         ];
 
@@ -730,7 +749,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertSame($this->mockLic, $savedLicenceVehicle->getLicence());
         $this->assertSame($this->mockApp, $savedLicenceVehicle->getApplication());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
@@ -792,6 +812,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'messages' => [
                 'Vehicle created',
                 'Licence Vehicle created'
+            ],
+            'flags' => [
+                'vrm' => 'ABC123'
             ]
         ];
 
@@ -804,7 +827,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertSame($this->mockApp, $savedLicenceVehicle->getApplication());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
