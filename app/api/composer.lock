@@ -2343,12 +2343,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.78",
+            "version": "4.206.81",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.78/olcs-olcs-transfer-4.206.78.zip",
-                "reference": "b4c2931485af7115c3400f6df65f4860531a4194",
-                "shasum": "b4c2931485af7115c3400f6df65f4860531a4194"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.81/olcs-olcs-transfer-4.206.81.zip",
+                "reference": "1b11ff467092bd730a4ed7adc8bcbcbbd3f65ef4",
+                "shasum": "1b11ff467092bd730a4ed7adc8bcbcbbd3f65ef4"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2410,7 +2410,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2020-08-13T11:20:11+00:00"
+            "time": "2020-08-24T09:04:04+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -8077,6 +8077,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {
@@ -8502,6 +8503,7 @@
             ],
             "description": "FinderFacade is a convenience wrapper for Symfony's Finder component.",
             "homepage": "https://github.com/sebastianbergmann/finder-facade",
+            "abandoned": true,
             "time": "2020-01-16T08:08:45+00:00"
         },
         {
