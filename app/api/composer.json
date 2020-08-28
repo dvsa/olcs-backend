@@ -32,6 +32,7 @@
         "league/flysystem-webdav": "2.0.0",
         "olcs/olcs-companies-house": "~4.206.0",
         "olcs/olcs-cpms": "~4.206.0",
+        "olcs/olcs-dvla-search": "~1.0.0",
         "olcs/olcs-logging": "~4.206.0",
         "olcs/olcs-transfer": "~4.206.0",
         "olcs/olcs-utils": "~4.206.0",

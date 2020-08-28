@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4773ced28adf9fa839832893e3c7a0ee",
+    "content-hash": "aa31bd742c58e3639b71557a36770fd5",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -171,6 +171,59 @@
                 "transliterator"
             ],
             "time": "2020-01-14T16:39:13+00:00"
+        },
+        {
+            "name": "caseyamcl/guzzle_retry_middleware",
+            "version": "v2.3.3",
+            "dist": {
+                "type": "zip",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/caseyamcl/guzzle_retry_middleware/v2.3.3/caseyamcl-guzzle_retry_middleware-v2.3.3.zip",
+                "reference": "a01cdf67ebea566c4edef42d5140a040fbc593b0",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "nesbot/carbon": "^2.0",
+                "phpunit/phpunit": "^7.5|^8.0|^9.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleRetry\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Casey McLaughlin",
+                    "email": "caseyamcl@gmail.com",
+                    "homepage": "https://caseymclaughlin.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Guzzle middleware that handles HTTP Retry-After middleware",
+            "homepage": "https://github.com/caseyamcl/guzzle_retry_middleware",
+            "keywords": [
+                "Guzzle",
+                "back-off",
+                "caseyamcl",
+                "guzzle_retry_middleware",
+                "middleware",
+                "retry",
+                "retry-after"
+            ],
+            "time": "2020-05-17T17:24:41+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -2275,6 +2328,71 @@
             ],
             "description": "CPMS Module",
             "time": "2020-07-13T00:14:23+00:00"
+        },
+        {
+            "name": "olcs/olcs-dvla-search",
+            "version": "1.0.3",
+            "dist": {
+                "type": "zip",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-dvla-search/1.0.3/olcs-olcs-dvla-search-1.0.3.zip",
+                "reference": "c3a63fd11022893878b8b15b868ba6fb2e6245bf",
+                "shasum": "c3a63fd11022893878b8b15b868ba6fb2e6245bf"
+            },
+            "require": {
+                "caseyamcl/guzzle_retry_middleware": "2.3.3",
+                "elendev/nexus-composer-push": "^0.1",
+                "guzzlehttp/guzzle": "^6.0",
+                "php": ">=7.2",
+                "psr/log": "^1.1"
+            },
+            "require-dev": {
+                "olcs/olcs-devtools": "~4.206.0"
+            },
+            "type": "library",
+            "extra": {
+                "nexus-push": {
+                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/olcs-dvla-search/",
+                    "ignore": [
+                        "tests"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dvsa\\Olcs\\DvlaSearch\\": "src"
+                }
+            },
+            "scripts": {
+                "ut": [
+                    "phpunit test --stop-on-failure"
+                ],
+                "review": [
+                    "review"
+                ],
+                "cs": [
+                    "phpcs --severity=1 --standard=vendor/olcs/coding-standards/Profiles/DVSA/CS/ruleset.xml"
+                ],
+                "coverage": [
+                    "phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html"
+                ],
+                "sonar": [
+                    "phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit"
+                ],
+                "update-syms": [
+                    "composer-update-syms"
+                ],
+                "release": [
+                    "release"
+                ],
+                "sa": [
+                    "phpstan analyse --level 8 src --ansi"
+                ]
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "DVSA Search API client",
+            "time": "2020-08-25T14:39:27+00:00"
         },
         {
             "name": "olcs/olcs-logging",

@@ -709,4 +709,7 @@ return [
     TransferQuery\PartialMarkup\ById::class => QueryHandler\Partial\ById::class,
     TransferQuery\PartialMarkup\GetList::class => QueryHandler\Partial\GetList::class,
 
+    //DvlaSearch
+    TransferQuery\DvlaSearch\Vehicle::class => QueryHandler\DvlaSearch\Vehicle::class,
+
 ];
