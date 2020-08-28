@@ -1,23 +1,22 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
+namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class EmissionsCategoryConditionalAdderFactory implements FactoryInterface
+class StockAvailabilityCounterFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return EmissionsCategoryConditionalAdder
+     * @return StockAvailabilityCounter
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new EmissionsCategoryConditionalAdder(
-            $serviceLocator->get('QaEcmtEmissionsCategoryFactory'),
+        return new StockAvailabilityCounter(
             $serviceLocator->get('PermitsAvailabilityEmissionsCategoryAvailabilityCounter')
         );
     }

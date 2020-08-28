@@ -2,18 +2,20 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
+use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityCounter;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
-use RuntimeException;
 
 class NoOfPermitsGenerator implements ElementGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    const TOT_AUTH_VEHICLES_MULTIPLIER = 2;
+    /** @var FeeTypeRepository */
+    private $feeTypeRepo;
 
     /** @var NoOfPermitsFactory */
     private $noOfPermitsFactory;
@@ -21,20 +23,35 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
     /** @var EmissionsCategoryConditionalAdder */
     private $emissionsCategoryConditionalAdder;
 
+    /** @var StockAvailabilityCounter */
+    private $stockAvailabilityCounter;
+
+    /** @var NoOfPermitsMaxPermittedGenerator */
+    private $noOfPermitsMaxPermittedGenerator;
+
     /**
      * Create service instance
      *
+     * @param FeeTypeRepository $feeTypeRepo
      * @param NoOfPermitsFactory $noOfPermitsFactory
      * @param EmissionsCategoryConditionalAdder $emissionsCategoryConditionalAdder
+     * @param StockAvailabilityCounter $stockAvailabilityCounter
+     * @param NoOfPermitsMaxPermittedGenerator $noOfPermitsMaxPermittedGenerator
      *
      * @return NoOfPermitsGenerator
      */
     public function __construct(
+        FeeTypeRepository $feeTypeRepo,
         NoOfPermitsFactory $noOfPermitsFactory,
-        EmissionsCategoryConditionalAdder $emissionsCategoryConditionalAdder
+        EmissionsCategoryConditionalAdder $emissionsCategoryConditionalAdder,
+        StockAvailabilityCounter $stockAvailabilityCounter,
+        NoOfPermitsMaxPermittedGenerator $noOfPermitsMaxPermittedGenerator
     ) {
+        $this->feeTypeRepo = $feeTypeRepo;
         $this->noOfPermitsFactory = $noOfPermitsFactory;
         $this->emissionsCategoryConditionalAdder = $emissionsCategoryConditionalAdder;
+        $this->stockAvailabilityCounter = $stockAvailabilityCounter;
+        $this->noOfPermitsMaxPermittedGenerator = $noOfPermitsMaxPermittedGenerator;
     }
 
     /**
@@ -44,31 +61,36 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
     {
         $irhpApplication = $context->getQaEntity();
 
-        $totAuthVehiclesMultiplierMappings = [
-            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT => 1,
-            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => 2,
-        ];
-
-        $irhpPermitTypeId = $irhpApplication->getIrhpPermitType()->getId();
-        if (!array_key_exists($irhpPermitTypeId, $totAuthVehiclesMultiplierMappings)) {
-            throw new RuntimeException('This question does not support permit type ' . $irhpPermitTypeId);
-        }
-
         $irhpPermitApplication = $irhpApplication->getFirstIrhpPermitApplication();
         $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
         $irhpPermitStockId = $irhpPermitStock->getId();
 
-        $totAuthVehiclesMultiplier = $totAuthVehiclesMultiplierMappings[$irhpPermitTypeId];
+        $applicationFee = $this->feeTypeRepo->getLatestByProductReference(
+            $irhpApplication->getApplicationFeeProductReference()
+        );
+
+        $issueFee = $this->feeTypeRepo->getLatestByProductReference(
+            $irhpApplication->getIssueFeeProductReference()
+        );
+
+        $maxPermitted = $this->noOfPermitsMaxPermittedGenerator->generate($irhpApplication);
+
+        $maxCanApplyFor = $maxPermitted;
+        $stockAvailability = $this->stockAvailabilityCounter->getCount($irhpPermitStockId);
+        if ($stockAvailability < $maxCanApplyFor) {
+            $maxCanApplyFor = $stockAvailability;
+        }
 
         $noOfPermits = $this->noOfPermitsFactory->create(
-            $irhpPermitStock->getValidityYear(),
-            $irhpApplication->getLicence()->getTotAuthVehicles() * $totAuthVehiclesMultiplier
+            $maxCanApplyFor,
+            $maxPermitted,
+            $applicationFee->getFixedValue(),
+            $issueFee->getFixedValue()
         );
 
         $this->emissionsCategoryConditionalAdder->addIfRequired(
             $noOfPermits,
-            FieldNames::REQUIRED_EURO5,
-            'qanda.ecmt.number-of-permits.label.euro5',
+            'euro5',
             $irhpPermitApplication->getRequiredEuro5(),
             RefData::EMISSIONS_CATEGORY_EURO5_REF,
             $irhpPermitStockId
@@ -76,8 +98,7 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
 
         $this->emissionsCategoryConditionalAdder->addIfRequired(
             $noOfPermits,
-            FieldNames::REQUIRED_EURO6,
-            'qanda.ecmt.number-of-permits.label.euro6',
+            'euro6',
             $irhpPermitApplication->getRequiredEuro6(),
             RefData::EMISSIONS_CATEGORY_EURO6_REF,
             $irhpPermitStockId

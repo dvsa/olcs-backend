@@ -3746,15 +3746,17 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpGetAnswerForCustomEcmtShortTermNoOfPermits
+     * @dataProvider dpGetAnswerForCustomEcmtNoOfPermits
      */
-    public function testGetAnswerForCustomEcmtShortTermNoOfPermits($isEcmtAnnual, $requiredEuro5, $requiredEuro6, $expectedAnswer)
-    {
+    public function testGetAnswerForCustomEcmtNoOfPermits(
+        $formControlType,
+        $requiredEuro5,
+        $requiredEuro6,
+        $expectedAnswer
+    ) {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
-        $question->shouldReceive('getFormControlType')->andReturn(
-            Question::FORM_CONTROL_ECMT_NO_OF_PERMITS
-        );
+        $question->shouldReceive('getFormControlType')->andReturn($formControlType);
 
         $step = m::mock(ApplicationStep::class);
         $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
@@ -3768,8 +3770,6 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity = m::mock(Entity::class)->makePartial();
         $entity->shouldReceive('getFirstIrhpPermitApplication')
             ->andReturn($irhpPermitApplication);
-        $entity->shouldReceive('getIrhpPermitType->isEcmtAnnual')
-            ->andReturn($isEcmtAnnual);
 
         $this->assertSame(
             $expectedAnswer,
@@ -3777,53 +3777,41 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
-    public function dpGetAnswerForCustomEcmtShortTermNoOfPermits()
+    public function dpGetAnswerForCustomEcmtNoOfPermits()
     {
         return [
             [
-                'isEcmtAnnual' => true,
+                'formControlType' => Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_EITHER,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
-                'isEcmtAnnual' => false,
-                'requiredEuro5' => 5,
-                'requiredEuro6' => 7,
-                'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
-            ],
-            [
-                'isEcmtAnnual' => false,
+                'formControlType' => Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_EITHER,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 0,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
-                'isEcmtAnnual' => false,
+                'formControlType' => Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_EITHER,
                 'requiredEuro5' => null,
                 'requiredEuro6' => 5,
                 'expectedAnswer' => null,
             ],
             [
-                'isEcmtAnnual' => false,
+                'formControlType' => Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_BOTH,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 7,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
-                'isEcmtAnnual' => false,
-                'requiredEuro5' => 5,
-                'requiredEuro6' => 7,
-                'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
-            ],
-            [
-                'isEcmtAnnual' => false,
+                'formControlType' => Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_BOTH,
                 'requiredEuro5' => 5,
                 'requiredEuro6' => 0,
                 'expectedAnswer' => Entity::NON_SCALAR_ANSWER_PRESENT,
             ],
             [
-                'isEcmtAnnual' => false,
+                'formControlType' => Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_BOTH,
                 'requiredEuro5' => null,
                 'requiredEuro6' => 5,
                 'expectedAnswer' => null,
@@ -3831,7 +3819,7 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testGetAnswerForCustomEcmtShortTermInternationalJourneys()
+    public function testGetAnswerForCustomEcmtInternationalJourneys()
     {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
@@ -3858,7 +3846,7 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
-    public function testGetAnswerForCustomEcmtShortTermInternationalJourneysNull()
+    public function testGetAnswerForCustomEcmtInternationalJourneysNull()
     {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
@@ -3878,9 +3866,9 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestGetAnswerForCustomEcmtShortTermSectors
+     * @dataProvider dpTestGetAnswerForCustomEcmtSectors
      */
-    public function testGetAnswerForCustomEcmtShortTermSectors($sectorsEntity, $expectedAnswer)
+    public function testGetAnswerForCustomEcmtSectors($sectorsEntity, $expectedAnswer)
     {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
@@ -3900,7 +3888,7 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
-    public function dpTestGetAnswerForCustomEcmtShortTermSectors()
+    public function dpTestGetAnswerForCustomEcmtSectors()
     {
         $sectorId = 7;
 

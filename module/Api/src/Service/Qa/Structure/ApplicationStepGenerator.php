@@ -50,11 +50,13 @@ class ApplicationStepGenerator
         $formControlStrategy = $this->formControlServiceManager->getByApplicationStep($applicationStepEntity);
         $elementGeneratorContext = $this->elementGeneratorContextGenerator->generate($qaContext);
         $element = $formControlStrategy->getElement($elementGeneratorContext);
+        $question = $applicationStepEntity->getQuestion();
 
         return $this->applicationStepFactory->create(
             $formControlStrategy->getFrontendType(),
             $applicationStepEntity->getFieldsetName(),
-            $applicationStepEntity->getQuestion()->getActiveQuestionText()->getQuestionShortKey(),
+            $question->getActiveQuestionText()->getQuestionShortKey(),
+            $question->getSlug(),
             $element,
             $elementGeneratorContext->getValidatorList()
         );

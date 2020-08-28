@@ -27,7 +27,8 @@ class Question extends AbstractQuestion
     // Custom question types
     const FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS = 'form_control_ecmt_rem_no_permits';
     const FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE = 'form_control_ecmt_rem_per_st_dat';
-    const FORM_CONTROL_ECMT_NO_OF_PERMITS = 'form_control_ecmt_st_no_permits';
+    const FORM_CONTROL_ECMT_NO_OF_PERMITS_EITHER = 'form_control_ecmt_no_permits_eit';
+    const FORM_CONTROL_ECMT_NO_OF_PERMITS_BOTH = 'form_control_ecmt_no_permits_bot';
     const FORM_CONTROL_ECMT_PERMIT_USAGE = 'form_control_ecmt_st_perm_usage';
     const FORM_CONTROL_ECMT_INTERNATIONAL_JOURNEYS = 'form_control_ecmt_st_int_journ';
     const FORM_CONTROL_ECMT_RESTRICTED_COUNTRIES = 'form_control_ecmt_st_rest_count';

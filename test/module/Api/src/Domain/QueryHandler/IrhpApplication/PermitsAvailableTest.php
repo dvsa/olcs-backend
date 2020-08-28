@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication\PermitsAvailable;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\StockAvailabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\PermitsAvailable as PermitsAvailableQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -24,7 +24,7 @@ class PermitsAvailableTest extends QueryHandlerTestCase
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
         $this->mockedSmServices = [
-            'PermitsShortTermEcmtStockAvailabilityChecker' => m::mock(StockAvailabilityChecker::class),
+            'PermitsAvailabilityStockAvailabilityChecker' => m::mock(StockAvailabilityChecker::class),
         ];
 
         $this->irhpApplication = m::mock(IrhpApplication::class);
@@ -55,7 +55,7 @@ class PermitsAvailableTest extends QueryHandlerTestCase
         $this->irhpApplication->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow')
             ->andReturn($irhpPermitWindow);
 
-        $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
+        $this->mockedSmServices['PermitsAvailabilityStockAvailabilityChecker']->shouldReceive('hasAvailability')
             ->with($irhpPermitStockId)
             ->andReturn(true);
 
@@ -82,7 +82,7 @@ class PermitsAvailableTest extends QueryHandlerTestCase
         $this->irhpApplication->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow')
             ->andReturn($irhpPermitWindow);
 
-        $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
+        $this->mockedSmServices['PermitsAvailabilityStockAvailabilityChecker']->shouldReceive('hasAvailability')
             ->with($irhpPermitStockId)
             ->andReturn(false);
 

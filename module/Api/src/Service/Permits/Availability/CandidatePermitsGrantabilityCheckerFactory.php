@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt;
+namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -17,7 +17,7 @@ class CandidatePermitsGrantabilityCheckerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new CandidatePermitsGrantabilityChecker(
-            $serviceLocator->get('PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator')
+            $serviceLocator->get('PermitsAvailabilityCandidatePermitsAvailableCountCalculator')
         );
     }
 }

@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\CandidatePermitsAvailableCountCalculator;
+use Dvsa\Olcs\Api\Service\Permits\Availability\CandidatePermitsAvailableCountCalculator;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -32,7 +32,7 @@ class RangesByIrhpApplication extends AbstractQueryHandler
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->candidatePermitsAvailableCountCalculator = $mainServiceLocator->get('PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator');
+        $this->candidatePermitsAvailableCountCalculator = $mainServiceLocator->get('PermitsAvailabilityCandidatePermitsAvailableCountCalculator');
 
         return parent::createService($serviceLocator);
     }

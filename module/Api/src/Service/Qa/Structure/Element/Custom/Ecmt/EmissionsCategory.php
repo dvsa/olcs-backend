@@ -5,33 +5,28 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 class EmissionsCategory
 {
     /** @var string */
-    private $name;
-
-    /** @var string */
-    private $labelTranslationKey;
+    private $type;
 
     /** @var int|null */
     private $value;
 
     /** @var int */
-    private $maxValue;
+    private $permitsRemaining;
 
     /**
      * Create instance
      *
-     * @param string $name
-     * @param string $labelTranslationKey
+     * @param string $type
      * @param int|null $value
-     * @param int $maxValue
+     * @param int $permitsRemaining
      *
      * @return EmissionsCategory
      */
-    public function __construct($name, $labelTranslationKey, $value, $maxValue)
+    public function __construct($type, $value, $permitsRemaining)
     {
-        $this->name = $name;
-        $this->labelTranslationKey = $labelTranslationKey;
+        $this->type = $type;
         $this->value = $value;
-        $this->maxValue = $maxValue;
+        $this->permitsRemaining = $permitsRemaining;
     }
 
     /**
@@ -42,10 +37,9 @@ class EmissionsCategory
     public function getRepresentation()
     {
         return [
-            'name' => $this->name,
-            'labelTranslationKey' => $this->labelTranslationKey,
+            'type' => $this->type,
             'value' => $this->value,
-            'maxValue' => $this->maxValue,
+            'permitsRemaining' => $this->permitsRemaining,
         ];
     }
 }
