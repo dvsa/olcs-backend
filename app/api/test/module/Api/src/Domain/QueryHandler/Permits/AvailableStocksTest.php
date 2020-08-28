@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\StockAvailabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\Permits\AvailableStocks as AvailableStocksQuery;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -21,7 +21,7 @@ class AvailableStocksTest extends QueryHandlerTestCase
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
 
         $this->mockedSmServices = [
-            'PermitsShortTermEcmtStockAvailabilityChecker' => m::mock(StockAvailabilityChecker::class)
+            'PermitsAvailabilityStockAvailabilityChecker' => m::mock(StockAvailabilityChecker::class)
         ];
 
         parent::setUp();
@@ -86,15 +86,15 @@ class AvailableStocksTest extends QueryHandlerTestCase
             )
             ->andReturn($irhpPermitWindows);
 
-        $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
+        $this->mockedSmServices['PermitsAvailabilityStockAvailabilityChecker']->shouldReceive('hasAvailability')
             ->with($ips1Id)
             ->once()
             ->andReturn(true);
-        $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
+        $this->mockedSmServices['PermitsAvailabilityStockAvailabilityChecker']->shouldReceive('hasAvailability')
             ->with($ips2Id)
             ->once()
             ->andReturn(true);
-        $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
+        $this->mockedSmServices['PermitsAvailabilityStockAvailabilityChecker']->shouldReceive('hasAvailability')
             ->with($ips3Id)
             ->once()
             ->andReturn(false);
@@ -154,7 +154,7 @@ class AvailableStocksTest extends QueryHandlerTestCase
             )
             ->andReturn($irhpPermitWindows);
 
-        $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
+        $this->mockedSmServices['PermitsAvailabilityStockAvailabilityChecker']->shouldReceive('hasAvailability')
             ->never();
 
         $this->assertSame(

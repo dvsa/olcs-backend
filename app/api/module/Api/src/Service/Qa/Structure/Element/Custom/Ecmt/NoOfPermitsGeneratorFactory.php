@@ -17,8 +17,11 @@ class NoOfPermitsGeneratorFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new NoOfPermitsGenerator(
+            $serviceLocator->get('RepositoryServiceManager')->get('FeeType'),
             $serviceLocator->get('QaEcmtNoOfPermitsElementFactory'),
-            $serviceLocator->get('QaEcmtEmissionsCategoryConditionalAdder')
+            $serviceLocator->get('QaEcmtEmissionsCategoryConditionalAdder'),
+            $serviceLocator->get('PermitsAvailabilityStockAvailabilityCounter'),
+            $serviceLocator->get('QaEcmtNoOfPermitsMaxPermittedGenerator')
         );
     }
 }

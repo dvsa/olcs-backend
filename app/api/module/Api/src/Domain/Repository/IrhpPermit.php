@@ -7,6 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
@@ -66,6 +67,33 @@ class IrhpPermit extends AbstractRepository
             ->from(Entity::class, 'ip')
             ->where('IDENTITY(ip.irhpPermitRange) = ?1')
             ->setParameter(1, $rangeId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Returns the count of ecmt annual permits by licence and stock end year
+     *
+     * @param int $licenceId
+     * @param int $stockEndYear
+     *
+     * @return int
+     */
+    public function getEcmtAnnualPermitCountByLicenceAndStockEndYear($licenceId, $stockEndYear)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('count(ip.id)')
+            ->from(Entity::class, 'ip')
+            ->innerJoin('ip.irhpPermitRange', 'ipr')
+            ->innerJoin('ipr.irhpPermitStock', 'ips')
+            ->innerJoin('ip.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.irhpApplication', 'ia')
+            ->where('IDENTITY(ia.licence) = ?1')
+            ->andWhere('YEAR(ips.validTo) = ?2')
+            ->andWhere('IDENTITY(ips.irhpPermitType) = ?3')
+            ->setParameter(1, $licenceId)
+            ->setParameter(2, $stockEndYear)
+            ->setParameter(3, IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT)
             ->getQuery()
             ->getSingleScalarResult();
     }

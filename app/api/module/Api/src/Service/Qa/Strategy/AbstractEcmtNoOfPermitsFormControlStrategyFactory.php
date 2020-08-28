@@ -5,8 +5,10 @@ namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class EcmtNoOfPermitsFormControlStrategyFactory implements FactoryInterface
+class AbstractEcmtNoOfPermitsFormControlStrategyFactory implements FactoryInterface
 {
+    protected $frontendComponent = 'changeMe';
+
     /**
      * Create service
      *
@@ -19,11 +21,11 @@ class EcmtNoOfPermitsFormControlStrategyFactory implements FactoryInterface
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         return new BaseFormControlStrategy(
-            'ecmt_st_no_of_permits',
+            $this->frontendComponent,
             $mainServiceLocator->get('QaEcmtNoOfPermitsElementGenerator'),
             $mainServiceLocator->get('QaEcmtNoOfPermitsAnswerSaver'),
             $mainServiceLocator->get('QaEcmtNoOfPermitsAnswerClearer'),
-            $mainServiceLocator->get('QaEcmtNoOfPermitsQuestionTextGenerator'),
+            $mainServiceLocator->get('QaQuestionTextGenerator'),
             $mainServiceLocator->get('QaEcmtNoOfPermitsAnswerSummaryProvider')
         );
     }

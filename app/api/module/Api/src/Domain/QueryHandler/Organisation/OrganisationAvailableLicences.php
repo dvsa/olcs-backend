@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as PermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as PermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as PermitWindowEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\StockAvailabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\Organisation\OrganisationAvailableLicences as OrganisationPermitsQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -41,7 +41,7 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->stockAvailabilityChecker = $mainServiceLocator->get('PermitsShortTermEcmtStockAvailabilityChecker');
+        $this->stockAvailabilityChecker = $mainServiceLocator->get('PermitsAvailabilityStockAvailabilityChecker');
 
         return parent::createService($serviceLocator);
     }

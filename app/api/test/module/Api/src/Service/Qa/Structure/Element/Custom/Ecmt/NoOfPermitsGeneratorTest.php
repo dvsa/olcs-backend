@@ -2,18 +2,21 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
+use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityCounter;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\EmissionsCategoryConditionalAdder;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\FieldNames;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermits;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsGenerator;
-use RuntimeException;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsMaxPermittedGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -24,44 +27,23 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class NoOfPermitsGeneratorTest extends MockeryTestCase
 {
-    private $irhpApplication;
-
-    private $elementGeneratorContext;
-
-    private $noOfPermitsFactory;
-
-    private $emissionsCategoryConditionalAdder;
-
-    private $noOfPermitsGenerator;
-
-    public function setUp(): void
-    {
-        $this->irhpApplication = m::mock(IrhpApplicationEntity::class);
-
-        $this->elementGeneratorContext = m::mock(ElementGeneratorContext::class);
-        $this->elementGeneratorContext->shouldReceive('getQaEntity')
-            ->andReturn($this->irhpApplication);
-
-        $this->noOfPermitsFactory = m::mock(NoOfPermitsFactory::class);
-
-        $this->emissionsCategoryConditionalAdder = m::mock(EmissionsCategoryConditionalAdder::class);
-
-        $this->noOfPermitsGenerator = new NoOfPermitsGenerator(
-            $this->noOfPermitsFactory,
-            $this->emissionsCategoryConditionalAdder
-        );
-    }
-
     /**
      * @dataProvider dpGenerate
      */
-    public function testGenerate($irhpPermitTypeId, $expectedMaxPermitted)
+    public function testGenerate($maxPermitted, $permitsRemaining, $expectedMaxCanApplyFor)
     {
         $stockId = 22;
         $validityYear = 2015;
-        $totAuthVehicles = 12;
         $requiredEuro5 = 13;
         $requiredEuro6 = 7;
+        $applicationFeePerPermit = '15.00';
+        $issueFeePerPermit = '5.00';
+
+        $irhpApplication = m::mock(IrhpApplicationEntity::class);
+
+        $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
+        $elementGeneratorContext->shouldReceive('getQaEntity')
+            ->andReturn($irhpApplication);
 
         $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
         $irhpPermitStock->shouldReceive('getId')
@@ -82,39 +64,53 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($requiredEuro6);
 
-        $this->irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
+        $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
             ->withNoArgs()
             ->andReturn($irhpPermitApplication);
-        $this->irhpApplication->shouldReceive('getLicence->getTotAuthVehicles')
-            ->withNoArgs()
-            ->andReturn($totAuthVehicles);
-        $this->irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->withNoArgs()
-            ->andReturn($irhpPermitTypeId);
+        $irhpApplication->shouldReceive('getApplicationFeeProductReference')
+            ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF);
+        $irhpApplication->shouldReceive('getIssueFeeProductReference')
+            ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF);
+
+        $applicationFeeTypeEntity = m::mock(FeeTypeEntity::class);
+        $applicationFeeTypeEntity->shouldReceive('getFixedValue')
+            ->andReturn($applicationFeePerPermit);
+
+        $issueFeeTypeEntity = m::mock(FeeTypeEntity::class);
+        $issueFeeTypeEntity->shouldReceive('getFixedValue')
+            ->andReturn($issueFeePerPermit);
+
+        $feeTypeRepo = m::mock(FeeTypeRepository::class);
+        $feeTypeRepo->shouldReceive('getLatestByProductReference')
+            ->with(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF)
+            ->andReturn($applicationFeeTypeEntity);
+        $feeTypeRepo->shouldReceive('getLatestByProductReference')
+            ->with(FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF)
+            ->andReturn($issueFeeTypeEntity);
 
         $noOfPermits = m::mock(NoOfPermits::class);
 
-        $this->noOfPermitsFactory->shouldReceive('create')
-            ->with($validityYear, $expectedMaxPermitted)
+        $noOfPermitsFactory = m::mock(NoOfPermitsFactory::class);
+        $noOfPermitsFactory->shouldReceive('create')
+            ->with($expectedMaxCanApplyFor, $maxPermitted, $applicationFeePerPermit, $issueFeePerPermit)
             ->once()
             ->andReturn($noOfPermits);
 
-        $this->emissionsCategoryConditionalAdder->shouldReceive('addIfRequired')
+        $emissionsCategoryConditionalAdder = m::mock(EmissionsCategoryConditionalAdder::class);
+        $emissionsCategoryConditionalAdder->shouldReceive('addIfRequired')
             ->with(
                 $noOfPermits,
-                FieldNames::REQUIRED_EURO5,
-                'qanda.ecmt.number-of-permits.label.euro5',
+                'euro5',
                 $requiredEuro5,
                 RefData::EMISSIONS_CATEGORY_EURO5_REF,
                 $stockId
             )
             ->once()
             ->ordered();
-        $this->emissionsCategoryConditionalAdder->shouldReceive('addIfRequired')
+        $emissionsCategoryConditionalAdder->shouldReceive('addIfRequired')
             ->with(
                 $noOfPermits,
-                FieldNames::REQUIRED_EURO6,
-                'qanda.ecmt.number-of-permits.label.euro6',
+                'euro6',
                 $requiredEuro6,
                 RefData::EMISSIONS_CATEGORY_EURO6_REF,
                 $stockId
@@ -122,43 +118,35 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             ->once()
             ->ordered();
 
+        $stockAvailabilityCounter = m::mock(StockAvailabilityCounter::class);
+        $stockAvailabilityCounter->shouldReceive('getCount')
+            ->with($stockId)
+            ->andReturn($permitsRemaining);
+
+        $noOfPermitsMaxPermittedGenerator = m::mock(NoOfPermitsMaxPermittedGenerator::class);
+        $noOfPermitsMaxPermittedGenerator->shouldReceive('generate')
+            ->with($irhpApplication)
+            ->andReturn($maxPermitted);
+
+        $noOfPermitsGenerator = new NoOfPermitsGenerator(
+            $feeTypeRepo,
+            $noOfPermitsFactory,
+            $emissionsCategoryConditionalAdder,
+            $stockAvailabilityCounter,
+            $noOfPermitsMaxPermittedGenerator
+        );
+
         $this->assertSame(
             $noOfPermits,
-            $this->noOfPermitsGenerator->generate($this->elementGeneratorContext)
+            $noOfPermitsGenerator->generate($elementGeneratorContext)
         );
     }
 
     public function dpGenerate()
     {
         return [
-            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT, 12],
-            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, 24],
-        ];
-    }
-
-    /**
-     * @dataProvider dpGenerateExceptionOnUnsupportedType
-     */
-    public function testGenerateExceptionOnUnsupportedType($irhpPermitTypeId)
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('This question does not support permit type ' . $irhpPermitTypeId);
-
-        $this->irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->withNoArgs()
-            ->andReturn($irhpPermitTypeId);
-
-        $this->noOfPermitsGenerator->generate($this->elementGeneratorContext);
-    }
-
-    public function dpGenerateExceptionOnUnsupportedType()
-    {
-        return [
-            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
-            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL],
-            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
-            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE],
-            [IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER],
+            [43, 19, 19],
+            [17, 40, 17],
         ];
     }
 }

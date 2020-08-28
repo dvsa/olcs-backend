@@ -15,6 +15,9 @@ class ApplicationStep
     /** @var string */
     private $shortName;
 
+    /** @var string */
+    private $slug;
+
     /** @var ElementInterface */
     private $element;
 
@@ -27,6 +30,7 @@ class ApplicationStep
      * @param string $type
      * @param string $fieldsetName
      * @param string $shortName
+     * @param string $slug
      * @param ElementInterface $element
      * @param ValidatorList $validatorList
      *
@@ -36,12 +40,14 @@ class ApplicationStep
         $type,
         $fieldsetName,
         $shortName,
+        $slug,
         ElementInterface $element,
         ValidatorList $validatorList
     ) {
         $this->type = $type;
         $this->fieldsetName = $fieldsetName;
         $this->shortName = $shortName;
+        $this->slug = $slug;
         $this->element = $element;
         $this->validatorList = $validatorList;
     }
@@ -57,6 +63,7 @@ class ApplicationStep
             'type' => $this->type,
             'fieldsetName' => $this->fieldsetName,
             'shortName' => $this->shortName,
+            'slug' => $this->slug,
             'element' => $this->element->getRepresentation(),
             'validators' => $this->validatorList->getRepresentation(),
         ];

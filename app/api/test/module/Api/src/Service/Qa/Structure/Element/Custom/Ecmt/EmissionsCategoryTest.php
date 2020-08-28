@@ -14,19 +14,17 @@ class EmissionsCategoryTest extends MockeryTestCase
 {
     public function testGetRepresentation()
     {
-        $name = 'euro5Required';
-        $labelTranslationKey = 'qanda.ecmt.number-of-permits.label.euro5';
+        $type = 'euro5';
         $value = '45';
-        $maxValue = '62';
+        $permitsRemaining = '62';
 
         $expectedRepresentation = [
-            'name' => $name,
-            'labelTranslationKey' => $labelTranslationKey,
+            'type' => $type,
             'value' => $value,
-            'maxValue' => $maxValue
+            'permitsRemaining' => $permitsRemaining
         ];
 
-        $emissionsCategory = new EmissionsCategory($name, $labelTranslationKey, $value, $maxValue);
+        $emissionsCategory = new EmissionsCategory($type, $value, $permitsRemaining);
 
         $this->assertSame(
             $expectedRepresentation,

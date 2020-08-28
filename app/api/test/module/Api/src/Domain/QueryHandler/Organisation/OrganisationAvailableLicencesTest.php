@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\StockAvailabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
@@ -32,7 +32,7 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
 
         $this->mockedSmServices = [
-            'PermitsShortTermEcmtStockAvailabilityChecker' => m::mock(StockAvailabilityChecker::class)
+            'PermitsAvailabilityStockAvailabilityChecker' => m::mock(StockAvailabilityChecker::class)
         ];
 
         parent::setUp();
@@ -107,7 +107,7 @@ class OrganisationAvailableLicencesTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($organisation);
 
-        $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']
+        $this->mockedSmServices['PermitsAvailabilityStockAvailabilityChecker']
             ->shouldReceive('hasAvailability')
             ->times($isShortTerm ? 1 : 0)
             ->with($stockId)
