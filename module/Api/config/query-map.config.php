@@ -705,4 +705,8 @@ return [
     TransferQuery\Replacement\ById::class => QueryHandler\Replacement\ById::class,
     TransferQuery\Replacement\GetList::class => QueryHandler\Replacement\GetList::class,
 
+    //Partials
+    TransferQuery\PartialMarkup\ById::class => QueryHandler\Partial\ById::class,
+    TransferQuery\PartialMarkup\GetList::class => QueryHandler\Partial\GetList::class,
+
 ];
