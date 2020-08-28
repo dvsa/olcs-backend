@@ -1216,4 +1216,8 @@ return [
     TransferCommand\Replacement\Update::class => CommandHandler\Replacement\Update::class,
     TransferCommand\Replacement\Create::class => CommandHandler\Replacement\Create::class,
 
+    // Partials
+    TransferCommand\PartialMarkup\Update::class => CommandHandler\Partial\Update::class,
+    Command\PartialMarkup\Create::class => CommandHandler\PartialMarkup\Create::class,
+    Command\PartialMarkup\Update::class => CommandHandler\PartialMarkup\Update::class,
 ];
