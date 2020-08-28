@@ -8,7 +8,9 @@ use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service as ApiSrv;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
+use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
 use Dvsa\Olcs\Api\Service\Qa\Strategy as QaStrategy;
+use Dvsa\Olcs\DvlaSearch\Service\Client as DvlaSearchService;
 
 return [
     'router' => [
@@ -171,6 +173,7 @@ return [
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
             'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
             'CompaniesHouseService' => \Dvsa\Olcs\Api\Service\CompaniesHouseService::class,
+            DvlaSearchService::class => DvlaSearchServiceFactory::class,
 
             \Dvsa\Olcs\Api\Service\Publication\PublicationGenerator::class =>
                 \Dvsa\Olcs\Api\Service\Publication\PublicationGeneratorFactory::class,
@@ -479,6 +482,7 @@ return [
 
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
+
         ],
     ],
     'view_manager' => [
