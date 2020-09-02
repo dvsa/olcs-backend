@@ -394,7 +394,7 @@ return [
     'permits.check-your-answers.no-of-permits.year' => 'Permits for %s',
     'permits.form.euro-emissions.label' => 'I confirm that I will only use my ECMT permits with vehicles that are environmentally compliant with the minimum Euro emissions standards that the permit allows.',
     'permits.form.cabotage.label' => 'I confirm that I will not undertake any cabotage journeys using an ECMT permit.',
-    'permits.page.roadworthiness.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
+    'permits.page.roadworthiness.question' => 'Mandatory certificates for vehicles and trailers you intend to use',
     'permits.page.restricted-countries.question' => 'Will you be transporting goods to Austria, Greece, Hungary, Italy or Russia?',
     'permits.page.permits.required.question' => 'How many permits do you require for this licence?',
     'permits.page.number-of-trips.question' => 'How many international trips did you make in the last 12 months using this licence?',
@@ -472,7 +472,7 @@ return [
     'qanda.certificate-of-roadworthiness.trailer.mot-expiry-date.question-summary' => 'MOT expiry date',
 
     'qanda.common.certificates.question-summary' => 'Certificates required',
-    'qanda.common.certificates.checkbox.label' => 'I understand that I must obtain and carry the appropriate ECMT Certificate of Compliance and Certificate of Roadworthiness for each vehicle and trailer I intend to use with this permit.',
+    'qanda.common.certificates.checkbox.label' => 'I understand that I must obtain and carry the appropriate Certificate of Compliance and Certificate of Roadworthiness for each vehicle and trailer I intend to use with this permit.',
 
     'permits.page.stock.select.option.1' => 'Permits for journeys starting between 1 February and 31 March 2020',
     'permits.page.stock.select.option.2' => 'Permits for journeys starting between 1 April and 31 May 2020',

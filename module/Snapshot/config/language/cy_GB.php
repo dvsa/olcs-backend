@@ -360,6 +360,8 @@ return [
     'inter_journey_60_90' => 'O 60% i 90%',
     'inter_journey_more_90' => 'Mwy na 90%',
     'permits.page.restricted-countries.question' => 'A fyddwch chi\'n cludo nwyddau i Awstria, Gwlad Groeg, Hwngari, yr Eidal neu Rwsia?',
+    'permits.page.roadworthiness.question' => 'Tystysgrifau gorfodol ar gyfer cerbydau a threlars rydych chi\'n bwriadu eu defnyddio',
+    'qanda.common.certificates.checkbox.label' => 'Deallaf fod yn rhaid i mi gael a chario\'r Dystysgrif Cydymffurfio a Thystysgrif Ffyrdd briodol ar gyfer pob cerbyd a threlar rwy\'n bwriadu ei defnyddio gyda\'r drwydded hon.',
     'qanda.ecmt-removal.removal-eligibility.question' => 'Dim ond ar gyfer gweithrediadau symud y gellir defnyddio trwyddedau symud, gan ddefnyddio offer arbenigol a staff',
     'qanda.ecmt-removal.cabotage.question' => 'Nid yw trwyddedau symud yn caniatáu ichi gynnal cabotage',
 
