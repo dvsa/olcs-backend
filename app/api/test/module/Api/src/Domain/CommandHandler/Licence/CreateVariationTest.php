@@ -91,7 +91,7 @@ class CreateVariationTest extends CommandHandlerTestCase
                 function (ApplicationEntity $app) {
                     $app->setId(222);
                     $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
-                    $this->assertEquals('2015-02-19', $app->getTargetCompletionDate()->format('Y-m-d'));
+                    $this->assertEquals('2015-02-26', $app->getTargetCompletionDate()->format('Y-m-d'));
                     $this->assertSame(
                         $this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION],
                         $app->getStatus()

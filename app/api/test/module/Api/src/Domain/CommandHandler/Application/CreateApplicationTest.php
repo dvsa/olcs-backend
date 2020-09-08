@@ -223,7 +223,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf('\DateTime', $app->getReceivedDate());
         $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
-        $this->assertEquals('2015-02-19', $app->getTargetCompletionDate()->format('Y-m-d')); // +7 weeks
+        $this->assertEquals('2015-02-26', $app->getTargetCompletionDate()->format('Y-m-d')); // +8 weeks
         $this->assertEquals('Y', $app->getNiFlag());
         $this->assertSame($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL], $app->getLicenceType());
         $this->assertSame($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE], $app->getGoodsOrPsv());
@@ -329,7 +329,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf('\DateTime', $app->getReceivedDate());
         $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
-        $this->assertEquals('2015-02-19', $app->getTargetCompletionDate()->format('Y-m-d')); // +7 weeks
+        $this->assertEquals('2015-02-26', $app->getTargetCompletionDate()->format('Y-m-d')); // +8 weeks
         $this->assertEquals('N', $app->getNiFlag());
         $this->assertSame($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL], $app->getLicenceType());
         $this->assertSame($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE], $app->getGoodsOrPsv());
