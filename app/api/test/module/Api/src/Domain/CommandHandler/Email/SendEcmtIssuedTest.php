@@ -13,7 +13,7 @@ class SendEcmtIssuedTest extends AbstractEcmtAnnualPermitTest
 {
     protected $commandClass = SendEcmtIssuedCmd::class;
     protected $commandHandlerClass = SendEcmtIssuedHandler::class;
-    protected $template = 'ecmt-app-issued';
+    protected $template = 'ecmt-annual-apsg-app-issued';
     protected $subject = 'email.ecmt.issued.subject';
     protected $permitApplicationRepo = 'IrhpApplication';
     protected $applicationEntityClass = IrhpApplication::class;

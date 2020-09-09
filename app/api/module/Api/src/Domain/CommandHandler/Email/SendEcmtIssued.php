@@ -16,7 +16,7 @@ class SendEcmtIssued extends AbstractEmailHandler
     use PermitEmailTrait;
 
     protected $repoServiceName = 'IrhpApplication';
-    protected $template = 'ecmt-app-issued';
+    protected $template = 'ecmt-annual-apsg-app-issued';
     protected $subject = 'email.ecmt.issued.subject';
     protected $extraRepos = ['FeeType'];
 }
