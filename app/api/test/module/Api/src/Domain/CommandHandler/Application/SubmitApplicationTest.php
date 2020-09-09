@@ -134,7 +134,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         }
 
         $expectedTargetCompletionDate = clone $now;
-        $expectedTargetCompletionDate->modify('+7 week');
+        $expectedTargetCompletionDate->modify('+8 week');
 
         // licence status should be updated if application is not a variation
         if ($isVariation) {
@@ -346,7 +346,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->andReturn('TEST CODE');
 
         $expectedTargetCompletionDate = clone $now;
-        $expectedTargetCompletionDate->modify('+7 week');
+        $expectedTargetCompletionDate->modify('+8 week');
 
         // licence status should be updated if application is not a variation
         $this->mockLic
@@ -451,7 +451,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->andReturn('TEST CODE');
 
         $expectedTargetCompletionDate = clone $now;
-        $expectedTargetCompletionDate->modify('+7 week');
+        $expectedTargetCompletionDate->modify('+8 week');
 
         // licence status should be updated if application is not a variation
         $this->mockLic
@@ -551,7 +551,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $application->setS4s(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
 
         $expectedTargetCompletionDate = clone $now;
-        $expectedTargetCompletionDate->modify('+7 week');
+        $expectedTargetCompletionDate->modify('+8 week');
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')

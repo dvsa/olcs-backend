@@ -97,7 +97,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const NOT_APPLICABLE = 'Not applicable';
     const UNKNOWN = 'Unknown';
 
-    const TARGET_COMPLETION_TIME = '+7 week';
+    const TARGET_COMPLETION_TIME = '+8 week';
     const OUT_OF_OPPOSITION_DATE_INTERVAL = '+22 days';
     const OUT_OF_REPRESENTATION_DATE_INTERVAL = '+21 days';
 
@@ -1658,7 +1658,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * Set the target completion date to +7 weeks from received date
+     * Set the target completion date to +8 weeks from received date
      *
      * @return $this
      */
