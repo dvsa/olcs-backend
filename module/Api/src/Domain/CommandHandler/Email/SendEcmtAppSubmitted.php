@@ -16,7 +16,7 @@ class SendEcmtAppSubmitted extends AbstractEmailHandler
     use PermitEmailTrait;
 
     protected $repoServiceName = 'IrhpApplication';
-    protected $template = 'ecmt-app-submitted';
+    protected $template = 'ecmt-annual-apsg-app-submitted';
     protected $subject = 'email.ecmt.default.subject';
     protected $extraRepos = ['FeeType'];
 }

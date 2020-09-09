@@ -13,7 +13,7 @@ class SendEcmtUnsuccessfulTest extends AbstractEcmtAnnualPermitTest
 {
     protected $commandClass = SendEcmtUnsuccessfulCmd::class;
     protected $commandHandlerClass = SendEcmtUnsuccessfulHandler::class;
-    protected $template = 'ecmt-app-unsuccessful';
+    protected $template = 'ecmt-annual-apsg-app-unsuccessful';
     protected $subject = 'email.ecmt.response.subject';
     protected $permitApplicationRepo = 'IrhpApplication';
     protected $applicationEntityClass = IrhpApplication::class;

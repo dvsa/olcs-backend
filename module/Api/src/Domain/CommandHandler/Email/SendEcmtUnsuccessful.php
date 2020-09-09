@@ -16,7 +16,7 @@ class SendEcmtUnsuccessful extends AbstractEmailHandler
     use PermitEmailTrait;
 
     protected $repoServiceName = 'IrhpApplication';
-    protected $template = 'ecmt-app-unsuccessful';
+    protected $template = 'ecmt-annual-apsg-app-unsuccessful';
     protected $subject = 'email.ecmt.response.subject';
     protected $extraRepos = ['FeeType'];
 }
