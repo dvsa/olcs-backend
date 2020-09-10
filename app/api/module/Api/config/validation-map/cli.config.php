@@ -76,6 +76,7 @@ return [
     CommandHandler\Email\SendEbsrErrors::class => IsSystemUser::class,
     CommandHandler\Email\SendEbsrRequestMap::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtApggAppSubmitted::class => IsSystemUser::class,
+    CommandHandler\Email\SendEcmtApggAppGranted::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtApsgAppSubmitted::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtApsgIssued::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtApsgUnsuccessful::class => IsSystemUser::class,
