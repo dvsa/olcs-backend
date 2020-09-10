@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Permits;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Availability\EmissionsCategoriesGrantabilityChecker;
 use Dvsa\Olcs\Api\Service\Permits\Availability\CandidatePermitsGrantabilityChecker;
 use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
@@ -48,9 +49,9 @@ class GrantabilityCheckerTest extends MockeryTestCase
         $this->irhpApplication->shouldReceive('getAllocationMode')
             ->withNoArgs()
             ->andReturn(IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES);
-        $this->irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+        $this->irhpApplication->shouldReceive('getBusinessProcess')
             ->withNoArgs()
-            ->andReturn(true);
+            ->andReturn(new RefData(RefData::BUSINESS_PROCESS_APGG));
 
         $this->emissionsCategoriesGrantabilityChecker->shouldReceive('isGrantable')
             ->with($this->irhpApplication)
@@ -71,9 +72,9 @@ class GrantabilityCheckerTest extends MockeryTestCase
         $this->irhpApplication->shouldReceive('getAllocationMode')
             ->withNoArgs()
             ->andReturn(IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS);
-        $this->irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+        $this->irhpApplication->shouldReceive('getBusinessProcess')
             ->withNoArgs()
-            ->andReturn(true);
+            ->andReturn(new RefData(RefData::BUSINESS_PROCESS_APGG));
 
         $this->candidatePermitsGrantabilityChecker->shouldReceive('isGrantable')
             ->with($this->irhpApplication)
@@ -94,15 +95,28 @@ class GrantabilityCheckerTest extends MockeryTestCase
         ];
     }
 
-    public function testExceptionWhenNotEcmtShortTerm()
+    /**
+     * @dataProvider dpExceptionUnsupportedBusinessProcess
+     */
+    public function testExceptionUnsupportedBusinessProcess($businessProcess)
     {
-        $this->irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
-            ->andReturn(false);
+        $this->irhpApplication->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn(new RefData($businessProcess));
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('GrantabilityChecker is only implemented for ecmt short term');
+        $this->expectExceptionMessage('GrantabilityChecker is only implemented for APGG');
 
         $this->grantabilityChecker->isGrantable($this->irhpApplication);
+    }
+
+    public function dpExceptionUnsupportedBusinessProcess()
+    {
+        return [
+            [RefData::BUSINESS_PROCESS_AG],
+            [RefData::BUSINESS_PROCESS_APG],
+            [RefData::BUSINESS_PROCESS_APSG],
+        ];
     }
 
     /**
@@ -116,9 +130,9 @@ class GrantabilityCheckerTest extends MockeryTestCase
         $this->irhpApplication->shouldReceive('getAllocationMode')
             ->withNoArgs()
             ->andReturn($allocationMode);
-        $this->irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+        $this->irhpApplication->shouldReceive('getBusinessProcess')
             ->withNoArgs()
-            ->andReturn(true);
+            ->andReturn(new RefData(RefData::BUSINESS_PROCESS_APGG));
 
         $this->grantabilityChecker->isGrantable($this->irhpApplication);
     }

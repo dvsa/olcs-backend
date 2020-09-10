@@ -2,9 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApggAppGranted;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -16,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitApplicationCmd;
+use Dvsa\Olcs\Transfer\Command\IrhpApplication\Grant as GrantCmd;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -58,11 +60,10 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         return parent::createService($serviceLocator);
     }
 
-
     /**
      * Handle command
      *
-     * @param SubmitApplicationCmd|CommandInterface $command command
+     * @param GrantCmd|CommandInterface $command command
      *
      * @return Result
      * @throws ForbiddenException
@@ -92,11 +93,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             $this->handleSideEffects(
                 [
                     $this->getCreateFeeCommand($irhpApplication),
-                    $this->emailQueue(
-                        SendEcmtShortTermSuccessful::class,
-                        ['id' => $irhpApplication->getId()],
-                        $irhpApplication->getId()
-                    )
+                    $this->getEmailCommand($irhpApplication),
                 ]
             )
         );
@@ -105,6 +102,23 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $this->result->addId('irhpApplication', $irhpApplicationId);
 
         return $this->result;
+    }
+
+    /**
+     * @param IrhpApplication $irhpApplication
+     *
+     * @return CreateQueue
+     */
+    private function getEmailCommand(IrhpApplication $irhpApplication)
+    {
+        $cmdClass = $irhpApplication->getIrhpPermitType()->isEcmtShortTerm()
+            ? SendEcmtShortTermSuccessful::class : SendEcmtApggAppGranted::class;
+
+        return $this->emailQueue(
+            $cmdClass,
+            ['id' => $irhpApplication->getId()],
+            $irhpApplication->getId()
+        );
     }
 
     /**
