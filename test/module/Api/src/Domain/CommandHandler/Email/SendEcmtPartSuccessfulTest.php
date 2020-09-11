@@ -13,7 +13,7 @@ class SendEcmtPartSuccessfulTest extends AbstractEcmtAnnualPermitTest
 {
     protected $commandClass = SendEcmtPartSuccessfulCmd::class;
     protected $commandHandlerClass = SendEcmtPartSuccessfulHandler::class;
-    protected $template = 'ecmt-app-part-successful';
+    protected $template = 'ecmt-annual-apsg-app-part-successful';
     protected $subject = 'email.ecmt.response.subject';
     protected $permitApplicationRepo = 'IrhpApplication';
     protected $applicationEntityClass = IrhpApplication::class;

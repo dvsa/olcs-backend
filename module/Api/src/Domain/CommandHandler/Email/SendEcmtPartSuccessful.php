@@ -16,7 +16,7 @@ class SendEcmtPartSuccessful extends AbstractEmailHandler
     use PermitEmailTrait;
 
     protected $repoServiceName = 'IrhpApplication';
-    protected $template = 'ecmt-app-part-successful';
+    protected $template = 'ecmt-annual-apsg-app-part-successful';
     protected $subject = 'email.ecmt.response.subject';
     protected $extraRepos = ['FeeType'];
 }
