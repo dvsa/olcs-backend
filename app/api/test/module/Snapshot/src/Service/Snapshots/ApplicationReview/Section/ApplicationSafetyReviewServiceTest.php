@@ -119,7 +119,7 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                                                 'value' => 'tachograph_analyser.tach_external-translated'
                                             ],
                                             [
-                                                'label' => 'application-review-safety-tachographInsName',
+                                                'label' => 'application-review-safety-tachographInsName-snapshot',
                                                 'value' => 'Bob'
                                             ]
                                         ],
@@ -237,7 +237,7 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                                                 'value' => 'tachograph_analyser.tach_external-translated'
                                             ],
                                             [
-                                                'label' => 'application-review-safety-tachographInsName',
+                                                'label' => 'application-review-safety-tachographInsName-snapshot',
                                                 'value' => 'Bob'
                                             ]
                                         ],
