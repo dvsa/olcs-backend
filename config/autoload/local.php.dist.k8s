@@ -1,0 +1,473 @@
+<?php
+
+/**
+* Local Configuration Override
+*
+* This configuration override file is for overriding environment-specific and
+* security-sensitive configuration information. Copy this file without the
+* .dist extension at the end and populate values as needed.
+*
+* @NOTE: This file is ignored from Git by default with the .gitignore included
+* in ZendSkeletonApplication. This is a good practice, as it prevents sensitive
+* credentials from accidentally being committed into version control.
+*/
+
+$doctrine_connection_params = [
+    'host' => 'database.localdev',
+    'port' => '3306',
+    'user' => 'mysql',
+    'password' => 'olcs',
+    'dbname' => 'olcs_be',
+];
+
+return [
+    // Postcode/Address service
+    'address' => [
+        'client' => [
+            // URI e.g. http://postcode.cit.olcs.mgt.mtpdvsa/ *Environment specific*
+            'baseuri' => 'http://address.localdev/'
+        ]
+    ],
+
+    // Elastic search
+    'elastic_search' => [
+        // Hostname e.g. elasticsearch-dev.olcs.mgt.mtpdvsa *Environment specific*
+        'host' => 'localstack.localdev',
+        // Port, e.g. 9200
+        'port' => '4571',
+        // // Transport protocol
+        // 'transport' => 'Https',
+        // // Additional CURL options
+        // 'curl' => [
+        //     CURLOPT_SSL_VERIFYHOST => false,
+        // ],
+    ],
+
+    // Doctrine
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'driverClass' => \Doctrine\DBAL\Driver\PDOMySql\Driver::class,
+                // Database connection details
+                'params' => $doctrine_connection_params,
+            ],
+            'export' => [
+                'driverClass' => \Doctrine\DBAL\Driver\PDOMySql\Driver::class,
+                'params' => $doctrine_connection_params +
+                    [
+                        'driverOptions' => [
+                            PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
+                            PDO::CURSOR_FWDONLY => true,
+                        ],
+                    ],
+            ],
+        ],
+        'driver' => [
+            'EntityDriver' => [
+                'cache' => 'apc'
+            ],
+            'translatable_metadata_driver' => [
+                'cache' => 'apc',
+            ]
+        ],
+        'configuration' => [
+            'orm_default' => [
+                'metadata_cache' => 'apc'
+                // Log SQL queries to the OLCS application log file
+                //'sql_logger' => 'DoctrineLogger',
+
+                // NOT used in production as may be causing issues
+                //'query_cache' => 'apc',
+                //'result_cache' => 'apc',
+            ]
+        ],
+    ],
+
+    'olcs-doctrine' => [
+        // The encryption key used for storing encrypted data in the database
+        'encryption_key' => ''
+    ],
+
+    // Companies house XML gateway credentials
+    'companies_house_credentials' => [
+        // Companies house XML gateway userID *Environment specific*
+        'userId' => 'XMLGatewayTestUserID',
+        // Companies house XML gateway password *Environment specific*
+        'password' => 'XMLGatewayTestPassword',
+    ],
+
+    // Set the following if you need to go via a proxy to get to Companies house XML gateway
+    // *Environment specific*
+    'companies_house_connection' => [
+    //    'proxy => 'proxy.gw.npm:80'
+    ],
+
+    // Document service
+    'document_share' => [
+        'client' => [
+            // Document service URI *Environment specific*
+            'baseuri' => "http://docman.localdev:8080/hfs/",
+            // Document service user ID *Environment specific*
+            'uuid' => '',
+            // Document service workspace "olcs"
+            'workspace' => 'olcs'
+        ],
+        'invalid_defined_mime_types' => [
+            'docm' => 'application/vnd.ms-word.document.macroEnabled.12',
+            'dotm' => 'application/vnd.ms-word.template.macroEnabled.12',
+            'xlsm' => 'application/vnd.ms-excel.sheet.macroEnabled.12',
+            'xltm' => 'application/vnd.ms-excel.template.macroEnabled.12',
+            'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
+            'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+            'ppam' => 'application/vnd.ms-powerpoint.addin.macroEnabled.12',
+            'pptm' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+            'potm' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+            'ppsm' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
+        ],
+    ],
+
+    // Asset path, URI to olcs-static (CSS, JS, etc) *Environment specific*
+    'asset_path' => '/static',
+
+    // Companies house RESTful API
+    'companies_house' => [
+        'http' => [
+            // Set the following if you need to go via a proxy to get to Companies House RESTful API
+            // *Environment specific*
+            'curloptions' => [
+                CURLOPT_PROXY => "http://proxy.shd.proxy.nonprod.dvsa.aws:3128",
+                // Companies House API key followed by a colon
+                CURLOPT_USERPWD => ":",
+            ],
+        ],
+        'auth' => [
+            // Companies House API key (register one at https://developer.companieshouse.gov.uk/] *Environment specific*
+            'username' => '',
+            // Leave this empty
+            'password' => '',
+        ],
+        'client' => [
+            'baseuri' => 'https://api.companieshouse.gov.uk/',
+        ],
+    ],
+
+    'message_queue' => [
+      'CompanyProfile_URL' => "http://localstack.localdev:4576/000000000000/LOCALDEV-OLCS-PRI-CHGET",
+      'CompanyProfileDlq_URL' => "http://localstack.localdev:4576/000000000000/LOCALDEV-OLCS-PRI-CHGET-DLQ",
+      'ProcessInsolvency_URL' => "http://localstack.localdev:4576/000000000000/LOCALDEV-OLCS-PRI-CHGET-INSOLVENCY",
+      'ProcessInsolvencyDlq_URL' => "http://localstack.localdev:4576/000000000000/LOCALDEV-OLCS-PRI-CHGET-INSOLVENCY-DLQ",
+    ],
+
+    // CPMS service
+    'cpms_api' => [
+        'logger_alias' => 'Logger', // Zend logger service manager alias - use 'Logger' for the main OLCS log
+        'identity_provider' => 'CpmsIdentityProvider', // Should implement CpmsClient\Authenticate\IdentityProviderInterface
+        'enable_cache' => true,
+        'cache_storage' => 'array',
+        'rest_client' => [
+            'options' => [
+                //CPMS API version to use
+                'version' => 2,
+                // CPMS hostname e.g. 'payment-service.psqa-ap01.ps.npm' *Environment specific*
+                'domain' => 'payment-service.psqa-ap01.ps.npm', // QA
+                'customer_reference' => '',
+                'grant_type' => 'client_credentials',
+                'timeout' => 15.0,
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ],
+        ],
+    ],
+
+    // CPMS service authentication - used by CpmsIdentityProvider service
+    'cpms_credentials' => [
+        // CPMS user ID *Environment specific*
+        // (this can be left as is, will be deprecated in the future once authentication is implemented)
+        'user_id' => '1234',
+        // CPMS client ID *Environment specific*
+        'client_id' => "",
+        // CPMS Client secret *Environment specific*
+        'client_secret' => "",
+        // CPMS client ID for NI *Environment specific*
+        'client_id_ni' => "",
+        // CPMS Client secret for NI *Environment specific*
+        'client_secret_ni' => "",
+    ],
+
+    'cpms' => [
+        // Prefix added to invoice numbers went sent to CPMS
+        'invoice_prefix' => 'LOCAL-',
+        // Timeout in seconds after which we allow user to repeat payment for the same fee
+        'pending_payments_timeout' => 3600,
+    ],
+
+    // Email config
+    'email' => [
+        // Debugging option forces all email to be sent to an address
+        // Selfserve/external URI e.g. http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
+        'send_all_mail_to' => 'terry.valtech@gmail.com',
+        'from_name' => 'OLCS do not reply',
+        'from_email' => 'mail.olcs.dev@dev-dvsacloud.uk',
+        'selfserve_uri' => 'https://olcs-selfserve.olcs.gov.uk',
+        'internal_uri' => 'https://olcs-internal.olcs.gov.uk',
+    ],
+
+    'awsOptions'=>[
+      'region' =>'eu-west-1',
+      'version'=>'latest',
+      'useEnvCredentials' => true,
+    ],
+
+    'mail' => array(
+        'type' => '\Dvsa\Olcs\Email\Transport\MultiTransport',
+        'options' => [
+            'transport' => [
+                ['type' => 'SendMail'],
+                ['type' => '\Dvsa\Olcs\Email\Transport\S3File', 'options' => ['s3Path' => 'devapp-olcs-pri-olcs-autotest-s3/olcs.dev.nonprod.dvsa.aws/email']],
+            ]
+        ],
+    ),
+
+    'mail' => [],
+    'mailboxes' => [
+        // IMAP connection to a the mailbox for reading inspection request emails
+        'inspection_request' => [
+            // IMAP hostname *Environment specific*
+            'host' => 'mail01.olcs.mgt.mtpdvsa',
+            // IMAP user *Environment specific*
+            'user' => 'olcsemail',
+            // IMAP password *Environment specific*
+            'password' => '74398f7g39',
+            // IMAP port 993 *Environment specific*
+            'port' => 993,
+            // SSL (0 or 1)
+            'ssl' => 'SSL',
+        ],
+    ],
+
+    // AUTH config
+    'openam' => [
+        'username' => 'olcs_app',
+        'password' => 'password',
+        'uri' => 'http://olcs-auth.olcs.gov.uk:18080',
+        'pid_header' => 'X-Pid'
+    ],
+
+    'ebsr' => [
+        'transexchange_publisher' => [
+            'uri' => 'http://localhost:8080/txc/publisherService',
+            'options' => [
+                'timeout' => 30
+            ]
+        ],
+        'tmp_extra_path' => '/EBSR-tmp', //extra path to ebsr files within /tmp
+        //debug only - validation must always be set to true in production
+        'validate' => [
+            'xml_structure' => true,
+            'bus_registration' => true,
+            'processed_data' => true,
+            'short_notice' => true
+        ]
+    ],
+
+    'nr' => [
+        // @to-do currently waiting on the actual nr address
+        'inr_service' => [
+            'uri' => 'Not Available in NonProd',
+            'adapter'   => Zend\Http\Client\Adapter\Curl::class,
+            'options' => [
+                'sslcert' => '/opt/dvsa/inr/certs/inr_client_cert.pem',
+                'sslverifypeer' => 1, //debug only, must be set to 1 in production
+                'curloptions' => [
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_SSL_VERIFYHOST => 2, //debug only, must be set to 2 in production
+                    CURLOPT_CAINFO => '/etc/ssl/certs/atos-ca1.pem',
+                    CURLOPT_SSLKEY => '/opt/dvsa/inr/certs/inr_client_key.pem',
+                    CURLOPT_SSLKEYTYPE => 'PEM'
+                ]
+
+          ]
+        ],
+        'repute_url' => [
+            'uri' => 'Not Available in NonProd'
+        ],
+    ],
+
+    // CUPS print server
+    'print' => [
+    
+        'server' => 'print.localdev:631'
+    
+    ],
+
+    // If this value is populated then printing will use this service,
+    // if it is not populated or missing then the Libreoffice converter will be used
+    'convert_to_pdf' => [
+        'uri' => 'http://renderer.localdev:8080/convert-document',
+    ],
+
+    /**
+    * Configure the location of the application log
+    */
+    'log' => [
+        'Logger' => [
+            'writers' => [
+                'full' => [
+                    'options' => [
+                        'stream' => '/var/log/dvsa/backend.log',
+                        'filters' => [
+                            'priority' => [
+                                'name' => 'priority',
+                                'options' => [
+                                    'priority' => \Zend\Log\Logger::DEBUG
+                                ]
+                            ],
+                        ]
+                    ],
+                ]
+            ]
+        ],
+    ],
+
+    // Path to VI extract data
+    'vi_extract_files' => [
+        'export_path' => '/tmp/ViExtract'
+    ],
+
+    // Path to export CSV data for data.gov.uk
+    'data-gov-uk-export' => [
+        'path' => '/var/tmp/dataGovUk',
+    ],
+
+    // Path to export CSV data for DVA Northern Ireland
+    'data-dva-ni-export' => [
+        'path' => '/var/tmp/dvaoplic',
+    ],
+
+    // Path to export CSV data for Companies House differences
+    'ch-vs-olcs-export' => [
+        'path' => '/var/tmp/companyHouse_vs_Olcs',
+    ],
+
+    // Nysiis configuration
+    'nysiis' => [
+        'rest' => [
+            'uri' => 'http://localhost:8080/nysiis-1.0/nysiis/convert',
+            'options' => [
+                'timeout' => 5
+            ]
+        ]
+    ],
+
+    'allow_file_upload' => [
+        // list of allowed file extensions that can be uploaded
+        'extensions' => [
+            // for external users
+            'external'
+                => 'doc,docb,docm,docx,ppt,pptx,pptm,pps,ppsm,ppsx,sldx,sldm,xls,xlsb,xlsx,xlsm,xlw'
+                . ',odt,ods,odp,odt,odm,odg,odp,ods,odi,odg'
+                . ',txt,csv,rtf,xml,htm,html,pdf,log,xml,json,djvu,xps,oxps'
+                . ',jpeg,jpg,png,tif,tiff,gif,jfif,bmp,webp,emf,dwg,dxf,wmf'
+                . ',zip,7z',
+            // for internal users
+            'internal'
+                => 'doc,docb,docm,docx,ppt,pptx,pptm,pps,ppsm,ppsx,sldx,sldm,xls,xlsb,xlsx,xlsm,xlw'
+                . ',odt,ods,odp,odt,odm,odg,odp,ods,odi,odg'
+                . ',txt,csv,rtf,xml,htm,html,pdf,log,xml,json,djvu,xps,oxps'
+                . ',jpeg,jpg,png,tif,tiff,gif,jfif,bmp,webp,emf,dwg,dxf,wmf'
+                . ',zip,7z'
+                . ',scan,eml'
+                . ',mp2,mp3,m4a,3gp,wav,aif,aiff,flac,ogg,wma,ape,aac,amr,webm,ac3',
+        ]
+    ],
+
+    //If we find these strings in xml validator error messages, don't return the message to the user.
+    //This is so we can avoid showing things like directory paths to the user in cases such as schema import errors
+    'xml_valid_message_exclude' => [
+        '/opt/dvsa',
+        'Skipping import of schema'
+    ],
+
+    // Specifies the batch size to use for disc printing
+    'disc_printing' => [
+        // Number of discs to print for each queue job
+        'disc_batch_size' => 120,
+        // Number of PSV vehicle lists to print for each queue job
+        'psv_vehicle_list_batch_size' => 120,
+        // Number of GOODS vehicle lists to print for each queue job
+        'gv_vehicle_list_batch_size' => 120,
+    ],
+
+    // Permit printing
+    'permit_printing' => [
+        // Maximum number of permits to print in one batch
+        'max_batch_size' => 100,
+    ],
+
+    // GDS Verify configuration
+    'gds_verify' => [
+        'msa_metadata_url' => __DIR__ .'/../../module/GdsVerify/data/compliance-tool/msa-certs/metadata.xml',
+        // Cache settings used to cache the above two metadata documents
+        'cache' => [
+            'adapter' => [
+                'name'    => 'filesystem',
+                'options' => array('ttl' => 300),
+            ],
+        ],
+        // Entity identifier
+        'entity_identifier' => 'https://olcs-selfserve.olcs.gov.uk',
+        // Key used to sign authentication requests
+        'signature_key' => '/var/www/dvsa/gds-verify/certs/gds_verify_sign.pem',
+        // Key used to decrypt data from hub
+        'encryption_keys' => [
+            // Array of encryption keys, they will be tried in order
+            '/opt/dvsa/gds-verify/certs/gds_verify_enc.pem'
+        ],
+    ],
+
+    'http_external' => [
+        'adapter' => \Zend\Http\Client\Adapter\Curl::class,
+        //'curl_options' => [
+        //    CURLOPT_PROXY => 'proxy.shd.proxy.nonprod.dvsa.aws:3128',
+        //],
+    ],
+
+    'cache-encryption' => [
+        'node_suffix' => 'backend',
+        'adapter' => 'openssl',
+        'options' => [
+            'algo' => 'aes',
+            'mode' => 'gcm',
+        ],
+        'secrets' => [
+            'node' => 'string',
+            'shared' => 'string',
+        ],
+    ],
+
+    'caches' => [
+        \Zend\Cache\Storage\Adapter\Redis::class => [
+            'adapter' => [
+                'name' => 'redis',
+                'options' => [
+                    'server' => [
+                        'host' => 'redis-master.localdev',
+                        'port' => 6379,
+                    ],
+                    'lib_options' => [
+                        \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_IGBINARY
+                    ],
+                    'ttl' => 3600, //one hour, likely to be overridden based on use case
+                    'namespace' => 'zfcache', //otherwise zend will default to "zfcache", but usually overridden anyway
+                ],
+                'plugins' => [
+                    'exception_handler' => [
+                        'throw_exceptions' => false,
+                    ],
+                ],
+            ],
+        ],
+    ],
+
+];
