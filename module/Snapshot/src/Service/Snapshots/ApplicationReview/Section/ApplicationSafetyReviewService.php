@@ -44,7 +44,7 @@ class ApplicationSafetyReviewService extends AbstractReviewService
                     'value' => $this->translate('tachograph_analyser.' . $data['licence']['tachographIns']['id'])
                 ],
                 [
-                    'label' => 'application-review-safety-tachographInsName',
+                    'label' => 'application-review-safety-tachographInsName-snapshot',
                     'value' => $data['licence']['tachographInsName']
                 ]
             ],
