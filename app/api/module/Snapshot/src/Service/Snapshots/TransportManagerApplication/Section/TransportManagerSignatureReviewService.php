@@ -16,7 +16,7 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
     const SIGNATURE = 'markup-tma-declaration-signature';
     const SIGNATURE_DIGITAL = 'markup-tma-declaration-signature-digital';
     const SIGNATURE_DIGITAL_BOTH = 'markup-tma-declaration-signature-digital-both';
-    const ADDRESS = 'tm-review-return-address';
+    const ADDRESS = 'tm-review-return-address-snapshot';
     const SIGNATURE_DIGITAL_OPERATOR_TM = 'markup-tma-declaration-signature-digital-operator-tm';
 
     /**

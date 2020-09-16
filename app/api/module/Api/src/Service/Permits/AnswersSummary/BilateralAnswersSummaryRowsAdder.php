@@ -46,7 +46,7 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
         $irhpPermitApplications = $irhpApplication->getIrhpPermitApplicationsByCountryName();
 
         $answersSummary->addRow(
-            $this->getCountryNamesRow($irhpPermitApplications)
+            $this->getCountryNamesRow($irhpPermitApplications, $isSnapshot)
         );
 
         foreach ($irhpPermitApplications as $irhpPermitApplication) {
@@ -62,10 +62,11 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
      * Get a row representing the country names for a bilateral application
      *
      * @param mixed $irhpPermitApplications
+     * @param $isSnapshot
      *
      * @return AnswersSummaryRow
      */
-    private function getCountryNamesRow($irhpPermitApplications)
+    private function getCountryNamesRow($irhpPermitApplications, $isSnapshot)
     {
         $countryNames = [];
 
@@ -86,7 +87,9 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
         );
  
         return $this->answersSummaryRowFactory->create(
-            'permits.irhp.application.question.countries',
+            $isSnapshot
+                ? 'permits.irhp.application.question.countries-snapshot'
+                : 'permits.irhp.application.question.countries',
             $formattedAnswer
         );
     }

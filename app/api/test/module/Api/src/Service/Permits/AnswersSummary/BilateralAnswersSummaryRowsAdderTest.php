@@ -25,7 +25,7 @@ class BilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
     /**
      * @dataProvider dpSnapshot
      */
-    public function testAddRows($isSnapshot)
+    public function testAddRows($isSnapshot, $countriesQuestionKey)
     {
         $countryNamesFormattedAnswer = 'country names line 1<br>country names line 2';
         $countryNamesAnswersSummaryRow = m::mock(AnswersSummaryRow::class);
@@ -71,7 +71,7 @@ class BilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
 
         $answersSummaryRowFactory = m::mock(AnswersSummaryRowFactory::class);
         $answersSummaryRowFactory->shouldReceive('create')
-            ->with('permits.irhp.application.question.countries', $countryNamesFormattedAnswer)
+            ->with($countriesQuestionKey, $countryNamesFormattedAnswer)
             ->once()
             ->andReturn($countryNamesAnswersSummaryRow)
             ->shouldReceive('create')
@@ -159,8 +159,8 @@ class BilateralAnswersSummaryRowsAdderTest extends MockeryTestCase
     public function dpSnapshot()
     {
         return [
-            [true],
-            [false]
+            [true, 'permits.irhp.application.question.countries-snapshot'],
+            [false, 'permits.irhp.application.question.countries']
         ];
     }
 

@@ -21,7 +21,7 @@ $ni = array_merge(
         'application-review-convictions-penalties-confirmation' => '{WELSH} Confirm that you are aware that you must
             tell the Department immediately of any relevant convictions that occur between the submission of your
             application and a decision being made on this application',
-        'tm-review-return-address' => 'Department for Infrastructure, Y Swyddfa Drwyddedu Ganolog, PO Box 180 '.
+        'tm-review-return-address-snapshot' => 'Department for Infrastructure, Y Swyddfa Drwyddedu Ganolog, PO Box 180 '.
             'Leeds, LS9 1BU',
     ]
 );
