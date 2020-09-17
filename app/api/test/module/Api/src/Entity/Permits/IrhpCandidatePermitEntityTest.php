@@ -216,7 +216,13 @@ class IrhpCandidatePermitEntityTest extends EntityTester
             ->andReturn(true);
 
         $emissionsCategory = m::mock(RefData::class);
+
+        $newRangeEmissionsCategory = m::mock(RefData::class);
+
         $newRange = m::mock(IrhpPermitRange::class);
+        $newRange
+            ->shouldReceive('getEmissionsCategory')
+            ->andReturn($newRangeEmissionsCategory);
 
         $entity = Entity::createNew(
             $irhpPermitApplication,
@@ -225,6 +231,7 @@ class IrhpCandidatePermitEntityTest extends EntityTester
 
         $entity->updateIrhpPermitRange($newRange);
         $this->assertSame($newRange, $entity->getIrhpPermitRange());
+        $this->assertSame($newRangeEmissionsCategory, $entity->getAssignedEmissionsCategory());
     }
 
     public function testUpdateIrhpPermitRangeWrongStatus()
