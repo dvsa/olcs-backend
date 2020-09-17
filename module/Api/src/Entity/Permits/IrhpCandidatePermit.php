@@ -158,6 +158,9 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
             throw new ForbiddenException('IRHP Application status does not support changing IRHP Permit Range');
         }
         $this->irhpPermitRange = $irhpPermitRange;
+
+        // update assignedEmissionsCategory based on the new range
+        $this->assignedEmissionsCategory = $irhpPermitRange->getEmissionsCategory();
     }
 
     /**
