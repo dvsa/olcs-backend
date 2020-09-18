@@ -1,15 +1,16 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
+namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use RuntimeException;
 
-class NoOfPermitsMaxPermittedGenerator
+class StockLicenceMaxPermittedCounter
 {
     const ECMT_SHORT_TERM_MULTIPLIER = 2;
-    const ERR_INVALID_TYPE = 'NoOfPermitsMaxPermittedGenerator is only applicable to short terms and annuals';
+    const ERR_INVALID_TYPE = 'LicenceMaxPermittedCounter is only applicable to short terms and annuals';
 
     /** @var IrhpPermitRepository */
     private $irhpPermitRepo;
@@ -19,7 +20,7 @@ class NoOfPermitsMaxPermittedGenerator
      *
      * @param IrhpPermitRepository $irhpPermitRepo
      *
-     * @return NoOfPermitsMaxPermittedGenerator
+     * @return StockLicenceMaxPermittedCounter
      */
     public function __construct(IrhpPermitRepository $irhpPermitRepo)
     {
@@ -27,34 +28,33 @@ class NoOfPermitsMaxPermittedGenerator
     }
 
     /**
-     * Generate a value for the maximum number of permits value shown on the number of permits page
+     * Return a count of the maximum number of permits that can be applied for in the context of the specified stock
+     * and licence
      *
-     * @param IrhpApplicationEntity $irhpApplicationEntity
+     * @param IrhpPermitStock $irhpPermitStock
+     * @param Licence $licence
      *
      * @return int
      *
      * @throws RuntimeException
      */
-    public function generate(IrhpApplicationEntity $irhpApplicationEntity)
+    public function getCount(IrhpPermitStock $irhpPermitStock, Licence $licence)
     {
-        $irhpPermitType = $irhpApplicationEntity->getIrhpPermitType();
+        $irhpPermitType = $irhpPermitStock->getIrhpPermitType();
 
         if (!$irhpPermitType->isEcmtShortTerm() && !$irhpPermitType->isEcmtAnnual()) {
             throw new RuntimeException(self::ERR_INVALID_TYPE);
         }
 
-        $totAuthVehicles = $irhpApplicationEntity->getLicence()->getTotAuthVehicles();
+        $totAuthVehicles = $licence->getTotAuthVehicles();
 
         if ($irhpPermitType->isEcmtShortTerm()) {
             return $totAuthVehicles * self::ECMT_SHORT_TERM_MULTIPLIER;
         }
 
-        $licenceId = $irhpApplicationEntity->getLicence()->getId();
-        $stockEndYear = $irhpApplicationEntity->getAssociatedStock()->getValidityYear();
-
         $allocatedPermitCount = $this->irhpPermitRepo->getEcmtAnnualPermitCountByLicenceAndStockEndYear(
-            $licenceId,
-            $stockEndYear
+            $licence->getId(),
+            $irhpPermitStock->getValidityYear()
         );
 
         return $totAuthVehicles - $allocatedPermitCount;
