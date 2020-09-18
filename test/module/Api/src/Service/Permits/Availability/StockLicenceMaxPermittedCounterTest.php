@@ -3,44 +3,48 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsMaxPermittedGenerator;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RuntimeException;
 
 /**
- * NoOfPermitsMaxPermittedGeneratorTest
+ * StockLicenceMaxPermittedCounterTest
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class NoOfPermitsMaxPermittedGeneratorTest extends MockeryTestCase
+class StockLicenceMaxPermittedCounterTest extends MockeryTestCase
 {
     private $irhpPermitType;
 
-    private $irhpApplication;
+    private $irhpPermitStock;
+
+    private $licence;
 
     private $irhpPermitRepo;
 
-    private $noOfPermitsMaxPermittedGenerator;
+    private $stockLicenceMaxPermittedCounter;
 
     public function setUp(): void
     {
-        $this->irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
+        $this->irhpPermitType = m::mock(IrhpPermitType::class);
 
-        $this->irhpApplication = m::mock(IrhpApplicationEntity::class);
-        $this->irhpApplication->shouldReceive('getIrhpPermitType')
+        $this->irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $this->irhpPermitStock->shouldReceive('getIrhpPermitType')
             ->withNoArgs()
             ->andReturn($this->irhpPermitType);
 
+        $this->licence = m::mock(Licence::class);
+
         $this->irhpPermitRepo = m::mock(IrhpPermitRepository::class);
 
-        $this->noOfPermitsMaxPermittedGenerator = new NoOfPermitsMaxPermittedGenerator($this->irhpPermitRepo);
+        $this->stockLicenceMaxPermittedCounter = new StockLicenceMaxPermittedCounter($this->irhpPermitRepo);
     }
 
-    public function testGenerateEcmtAnnual()
+    public function testGetCountEcmtAnnual()
     {
         $licenceId = 707;
         $totAuthVehicles = 15;
@@ -55,21 +59,16 @@ class NoOfPermitsMaxPermittedGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturnFalse();
 
-        $this->irhpApplication->shouldReceive('getAssociatedStock->getValidityYear')
+        $this->irhpPermitStock->shouldReceive('getValidityYear')
             ->withNoArgs()
             ->andReturn($validityYear);
 
-        $licence = m::mock(Licence::class);
-        $licence->shouldReceive('getId')
+        $this->licence->shouldReceive('getId')
             ->withNoArgs()
             ->andReturn($licenceId);
-        $licence->shouldReceive('getTotAuthVehicles')
+        $this->licence->shouldReceive('getTotAuthVehicles')
             ->withNoArgs()
             ->andReturn($totAuthVehicles);
-
-        $this->irhpApplication->shouldReceive('getLicence')
-            ->withNoArgs()
-            ->andReturn($licence);
 
         $this->irhpPermitRepo->shouldReceive('getEcmtAnnualPermitCountByLicenceAndStockEndYear')
             ->with($licenceId, $validityYear)
@@ -77,11 +76,11 @@ class NoOfPermitsMaxPermittedGeneratorTest extends MockeryTestCase
 
         $this->assertEquals(
             $expectedMaxPermitted,
-            $this->noOfPermitsMaxPermittedGenerator->generate($this->irhpApplication)
+            $this->stockLicenceMaxPermittedCounter->getCount($this->irhpPermitStock, $this->licence)
         );
     }
 
-    public function testGenerateEcmtShortTerm()
+    public function testGetCountEcmtShortTerm()
     {
         $totAuthVehicles = 12;
         $totAuthVehiclesTimesTwo = 24;
@@ -93,20 +92,20 @@ class NoOfPermitsMaxPermittedGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturnTrue();
 
-        $this->irhpApplication->shouldReceive('getLicence->getTotAuthVehicles')
+        $this->licence->shouldReceive('getTotAuthVehicles')
             ->withNoArgs()
             ->andReturn($totAuthVehicles);
 
         $this->assertEquals(
             $totAuthVehiclesTimesTwo,
-            $this->noOfPermitsMaxPermittedGenerator->generate($this->irhpApplication)
+            $this->stockLicenceMaxPermittedCounter->getCount($this->irhpPermitStock, $this->licence)
         );
     }
 
-    public function testGenerateInvalidType()
+    public function testGetCountInvalidType()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(NoOfPermitsMaxPermittedGenerator::ERR_INVALID_TYPE);
+        $this->expectExceptionMessage(StockLicenceMaxPermittedCounter::ERR_INVALID_TYPE);
 
         $this->irhpPermitType->shouldReceive('isEcmtAnnual')
             ->withNoArgs()
@@ -115,6 +114,6 @@ class NoOfPermitsMaxPermittedGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturnFalse();
 
-        $this->noOfPermitsMaxPermittedGenerator->generate($this->irhpApplication);
+        $this->stockLicenceMaxPermittedCounter->getCount($this->irhpPermitStock, $this->licence);
     }
 }
