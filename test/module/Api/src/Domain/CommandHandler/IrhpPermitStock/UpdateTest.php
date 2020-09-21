@@ -64,12 +64,6 @@ class UpdateTest extends CommandHandlerTestCase
             ->andReturn($entity);
 
         $this->repoMap['IrhpPermitStock']
-            ->shouldReceive('getPermitStockCountByTypeDate')
-            ->once()
-            ->with($cmdData['irhpPermitType'], $cmdData['validFrom'], $cmdData['validTo'], 0)
-            ->andReturn(0);
-
-        $this->repoMap['IrhpPermitStock']
             ->shouldReceive('save')
             ->once()
             ->with($entity);

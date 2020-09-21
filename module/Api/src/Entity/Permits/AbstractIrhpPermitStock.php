@@ -36,10 +36,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_permit_stock_permit_category_ref_data_id",
      *     columns={"permit_category"}),
  *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uniqueStock",
-     *     columns={"irhp_permit_type_id","country_id","valid_from","valid_to"})
  *    }
  * )
  */

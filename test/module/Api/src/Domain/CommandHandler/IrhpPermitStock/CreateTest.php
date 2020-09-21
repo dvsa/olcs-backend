@@ -59,19 +59,12 @@ class CreateTest extends CommandHandlerTestCase
         $command = CreateCmd::create($cmdData);
 
         $this->repoMap['IrhpPermitStock']
-            ->shouldReceive('getPermitStockCountByTypeDate')
-            ->once()
-            ->with($cmdData['irhpPermitType'], $cmdData['validFrom'], $cmdData['validTo'], 0)
-            ->andReturn(0);
-
-        $this->repoMap['IrhpPermitStock']
             ->shouldReceive('save')
             ->once()
             ->with(m::type(PermitStockEntity::class))
             ->andReturnUsing(
-                function (PermitStockEntity $permitStock) use (&$savedPermitStock) {
+                function (PermitStockEntity $permitStock) {
                     $permitStock->setId(1);
-                    $savedPermitStock = $permitStock;
                 }
             );
 
@@ -152,63 +145,5 @@ class CreateTest extends CommandHandlerTestCase
         $cmd = CreateCmd::create($cmdData);
         $this->expectException(ValidationException::class);
         $this->sut->validityPeriodValidation($cmd);
-    }
-
-    /**
-     * Tests method on IrhpPermitStockTrait
-     */
-    public function testDuplicateStockCheckGood()
-    {
-        $cmdData = [
-            'initialStock' => 1000,
-            'validFrom' => '2100-01-01',
-            'validTo' => '2000-12-31',
-            'irhpPermitType' => 1
-        ];
-
-        $cmd = CreateCmd::create($cmdData);
-
-        $this->repoMap['IrhpPermitStock']
-            ->shouldReceive('getPermitStockCountByTypeDate')
-            ->once()
-            ->with(
-                $cmd->getIrhpPermitType(),
-                $cmd->getValidFrom(),
-                $cmd->getValidTo(),
-                0
-            )
-            ->andReturn(0);
-
-        $this->assertNull($this->sut->duplicateStockCheck($cmd));
-    }
-
-
-    /**
-     * Tests method on IrhpPermitStockTrait
-     */
-    public function testDuplicateStockCheckBad()
-    {
-        $cmdData = [
-            'initialStock' => 1000,
-            'validFrom' => '2100-01-01',
-            'validTo' => '2000-12-31',
-            'irhpPermitType' => 1
-        ];
-
-        $cmd = CreateCmd::create($cmdData);
-
-        $this->repoMap['IrhpPermitStock']
-            ->shouldReceive('getPermitStockCountByTypeDate')
-            ->once()
-            ->with(
-                $cmd->getIrhpPermitType(),
-                $cmd->getValidFrom(),
-                $cmd->getValidTo(),
-                0
-            )
-            ->andReturn(1);
-
-        $this->expectException(ValidationException::class);
-        $this->sut->duplicateStockCheck($cmd);
     }
 }

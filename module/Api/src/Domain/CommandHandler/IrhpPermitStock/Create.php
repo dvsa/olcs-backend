@@ -31,7 +31,6 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     public function handleCommand(CommandInterface $command): Result
     {
         // This shared method is defined in IrhpPermitStockTrait - and can throw a ValidationException
-        $this->duplicateStockCheck($command);
         $this->validityPeriodValidation($command);
         $references = $this->resolveReferences($command);
 
@@ -49,11 +48,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $command->getHiddenSs()
         );
 
-        try {
-            $this->getRepo('IrhpPermitStock')->save($stock);
-        } catch (\Exception $e) {
-            throw new ValidationException(['You cannot create a duplicate stock']);
-        }
+        $this->getRepo('IrhpPermitStock')->save($stock);
 
         $stockId = $stock->getId();
 
