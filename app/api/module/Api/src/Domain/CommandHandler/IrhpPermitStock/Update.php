@@ -24,12 +24,11 @@ final class Update extends AbstractCommandHandler
     /**
      * @param CommandInterface $command
      * @return Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @throws ValidationException
      */
     public function handleCommand(CommandInterface $command): Result
     {
         // This shared method is defined in IrhpPermitStockTrait - and can throw a ValidationException
-        $this->duplicateStockCheck($command);
         $this->validityPeriodValidation($command);
         $references = $this->resolveReferences($command);
 
@@ -50,11 +49,7 @@ final class Update extends AbstractCommandHandler
             $command->getHiddenSs()
         );
 
-        try {
-            $this->getRepo()->save($stock);
-        } catch (\Exception $e) {
-            throw new ValidationException(['You cannot create a duplicate stock']);
-        }
+        $this->getRepo()->save($stock);
 
         $this->result->addId('Irhp Permit Stock', $stock->getId());
         $this->result->addMessage("Irhp Permit Stock '{$stock->getId()}' updated");

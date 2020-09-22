@@ -21,8 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="partial_markup",
  *    indexes={
- *        @ORM\Index(name="fk_partial_markup_languages1", columns={"language_id"}),
- *        @ORM\Index(name="fk_partial_markup_partial1", columns={"partial_id"}),
+ *        @ORM\Index(name="fk_partial_markup_language1_idx", columns={"language_id"}),
+ *        @ORM\Index(name="fk_partial_markup_partial1_idx", columns={"partial_id"}),
  *        @ORM\Index(name="fk_partial_markup_users_created_by", columns={"created_by"}),
  *        @ORM\Index(name="fk_partial_markup_users_last_modified_by", columns={"last_modified_by"})
  *    }

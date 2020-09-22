@@ -15,34 +15,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 trait IrhpPermitStockTrait
 {
     /**
-     * Throws a validation error if any duplicate stock (same type and validity period) is being added for any
-     * type other than Annual Bilateral
-     *
-     * @param $command
-     * @return void
-     * @throws ValidationException
-     */
-    public function duplicateStockCheck($command)
-    {
-        $editingId = method_exists($command, 'getId') ? $command->getId() : 0;
-
-        // Stocks for bilateral type are permitted to share same type ID and validFrom/validTo
-        if ((int) $command->getIrhpPermitType() !== IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
-            $existingStock = $this->getRepo('IrhpPermitStock')
-                ->getPermitStockCountByTypeDate(
-                    $command->getIrhpPermitType(),
-                    $command->getValidFrom(),
-                    $command->getValidTo(),
-                    $editingId
-                );
-
-            if ($existingStock > 0) {
-                throw new ValidationException(['You cannot create a duplicate stock']);
-            }
-        }
-    }
-
-    /**
      * Performs validation on provided validity dates.
      *
      * @param $command
