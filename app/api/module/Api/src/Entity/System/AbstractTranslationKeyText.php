@@ -26,6 +26,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_translation_key_text_users_created_by", columns={"created_by"}),
  *        @ORM\Index(name="fk_translation_key_text_users_last_modified_by",
      *     columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="one_transText_per_lang", columns={"language_id","translation_key_id"})
  *    }
  * )
  */
