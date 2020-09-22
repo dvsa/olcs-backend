@@ -16,14 +16,15 @@ class NoOfPermitsTest extends MockeryTestCase
 {
     public function testGetRepresentation()
     {
-        $year = 2017;
+        $maxCanApplyFor = 37;
         $maxPermitted = 42;
+        $applicationFee = '15.00';
+        $issueFee = '10.00';
 
         $emissionsCategory1Representation = [
-            'name' => 'emissionsCategory1Name',
-            'labelTranslationKey' => 'emissionsCategory1LabelTranslationKey',
+            'type' => 'emissionsCategory1Type',
             'value' => 'emissionsCategory1Value',
-            'maxValue' => 'emissionsCategory1MaxValue'
+            'permitsRemaining' => 'emissionsCategory1PermitsRemaining'
         ];
 
         $emissionsCategory1 = m::mock(EmissionsCategory::class);
@@ -31,23 +32,24 @@ class NoOfPermitsTest extends MockeryTestCase
             ->andReturn($emissionsCategory1Representation);
 
         $emissionsCategory2Representation = [
-            'name' => 'emissionsCategory2Name',
-            'labelTranslationKey' => 'emissionsCategory2LabelTranslationKey',
+            'type' => 'emissionsCategory2Type',
             'value' => 'emissionsCategory2Value',
-            'maxValue' => 'emissionsCategory2MaxValue'
+            'permitsRemaining' => 'emissionsCategory2PermitsRemaining'
         ];
 
         $emissionsCategory2 = m::mock(EmissionsCategory::class);
         $emissionsCategory2->shouldReceive('getRepresentation')
             ->andReturn($emissionsCategory2Representation);
 
-        $noOfPermits = new NoOfPermits($year, $maxPermitted);
+        $noOfPermits = new NoOfPermits($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee);
         $noOfPermits->addEmissionsCategory($emissionsCategory1);
         $noOfPermits->addEmissionsCategory($emissionsCategory2);
 
         $expectedRepresentation = [
-            'year' => $year,
+            'maxCanApplyFor' => $maxCanApplyFor,
             'maxPermitted' => $maxPermitted,
+            'applicationFee' => $applicationFee,
+            'issueFee' => $issueFee,
             'emissionsCategories' => [
                 $emissionsCategory1Representation,
                 $emissionsCategory2Representation

@@ -7,13 +7,15 @@ class NoOfPermitsFactory
     /**
      * Create and return a NoOfPermits instance
      *
-     * @param int $year
+     * @param int $maxCanApplyFor
      * @param int $maxPermitted
+     * @param int $applicationFee
+     * @param int $issueFee
      *
      * @return NoOfPermits
      */
-    public function create($year, $maxPermitted)
+    public function create($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee)
     {
-        return new NoOfPermits($year, $maxPermitted);
+        return new NoOfPermits($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee);
     }
 }

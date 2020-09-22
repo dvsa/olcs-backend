@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitType as IrhpPermitTypeRepo;
 use Dvsa\Olcs\Transfer\Query\Permits\AvailableTypes as AvailableTypesQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\WindowAvailabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\WindowAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use DateTime;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -31,7 +31,7 @@ class AvailableTypes extends AbstractQueryHandler
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->windowAvailabilityChecker = $mainServiceLocator->get('PermitsShortTermEcmtWindowAvailabilityChecker');
+        $this->windowAvailabilityChecker = $mainServiceLocator->get('PermitsAvailabilityWindowAvailabilityChecker');
 
         return parent::createService($serviceLocator);
     }

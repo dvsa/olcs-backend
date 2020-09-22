@@ -259,7 +259,6 @@ return [
             'QaFilteredTranslateableTextGenerator' => ApiSrv\Qa\Structure\FilteredTranslateableTextGeneratorFactory::class,
             'QaQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorFactory::class,
             'QaEcmtRemovalNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtRemovalNoOfPermitsGeneratorFactory::class,
-            'QaEcmtNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\Ecmt\NoOfPermitsGeneratorFactory::class,
             'QaEcmtRestrictedCountriesQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\Ecmt\RestrictedCountriesGeneratorFactory::class,
             'QaBilateralPermitUsageQuestionTextGenerator'
@@ -302,6 +301,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsGeneratorFactory::class,
             'QaEcmtEmissionsCategoryConditionalAdder' =>
                 ApiSrv\Qa\Structure\Element\Custom\Ecmt\EmissionsCategoryConditionalAdderFactory::class,
+            'QaEcmtNoOfPermitsMaxPermittedGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsMaxPermittedGeneratorFactory::class,
             'QaEcmtConditionalFeeUpdater' =>
                 ApiSrv\Qa\Structure\Element\Custom\Ecmt\ConditionalFeeUpdaterFactory::class,
             'QaEcmtFeeUpdater' =>
@@ -394,20 +395,22 @@ return [
                 ApiSrv\Permits\Bilateral\ApplicationCountryRemoverFactory::class,
             'PermitsBilateralApplicationFeesClearer' =>
                 ApiSrv\Permits\Bilateral\ApplicationFeesClearerFactory::class,
-            'PermitsShortTermEcmtWindowAvailabilityChecker' =>
-                ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
-            'PermitsShortTermEcmtStockAvailabilityChecker' =>
-                ApiSrv\Permits\ShortTermEcmt\StockAvailabilityCheckerFactory::class,
-            'PermitsShortTermEcmtEmissionsCategoryAvailabilityChecker' =>
-                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCheckerFactory::class,
-            'PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter' =>
-                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
-            'PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator' =>
-                ApiSrv\Permits\ShortTermEcmt\CandidatePermitsAvailableCountCalculatorFactory::class,
-            'PermitsShortTermEcmtCandidatePermitsGrantabilityChecker' =>
-                ApiSrv\Permits\ShortTermEcmt\CandidatePermitsGrantabilityCheckerFactory::class,
-            'PermitsShortTermEcmtEmissionsCategoriesGrantabilityChecker' =>
-                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoriesGrantabilityCheckerFactory::class,
+            'PermitsAvailabilityWindowAvailabilityChecker' =>
+                ApiSrv\Permits\Availability\WindowAvailabilityCheckerFactory::class,
+            'PermitsAvailabilityStockAvailabilityChecker' =>
+                ApiSrv\Permits\Availability\StockAvailabilityCheckerFactory::class,
+            'PermitsAvailabilityStockAvailabilityCounter' =>
+                ApiSrv\Permits\Availability\StockAvailabilityCounterFactory::class,
+            'PermitsAvailabilityEmissionsCategoryAvailabilityChecker' =>
+                ApiSrv\Permits\Availability\EmissionsCategoryAvailabilityCheckerFactory::class,
+            'PermitsAvailabilityEmissionsCategoryAvailabilityCounter' =>
+                ApiSrv\Permits\Availability\EmissionsCategoryAvailabilityCounterFactory::class,
+            'PermitsAvailabilityCandidatePermitsAvailableCountCalculator' =>
+                ApiSrv\Permits\Availability\CandidatePermitsAvailableCountCalculatorFactory::class,
+            'PermitsAvailabilityCandidatePermitsGrantabilityChecker' =>
+                ApiSrv\Permits\Availability\CandidatePermitsGrantabilityCheckerFactory::class,
+            'PermitsAvailabilityEmissionsCategoriesGrantabilityChecker' =>
+                ApiSrv\Permits\Availability\EmissionsCategoriesGrantabilityCheckerFactory::class,
 
             'PermitsGrantabilityChecker' =>
                 ApiSrv\Permits\GrantabilityCheckerFactory::class,
@@ -745,8 +748,10 @@ return [
                 QaStrategy\EcmtRemovalNoOfPermitsFormControlStrategyFactory::class,
             Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE =>
                 QaStrategy\EcmtRemovalPermitStartDateFormControlStrategyFactory::class,
-            Question::FORM_CONTROL_ECMT_NO_OF_PERMITS =>
-                QaStrategy\EcmtNoOfPermitsFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_EITHER =>
+                QaStrategy\EcmtNoOfPermitsEitherFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_BOTH =>
+                QaStrategy\EcmtNoOfPermitsBothFormControlStrategyFactory::class,
             Question::FORM_CONTROL_ECMT_PERMIT_USAGE =>
                 QaStrategy\EcmtPermitUsageFormControlStrategyFactory::class,
             Question::FORM_CONTROL_ECMT_INTERNATIONAL_JOURNEYS =>

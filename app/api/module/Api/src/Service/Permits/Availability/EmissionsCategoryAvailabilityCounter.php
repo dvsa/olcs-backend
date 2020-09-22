@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt;
+namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 use Doctrine\DBAL\Connection;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
@@ -62,8 +62,8 @@ class EmissionsCategoryAvailabilityCounter
     }
 
     /**
-     * Get the count of permits available to apply for within the scope of a specific short term stock and emissions
-     * category, using a transaction to ensure read consistency
+     * Get the count of permits available to apply for within the scope of a specific stock and emissions category,
+     * using a transaction to ensure read consistency
      *
      * @param int $irhpPermitStockId
      * @param int $emissionsCategoryId

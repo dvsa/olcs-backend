@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt;
+namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -17,7 +17,7 @@ class EmissionsCategoriesGrantabilityCheckerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new EmissionsCategoriesGrantabilityChecker(
-            $serviceLocator->get('PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter')
+            $serviceLocator->get('PermitsAvailabilityEmissionsCategoryAvailabilityCounter')
         );
     }
 }

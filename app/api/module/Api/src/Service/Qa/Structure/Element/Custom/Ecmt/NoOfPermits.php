@@ -7,10 +7,16 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 class NoOfPermits implements ElementInterface
 {
     /** @var int */
-    private $year;
+    private $maxCanApplyFor;
 
     /** @var int */
     private $maxPermitted;
+
+    /** @var int */
+    private $applicationFee;
+
+    /** @var int */
+    private $issueFee;
 
     /** @var array */
     private $emissionsCategories = [];
@@ -18,15 +24,19 @@ class NoOfPermits implements ElementInterface
     /**
      * Create instance
      *
-     * @param int $year
+     * @param int $maxCanApplyFor
      * @param int $maxPermitted
+     * @param int $applicationFee
+     * @param int $issueFee
      *
      * @return NoOfPermits
      */
-    public function __construct($year, $maxPermitted)
+    public function __construct($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee)
     {
-        $this->year = $year;
+        $this->maxCanApplyFor = $maxCanApplyFor;
         $this->maxPermitted = $maxPermitted;
+        $this->applicationFee = $applicationFee;
+        $this->issueFee = $issueFee;
     }
 
     /**
@@ -35,8 +45,10 @@ class NoOfPermits implements ElementInterface
     public function getRepresentation()
     {
         return [
-            'year' => $this->year,
+            'maxCanApplyFor' => $this->maxCanApplyFor,
             'maxPermitted' => $this->maxPermitted,
+            'applicationFee' => $this->applicationFee,
+            'issueFee' => $this->issueFee,
             'emissionsCategories' => $this->getEmissionsCategoriesRepresentation()
         ];
     }

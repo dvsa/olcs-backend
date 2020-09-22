@@ -29,6 +29,7 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
         $fieldsetName = 'fieldset123';
         $questionShortKey = 'Cabotage';
         $questionId = 47;
+        $questionSlug = 'question-slug';
 
         $question = m::mock(Question::class);
         $question->shouldReceive('getId')
@@ -36,6 +37,9 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
         $question->shouldReceive('getActiveQuestionText->getQuestionShortKey')
             ->withNoArgs()
             ->andReturn($questionShortKey);
+        $question->shouldReceive('getSlug')
+            ->withNoArgs()
+            ->andReturn($questionSlug);
 
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
         $applicationStepEntity->shouldReceive('getFieldsetName')
@@ -70,10 +74,9 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
 
         $applicationStep = m::mock(ApplicationStep::class);
 
-
         $applicationStepFactory = m::mock(ApplicationStepFactory::class);
         $applicationStepFactory->shouldReceive('create')
-            ->with($frontendType, $fieldsetName, $questionShortKey, $element, $validatorList)
+            ->with($frontendType, $fieldsetName, $questionShortKey, $questionSlug, $element, $validatorList)
             ->andReturn($applicationStep);
 
         $elementGeneratorContextGenerator = m::mock(ElementGeneratorContextGenerator::class);

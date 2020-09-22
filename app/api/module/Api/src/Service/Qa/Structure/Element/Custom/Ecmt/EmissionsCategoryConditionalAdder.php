@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounter;
+use Dvsa\Olcs\Api\Service\Permits\Availability\EmissionsCategoryAvailabilityCounter;
 
 class EmissionsCategoryConditionalAdder
 {
@@ -33,16 +33,14 @@ class EmissionsCategoryConditionalAdder
      * present and contain sufficient free stock
      *
      * @param NoOfPermits $noOfPermits
-     * @param string $fieldName
-     * @param string $labelTranslationKey
+     * @param string $type
      * @param string|null $value
      * @param string $emissionsCategoryId
      * @param int $stockId
      */
     public function addIfRequired(
         NoOfPermits $noOfPermits,
-        $fieldName,
-        $labelTranslationKey,
+        $type,
         $value,
         $emissionsCategoryId,
         $stockId
@@ -55,8 +53,7 @@ class EmissionsCategoryConditionalAdder
 
         $noOfPermits->addEmissionsCategory(
             $this->emissionsCategoryFactory->create(
-                $fieldName,
-                $labelTranslationKey,
+                $type,
                 $value,
                 $permitsRemaining
             )

@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\AvailableTypes;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitType as IrhpPermitTypeRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\WindowAvailabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\WindowAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\Permits\AvailableTypes as AvailableTypesQuery;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -27,7 +27,7 @@ class AvailableTypesTest extends QueryHandlerTestCase
         $this->mockRepo('IrhpPermitType', IrhpPermitTypeRepo::class);
 
         $this->mockedSmServices = [
-            'PermitsShortTermEcmtWindowAvailabilityChecker' => m::mock(WindowAvailabilityChecker::class)
+            'PermitsAvailabilityWindowAvailabilityChecker' => m::mock(WindowAvailabilityChecker::class)
         ];
 
         $this->irhpPermitType1 = m::mock(IrhpPermitType::class);
@@ -55,7 +55,7 @@ class AvailableTypesTest extends QueryHandlerTestCase
     {
         $query = AvailableTypesQuery::create([]);
 
-        $this->mockedSmServices['PermitsShortTermEcmtWindowAvailabilityChecker']->shouldReceive('hasAvailability')
+        $this->mockedSmServices['PermitsAvailabilityWindowAvailabilityChecker']->shouldReceive('hasAvailability')
             ->once()
             ->with(m::type(DateTime::class))
             ->andReturn(true);
@@ -84,7 +84,7 @@ class AvailableTypesTest extends QueryHandlerTestCase
     {
         $query = AvailableTypesQuery::create([]);
 
-        $this->mockedSmServices['PermitsShortTermEcmtWindowAvailabilityChecker']->shouldReceive('hasAvailability')
+        $this->mockedSmServices['PermitsAvailabilityWindowAvailabilityChecker']->shouldReceive('hasAvailability')
             ->once()
             ->with(m::type(DateTime::class))
             ->andReturn(false);

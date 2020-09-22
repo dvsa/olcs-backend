@@ -1,11 +1,11 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Permits\ShortTermEcmt;
+namespace Dvsa\OlcsTest\Api\Service\Permits\Availability;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\CandidatePermitsAvailableCountCalculator;
+use Dvsa\Olcs\Api\Service\Permits\Availability\CandidatePermitsAvailableCountCalculator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

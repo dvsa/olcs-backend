@@ -381,7 +381,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
             switch ($formControlType) {
                 case Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS:
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
-                case Question::FORM_CONTROL_ECMT_NO_OF_PERMITS:
+                case Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_EITHER:
+                case Question::FORM_CONTROL_ECMT_NO_OF_PERMITS_BOTH:
                     return $this->getEcmtNoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_INTERNATIONAL_JOURNEYS:
                     return $this->getInternationalJourneysAnswer();
@@ -1285,7 +1286,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Gets the application fee product reference for this application
-     * Applicable only to bilateral, multilateral and ecmt short term
+     * Applicable only to ecmt annual, bilateral, multilateral and ecmt short term and ecmt removal
      *
      * @return array
      *

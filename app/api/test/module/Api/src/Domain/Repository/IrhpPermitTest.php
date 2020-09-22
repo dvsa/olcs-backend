@@ -174,6 +174,73 @@ class IrhpPermitTest extends RepositoryTestCase
         );
     }
 
+    public function testGetEcmtAnnualPermitCountByLicenceAndStockEndYear()
+    {
+        $licenceId = 47;
+        $stockEndYear = 2023;
+        $permitCount = 55;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('count(ip.id)')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitEntity::class, 'ip')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ip.irhpPermitRange', 'ipr')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipr.irhpPermitStock', 'ips')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ip.irhpPermitApplication', 'ipa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.irhpApplication', 'ia')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('IDENTITY(ia.licence) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('YEAR(ips.validTo) = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('IDENTITY(ips.irhpPermitType) = ?3')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $licenceId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $stockEndYear)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(3, IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn($permitCount);
+
+        $this->assertEquals(
+            $permitCount,
+            $this->sut->getEcmtAnnualPermitCountByLicenceAndStockEndYear($licenceId, $stockEndYear)
+        );
+    }
+
     public function testGetAssignedPermitNumbersByRange()
     {
         $rangeId = 45;

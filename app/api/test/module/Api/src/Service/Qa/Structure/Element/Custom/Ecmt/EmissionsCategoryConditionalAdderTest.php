@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounter;
+use Dvsa\Olcs\Api\Service\Permits\Availability\EmissionsCategoryAvailabilityCounter;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\EmissionsCategory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\EmissionsCategoryConditionalAdder;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\EmissionsCategoryFactory;
@@ -18,6 +18,11 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
 {
+    const TYPE = 'euro5';
+    const VALUE = 45;
+    const EMISSIONS_CATEGORY_ID = RefData::EMISSIONS_CATEGORY_EURO5_REF;
+    const STOCK_ID = 28;
+
     private $emissionsCategoryFactory;
 
     private $emissionsCategoryAvailabilityCounter;
@@ -26,32 +31,17 @@ class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
 
     private $noOfPermits;
 
-    private $fieldName;
-
-    private $labelTranslationKey;
-
-    private $value;
-
-    private $emissionsCategoryId;
-
-    private $stockId;
-
     public function setUp(): void
     {
         $this->emissionsCategoryFactory = m::mock(EmissionsCategoryFactory::class);
         $this->emissionsCategoryAvailabilityCounter = m::mock(EmissionsCategoryAvailabilityCounter::class);
 
+        $this->noOfPermits = m::mock(NoOfPermits::class);
+
         $this->emissionsCategoryConditionalAdder = new EmissionsCategoryConditionalAdder(
             $this->emissionsCategoryFactory,
             $this->emissionsCategoryAvailabilityCounter
         );
-
-        $this->noOfPermits = m::mock(NoOfPermits::class);
-        $this->fieldName = 'euro5Required';
-        $this->labelTranslationKey = 'qanda.ecmt.number-of-permits.label.euro5';
-        $this->value = '45';
-        $this->emissionsCategoryId = RefData::EMISSIONS_CATEGORY_EURO5_REF;
-        $this->stockId = 28;
     }
 
     public function testAddWhenRangesExistAndFreePermits()
@@ -59,13 +49,13 @@ class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
         $permitsRemaining = 3;
 
         $this->emissionsCategoryAvailabilityCounter->shouldReceive('getCount')
-            ->with($this->stockId, $this->emissionsCategoryId)
+            ->with(self::STOCK_ID, self::EMISSIONS_CATEGORY_ID)
             ->andReturn($permitsRemaining);
 
         $emissionsCategory = m::mock(EmissionsCategory::class);
 
         $this->emissionsCategoryFactory->shouldReceive('create')
-            ->with($this->fieldName, $this->labelTranslationKey, $this->value, $permitsRemaining)
+            ->with(self::TYPE, self::VALUE, $permitsRemaining)
             ->once()
             ->andReturn($emissionsCategory);
 
@@ -75,18 +65,17 @@ class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
 
         $this->emissionsCategoryConditionalAdder->addIfRequired(
             $this->noOfPermits,
-            $this->fieldName,
-            $this->labelTranslationKey,
-            $this->value,
-            $this->emissionsCategoryId,
-            $this->stockId
+            self::TYPE,
+            self::VALUE,
+            self::EMISSIONS_CATEGORY_ID,
+            self::STOCK_ID
         );
     }
 
     public function testNoAddWhenNoFreePermitsInRanges()
     {
         $this->emissionsCategoryAvailabilityCounter->shouldReceive('getCount')
-            ->with($this->stockId, $this->emissionsCategoryId)
+            ->with(self::STOCK_ID, self::EMISSIONS_CATEGORY_ID)
             ->andReturn(0);
 
         $this->noOfPermits->shouldReceive('addEmissionsCategory')
@@ -94,11 +83,10 @@ class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
 
         $this->emissionsCategoryConditionalAdder->addIfRequired(
             $this->noOfPermits,
-            $this->fieldName,
-            $this->labelTranslationKey,
-            $this->value,
-            $this->emissionsCategoryId,
-            $this->stockId
+            self::TYPE,
+            self::VALUE,
+            self::EMISSIONS_CATEGORY_ID,
+            self::STOCK_ID
         );
     }
 }
