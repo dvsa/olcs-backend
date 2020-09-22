@@ -4,8 +4,8 @@ namespace Dvsa\OlcsTest\Api\Service\Permits;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoriesGrantabilityChecker;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\CandidatePermitsGrantabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\EmissionsCategoriesGrantabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\CandidatePermitsGrantabilityChecker;
 use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

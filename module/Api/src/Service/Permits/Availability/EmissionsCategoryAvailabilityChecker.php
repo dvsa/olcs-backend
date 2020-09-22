@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt;
+namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 class EmissionsCategoryAvailabilityChecker
 {

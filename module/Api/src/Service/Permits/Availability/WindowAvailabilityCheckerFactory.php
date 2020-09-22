@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt;
+namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -18,7 +18,7 @@ class WindowAvailabilityCheckerFactory implements FactoryInterface
     {
         return new WindowAvailabilityChecker(
             $serviceLocator->get('RepositoryServiceManager')->get('IrhpPermitWindow'),
-            $serviceLocator->get('PermitsShortTermEcmtStockAvailabilityChecker')
+            $serviceLocator->get('PermitsAvailabilityStockAvailabilityChecker')
         );
     }
 }

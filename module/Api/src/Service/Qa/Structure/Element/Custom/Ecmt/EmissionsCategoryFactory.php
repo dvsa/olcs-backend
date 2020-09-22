@@ -7,15 +7,14 @@ class EmissionsCategoryFactory
     /**
      * Create and return an EmissionsCategory instance
      *
-     * @param string $name
-     * @param string $labelTranslationKey
+     * @param string $type
      * @param int|null $value
-     * @param int $maxValue
+     * @param int $permitsRemaining
      *
      * @return EmissionsCategory
      */
-    public function create($name, $labelTranslationKey, $value, $maxValue)
+    public function create($type, $value, $permitsRemaining)
     {
-        return new EmissionsCategory($name, $labelTranslationKey, $value, $maxValue);
+        return new EmissionsCategory($type, $value, $permitsRemaining);
     }
 }

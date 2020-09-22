@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\StockAvailabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\Permits\AvailableStocks as AvailableStocksQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -31,7 +31,7 @@ class AvailableStocks extends AbstractQueryHandler
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->stockAvailabilityChecker = $mainServiceLocator->get('PermitsShortTermEcmtStockAvailabilityChecker');
+        $this->stockAvailabilityChecker = $mainServiceLocator->get('PermitsAvailabilityStockAvailabilityChecker');
 
         return parent::createService($serviceLocator);
     }

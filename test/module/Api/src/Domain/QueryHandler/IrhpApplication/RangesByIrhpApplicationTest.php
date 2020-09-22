@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication\RangesByIrhpApplication as
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\CandidatePermitsAvailableCountCalculator;
+use Dvsa\Olcs\Api\Service\Permits\Availability\CandidatePermitsAvailableCountCalculator;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\RangesByIrhpApplication as QryClass;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -25,7 +25,7 @@ class RangesByIrhpApplicationTest extends QueryHandlerTestCase
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
         $this->mockedSmServices = [
-            'PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator' => m::mock(CandidatePermitsAvailableCountCalculator::class),
+            'PermitsAvailabilityCandidatePermitsAvailableCountCalculator' => m::mock(CandidatePermitsAvailableCountCalculator::class),
         ];
 
         parent::setUp();
@@ -45,13 +45,13 @@ class RangesByIrhpApplicationTest extends QueryHandlerTestCase
 
         $ranges = new ArrayCollection([$range1, $range2]);
 
-        $this->mockedSmServices['PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator']
+        $this->mockedSmServices['PermitsAvailabilityCandidatePermitsAvailableCountCalculator']
             ->shouldReceive('getCount')
             ->once()
             ->with($range1, 0)
             ->andReturn(40);
 
-        $this->mockedSmServices['PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator']
+        $this->mockedSmServices['PermitsAvailabilityCandidatePermitsAvailableCountCalculator']
             ->shouldReceive('getCount')
             ->once()
             ->with($range2, 0)
