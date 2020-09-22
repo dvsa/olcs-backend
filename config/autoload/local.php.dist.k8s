@@ -315,7 +315,7 @@ return [
             'writers' => [
                 'full' => [
                     'options' => [
-                        'stream' => '/var/log/dvsa/backend.log',
+                        'stream' => '/var/log/dvsa/app.log',
                         'filters' => [
                             'priority' => [
                                 'name' => 'priority',
