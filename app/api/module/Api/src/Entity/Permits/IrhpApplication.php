@@ -7,12 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApggAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAutomaticallyWithdrawn;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgIssued;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
@@ -1853,9 +1854,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         if ($this->irhpPermitType->isEcmtAnnual()) {
             return [
-                ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
-                ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
-                ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+                ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtApsgUnsuccessful::class,
+                ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtApsgPartSuccessful::class,
+                ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtApsgSuccessful::class
             ];
         } elseif ($this->irhpPermitType->isEcmtShortTerm()) {
             return [
@@ -1897,16 +1898,17 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getAppSubmittedEmailCommand()
     {
-        $isApsg = $this->getBusinessProcess()->getId() == RefData::BUSINESS_PROCESS_APSG;
-        if (!$isApsg) {
-            return null;
-        }
+        $businessProcessId = $this->getBusinessProcess()->getId();
+        $isApsg = $businessProcessId == RefData::BUSINESS_PROCESS_APSG;
+        $isApgg = $businessProcessId == RefData::BUSINESS_PROCESS_APGG;
 
         if ($this->irhpPermitType->isEcmtAnnual()) {
-            return SendEcmtAppSubmitted::class;
-        }
-
-        if ($this->irhpPermitType->isEcmtShortTerm()) {
+            if ($isApsg) {
+                return SendEcmtApsgAppSubmitted::class;
+            } elseif ($isApgg) {
+                return SendEcmtApggAppSubmitted::class;
+            }
+        } elseif ($this->irhpPermitType->isEcmtShortTerm() && $isApsg) {
             return SendEcmtShortTermAppSubmitted::class;
         }
 
@@ -1949,7 +1951,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getIssuedEmailCommand()
     {
         if ($this->irhpPermitType->isEcmtAnnual()) {
-            return SendEcmtIssued::class;
+            return SendEcmtApsgIssued::class;
         }
 
         return null;

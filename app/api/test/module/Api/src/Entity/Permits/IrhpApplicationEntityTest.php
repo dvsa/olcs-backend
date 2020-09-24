@@ -12,11 +12,12 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAutomaticallyWithdrawn;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApggAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgIssued;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
@@ -4681,9 +4682,9 @@ class IrhpApplicationEntityTest extends EntityTester
                 false,
                 true,
                 [
-                    ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
-                    ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
-                    ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtApsgUnsuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtApsgPartSuccessful::class,
+                    ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtApsgSuccessful::class
                 ]
             ]
         ];
@@ -4975,8 +4976,8 @@ class IrhpApplicationEntityTest extends EntityTester
             [true, false, RefData::BUSINESS_PROCESS_APGG, null],
             [true, false, RefData::BUSINESS_PROCESS_APSG, SendEcmtShortTermAppSubmitted::class],
             [false, true, RefData::BUSINESS_PROCESS_APG, null],
-            [false, true, RefData::BUSINESS_PROCESS_APGG, null],
-            [false, true, RefData::BUSINESS_PROCESS_APSG, SendEcmtAppSubmitted::class],
+            [false, true, RefData::BUSINESS_PROCESS_APGG, SendEcmtApggAppSubmitted::class],
+            [false, true, RefData::BUSINESS_PROCESS_APSG, SendEcmtApsgAppSubmitted::class],
             [false, false, RefData::BUSINESS_PROCESS_APG, null],
             [false, false, RefData::BUSINESS_PROCESS_APGG, null],
             [false, false, RefData::BUSINESS_PROCESS_APSG, null],
@@ -5068,7 +5069,7 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpGetIssuedEmailCommand()
     {
         return [
-            [true, SendEcmtIssued::class],
+            [true, SendEcmtApsgIssued::class],
             [false, null],
         ];
     }

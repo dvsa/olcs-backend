@@ -6,11 +6,11 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\EcmtAnnualPermitEmailTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
 
 /**
- * Send ECMT app submitted email
+ * Send ECMT APSG app submitted email
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class SendEcmtAppSubmitted extends AbstractEmailHandler
+class SendEcmtApsgAppSubmitted extends AbstractEmailHandler
 {
     use EcmtAnnualPermitEmailTrait;
     use PermitEmailTrait;

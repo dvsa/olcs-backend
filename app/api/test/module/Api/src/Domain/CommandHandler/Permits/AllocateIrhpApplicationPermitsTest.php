@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAspgIssued;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\BilateralCriteria;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\BilateralCriteriaFactory;
@@ -415,7 +415,7 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getIssuedEmailCommand')
-            ->andReturn(SendEcmtIssued::class);
+            ->andReturn(SendEcmtApsgIssued::class);
         $irhpApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn($irhpPermitApplications);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
@@ -447,7 +447,7 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         );
 
         $this->expectedEmailQueueSideEffect(
-            SendEcmtIssued::class,
+            SendEcmtApsgIssued::class,
             ['id' => $this->irhpApplicationId],
             $this->irhpApplicationId,
             new Result()
