@@ -9,9 +9,9 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptScoring;
@@ -48,9 +48,9 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->shouldAllowMockingProtectedMethods();
 
         $this->emailCommandLookup = [
-            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
-            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
-            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtApsgUnsuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtApsgPartSuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtApsgSuccessful::class
         ];
 
         parent::setUp();
@@ -383,14 +383,14 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateTask::class, $taskParams, $taskResult);
 
         $this->expectedEmailQueueSideEffect(
-            SendEcmtSuccessful::class,
+            SendEcmtApsgSuccessful::class,
             ['id' => $checkedSuccessfulApplicationId],
             $checkedSuccessfulApplicationId,
             $taskResult
         );
 
         $this->expectedEmailQueueSideEffect(
-            SendEcmtPartSuccessful::class,
+            SendEcmtApsgPartSuccessful::class,
             ['id' => $checkedPartSuccessfulApplicationId],
             $checkedPartSuccessfulApplicationId,
             $taskResult
@@ -398,14 +398,14 @@ class AcceptScoringTest extends CommandHandlerTestCase
 
         if (!$disableEcmtAllocEmailNone) {
             $this->expectedEmailQueueSideEffect(
-                SendEcmtUnsuccessful::class,
+                SendEcmtApsgUnsuccessful::class,
                 ['id' => $checkedUnsuccessfulApplicationId],
                 $checkedUnsuccessfulApplicationId,
                 $taskResult
             );
 
             $this->expectedEmailQueueSideEffect(
-                SendEcmtUnsuccessful::class,
+                SendEcmtApsgUnsuccessful::class,
                 ['id' => $uncheckedUnsuccessfulApplicationId],
                 $uncheckedUnsuccessfulApplicationId,
                 $taskResult
@@ -443,20 +443,20 @@ class AcceptScoringTest extends CommandHandlerTestCase
                         'processing application with id 1:',
                         '- create fee and set application to awaiting fee',
                         'processing application with id 2:',
-                        '- sending email using command '.SendEcmtSuccessful::class,
+                        '- sending email using command '.SendEcmtApsgSuccessful::class,
                         '- create fee and set application to awaiting fee',
                         'processing application with id 52:',
                         '- application has been awarded permits and has not been checked, skipping',
                         'processing application with id 3:',
-                        '- sending email using command '.SendEcmtPartSuccessful::class,
+                        '- sending email using command '.SendEcmtApsgPartSuccessful::class,
                         '- create fee and set application to awaiting fee',
                         'processing application with id 53:',
                         '- application has been awarded permits and has not been checked, skipping',
                         'processing application with id 4:',
-                        '- sending email using command '.SendEcmtUnsuccessful::class,
+                        '- sending email using command '.SendEcmtApsgUnsuccessful::class,
                         '- no fee applicable, set application to unsuccessful',
                         'processing application with id 54:',
-                        '- sending email using command '.SendEcmtUnsuccessful::class,
+                        '- sending email using command '.SendEcmtApsgUnsuccessful::class,
                         '- no fee applicable, set application to unsuccessful',
                         'Acceptance process completed successfully.',
                     ],
@@ -471,12 +471,12 @@ class AcceptScoringTest extends CommandHandlerTestCase
                         'processing application with id 1:',
                         '- create fee and set application to awaiting fee',
                         'processing application with id 2:',
-                        '- sending email using command '.SendEcmtSuccessful::class,
+                        '- sending email using command '.SendEcmtApsgSuccessful::class,
                         '- create fee and set application to awaiting fee',
                         'processing application with id 52:',
                         '- application has been awarded permits and has not been checked, skipping',
                         'processing application with id 3:',
-                        '- sending email using command '.SendEcmtPartSuccessful::class,
+                        '- sending email using command '.SendEcmtApsgPartSuccessful::class,
                         '- create fee and set application to awaiting fee',
                         'processing application with id 53:',
                         '- application has been awarded permits and has not been checked, skipping',
