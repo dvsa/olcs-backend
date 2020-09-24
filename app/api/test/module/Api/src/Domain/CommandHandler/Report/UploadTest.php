@@ -58,7 +58,8 @@ class UploadTest extends CommandHandlerTestCase
         ];
 
         $this->subCategoryReferences = [
-            SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE => m::mock(SubCategory::class)
+            SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE => m::mock(SubCategory::class),
+            SubCategory::DOC_SUB_CATEGORY_REPORT_LETTER => m::mock(SubCategory::class),
         ];
 
         parent::initReferences();
@@ -117,6 +118,162 @@ class UploadTest extends CommandHandlerTestCase
                     [
                         'identifier' => self::IDENTIFIER,
                         'user' => self::USER_ID,
+                    ]
+                ),
+                'processAfterDate' => null,
+            ],
+            (new Result())->addMessage('Queue item created')
+        );
+
+        //  call
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'identifier' => self::IDENTIFIER,
+            ],
+            'messages' => [
+                'File uploaded',
+                'Queue item created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandForBulkEmail()
+    {
+        $data = [
+            'reportType' => RefData::REPORT_TYPE_BULK_EMAIL,
+            'filename' => self::FILENAME,
+            'content' => base64_encode(self::BODY),
+            'name' => 'template'
+        ];
+
+        $command = UploadCmd::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']
+            ->shouldReceive('generateName')
+            ->once()
+            ->with(
+                'bulk_upload_email_send',
+                'csv',
+                $this->categoryReferences[Category::CATEGORY_REPORT],
+                $this->subCategoryReferences[SubCategory::DOC_SUB_CATEGORY_REPORT_LETTER]
+            )
+            ->andReturn(self::IDENTIFIER);
+
+        $this->mockedSmServices['FileUploader']
+            ->shouldReceive('upload')
+            ->andReturnUsing(
+                function ($identifier, DsFile $file) {
+                    static::assertSame(self::IDENTIFIER, $identifier);
+                    static::assertEquals(self::BODY, $file->getContent());
+
+                    $file->setIdentifier(self::IDENTIFIER);
+
+                    return $file;
+                }
+            );
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->shouldReceive('getId')
+            ->andReturn(self::USER_ID);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->andReturn($user);
+
+        $this->expectedSideEffect(
+            CreateQueue::class,
+            [
+                'entityId' => null,
+                'type' => Queue::TYPE_EMAIL_BULK_UPLOAD,
+                'status' => Queue::STATUS_QUEUED,
+                'options' => ZendJson::encode(
+                    [
+                        'identifier' => self::IDENTIFIER,
+                        'user' => self::USER_ID,
+                        'templateName' => $data['name']
+                    ]
+                ),
+                'processAfterDate' => null,
+            ],
+            (new Result())->addMessage('Queue item created')
+        );
+
+        //  call
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'identifier' => self::IDENTIFIER,
+            ],
+            'messages' => [
+                'File uploaded',
+                'Queue item created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandForBulkLetter()
+    {
+        $data = [
+            'reportType' => RefData::REPORT_TYPE_BULK_LETTER,
+            'filename' => self::FILENAME,
+            'content' => base64_encode(self::BODY),
+            'templateSlug' => 'slug'
+        ];
+
+        $command = UploadCmd::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']
+            ->shouldReceive('generateName')
+            ->once()
+            ->with(
+                'bulk_upload_letter_send',
+                'csv',
+                $this->categoryReferences[Category::CATEGORY_REPORT],
+                $this->subCategoryReferences[SubCategory::DOC_SUB_CATEGORY_REPORT_LETTER]
+            )
+            ->andReturn(self::IDENTIFIER);
+
+        $this->mockedSmServices['FileUploader']
+            ->shouldReceive('upload')
+            ->andReturnUsing(
+                function ($identifier, DsFile $file) {
+                    static::assertSame(self::IDENTIFIER, $identifier);
+                    static::assertEquals(self::BODY, $file->getContent());
+
+                    $file->setIdentifier(self::IDENTIFIER);
+
+                    return $file;
+                }
+            );
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->shouldReceive('getId')
+            ->andReturn(self::USER_ID);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->andReturn($user);
+
+        $this->expectedSideEffect(
+            CreateQueue::class,
+            [
+                'entityId' => null,
+                'type' => Queue::TYPE_LETTER_BULK_UPLOAD,
+                'status' => Queue::STATUS_QUEUED,
+                'options' => ZendJson::encode(
+                    [
+                        'identifier' => self::IDENTIFIER,
+                        'user' => self::USER_ID,
+                        'templateSlug' => $data['templateSlug']
                     ]
                 ),
                 'processAfterDate' => null,
