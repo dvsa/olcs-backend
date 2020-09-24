@@ -399,6 +399,10 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
             Queue::TYPE_COMM_LIC_BULK_REPRINT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\ReportingBulkReprint::class,
+            Queue::TYPE_LETTER_BULK_UPLOAD
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\BulkSend\Letter::class,
+            Queue::TYPE_EMAIL_BULK_UPLOAD
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\BulkSend\Email::class,
             Queue::TYPE_PERMITS_POST_SUBMIT
             => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\PostSubmitTasks::class,
             Queue::TYPE_CREATE_TASK

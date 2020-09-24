@@ -720,6 +720,12 @@ return [
 
     // Domain - Report
     TransferCommand\Report\Upload::class => CommandHandler\Report\Upload::class,
+    Command\BulkSend\ProcessEmail::class => CommandHandler\BulkSend\ProcessEmail::class,
+
+    // Domain - Report Upload BulkSend
+
+    Command\BulkSend\Email::class => CommandHandler\BulkSend\Email::class,
+    Command\BulkSend\Letter::class => CommandHandler\BulkSend\Letter::class,
 
     // Domain - LicenceStatusRule
     Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class

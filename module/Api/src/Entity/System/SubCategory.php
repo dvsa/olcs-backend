@@ -46,4 +46,5 @@ class SubCategory extends AbstractSubCategory
 
     const DOC_SUB_CATEGORY_REG_29_31_SECTION_57 = 81;
     const DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION = 195;
+    const DOC_SUB_CATEGORY_REPORT_LETTER = 203;
 }
