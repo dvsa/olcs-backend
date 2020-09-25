@@ -28,8 +28,7 @@ class FinancialStandingRateTest extends RepositoryTestCase
 
     public function testFetchRatesInEffect()
     {
-        $date = m::mock('\DateTime');
-        $date->shouldReceive('format')->andReturn('2015-06-04');
+        $date = new \DateTime();
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
@@ -55,7 +54,7 @@ class FinancialStandingRateTest extends RepositoryTestCase
             ->with('fsr.effectiveFrom', 'DESC')
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with('effectiveFrom', '2015-06-04')
+            ->with('effectiveFrom', $date)
             ->shouldReceive('getQuery->execute')
             ->andReturn('RESULT');
 

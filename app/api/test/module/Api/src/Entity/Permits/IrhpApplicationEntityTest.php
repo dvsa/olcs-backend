@@ -1404,9 +1404,9 @@ class IrhpApplicationEntityTest extends EntityTester
      */
     public function testIssueFeeOverdue()
     {
-        $dateTimeMinus9 = (new \DateTime('-9 weekdays'))->format(\DateTime::ISO8601);
-        $dateTimeMinus10 = (new \DateTime('-10 weekdays'))->format(\DateTime::ISO8601);
-        $dateTimeMinus11 = (new \DateTime('-11 weekdays'))->format(\DateTime::ISO8601);
+        $dateTimeMinus9 = new \DateTime('-9 weekdays');
+        $dateTimeMinus10 = new \DateTime('-10 weekdays');
+        $dateTimeMinus11 = new \DateTime('-11 weekdays');
 
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('isOutstanding')->never();
@@ -1446,7 +1446,7 @@ class IrhpApplicationEntityTest extends EntityTester
      */
     public function testIssueFeeOverdueBoundary($days, $expected)
     {
-        $invoiceDate = (new \DateTime('-' . $days . ' weekdays'))->format(\DateTime::ISO8601);
+        $invoiceDate = new \DateTime('-' . $days . ' weekdays');
 
         $fee = m::mock(Fee::class)->makePartial();
         $fee->shouldReceive('isOutstanding')->times($expected)->andReturn(true);

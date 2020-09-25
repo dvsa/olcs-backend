@@ -34,12 +34,11 @@ final class ProcessToRevokeCurtailSuspend extends AbstractCommandHandler impleme
 
         $result = new Result();
         $licencesToAction = $this->getRepo('LicenceStatusRule')->fetchRevokeCurtailSuspend(
-            (new \DateTime())->format(\DateTime::W3C)
+            new \DateTime()
         );
 
         /* @var $licenceStatusRule \Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule */
         foreach ($licencesToAction as $licenceStatusRule) {
-
             // if licence is not valid, then continue
             if ($licenceStatusRule->getLicence()->getStatus()->getId() !== Licence::LICENCE_STATUS_VALID) {
                 $result->addMessage(

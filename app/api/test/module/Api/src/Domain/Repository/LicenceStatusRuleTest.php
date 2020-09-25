@@ -30,6 +30,7 @@ class LicenceStatusRuleTest extends RepositoryTestCase
     public function testFetchRevokeCurtailSuspend()
     {
         $mockQb = m::mock(QueryBuilder::class);
+        $date = new \DateTime();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('lsr')->once()->andReturn($mockQb);
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
@@ -45,16 +46,17 @@ class LicenceStatusRuleTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->lte')->with('lsr.startDate', ':startDate')->once()->andReturn('EXPR3');
         $mockQb->shouldReceive('andWhere')->with('EXPR3')->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('setParameter')->with('startDate', 'DATE')->once();
+        $mockQb->shouldReceive('setParameter')->with('startDate', $date)->once();
 
         $mockQb->shouldReceive('getQuery->getResult')->with()->once()->andReturn('RESULT');
 
-        $this->assertSame('RESULT', $this->sut->fetchRevokeCurtailSuspend('DATE'));
+        $this->assertSame('RESULT', $this->sut->fetchRevokeCurtailSuspend($date));
     }
 
     public function testFetchToValid()
     {
         $mockQb = m::mock(QueryBuilder::class);
+        $date = new \DateTime();
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('lsr')->once()->andReturn($mockQb);
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
@@ -72,11 +74,11 @@ class LicenceStatusRuleTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->lte')->with('lsr.endDate', ':endDate')->once()->andReturn('EXPR4');
         $mockQb->shouldReceive('andWhere')->with('EXPR4')->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('setParameter')->with('endDate', 'DATE')->once();
+        $mockQb->shouldReceive('setParameter')->with('endDate', $date)->once();
 
         $mockQb->shouldReceive('getQuery->getResult')->with()->once()->andReturn('RESULT');
 
-        $this->assertSame('RESULT', $this->sut->fetchToValid('DATE'));
+        $this->assertSame('RESULT', $this->sut->fetchToValid($date));
     }
 
     public function testApplyListJoins()

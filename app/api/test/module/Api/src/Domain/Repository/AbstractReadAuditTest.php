@@ -31,8 +31,8 @@ abstract class AbstractReadAuditTest extends RepositoryTestCase
 
         $expected = '{{QUERY}} AND m.user = [[111]]' .
             ' AND m.' . $entityProperty . ' = [[222]]' .
-            ' AND m.createdOn >= [[2013-12-11T00:00:00+0000]]' .
-            ' AND m.createdOn <= [[2013-12-11T23:59:59+0000]]';
+            ' AND m.createdOn >= [[2013-12-11T00:00:00+00:00]]' .
+            ' AND m.createdOn <= [[2013-12-11T23:59:59+00:00]]';
 
         static::assertEquals($expected, $this->query);
     }

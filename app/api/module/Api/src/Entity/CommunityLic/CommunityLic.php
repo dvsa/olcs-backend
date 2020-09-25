@@ -85,7 +85,7 @@ class CommunityLic extends AbstractCommunityLic
     {
         if ($this->getStatus()->getId() === self::STATUS_ACTIVE) {
             $criteria = Criteria::create()
-                ->where(Criteria::expr()->gt('startDate', (new \DateTime())->format(\DateTime::ISO8601)))
+                ->where(Criteria::expr()->gt('startDate', new \DateTime()))
                 ->setMaxResults(1);
             $suspension = $this->getCommunityLicSuspensions()->matching($criteria)->current();
             if ($suspension) {
@@ -110,7 +110,7 @@ class CommunityLic extends AbstractCommunityLic
     {
         if ($this->getStatus()->getId() === self::STATUS_SUSPENDED) {
             $criteria = Criteria::create()
-                ->where(Criteria::expr()->lte('startDate', (new \DateTime())->format(\DateTime::ISO8601)))
+                ->where(Criteria::expr()->lte('startDate', new \DateTime()))
                 ->setMaxResults(1);
             $suspension = $this->getCommunityLicSuspensions()->matching($criteria)->current();
             if ($suspension) {
@@ -152,7 +152,7 @@ class CommunityLic extends AbstractCommunityLic
     {
         if ($this->getStatus()->getId() === self::STATUS_WITHDRAWN) {
             $criteria = Criteria::create()
-                ->where(Criteria::expr()->lte('startDate', (new \DateTime())->format(\DateTime::ISO8601)))
+                ->where(Criteria::expr()->lte('startDate', new \DateTime()))
                 ->setMaxResults(1);
             $withdrawal = $this->getCommunityLicWithdrawals()->matching($criteria)->current();
             if ($withdrawal) {

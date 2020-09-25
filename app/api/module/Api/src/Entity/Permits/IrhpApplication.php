@@ -608,7 +608,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $cutoff = new \DateTime('-' . $days . ' weekdays');
 
         $criteria = Criteria::create();
-        $criteria->andWhere(Criteria::expr()->lte('invoicedDate', $cutoff->format(\DateTime::ISO8601)));
+        $criteria->andWhere(Criteria::expr()->lte('invoicedDate', $cutoff));
         $criteria->orderBy(['invoicedDate' => Criteria::DESC]);
 
         return $this->getFees()->matching($criteria);
