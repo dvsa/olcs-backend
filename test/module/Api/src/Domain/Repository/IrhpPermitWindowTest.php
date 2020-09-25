@@ -180,8 +180,8 @@ class IrhpPermitWindowTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchWindowsToBeClosed($now, '-2 days'));
 
         $expectedQuery = 'BLAH '
-            . 'AND ipw.endDate >= [[2018-10-23T00:00:00+0000]] '
-            . 'AND ipw.endDate < [[2018-10-25T13:21:10+0000]]';
+            . 'AND ipw.endDate >= [[2018-10-23T00:00:00+00:00]] '
+            . 'AND ipw.endDate < [[2018-10-25T13:21:10+00:00]]';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -215,8 +215,8 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'INNER JOIN ips.country c '
             . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
-            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
-            . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+00:00]] '
+            . 'AND ipw.endDate > [[2018-10-25T13:21:10+00:00]] '
             . 'AND c.id IN [[["DE","NL"]]]';
 
         $this->assertEquals($expectedQuery, $this->query);
@@ -249,8 +249,8 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'INNER JOIN ipw.irhpPermitStock ips '
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT.']] '
-            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
-            . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+00:00]] '
+            . 'AND ipw.endDate > [[2018-10-25T13:21:10+00:00]] '
             . 'ORDER BY ipw.endDate DESC '
             . 'LIMIT 1';
 
@@ -310,8 +310,8 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'INNER JOIN ipw.irhpPermitStock ips '
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT.']] '
-            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
-            . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+00:00]] '
+            . 'AND ipw.endDate > [[2018-10-25T13:21:10+00:00]] '
             . 'ORDER BY ipw.endDate DESC '
             . 'LIMIT 1 '
             . 'AND ips.validTo BETWEEN [[3030-01-01T00:00:00+00:00]] AND [[3030-12-31T23:59:59+00:00]]';
@@ -355,16 +355,16 @@ class IrhpPermitWindowTest extends RepositoryTestCase
                 . 'INNER JOIN ipw.irhpPermitStock ips '
                 . 'INNER JOIN ips.irhpPermitType ipt '
                 . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
-                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-                . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] '
+                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+00:00]] '
+                . 'AND ipw.endDate > [[2019-04-08T09:51:10+00:00]] '
                 . 'AND ips.hiddenSs != 1'],
             [true, 'BLAH '
                 . 'SELECT ipw '
                 . 'INNER JOIN ipw.irhpPermitStock ips '
                 . 'INNER JOIN ips.irhpPermitType ipt '
                 . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
-                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-                . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]]']
+                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+00:00]] '
+                . 'AND ipw.endDate > [[2019-04-08T09:51:10+00:00]]']
         ];
     }
 
@@ -400,8 +400,8 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'INNER JOIN ips.irhpPermitRanges ipr '
             . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT . ']] '
-            . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] '
+            . 'AND ipw.startDate <= [[2019-04-08T09:51:10+00:00]] '
+            . 'AND ipw.endDate > [[2019-04-08T09:51:10+00:00]] '
             . 'AND ips.validTo BETWEEN [[3000-01-01T00:00:00+00:00]] AND [[3000-12-31T23:59:59+00:00]] '
             . 'AND ips.hiddenSs != 1';
 
@@ -416,16 +416,16 @@ class IrhpPermitWindowTest extends RepositoryTestCase
                 . 'INNER JOIN ipw.irhpPermitStock ips '
                 . 'INNER JOIN ips.irhpPermitType ipt '
                 . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
-                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-                . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] '
+                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+00:00]] '
+                . 'AND ipw.endDate > [[2019-04-08T09:51:10+00:00]] '
                 . 'AND ips.hiddenSs != 1'],
             [true, 'BLAH '
                 . 'SELECT ipw '
                 . 'INNER JOIN ipw.irhpPermitStock ips '
                 . 'INNER JOIN ips.irhpPermitType ipt '
                 . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
-                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
-                . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]]']
+                . 'AND ipw.startDate <= [[2019-04-08T09:51:10+00:00]] '
+                . 'AND ipw.endDate > [[2019-04-08T09:51:10+00:00]]']
         ];
     }
 

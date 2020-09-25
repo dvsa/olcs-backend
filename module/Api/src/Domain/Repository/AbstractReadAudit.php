@@ -42,6 +42,8 @@ abstract class AbstractReadAudit extends AbstractRepository implements ReadAudit
     {
         $qb = $this->createQueryBuilder();
 
+        $dateTo = clone $date;
+
         $qb->andWhere($qb->expr()->eq($this->alias . '.user', ':user'));
         $qb->andWhere($qb->expr()->eq($this->alias . '.' . $this->entityProperty, ':entityId'));
         $qb->andWhere($qb->expr()->gte($this->alias . '.createdOn', ':dateFrom'));
@@ -49,8 +51,8 @@ abstract class AbstractReadAudit extends AbstractRepository implements ReadAudit
 
         $qb->setParameter('user', $userId);
         $qb->setParameter('entityId', $entityId);
-        $qb->setParameter('dateFrom', $date->setTime(0, 0, 0)->format(DATE_ISO8601));
-        $qb->setParameter('dateTo', $date->setTime(23, 59, 59)->format(DATE_ISO8601));
+        $qb->setParameter('dateFrom', $date->setTime(0, 0, 0));
+        $qb->setParameter('dateTo', $dateTo->setTime(23, 59, 59));
 
         return $qb->getQuery()->getResult();
     }

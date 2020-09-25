@@ -22,11 +22,11 @@ class LicenceStatusRule extends AbstractRepository
     /**
      * Fetch rules to set a licence to revoke, curtail or suspend
      *
-     * @param string $date Date to check for rules, normally this will be now
+     * @param \DateTime $date Date to check for rules, normally this will be now
      *
      * @return array
      */
-    public function fetchRevokeCurtailSuspend($date)
+    public function fetchRevokeCurtailSuspend(\DateTime $date)
     {
         $doctrineQb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($doctrineQb)->withRefdata()
@@ -44,11 +44,11 @@ class LicenceStatusRule extends AbstractRepository
     /**
      * Fetch rules to set a licence to valid
      *
-     * @param string $date Date to check for rules, normally this will be now
+     * @param \DateTime $date Date to check for rules, normally this will be now
      *
      * @return array
      */
-    public function fetchToValid($date)
+    public function fetchToValid(\DateTime $date)
     {
         $doctrineQb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($doctrineQb)->withRefdata()

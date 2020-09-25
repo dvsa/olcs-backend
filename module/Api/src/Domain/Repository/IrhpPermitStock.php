@@ -94,7 +94,7 @@ class IrhpPermitStock extends AbstractRepository
             ->andWhere($qb->expr()->eq('ipt.id', ':type'))
             ->setParameter('country', $country)
             ->setParameter('type', IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL)
-            ->setParameter('now', $now->format(DateTime::ISO8601));
+            ->setParameter('now', $now);
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
