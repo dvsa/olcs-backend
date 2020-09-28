@@ -16,6 +16,7 @@ class DvlaSearchServiceFactoryTest extends TestCase
         $config = [
             'dvla_search' => [
                 'base_uri' => 'http://localhost',
+                'proxy' => 'http://localhost',
                 'api_key' => 'abc123'
             ]
         ];
