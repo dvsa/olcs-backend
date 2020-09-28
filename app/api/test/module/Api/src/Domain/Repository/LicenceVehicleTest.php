@@ -574,9 +574,24 @@ class LicenceVehicleTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('expr');
         $mockQb->shouldReceive('andWhere')->with('expr')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('licence', 1)->once()->andReturnSelf();
-        $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn('result');
+        $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn('2');
 
-        $this->assertSame('result', $this->sut->fetchAllVehiclesCount(1));
+        $this->assertSame(2, $this->sut->fetchAllVehiclesCount(1));
+    }
+
+    public function testFetchActiveVehiclesCount()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('select')->with('count(m.id)')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('expr');
+        $mockQb->shouldReceive('expr->isNull')->with('m.removalDate')->once()->andReturn('expr');
+        $mockQb->shouldReceive('andWhere')->with('expr')->times(2)->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('licence', 1)->once()->andReturnSelf();
+        $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn('1');
+
+        $this->assertSame(1, $this->sut->fetchActiveVehicleCount(1));
     }
 
     public function testFetchForExport()

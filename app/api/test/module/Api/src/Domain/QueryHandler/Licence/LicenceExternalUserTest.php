@@ -22,6 +22,7 @@ class LicenceExternalUserTest extends QueryHandlerTestCase
     {
         $this->sut = new Licence();
         $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
         $this->mockRepo('ContinuationDetail', Repository\ContinuationDetail::class);
         $this->mockRepo('Note', Repository\Note::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
@@ -92,6 +93,14 @@ class LicenceExternalUserTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($licence);
 
+        $this->repoMap['LicenceVehicle']->shouldReceive('fetchActiveVehicleCount')
+            ->with(111)
+            ->andReturn(1);
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('fetchAllVehiclesCount')
+            ->with(111)
+            ->andReturn(1);
+
         $this->repoMap['Application']->shouldReceive('fetchOpenApplicationsForLicence')
             ->with($query->getId())
             ->andReturn($openApplicationsForLicence);
@@ -114,7 +123,9 @@ class LicenceExternalUserTest extends QueryHandlerTestCase
             'latestNote' => 'latest note',
             'canHaveInspectionRequest' => true,
             'showExpiryWarning' => false,
-            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
+            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed,
+            'activeVehicleCount' => 1,
+            'totalVehicleCount' => 1,
         ];
 
         $this->assertEquals($expected, $result->serialize());
