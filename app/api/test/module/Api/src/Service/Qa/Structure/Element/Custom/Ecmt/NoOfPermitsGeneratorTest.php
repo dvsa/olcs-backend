@@ -4,19 +4,20 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityCounter;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\EmissionsCategoryConditionalAdder;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\FieldNames;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermits;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsMaxPermittedGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -64,29 +65,36 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($requiredEuro6);
 
+        $licence = m::mock(LicenceEntity::class);
+
         $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
             ->withNoArgs()
             ->andReturn($irhpPermitApplication);
         $irhpApplication->shouldReceive('getApplicationFeeProductReference')
+            ->withNoArgs()
             ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF);
         $irhpApplication->shouldReceive('getIssueFeeProductReference')
+            ->withNoArgs()
             ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF);
+        $irhpApplication->shouldReceive('getLicence')
+            ->withNoArgs()
+            ->andReturn($licence);
 
-        $applicationFeeTypeEntity = m::mock(FeeTypeEntity::class);
-        $applicationFeeTypeEntity->shouldReceive('getFixedValue')
+        $applicationFeeType = m::mock(FeeTypeEntity::class);
+        $applicationFeeType->shouldReceive('getFixedValue')
             ->andReturn($applicationFeePerPermit);
 
-        $issueFeeTypeEntity = m::mock(FeeTypeEntity::class);
-        $issueFeeTypeEntity->shouldReceive('getFixedValue')
+        $issueFeeType = m::mock(FeeTypeEntity::class);
+        $issueFeeType->shouldReceive('getFixedValue')
             ->andReturn($issueFeePerPermit);
 
         $feeTypeRepo = m::mock(FeeTypeRepository::class);
         $feeTypeRepo->shouldReceive('getLatestByProductReference')
             ->with(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF)
-            ->andReturn($applicationFeeTypeEntity);
+            ->andReturn($applicationFeeType);
         $feeTypeRepo->shouldReceive('getLatestByProductReference')
             ->with(FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF)
-            ->andReturn($issueFeeTypeEntity);
+            ->andReturn($issueFeeType);
 
         $noOfPermits = m::mock(NoOfPermits::class);
 
@@ -123,9 +131,9 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             ->with($stockId)
             ->andReturn($permitsRemaining);
 
-        $noOfPermitsMaxPermittedGenerator = m::mock(NoOfPermitsMaxPermittedGenerator::class);
-        $noOfPermitsMaxPermittedGenerator->shouldReceive('generate')
-            ->with($irhpApplication)
+        $stockLicenceMaxPermittedCounter = m::mock(StockLicenceMaxPermittedCounter::class);
+        $stockLicenceMaxPermittedCounter->shouldReceive('getCount')
+            ->with($irhpPermitStock, $licence)
             ->andReturn($maxPermitted);
 
         $noOfPermitsGenerator = new NoOfPermitsGenerator(
@@ -133,7 +141,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             $noOfPermitsFactory,
             $emissionsCategoryConditionalAdder,
             $stockAvailabilityCounter,
-            $noOfPermitsMaxPermittedGenerator
+            $stockLicenceMaxPermittedCounter
         );
 
         $this->assertSame(
