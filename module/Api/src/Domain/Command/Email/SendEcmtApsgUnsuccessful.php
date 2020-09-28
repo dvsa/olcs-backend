@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\Command\Email;
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
 
 /**
- * Send email to notify ECMT app successful
+ * Send email to notify ECMT APSG app unsuccessful
  */
-final class SendEcmtSuccessful extends AbstractIdOnlyCommand
+final class SendEcmtApsgUnsuccessful extends AbstractIdOnlyCommand
 {
 }
