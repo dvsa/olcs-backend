@@ -26,6 +26,7 @@ class LicenceTest extends QueryHandlerTestCase
     {
         $this->sut = new Licence();
         $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
         $this->mockRepo('ContinuationDetail', Repository\ContinuationDetail::class);
         $this->mockRepo('Note', Repository\Note::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
@@ -34,6 +35,14 @@ class LicenceTest extends QueryHandlerTestCase
         /** @var UserEntity $currentUser */
         $currentUser = m::mock(UserEntity::class)->makePartial();
         $currentUser->shouldReceive('isAnonymous')->andReturn(false);
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('fetchActiveVehicleCount')
+            ->with(111)
+            ->andReturn(1);
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('fetchAllVehiclesCount')
+            ->with(111)
+            ->andReturn(1);
 
         $this->mockedSmServices = [
             'SectionAccessService' => m::mock(),
@@ -112,7 +121,9 @@ class LicenceTest extends QueryHandlerTestCase
             'latestNote' => 'latest note',
             'canHaveInspectionRequest' => true,
             'showExpiryWarning' => false,
-            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
+            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed,
+            'activeVehicleCount' => 1,
+            'totalVehicleCount' => 1,
         ];
 
         $this->assertEquals($expected, $result->serialize());
@@ -180,7 +191,9 @@ class LicenceTest extends QueryHandlerTestCase
             'latestNote' => 'latest note',
             'canHaveInspectionRequest' => false,
             'showExpiryWarning' => false,
-            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
+            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed,
+            'activeVehicleCount' => 1,
+            'totalVehicleCount' => 1,
         ];
 
         $this->assertEquals($expected, $result->serialize());
@@ -258,7 +271,9 @@ class LicenceTest extends QueryHandlerTestCase
                 'isSystemParamDisabled' => false,
                 'continuationDetailStatusId' => ContinuationDetail::STATUS_PRINTED,
                 'isLicenceSurrenderAllowed' => true,
-                'openApplicationsForLicence' => []
+                'openApplicationsForLicence' => [],
+                'activeVehicleCount' => 1,
+                'totalVehicleCount' => 1,
             ],
             'licence is expiring' => [
                 'expected' => false,
@@ -266,7 +281,9 @@ class LicenceTest extends QueryHandlerTestCase
                 'isSystemParamDisabled' => false,
                 'continuationDetailStatusId' => ContinuationDetail::STATUS_PRINTED,
                 'isLicenceSurrenderAllowed' => true,
-                'openApplicationsForLicence' => []
+                'openApplicationsForLicence' => [],
+                'activeVehicleCount' => 1,
+                'totalVehicleCount' => 1,
             ],
             'system Parameter disabled' => [
                 'expected' => false,
@@ -274,7 +291,9 @@ class LicenceTest extends QueryHandlerTestCase
                 'isSystemParamDisabled' => true,
                 'continuationDetailStatusId' => ContinuationDetail::STATUS_PRINTED,
                 'isLicenceSurrenderAllowed' => false,
-                'openApplicationsForLicence' => ['some data']
+                'openApplicationsForLicence' => ['some data'],
+                'activeVehicleCount' => 1,
+                'totalVehicleCount' => 1,
             ],
             'wrong continuation detail status' => [
                 'expected' => false,
@@ -282,7 +301,9 @@ class LicenceTest extends QueryHandlerTestCase
                 'isSystemParamDisabled' => false,
                 'continuationDetailStatusId' => ContinuationDetail::STATUS_PRINTING,
                 'isLicenceSurrenderAllowed' => false,
-                'openApplicationsForLicence' => ['some data']
+                'openApplicationsForLicence' => ['some data'],
+                'activeVehicleCount' => 1,
+                'totalVehicleCount' => 1,
             ],
         ];
     }
