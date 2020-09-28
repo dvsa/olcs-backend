@@ -338,7 +338,6 @@ class LicenceVehicle extends AbstractRepository
         $disc = $query->getDisc();
 
         if (isset($disc)) {
-
             if ($disc === 'Y') {
                 $qb->innerJoin('m.goodsDiscs', 'gd');
                 $qb->andWhere($qb->expr()->isNull('gd.ceasedDate'));
@@ -456,14 +455,31 @@ class LicenceVehicle extends AbstractRepository
      * @param int $licenceId
      * @return int
      */
-    public function fetchAllVehiclesCount($licenceId)
+    public function fetchAllVehiclesCount($licenceId): int
     {
         $qb = $this->createQueryBuilder();
         $qb->select('count(' . $this->alias . '.id)')
             ->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
             ->setParameter('licence', $licenceId);
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int)$qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Fetch active vehicle count for a licence
+     *
+     * @param int $licenceId
+     * @return int
+     */
+    public function fetchActiveVehicleCount($licenceId): int
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->select('count(' . $this->alias . '.id)')
+            ->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->andwhere($qb->expr()->isNull($this->alias . '.removalDate'))
+            ->setParameter('licence', $licenceId);
+
+        return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -482,9 +498,13 @@ class LicenceVehicle extends AbstractRepository
 
         $qb->
             select(
-                'v.vrm', 'v.platedWeight',
-                $this->alias . '.specifiedDate', $this->alias . '.removalDate',
-                'gd2.id as discId', 'gd2.ceasedDate', 'gd2.discNo'
+                'v.vrm',
+                'v.platedWeight',
+                $this->alias . '.specifiedDate',
+                $this->alias . '.removalDate',
+                'gd2.id as discId',
+                'gd2.ceasedDate',
+                'gd2.discNo'
             )
             ->leftJoin(
                 GoodsDiscEntity::class,
