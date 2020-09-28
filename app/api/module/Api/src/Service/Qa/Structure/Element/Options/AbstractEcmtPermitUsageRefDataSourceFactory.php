@@ -5,8 +5,11 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class EcmtPermitUsageRefDataSourceFactory implements FactoryInterface
+abstract class AbstractEcmtPermitUsageRefDataSourceFactory implements FactoryInterface
 {
+    // override in inheriting classes
+    const TRANSFORMATIONS = [];
+
     /**
      * Create service
      *
@@ -17,7 +20,8 @@ class EcmtPermitUsageRefDataSourceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new EcmtPermitUsageRefDataSource(
-            $serviceLocator->get('QaRefDataOptionsSource')
+            $serviceLocator->get('QaRefDataOptionsSource'),
+            static::TRANSFORMATIONS
         );
     }
 }

@@ -23,8 +23,12 @@ class OptionListGeneratorFactory implements FactoryInterface
 
         $optionListGenerator->registerSource('refData', $serviceLocator->get('QaRefDataOptionsSource'));
         $optionListGenerator->registerSource(
-            'ecmtPermitUsageRefData',
-            $serviceLocator->get('QaEcmtPermitUsageRefDataOptionsSource')
+            'ecmtPermitUsageThreeOptionsRefData',
+            $serviceLocator->get('QaEcmtPermitUsageThreeOptionsRefDataOptionsSource')
+        );
+        $optionListGenerator->registerSource(
+            'ecmtPermitUsageFourOptionsRefData',
+            $serviceLocator->get('QaEcmtPermitUsageFourOptionsRefDataOptionsSource')
         );
         $optionListGenerator->registerSource('repoQuery', $serviceLocator->get('QaRepoQueryOptionsSource'));
 

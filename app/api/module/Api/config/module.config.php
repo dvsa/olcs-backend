@@ -280,7 +280,10 @@ return [
             'QaValidatorListGenerator' => ApiSrv\Qa\Structure\ValidatorListGeneratorFactory::class,
             'QaOptionListGenerator' => ApiSrv\Qa\Structure\Element\Options\OptionListGeneratorFactory::class,
             'QaRefDataOptionsSource' => ApiSrv\Qa\Structure\Element\Options\RefDataSourceFactory::class,
-            'QaEcmtPermitUsageRefDataOptionsSource' => ApiSrv\Qa\Structure\Element\Options\EcmtPermitUsageRefDataSourceFactory::class,
+            'QaEcmtPermitUsageThreeOptionsRefDataOptionsSource'
+                => ApiSrv\Qa\Structure\Element\Options\EcmtPermitUsageThreeOptionsRefDataSourceFactory::class,
+            'QaEcmtPermitUsageFourOptionsRefDataOptionsSource'
+                => ApiSrv\Qa\Structure\Element\Options\EcmtPermitUsageFourOptionsRefDataSourceFactory::class,
             'QaRepoQueryOptionsSource' => ApiSrv\Qa\Structure\Element\Options\RepoQuerySourceFactory::class,
 
             'QaEcmtRemovalNoOfPermitsAnswerWriter' =>
