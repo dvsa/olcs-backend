@@ -38,7 +38,7 @@ trait EcmtAnnualPermitEmailTrait
             /** @var IrhpPermitApplication $irhpPermitApplication */
             $irhpPermitApplication = $recordObject->getIrhpPermitApplications()->first();
 
-            $vars['awaitingFeeUrl'] = 'http://selfserve/permits/' . (int)$recordObject->getId() . '/ecmt-awaiting-fee/';
+            $vars['awaitingFeeUrl'] = 'http://selfserve/permits/application/' . (int)$recordObject->getId() . '/awaiting-fee';
             $vars['permitsRequired'] = $recordObject->calculateTotalPermitsRequired();
             $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
             // TODO - OLCS-21979

@@ -158,7 +158,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
         $permitsGrantedissueFeeTotal = $permitsRequired * $issueFeeAmount;
         $paymentDeadlineNumDays = '10';
         $issueFeeDeadlineDate = '21 March 2019';
-        $awaitingFeeUrl = 'http://selfserve/permits/' . $this->permitAppId . '/ecmt-awaiting-fee/';
+        $awaitingFeeUrl = 'http://selfserve/permits/application/' . $this->permitAppId . '/awaiting-fee';
         $validityYear = '2022';
 
         $templateVars = [

@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApggAppGranted;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\Grant;
@@ -45,7 +46,10 @@ class GrantTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpHandleCommand
+     */
+    public function testHandleCommand($isEcmtShortTerm, $issueFeeProductReference, $expectedEmailCmd)
     {
         $irhpApplicationId = 55;
 
@@ -79,7 +83,7 @@ class GrantTest extends CommandHandlerTestCase
         $irhpApplication->shouldReceive('getIssueFeeProductReference')
             ->once()
             ->withNoArgs()
-            ->andReturn(FeeType::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF);
+            ->andReturn($issueFeeProductReference);
 
         $irhpApplication->shouldReceive('getLicence->getId')
             ->once()
@@ -91,8 +95,13 @@ class GrantTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->andReturn(55);
 
+        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($isEcmtShortTerm);
+
         $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
-            ->with(FeeType::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF)
+            ->with($issueFeeProductReference)
             ->andReturn($feeType);
 
         $feeType->shouldReceive('getDescription')
@@ -104,7 +113,6 @@ class GrantTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->once()
             ->andReturn(40084);
-
 
         $this->repoMap['IrhpApplication']->shouldReceive('save')
             ->with($irhpApplication)
@@ -131,7 +139,7 @@ class GrantTest extends CommandHandlerTestCase
         );
 
         $this->expectedEmailQueueSideEffect(
-            SendEcmtShortTermSuccessful::class,
+            $expectedEmailCmd,
             ['id' => $irhpApplicationId],
             $irhpApplicationId,
             new Result()
@@ -149,6 +157,22 @@ class GrantTest extends CommandHandlerTestCase
         );
 
         $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
+    }
+
+    public function dpHandleCommand()
+    {
+        return [
+            [
+                'isEcmtShortTerm' => true,
+                'issueFeeProductReference' => FeeType::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF,
+                'expectedEmailCmd' => SendEcmtShortTermSuccessful::class,
+            ],
+            [
+                'isEcmtShortTerm' => false,
+                'issueFeeProductReference' => FeeType::FEE_TYPE_IRHP_ISSUE,
+                'expectedEmailCmd' => SendEcmtApggAppGranted::class,
+            ],
+        ];
     }
 
     public function testHandleCommandCantGrantFromEntity()

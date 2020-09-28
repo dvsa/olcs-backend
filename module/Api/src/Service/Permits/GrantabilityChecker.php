@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Availability\EmissionsCategoriesGrantabilityChecker;
 use Dvsa\Olcs\Api\Service\Permits\Availability\CandidatePermitsGrantabilityChecker;
 use RuntimeException;
@@ -41,8 +42,8 @@ class GrantabilityChecker
      */
     public function isGrantable(IrhpApplication $irhpApplication)
     {
-        if (!$irhpApplication->getIrhpPermitType()->isEcmtShortTerm()) {
-            throw new RuntimeException('GrantabilityChecker is only implemented for ecmt short term');
+        if ((string)$irhpApplication->getBusinessProcess() !== RefData::BUSINESS_PROCESS_APGG) {
+            throw new RuntimeException('GrantabilityChecker is only implemented for APGG');
         }
 
         switch ($irhpApplication->getAllocationMode()) {
