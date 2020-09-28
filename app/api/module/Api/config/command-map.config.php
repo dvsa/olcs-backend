@@ -773,6 +773,7 @@ return [
     Command\Email\SendEbsrErrors::class => CommandHandler\Email\SendEbsrErrors::class,
     Command\Email\SendEbsrRequestMap::class => CommandHandler\Email\SendEbsrRequestMap::class,
     Command\Email\SendEcmtApggAppSubmitted::class => CommandHandler\Email\SendEcmtApggAppSubmitted::class,
+    Command\Email\SendEcmtApggAppGranted::class => CommandHandler\Email\SendEcmtApggAppGranted::class,
     Command\Email\SendEcmtApsgAppSubmitted::class => CommandHandler\Email\SendEcmtApsgAppSubmitted::class,
     Command\Email\SendEcmtApsgIssued::class => CommandHandler\Email\SendEcmtApsgIssued::class,
     Command\Email\SendEcmtApsgUnsuccessful::class => CommandHandler\Email\SendEcmtApsgUnsuccessful::class,
