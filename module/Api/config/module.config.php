@@ -301,8 +301,6 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsGeneratorFactory::class,
             'QaEcmtEmissionsCategoryConditionalAdder' =>
                 ApiSrv\Qa\Structure\Element\Custom\Ecmt\EmissionsCategoryConditionalAdderFactory::class,
-            'QaEcmtNoOfPermitsMaxPermittedGenerator' =>
-                ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsMaxPermittedGeneratorFactory::class,
             'QaEcmtConditionalFeeUpdater' =>
                 ApiSrv\Qa\Structure\Element\Custom\Ecmt\ConditionalFeeUpdaterFactory::class,
             'QaEcmtFeeUpdater' =>
@@ -411,6 +409,8 @@ return [
                 ApiSrv\Permits\Availability\CandidatePermitsGrantabilityCheckerFactory::class,
             'PermitsAvailabilityEmissionsCategoriesGrantabilityChecker' =>
                 ApiSrv\Permits\Availability\EmissionsCategoriesGrantabilityCheckerFactory::class,
+            'PermitsAvailabilityStockLicenceMaxPermittedCounter' =>
+                ApiSrv\Permits\Availability\StockLicenceMaxPermittedCounterFactory::class,
 
             'PermitsGrantabilityChecker' =>
                 ApiSrv\Permits\GrantabilityCheckerFactory::class,

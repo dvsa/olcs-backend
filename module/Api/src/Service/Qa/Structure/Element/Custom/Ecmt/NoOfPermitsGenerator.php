@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityCounter;
+use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
@@ -26,8 +27,8 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
     /** @var StockAvailabilityCounter */
     private $stockAvailabilityCounter;
 
-    /** @var NoOfPermitsMaxPermittedGenerator */
-    private $noOfPermitsMaxPermittedGenerator;
+    /** @var StockLicenceMaxPermittedCounter */
+    private $stockLicenceMaxPermittedCounter;
 
     /**
      * Create service instance
@@ -36,7 +37,7 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
      * @param NoOfPermitsFactory $noOfPermitsFactory
      * @param EmissionsCategoryConditionalAdder $emissionsCategoryConditionalAdder
      * @param StockAvailabilityCounter $stockAvailabilityCounter
-     * @param NoOfPermitsMaxPermittedGenerator $noOfPermitsMaxPermittedGenerator
+     * @param StockLicenceMaxPermittedCounter $stockLicenceMaxPermittedCounter
      *
      * @return NoOfPermitsGenerator
      */
@@ -45,13 +46,13 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
         NoOfPermitsFactory $noOfPermitsFactory,
         EmissionsCategoryConditionalAdder $emissionsCategoryConditionalAdder,
         StockAvailabilityCounter $stockAvailabilityCounter,
-        NoOfPermitsMaxPermittedGenerator $noOfPermitsMaxPermittedGenerator
+        StockLicenceMaxPermittedCounter $stockLicenceMaxPermittedCounter
     ) {
         $this->feeTypeRepo = $feeTypeRepo;
         $this->noOfPermitsFactory = $noOfPermitsFactory;
         $this->emissionsCategoryConditionalAdder = $emissionsCategoryConditionalAdder;
         $this->stockAvailabilityCounter = $stockAvailabilityCounter;
-        $this->noOfPermitsMaxPermittedGenerator = $noOfPermitsMaxPermittedGenerator;
+        $this->stockLicenceMaxPermittedCounter = $stockLicenceMaxPermittedCounter;
     }
 
     /**
@@ -64,6 +65,7 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
         $irhpPermitApplication = $irhpApplication->getFirstIrhpPermitApplication();
         $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
         $irhpPermitStockId = $irhpPermitStock->getId();
+        $licence = $irhpApplication->getLicence();
 
         $applicationFee = $this->feeTypeRepo->getLatestByProductReference(
             $irhpApplication->getApplicationFeeProductReference()
@@ -73,7 +75,7 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
             $irhpApplication->getIssueFeeProductReference()
         );
 
-        $maxPermitted = $this->noOfPermitsMaxPermittedGenerator->generate($irhpApplication);
+        $maxPermitted = $this->stockLicenceMaxPermittedCounter->getCount($irhpPermitStock, $licence);
 
         $maxCanApplyFor = $maxPermitted;
         $stockAvailability = $this->stockAvailabilityCounter->getCount($irhpPermitStockId);

@@ -36,6 +36,7 @@ return [
     QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableYears::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableStocks::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\MaxPermittedReached::class => CanAccessLicenceWithLicence::class,
     QueryHandler\Permits\EmissionsByYear::class => IsInternalUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\QueueRunScoringPermitted::class => NotIsAnonymousUser::class,

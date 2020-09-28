@@ -21,7 +21,7 @@ class NoOfPermitsGeneratorFactory implements FactoryInterface
             $serviceLocator->get('QaEcmtNoOfPermitsElementFactory'),
             $serviceLocator->get('QaEcmtEmissionsCategoryConditionalAdder'),
             $serviceLocator->get('PermitsAvailabilityStockAvailabilityCounter'),
-            $serviceLocator->get('QaEcmtNoOfPermitsMaxPermittedGenerator')
+            $serviceLocator->get('PermitsAvailabilityStockLicenceMaxPermittedCounter')
         );
     }
 }
