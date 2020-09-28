@@ -39,7 +39,7 @@ class EcmtPermitUsageRefDataSourceTest extends MockeryTestCase
         $this->optionListOption1 = m::mock(Option::class);
         $this->optionListOption1->shouldReceive('getValue')
             ->withNoArgs()
-            ->andReturn(RefData::ECMT_PERMIT_USAGE_BOTH);
+            ->andReturn(RefData::ECMT_PERMIT_USAGE_THREE_BOTH);
         $this->optionListOption1->shouldReceive('setLabel')
             ->with('qanda.ecmt.permit-usage.option.both.label')
             ->once();
@@ -47,7 +47,7 @@ class EcmtPermitUsageRefDataSourceTest extends MockeryTestCase
         $this->optionListOption2 = m::mock(Option::class);
         $this->optionListOption2->shouldReceive('getValue')
             ->withNoArgs()
-            ->andReturn(RefData::ECMT_PERMIT_USAGE_CROSS_TRADE_ONLY);
+            ->andReturn(RefData::ECMT_PERMIT_USAGE_THREE_CROSS_TRADE_ONLY);
         $this->optionListOption2->shouldReceive('setLabel')
             ->with('qanda.ecmt.permit-usage.option.cross-trade-only.label')
             ->once();
@@ -58,7 +58,7 @@ class EcmtPermitUsageRefDataSourceTest extends MockeryTestCase
         $this->optionListOption3 = m::mock(Option::class);
         $this->optionListOption3->shouldReceive('getValue')
             ->withNoArgs()
-            ->andReturn(RefData::ECMT_PERMIT_USAGE_TRANSIT_ONLY);
+            ->andReturn(RefData::ECMT_PERMIT_USAGE_THREE_TRANSIT_ONLY);
         $this->optionListOption3->shouldReceive('setLabel')
             ->with('qanda.ecmt.permit-usage.option.transit-only.label')
             ->once();
@@ -73,7 +73,21 @@ class EcmtPermitUsageRefDataSourceTest extends MockeryTestCase
             ->with($this->optionList, self::OPTIONS)
             ->once();
 
-        $this->ecmtPermitUsageRefDataSource = new EcmtPermitUsageRefDataSource($this->refDataSource);
+        $transformations = [
+            RefData::ECMT_PERMIT_USAGE_THREE_BOTH => [
+                EcmtPermitUsageRefDataSource::LABEL_KEY => 'qanda.ecmt.permit-usage.option.both.label',
+            ],
+            RefData::ECMT_PERMIT_USAGE_THREE_CROSS_TRADE_ONLY => [
+                EcmtPermitUsageRefDataSource::LABEL_KEY => 'qanda.ecmt.permit-usage.option.cross-trade-only.label',
+                EcmtPermitUsageRefDataSource::HINT_KEY => 'qanda.ecmt.permit-usage.option.cross-trade-only.hint',
+            ],
+            RefData::ECMT_PERMIT_USAGE_THREE_TRANSIT_ONLY => [
+                EcmtPermitUsageRefDataSource::LABEL_KEY => 'qanda.ecmt.permit-usage.option.transit-only.label',
+                EcmtPermitUsageRefDataSource::HINT_KEY => 'qanda.ecmt.permit-usage.option.transit-only.hint',
+            ],
+        ];
+
+        $this->ecmtPermitUsageRefDataSource = new EcmtPermitUsageRefDataSource($this->refDataSource, $transformations);
     }
 
     public function testPopulateOptionList()
@@ -94,7 +108,7 @@ class EcmtPermitUsageRefDataSourceTest extends MockeryTestCase
     public function testPopulateOptionListException()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Unable to find translation keys for option other_ref_data');
+        $this->expectExceptionMessage('Unable to find transformations for option value other_ref_data');
 
         $optionListOption4 = m::mock(Option::class);
         $optionListOption4->shouldReceive('getValue')

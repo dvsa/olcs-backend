@@ -441,9 +441,13 @@ return [
     'section.name.application/declaration' => 'Declaration',
 
     'qanda.ecmt.permit-usage.question-summary' => 'Permit usage',
-    'qanda.ecmt.permit-usage.option.transit-only.label' => 'Transit only',
-    'qanda.ecmt.permit-usage.option.cross-trade-only.label' => 'Cross-trade only',
-    'qanda.ecmt.permit-usage.option.both.label' => 'For both transit and cross-trade',
+    'qanda.ecmt.permit-usage.three-options.option.transit-only.label' => 'Transit only',
+    'qanda.ecmt.permit-usage.three-options.option.cross-trade-only.label' => 'Cross-trade only',
+    'qanda.ecmt.permit-usage.three-options.option.both.label' => 'For both transit and cross-trade',
+    'qanda.ecmt.permit-usage.four-options.option.cross-trade-only.label' => 'Cross-trade only',
+    'qanda.ecmt.permit-usage.four-options.option.non-eu-only.label' => 'Transit to non-EU countries only',
+    'qanda.ecmt.permit-usage.four-options.option.ecmt-without.label' => 'Transporting goods to ECMT member countries without cross trade or transit',
+    'qanda.ecmt.permit-usage.four-options.option.all-journeys.label' => 'All journeys to ECMT member countries including cross trade and transit',
 
     'qanda.ecmt.cabotage.question-summary' => 'Cabotage',
     'qanda.ecmt.cabotage.checkbox.label' => 'I confirm that I will not undertake cabotage journeys using an ECMT permit.',
