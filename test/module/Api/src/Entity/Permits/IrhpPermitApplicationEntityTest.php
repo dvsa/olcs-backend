@@ -1507,6 +1507,30 @@ class IrhpPermitApplicationEntityTest extends EntityTester
                 Entity::BILATERAL_FEE_PRODUCT_REFS_TYPE_2
             ],
             [
+                'XX',
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_FEE_PRODUCT_REFS_TYPE_2
+            ],
+            [
+                'XX',
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_FEE_PRODUCT_REFS_TYPE_2
+            ],
+            [
+                'XX',
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                Entity::BILATERAL_FEE_PRODUCT_REFS_TYPE_1
+            ],
+            [
+                'XX',
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                Entity::BILATERAL_FEE_PRODUCT_REFS_TYPE_2
+            ],
+            [
                 Country::ID_BELARUS,
                 RefData::JOURNEY_SINGLE,
                 Entity::BILATERAL_STANDARD_REQUIRED,
@@ -1571,10 +1595,13 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testGetBilateralFeeProductReferencesFeeNotFound()
+    /**
+     * @dataProvider dpGetBilateralFeeProductReferencesNotFound
+     */
+    public function testGetBilateralFeeProductReferencesFeeNotFound($countryId, $permitUsage, $standardOrCabotage, $expectedMessage)
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('No bilateral fee configuration found: IT/journey_single/standard');
+        $this->expectExceptionMessage($expectedMessage);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('isBilateral')
@@ -1584,14 +1611,143 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $entity = m::mock(Entity::class)->makePartial();
         $entity->shouldReceive('getBilateralPermitUsageSelection')
             ->withNoArgs()
-            ->andReturn(RefData::JOURNEY_SINGLE);
+            ->andReturn($permitUsage);
 
         $entity->setIrhpApplication($irhpApplication);
 
-        $entity->getBilateralFeeProductReferences(
-            Country::ID_ITALY,
-            Entity::BILATERAL_STANDARD_REQUIRED
-        );
+        $entity->getBilateralFeeProductReferences($countryId, $standardOrCabotage);
+    }
+
+    public function dpGetBilateralFeeProductReferencesNotFound()
+    {
+        return [
+            [
+                Country::ID_BELARUS,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                'No bilateral fee configuration found: BY/journey_multiple/standard'
+            ],
+            [
+                Country::ID_BELARUS,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: BY/journey_single/cabotage'
+            ],
+            [
+                Country::ID_BELARUS,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: BY/journey_multiple/cabotage'
+            ],
+            [
+                Country::ID_GEORGIA,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                'No bilateral fee configuration found: GE/journey_multiple/standard'
+            ],
+            [
+                Country::ID_GEORGIA,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: GE/journey_single/cabotage'
+            ],
+            [
+                Country::ID_GEORGIA,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: GE/journey_multiple/cabotage'
+            ],
+            [
+                Country::ID_RUSSIA,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                'No bilateral fee configuration found: RU/journey_multiple/standard'
+            ],
+            [
+                Country::ID_RUSSIA,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: RU/journey_single/cabotage'
+            ],
+            [
+                Country::ID_RUSSIA,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: RU/journey_multiple/cabotage'
+            ],
+            [
+                Country::ID_TUNISIA,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                'No bilateral fee configuration found: TN/journey_multiple/standard'
+            ],
+            [
+                Country::ID_TUNISIA,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: TN/journey_single/cabotage'
+            ],
+            [
+                Country::ID_TUNISIA,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: TN/journey_multiple/cabotage'
+            ],
+            [
+                Country::ID_TURKEY,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                'No bilateral fee configuration found: TR/journey_multiple/standard'
+            ],
+            [
+                Country::ID_TURKEY,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: TR/journey_single/cabotage'
+            ],
+            [
+                Country::ID_TURKEY,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: TR/journey_multiple/cabotage'
+            ],
+            [
+                Country::ID_UKRAINE,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                'No bilateral fee configuration found: UA/journey_multiple/standard'
+            ],
+            [
+                Country::ID_UKRAINE,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: UA/journey_single/cabotage'
+            ],
+            [
+                Country::ID_UKRAINE,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: UA/journey_multiple/cabotage'
+            ],
+            [
+                Country::ID_KAZAKHSTAN,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_STANDARD_REQUIRED,
+                'No bilateral fee configuration found: KZ/journey_multiple/standard'
+            ],
+            [
+                Country::ID_KAZAKHSTAN,
+                RefData::JOURNEY_SINGLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: KZ/journey_single/cabotage'
+            ],
+            [
+                Country::ID_KAZAKHSTAN,
+                RefData::JOURNEY_MULTIPLE,
+                Entity::BILATERAL_CABOTAGE_REQUIRED,
+                'No bilateral fee configuration found: KZ/journey_multiple/cabotage'
+            ],
+        ];
     }
 
     public function testGetBilateralFeeProductReferencesNotBilateral()
