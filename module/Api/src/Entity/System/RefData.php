@@ -103,10 +103,16 @@ class RefData extends AbstractRefData
     const STD_OR_CAB_STANDARD = 'std_or_cab_standard';
     const STD_OR_CAB_CABOTAGE = 'std_or_cab_cabotage';
 
-    // ecmt permit usage
-    const ECMT_PERMIT_USAGE_BOTH = 'st_permit_usage_both';
-    const ECMT_PERMIT_USAGE_CROSS_TRADE_ONLY = 'st_permit_usage_cross_trade_only';
-    const ECMT_PERMIT_USAGE_TRANSIT_ONLY = 'st_permit_usage_transit_only';
+    // ecmt permit usage (three options)
+    const ECMT_PERMIT_USAGE_THREE_BOTH = 'st_permit_usage_both';
+    const ECMT_PERMIT_USAGE_THREE_CROSS_TRADE_ONLY = 'st_permit_usage_cross_trade_only';
+    const ECMT_PERMIT_USAGE_THREE_TRANSIT_ONLY = 'st_permit_usage_transit_only';
+
+    // ecmt permit usage (four options)
+    const ECMT_PERMIT_USAGE_FOUR_CROSS_TRADE_ONLY = 'ecmt_per_usa_4_cross_trade_only';
+    const ECMT_PERMIT_USAGE_FOUR_NON_EU_ONLY = 'ecmt_per_usa_4_non_eu_only';
+    const ECMT_PERMIT_USAGE_FOUR_ECMT_WITHOUT = 'ecmt_per_usa_4_ecmt_without';
+    const ECMT_PERMIT_USAGE_FOUR_ALL_JOURNEYS = 'ecmt_per_usa_4_all_journeys';
 
     /**
      * RefData constructor.
