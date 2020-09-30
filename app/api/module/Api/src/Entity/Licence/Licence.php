@@ -722,8 +722,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function isEligibleForPermits()
     {
-        return $this->isValidGoods() &&
-            ($this->isStandardInternational() || $this->isRestricted() || $this->isStandardNational());
+        return $this->isValidGoods();
     }
 
     /**
