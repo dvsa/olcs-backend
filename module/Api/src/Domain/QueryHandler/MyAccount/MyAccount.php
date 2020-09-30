@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Entity\System\SystemParameter;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -21,6 +21,7 @@ class MyAccount extends AbstractQueryHandler
      *
      * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
      * @throws NotFoundException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handleQuery(QueryInterface $query)
     {
@@ -29,6 +30,10 @@ class MyAccount extends AbstractQueryHandler
         if ($user === null) {
             throw new NotFoundException('No user currently logged in');
         }
+
+        /** @var SystemParameter $systemParameterRepo */
+        $systemParameterRepo = $this->getRepo('SystemParameter');
+        $isEligibleForPermits = $user->isEligibleForPermits();
 
         return $this->result(
             $user,
@@ -50,9 +55,9 @@ class MyAccount extends AbstractQueryHandler
             [
                 'hasActivePsvLicence' => $user->hasActivePsvLicence(),
                 'numberOfVehicles' => $user->getNumberOfVehicles(),
-                'disableDataRetentionRecords' => $this->getRepo('SystemParameter')
-                    ->getDisableDataRetentionRecords(),
-                'eligibleForPermits' => $user->isEligibleForPermits(),
+                'disableDataRetentionRecords' => $systemParameterRepo->getDisableDataRetentionRecords(),
+                'eligibleForPermits' => $isEligibleForPermits,
+                'eligibleForPrompt' => $isEligibleForPermits && $systemParameterRepo->isSelfservePromptEnabled(),
             ]
         );
     }

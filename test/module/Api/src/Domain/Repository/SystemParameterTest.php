@@ -140,6 +140,15 @@ class SystemParameterTest extends RepositoryTestCase
     /**
      * @dataProvider boolDataProvider
      */
+    public function testIsSelfservePromptEnabled($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::ENABLE_SELFSERVE_PROMPT, $value);
+        $this->assertSame($expected, $this->sut->isSelfservePromptEnabled());
+    }
+
+    /**
+     * @dataProvider boolDataProvider
+     */
     public function testGetDisabledDigitalContinuations($expected, $value)
     {
         $this->setupFetchValue(SystemParameterEntity::DISABLE_DIGITAL_CONTINUATIONS, $value);
