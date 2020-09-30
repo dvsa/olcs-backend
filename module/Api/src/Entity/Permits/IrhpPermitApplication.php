@@ -61,6 +61,17 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF,
     ];
 
+    const DEFAULT_BILATERAL_FEE_PRODUCT_REFS = [
+        RefData::JOURNEY_SINGLE => [
+            self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+            self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+        ],
+        RefData::JOURNEY_MULTIPLE => [
+            self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_1,
+            self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
+        ],
+    ];
+
     const BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD = [
         RefData::JOURNEY_SINGLE => [
             self::BILATERAL_STANDARD_REQUIRED => [
@@ -69,17 +80,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         ]
     ];
 
-    const BILATERAL_FEE_PRODUCT_REFS = [
-        Country::ID_NORWAY => [
-            RefData::JOURNEY_SINGLE => [
-                self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
-                self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
-            ],
-            RefData::JOURNEY_MULTIPLE => [
-                self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_1,
-                self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
-            ],
-        ],
+    const CUSTOM_BILATERAL_FEE_PRODUCT_REFS = [
         Country::ID_BELARUS => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
         Country::ID_GEORGIA => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
         Country::ID_RUSSIA => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
@@ -746,7 +747,12 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
 
         $permitUsage = $this->getBilateralPermitUsageSelection();
 
-        if (!isset(self::BILATERAL_FEE_PRODUCT_REFS[$countryId][$permitUsage][$standardOrCabotage])) {
+        $productReferences = self::DEFAULT_BILATERAL_FEE_PRODUCT_REFS;
+        if (isset(self::CUSTOM_BILATERAL_FEE_PRODUCT_REFS[$countryId])) {
+            $productReferences = self::CUSTOM_BILATERAL_FEE_PRODUCT_REFS[$countryId];
+        }
+
+        if (!isset($productReferences[$permitUsage][$standardOrCabotage])) {
             $message = sprintf(
                 'No bilateral fee configuration found: %s/%s/%s',
                 $countryId,
@@ -757,7 +763,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
             throw new RuntimeException($message);
         }
 
-        return self::BILATERAL_FEE_PRODUCT_REFS[$countryId][$permitUsage][$standardOrCabotage];
+        return $productReferences[$permitUsage][$standardOrCabotage];
     }
 
     /**
