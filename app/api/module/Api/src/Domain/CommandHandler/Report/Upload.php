@@ -57,7 +57,7 @@ final class Upload extends AbstractCommandHandler implements
         $file = $this->uploadFile($command, $identifier);
 
         // process the uploaded report
-        $this->process($command->getReportType(), $file);
+        $this->process($command, $file);
 
         return $this->result;
     }
@@ -74,9 +74,19 @@ final class Upload extends AbstractCommandHandler implements
         $description = 'uploaded_report';
         $subCategory = null;
 
-        if ($command->getReportType() === RefData::REPORT_TYPE_COMM_LIC_BULK_REPRINT) {
-            $description = 'community_licence_bulk_reprint';
-            $subCategory = SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE;
+        switch ($command->getReportType()) {
+            case RefData::REPORT_TYPE_COMM_LIC_BULK_REPRINT:
+                $description = 'community_licence_bulk_reprint';
+                $subCategory = SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE;
+                break;
+            case RefData::REPORT_TYPE_BULK_EMAIL:
+                $description = 'bulk_upload_email_send';
+                $subCategory = SubCategory::DOC_SUB_CATEGORY_REPORT_LETTER;
+                break;
+            case RefData::REPORT_TYPE_BULK_LETTER:
+                $description = 'bulk_upload_letter_send';
+                $subCategory = SubCategory::DOC_SUB_CATEGORY_REPORT_LETTER;
+                break;
         }
 
         $categoryReference = $this->getRepo()->getCategoryReference(Category::CATEGORY_REPORT);
@@ -92,8 +102,8 @@ final class Upload extends AbstractCommandHandler implements
     /**
      * Upload file to Document storage
      *
-     * @param UploadCmd $command    Upload Command
-     * @param string    $identifier File name (path)
+     * @param UploadCmd $command Upload Command
+     * @param string $identifier File name (path)
      *
      * @return DsFile
      * @throws ValidationException
@@ -135,25 +145,56 @@ final class Upload extends AbstractCommandHandler implements
      * Process the uploaded report
      *
      * @param string $reportType Report type
-     * @param DsFile $file       The uploaded file
+     * @param DsFile $file The uploaded file
      *
      * @return void
      */
-    protected function process($reportType, DsFile $file)
+    protected function process($command, DsFile $file)
     {
-        if ($reportType === RefData::REPORT_TYPE_COMM_LIC_BULK_REPRINT) {
-            $this->result->merge(
-                $this->handleSideEffect(
-                    $this->createQueue(
-                        null,
-                        Queue::TYPE_COMM_LIC_BULK_REPRINT,
-                        [
-                            'identifier' => $file->getIdentifier(),
-                            'user' => $this->getCurrentUser()->getId(),
-                        ]
+        switch ($command->getReportType()) {
+            case RefData::REPORT_TYPE_COMM_LIC_BULK_REPRINT:
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        $this->createQueue(
+                            null,
+                            Queue::TYPE_COMM_LIC_BULK_REPRINT,
+                            [
+                                'identifier' => $file->getIdentifier(),
+                                'user' => $this->getCurrentUser()->getId(),
+                            ]
+                        )
                     )
-                )
-            );
+                );
+                break;
+            case RefData::REPORT_TYPE_BULK_EMAIL:
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        $this->createQueue(
+                            null,
+                            Queue::TYPE_EMAIL_BULK_UPLOAD,
+                            [
+                                'identifier' => $file->getIdentifier(),
+                                'user' => $this->getCurrentUser()->getId(),
+                                'templateName' => $command->getName(),
+                            ]
+                        )
+                    )
+                );
+                break;
+            case RefData::REPORT_TYPE_BULK_LETTER:
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        $this->createQueue(
+                            null,
+                            Queue::TYPE_LETTER_BULK_UPLOAD,
+                            [
+                                'identifier' => $file->getIdentifier(),
+                                'user' => $this->getCurrentUser()->getId(),
+                                'templateSlug' => $command->getTemplateSlug(),
+                            ]
+                        )
+                    )
+                );
         }
     }
 }

@@ -102,6 +102,8 @@ return [
     CommandHandler\Permits\RunScoring::class => IsSystemUser::class,
     CommandHandler\Permits\AcceptScoring::class => IsSystemUser::class,
     CommandHandler\CommunityLic\ReportingBulkReprint::class => IsSystemUser::class,
+    CommandHandler\BulkSend\Email::class => IsSystemUser::class,
+    CommandHandler\BulkSend\Letter::class => IsSystemUser::class,
     CliCommandHandler\MessageQueue\Enqueue::class => IsSystemUser::class,
     CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class => IsSystemUser::class,
     CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class => IsSystemUser::class,
