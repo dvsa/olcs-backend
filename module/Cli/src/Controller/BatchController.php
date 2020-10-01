@@ -71,12 +71,6 @@ class BatchController extends AbstractCliController
         }
 
         if ($this->params('precheck')) {
-            if (!is_numeric($limit) || $limit < 1 || $limit != round($limit)) {
-                $consoleModel = new ConsoleModel();
-                $consoleModel->setResult("\nYou must specify a positive integer limit with --limit=x\n\n");
-                $consoleModel->setErrorLevel(1);
-                return($consoleModel);
-            }
             return $this->handleExitStatus($this->handleCommand([Command\DataRetention\Precheck::create(['limit' => $limit])]));
         }
 
