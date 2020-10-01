@@ -75,6 +75,8 @@ class RefData extends AbstractRefData
 
     // Report
     const REPORT_TYPE_COMM_LIC_BULK_REPRINT = 'rep_typ_comm_lic_bulk_reprint';
+    const REPORT_TYPE_BULK_EMAIL = 'rep_typ_bulk_email';
+    const REPORT_TYPE_BULK_LETTER = 'rep_typ_bulk_letter';
 
     const EMISSIONS_CATEGORY_EURO6_REF = 'emissions_cat_euro6';
     const EMISSIONS_CATEGORY_EURO5_REF = 'emissions_cat_euro5';
