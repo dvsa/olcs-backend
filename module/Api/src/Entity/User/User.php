@@ -47,6 +47,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     // user operating system
     const USER_OS_TYPE_WINDOWS_7 = 'windows_7';
     const USER_OS_TYPE_WINDOWS_10 = 'windows_10';
+    const USER_OS_TYPE_NORTHERN_I = 'northern_i';
     /**
      * List of all roles available by user type
      *
