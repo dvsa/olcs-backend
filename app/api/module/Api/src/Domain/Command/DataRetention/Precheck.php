@@ -18,6 +18,6 @@ final class Precheck extends AbstractCommand
      */
     public function getLimit()
     {
-        return $this->limit;
+        return (int)$this->limit;
     }
 }
