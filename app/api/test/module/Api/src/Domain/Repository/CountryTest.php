@@ -81,8 +81,8 @@ class CountryTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'INNER JOIN ips.irhpPermitWindows ipw '
             . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
-            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
-            . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+00:00]] '
+            . 'AND ipw.endDate > [[2018-10-25T13:21:10+00:00]] '
             . 'ORDER BY m.countryDesc ASC';
 
         $this->assertEquals($expectedQuery, $this->query);

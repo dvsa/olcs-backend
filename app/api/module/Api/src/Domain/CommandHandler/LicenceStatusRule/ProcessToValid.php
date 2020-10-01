@@ -29,12 +29,11 @@ final class ProcessToValid extends AbstractCommandHandler implements Transaction
 
         $result = new Result();
         $licencesToAction = $this->getRepo('LicenceStatusRule')->fetchToValid(
-            (new \DateTime())->format(\DateTime::W3C)
+            new \DateTime()
         );
 
         /* @var $licenceStatusRule \Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule */
         foreach ($licencesToAction as $licenceStatusRule) {
-
             // if licence is not curtailed or suspended, then continue
             if ($licenceStatusRule->getLicence()->getStatus()->getId() !== Licence::LICENCE_STATUS_CURTAILED &&
                 $licenceStatusRule->getLicence()->getStatus()->getId() !== Licence::LICENCE_STATUS_SUSPENDED

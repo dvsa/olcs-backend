@@ -146,7 +146,7 @@ class IrhpPermitWindow extends AbstractRepository
             ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
             ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
             ->setParameter('irhpPermitTypeId', $irhpPermitTypeId)
-            ->setParameter('now', $now->format(DateTime::ISO8601))
+            ->setParameter('now', $now)
             ->orderBy($this->alias.'.endDate', 'DESC')
             ->setMaxResults(1);
 
@@ -185,8 +185,8 @@ class IrhpPermitWindow extends AbstractRepository
         $qb
             ->where($qb->expr()->gte($this->alias.'.endDate', ':periodStart'))
             ->andWhere($qb->expr()->lt($this->alias.'.endDate', ':periodEnd'))
-            ->setParameter('periodStart', $clonedDateTime->modify($since)->setTime(0, 0, 0)->format(\DateTime::ISO8601))
-            ->setParameter('periodEnd', $currentDateTime->format(\DateTime::ISO8601));
+            ->setParameter('periodStart', $clonedDateTime->modify($since)->setTime(0, 0, 0))
+            ->setParameter('periodEnd', $currentDateTime);
 
         return $qb->getQuery()->getResult();
     }
@@ -215,7 +215,7 @@ class IrhpPermitWindow extends AbstractRepository
             ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
             ->andWhere($qb->expr()->in('c.id', ':countries'))
             ->setParameter('type', $type)
-            ->setParameter('now', $now->format(DateTime::ISO8601))
+            ->setParameter('now', $now)
             ->setParameter('countries', $countries);
 
         return $qb->getQuery()->getResult();
@@ -241,7 +241,7 @@ class IrhpPermitWindow extends AbstractRepository
             ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
             ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
             ->setParameter('type', $type)
-            ->setParameter('now', $now->format(DateTime::ISO8601));
+            ->setParameter('now', $now);
 
         if (!$internalUser) {
             $qb->andWhere($qb->expr()->neq('ips.hiddenSs', 1));
@@ -277,7 +277,7 @@ class IrhpPermitWindow extends AbstractRepository
             ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
             ->andWhere($qb->expr()->between('ips.validTo', ':fromDate', ':toDate'))
             ->setParameter('type', $type)
-            ->setParameter('now', $now->format(DateTime::ISO8601))
+            ->setParameter('now', $now)
             ->setParameter('fromDate', $fromDate)
             ->setParameter('toDate', $toDate);
 

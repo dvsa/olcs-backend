@@ -48,13 +48,11 @@ class FinancialStandingRate extends AbstractRepository
 
         $this->getQueryBuilder()->withRefdata();
 
-        $effectiveFrom = $date->format(\DateTime::W3C);
-
         $qb
             ->andWhere($qb->expr()->isNull($this->alias.'.deletedDate'))
             ->andWhere($qb->expr()->lte($this->alias.'.effectiveFrom', ':effectiveFrom'))
             ->addOrderBy($this->alias.'.effectiveFrom', 'DESC')
-            ->setParameter('effectiveFrom', $effectiveFrom);
+            ->setParameter('effectiveFrom', $date);
 
         $results = $qb->getQuery()->execute();
 

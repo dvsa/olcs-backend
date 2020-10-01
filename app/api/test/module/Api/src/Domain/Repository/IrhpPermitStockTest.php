@@ -126,7 +126,7 @@ class IrhpPermitStockTest extends RepositoryTestCase
             $this->sut->fetchOpenBilateralStocksByCountry(Country::ID_NORWAY, $now)
         );
 
-        $iso8601String = $now->format(DateTime::ISO8601);
+        $iso8601String = $now->format(DateTime::W3C);
 
         $expectedQuery = 'BLAH '.
         'SELECT ips '.
