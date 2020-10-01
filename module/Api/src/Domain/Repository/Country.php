@@ -87,7 +87,7 @@ class Country extends AbstractRepository
             ->where($qb->expr()->eq('ipt.id', ':type'))
             ->andWhere($qb->expr()->lte('ipw.startDate', ':now'))
             ->andWhere($qb->expr()->gt('ipw.endDate', ':now'))
-            ->setParameter('now', $now->format(DateTime::ISO8601))
+            ->setParameter('now', $now)
             ->setParameter('type', $type)
             ->orderBy($this->alias.'.countryDesc', 'ASC');
 

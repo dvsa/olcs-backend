@@ -62,8 +62,6 @@ class FeeType extends AbstractRepository
             $date = new DateTimeExtended($date);
         }
 
-        $effectiveOn = $date->format(\DateTime::W3C);
-
         $qb->andWhere($qb->expr()->eq('ft.feeType', ':feeType'))
             ->andWhere($qb->expr()->eq('ft.goodsOrPsv', ':goodsOrPsv'))
             ->andWhere(
@@ -92,7 +90,7 @@ class FeeType extends AbstractRepository
             ->setParameter('goodsOrPsv', $goodsOrPsv)
             ->setParameter('licenceType', $licenceType)
             ->setParameter('feeType', $feeType)
-            ->setParameter('effectiveOn', $effectiveOn)
+            ->setParameter('effectiveOn', $date)
             ->setMaxResults(1);
 
         $results = $qb->getQuery()->execute();
