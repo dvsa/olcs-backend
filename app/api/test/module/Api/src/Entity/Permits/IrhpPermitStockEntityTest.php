@@ -682,19 +682,19 @@ class IrhpPermitStockEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider statusAllowsQueueAcceptScoringProvider
+     * @dataProvider statusAllowsQueueAcceptScoringAndPostScoringReportProvider
      */
-    public function testStatusAllowsQueueAcceptScoring($statusId, $expectedResult)
+    public function testStatusAllowsQueueAcceptScoringAndPostScoringReport($statusId, $expectedResult)
     {
         $stock = $this->createEntityWithStatusId($statusId);
 
         $this->assertEquals(
             $expectedResult,
-            $stock->statusAllowsQueueAcceptScoring()
+            $stock->statusAllowsQueueAcceptScoringAndPostScoringReport()
         );
     }
 
-    public function statusAllowsQueueAcceptScoringProvider()
+    public function statusAllowsQueueAcceptScoringAndPostScoringReportProvider()
     {
         return [
             [Entity::STATUS_SCORING_NEVER_RUN, false],

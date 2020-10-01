@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptScoring;
-use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites;
+use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
@@ -266,7 +266,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->globally();
 
         $this->sut->shouldReceive('handleQuery')->once()
-            ->with(m::type(CheckAcceptScoringPrerequisites::class))
+            ->with(m::type(CheckAcceptScoringAndPostScoringReportPrerequisites::class))
             ->andReturnUsing(function ($query) use ($stockId) {
                 $this->assertEquals($stockId, $query->getId());
 
@@ -578,7 +578,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->globally();
 
         $this->sut->shouldReceive('handleQuery')
-            ->with(m::type(CheckAcceptScoringPrerequisites::class))
+            ->with(m::type(CheckAcceptScoringAndPostScoringReportPrerequisites::class))
             ->andReturnUsing(function ($query) use ($stockId) {
                 $this->assertEquals($stockId, $query->getId());
 

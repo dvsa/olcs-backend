@@ -2583,7 +2583,7 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpHasStatusRequiredForCommunityLicenceReprint
+     * @dataProvider dpValidSuspendedOrCurtailed
      */
     public function testHasStatusRequiredForCommunityLicenceReprint($status, $expected)
     {
@@ -2597,7 +2597,22 @@ class LicenceEntityTest extends EntityTester
         );
     }
 
-    public function dpHasStatusRequiredForCommunityLicenceReprint()
+    /**
+     * @dataProvider dpValidSuspendedOrCurtailed
+     */
+    public function testHasStatusRequiredForPostScoringEmail($status, $expected)
+    {
+        $sut = m::mock(Licence::class)->makePartial();
+        $sut->shouldReceive('getStatus->getId')
+            ->andReturn($status);
+
+        $this->assertEquals(
+            $expected,
+            $sut->hasStatusRequiredForPostScoringEmail()
+        );
+    }
+
+    public function dpValidSuspendedOrCurtailed()
     {
         return [
             [Licence::LICENCE_STATUS_UNDER_CONSIDERATION, false],

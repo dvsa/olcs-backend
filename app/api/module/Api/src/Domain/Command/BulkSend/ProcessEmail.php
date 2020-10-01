@@ -21,7 +21,7 @@ class ProcessEmail extends AbstractCommand
     protected $templateName;
 
     /**
-     * @return strin
+     * @return string
      */
     public function getTemplateName()
     {

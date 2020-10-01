@@ -2,17 +2,18 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites as CheckAcceptScoringPrerequisitesQuery;
+use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites
+    as CheckAcceptScoringAndPostScoringReportPrerequisitesQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Check accept scoring prerequisites
+ * Check accept scoring and post scoring report prerequisites
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class CheckAcceptScoringPrerequisites extends AbstractQueryHandler
+class CheckAcceptScoringAndPostScoringReportPrerequisites extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermitRange';
 
@@ -21,7 +22,7 @@ class CheckAcceptScoringPrerequisites extends AbstractQueryHandler
     /**
      * Handle query
      *
-     * @param QueryInterface|CheckAcceptScoringPrerequisitesQuery $query query
+     * @param QueryInterface|CheckAcceptScoringAndPostScoringReportPrerequisitesQuery $query query
      *
      * @return array
      */
