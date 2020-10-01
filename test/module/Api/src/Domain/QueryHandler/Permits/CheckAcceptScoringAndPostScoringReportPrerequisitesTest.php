@@ -3,8 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\CheckAcceptScoringPrerequisites;
-use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites as CheckAcceptScoringPrerequisitesQry;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites;
+use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites
+    as CheckAcceptScoringAndPostScoringReportPrerequisitesQry;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
@@ -12,11 +13,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
-class CheckAcceptScoringPrerequisitesTest extends QueryHandlerTestCase
+class CheckAcceptScoringAndPostScoringReportPrerequisitesTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {
-        $this->sut = new CheckAcceptScoringPrerequisites();
+        $this->sut = new CheckAcceptScoringAndPostScoringReportPrerequisites();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
@@ -68,7 +69,7 @@ class CheckAcceptScoringPrerequisitesTest extends QueryHandlerTestCase
             ->andReturn($euro6SuccessfulCount);
 
         $result = $this->sut->handleQuery(
-            CheckAcceptScoringPrerequisitesQry::create(['id' => $stockId])
+            CheckAcceptScoringAndPostScoringReportPrerequisitesQry::create(['id' => $stockId])
         );
 
         $this->assertEquals(
@@ -107,7 +108,7 @@ class CheckAcceptScoringPrerequisitesTest extends QueryHandlerTestCase
             ->andReturn(false);
 
         $result = $this->sut->handleQuery(
-            CheckAcceptScoringPrerequisitesQry::create(['id' => $stockId])
+            CheckAcceptScoringAndPostScoringReportPrerequisitesQry::create(['id' => $stockId])
         );
 
         $this->assertEquals(

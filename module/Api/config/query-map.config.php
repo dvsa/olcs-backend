@@ -666,12 +666,15 @@ return [
     TransferQuery\Permits\EmissionsByYear::class => QueryHandler\Permits\EmissionsByYear::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
+    TransferQuery\Permits\PostScoringReport::class => QueryHandler\Permits\PostScoringReport::class,
 
     // Permits - internal
     Query\Permits\QueueRunScoringPermitted::class => QueryHandler\Permits\QueueRunScoringPermitted::class,
-    Query\Permits\QueueAcceptScoringPermitted::class => QueryHandler\Permits\QueueAcceptScoringPermitted::class,
+    Query\Permits\QueueAcceptScoringAndPostScoringReportPermitted::class =>
+        QueryHandler\Permits\QueueAcceptScoringAndPostScoringReportPermitted::class,
     Query\Permits\CheckRunScoringPrerequisites::class => QueryHandler\Permits\CheckRunScoringPrerequisites::class,
-    Query\Permits\CheckAcceptScoringPrerequisites::class => QueryHandler\Permits\CheckAcceptScoringPrerequisites::class,
+    Query\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites::class =>
+        QueryHandler\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites::class,
     Query\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
     Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,

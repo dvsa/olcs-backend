@@ -3,7 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Transfer\Command\Permits\QueueAcceptScoring as QueueAcceptScoringCmd;
-use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringPermitted as QueueAcceptScoringPermittedQry;
+use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringAndPostScoringReportPermitted
+    as QueueAcceptScoringAndPostScoringReportPermittedQry;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
@@ -34,7 +35,7 @@ class QueueAcceptScoring extends AbstractCommandHandler
         $stockId = $command->getId();
 
         $permittedResult = $this->handleQuery(
-            QueueAcceptScoringPermittedQry::create(['id' => $stockId])
+            QueueAcceptScoringAndPostScoringReportPermittedQry::create(['id' => $stockId])
         );
 
         if (!$permittedResult['result']) {

@@ -1523,11 +1523,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
-     * Whether the status of this licence is one required for community licence reprint
+     * Whether the status of this licence is valid, suspended or curtailed
      *
      * @return bool
      */
-    public function hasStatusRequiredForCommunityLicenceReprint()
+    private function isValidOrSuspendedOrCurtailed()
     {
         $eligibleStatusIds = [
             self::LICENCE_STATUS_VALID,
@@ -1536,6 +1536,26 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         ];
 
         return in_array($this->getStatus()->getId(), $eligibleStatusIds);
+    }
+
+    /**
+     * Whether the status of this licence is one required for community licence reprint
+     *
+     * @return bool
+     */
+    public function hasStatusRequiredForCommunityLicenceReprint()
+    {
+        return $this->isValidOrSuspendedOrCurtailed();
+    }
+
+    /**
+     * Whether the status of this licence is one required for the post scoring email
+     *
+     * @return bool
+     */
+    public function hasStatusRequiredForPostScoringEmail()
+    {
+        return $this->isValidOrSuspendedOrCurtailed();
     }
 
     /**
