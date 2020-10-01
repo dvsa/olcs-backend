@@ -32,7 +32,10 @@ class MyAccountTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    /**
+     * @dataProvider dpHandleQuery
+     */
+    public function testHandleQuery($isSelfservePromptEnabled, $isEligibleForPermits, $expectedEligibleForPrompt)
     {
         $userId = 1;
 
@@ -42,13 +45,17 @@ class MyAccountTest extends QueryHandlerTestCase
         $mockUser->shouldReceive('serialize')->andReturn(['foo']);
         $mockUser->shouldReceive('hasActivePsvLicence')->andReturn(false);
         $mockUser->shouldReceive('getNumberOfVehicles')->andReturn(2);
-        $mockUser->shouldReceive('isEligibleForPermits')->andReturn(false);
+        $mockUser->expects('isEligibleForPermits')->withNoArgs()->andReturn($isEligibleForPermits);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
         $mockSystemParameter = $this->repoMap['SystemParameter'];
         $mockSystemParameter->shouldReceive('getDisableDataRetentionRecords')->andReturn(true);
+        $mockSystemParameter->shouldReceive('isSelfservePromptEnabled')
+            ->times($isEligibleForPermits ? 1 : 0)
+            ->withNoArgs()
+            ->andReturn($isSelfservePromptEnabled);
 
         $query = Qry::create([]);
 
@@ -59,10 +66,32 @@ class MyAccountTest extends QueryHandlerTestCase
                 'hasActivePsvLicence' => false,
                 'numberOfVehicles' => 2,
                 'disableDataRetentionRecords' => true,
-                'eligibleForPermits' => false,
+                'eligibleForPermits' => $isEligibleForPermits,
+                'eligibleForPrompt' => $expectedEligibleForPrompt,
             ],
             $result->serialize()
         );
+    }
+
+    public function dpHandleQuery()
+    {
+        return [
+            [
+                'isSelfservePromptEnabled' => false,
+                'isEligibleForPermits' => true,
+                'expectedEligibleForPrompt' => false,
+            ],
+            [
+                'isSelfservePromptEnabled' => true,
+                'isEligibleForPermits' => false,
+                'expectedEligibleForPrompt' => false,
+            ],
+            [
+                'isSelfservePromptEnabled' => true,
+                'isEligibleForPermits' => true,
+                'expectedEligibleForPrompt' => true,
+            ],
+        ];
     }
 
     public function testHandleQueryThrowsNotFoundException()

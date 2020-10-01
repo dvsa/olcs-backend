@@ -141,4 +141,14 @@ class SystemParameter extends AbstractRepository
     {
         return (int) $this->fetchValue(Entity::DR_DELETE_LIMIT);
     }
+
+    /**
+     * Is prompt after login on selfserve enabled
+     *
+     * @return bool
+     */
+    public function isSelfservePromptEnabled(): bool
+    {
+        return (bool) $this->fetchValue(Entity::ENABLE_SELFSERVE_PROMPT);
+    }
 }

@@ -112,7 +112,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         $licences = $this->getLicences();
 
         /**
-         * Iterate through the licences, looking for a (valid) standard international goods licence
+         * Iterate through the licences, looking for a (valid) goods licence
          * Stop as soon as we find one
          *
          * @var LicenceEntity $licence
