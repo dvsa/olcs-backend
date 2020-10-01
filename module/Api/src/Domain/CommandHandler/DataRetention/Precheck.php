@@ -72,6 +72,6 @@ final class Precheck extends AbstractCommandHandler
         /** @var SystemParameter $systemParameterRepo */
         $systemParameterRepo = $this->getRepo('SystemParameter');
 
-        return $systemParameterRepo->getDataRetentionDeleteLimit();;
+        return $systemParameterRepo->getDataRetentionDeleteLimit();
     }
 }

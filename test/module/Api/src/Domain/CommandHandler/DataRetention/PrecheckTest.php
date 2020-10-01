@@ -48,6 +48,7 @@ class PrecheckTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
+                'Calling stored procedure sp_dr_precheck(10)',
                 'Precheck procedure executed.'
             ]
         ];
