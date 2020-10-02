@@ -123,7 +123,7 @@ class ClientFactory implements FactoryInterface
         /** @var User $currentUser */
         $currentUser = $authService->getIdentity()->getUser();
 
-        return ($currentUser->getOsType() == User::USER_OS_TYPE_WINDOWS_10) ? WebDavClient::class : DocManClient::class;
+        return ($currentUser->getOsType() == User::USER_OS_TYPE_WINDOWS_10 || $currentUser->getOsType() == User::USER_OS_TYPE_NORTHERN_I) ? WebDavClient::class : DocManClient::class;
     }
 
     /**
