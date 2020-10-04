@@ -2332,12 +2332,12 @@
         },
         {
             "name": "olcs/olcs-dvla-search",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-dvla-search/1.0.3/olcs-olcs-dvla-search-1.0.3.zip",
-                "reference": "c3a63fd11022893878b8b15b868ba6fb2e6245bf",
-                "shasum": "c3a63fd11022893878b8b15b868ba6fb2e6245bf"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-dvla-search/1.0.4/olcs-olcs-dvla-search-1.0.4.zip",
+                "reference": "ada28bc6d8619d18b8f61c608ddf8ffa93f5f789",
+                "shasum": "ada28bc6d8619d18b8f61c608ddf8ffa93f5f789"
             },
             "require": {
                 "caseyamcl/guzzle_retry_middleware": "2.3.3",
@@ -2393,7 +2393,7 @@
                 "proprietary"
             ],
             "description": "DVSA Search API client",
-            "time": "2020-08-25T14:39:27+00:00"
+            "time": "2020-09-25T12:18:19+00:00"
         },
         {
             "name": "olcs/olcs-logging",
@@ -2462,12 +2462,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.83",
+            "version": "4.206.87",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.83/olcs-olcs-transfer-4.206.83.zip",
-                "reference": "2f191e38493f6fab1019999349d8f27725006bfd",
-                "shasum": "2f191e38493f6fab1019999349d8f27725006bfd"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.87/olcs-olcs-transfer-4.206.87.zip",
+                "reference": "ed0c4b13ae5d7a4e1e8ee5e96d55e76772341b72",
+                "shasum": "ed0c4b13ae5d7a4e1e8ee5e96d55e76772341b72"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2529,7 +2529,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2020-09-01T06:51:57+00:00"
+            "time": "2020-10-02T11:01:19+00:00"
         },
         {
             "name": "olcs/olcs-utils",
