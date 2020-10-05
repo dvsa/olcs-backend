@@ -37,6 +37,13 @@ class UploadEvidence extends AbstractQueryHandler
             )
         );
 
+        $supportingEvidenceDocuments = $application->getPostSubmissionApplicationDocuments(
+            $applicationRepo->getCategoryReference(Entity\System\Category::CATEGORY_APPLICATION),
+            $applicationRepo->getSubCategoryReference(
+                Entity\System\SubCategory::DOC_SUB_CATEGORY_SUPPORTING_EVIDENCE
+            )
+        );
+
         /** @var ApplicationOperatingCentre $aopRepo */
         $aopRepo = $this->getRepo('ApplicationOperatingCentre');
 
@@ -53,7 +60,8 @@ class UploadEvidence extends AbstractQueryHandler
             'operatingCentres' => $this->resultList(
                 $aocsRequireUpload,
                 ['operatingCentre' => ['address', 'adDocuments']]
-            )
+            ),
+            'supportingEvidence' => $this->resultList($supportingEvidenceDocuments)
         ];
     }
 }
