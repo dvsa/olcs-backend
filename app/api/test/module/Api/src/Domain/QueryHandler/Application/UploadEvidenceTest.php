@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre as ApplicationOpe
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Query\Application\UploadEvidence as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -43,14 +44,16 @@ class UploadEvidenceTest extends QueryHandlerTestCase
         /** @var ApplicationEntity|m\Mock $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->shouldReceive('getPostSubmissionApplicationDocuments')
-            ->with('CAT_REF', 'SUB_CAT_REF')->once()->andReturn($documentCollection);
+            ->with('CAT_REF', 'SUB_CAT_REF')->twice()->andReturn($documentCollection);
         $application->shouldReceive('canAddFinancialEvidence')->with()->once()->andReturn('CAN_ADD_FE');
 
         $this->repoMap['Application']->shouldReceive('fetchById')->with(111)->once()->andReturn($application);
         $this->repoMap['Application']->shouldReceive('getCategoryReference')
-            ->with(\Dvsa\Olcs\Api\Entity\System\Category::CATEGORY_APPLICATION)->once()->andReturn('CAT_REF');
+            ->with(Category::CATEGORY_APPLICATION)->twice()->andReturn('CAT_REF');
         $this->repoMap['Application']->shouldReceive('getSubCategoryReference')
             ->with(SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL)->once()->andReturn('SUB_CAT_REF');
+        $this->repoMap['Application']->shouldReceive('getSubCategoryReference')
+            ->with(SubCategory::DOC_SUB_CATEGORY_SUPPORTING_EVIDENCE)->once()->andReturn('SUB_CAT_REF');
 
         $aoc1 = m::mock(ApplicationOperatingCentre::class);
         $aoc2 = m::mock(ApplicationOperatingCentre::class);
@@ -75,6 +78,11 @@ class UploadEvidenceTest extends QueryHandlerTestCase
                 ],
                 'operatingCentres' => [
                     ['OC1']
+                ],
+                'supportingEvidence' => [
+                    ['identifier' => 'doc1'],
+                    ['identifier' => 'doc2'],
+                    ['identifier' => 'doc3']
                 ]
             ],
             $result
