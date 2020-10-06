@@ -132,6 +132,10 @@ class DocumentSearchView extends AbstractReadonlyRepository
                 );
                 $qb->setParameter('IRHP_APPLICATION_ID', $irhpApplicationId);
             }
+        } elseif ($query->getShowDocs() === FilterOptions::EXCLUDE_IRHP) {
+            $qb->andWhere(
+                $qb->expr()->isNull($this->alias . '.irhpApplicationId')
+            );
         }
 
         $idExpressions = [];
