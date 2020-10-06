@@ -104,7 +104,6 @@ class DocumentSearchViewTest extends RepositoryTestCase
             ->once()
             ->with($mockQb, Query::HYDRATE_ARRAY)
             ->andReturn(['foo' => 'bar'])
-            //
             ->shouldReceive('buildDefaultListQuery')->once();
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
@@ -117,6 +116,34 @@ class DocumentSearchViewTest extends RepositoryTestCase
             ' AND ('.
                 'm.irfoOrganisationId = :irfoOrganisation' .
             ')';
+
+        $this->assertEquals($expected, $this->query);
+    }
+
+    public function testFetchListWithExcludeIrhp()
+    {
+        $mockQb = $this->createMockQb('{QUERY}');
+        $this->mockCreateQueryBuilder($mockQb);
+
+        $data = [
+            'licence' => 'unit_LicenceId',
+            'showDocs' => FilterOptions::EXCLUDE_IRHP,
+        ];
+
+        $query = DocumentList::create($data);
+
+        $this->sut
+            ->shouldReceive('fetchPaginatedList')
+            ->once()
+            ->with($mockQb, Query::HYDRATE_ARRAY)
+            ->andReturn(['foo' => 'bar'])
+            ->shouldReceive('buildDefaultListQuery')->once();
+
+        $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
+
+        $expected = '{QUERY}' .
+            ' AND m.irhpApplicationId IS NULL' .
+            ' AND (m.licenceId = :licence)';
 
         $this->assertEquals($expected, $this->query);
     }
