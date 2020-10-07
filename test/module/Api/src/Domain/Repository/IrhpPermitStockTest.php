@@ -3,6 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use DateTime;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
@@ -112,12 +114,21 @@ class IrhpPermitStockTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
-        $qb->shouldReceive('getQuery')->andReturn(
-            m::mock()->shouldReceive('execute')
-                ->shouldReceive('getResult')
-                ->andReturn(['RESULTS'])
-                ->getMock()
-        );
+        $query = m::mock(AbstractQuery::class);
+        $query->shouldReceive('setHint')
+            ->with(Query::HINT_INCLUDE_META_COLUMNS, true)
+            ->once()
+            ->ordered()
+            ->andReturnSelf()
+            ->shouldReceive('getResult')
+            ->with(Query::HYDRATE_ARRAY)
+            ->once()
+            ->ordered()
+            ->andReturn(['RESULTS']);
+
+        $qb->shouldReceive('getQuery')
+            ->withNoArgs()
+            ->andReturn($query);
 
         $now = new DateTime();
 
