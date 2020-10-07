@@ -5,7 +5,8 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Permits\DeviationData as DeviationDataQry;
 use Dvsa\Olcs\Api\Domain\Query\Permits\QueueRunScoringPermitted as QueueRunScoringPermittedQry;
-use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringPermitted as QueueAcceptScoringPermittedQry;
+use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringAndPostScoringReportPermitted
+    as QueueAcceptScoringAndPostScoringReportPermittedQry;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\StockOperationsPermitted as StockOperationsPermittedHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
@@ -83,13 +84,13 @@ class StockOperationsPermittedTest extends QueryHandlerTestCase
             });
 
         $queryHandler->shouldReceive('handleQuery')
-            ->with(m::type(QueueAcceptScoringPermittedQry::class))
+            ->with(m::type(QueueAcceptScoringAndPostScoringReportPermittedQry::class))
             ->andReturnUsing(function ($query) use ($stockId) {
                 $this->assertEquals($stockId, $query->getId());
 
                 return [
-                    'result' => 'acceptPermittedResult',
-                    'message' => 'acceptPermittedMessage'
+                    'result' => 'acceptAndPostScoringReportPermittedResult',
+                    'message' => 'acceptAndPostScoringReportPermittedMessage'
                 ];
             });
 
@@ -112,8 +113,8 @@ class StockOperationsPermittedTest extends QueryHandlerTestCase
             'stockStatusMessage' => $stockStatusDescription,
             'scoringPermitted' => 'scoringPermittedResult',
             'scoringMessage' => 'scoringPermittedMessage',
-            'acceptPermitted' => 'acceptPermittedResult',
-            'acceptMessage' => 'acceptPermittedMessage',
+            'acceptAndPostScoringReportPermitted' => 'acceptAndPostScoringReportPermittedResult',
+            'acceptAndPostScoringReportMessage' => 'acceptAndPostScoringReportPermittedMessage',
             'meanDeviation' => 1.5
         ];
 

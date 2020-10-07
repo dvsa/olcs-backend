@@ -4761,6 +4761,49 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpHasStateRequiredForPostScoringEmail
+     */
+    public function testHasStateRequiredForPostScoringEmail($isUnderConsideration, $isInScope, $successLevel, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $entity->shouldReceive('isUnderConsideration')
+            ->withNoArgs()
+            ->andReturn($isUnderConsideration);
+
+        $entity->shouldReceive('getInScope')
+            ->withNoArgs()
+            ->andReturn($isInScope);
+
+        $entity->shouldReceive('getSuccessLevel')
+            ->withNoArgs()
+            ->andReturn($successLevel);
+
+        $this->assertEquals(
+            $expected,
+            $entity->hasStateRequiredForPostScoringEmail()
+        );
+    }
+
+    public function dpHasStateRequiredForPostScoringEmail()
+    {
+        return [
+            [false, false, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE, false],
+            [false, false, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL, false],
+            [false, false, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL, false],
+            [false, true, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE, false],
+            [false, true, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL, false],
+            [false, true, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL, false],
+            [true, false, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE, false],
+            [true, false, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL, false],
+            [true, false, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL, false],
+            [true, true, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE, false],
+            [true, true, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL, true],
+            [true, true, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL, true],
+        ];
+    }
+
+    /**
      * Pass array of app statuses to make sure an exception is thrown
      *
      * @return array

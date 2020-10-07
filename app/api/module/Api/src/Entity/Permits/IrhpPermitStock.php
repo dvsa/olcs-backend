@@ -253,12 +253,12 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     }
 
     /**
-     * Indicates if the status of the stock allows the accept scoring process to be queued for execution (subject to
-     * further checks outside the boundary of this entity)
+     * Indicates if the status of the stock allows the accept scoring process to be queued for execution or the post
+     * scoring report to be generated (subject to further checks outside the boundary of this entity)
      *
      * @return bool
      */
-    public function statusAllowsQueueAcceptScoring()
+    public function statusAllowsQueueAcceptScoringAndPostScoringReport()
     {
         return in_array(
             $this->status->getId(),
@@ -398,7 +398,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      */
     public function proceedToAcceptPending(RefData $acceptPendingStatus)
     {
-        if (!$this->statusAllowsQueueAcceptScoring()) {
+        if (!$this->statusAllowsQueueAcceptScoringAndPostScoringReport()) {
             throw new ForbiddenException(
                 sprintf(
                     'This stock is not in the correct status to proceed to accept pending (%s)',

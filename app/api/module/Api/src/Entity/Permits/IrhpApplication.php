@@ -2215,6 +2215,27 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Indicate whether this application is in the correct state for post scoring email report generation and upload
+     *
+     * @return bool
+     */
+    public function hasStateRequiredForPostScoringEmail()
+    {
+        if (!$this->isUnderConsideration() || !$this->getInScope()) {
+            return false;
+        }
+
+        $permittedSuccessLevels = [
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL,
+        ];
+
+        $successLevel = $this->getSuccessLevel();
+
+        return in_array($successLevel, $permittedSuccessLevels);
+    }
+
+    /**
      * Proceeds the application from under consideration to unsuccessful during the accept scoring process
      *
      * @param RefData $unsuccessfulStatus

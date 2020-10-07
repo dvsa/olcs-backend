@@ -60,6 +60,7 @@ class UploadTest extends CommandHandlerTestCase
         $this->subCategoryReferences = [
             SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE => m::mock(SubCategory::class),
             SubCategory::DOC_SUB_CATEGORY_REPORT_LETTER => m::mock(SubCategory::class),
+            SubCategory::DOC_SUB_CATEGORY_POST_SCORING_EMAIL => m::mock(SubCategory::class),
         ];
 
         parent::initReferences();
@@ -296,6 +297,72 @@ class UploadTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+    public function testHandleCommandForPostScoringEmail()
+    {
+        $data = [
+            'reportType' => RefData::REPORT_TYPE_POST_SCORING_EMAIL,
+            'filename' => self::FILENAME,
+            'content' => base64_encode(self::BODY),
+        ];
+
+        $command = UploadCmd::create($data);
+
+        $this->mockedSmServices['DocumentNamingService']
+            ->shouldReceive('generateName')
+            ->once()
+            ->with(
+                'post_scoring_email_send',
+                'csv',
+                $this->categoryReferences[Category::CATEGORY_REPORT],
+                $this->subCategoryReferences[SubCategory::DOC_SUB_CATEGORY_POST_SCORING_EMAIL]
+            )
+            ->andReturn(self::IDENTIFIER);
+
+        $this->mockedSmServices['FileUploader']
+            ->shouldReceive('upload')
+            ->andReturnUsing(
+                function ($identifier, DsFile $file) {
+                    static::assertSame(self::IDENTIFIER, $identifier);
+                    static::assertEquals(self::BODY, $file->getContent());
+
+                    $file->setIdentifier(self::IDENTIFIER);
+
+                    return $file;
+                }
+            );
+
+        $this->expectedSideEffect(
+            CreateQueue::class,
+            [
+                'entityId' => null,
+                'type' => Queue::TYPE_POST_SCORING_EMAIL,
+                'status' => Queue::STATUS_QUEUED,
+                'options' => ZendJson::encode(
+                    [
+                        'identifier' => self::IDENTIFIER,
+                    ]
+                ),
+                'processAfterDate' => null,
+            ],
+            (new Result())->addMessage('Queue item created')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'identifier' => self::IDENTIFIER,
+            ],
+            'messages' => [
+                'File uploaded',
+                'Queue item created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
 
     public function testHandleCommandForGenericUpload()
     {

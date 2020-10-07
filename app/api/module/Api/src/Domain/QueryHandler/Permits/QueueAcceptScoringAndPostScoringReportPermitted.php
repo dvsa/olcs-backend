@@ -2,24 +2,25 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringPermitted as QueueAcceptScoringPermittedQuery;
-use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites;
+use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringAndPostScoringReportPermitted
+    as QueueAcceptScoringAndPostScoringReportPermittedQuery;
+use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Queue accept scoring permitted
+ * Queue accept scoring and post scoring report permitted
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class QueueAcceptScoringPermitted extends AbstractQueryHandler
+class QueueAcceptScoringAndPostScoringReportPermitted extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermitStock';
 
     /**
      * Handle query
      *
-     * @param QueryInterface|QueueAcceptScoringPermittedQuery $query query
+     * @param QueryInterface|QueueAcceptScoringAndPostScoringReportPermittedQuery $query query
      *
      * @return array
      */
@@ -28,18 +29,18 @@ class QueueAcceptScoringPermitted extends AbstractQueryHandler
         $stockId = $query->getId();
         $stock = $this->getRepo()->fetchById($stockId);
 
-        if (!$stock->statusAllowsQueueAcceptScoring()) {
+        if (!$stock->statusAllowsQueueAcceptScoringAndPostScoringReport()) {
             return [
                 'result' => false,
                 'message' => sprintf(
-                    'Acceptance is not permitted when stock status is \'%s\'',
+                    'Acceptance and post scoring report are not permitted when stock status is \'%s\'',
                     $stock->getStatusDescription()
                 )
             ];
         }
 
         return $this->getQueryHandler()->handleQuery(
-            CheckAcceptScoringPrerequisites::create(['id' => $stockId])
+            CheckAcceptScoringAndPostScoringReportPrerequisites::create(['id' => $stockId])
         );
     }
 }

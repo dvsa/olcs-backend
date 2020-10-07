@@ -8,7 +8,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites;
+use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -51,7 +51,7 @@ class AcceptScoring extends AbstractCommandHandler
 
         if ($stock->statusAllowsAcceptScoring()) {
             $prerequisiteResult = $this->handleQuery(
-                CheckAcceptScoringPrerequisites::create(['id' => $stockId])
+                CheckAcceptScoringAndPostScoringReportPrerequisites::create(['id' => $stockId])
             );
         } else {
             $prerequisiteResult = [

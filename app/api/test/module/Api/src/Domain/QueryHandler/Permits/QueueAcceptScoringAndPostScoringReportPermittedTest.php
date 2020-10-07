@@ -3,21 +3,22 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\QueueAcceptScoringPermitted;
-use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringPermitted as QueueAcceptScoringPermittedQry;
-use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\QueueAcceptScoringAndPostScoringReportPermitted;
+use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringAndPostScoringReportPermitted
+    as QueueAcceptScoringAndPostScoringReportPermittedQry;
+use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
-class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
+class QueueAcceptScoringAndPostScoringReportPermittedTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {
         $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
 
-        $this->sut = m::mock(QueueAcceptScoringPermitted::class)
+        $this->sut = m::mock(QueueAcceptScoringAndPostScoringReportPermitted::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -32,7 +33,7 @@ class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
         $stockId = 28;
 
         $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('statusAllowsQueueAcceptScoring')
+        $stock->shouldReceive('statusAllowsQueueAcceptScoringAndPostScoringReport')
             ->andReturn(true);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
@@ -42,7 +43,7 @@ class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
         $queryHandler = m::mock(AbstractQueryHandler::class);
 
         $queryHandler->shouldReceive('handleQuery')
-            ->with(m::type(CheckAcceptScoringPrerequisites::class))
+            ->with(m::type(CheckAcceptScoringAndPostScoringReportPrerequisites::class))
             ->andReturnUsing(function ($query) use ($stockId, $prerequisiteResult, $prerequisiteMessage) {
                 $this->assertEquals($stockId, $query->getId());
 
@@ -56,7 +57,7 @@ class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
             ->andReturn($queryHandler);
 
         $result = $this->sut->handleQuery(
-            CheckAcceptScoringPrerequisites::create(['id' => $stockId])
+            CheckAcceptScoringAndPostScoringReportPrerequisites::create(['id' => $stockId])
         );
 
         $this->assertEquals(
@@ -73,7 +74,7 @@ class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
         $stockId = 28;
 
         $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('statusAllowsQueueAcceptScoring')
+        $stock->shouldReceive('statusAllowsQueueAcceptScoringAndPostScoringReport')
             ->andReturn(false);
         $stock->shouldReceive('getStatusDescription')
             ->andReturn('stock status description');
@@ -83,13 +84,13 @@ class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
             ->andReturn($stock);
 
         $result = $this->sut->handleQuery(
-            CheckAcceptScoringPrerequisites::create(['id' => $stockId])
+            CheckAcceptScoringAndPostScoringReportPrerequisites::create(['id' => $stockId])
         );
 
         $this->assertEquals(
             [
                 'result' => false,
-                'message' => 'Acceptance is not permitted when stock status is \'stock status description\''
+                'message' => 'Acceptance and post scoring report are not permitted when stock status is \'stock status description\''
             ],
             $result
         );

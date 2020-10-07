@@ -87,6 +87,10 @@ final class Upload extends AbstractCommandHandler implements
                 $description = 'bulk_upload_letter_send';
                 $subCategory = SubCategory::DOC_SUB_CATEGORY_REPORT_LETTER;
                 break;
+            case RefData::REPORT_TYPE_POST_SCORING_EMAIL:
+                $description = 'post_scoring_email_send';
+                $subCategory = SubCategory::DOC_SUB_CATEGORY_POST_SCORING_EMAIL;
+                break;
         }
 
         $categoryReference = $this->getRepo()->getCategoryReference(Category::CATEGORY_REPORT);
@@ -195,6 +199,20 @@ final class Upload extends AbstractCommandHandler implements
                         )
                     )
                 );
+                break;
+            case RefData::REPORT_TYPE_POST_SCORING_EMAIL:
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        $this->createQueue(
+                            null,
+                            Queue::TYPE_POST_SCORING_EMAIL,
+                            [
+                                'identifier' => $file->getIdentifier(),
+                            ]
+                        )
+                    )
+                );
+                break;
         }
     }
 }

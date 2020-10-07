@@ -67,6 +67,7 @@ class Queue extends AbstractQueue
     const TYPE_COMM_LIC_BULK_REPRINT = 'que_typ_comm_lic_bulk_reprint';
     const TYPE_LETTER_BULK_UPLOAD = 'que_typ_letter_bulk_upload';
     const TYPE_EMAIL_BULK_UPLOAD = 'que_typ_email_bulk_upload';
+    const TYPE_POST_SCORING_EMAIL = 'que_typ_post_scoring_email';
     const TYPE_REFUND_INTERIM_FEES = 'que_typ_refund_interim_fees';
     const TYPE_CREATE_TASK = 'que_typ_create_task';
 
@@ -102,6 +103,7 @@ class Queue extends AbstractQueue
         self::TYPE_COMM_LIC_BULK_REPRINT,
         self::TYPE_LETTER_BULK_UPLOAD,
         self::TYPE_EMAIL_BULK_UPLOAD,
+        self::TYPE_POST_SCORING_EMAIL,
         self::TYPE_REFUND_INTERIM_FEES,
         self::TYPE_PERMITS_POST_SUBMIT,
         self::TYPE_CREATE_TASK,

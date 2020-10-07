@@ -721,6 +721,7 @@ return [
     // Domain - Report
     TransferCommand\Report\Upload::class => CommandHandler\Report\Upload::class,
     Command\BulkSend\ProcessEmail::class => CommandHandler\BulkSend\ProcessEmail::class,
+    Command\Permits\PostScoringEmail::class => CommandHandler\Permits\PostScoringEmail::class,
 
     // Domain - Report Upload BulkSend
 
@@ -786,6 +787,7 @@ return [
     Command\Email\SendEcmtShortTermAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtShortTermAutomaticallyWithdrawn::class,
     Command\Email\SendEcmtApsgPartSuccessful::class => CommandHandler\Email\SendEcmtApsgPartSuccessful::class,
     Command\Email\SendEcmtApsgSuccessful::class => CommandHandler\Email\SendEcmtApsgSuccessful::class,
+    Command\Email\SendEcmtApsgPostScoring::class => CommandHandler\Email\SendEcmtApsgPostScoring::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
