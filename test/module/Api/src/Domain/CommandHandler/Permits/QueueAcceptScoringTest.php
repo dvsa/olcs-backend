@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringPermitted;
+use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringAndPostScoringReportPermitted;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\QueueAcceptScoring;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
@@ -43,7 +43,7 @@ class QueueAcceptScoringTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('handleQuery')
             ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertInstanceOf(QueueAcceptScoringPermitted::class, $query);
+                $this->assertInstanceOf(QueueAcceptScoringandPostScoringReportPermitted::class, $query);
                 $this->assertEquals($stockId, $query->getId());
 
                 return [
@@ -89,7 +89,7 @@ class QueueAcceptScoringTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('handleQuery')
             ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertInstanceOf(QueueAcceptScoringPermitted::class, $query);
+                $this->assertInstanceOf(QueueAcceptScoringAndPostScoringReportPermitted::class, $query);
                 $this->assertEquals($stockId, $query->getId());
 
                 return [
