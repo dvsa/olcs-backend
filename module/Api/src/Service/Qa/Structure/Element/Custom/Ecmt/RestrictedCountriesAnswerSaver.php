@@ -72,11 +72,13 @@ class RestrictedCountriesAnswerSaver implements AnswerSaverInterface
         $applicationStepEntity = $qaContext->getApplicationStepEntity();
         $irhpApplicationEntity = $qaContext->getQaEntity();
 
-        $hasRestrictedCountries = $this->namedAnswerFetcher->fetch(
+        $restrictedCountries = $this->namedAnswerFetcher->fetch(
             $applicationStepEntity,
             $postData,
             'restrictedCountries'
         );
+
+        $hasRestrictedCountries = ($restrictedCountries === 'Y');
 
         $countryReferences = $this->arrayCollectionFactory->create();
 
