@@ -98,13 +98,13 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
         $selectedCountry2Code = 'IT';
         $selectedCountry2Reference = m::mock(Country::class);
 
-        $hasRestrictedCountries = 1;
+        $restrictedCountries = 'Y';
         $selectedRestrictedCountries = ['HU', 'IT'];
 
         $postData = [
             'qa' => [
                 'fieldset12' => [
-                    'restrictedCountries' => $hasRestrictedCountries,
+                    'restrictedCountries' => $restrictedCountries,
                     'yesContent' => $selectedRestrictedCountries
                 ]
             ]
@@ -112,7 +112,7 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
 
         $this->namedAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $postData, 'restrictedCountries')
-            ->andReturn($hasRestrictedCountries);
+            ->andReturn($restrictedCountries);
         $this->namedAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $postData, 'yesContent')
             ->andReturn($selectedRestrictedCountries);
@@ -153,7 +153,7 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
         $this->genericAnswerWriter->shouldReceive('write')
             ->with(
                 $this->qaContext,
-                $hasRestrictedCountries,
+                true,
                 Question::QUESTION_TYPE_BOOLEAN
             )
             ->once();
@@ -167,13 +167,13 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
 
     public function testSaveWhenNo()
     {
-        $hasRestrictedCountries = 0;
+        $restrictedCountries = 'N';
         $selectedRestrictedCountries = null;
 
         $postData = [
             'qa' => [
                 'fieldset12' => [
-                    'restrictedCountries' => $hasRestrictedCountries,
+                    'restrictedCountries' => $restrictedCountries,
                     'yesContent' => null
                 ]
             ]
@@ -181,7 +181,7 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
 
         $this->namedAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $postData, 'restrictedCountries')
-            ->andReturn($hasRestrictedCountries);
+            ->andReturn($restrictedCountries);
         $this->namedAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $postData, 'yesContent')
             ->andReturn($selectedRestrictedCountries);
@@ -201,7 +201,7 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
         $this->genericAnswerWriter->shouldReceive('write')
             ->with(
                 $this->qaContext,
-                $hasRestrictedCountries,
+                false,
                 Question::QUESTION_TYPE_BOOLEAN
             )
             ->once();
