@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.158.1",
+            "version": "3.158.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.158.1/aws-aws-sdk-php-3.158.1.zip",
-                "reference": "55ae8bdf2eb2f9774193fa79c6fc436835c42db4",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.158.5/aws-aws-sdk-php-3.158.5.zip",
+                "reference": "dae8d62d976adc737d9daf4817ac36de6d53c3e8",
                 "shasum": ""
             },
             "require": {
@@ -83,7 +83,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-10-02T18:16:40+00:00"
+            "time": "2020-10-08T18:13:24+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
