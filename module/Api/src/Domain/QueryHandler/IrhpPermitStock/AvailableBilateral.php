@@ -13,6 +13,8 @@ class AvailableBilateral extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermitStock';
 
+    protected $extraRepos = ['ApplicationPathGroup'];
+
     /**
      * Handle query
      *
@@ -23,6 +25,22 @@ class AvailableBilateral extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->fetchOpenBilateralStocksByCountry($query->getCountry(), new DateTime());
+        $stocks = $this->getRepo()->fetchOpenBilateralStocksByCountry($query->getCountry(), new DateTime());
+
+        foreach ($stocks as $key => $stock) {
+            $applicationPathGroup = $this->getRepo('ApplicationPathGroup')->fetchById(
+                $stock['application_path_group_id']
+            );
+
+            $slug = $applicationPathGroup->getActiveApplicationPath()
+                ->getApplicationSteps()
+                ->first()
+                ->getQuestion()
+                ->getSlug();
+
+            $stocks[$key]['first_step_slug'] = $slug;
+        }
+
+        return $stocks;
     }
 }
