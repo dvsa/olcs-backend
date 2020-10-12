@@ -49,7 +49,7 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
         $isSnapshot = false;
 
         $irhpPermitApplicationEntity = m::mock(IrhpPermitApplicationEntity::class);
-        $irhpPermitApplicationEntity->shouldReceive('getBilateralRequired')
+        $irhpPermitApplicationEntity->shouldReceive('getFilteredBilateralRequired')
             ->withNoArgs()
             ->andReturn($bilateralRequired)
             ->shouldReceive('getBilateralPermitUsageSelection')
@@ -100,7 +100,6 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
             [
                 RefData::JOURNEY_MULTIPLE,
                 [
-                    IrhpPermitApplicationEntity::BILATERAL_STANDARD_REQUIRED => null,
                     IrhpPermitApplicationEntity::BILATERAL_CABOTAGE_REQUIRED => $requiredCabotage,
                 ],
                 [
@@ -116,7 +115,6 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
                 RefData::JOURNEY_MULTIPLE,
                 [
                     IrhpPermitApplicationEntity::BILATERAL_STANDARD_REQUIRED => $requiredStandard,
-                    IrhpPermitApplicationEntity::BILATERAL_CABOTAGE_REQUIRED => null,
                 ],
                 [
                     'rows' => [
@@ -149,7 +147,6 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
             [
                 RefData::JOURNEY_SINGLE,
                 [
-                    IrhpPermitApplicationEntity::BILATERAL_STANDARD_REQUIRED => null,
                     IrhpPermitApplicationEntity::BILATERAL_CABOTAGE_REQUIRED => $requiredCabotage,
                 ],
                 [
@@ -165,7 +162,6 @@ class NoOfPermitsAnswerSummaryProviderTest extends MockeryTestCase
                 RefData::JOURNEY_SINGLE,
                 [
                     IrhpPermitApplicationEntity::BILATERAL_STANDARD_REQUIRED => $requiredStandard,
-                    IrhpPermitApplicationEntity::BILATERAL_CABOTAGE_REQUIRED => null,
                 ],
                 [
                     'rows' => [

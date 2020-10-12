@@ -2078,4 +2078,57 @@ class IrhpPermitStockEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider dpIsMorocco
+     */
+    public function testIsMorocco($countryId, $expectedIsMorocco)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $country = m::mock(Country::class);
+        $country->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($countryId);
+
+        $entity->setCountry($country);
+
+        $this->assertEquals(
+            $expectedIsMorocco,
+            $entity->isMorocco()
+        );
+    }
+
+    public function dpIsMorocco()
+    {
+        return [
+            [Country::ID_NORWAY, false],
+            [Country::ID_BELARUS, false],
+            [Country::ID_MOROCCO, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetBilateralAnswerSummaryLabelKey
+     */
+    public function testGetBilateralAnswerSummaryLabelKey($isMorocco, $expectedKey)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isMorocco')
+            ->withNoArgs()
+            ->andReturn($isMorocco);
+
+        $this->assertEquals(
+            $expectedKey,
+            $entity->getBilateralAnswerSummaryLabelKey()
+        );
+    }
+
+    public function dpGetBilateralAnswerSummaryLabelKey()
+    {
+        return [
+            [true, 'permits.page.bilateral.permit-needed'],
+            [false, 'permits.page.bilateral.which-period-required'],
+        ];
+    }
 }

@@ -213,6 +213,12 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
         $permitUsage = $irhpPermitApplication->getBilateralPermitUsageSelection();
 
         foreach ($bilateralRequired as $standardOrCabotage => $permitsRequired) {
+            // TODO: permit allocation for morocco has been suppressed for now due to the additional logic not being
+            // present. To be addressed as part of OLCS-27628.
+            if ($standardOrCabotage == IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED) {
+                continue;
+            }
+
             $criteria = $this->bilateralCriteriaFactory->create($standardOrCabotage, $permitUsage);
             $this->allocatePermits($irhpPermitApplication, $criteria, $permitsRequired);
         }

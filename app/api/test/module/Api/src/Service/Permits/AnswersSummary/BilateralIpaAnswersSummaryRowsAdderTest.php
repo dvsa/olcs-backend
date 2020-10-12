@@ -28,6 +28,7 @@ class BilateralIpaAnswersSummaryRowsAdderTest extends MockeryTestCase
         $countryId = 'NO';
         $periodNameKey = 'period-key';
         $periodFormattedAnswer = 'formatted period';
+        $answerSummaryLabelKey = 'answer.summary.label.key';
         $periodAnswersSummaryRow = m::mock(AnswersSummaryRow::class);
 
         $answersSummary = m::mock(AnswersSummary::class);
@@ -42,6 +43,9 @@ class BilateralIpaAnswersSummaryRowsAdderTest extends MockeryTestCase
             ->shouldReceive('getCountry->getId')
             ->withNoArgs()
             ->andReturn($countryId);
+        $irhpPermitStock->shouldReceive('getBilateralAnswerSummaryLabelKey')
+            ->withNoArgs()
+            ->andReturn($answerSummaryLabelKey);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
@@ -50,7 +54,7 @@ class BilateralIpaAnswersSummaryRowsAdderTest extends MockeryTestCase
 
         $answersSummaryRowFactory = m::mock(AnswersSummaryRowFactory::class);
         $answersSummaryRowFactory->shouldReceive('create')
-            ->with('permits.page.bilateral.which-period-required', $periodFormattedAnswer, $expectedSlug)
+            ->with($answerSummaryLabelKey, $periodFormattedAnswer, $expectedSlug)
             ->once()
             ->andReturn($periodAnswersSummaryRow);
 
