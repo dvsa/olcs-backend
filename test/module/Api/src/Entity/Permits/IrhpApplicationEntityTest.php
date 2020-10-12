@@ -6215,4 +6215,30 @@ class IrhpApplicationEntityTest extends EntityTester
             [$irhpPermitApplications, 'NO', null],
         ];
     }
+
+    /**
+     * @dataProvider dpIsApsg
+     */
+    public function testIsApsg($businessProcessId, $expected)
+    {
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn(isset($businessProcessId) ? new RefData($businessProcessId) : null);
+
+        $this->assertSame(
+            $expected,
+            $this->sut->isApsg()
+        );
+    }
+
+    public function dpIsApsg()
+    {
+        return [
+            [null, false],
+            [RefData::BUSINESS_PROCESS_APG, false],
+            [RefData::BUSINESS_PROCESS_APGG, false],
+            [RefData::BUSINESS_PROCESS_APSG, true],
+            [RefData::BUSINESS_PROCESS_AG, false],
+        ];
+    }
 }
