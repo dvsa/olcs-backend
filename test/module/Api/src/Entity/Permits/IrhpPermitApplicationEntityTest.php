@@ -1107,7 +1107,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpUpdateAndGetBilateralRequired
      */
-    public function testUpdateAndGetBilateralRequired($standardRequired, $cabotageRequired)
+    public function testUpdateAndGetBilateralRequired($standardRequired, $cabotageRequired, $moroccoRequired)
     {
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('isBilateral')
@@ -1122,6 +1122,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $required = [
             Entity::BILATERAL_STANDARD_REQUIRED => $standardRequired,
             Entity::BILATERAL_CABOTAGE_REQUIRED => $cabotageRequired,
+            Entity::BILATERAL_MOROCCO_REQUIRED => $moroccoRequired,
         ];
 
         $this->sut->updateBilateralRequired($required);
@@ -1131,9 +1132,10 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     public function dpUpdateAndGetBilateralRequired()
     {
         return [
-            ['43', '57'],
-            ['22', null],
-            [null, '31'],
+            ['43', '57', null],
+            ['22', null, null],
+            [null, '31', null],
+            [null, null, '10'],
         ];
     }
 
@@ -1208,6 +1210,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $required = [
             Entity::BILATERAL_STANDARD_REQUIRED => '7',
             Entity::BILATERAL_CABOTAGE_REQUIRED => '8',
+            Entity::BILATERAL_MOROCCO_REQUIRED => '9',
         ];
 
         $this->sut->updateBilateralRequired($required);
@@ -1215,6 +1218,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $expected = [
             Entity::BILATERAL_STANDARD_REQUIRED => null,
             Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+            Entity::BILATERAL_MOROCCO_REQUIRED => null,
         ];
 
         $this->sut->clearBilateralRequired();
@@ -1233,6 +1237,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $expected = [
             Entity::BILATERAL_STANDARD_REQUIRED => null,
             Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+            Entity::BILATERAL_MOROCCO_REQUIRED => null,
         ];
 
         $this->assertEquals(
@@ -1280,6 +1285,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
                 [
                     Entity::BILATERAL_STANDARD_REQUIRED => null,
                     Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+                    Entity::BILATERAL_MOROCCO_REQUIRED => null,
                 ],
                 []
             ],
@@ -1287,6 +1293,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
                 [
                     Entity::BILATERAL_STANDARD_REQUIRED => 5,
                     Entity::BILATERAL_CABOTAGE_REQUIRED => 9,
+                    Entity::BILATERAL_MOROCCO_REQUIRED => null,
                 ],
                 [
                     Entity::BILATERAL_STANDARD_REQUIRED => 5,
@@ -1297,6 +1304,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
                 [
                     Entity::BILATERAL_STANDARD_REQUIRED => null,
                     Entity::BILATERAL_CABOTAGE_REQUIRED => 3,
+                    Entity::BILATERAL_MOROCCO_REQUIRED => null,
                 ],
                 [
                     Entity::BILATERAL_CABOTAGE_REQUIRED => 3,
@@ -1306,9 +1314,20 @@ class IrhpPermitApplicationEntityTest extends EntityTester
                 [
                     Entity::BILATERAL_STANDARD_REQUIRED => 12,
                     Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+                    Entity::BILATERAL_MOROCCO_REQUIRED => null,
                 ],
                 [
                     Entity::BILATERAL_STANDARD_REQUIRED => 12,
+                ]
+            ],
+            [
+                [
+                    Entity::BILATERAL_STANDARD_REQUIRED => null,
+                    Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+                    Entity::BILATERAL_MOROCCO_REQUIRED => 14,
+                ],
+                [
+                    Entity::BILATERAL_MOROCCO_REQUIRED => 14,
                 ]
             ],
         ];
@@ -1316,11 +1335,12 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
     public function testGetBilateralFeeProductRefsAndQuantitiesStandardOnly()
     {
-        $countryId = Country::ID_FRANCE;
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
 
         $bilateralRequired = [
             Entity::BILATERAL_STANDARD_REQUIRED => 6,
-            Entity::BILATERAL_CABOTAGE_REQUIRED => null
+            Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+            Entity::BILATERAL_MOROCCO_REQUIRED => null
         ];
 
         $entity = m::mock(Entity::class)->makePartial();
@@ -1328,13 +1348,13 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             ->withNoArgs()
             ->andReturn($bilateralRequired);
         $entity->shouldReceive('getBilateralFeeProductReferences')
-            ->with($countryId, Entity::BILATERAL_STANDARD_REQUIRED)
+            ->with($irhpPermitStock, Entity::BILATERAL_STANDARD_REQUIRED)
             ->andReturn(['PRODUCT_REF_ABC', 'PRODUCT_REF_DEF']);
 
         $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
-        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry->getId')
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock')
             ->withNoArgs()
-            ->andReturn($countryId);
+            ->andReturn($irhpPermitStock);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('isBilateral')
@@ -1357,11 +1377,12 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
     public function testGetBilateralFeeProductRefsAndQuantitiesCabotageOnly()
     {
-        $countryId = Country::ID_GERMANY;
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
 
         $bilateralRequired = [
             Entity::BILATERAL_STANDARD_REQUIRED => null,
-            Entity::BILATERAL_CABOTAGE_REQUIRED => 8
+            Entity::BILATERAL_CABOTAGE_REQUIRED => 8,
+            Entity::BILATERAL_MOROCCO_REQUIRED => null
         ];
 
         $entity = m::mock(Entity::class)->makePartial();
@@ -1369,13 +1390,13 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             ->withNoArgs()
             ->andReturn($bilateralRequired);
         $entity->shouldReceive('getBilateralFeeProductReferences')
-            ->with($countryId, Entity::BILATERAL_CABOTAGE_REQUIRED)
+            ->with($irhpPermitStock, Entity::BILATERAL_CABOTAGE_REQUIRED)
             ->andReturn(['PRODUCT_REF_ABC', 'PRODUCT_REF_DEF']);
 
         $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
-        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry->getId')
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock')
             ->withNoArgs()
-            ->andReturn($countryId);
+            ->andReturn($irhpPermitStock);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('isBilateral')
@@ -1398,11 +1419,12 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
     public function testGetBilateralFeeProductRefsAndQuantitiesStandardAndCabotage()
     {
-        $countryId = Country::ID_BELARUS;
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
 
         $bilateralRequired = [
             Entity::BILATERAL_STANDARD_REQUIRED => 7,
-            Entity::BILATERAL_CABOTAGE_REQUIRED => 5
+            Entity::BILATERAL_CABOTAGE_REQUIRED => 5,
+            Entity::BILATERAL_MOROCCO_REQUIRED => null
         ];
 
         $entity = m::mock(Entity::class)->makePartial();
@@ -1410,16 +1432,16 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             ->withNoArgs()
             ->andReturn($bilateralRequired);
         $entity->shouldReceive('getBilateralFeeProductReferences')
-            ->with($countryId, Entity::BILATERAL_STANDARD_REQUIRED)
+            ->with($irhpPermitStock, Entity::BILATERAL_STANDARD_REQUIRED)
             ->andReturn(['PRODUCT_REF_ABC', 'PRODUCT_REF_DEF']);
         $entity->shouldReceive('getBilateralFeeProductReferences')
-            ->with($countryId, Entity::BILATERAL_CABOTAGE_REQUIRED)
+            ->with($irhpPermitStock, Entity::BILATERAL_CABOTAGE_REQUIRED)
             ->andReturn(['PRODUCT_REF_DEF', 'PRODUCT_REF_GHI']);
 
         $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
-        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getCountry->getId')
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock')
             ->withNoArgs()
-            ->andReturn($countryId);
+            ->andReturn($irhpPermitStock);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('isBilateral')
@@ -1441,6 +1463,49 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         );
     }
 
+    public function testGetBilateralFeeProductRefsAndQuantitiesMoroccoOnly()
+    {
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+
+        $bilateralRequired = [
+            Entity::BILATERAL_STANDARD_REQUIRED => null,
+            Entity::BILATERAL_CABOTAGE_REQUIRED => null,
+            Entity::BILATERAL_MOROCCO_REQUIRED => 10
+        ];
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getBilateralRequired')
+            ->withNoArgs()
+            ->andReturn($bilateralRequired);
+        $entity->shouldReceive('getBilateralFeeProductReferences')
+            ->with($irhpPermitStock, Entity::BILATERAL_MOROCCO_REQUIRED)
+            ->andReturn(['PRODUCT_REF_GHI', 'PRODUCT_REF_JKL']);
+
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity->setIrhpApplication($irhpApplication);
+        $entity->setIrhpPermitWindow($irhpPermitWindow);
+
+        $expectedProductRefsAndQuantities = [
+            'PRODUCT_REF_GHI' => 10,
+            'PRODUCT_REF_JKL' => 10,
+        ];
+
+        $this->assertEquals(
+            $expectedProductRefsAndQuantities,
+            $entity->getBilateralFeeProductRefsAndQuantities()
+        );
+    }
+
+
     public function testGetBilateralFeeProductRefsAndQuantitiesNotBilateral()
     {
         $this->expectException(RuntimeException::class);
@@ -1457,14 +1522,26 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpGetBilateralFeeProductReferences
+     * @dataProvider dpGetBilateralFeeProductReferencesNotMorocco
      */
-    public function testGetBilateralFeeProductReferences($countryId, $permitUsage, $standardOrCabotage, $expected)
-    {
+    public function testGetBilateralFeeProductReferencesNotMorocco(
+        $countryId,
+        $permitUsage,
+        $standardOrCabotage,
+        $expected
+    ) {
         $entity = m::mock(Entity::class)->makePartial();
         $entity->shouldReceive('getBilateralPermitUsageSelection')
             ->withNoArgs()
             ->andReturn($permitUsage);
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('isMorocco')
+            ->withNoArgs()
+            ->andReturnFalse();
+        $irhpPermitStock->shouldReceive('getCountry->getId')
+            ->withNoArgs()
+            ->andReturn($countryId);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('isBilateral')
@@ -1475,11 +1552,11 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->assertEquals(
             $expected,
-            $entity->getBilateralFeeProductReferences($countryId, $standardOrCabotage)
+            $entity->getBilateralFeeProductReferences($irhpPermitStock, $standardOrCabotage)
         );
     }
 
-    public function dpGetBilateralFeeProductReferences()
+    public function dpGetBilateralFeeProductReferencesNotMorocco()
     {
         return [
             [
@@ -1596,10 +1673,14 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpGetBilateralFeeProductReferencesNotFound
+     * @dataProvider dpGetBilateralFeeProductReferencesNotMoroccoNotFound
      */
-    public function testGetBilateralFeeProductReferencesFeeNotFound($countryId, $permitUsage, $standardOrCabotage, $expectedMessage)
-    {
+    public function testGetBilateralFeeProductReferencesNotMoroccoNotFound(
+        $countryId,
+        $permitUsage,
+        $standardOrCabotage,
+        $expectedMessage
+    ) {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage($expectedMessage);
 
@@ -1613,12 +1694,20 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             ->withNoArgs()
             ->andReturn($permitUsage);
 
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('isMorocco')
+            ->withNoArgs()
+            ->andReturnFalse();
+        $irhpPermitStock->shouldReceive('getCountry->getId')
+            ->withNoArgs()
+            ->andReturn($countryId);
+
         $entity->setIrhpApplication($irhpApplication);
 
-        $entity->getBilateralFeeProductReferences($countryId, $standardOrCabotage);
+        $entity->getBilateralFeeProductReferences($irhpPermitStock, $standardOrCabotage);
     }
 
-    public function dpGetBilateralFeeProductReferencesNotFound()
+    public function dpGetBilateralFeeProductReferencesNotMoroccoNotFound()
     {
         return [
             [
@@ -1750,10 +1839,83 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         ];
     }
 
+    /**
+     * @dataProvider dpGetBilateralFeeProductReferencesMorocco
+     */
+    public function testGetBilateralFeeProductReferencesMorocco($permitCategoryId, $expected)
+    {
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('isMorocco')
+            ->withNoArgs()
+            ->andReturnTrue();
+        $irhpPermitStock->shouldReceive('getPermitCategory->getId')
+            ->withNoArgs()
+            ->andReturn($permitCategoryId);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->getBilateralFeeProductReferences($irhpPermitStock, Entity::BILATERAL_MOROCCO_REQUIRED)
+        );
+    }
+
+    public function dpGetBilateralFeeProductReferencesMorocco()
+    {
+        return [
+            [
+                RefData::PERMIT_CAT_STANDARD_MULTIPLE_15,
+                [FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_MULTI_MOROCCO_PRODUCT_REF]
+            ],
+            [
+                RefData::PERMIT_CAT_STANDARD_SINGLE,
+                [FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU]
+            ],
+            [
+                RefData::PERMIT_CAT_EMPTY_ENTRY,
+                [FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU]
+            ],
+            [
+                RefData::PERMIT_CAT_HORS_CONTINGENT,
+                [FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU]
+            ],
+        ];
+    }
+
+    public function testGetBilateralFeeProductReferencesMoroccoNotFound()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No bilateral morocco fee configuration found: permit_category_other');
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('isMorocco')
+            ->withNoArgs()
+            ->andReturnTrue();
+        $irhpPermitStock->shouldReceive('getPermitCategory->getId')
+            ->withNoArgs()
+            ->andReturn('permit_category_other');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->sut->getBilateralFeeProductReferences($irhpPermitStock, Entity::BILATERAL_MOROCCO_REQUIRED);
+    }
+
     public function testGetBilateralFeeProductReferencesNotBilateral()
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('getBilateralFeeProductReferences is applicable only to bilateral applications');
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('isBilateral')
@@ -1762,7 +1924,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->sut->setIrhpApplication($irhpApplication);
 
-        $this->sut->getBilateralFeeProductReferences(Country::ID_GERMANY, Entity::BILATERAL_STANDARD_REQUIRED);
+        $this->sut->getBilateralFeeProductReferences($irhpPermitStock, Entity::BILATERAL_STANDARD_REQUIRED);
     }
 
     public function testGetBilateralFeePerPermit()

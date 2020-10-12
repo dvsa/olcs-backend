@@ -45,10 +45,12 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
 
     const BILATERAL_STANDARD_REQUIRED = 'standard';
     const BILATERAL_CABOTAGE_REQUIRED = 'cabotage';
+    const BILATERAL_MOROCCO_REQUIRED = 'morocco';
 
     const BILATERAL_REQUIRED_KEYS = [
         self::BILATERAL_STANDARD_REQUIRED,
         self::BILATERAL_CABOTAGE_REQUIRED,
+        self::BILATERAL_MOROCCO_REQUIRED,
     ];
 
     const BILATERAL_FEE_PRODUCT_REFS_TYPE_1 = [
@@ -92,6 +94,21 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
                 self::BILATERAL_STANDARD_REQUIRED => []
             ]
         ]
+    ];
+
+    const MOROCCO_BILATERAL_FEE_PRODUCT_REFS = [
+        RefData::PERMIT_CAT_STANDARD_MULTIPLE_15 => [
+            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_MULTI_MOROCCO_PRODUCT_REF
+        ],
+        RefData::PERMIT_CAT_STANDARD_SINGLE => [
+            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+        ],
+        RefData::PERMIT_CAT_EMPTY_ENTRY => [
+            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+        ],
+        RefData::PERMIT_CAT_HORS_CONTINGENT => [
+            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU
+        ],
     ];
 
     const MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
@@ -649,6 +666,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
 
         $this->requiredStandard = $required[self::BILATERAL_STANDARD_REQUIRED];
         $this->requiredCabotage = $required[self::BILATERAL_CABOTAGE_REQUIRED];
+        $this->permitsRequired = $required[self::BILATERAL_MOROCCO_REQUIRED];
     }
 
     /**
@@ -685,6 +703,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         return [
             self::BILATERAL_STANDARD_REQUIRED => $this->requiredStandard,
             self::BILATERAL_CABOTAGE_REQUIRED => $this->requiredCabotage,
+            self::BILATERAL_MOROCCO_REQUIRED => $this->permitsRequired,
         ];
     }
 
@@ -709,20 +728,18 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
     {
         $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
 
-        $bilateralRequired = $this->getBilateralRequired();
-        $countryId = $this->irhpPermitWindow->getIrhpPermitStock()->getCountry()->getId();
+        $bilateralRequired = $this->getFilteredBilateralRequired();
+        $irhpPermitStock = $this->irhpPermitWindow->getIrhpPermitStock();
 
         $productRefsAndQuantities = [];
-        foreach ($bilateralRequired as $standardOrCabotage => $quantity) {
-            if ($quantity) {
-                $productReferences = $this->getBilateralFeeProductReferences($countryId, $standardOrCabotage);
+        foreach ($bilateralRequired as $requestedType => $quantity) {
+            $productReferences = $this->getBilateralFeeProductReferences($irhpPermitStock, $requestedType);
 
-                foreach ($productReferences as $productReference) {
-                    if (isset($productRefsAndQuantities[$productReference])) {
-                        $productRefsAndQuantities[$productReference] += $quantity;
-                    } else {
-                        $productRefsAndQuantities[$productReference] = $quantity;
-                    }
+            foreach ($productReferences as $productReference) {
+                if (isset($productRefsAndQuantities[$productReference])) {
+                    $productRefsAndQuantities[$productReference] += $quantity;
+                } else {
+                    $productRefsAndQuantities[$productReference] = $quantity;
                 }
             }
         }
@@ -734,36 +751,49 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
      * Get an array of bilateral fee product references in the context of this application for the specified country
      * and standard/cabotage value
      *
-     * @param string $countryId
-     * @param string $standardOrCabotage
+     * @param IrhpPermitStock $irhpPermitStock
+     * @param string $requestedType
      *
      * @return array
      *
      * @throws RuntimeException
      */
-    public function getBilateralFeeProductReferences($countryId, $standardOrCabotage)
+    public function getBilateralFeeProductReferences(IrhpPermitStock $irhpPermitStock, $requestedType)
     {
         $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
 
+        if ($irhpPermitStock->isMorocco()) {
+            $permitCategory = $irhpPermitStock->getPermitCategory()->getId();
+
+            if (!isset(self::MOROCCO_BILATERAL_FEE_PRODUCT_REFS[$permitCategory])) {
+                $message = sprintf('No bilateral morocco fee configuration found: %s', $permitCategory);
+
+                throw new RuntimeException($message);
+            }
+
+            return self::MOROCCO_BILATERAL_FEE_PRODUCT_REFS[$permitCategory];
+        }
+
         $permitUsage = $this->getBilateralPermitUsageSelection();
+        $countryId = $irhpPermitStock->getCountry()->getId();
 
         $productReferences = self::DEFAULT_BILATERAL_FEE_PRODUCT_REFS;
         if (isset(self::CUSTOM_BILATERAL_FEE_PRODUCT_REFS[$countryId])) {
             $productReferences = self::CUSTOM_BILATERAL_FEE_PRODUCT_REFS[$countryId];
         }
 
-        if (!isset($productReferences[$permitUsage][$standardOrCabotage])) {
+        if (!isset($productReferences[$permitUsage][$requestedType])) {
             $message = sprintf(
                 'No bilateral fee configuration found: %s/%s/%s',
                 $countryId,
                 $permitUsage,
-                $standardOrCabotage
+                $requestedType
             );
 
             throw new RuntimeException($message);
         }
 
-        return $productReferences[$permitUsage][$standardOrCabotage];
+        return $productReferences[$permitUsage][$requestedType];
     }
 
     /**
