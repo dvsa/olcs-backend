@@ -31,7 +31,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
     /**
      * @dataProvider dpGenerate
      */
-    public function testGenerate($maxPermitted, $permitsRemaining, $expectedMaxCanApplyFor)
+    public function testGenerate($maxPermitted, $permitsRemaining, $expectedMaxCanApplyFor, $isApsg, $isUnderConsideration, $expectedSkipAvailabilityValidation)
     {
         $stockId = 22;
         $validityYear = 2015;
@@ -79,6 +79,12 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $irhpApplication->shouldReceive('getLicence')
             ->withNoArgs()
             ->andReturn($licence);
+        $irhpApplication->shouldReceive('isApsg')
+            ->withNoArgs()
+            ->andReturn($isApsg);
+        $irhpApplication->shouldReceive('isUnderConsideration')
+            ->withNoArgs()
+            ->andReturn($isUnderConsideration);
 
         $applicationFeeType = m::mock(FeeTypeEntity::class);
         $applicationFeeType->shouldReceive('getFixedValue')
@@ -100,7 +106,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
 
         $noOfPermitsFactory = m::mock(NoOfPermitsFactory::class);
         $noOfPermitsFactory->shouldReceive('create')
-            ->with($expectedMaxCanApplyFor, $maxPermitted, $applicationFeePerPermit, $issueFeePerPermit)
+            ->with($expectedMaxCanApplyFor, $maxPermitted, $applicationFeePerPermit, $issueFeePerPermit, $expectedSkipAvailabilityValidation)
             ->once()
             ->andReturn($noOfPermits);
 
@@ -153,8 +159,11 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
     public function dpGenerate()
     {
         return [
-            [43, 19, 19],
-            [17, 40, 17],
+            [43, 19, 19, true, true, true],
+            [17, 40, 17, true, true, true],
+            [17, 40, 17, false, true, false],
+            [17, 40, 17, true, false, false],
+            [17, 40, 17, false, false, false],
         ];
     }
 }

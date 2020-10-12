@@ -20,6 +20,7 @@ class NoOfPermitsTest extends MockeryTestCase
         $maxPermitted = 42;
         $applicationFee = '15.00';
         $issueFee = '10.00';
+        $skipAvailabilityValidation = true;
 
         $emissionsCategory1Representation = [
             'type' => 'emissionsCategory1Type',
@@ -41,7 +42,7 @@ class NoOfPermitsTest extends MockeryTestCase
         $emissionsCategory2->shouldReceive('getRepresentation')
             ->andReturn($emissionsCategory2Representation);
 
-        $noOfPermits = new NoOfPermits($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee);
+        $noOfPermits = new NoOfPermits($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee, $skipAvailabilityValidation);
         $noOfPermits->addEmissionsCategory($emissionsCategory1);
         $noOfPermits->addEmissionsCategory($emissionsCategory2);
 
@@ -50,6 +51,7 @@ class NoOfPermitsTest extends MockeryTestCase
             'maxPermitted' => $maxPermitted,
             'applicationFee' => $applicationFee,
             'issueFee' => $issueFee,
+            'skipAvailabilityValidation' => $skipAvailabilityValidation,
             'emissionsCategories' => [
                 $emissionsCategory1Representation,
                 $emissionsCategory2Representation
