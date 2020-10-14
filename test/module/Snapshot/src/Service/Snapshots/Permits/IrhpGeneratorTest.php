@@ -56,7 +56,10 @@ class IrhpGeneratorTest extends MockeryTestCase
         $this->sut->generate();
     }
 
-    public function testGenerate()
+    /**
+     * @dataProvider dpGenerate
+     */
+    public function testGenerate($isCertificateOfRoadworthiness, $expectedGuidanceDeclarationTitle)
     {
         $operatorName = 'operator name';
         $permitTypeDescription = 'permit type';
@@ -77,6 +80,10 @@ class IrhpGeneratorTest extends MockeryTestCase
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('getName->getDescription')->once()->andReturn($permitTypeDescription);
         $irhpPermitType->shouldReceive('getId')->once()->withNoArgs()->andReturn($permitTypeId);
+        $irhpPermitType->shouldReceive('isCertificateOfRoadworthiness')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($isCertificateOfRoadworthiness);
 
         $irhpApplication = m::mock(IrhpApplication::class);
 
@@ -110,6 +117,7 @@ class IrhpGeneratorTest extends MockeryTestCase
             'questionAnswerPartialName' => 'question-answer-section-qa',
             'questionAnswerData' => $questionAnswerData,
             'guidanceDeclaration' => [
+                'title' => $expectedGuidanceDeclarationTitle,
                 'bullets' => 'markup-irhp-declaration-' . $permitTypeId,
                 'declaration' => 'permits.snapshot.declaration',
             ],
@@ -132,5 +140,13 @@ class IrhpGeneratorTest extends MockeryTestCase
 
         $this->sut->setData(['entity' => $irhpApplication]);
         $this->sut->generate();
+    }
+
+    public function dpGenerate()
+    {
+        return [
+            [false, 'permits.snapshot.declaration.title'],
+            [true, 'permits.snapshot.declaration.title.certificate'],
+        ];
     }
 }

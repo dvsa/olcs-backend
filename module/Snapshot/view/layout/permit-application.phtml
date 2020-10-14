@@ -22,6 +22,7 @@
                 echo $this->partial(
                         'partials/read-only/printable-declaration-bullets',
                         [
+                            'title' => $guidanceDeclaration['title'],
                             'bullets' => $guidanceDeclaration['bullets'],
                             'declaration' => $guidanceDeclaration['declaration']
                         ]
