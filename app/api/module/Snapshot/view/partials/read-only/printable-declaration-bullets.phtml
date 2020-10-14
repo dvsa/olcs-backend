@@ -1,4 +1,5 @@
 <div class="printable__section">
+    <p><?php echo $this->escapeHtml($this->translate($title, 'snapshot')); ?></p>
     <?php echo $this->translate($bullets, 'snapshot'); //pre rendered html partial so not escaped ?>
     <p><strong><?php echo $this->escapeHtml($this->translate($declaration, 'snapshot')); ?></strong></p>
 </div>
