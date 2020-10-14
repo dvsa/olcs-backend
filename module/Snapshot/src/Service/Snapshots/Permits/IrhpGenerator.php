@@ -61,6 +61,9 @@ class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterf
                 'questionAnswerPartialName' => 'question-answer-section-qa',
                 'questionAnswerData' => $answersSummaryRepresentation['rows'],
                 'guidanceDeclaration' => [
+                    'title' => $permitType->isCertificateOfRoadworthiness()
+                        ? 'permits.snapshot.declaration.title.certificate'
+                        : 'permits.snapshot.declaration.title',
                     'bullets' => 'markup-irhp-declaration-' . $permitType->getId(),
                     'declaration' => 'permits.snapshot.declaration',
                 ],
