@@ -75,6 +75,10 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
             $irhpApplication->getIssueFeeProductReference()
         );
 
+        // validation against the remaining stock should be skipped
+        // when the application is APSG and under consideration
+        $skipAvailabilityValidation = $irhpApplication->isApsg() && $irhpApplication->isUnderConsideration();
+
         $maxPermitted = $this->stockLicenceMaxPermittedCounter->getCount($irhpPermitStock, $licence);
 
         $maxCanApplyFor = $maxPermitted;
@@ -87,7 +91,8 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
             $maxCanApplyFor,
             $maxPermitted,
             $applicationFee->getFixedValue(),
-            $issueFee->getFixedValue()
+            $issueFee->getFixedValue(),
+            $skipAvailabilityValidation
         );
 
         $this->emissionsCategoryConditionalAdder->addIfRequired(
