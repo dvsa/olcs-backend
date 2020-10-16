@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
+use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -135,6 +136,12 @@ class RevokeTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
+            ['id' => 532],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 revoked"], $result->getMessages());
@@ -213,6 +220,12 @@ class RevokeTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
+            ['id' => 532],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 revoked"], $result->getMessages());
@@ -277,6 +290,12 @@ class RevokeTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             EndInterim::class,
             ['licenceId' => 532],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
+            ['id' => 532],
             new Result()
         );
 
@@ -346,6 +365,12 @@ class RevokeTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             EndInterim::class,
             ['licenceId' => 532],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
+            ['id' => 532],
             new Result()
         );
 

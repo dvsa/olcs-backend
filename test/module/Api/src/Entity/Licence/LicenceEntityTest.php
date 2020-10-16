@@ -2645,4 +2645,35 @@ class LicenceEntityTest extends EntityTester
         $licence->setLicNo('UPB2000001');
         $this->assertFalse($licence->isExempt());
     }
+
+    public function testGetOngoingPermitApplications()
+    {
+        $irhpApplication1 = m::mock(IrhpApplication::class);
+        $irhpApplication1->shouldReceive('isOngoing')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $irhpApplication2 = m::mock(IrhpApplication::class);
+        $irhpApplication2->shouldReceive('isOngoing')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $irhpApplication3 = m::mock(IrhpApplication::class);
+        $irhpApplication3->shouldReceive('isOngoing')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->setIrhpApplications(
+            new ArrayCollection([$irhpApplication1, $irhpApplication2, $irhpApplication3])
+        );
+
+        $ongoingIrhpApplications = $licence->getOngoingIrhpApplications();
+        $ongoingIrhpApplicationsArray = $ongoingIrhpApplications->toArray();
+
+        $this->assertCount(2, $ongoingIrhpApplicationsArray);
+        $this->assertSame($irhpApplication1, $ongoingIrhpApplicationsArray[0]);
+        $this->assertSame($irhpApplication3, $ongoingIrhpApplicationsArray[1]);
+    }
 }

@@ -1567,4 +1567,23 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         return (substr($this->licNo, 0, 1) === self::LICENCE_EXEMPT_PREFIX);
     }
+
+    /**
+     * Get all ongoing irhp applications associated with this licence
+     *
+     * @return ArrayCollection
+     */
+    public function getOngoingIrhpApplications()
+    {
+        $irhpApplications = $this->irhpApplications;
+        $ongoingIrhpApplications = [];
+
+        foreach ($irhpApplications as $irhpApplication) {
+            if ($irhpApplication->isOngoing()) {
+                $ongoingIrhpApplications[] = $irhpApplication;
+            }
+        }
+
+        return new ArrayCollection($ongoingIrhpApplications);
+    }
 }
