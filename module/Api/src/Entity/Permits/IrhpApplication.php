@@ -2160,6 +2160,22 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Whether the permit application is APSG
+     *
+     * @return bool
+     */
+    public function isApsg()
+    {
+        $businessProcess = $this->getBusinessProcess();
+
+        if ($businessProcess === null) {
+            return false;
+        }
+
+        return $businessProcess->getId() == RefData::BUSINESS_PROCESS_APSG;
+    }
+
+    /**
      * Whether the permit application can be revived from an unsuccessful state
      *
      * @return bool

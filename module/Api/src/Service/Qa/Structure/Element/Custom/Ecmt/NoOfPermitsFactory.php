@@ -11,11 +11,12 @@ class NoOfPermitsFactory
      * @param int $maxPermitted
      * @param int $applicationFee
      * @param int $issueFee
+     * @param bool $skipAvailabilityValidation
      *
      * @return NoOfPermits
      */
-    public function create($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee)
+    public function create($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee, $skipAvailabilityValidation)
     {
-        return new NoOfPermits($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee);
+        return new NoOfPermits($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee, $skipAvailabilityValidation);
     }
 }

@@ -28,15 +28,17 @@ class NoOfPermits implements ElementInterface
      * @param int $maxPermitted
      * @param int $applicationFee
      * @param int $issueFee
+     * @param bool $skipAvailabilityValidation
      *
      * @return NoOfPermits
      */
-    public function __construct($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee)
+    public function __construct($maxCanApplyFor, $maxPermitted, $applicationFee, $issueFee, $skipAvailabilityValidation)
     {
         $this->maxCanApplyFor = $maxCanApplyFor;
         $this->maxPermitted = $maxPermitted;
         $this->applicationFee = $applicationFee;
         $this->issueFee = $issueFee;
+        $this->skipAvailabilityValidation = $skipAvailabilityValidation;
     }
 
     /**
@@ -49,6 +51,7 @@ class NoOfPermits implements ElementInterface
             'maxPermitted' => $this->maxPermitted,
             'applicationFee' => $this->applicationFee,
             'issueFee' => $this->issueFee,
+            'skipAvailabilityValidation' => $this->skipAvailabilityValidation,
             'emissionsCategories' => $this->getEmissionsCategoriesRepresentation()
         ];
     }
