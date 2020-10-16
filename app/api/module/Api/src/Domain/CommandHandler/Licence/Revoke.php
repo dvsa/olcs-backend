@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\DeleteApplication;
+use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as ReturnComLics;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -121,6 +122,14 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
                 }
             }
         }
+
+        $result->merge(
+            $this->handleSideEffect(
+                EndIrhpApplicationsAndPermits::create(
+                    ['id' => $licence->getId()]
+                )
+            )
+        );
 
         // Exclude PSV Special Restricted licences
         if (!($licence->isPsv() && $licence->isSpecialRestricted())) {

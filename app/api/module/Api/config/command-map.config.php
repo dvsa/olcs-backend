@@ -222,6 +222,7 @@ return [
     TransferCommand\Licence\CreatePsvVehicle::class => CommandHandler\Licence\CreatePsvVehicle::class,
     Command\Licence\ReturnAllCommunityLicences::class => CommandHandler\Licence\ReturnAllCommunityLicences::class,
     Command\Licence\ExpireAllCommunityLicences::class => CommandHandler\Licence\ExpireAllCommunityLicences::class,
+    Command\Licence\EndIrhpApplicationsAndPermits::class => CommandHandler\Licence\EndIrhpApplicationsAndPermits::class,
     TransferCommand\Licence\UpdateTrailers::class => CommandHandler\Licence\UpdateTrailers::class,
     TransferCommand\Licence\UpdateVehicles::class => CommandHandler\Licence\UpdateVehicles::class,
     Command\Licence\TmNominatedTask::class => CommandHandler\Licence\TmNominatedTask::class,
