@@ -840,4 +840,28 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
 
         return $result;
     }
+
+    /**
+     * Whether the country associated with this stock is Morocco
+     *
+     * @return bool
+     */
+    public function isMorocco()
+    {
+        return $this->country->getId() == Country::ID_MOROCCO;
+    }
+
+    /**
+     * Return the translation key to be used to represent the period selection page on bilateral
+     *
+     * @return string
+     */
+    public function getBilateralAnswerSummaryLabelKey()
+    {
+        if ($this->isMorocco()) {
+            return 'permits.page.bilateral.permit-needed';
+        }
+
+        return 'permits.page.bilateral.which-period-required';
+    }
 }
