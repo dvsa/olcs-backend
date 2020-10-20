@@ -351,6 +351,22 @@ return [
     'continuations.people-empty-table-message.org_t_st' => 'Ni chofnodir unrhyw berchennog ar eich trwydded',
 
     //permit snapshot translations
+
+    'bilateral.permit.category.label.standard-multiple-15.2020' => 'Trwydded siwrnai luosog safonol ar gyfer 2020',
+    'bilateral.permit.category.label.standard-multiple-15.2021' => 'Trwydded siwrnai luosog safonol ar gyfer 2021',
+    'bilateral.permit.category.label.standard-multiple-15.2022' => 'Trwydded siwrnai luosog safonol ar gyfer 2022',
+    'bilateral.permit.category.label.standard-multiple-15.2023' => 'Trwydded siwrnai luosog safonol ar gyfer 2023',
+    'bilateral.permit.category.label.standard-multiple-15.2024' => 'Trwydded siwrnai luosog safonol ar gyfer 2024',
+    'bilateral.permit.category.label.standard-multiple-15.2025' => 'Trwydded siwrnai luosog safonol ar gyfer 2025',
+    'bilateral.permit.category.label.standard-multiple-15.2026' => 'Trwydded siwrnai luosog safonol ar gyfer 2026',
+    'bilateral.permit.category.label.standard-multiple-15.2027' => 'Trwydded siwrnai luosog safonol ar gyfer 2027',
+    'bilateral.permit.category.label.standard-multiple-15.2028' => 'Trwydded siwrnai luosog safonol ar gyfer 2028',
+    'bilateral.permit.category.label.standard-multiple-15.2029' => 'Trwydded siwrnai luosog safonol ar gyfer 2029',
+    'bilateral.permit.category.label.standard-multiple-15.2030' => 'Trwydded siwrnai luosog safonol ar gyfer 2030',
+    'bilateral.permit.category.label.standard-single' => 'Trwydded siwrnai sengl safonol',
+    'bilateral.permit.category.label.empty-entry' => 'Trwydded siwrnai sengl wag',
+    'bilateral.permit.category.label.hors-contigent' => 'Hors trwydded siwrnai sengl amodol',
+
     'section.name.application/licence' => 'Rhif trwydded',
     'section.name.application/check-answers' => 'Gwiriwch eich atebion',
     'section.name.application/declaration' => 'Datganiad',

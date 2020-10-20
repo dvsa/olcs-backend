@@ -91,7 +91,7 @@ class BilateralIpaAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInte
         }
 
         return $this->answersSummaryRowFactory->create(
-            'permits.page.bilateral.which-period-required',
+            $stock->getBilateralAnswerSummaryLabelKey(),
             $formattedAnswer,
             $slug
         );

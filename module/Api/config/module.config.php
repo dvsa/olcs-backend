@@ -89,10 +89,14 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\EmissionsStandardsFactory::class,
             'QaBilateralNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsFactory::class,
+            'QaBilateralNoOfPermitsMoroccoElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsMoroccoFactory::class,
             'QaBilateralNoOfPermitsTextFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsTextFactory::class,
             'QaBilateralNoOfPermitsAnswerSummaryProvider' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSummaryProvider::class,
+            'QaBilateralNoOfPermitsMoroccoAnswerSummaryProvider' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsMoroccoAnswerSummaryProvider::class,
             'QaBilateralPermitUsageAnswerSummaryProvider' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageAnswerSummaryProvider::class,
 
@@ -361,10 +365,14 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\EmissionsStandardsAnswerSaverFactory::class,
             'QaBilateralNoOfPermitsElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsGeneratorFactory::class,
+            'QaBilateralNoOfPermitsMoroccoElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsMoroccoGeneratorFactory::class,
             'QaBilateralClientReturnCodeHandler' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\ClientReturnCodeHandlerFactory::class,
             'QaBilateralNoOfPermitsAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSaverFactory::class,
+            'QaBilateralNoOfPermitsMoroccoAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsMoroccoAnswerSaverFactory::class,
             'QaBilateralNoOfPermitsUpdater' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsUpdaterFactory::class,
             'QaBilateralNoOfPermitsAnswerClearer' =>
@@ -785,6 +793,8 @@ return [
                 QaStrategy\BilateralThirdCountryFormControlStrategyFactory::class,
             Question::FORM_CONTROL_BILATERAL_EMISSIONS_STANDARDS =>
                 QaStrategy\BilateralEmissionsStandardsFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_BILATERAL_NO_OF_PERMITS_MOROCCO =>
+                QaStrategy\BilateralNoOfPermitsMoroccoFormControlStrategyFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\FeeBreakdown\BilateralFeeBreakdownGenerator;
 use Mockery as m;
@@ -24,7 +25,6 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
         $feeTypeRepo = m::mock(FeeTypeRepository::class);
 
         $bilateralPermitUsageSelection1 = RefData::JOURNEY_SINGLE;
-        $countryId1 = 'ES';
         $countryDesc1 = 'Spain';
         $filteredBilateralRequired1 = [
             IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => 5,
@@ -62,15 +62,16 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($bilateralPermitUsageSelection1);
         $country1 = m::mock(Country::class);
-        $country1->shouldReceive('getId')
-            ->withNoArgs()
-            ->andReturn($countryId1);
         $country1->shouldReceive('getCountryDesc')
             ->withNoArgs()
             ->andReturn($countryDesc1);
-        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry')
+        $irhpPermitStock1 = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock1->shouldReceive('getCountry')
             ->withNoArgs()
             ->andReturn($country1);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock1);
         $irhpPermitApplication1->shouldReceive('getFilteredBilateralRequired')
             ->withNoArgs()
             ->andReturn($filteredBilateralRequired1);
@@ -100,25 +101,25 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
             });
 
         $irhpPermitApplication1->shouldReceive('getBilateralFeeProductReferences')
-            ->with($countryId1, IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED)
+            ->with($irhpPermitStock1, IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED)
             ->andReturn([$productReference1StandardApplication, $productReference1StandardIssue]);
         $irhpPermitApplication1->shouldReceive('getBilateralFeeProductReferences')
-            ->with($countryId1, IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED)
+            ->with($irhpPermitStock1, IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED)
             ->andReturn([$productReference1CabotageApplication, $productReference1CabotageIssue]);
 
-        $bilateralPermitUsageSelection2 = RefData::JOURNEY_MULTIPLE;
-        $countryId2 = 'NO';
-        $countryDesc2 = 'Norway';
+        $countryDesc2 = 'Morocco';
         $filteredBilateralRequired2 = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => 12,
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => 12,
         ];
 
-        $productReference2StandardApplication = 'PRODUCT_REFERENCE_2_STANDARD_APPLICATION';
-        $productReference2StandardIssue = 'PRODUCT_REFERENCE_2_STANDARD_ISSUE';
+        $productReference2StandardApplication = 'PRODUCT_REFERENCE_2_MOROCCO_APPLICATION';
+        $productReference2StandardIssue = 'PRODUCT_REFERENCE_2_MOROCCO_ISSUE';
 
         $applicationFeeType2StandardApplication = m::mock(FeeType::class);
         $applicationFeeType2StandardIssue = m::mock(FeeType::class);
         $feePerPermit2Standard = 30;
+
+        $moroccoPeriodNameKey = 'morocco.period.name.key';
 
         $feeTypeRepo->shouldReceive('getLatestByProductReference')
             ->with($productReference2StandardApplication)
@@ -128,19 +129,20 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
             ->andReturn($applicationFeeType2StandardIssue);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication2->shouldReceive('getBilateralPermitUsageSelection')
-            ->withNoArgs()
-            ->andReturn($bilateralPermitUsageSelection2);
         $country2 = m::mock(Country::class);
-        $country2->shouldReceive('getId')
-            ->withNoArgs()
-            ->andReturn($countryId2);
         $country2->shouldReceive('getCountryDesc')
             ->withNoArgs()
             ->andReturn($countryDesc2);
-        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry')
+        $irhpPermitStock2 = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock2->shouldReceive('getCountry')
             ->withNoArgs()
             ->andReturn($country2);
+        $irhpPermitStock2->shouldReceive('getPeriodNameKey')
+            ->withNoArgs()
+            ->andReturn($moroccoPeriodNameKey);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock2);
         $irhpPermitApplication2->shouldReceive('getFilteredBilateralRequired')
             ->withNoArgs()
             ->andReturn($filteredBilateralRequired2);
@@ -161,7 +163,7 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
             });
 
         $irhpPermitApplication2->shouldReceive('getBilateralFeeProductReferences')
-            ->with($countryId2, IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED)
+            ->with($irhpPermitStock2, IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED)
             ->andReturn([$productReference2StandardApplication, $productReference2StandardIssue]);
 
         $irhpPermitApplications = [$irhpPermitApplication1, $irhpPermitApplication2];
@@ -175,8 +177,8 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
 
         $expectedResult = [
             [
-                'countryName' => 'Norway',
-                'type' => 'permits.irhp.range.type.standard.multiple',
+                'countryName' => 'Morocco',
+                'type' => 'morocco.period.name.key',
                 'quantity' => 12,
                 'total' => 360,
             ],

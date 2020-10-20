@@ -106,6 +106,12 @@ class RefData extends AbstractRefData
     const STD_OR_CAB_STANDARD = 'std_or_cab_standard';
     const STD_OR_CAB_CABOTAGE = 'std_or_cab_cabotage';
 
+    // permit categories for morocco bilaterals
+    const PERMIT_CAT_STANDARD_MULTIPLE_15 = 'permit_cat_standard_multiple_15';
+    const PERMIT_CAT_STANDARD_SINGLE = 'permit_cat_standard_single';
+    const PERMIT_CAT_EMPTY_ENTRY = 'permit_cat_empty_entry';
+    const PERMIT_CAT_HORS_CONTINGENT = 'permit_cat_hors_contingent';
+
     // ecmt permit usage (three options)
     const ECMT_PERMIT_USAGE_THREE_BOTH = 'st_permit_usage_both';
     const ECMT_PERMIT_USAGE_THREE_CROSS_TRADE_ONLY = 'st_permit_usage_cross_trade_only';

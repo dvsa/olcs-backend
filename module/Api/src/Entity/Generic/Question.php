@@ -44,6 +44,7 @@ class Question extends AbstractQuestion
     const FORM_CONTROL_BILATERAL_NO_OF_PERMITS = 'form_control_bi_no_of_permits';
     const FORM_CONTROL_BILATERAL_THIRD_COUNTRY = 'form_control_bi_third_co';
     const FORM_CONTROL_BILATERAL_EMISSIONS_STANDARDS = 'form_control_bi_emissions_std';
+    const FORM_CONTROL_BILATERAL_NO_OF_PERMITS_MOROCCO = 'form_control_bi_no_of_permits_ma';
 
     // Question data types
     const QUESTION_TYPE_STRING = 'question_type_string';

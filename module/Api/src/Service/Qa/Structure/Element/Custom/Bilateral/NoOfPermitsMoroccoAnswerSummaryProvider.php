@@ -2,13 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AlwaysIncludeSlugTrait;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
-class NoOfPermitsAnswerSummaryProvider implements AnswerSummaryProviderInterface
+class NoOfPermitsMoroccoAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
     use AlwaysIncludeSlugTrait, IrhpPermitApplicationOnlyTrait;
 
@@ -17,7 +18,7 @@ class NoOfPermitsAnswerSummaryProvider implements AnswerSummaryProviderInterface
      */
     public function getTemplateName()
     {
-        return 'bilateral-permits-required';
+        return 'generic';
     }
 
     /**
@@ -27,23 +28,9 @@ class NoOfPermitsAnswerSummaryProvider implements AnswerSummaryProviderInterface
     {
         $irhpPermitApplication = $qaContext->getQaEntity();
 
-        $usage = $irhpPermitApplication->getBilateralPermitUsageSelection();
+        $bilateralRequired = $irhpPermitApplication->getFilteredBilateralRequired();
+        $moroccoBilateralRequired = $bilateralRequired[IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED];
 
-        $rows = [];
-
-        foreach ($irhpPermitApplication->getFilteredBilateralRequired() as $type => $count) {
-            $rows[] = [
-                'key' => sprintf(
-                    'qanda.bilateral.no-of-permits.%s.%s',
-                    $usage,
-                    $type
-                ),
-                'count' => $count
-            ];
-        }
-
-        return [
-            'rows' => $rows
-        ];
+        return ['answer' => $moroccoBilateralRequired];
     }
 }

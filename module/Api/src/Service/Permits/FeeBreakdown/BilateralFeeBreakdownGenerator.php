@@ -43,21 +43,19 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
         $rows = [];
 
         foreach ($irhpPermitApplications as $irhpPermitApplication) {
-            $permitUsage = $irhpPermitApplication->getBilateralPermitUsageSelection();
-
             $countryName = $irhpPermitApplication->getIrhpPermitWindow()
                 ->getIrhpPermitStock()
                 ->getCountry()
                 ->getCountryDesc();
 
             $bilateralRequired = $irhpPermitApplication->getFilteredBilateralRequired();
-            foreach ($bilateralRequired as $standardOrCabotage => $quantity) {
-                $feePerPermit = $this->getFeePerPermit($irhpPermitApplication, $standardOrCabotage);
+            foreach ($bilateralRequired as $requestedType => $quantity) {
+                $feePerPermit = $this->getFeePerPermit($irhpPermitApplication, $requestedType);
                 $total = $feePerPermit * $quantity;
 
                 $rows[] = [
                     'countryName' => $countryName,
-                    'type' => $this->generateTranslationKey($standardOrCabotage, $permitUsage),
+                    'type' => $this->generateTranslationKey($irhpPermitApplication, $requestedType),
                     'quantity' => $quantity,
                     'total' => $total,
                 ];
@@ -84,19 +82,19 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
      * Get the fee amount per permit
      *
      * @param IrhpPermitApplication $irhpPermitApplication
-     * @param string $standardOrCabotage
+     * @param string $requestedType
      *
      * @return int
      */
-    public function getFeePerPermit(IrhpPermitApplication $irhpPermitApplication, $standardOrCabotage)
+    public function getFeePerPermit(IrhpPermitApplication $irhpPermitApplication, $requestedType)
     {
-        $countryId = $irhpPermitApplication->getIrhpPermitWindow()
-            ->getIrhpPermitStock()
-            ->getCountry()
-            ->getId();
+        $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
 
         $feeTypes = [];
-        $productReferences = $irhpPermitApplication->getBilateralFeeProductReferences($countryId, $standardOrCabotage);
+        $productReferences = $irhpPermitApplication->getBilateralFeeProductReferences(
+            $irhpPermitStock,
+            $requestedType
+        );
 
         foreach ($productReferences as $productReference) {
             $feeTypes[] = $this->feeTypeRepo->getLatestByProductReference($productReference);
@@ -108,16 +106,24 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
     /**
      * Generate a translation key for use in the type column
      *
-     * @param string $standardOrCabotage
-     * @param string $permitUsage
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param string $requestedType
      *
      * @return string
      */
-    private function generateTranslationKey($standardOrCabotage, $permitUsage)
+    private function generateTranslationKey(IrhpPermitApplication $irhpPermitApplication, $requestedType)
     {
+        if ($requestedType == IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED) {
+            return $irhpPermitApplication->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getPeriodNameKey();
+        }
+
+        $permitUsage = $irhpPermitApplication->getBilateralPermitUsageSelection();
+
         return sprintf(
             'permits.irhp.range.type.%s.%s',
-            self::STANDARD_OR_CABOTAGE_KEY_MAPPINGS[$standardOrCabotage],
+            self::STANDARD_OR_CABOTAGE_KEY_MAPPINGS[$requestedType],
             self::PERMIT_USAGE_KEY_MAPPINGS[$permitUsage]
         );
     }
