@@ -40,6 +40,10 @@ class StockBasedPermitTypeConfigProvider
         $irhpPermitStock = $this->irhpPermitStockRepo->fetchById($stockId);
         $irhpPermitTypeId = $irhpPermitStock->getIrhpPermitType()->getId();
 
-        return $this->typeBasedPermitTypeConfigProvider->getPermitTypeConfig($irhpPermitTypeId);
+        $excludedRestrictedCountryIds = $irhpPermitStock->getExcludedRestrictedCountryIds();
+
+        $restrictedCountryIds = $this->typeBasedPermitTypeConfigProvider->getPermitTypeConfig($irhpPermitTypeId, $excludedRestrictedCountryIds);
+
+        return $restrictedCountryIds;
     }
 }
