@@ -51,10 +51,11 @@ class TypeBasedPermitTypeConfigProviderTest extends MockeryTestCase
      */
     public function testGetPermitTypeConfig(
         $irhpPermitTypeId,
+        $excludedRestrictedCountryIds,
         $expectedRestrictedCountryIds,
         $expectedRestrictedCountriesQuestionKey
     ) {
-        $permitTypeConfig = $this->typeBasedPermitTypeConfigProvider->getPermitTypeConfig($irhpPermitTypeId);
+        $permitTypeConfig = $this->typeBasedPermitTypeConfigProvider->getPermitTypeConfig($irhpPermitTypeId, $excludedRestrictedCountryIds);
     
         $this->assertEquals(
             $expectedRestrictedCountriesQuestionKey,
@@ -72,12 +73,26 @@ class TypeBasedPermitTypeConfigProviderTest extends MockeryTestCase
         return [
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                [],
                 $this->ecmtAnnualRestrictedCountryIds,
                 $this->ecmtAnnualRestrictedCountriesQuestionKey,
             ],
             [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                ['DE'],
+                ['FR'],
+                $this->ecmtAnnualRestrictedCountriesQuestionKey,
+            ],
+            [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                [],
                 $this->ecmtShortTermRestrictedCountryIds,
+                $this->ecmtShortTermRestrictedCountriesQuestionKey,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                ['RU', 'IT'],
+                ['HU'],
                 $this->ecmtShortTermRestrictedCountriesQuestionKey,
             ],
         ];

@@ -25,12 +25,13 @@ class TypeBasedPermitTypeConfigProvider
      * Return the restricted country codes corresponding to the specified IrhpPermitType
      *
      * @param int $irhpPermitTypeId
+     * @param array $excludedRestrictedCountryIds
      *
      * @return PermitTypeConfig
      *
      * @throws RuntimeException
      */
-    public function getPermitTypeConfig($irhpPermitTypeId)
+    public function getPermitTypeConfig($irhpPermitTypeId, $excludedRestrictedCountryIds = [])
     {
         $typesConfig = $this->config['permits']['types'];
 
@@ -40,9 +41,11 @@ class TypeBasedPermitTypeConfigProvider
 
         $typeConfig = $typesConfig[$irhpPermitTypeId];
 
+        $restrictedCountryIds = array_diff($typeConfig['restricted_country_ids'], $excludedRestrictedCountryIds);
+
         return new PermitTypeConfig(
             $typeConfig['restricted_countries_question_key'],
-            $typeConfig['restricted_country_ids']
+            $restrictedCountryIds
         );
     }
 }
