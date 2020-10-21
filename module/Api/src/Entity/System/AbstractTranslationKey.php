@@ -62,7 +62,7 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
      * @var string
      *
      * @ORM\Id
-     * @ORM\Column(type="string", name="id", length=255)
+     * @ORM\Column(type="string", name="id", length=512)
      */
     protected $id;
 
