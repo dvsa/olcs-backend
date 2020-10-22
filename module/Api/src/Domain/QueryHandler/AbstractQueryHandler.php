@@ -2,9 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
-use Dvsa\Olcs\Api\Domain\RedisAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -15,13 +17,14 @@ use Dvsa\Olcs\Api\Domain\NationalRegisterAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Domain\TranslationLoaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\Audit as AuditCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity;
 use Olcs\Logging\Log\Logger;
-use Zend\Cache\Storage\Adapter\Redis;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 
 /**
@@ -257,10 +260,20 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
             $this->setOpenAmUser($mainServiceLocator->get(UserInterface::class));
         }
 
-        if ($this instanceof RedisAwareInterface) {
-            /** @var Redis $redis */
-            $redis = $mainServiceLocator->get(Redis::class);
-            $this->setRedis($redis);
+        if ($this instanceof CacheAwareInterface) {
+            /** @var CacheEncryptionService $cacheEncryptionService */
+            $cacheEncryptionService = $mainServiceLocator->get(CacheEncryptionService::class);
+            $this->setCache($cacheEncryptionService);
+        }
+
+        if ($this instanceof TranslationLoaderAwareInterface) {
+            $translationLoader = $mainServiceLocator->get('TranslatorPluginManager')->get(TranslationLoader::class);
+            $this->setTranslationLoader($translationLoader);
+        }
+
+        if ($this instanceof TranslatorAwareInterface) {
+            $translator = $mainServiceLocator->get('translator');
+            $this->setTranslator($translator);
         }
     }
 

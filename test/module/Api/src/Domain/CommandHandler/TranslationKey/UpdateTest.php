@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Update;
 use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Create;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Transfer\Command\TranslationKey\GenerateCache;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TranslationKey\Update as UpdateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKey as TranslationKeyRepo;
@@ -138,6 +139,10 @@ class UpdateTest extends CommandHandlerTestCase
             1
         );
 
+        $cacheResult = new Result();
+        $cacheResult->addMessage('Generate cache result message');
+        $this->expectedSideEffect(GenerateCache::class, [], $cacheResult);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -145,7 +150,8 @@ class UpdateTest extends CommandHandlerTestCase
                 'TranslationKey' => 'TEST_STR_ID'
             ],
             'messages' => [
-                'Translations Updated'
+                'Generate cache result message',
+                'Translations Updated',
             ]
         ];
 

@@ -1220,6 +1220,7 @@ return [
 
     //TranslationKey
     TransferCommand\TranslationKey\Update::class => CommandHandler\TranslationKey\Update::class,
+    TransferCommand\TranslationKey\GenerateCache::class => CommandHandler\TranslationKey\GenerateCache::class,
     Command\TranslationKeyText\Create::class => CommandHandler\TranslationKeyText\Create::class,
     Command\TranslationKeyText\Update::class => CommandHandler\TranslationKeyText\Update::class,
 
