@@ -1,32 +1,33 @@
 <?php
 
 /**
- * RevokeTest
+ * SurrenderTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Licence;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Surrender as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\Licence\SurrenderLicence as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Surrender as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
-use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
+use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
+use Dvsa\Olcs\Api\Domain\Repository\Licence;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Transfer\Command\Licence\SurrenderLicence as Command;
+use Mockery as m;
 
 /**
- * RevokeTest
+ * SurrenderTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
@@ -45,9 +46,7 @@ class SurrenderTest extends CommandHandlerTestCase
     {
         $this->refData = ['lsts_terminated', 'lsts_surrendered', 'lcat_psv', 'lcat_gv'];
 
-        $this->references = [
-
-        ];
+        $this->references = [];
 
         parent::initReferences();
     }
@@ -126,6 +125,12 @@ class SurrenderTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             EndInterim::class,
             ['licenceId' => 532],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
+            ['id' => 532],
             new Result()
         );
 
@@ -209,6 +214,12 @@ class SurrenderTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
+            ['id' => 532],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 surrendered"], $result->getMessages());
@@ -284,6 +295,12 @@ class SurrenderTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
+            ['id' => 532],
+            new Result()
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 surrendered"], $result->getMessages());
@@ -337,7 +354,8 @@ class SurrenderTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('licence' => 532), new Result()
+            array('licence' => 532),
+            new Result()
         );
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
@@ -369,6 +387,12 @@ class SurrenderTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             EndInterim::class,
             ['licenceId' => 532],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
+            ['id' => 532],
             new Result()
         );
 

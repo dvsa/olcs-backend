@@ -1,13 +1,14 @@
 <?php
 
 /**
- * Revoke a licence
+ * Surrender a licence
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\DeleteApplication;
+use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as ReturnComLics;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -111,7 +112,14 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
             }
         }
 
-        //
+        $result->merge(
+            $this->handleSideEffect(
+                EndIrhpApplicationsAndPermits::create(
+                    ['id' => $licence->getId()]
+                )
+            )
+        );
+
         if (!($licence->getStatus()->getId() === Licence::LICENCE_STATUS_TERMINATED &&
                 $licence->isPsv() &&
                 $licence->isSpecialRestricted())

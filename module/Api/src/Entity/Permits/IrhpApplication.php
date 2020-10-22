@@ -2500,4 +2500,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         $this->status = $status;
     }
+
+    /**
+     * Whether the permit application is ongoing
+     *
+     * @return bool
+     */
+    public function isOngoing()
+    {
+        return $this->isNotYetSubmitted() || $this->isUnderConsideration();
+    }
 }
