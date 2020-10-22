@@ -8,6 +8,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermit;
 
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;

@@ -6241,4 +6241,33 @@ class IrhpApplicationEntityTest extends EntityTester
             [RefData::BUSINESS_PROCESS_AG, false],
         ];
     }
+       
+    /**
+     * @dataProvider dpIsOngoing
+     */
+    public function testIsOngoing($isNotYetSubmitted, $isUnderConsideration, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isNotYetSubmitted')
+            ->withNoArgs()
+            ->andReturn($isNotYetSubmitted);
+        $entity->shouldReceive('isUnderConsideration')
+            ->withNoArgs()
+            ->andReturn($isUnderConsideration);
+
+        $this->assertEquals(
+            $expected,
+            $entity->isOngoing()
+        );
+    }
+
+    public function dpIsOngoing()
+    {
+        return [
+            [true, true, true],
+            [true, false, true],
+            [false, true, true],
+            [false, false, false],
+        ];
+    }
 }
