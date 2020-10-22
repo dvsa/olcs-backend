@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Snapshot;
 
 use Dvsa\Olcs\Utils\Translation\MissingTranslationProcessor;
+use Zend\Cache\Storage\Adapter\Redis;
 use Zend\I18n\Translator\Translator;
 
 /**
@@ -21,12 +22,13 @@ class Module
     {
         $sm = $e->getApplication()->getServiceManager();
 
-        // initialise the translator
-        /* @var $translator \Zend\I18n\Translator\Translator */
+        /**
+         * @var Translator $translator
+         * @var Redis      $cache
+         */
+        $cache = $sm->get(Redis::class);
         $translator = $sm->get('translator');
-        $translator->setLocale('en_GB');
-        $translator->setFallbackLocale('en_GB');
-        $translator->addTranslationFilePattern('phparray', __DIR__ . '/../config/language', '%s.php', 'snapshot');
+        $translator->setCache($cache);
 
         $events = $e->getApplication()->getEventManager();
 

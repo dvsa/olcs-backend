@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Service as ApiSrv;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
 use Dvsa\Olcs\Api\Service\Qa\Strategy as QaStrategy;
+use Dvsa\Olcs\Api\Service\Translator;
 use Dvsa\Olcs\DvlaSearch\Service\Client as DvlaSearchService;
 
 return [
@@ -1171,6 +1172,22 @@ return [
         ],
         'factories' => [
             \Dvsa\Olcs\Api\Service\Nr\Filter\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory::class
+        ],
+    ],
+    'translator_plugins' => [
+        'factories' => [
+            Translator\TranslationLoader::class => Translator\TranslationLoaderFactory::class
+        ],
+    ],
+    'translator' => [
+        'locale' => [
+            'en_GB', //default locale
+            'en_GB', //fallback locale
+        ],
+        'remote_translation' => [
+            [
+                'type' => Translator\TranslationLoader::class,
+            ]
         ],
     ],
 ];
