@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\Common;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
@@ -21,6 +22,7 @@ class StockBasedPermitTypeConfigProviderTest extends MockeryTestCase
     public function testGetPermitTypeConfig()
     {
         $irhpPermitStockId = 42;
+        $excludedRestrictedCountryIds = [Country::ID_AUSTRIA];
 
         $irhpPermitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
 
@@ -28,6 +30,10 @@ class StockBasedPermitTypeConfigProviderTest extends MockeryTestCase
         $irhpPermitStock->shouldReceive('getIrhpPermitType->getId')
             ->withNoArgs()
             ->andReturn($irhpPermitTypeId);
+        $irhpPermitStock->shouldReceive('getExcludedRestrictedCountryIds')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($excludedRestrictedCountryIds);
 
         $irhpPermitStockRepo = m::mock(IrhpPermitStockRepository::class);
         $irhpPermitStockRepo->shouldReceive('fetchById')
@@ -39,7 +45,7 @@ class StockBasedPermitTypeConfigProviderTest extends MockeryTestCase
 
         $typeBasedPermitTypeConfigProvider = m::mock(TypeBasedPermitTypeConfigProvider::class);
         $typeBasedPermitTypeConfigProvider->shouldReceive('getPermitTypeConfig')
-            ->with($irhpPermitTypeId)
+            ->with($irhpPermitTypeId, $excludedRestrictedCountryIds)
             ->once()
             ->andReturn($permitTypeConfig);
 

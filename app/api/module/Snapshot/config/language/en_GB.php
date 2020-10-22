@@ -476,6 +476,7 @@ return [
     'qanda.ecmt-short-term.restricted-countries.question-summary' => 'Transportation of goods to Greece, Hungary, Italy or Russia',
     'qanda.ecmt-short-term.restricted-countries.question-summary.ecmt-short-term-2020-apsg-without-sectors' => 'Transportation of goods to Greece, Hungary, Italy or Russia',
     'qanda.ecmt-annual.restricted-countries.question-summary' => 'Transportation of goods to Austria, Greece, Hungary, Italy or Russia',
+    'qanda.ecmt-annual.restricted-countries.question-summary.without.AT' => 'Transportation of goods to Greece, Hungary, Italy or Russia',
     'qanda.ecmt.annual-trips-abroad.question-summary' => 'International trips in last 12 months with this licence',
     'qanda.ecmt.percentage-international-journeys.question-summary' => 'Percentage of international trips with this licence',
     'qanda.ecmt.sectors.question-summary' => 'Sector you mainly transport goods in',
