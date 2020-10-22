@@ -1,10 +1,10 @@
 <strong><?php
 
 if ($periodNameKey) {
-    echo($this->escapeHtml($this->translate($periodNameKey, 'snapshot')));
+    echo($this->escapeHtml($this->translate($periodNameKey)));
 } else {
     $translated = sprintf(
-        $this->translate('permits.check-your-answers.no-of-permits.year', 'snapshot'),
+        $this->translate('permits.check-your-answers.no-of-permits.year'),
         $validityYear
     );
 
@@ -16,10 +16,10 @@ if ($periodNameKey) {
 foreach ($emissionsCategories as $emissionsCategory) {
 
     if ($emissionsCategory['count'] > 0) {
-        $translatedKey = $this->translate($emissionsCategory['key'], 'snapshot');
+        $translatedKey = $this->translate($emissionsCategory['key']);
 
         $line = sprintf(
-            $this->translate('qanda.common.no-of-permits.emissions-category.line', 'snapshot'),
+            $this->translate('qanda.common.no-of-permits.emissions-category.line'),
             $emissionsCategory['count'],
             $translatedKey
         );

@@ -115,10 +115,10 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
             $this->sm->setService('translator', $mockTranslator);
 
             $mockTranslator->shouldReceive('translate')
-                ->with('no-files-uploaded', 'snapshot')
+                ->with('no-files-uploaded')
                 ->andReturn('no-files-uploaded-translated')
                 ->shouldReceive('translate')
-                ->with($expectedAdvertisements[0]['value'], 'snapshot')
+                ->with($expectedAdvertisements[0]['value'])
                 ->andReturn($expectedAdvertisements[0]['value']);
         }
 

@@ -1,5 +1,5 @@
 <?php if(!empty($header)): ?>
-    <h4><?php echo $this->translate($header, 'snapshot'); ?></h4>
+    <h4><?php echo $this->translate($header); ?></h4>
 <?php endif; ?>
 <?php
 $additionalClass = 'table--2-column';
@@ -17,7 +17,7 @@ foreach ($data as $line) {
             $openTag = '<td>';
             $closeTag = '</td>';
         }
-        $value = $this->translate($cell['value'], 'snapshot');
+        $value = $this->translate($cell['value']);
         if (!isset($cell['noEscape']) || $cell['noEscape'] === false) {
             $value = $this->escapeHtml($value);
         }

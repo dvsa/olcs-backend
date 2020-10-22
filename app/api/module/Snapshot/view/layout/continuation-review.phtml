@@ -3,14 +3,14 @@
 <html lang="en" class="review">
     
     <?php
-        echo $this->partial('partials/review-header', ['pageTitle' => $this->translate('Licence review', 'snapshot')]);
+        echo $this->partial('partials/review-header', ['pageTitle' => $this->translate('Licence review')]);
     ?>
 
     <body>
         
         <div class="review-header">
-            <p><?php echo $this->escapeHtml($this->translate($subTitle, 'snapshot')); ?></p>
-            <h1><?php echo $this->escapeHtml($this->translate($reviewTitle, 'snapshot')); ?></h1>
+            <p><?php echo $this->escapeHtml($this->translate($subTitle)); ?></p>
+            <h1><?php echo $this->escapeHtml($this->translate($reviewTitle)); ?></h1>
             <a class="hide-print" href="javascript:window.print()">Print this page</a>
         </div>
         <?php $count = 0; foreach ($sections as $section): $count++; ?>
@@ -20,7 +20,7 @@
                         if (!isset($settings['hide-count'])) {
                             echo $count . '. ';
                         }
-                        echo $this->escapeHtml($this->translate($section['header'], 'snapshot'));
+                        echo $this->escapeHtml($this->translate($section['header']));
                     ?>
                 </h2>
                 <?php

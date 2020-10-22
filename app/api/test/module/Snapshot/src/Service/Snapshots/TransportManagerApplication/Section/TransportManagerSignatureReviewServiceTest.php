@@ -46,15 +46,15 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
         $mockTranslator
             ->shouldReceive('translate')
-            ->with(TransportManagerSignatureReviewService::ADDRESS, 'snapshot')
+            ->with(TransportManagerSignatureReviewService::ADDRESS)
             ->once()
             ->andReturn('ADDRESS');
 
-        $mockTranslator->shouldReceive('translate')->with($expected['label'], 'snapshot')->once()
+        $mockTranslator->shouldReceive('translate')->with($expected['label'])->once()
             ->andReturn($expected['label'] . 'translated');
 
         if (empty($data['TmDigitalSignature'])) {
-            $mockTranslator->shouldReceive('translate')->with($expected['markup'], 'snapshot')->once()->
+            $mockTranslator->shouldReceive('translate')->with($expected['markup'])->once()->
             andReturn(
                 '%s_%s'
             );
@@ -79,7 +79,7 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
             $mockTranslator
                 ->shouldReceive('translate')
-                ->with(TransportManagerSignatureReviewService::SIGNATURE_DIGITAL_BOTH, 'snapshot')
+                ->with(TransportManagerSignatureReviewService::SIGNATURE_DIGITAL_BOTH)
                 ->once()
                 ->andReturn('%s_%s_%s_%s_%s_%s_%s');
 
@@ -190,11 +190,11 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
         $mockTranslator
             ->shouldReceive('translate')
-            ->with(TransportManagerSignatureReviewService::ADDRESS, 'snapshot')
+            ->with(TransportManagerSignatureReviewService::ADDRESS)
             ->once()
             ->andReturn('ADDRESS');
 
-        $mockTranslator->shouldReceive('translate')->with($expected['label'], 'snapshot')->once()
+        $mockTranslator->shouldReceive('translate')->with($expected['label'])->once()
             ->andReturn($expected['label'] . 'translated');
 
 
@@ -209,7 +209,7 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
         $mockTranslator
             ->shouldReceive('translate')
-            ->with($conditions['markup'], 'snapshot')
+            ->with($conditions['markup'])
             ->once()
             ->andReturn($expected['replacements']);
 

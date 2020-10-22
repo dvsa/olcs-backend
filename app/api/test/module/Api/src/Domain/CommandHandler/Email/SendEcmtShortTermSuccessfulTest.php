@@ -117,7 +117,7 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
             ->globally()
             ->ordered();
         $this->mockedSmServices['translator']->shouldReceive('translate')
-            ->with($this->periodNameKey, 'snapshot')
+            ->with($this->periodNameKey)
             ->once()
             ->globally()
             ->ordered()
@@ -179,7 +179,7 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
             ->globally()
             ->ordered();
         $this->mockedSmServices['translator']->shouldReceive('translate')
-            ->with($this->periodNameKey, 'snapshot')
+            ->with($this->periodNameKey)
             ->once()
             ->globally()
             ->ordered()

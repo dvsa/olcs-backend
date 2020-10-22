@@ -38,7 +38,7 @@ class VariationDiscsReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->with('variation-review-discs-change', 'snapshot')
+            ->with('variation-review-discs-change')
             ->andReturn('variation-review-discs-change-translated');
 
         $expected = [

@@ -150,7 +150,7 @@ class AbstractReviewServiceTest extends MockeryTestCase
             ->andReturn($translator);
 
         $translator->shouldReceive('translate')
-            ->with($translationKey, 'snapshot')
+            ->with($translationKey)
             ->andReturn($translated);
 
         $this->assertEquals(

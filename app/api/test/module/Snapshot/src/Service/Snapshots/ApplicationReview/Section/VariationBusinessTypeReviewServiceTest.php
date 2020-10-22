@@ -38,7 +38,7 @@ class VariationBusinessTypeReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->with('variation-review-business-type-change', 'snapshot')
+            ->with('variation-review-business-type-change')
             ->andReturn('variation-review-business-type-change-translated');
 
         $expected = [

@@ -26,7 +26,7 @@ class AbstractReviewServiceTest extends MockeryTestCase
     {
         $mockTranslator = m::mock()
             ->shouldReceive('translate')
-            ->with('foo', 'snapshot')
+            ->with('foo')
             ->andReturn('foo_translated')
             ->once()
             ->getMock();

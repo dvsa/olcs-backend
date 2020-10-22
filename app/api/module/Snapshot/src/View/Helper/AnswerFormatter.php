@@ -64,7 +64,7 @@ class AnswerFormatter extends AbstractHelper
      */
     private function translateAndEscape($answer, bool $escape): string
     {
-        $translatedAnswer = $this->view->translate($answer, 'snapshot');
+        $translatedAnswer = $this->view->translate($answer);
 
         if ($escape) {
             return $this->view->escapeHtml($translatedAnswer);
