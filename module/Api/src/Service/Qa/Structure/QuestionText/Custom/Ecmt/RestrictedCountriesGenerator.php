@@ -49,7 +49,18 @@ class RestrictedCountriesGenerator implements QuestionTextGeneratorInterface
 
         $questionKey = sprintf('qanda.%s.restricted-countries.question', $translationKeyFragment);
         $questionSummaryKey = sprintf('qanda.%s.restricted-countries.question-summary', $translationKeyFragment);
-        $applicationPathGroupId = $irhpApplicationEntity->getAssociatedStock()->getApplicationPathGroup()->getId();
+
+        $associatedStock = $irhpApplicationEntity->getAssociatedStock();
+        $excludedRestrictedCountryIds = $associatedStock->getExcludedRestrictedCountryIds();
+
+        if (!empty($excludedRestrictedCountryIds)) {
+            $suffix = '.without.'.implode('.', $excludedRestrictedCountryIds);
+            $questionKey .= $suffix;
+            $questionSummaryKey .= $suffix;
+        }
+
+        $applicationPathGroupId = $associatedStock->getApplicationPathGroup()->getId();
+
         if ($applicationPathGroupId == ApplicationPathGroup::ECMT_SHORT_TERM_2020_APSG_WITHOUT_SECTORS_ID) {
             $questionKey = 'qanda.ecmt-short-term.restricted-countries.question.ecmt-short-term-2020-apsg-without-sectors';
             $questionSummaryKey = 'qanda.ecmt-short-term.restricted-countries.question-summary.ecmt-short-term-2020-apsg-without-sectors';

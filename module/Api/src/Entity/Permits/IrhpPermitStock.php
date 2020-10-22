@@ -864,4 +864,20 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
 
         return 'permits.page.bilateral.which-period-required';
     }
+
+    /**
+     * Get list of excluded restricted country ids
+     *
+     * @return array
+     */
+    public function getExcludedRestrictedCountryIds()
+    {
+        $excludedRestrictedCountryIds = [];
+
+        if ($this->irhpPermitType->isEcmtAnnual() && $this->hasEuro5Range() && !$this->hasEuro6Range()) {
+            $excludedRestrictedCountryIds[] = Country::ID_AUSTRIA;
+        }
+
+        return $excludedRestrictedCountryIds;
+    }
 }

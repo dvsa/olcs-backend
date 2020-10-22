@@ -2131,4 +2131,85 @@ class IrhpPermitStockEntityTest extends EntityTester
             [false, 'permits.page.bilateral.which-period-required'],
         ];
     }
+
+    /**
+     * @dataProvider dpGetExcludedRestrictedCountryIds
+     */
+    public function testGetExcludedRestrictedCountryIds(
+        $isEcmtAnnual,
+        $hasEuro5Range,
+        $hasEuro6Range,
+        $expected
+    ) {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpPermitType($irhpPermitType);
+
+        $entity->shouldReceive('hasEuro5Range')
+            ->andReturn($hasEuro5Range);
+        $entity->shouldReceive('hasEuro6Range')
+            ->andReturn($hasEuro6Range);
+
+        $this->assertEquals(
+            $expected,
+            $entity->getExcludedRestrictedCountryIds()
+        );
+    }
+
+    public function dpGetExcludedRestrictedCountryIds()
+    {
+        return [
+            [
+                'isEcmtAnnual' => false,
+                'hasEuro5Range' => false,
+                'hasEuro6Range' => false,
+                'expected' => [],
+            ],
+            [
+                'isEcmtAnnual' => false,
+                'hasEuro5Range' => true,
+                'hasEuro6Range' => false,
+                'expected' => [],
+            ],
+            [
+                'isEcmtAnnual' => false,
+                'hasEuro5Range' => false,
+                'hasEuro6Range' => true,
+                'expected' => [],
+            ],
+            [
+                'isEcmtAnnual' => false,
+                'hasEuro5Range' => true,
+                'hasEuro6Range' => true,
+                'expected' => [],
+            ],
+            [
+                'isEcmtAnnual' => true,
+                'hasEuro5Range' => false,
+                'hasEuro6Range' => false,
+                'expected' => [],
+            ],
+            [
+                'isEcmtAnnual' => true,
+                'hasEuro5Range' => true,
+                'hasEuro6Range' => false,
+                'expected' => [Country::ID_AUSTRIA],
+            ],
+            [
+                'isEcmtAnnual' => true,
+                'hasEuro5Range' => false,
+                'hasEuro6Range' => true,
+                'expected' => [],
+            ],
+            [
+                'isEcmtAnnual' => true,
+                'hasEuro5Range' => true,
+                'hasEuro6Range' => true,
+                'expected' => [],
+            ],
+        ];
+    }
 }
