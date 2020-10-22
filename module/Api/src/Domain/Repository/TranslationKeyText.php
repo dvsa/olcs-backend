@@ -30,4 +30,28 @@ class TranslationKeyText extends AbstractRepository
 
         return $qb->getQuery()->getOneOrNullResult(Query::HYDRATE_OBJECT);
     }
+
+    /**
+     * Fetch all translation keys, with option to filter by locale
+     *
+     * @param string|null $locale
+     * @param int         $hydrationMode
+     *
+     * @return mixed
+     */
+    public function fetchAll(?string $locale, int $hydrationMode = Query::HYDRATE_OBJECT)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->with('translationKey', 't')
+            ->with('language', 'l');
+
+        if ($locale !== null) {
+            $qb->andWhere($qb->expr()->eq('l.isoCode', ':locale'))->setParameter('locale', $locale);
+        }
+
+        return $qb->getQuery()->getResult($hydrationMode);
+    }
 }

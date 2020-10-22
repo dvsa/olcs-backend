@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
+use Zend\I18n\Translator\Translator;
 use Zend\I18n\Translator\TranslatorInterface;
 
 /**
@@ -10,7 +11,7 @@ use Zend\I18n\Translator\TranslatorInterface;
 trait TranslatorAwareTrait
 {
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface|Translator
      */
     protected $translator;
 
@@ -23,7 +24,7 @@ trait TranslatorAwareTrait
     }
 
     /**
-     * @return TranslatorInterface
+     * @return TranslatorInterface|Translator
      */
     public function getTranslator()
     {

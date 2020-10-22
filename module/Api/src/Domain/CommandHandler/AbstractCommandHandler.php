@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\RedisAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
@@ -18,6 +18,8 @@ use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
+use Dvsa\Olcs\Api\Domain\TranslationLoaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
@@ -27,13 +29,14 @@ use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
+use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
 use Dvsa\Olcs\Queue\Service\Queue;
 use Dvsa\Olcs\Queue\Service\QueueInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
 use Olcs\Logging\Log\Logger;
-use Zend\Cache\Storage\Adapter\Redis;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -239,17 +242,26 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $this->setFileProcessor($mainServiceLocator->get(FileProcessorInterface::class));
         }
 
-
         if ($this instanceof QueueInterface) {
             $this->setQueueService($mainServiceLocator->get(Queue::class));
             $this->setMessageBuilderService($mainServiceLocator->get(MessageBuilder::class));
             $this->setQueueConfig($mainServiceLocator->get('Config')['message_queue']);
         }
 
-        if ($this instanceof RedisAwareInterface) {
-            /** @var Redis $redis */
-            $redis = $mainServiceLocator->get(Redis::class);
-            $this->setRedis($redis);
+        if ($this instanceof CacheAwareInterface) {
+            /** @var CacheEncryptionService $cacheEncryptionService */
+            $cacheEncryptionService = $mainServiceLocator->get(CacheEncryptionService::class);
+            $this->setCache($cacheEncryptionService);
+        }
+
+        if ($this instanceof TranslationLoaderAwareInterface) {
+            $translationLoader = $mainServiceLocator->get('TranslatorPluginManager')->get(TranslationLoader::class);
+            $this->setTranslationLoader($translationLoader);
+        }
+
+        if ($this instanceof TranslatorAwareInterface) {
+            $translator = $mainServiceLocator->get('translator');
+            $this->setTranslator($translator);
         }
     }
 

@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Create as CreateTranslationKeyTextCmd;
 use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Update as UpdateTranslationKeyTextCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\TranslationKey\GenerateCache;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\TranslationKey as TranslationKeyEntity;
 use Dvsa\Olcs\Transfer\Command\TranslationKey\Update as UpdateTranslationKeyCmd;
@@ -36,13 +37,15 @@ final class Update extends AbstractCommandHandler
          * @var TranslationKeyEntity $translationKey
          * @var TranslationKeyRepo $repo
          */
-
         $repo = $this->getRepo();
         $this->childRepo = $this->getRepo('TranslationKeyText');
         $translationKey = $repo->fetchUsingId($command);
 
         // Handled in included trait. Shared with PartialMarkup
         $this->processTranslations($command->getTranslationsArray(), $translationKey);
+
+        //refresh the translation cache
+        $this->result->merge($this->handleSideEffect(GenerateCache::create([])));
 
         $this->result->addId('TranslationKey', $translationKey->getId());
         $this->result->addMessage('Translations Updated');
