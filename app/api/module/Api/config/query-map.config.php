@@ -702,6 +702,7 @@ return [
 
     //Editable Translations
     TransferQuery\TranslationKey\ById::class => QueryHandler\TranslationKey\ById::class,
+    TransferQuery\TranslationCache\Key::class => QueryHandler\TranslationCache\Key::class,
     TransferQuery\TranslationKey\GetList::class => QueryHandler\TranslationKey\GetList::class,
     TransferQuery\Language\GetList::class => QueryHandler\Language\GetList::class,
 
