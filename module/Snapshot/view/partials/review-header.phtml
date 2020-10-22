@@ -5,8 +5,8 @@
     <?php
         if (isset($pageTitle)) {
             echo $this->headTitle(strip_tags($pageTitle))
-                ->append($this->translate('header-vehicle-operator-licensing', 'snapshot'))
-                ->append($this->translate('header-gov.uk', 'snapshot'))
+                ->append($this->translate('header-vehicle-operator-licensing'))
+                ->append($this->translate('header-gov.uk'))
                 ->setSeparator(' - ');
         }
         echo $this->headMeta()

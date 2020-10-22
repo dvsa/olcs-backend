@@ -72,16 +72,16 @@ class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s');
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));
@@ -119,19 +119,19 @@ class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s');
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));

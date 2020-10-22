@@ -38,7 +38,7 @@ class VariationSafetyReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->with('variation-review-safety-change', 'snapshot')
+            ->with('variation-review-safety-change')
             ->andReturn('variation-review-safety-change-translated');
 
         $expected = [
