@@ -41,13 +41,8 @@ final class Update extends AbstractCommandHandler
         $this->childRepo = $this->getRepo('PartialMarkup');
         $partial = $repo->fetchUsingId($command);
 
-        $translations = [];
-        foreach ($command->getTranslationsArray() as $isoCode => $base64) {
-            $translations[$isoCode] = base64_decode($base64);
-        }
-
         // Handled in included trait. Shared with TranslationKeyText
-        $this->processTranslations($translations, $partial);
+        $this->processTranslations($command->getTranslationsArray(), $partial);
 
         $this->result->addId('Partial', $partial->getId());
         $this->result->addMessage('Translations Updated');
