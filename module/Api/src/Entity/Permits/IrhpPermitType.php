@@ -144,15 +144,21 @@ class IrhpPermitType extends AbstractIrhpPermitType
      */
     public function generateExpiryDate(DateTime $issueDateTime)
     {
-        if (!$this->isEcmtRemoval()) {
-            throw new RuntimeException('Unable to generate an expiry date for permit type ' . $this->id);
+        $expiryDateTime = clone $issueDateTime;
+
+        if ($this->isEcmtRemoval()) {
+            $expiryDateTime->add(new DateInterval('P1Y'));
+            $expiryDateTime->sub(new DateInterval('P1D'));
+
+            return $expiryDateTime;
+        } elseif ($this->isBilateral()) {
+            // only applicable to Morocco - other countries do not have an expiry date
+            $expiryDateTime->add(new DateInterval('P3M'));
+
+            return $expiryDateTime;
         }
 
-        $expiryDateTime = clone $issueDateTime;
-        $expiryDateTime->add(new DateInterval('P1Y'));
-        $expiryDateTime->sub(new DateInterval('P1D'));
-
-        return $expiryDateTime;
+        throw new RuntimeException('Unable to generate an expiry date for permit type ' . $this->id);
     }
 
     /**

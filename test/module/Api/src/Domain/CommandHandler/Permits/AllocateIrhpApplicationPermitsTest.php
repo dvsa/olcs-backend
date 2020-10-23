@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteria;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteriaFactory;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\IrhpPermitAllocator;
 use Mockery as m;
+use RuntimeException;
 
 class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
 {
@@ -290,7 +291,72 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplication2->shouldReceive('getBilateralPermitUsageSelection')
             ->andReturn($irhpPermitApplication2PermitUsage);
 
-        $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1, $irhpPermitApplication2]);
+        $irhpPermitApplication3MoroccoRequired = 10;
+        $irhpPermitApplication3FilteredBilateralRequired = [
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => $irhpPermitApplication3MoroccoRequired,
+        ];
+        $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication3->shouldReceive('getFilteredBilateralRequired')
+            ->andReturn($irhpPermitApplication3FilteredBilateralRequired);
+        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getPermitCategory->getId')
+            ->withNoArgs()
+            ->andReturn(RefData::PERMIT_CAT_STANDARD_MULTIPLE_15);
+
+        $irhpPermitApplication4MoroccoRequired = 13;
+        $irhpPermitApplication4FilteredBilateralRequired = [
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => $irhpPermitApplication4MoroccoRequired,
+        ];
+        $irhpPermitApplication4ExpiryDate = m::mock(DateTime::class);
+        $irhpPermitApplication4 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication4->shouldReceive('getFilteredBilateralRequired')
+            ->andReturn($irhpPermitApplication4FilteredBilateralRequired);
+        $irhpPermitApplication4->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getPermitCategory->getId')
+            ->withNoArgs()
+            ->andReturn(RefData::PERMIT_CAT_STANDARD_SINGLE);
+        $irhpPermitApplication4->shouldReceive('generateExpiryDate')
+            ->withNoArgs()
+            ->andReturn($irhpPermitApplication4ExpiryDate);
+
+        $irhpPermitApplication5MoroccoRequired = 19;
+        $irhpPermitApplication5FilteredBilateralRequired = [
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => $irhpPermitApplication5MoroccoRequired,
+        ];
+        $irhpPermitApplication5ExpiryDate = m::mock(DateTime::class);
+        $irhpPermitApplication5 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication5->shouldReceive('getFilteredBilateralRequired')
+            ->andReturn($irhpPermitApplication5FilteredBilateralRequired);
+        $irhpPermitApplication5->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getPermitCategory->getId')
+            ->withNoArgs()
+            ->andReturn(RefData::PERMIT_CAT_EMPTY_ENTRY);
+        $irhpPermitApplication5->shouldReceive('generateExpiryDate')
+            ->withNoArgs()
+            ->andReturn($irhpPermitApplication5ExpiryDate);
+
+        $irhpPermitApplication6MoroccoRequired = 16;
+        $irhpPermitApplication6FilteredBilateralRequired = [
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => $irhpPermitApplication6MoroccoRequired,
+        ];
+        $irhpPermitApplication6ExpiryDate = m::mock(DateTime::class);
+        $irhpPermitApplication6 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication6->shouldReceive('getFilteredBilateralRequired')
+            ->andReturn($irhpPermitApplication6FilteredBilateralRequired);
+        $irhpPermitApplication6->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getPermitCategory->getId')
+            ->withNoArgs()
+            ->andReturn(RefData::PERMIT_CAT_HORS_CONTINGENT);
+        $irhpPermitApplication6->shouldReceive('generateExpiryDate')
+            ->withNoArgs()
+            ->andReturn($irhpPermitApplication6ExpiryDate);
+
+        $irhpPermitApplications = new ArrayCollection(
+            [
+                $irhpPermitApplication1,
+                $irhpPermitApplication2,
+                $irhpPermitApplication3,
+                $irhpPermitApplication4,
+                $irhpPermitApplication5,
+                $irhpPermitApplication6
+            ]
+        );
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getIssuedEmailCommand')
@@ -346,12 +412,65 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
             ->with(m::type(Result::class), $irhpPermitApplication2, $standardMultipleCriteria, null)
             ->times($irhpPermitApplication2StandardRequired);
 
+        $this->mockedSmServices['PermitsAllocateIrhpPermitAllocator']->shouldReceive('allocate')
+            ->with(m::type(Result::class), $irhpPermitApplication3, null, null)
+            ->times($irhpPermitApplication3MoroccoRequired);
+
+        $this->mockedSmServices['PermitsAllocateIrhpPermitAllocator']->shouldReceive('allocate')
+            ->with(m::type(Result::class), $irhpPermitApplication4, null, $irhpPermitApplication4ExpiryDate)
+            ->times($irhpPermitApplication4MoroccoRequired);
+
+        $this->mockedSmServices['PermitsAllocateIrhpPermitAllocator']->shouldReceive('allocate')
+            ->with(m::type(Result::class), $irhpPermitApplication5, null, $irhpPermitApplication5ExpiryDate)
+            ->times($irhpPermitApplication5MoroccoRequired);
+
+        $this->mockedSmServices['PermitsAllocateIrhpPermitAllocator']->shouldReceive('allocate')
+            ->with(m::type(Result::class), $irhpPermitApplication6, null, $irhpPermitApplication6ExpiryDate)
+            ->times($irhpPermitApplication6MoroccoRequired);
+
         $result = $this->sut->handleCommand($this->command);
 
         $this->assertEquals(
             $this->irhpApplicationId,
             $result->getId('irhpApplication')
         );
+    }
+
+    public function testHandleCommandBilateralMoroccoException()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unknown permit category: other_permit_cat');
+
+        $irhpPermitApplicationFilteredBilateralRequired = [
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => 4,
+        ];
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getFilteredBilateralRequired')
+            ->andReturn($irhpPermitApplicationFilteredBilateralRequired);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getPermitCategory->getId')
+            ->withNoArgs()
+            ->andReturn('other_permit_cat');
+
+        $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication]);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIssuedEmailCommand')
+            ->andReturnNull();
+        $irhpApplication->shouldReceive('getIrhpPermitApplications')
+            ->andReturn($irhpPermitApplications);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_BILATERAL);
+        $this->repoMap['IrhpApplication']->shouldReceive('refresh')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($this->irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->sut->handleCommand($this->command);
     }
 
     public function testHandleCommandCandidatePermits()
