@@ -4,9 +4,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateCandidatePermits as AllocateCandidatePermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpApplicationPermits as AllocateIrhpApplicationPermitsCmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
@@ -210,17 +210,67 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
     private function processForBilateral(IrhpPermitApplication $irhpPermitApplication)
     {
         $bilateralRequired = $irhpPermitApplication->getFilteredBilateralRequired();
-        $permitUsage = $irhpPermitApplication->getBilateralPermitUsageSelection();
 
-        foreach ($bilateralRequired as $standardOrCabotage => $permitsRequired) {
-            // TODO: permit allocation for morocco has been suppressed for now due to the additional logic not being
-            // present. To be addressed as part of OLCS-27628.
-            if ($standardOrCabotage == IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED) {
-                continue;
+        foreach ($bilateralRequired as $requestedType => $permitsRequired) {
+            if ($requestedType == IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED) {
+                $this->processBilateralMoroccoRequest($irhpPermitApplication, $permitsRequired);
+            } else {
+                $this->processBilateralStandardOrCabotageRequest(
+                    $irhpPermitApplication,
+                    $requestedType,
+                    $permitsRequired
+                );
             }
+        }
+    }
 
-            $criteria = $this->bilateralCriteriaFactory->create($standardOrCabotage, $permitUsage);
-            $this->allocatePermits($irhpPermitApplication, $criteria, $permitsRequired);
+    /**
+     * Allocate standard or cabotage permits within a bilateral application
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param string $requestedType
+     * @param int $permitsRequired
+     */
+    private function processBilateralStandardOrCabotageRequest(
+        IrhpPermitApplication $irhpPermitApplication,
+        $requestedType,
+        $permitsRequired
+    ) {
+        $permitUsage = $irhpPermitApplication->getBilateralPermitUsageSelection();
+        $criteria = $this->bilateralCriteriaFactory->create($requestedType, $permitUsage);
+
+        $this->allocatePermits($irhpPermitApplication, $criteria, $permitsRequired);
+    }
+
+    /**
+     * Allocate morocco permits within a bilateral application
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param int $permitsRequired
+     */
+    private function processBilateralMoroccoRequest(IrhpPermitApplication $irhpPermitApplication, $permitsRequired)
+    {
+        $permitCategory = $irhpPermitApplication->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getPermitCategory()
+            ->getId();
+
+        switch ($permitCategory) {
+            case RefData::PERMIT_CAT_STANDARD_MULTIPLE_15:
+                $this->allocatePermits($irhpPermitApplication, null, $permitsRequired);
+                break;
+            case RefData::PERMIT_CAT_STANDARD_SINGLE:
+            case RefData::PERMIT_CAT_EMPTY_ENTRY:
+            case RefData::PERMIT_CAT_HORS_CONTINGENT:
+                $this->allocatePermits(
+                    $irhpPermitApplication,
+                    null,
+                    $permitsRequired,
+                    $irhpPermitApplication->generateExpiryDate()
+                );
+                break;
+            default:
+                throw new RuntimeException('Unknown permit category: ' . $permitCategory);
         }
     }
 
