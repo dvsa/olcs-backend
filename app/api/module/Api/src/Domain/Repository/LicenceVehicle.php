@@ -335,21 +335,19 @@ class LicenceVehicle extends AbstractRepository
      */
     private function filterByDisc(QueryBuilder $qb, QueryInterface $query)
     {
-        $disc = $query->getDisc();
-
-        if (isset($disc)) {
-            if ($disc === 'Y') {
+        switch ($query->getDisc()) {
+            case 'Y':
                 $qb->innerJoin('m.goodsDiscs', 'gd');
                 $qb->andWhere($qb->expr()->isNull('gd.ceasedDate'));
                 $qb->andWhere($qb->expr()->isNotNull('gd.issuedDate'));
-            }
-
-            if ($disc === 'N') {
+                break;
+            case 'N':
                 $condition = 'gd.ceasedDate IS NULL AND gd.issuedDate IS NOT NULL';
                 $qb->leftJoin('m.goodsDiscs', 'gd', Query\Expr\Join::WITH, $condition);
                 $qb->andWhere($qb->expr()->isNull('gd.id'));
-            }
+                break;
         }
+
     }
 
     /**
