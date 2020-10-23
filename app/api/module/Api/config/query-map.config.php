@@ -130,6 +130,7 @@ return [
     TransferQuery\Licence\Exists::class => QueryHandler\Licence\Exists::class,
     Query\Licence\ContinuationNotSoughtList::class => QueryHandler\Licence\ContinuationNotSoughtList::class,
     Query\Licence\PsvLicenceSurrenderList::class => QueryHandler\Licence\PsvLicenceSurrenderList::class,
+    TransferQuery\Licence\Vehicles::class => QueryHandler\Licence\Vehicles::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
