@@ -17,6 +17,7 @@ trait HandleTranslationTrait
     protected function processTranslations(array $translationsArray, $parentEntity)
     {
         foreach ($translationsArray as $isoCode => $translatedText) {
+            $translatedText = base64_decode($translatedText);
             if (array_key_exists($isoCode, Language::SUPPORTED_LANGUAGES)) {
                 $this->updateOrCreate($parentEntity->getId(), Language::SUPPORTED_LANGUAGES[$isoCode]['id'], $translatedText);
             } else {

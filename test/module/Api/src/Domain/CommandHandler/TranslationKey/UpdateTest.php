@@ -38,10 +38,10 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $id = 'TEST_STR_ID';
         $translationsArray = [
-            'en_GB' => 'English',
-            'cy_GB' => 'Welsh',
-            'en_NI' => 'English (NI)',
-            'cy_NI' => 'Welsh (NI)'
+            'en_GB' => base64_encode('English'),
+            'cy_GB' => base64_encode('Welsh'),
+            'en_NI' => base64_encode('English (NI)'),
+            'cy_NI' => base64_encode('Welsh (NI)')
         ];
 
         $cmdData = [
@@ -101,7 +101,7 @@ class UpdateTest extends CommandHandlerTestCase
             [
                 'translationKey' => $id,
                 'language' => 2,
-                'translatedText' => $translationsArray['cy_GB']
+                'translatedText' => base64_decode($translationsArray['cy_GB'])
             ],
             new Result(),
             1
@@ -111,7 +111,7 @@ class UpdateTest extends CommandHandlerTestCase
             Update::class,
             [
                 'id' => 22,
-                'translatedText' => $translationsArray['en_GB']
+                'translatedText' => base64_decode($translationsArray['en_GB'])
             ],
             new Result(),
             1
@@ -122,7 +122,7 @@ class UpdateTest extends CommandHandlerTestCase
             [
                 'translationKey' => $id,
                 'language' => 3,
-                'translatedText' => $translationsArray['en_NI']
+                'translatedText' => base64_decode($translationsArray['en_NI'])
             ],
             new Result(),
             1
@@ -133,7 +133,7 @@ class UpdateTest extends CommandHandlerTestCase
             [
                 'translationKey' => $id,
                 'language' => 4,
-                'translatedText' => $translationsArray['cy_NI']
+                'translatedText' => base64_decode($translationsArray['cy_NI'])
             ],
             new Result(),
             1
