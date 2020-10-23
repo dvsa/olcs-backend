@@ -151,7 +151,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="period_name_key", length=255, nullable=true)
+     * @ORM\Column(type="string", name="period_name_key", length=512, nullable=true)
      */
     protected $periodNameKey;
 
