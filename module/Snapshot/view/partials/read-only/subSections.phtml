@@ -1,7 +1,7 @@
 <?php foreach ($subSections as $subSection) {
     
     if (isset($subSection['title'])) { ?>
-        <h3><?php echo $this->translate($subSection['title'], 'snapshot'); ?></h3>
+        <h3><?php echo $this->translate($subSection['title']); ?></h3>
         <hr>
     <?php } if (isset($subSection['mainItems'])) {
         foreach ($subSection['mainItems'] as $mainItem) {

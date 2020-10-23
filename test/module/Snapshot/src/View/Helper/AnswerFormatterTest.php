@@ -40,7 +40,7 @@ class AnswerFormatterTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $this->view->shouldReceive('translate')
             ->twice()
-            ->with('Yes', 'snapshot')
+            ->with('Yes')
             ->andReturn('translated yes');
 
         $this->view->shouldReceive('escapeHtml')
@@ -50,7 +50,7 @@ class AnswerFormatterTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $this->view->shouldReceive('translate')
             ->twice()
-            ->with('No', 'snapshot')
+            ->with('No')
             ->andReturn('translated no');
 
         $this->view->shouldReceive('escapeHtml')
@@ -80,12 +80,12 @@ class AnswerFormatterTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $this->view->shouldReceive('translate')
             ->twice()
-            ->with('Yes', 'snapshot')
+            ->with('Yes')
             ->andReturn('translated yes');
 
         $this->view->shouldReceive('translate')
             ->twice()
-            ->with('No', 'snapshot')
+            ->with('No')
             ->andReturn('translated no');
 
         $this->view->shouldReceive('escapeHtml')->never();

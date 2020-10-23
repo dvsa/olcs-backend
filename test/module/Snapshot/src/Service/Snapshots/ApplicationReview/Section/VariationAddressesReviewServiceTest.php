@@ -38,7 +38,7 @@ class VariationAddressesReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->with('variation-review-addresses-change', 'snapshot')
+            ->with('variation-review-addresses-change')
             ->andReturn('variation-review-addresses-change-translated');
 
         $expected = [

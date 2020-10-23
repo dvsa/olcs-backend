@@ -65,8 +65,7 @@ class SendEcmtApsgPostScoring extends AbstractEcmtShortTermEmailHandler
         $this->translator->setLocale($locale);
 
         $periodName = $this->translator->translate(
-            $recordObject->getAssociatedStock()->getPeriodNameKey(),
-            'snapshot'
+            $recordObject->getAssociatedStock()->getPeriodNameKey()
         );
 
         $this->translator->setLocale($previousLocale);

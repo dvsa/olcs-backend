@@ -68,8 +68,7 @@ class SendEcmtShortTermApsgPartSuccessful extends AbstractEcmtShortTermEmailHand
         $this->translator->setLocale($locale);
 
         $periodName = $this->translator->translate(
-            $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getPeriodNameKey(),
-            'snapshot'
+            $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getPeriodNameKey()
         );
 
         $this->translator->setLocale($previousLocale);

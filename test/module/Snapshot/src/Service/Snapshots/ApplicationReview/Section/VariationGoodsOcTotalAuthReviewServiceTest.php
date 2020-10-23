@@ -80,10 +80,10 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->with('review-value-decreased', 'snapshot')
+            ->with('review-value-decreased')
             ->andReturn('decreased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s');
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));
@@ -127,13 +127,13 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->with('review-value-decreased', 'snapshot')
+            ->with('review-value-decreased')
             ->andReturn('decreased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s')
             ->shouldReceive('translate')
-            ->with('review-value-increased', 'snapshot')
+            ->with('review-value-increased')
             ->andReturn('increased from %s to %s');
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));

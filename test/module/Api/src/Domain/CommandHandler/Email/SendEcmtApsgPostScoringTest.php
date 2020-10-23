@@ -100,7 +100,7 @@ class SendEcmtApsgPostScoringTest extends AbstractPermitTest
             ->globally()
             ->ordered();
         $this->mockedSmServices['translator']->shouldReceive('translate')
-            ->with($periodNameKey, 'snapshot')
+            ->with($periodNameKey)
             ->once()
             ->globally()
             ->ordered()
@@ -206,7 +206,7 @@ class SendEcmtApsgPostScoringTest extends AbstractPermitTest
             ->globally()
             ->ordered();
         $this->mockedSmServices['translator']->shouldReceive('translate')
-            ->with($periodNameKey, 'snapshot')
+            ->with($periodNameKey)
             ->once()
             ->globally()
             ->ordered()

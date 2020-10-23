@@ -3,7 +3,7 @@
 $translatedEscapedCountryNames = [];
 foreach ($countryNames as $countryName) {
     $translatedEscapedCountryNames[] = $this->escapeHtml(
-        $this->translate($countryName, 'snapshot')
+        $this->translate($countryName)
     );
 }
 
