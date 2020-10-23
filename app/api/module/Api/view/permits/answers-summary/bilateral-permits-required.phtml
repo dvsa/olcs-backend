@@ -3,7 +3,7 @@
 $lines = [];
 foreach ($rows as $row) {
     $line = sprintf(
-        $this->translate($row['key'], 'snapshot'),
+        $this->translate($row['key']),
         $row['count']
     );
 

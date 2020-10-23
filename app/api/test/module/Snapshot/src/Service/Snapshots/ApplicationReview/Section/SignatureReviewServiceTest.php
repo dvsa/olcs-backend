@@ -34,15 +34,15 @@ class SignatureReviewServiceTest extends MockeryTestCase
         $translator = $this->mockTranslator();
 
         $translator->shouldReceive('translate')
-            ->with($expected['markup'], 'snapshot')
+            ->with($expected['markup'])
             ->andReturn($expected['markup'] . '-translated');
 
         $translator->shouldReceive('translate')
-            ->with($expected['signature_address'], 'snapshot')
+            ->with($expected['signature_address'])
             ->andReturn($expected['signature_address'] . '-translated');
 
         $translator->shouldReceive('translate')
-            ->with('markup-application_undertakings_signature', 'snapshot')
+            ->with('markup-application_undertakings_signature')
             ->andReturn('markup-application_undertakings_signature-translated');
 
 
@@ -76,7 +76,7 @@ class SignatureReviewServiceTest extends MockeryTestCase
 
         $translator = $this->mockTranslator();
         $translator->shouldReceive('translate')
-            ->with('markup-signature-digital', 'snapshot')
+            ->with('markup-signature-digital')
             ->andReturn('%s__%s__%s__translated');
 
         $signatureType = m::mock(RefData::class);

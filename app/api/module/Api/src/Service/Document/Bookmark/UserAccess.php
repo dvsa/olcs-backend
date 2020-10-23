@@ -111,7 +111,7 @@ class UserAccess extends DynamicBookmark implements TranslatorAwareInterface
                 ',',
                 array_map(
                     function ($role) {
-                        return $this->getTranslator()->translate('role.' . $role['role'], 'snapshot');
+                        return $this->getTranslator()->translate('role.' . $role['role']);
                     },
                     $user['roles']
                 )

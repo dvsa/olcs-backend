@@ -60,7 +60,7 @@ trait FormatReviewDataTrait
         if ($string === null) {
             return '';
         }
-        return $this->getServiceLocator()->get('translator')->translate($string, 'snapshot');
+        return $this->getServiceLocator()->get('translator')->translate($string);
     }
 
     /**

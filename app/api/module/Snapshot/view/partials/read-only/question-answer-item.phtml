@@ -1,5 +1,5 @@
 <dl>
-    <dt><?php echo $this->escapeHtml($this->translate($question['question'], 'snapshot')); ?></dt>
+    <dt><?php echo $this->escapeHtml($this->translate($question['question'])); ?></dt>
     <dd>
         <?php
             echo $this->answerFormatter($question);

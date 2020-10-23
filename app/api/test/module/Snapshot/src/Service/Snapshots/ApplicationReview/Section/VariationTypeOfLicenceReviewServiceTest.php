@@ -47,7 +47,7 @@ class VariationTypeOfLicenceReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->with('variation-application-type-of-licence-freetext', 'snapshot')
+            ->with('variation-application-type-of-licence-freetext')
             ->andReturn('translated-text-%s-%s');
 
         $this->assertEquals(['freetext' => 'translated-text-bar-foo'], $this->sut->getConfigFromData($data));
