@@ -42,7 +42,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="additional_guidance_key", length=512, nullable=true)
+     * @ORM\Column(type="string", name="additional_guidance_key", length=1024, nullable=true)
      */
     protected $additionalGuidanceKey;
 
@@ -51,7 +51,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="bullet_list_key", length=512, nullable=true)
+     * @ORM\Column(type="string", name="bullet_list_key", length=255, nullable=true)
      */
     protected $bulletListKey;
 
@@ -89,7 +89,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="guidance_key", length=512, nullable=true)
+     * @ORM\Column(type="string", name="guidance_key", length=1024, nullable=true)
      */
     protected $guidanceKey;
 
@@ -98,7 +98,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="hint_key", length=512, nullable=true)
+     * @ORM\Column(type="string", name="hint_key", length=255, nullable=true)
      */
     protected $hintKey;
 
@@ -118,7 +118,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="label_key", length=512, nullable=true)
+     * @ORM\Column(type="string", name="label_key", length=255, nullable=true)
      */
     protected $labelKey;
 
@@ -152,7 +152,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="question_key", length=512, nullable=true)
+     * @ORM\Column(type="string", name="question_key", length=255, nullable=true)
      */
     protected $questionKey;
 
@@ -161,7 +161,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="question_short_key", length=512, nullable=true)
+     * @ORM\Column(type="string", name="question_short_key", length=255, nullable=true)
      */
     protected $questionShortKey;
 
@@ -170,7 +170,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="question_summary_key", length=512, nullable=true)
+     * @ORM\Column(type="string", name="question_summary_key", length=255, nullable=true)
      */
     protected $questionSummaryKey;
 
@@ -189,7 +189,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="warning_key", length=512, nullable=true)
+     * @ORM\Column(type="string", name="warning_key", length=255, nullable=true)
      */
     protected $warningKey;
 
