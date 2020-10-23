@@ -259,6 +259,43 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
+    public function testCreatePaginatedVehiclesDataForLicenceQueryIgnoreDisc()
+    {
+        $data = [
+            'includeRemoved' => true,
+            'specified' => 'N',
+            'page' => 3,
+            'limit' => 10
+        ];
+        $qry = LicGoodsVehicles::create($data);
+        $licId = 222;
+
+        $qb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('withRefdata')
+            ->withNoArgs()
+            ->once()
+            ->shouldReceive('paginate')
+            ->with(3, 10)
+            ->once();
+
+        $this->assertSame($qb, $this->sut->createPaginatedVehiclesDataForLicenceQuery($qry, $licId));
+
+        $expectedQuery = '[QUERY] INNER JOIN m.vehicle v LEFT JOIN m.interimApplication in'
+            // VRM NULL
+            // Include Removed = true
+            // Specified = N
+            . ' AND m.specifiedDate IS NOT NULL'
+            . ' AND m.licence = [[222]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
     public function testCreatePaginatedVehiclesDataForLicenceQueryPsv()
     {
         $data = [
