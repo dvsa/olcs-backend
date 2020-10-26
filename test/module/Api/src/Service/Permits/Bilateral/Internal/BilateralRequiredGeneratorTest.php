@@ -41,7 +41,8 @@ class BilateralRequiredGeneratorTest extends MockeryTestCase
                 ],
                 [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => '4',
-                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => '5'
+                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => '5',
+                    IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null
                 ]
             ],
             [
@@ -51,7 +52,8 @@ class BilateralRequiredGeneratorTest extends MockeryTestCase
                 ],
                 [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => '9',
-                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => null
+                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => null,
+                    IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null
                 ]
             ],
             [
@@ -64,7 +66,8 @@ class BilateralRequiredGeneratorTest extends MockeryTestCase
                 ],
                 [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => '7',
-                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => '8'
+                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => '8',
+                    IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null
                 ]
             ],
             [
@@ -74,7 +77,8 @@ class BilateralRequiredGeneratorTest extends MockeryTestCase
                 ],
                 [
                     IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
-                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => '10'
+                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => '10',
+                    IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null
                 ]
             ],
         ];
