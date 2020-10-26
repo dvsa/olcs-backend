@@ -30,7 +30,8 @@ class BilateralRequiredGenerator
 
         return [
             IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => $standardRequired,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $cabotageRequired
+            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $cabotageRequired,
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null,
         ];
     }
 
