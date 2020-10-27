@@ -13,20 +13,26 @@ class ForCpWithCountriesAndNoMatchingRangesProvider
     /** @var RestrictedWithFewestCountriesProvider */
     private $restrictedWithFewestCountriesProvider;
 
+    /** @var HighestAvailabilityRangeSelector */
+    private $highestAvailabilityRangeSelector;
+
     /**
      * Create service instance
      *
      * @param UnrestrictedWithLowestStartNumberProvider $unrestrictedWithLowestStartNumberProvider
      * @param RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider
+     * @param HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
      *
      * @return ForCpWithCountriesAndNoMatchingRangesProvider
      */
     public function __construct(
         UnrestrictedWithLowestStartNumberProvider $unrestrictedWithLowestStartNumberProvider,
-        RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider
+        RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider,
+        HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
     ) {
         $this->unrestrictedWithLowestStartNumberProvider = $unrestrictedWithLowestStartNumberProvider;
         $this->restrictedWithFewestCountriesProvider = $restrictedWithFewestCountriesProvider;
+        $this->highestAvailabilityRangeSelector = $highestAvailabilityRangeSelector;
     }
 
     /**
@@ -57,9 +63,8 @@ class ForCpWithCountriesAndNoMatchingRangesProvider
             }
 
             if (count($ranges) > 1) {
-                throw new RuntimeException(
-                    'Assertion failed in method ' . __METHOD__ . ': count($ranges) > 1'
-                );
+                $result->addMessage('    - multiple ranges have the fewest countries');
+                return $this->highestAvailabilityRangeSelector->getRange($result, $ranges);
             }
 
             $matchingRange = $ranges[0]; // Use first range

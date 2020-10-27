@@ -5,10 +5,10 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\ApplyRanges;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\ForCpWithCountriesAndMultipleMatchingRangesProvider;
+use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\HighestAvailabilityRangeSelector;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\WithFewestNonRequestedCountriesProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use RuntimeException;
 
 /**
  * ForCpWithCountriesAndMultipleMatchingRangesProviderTest
@@ -30,6 +30,8 @@ class ForCpWithCountriesAndMultipleMatchingRangesProviderTest extends MockeryTes
     private $result;
 
     private $withFewestNonRequestedCountriesProvider;
+
+    private $highestAvailabilityRangeSelector;
 
     private $rangesProvider;
 
@@ -73,8 +75,11 @@ class ForCpWithCountriesAndMultipleMatchingRangesProviderTest extends MockeryTes
 
         $this->withFewestNonRequestedCountriesProvider = m::mock(WithFewestNonRequestedCountriesProvider::class);
 
+        $this->highestAvailabilityRangeSelector = m::mock(HighestAvailabilityRangeSelector::class);
+
         $this->rangesProvider = new ForCpWithCountriesAndMultipleMatchingRangesProvider(
-            $this->withFewestNonRequestedCountriesProvider
+            $this->withFewestNonRequestedCountriesProvider,
+            $this->highestAvailabilityRangeSelector
         );
     }
 
@@ -103,22 +108,32 @@ class ForCpWithCountriesAndMultipleMatchingRangesProviderTest extends MockeryTes
         );
     }
 
-    public function testExceptionOnMultipleMatchingRanges()
+    public function testSelectRangeMultipleMatchingRanges()
     {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(
-            sprintf(
-                'Assertion failed in method %s::selectRange: count($matchingRanges) > 1',
-                ForCpWithCountriesAndMultipleMatchingRangesProvider::class
-            )
-        );
-
-        $matchingRanges = [$this->range2, $this->range3];
+        $matchingRanges = [$this->range1, $this->range2];
 
         $this->withFewestNonRequestedCountriesProvider->shouldReceive('getRanges')
             ->with($this->applicationCountryIds, $this->ranges)
             ->andReturn($matchingRanges);
 
-        $this->rangesProvider->selectRange($this->result, $this->ranges, $this->applicationCountryIds);
+        $this->highestAvailabilityRangeSelector->shouldReceive('getRange')
+            ->with($this->result, $matchingRanges)
+            ->andReturn($this->range1);
+
+        $this->assertEquals(
+            $this->range1,
+            $this->rangesProvider->selectRange($this->result, $this->ranges, $this->applicationCountryIds)
+        );
+
+        $this->assertEquals(
+            [
+                '    - more than one range found with most matching countries:',
+                '      - range with id 47 and countries RU, IT',
+                '      - range with id 49 and countries AT, GR',
+                '      - range with id 55 and countries GR, AT',
+                '    - multiple ranges have the fewest non-requested countries'
+            ],
+            $this->result->getMessages()
+        );
     }
 }

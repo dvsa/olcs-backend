@@ -13,20 +13,26 @@ class ForCpWithNoCountriesProvider
     /** @var RestrictedWithFewestCountriesProvider */
     private $restrictedWithFewestCountriesProvider;
 
+    /** @var HighestAvailabilityRangeSelector */
+    private $highestAvailabilityRangeSelector;
+
     /**
      * Create service instance
      *
      * @param UnrestrictedWithLowestStartNumberProvider $unrestrictedWithLowestStartNumberProvider
      * @param RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider
+     * @param HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
      *
      * @return ForCpWithNoCountriesProvider
      */
     public function __construct(
         UnrestrictedWithLowestStartNumberProvider $unrestrictedWithLowestStartNumberProvider,
-        RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider
+        RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider,
+        HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
     ) {
         $this->unrestrictedWithLowestStartNumberProvider = $unrestrictedWithLowestStartNumberProvider;
         $this->restrictedWithFewestCountriesProvider = $restrictedWithFewestCountriesProvider;
+        $this->highestAvailabilityRangeSelector = $highestAvailabilityRangeSelector;
     }
 
     /**
@@ -54,9 +60,8 @@ class ForCpWithNoCountriesProvider
                     $range = $ranges[0];
                     break;
                 default:
-                    throw new RuntimeException(
-                        'Assertion failed in method ' . __METHOD__ . ': count($ranges) > 1'
-                    );
+                    $result->addMessage('    - multiple ranges have the fewest countries');
+                    return $this->highestAvailabilityRangeSelector->getRange($result, $ranges);
             }
 
             $message = sprintf(
