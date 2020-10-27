@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\ApplyRanges;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\ForCpWithCountriesAndNoMatchingRangesProvider;
+use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\HighestAvailabilityRangeSelector;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\RestrictedWithFewestCountriesProvider;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\UnrestrictedWithLowestStartNumberProvider;
 use Mockery as m;
@@ -30,6 +31,8 @@ class ForCpWithCountriesAndNoMatchingRangesProviderTest extends MockeryTestCase
     private $unrestrictedWithLowestStartNumberProvider;
 
     private $restrictedWithFewestCountriesProvider;
+
+    private $highestAvailabilityRangeSelector;
 
     private $forCpWithCountriesAndNoMatchingRangesProvider;
 
@@ -67,9 +70,12 @@ class ForCpWithCountriesAndNoMatchingRangesProviderTest extends MockeryTestCase
 
         $this->restrictedWithFewestCountriesProvider = m::mock(RestrictedWithFewestCountriesProvider::class);
 
+        $this->highestAvailabilityRangeSelector = m::mock(HighestAvailabilityRangeSelector::class);
+
         $this->forCpWithCountriesAndNoMatchingRangesProvider = new ForCpWithCountriesAndNoMatchingRangesProvider(
             $this->unrestrictedWithLowestStartNumberProvider,
-            $this->restrictedWithFewestCountriesProvider
+            $this->restrictedWithFewestCountriesProvider,
+            $this->highestAvailabilityRangeSelector
         );
     }
 
@@ -123,16 +129,8 @@ class ForCpWithCountriesAndNoMatchingRangesProviderTest extends MockeryTestCase
         $this->forCpWithCountriesAndNoMatchingRangesProvider->selectRange($this->result, $this->ranges);
     }
 
-    public function testExceptionMultipleRangesWithFewestCountries()
+    public function testMultipleRangesWithFewestCountries()
     {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(
-            sprintf(
-                'Assertion failed in method %s::selectRange: count($ranges) > 1',
-                ForCpWithCountriesAndNoMatchingRangesProvider::class
-            )
-        );
-
         $matchingRanges = [$this->range1, $this->range2];
 
         $this->unrestrictedWithLowestStartNumberProvider->shouldReceive('getRange')
@@ -143,7 +141,23 @@ class ForCpWithCountriesAndNoMatchingRangesProviderTest extends MockeryTestCase
             ->with($this->ranges)
             ->andReturn($matchingRanges);
 
-        $this->forCpWithCountriesAndNoMatchingRangesProvider->selectRange($this->result, $this->ranges);
+        $this->highestAvailabilityRangeSelector->shouldReceive('getRange')
+            ->with($this->result, $matchingRanges)
+            ->andReturn($this->range1);
+
+        $this->assertEquals(
+            $this->range1,
+            $this->forCpWithCountriesAndNoMatchingRangesProvider->selectRange($this->result, $this->ranges)
+        );
+
+        $this->assertEquals(
+            [
+                '    - no restricted ranges found with matching countries',
+                '    - no unrestricted ranges found with lowest start number',
+                '    - multiple ranges have the fewest countries'
+            ],
+            $this->result->getMessages()
+        );
     }
 
     public function testUseUnrestrictedWithLowestStartNumber()
