@@ -4,45 +4,61 @@ namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use RuntimeException;
 
 class PeriodGenerator
 {
     /** @var IrhpPermitStockRepository */
     private $irhpPermitStockRepo;
 
-    /** @var FieldsGenerator */
-    private $fieldsGenerator;
+    /** @var array */
+    private $fieldsGenerators = [];
 
     /**
      * Create service instance
      *
      * @param IrhpPermitStockRepository $irhpPermitStockRepo
-     * @param FieldsGenerator $fieldsGenerator
      *
      * @return PeriodGenerator
      */
-    public function __construct(IrhpPermitStockRepository $irhpPermitStockRepo, FieldsGenerator $fieldsGenerator)
+    public function __construct(IrhpPermitStockRepository $irhpPermitStockRepo)
     {
         $this->irhpPermitStockRepo = $irhpPermitStockRepo;
-        $this->fieldsGenerator = $fieldsGenerator;
     }
 
     /**
      * Generate the period part of the response
      *
      * @param int $stockId
+     * @param string $behaviour
      * @param IrhpPermitApplication $irhpPermitApplication (optional)
      *
      * @return array
      */
-    public function generate($stockId, ?IrhpPermitApplication $irhpPermitApplication)
+    public function generate($stockId, $behaviour, ?IrhpPermitApplication $irhpPermitApplication)
     {
+        if (!isset($this->fieldsGenerators[$behaviour])) {
+            throw new RuntimeException('No fields generator found for behaviour name ' . $behaviour);
+        }
+
+        $fieldsGenerator = $this->fieldsGenerators[$behaviour];
         $irhpPermitStock = $this->irhpPermitStockRepo->fetchById($stockId);
 
         return [
             'id' => $stockId,
             'key' => $irhpPermitStock->getPeriodNameKey(),
-            'fields' => $this->fieldsGenerator->generate($irhpPermitStock, $irhpPermitApplication)
+            'fields' => $fieldsGenerator->generate($irhpPermitStock, $irhpPermitApplication)
         ];
+    }
+
+    /**
+     * Associate an instance of FieldsGeneratorInterface with a country behaviour
+     *
+     * @param string $behaviour
+     * @param FieldsGeneratorInterface $fieldsGeneratorInterface
+     */
+    public function registerFieldsGenerator($behaviour, FieldsGeneratorInterface $fieldsGenerator)
+    {
+        $this->fieldsGenerators[$behaviour] = $fieldsGenerator;
     }
 }
