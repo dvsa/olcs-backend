@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\NoOfPermitsConditionalUpdater;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAvailableTextboxes as AvailableTextboxes;
@@ -15,21 +17,23 @@ class NoOfPermitsAnswerSaver implements AnswerSaverInterface
     /** @var NamedAnswerFetcher */
     private $namedAnswerFetcher;
 
-    /** @var NoOfPermitsUpdater */
-    private $noOfPermitsUpdater;
+    /** @var NoOfPermitsConditionalUpdater */
+    private $noOfPermitsConditionalUpdater;
 
     /**
      * Create service instance
      *
      * @param NamedAnswerFetcher $namedAnswerFetcher
-     * @param NoOfPermitsUpdater $noOfPermitsUpdater
+     * @param NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
      *
      * @return NoOfPermitsAnswerSaver
      */
-    public function __construct(NamedAnswerFetcher $namedAnswerFetcher, NoOfPermitsUpdater $noOfPermitsUpdater)
-    {
+    public function __construct(
+        NamedAnswerFetcher $namedAnswerFetcher,
+        NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
+    ) {
         $this->namedAnswerFetcher = $namedAnswerFetcher;
-        $this->noOfPermitsUpdater = $noOfPermitsUpdater;
+        $this->noOfPermitsConditionalUpdater = $noOfPermitsConditionalUpdater;
     }
 
     /**
@@ -38,8 +42,7 @@ class NoOfPermitsAnswerSaver implements AnswerSaverInterface
     public function save(QaContext $qaContext, array $postData)
     {
         $irhpPermitApplication = $qaContext->getQaEntity();
-        $oldAnswers = $irhpPermitApplication->getBilateralRequired();
-        $updatedAnswers = $irhpPermitApplication->getDefaultBilateralRequired();
+        $updatedAnswers = IrhpPermitApplication::DEFAULT_BILATERAL_REQUIRED;
 
         $cabotageAnswer = $irhpPermitApplication->getBilateralCabotageSelection();
         $availableTextboxes = AvailableTextBoxes::LOOKUP[$cabotageAnswer];
@@ -50,10 +53,6 @@ class NoOfPermitsAnswerSaver implements AnswerSaverInterface
             $updatedAnswers[$standardOrCabotageKey] = $answerValue;
         }
 
-        if ($oldAnswers == $updatedAnswers) {
-            return;
-        }
-
-        $this->noOfPermitsUpdater->update($irhpPermitApplication, $updatedAnswers);
+        $this->noOfPermitsConditionalUpdater->update($irhpPermitApplication, $updatedAnswers);
     }
 }

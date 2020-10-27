@@ -18,7 +18,7 @@ class NoOfPermitsMoroccoAnswerSaverFactory implements FactoryInterface
     {
         return new NoOfPermitsMoroccoAnswerSaver(
             $serviceLocator->get('QaGenericAnswerFetcher'),
-            $serviceLocator->get('QaBilateralNoOfPermitsUpdater')
+            $serviceLocator->get('PermitsBilateralCommonNoOfPermitsConditionalUpdater')
         );
     }
 }

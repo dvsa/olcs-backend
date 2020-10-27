@@ -28,6 +28,8 @@ class ApplicationCountryUpdaterTest extends MockeryTestCase
 
     private $irhpApplication;
 
+    private $irhpPermitApplication;
+
     private $irhpPermitApplicationCreator;
 
     private $existingIrhpPermitApplicationHandler;
@@ -38,9 +40,14 @@ class ApplicationCountryUpdaterTest extends MockeryTestCase
     {
         $this->irhpApplication = m::mock(IrhpApplication::class);
 
+        $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+
         $this->irhpPermitApplicationCreator = m::mock(IrhpPermitApplicationCreator::class);
 
         $this->existingIrhpPermitApplicationHandler = m::mock(ExistingIrhpPermitApplicationHandler::class);
+        $this->existingIrhpPermitApplicationHandler->shouldReceive('handle')
+            ->with($this->irhpPermitApplication, self::STOCK_ID, self::REQUIRED_PERMITS)
+            ->once();
 
         $this->applicationCountryUpdater = new ApplicationCountryUpdater(
             $this->irhpPermitApplicationCreator,
@@ -50,15 +57,9 @@ class ApplicationCountryUpdaterTest extends MockeryTestCase
 
     public function testUpdateIrhpPermitApplicationExists()
     {
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-
         $this->irhpApplication->shouldReceive('getIrhpPermitApplicationByStockCountryId')
             ->with(self::COUNTRY_ID)
-            ->andReturn($irhpPermitApplication);
-
-        $this->existingIrhpPermitApplicationHandler->shouldReceive('handle')
-            ->with($irhpPermitApplication, self::STOCK_ID, self::REQUIRED_PERMITS)
-            ->once();
+            ->andReturn($this->irhpPermitApplication);
 
         $this->applicationCountryUpdater->update(
             $this->irhpApplication,
@@ -75,8 +76,9 @@ class ApplicationCountryUpdaterTest extends MockeryTestCase
             ->andReturnNull();
 
         $this->irhpPermitApplicationCreator->shouldReceive('create')
-            ->with($this->irhpApplication, self::STOCK_ID, self::REQUIRED_PERMITS)
-            ->once();
+            ->with($this->irhpApplication, self::STOCK_ID)
+            ->once()
+            ->andReturn($this->irhpPermitApplication);
 
         $this->applicationCountryUpdater->update(
             $this->irhpApplication,

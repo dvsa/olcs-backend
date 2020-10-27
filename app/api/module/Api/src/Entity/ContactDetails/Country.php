@@ -55,4 +55,14 @@ class Country extends AbstractCountry
     const ID_TUNISIA = 'TN';
     const ID_TURKEY = 'TR';
     const ID_UKRAINE = 'UA';
+
+    /**
+     * Whether this country is Morocco
+     *
+     * @return bool
+     */
+    public function isMorocco()
+    {
+        return $this->id == self::ID_MOROCCO;
+    }
 }

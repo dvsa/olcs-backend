@@ -39,11 +39,10 @@ class ApplicationCountryUpdater
     public function update(IrhpApplication $irhpApplication, $countryId, $stockId, array $requiredPermits)
     {
         $irhpPermitApplication = $irhpApplication->getIrhpPermitApplicationByStockCountryId($countryId);
-
         if (is_null($irhpPermitApplication)) {
-            $this->irhpPermitApplicationCreator->create($irhpApplication, $stockId, $requiredPermits);
-        } else {
-            $this->existingIrhpPermitApplicationHandler->handle($irhpPermitApplication, $stockId, $requiredPermits);
+            $irhpPermitApplication = $this->irhpPermitApplicationCreator->create($irhpApplication, $stockId);
         }
+
+        $this->existingIrhpPermitApplicationHandler->handle($irhpPermitApplication, $stockId, $requiredPermits);
     }
 }

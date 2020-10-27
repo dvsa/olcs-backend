@@ -16,9 +16,20 @@ class PeriodGeneratorFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new PeriodGenerator(
-            $serviceLocator->get('RepositoryServiceManager')->get('IrhpPermitStock'),
-            $serviceLocator->get('PermitsBilateralMetadataFieldsGenerator')
+        $periodGenerator = new PeriodGenerator(
+            $serviceLocator->get('RepositoryServiceManager')->get('IrhpPermitStock')
         );
+
+        $periodGenerator->registerFieldsGenerator(
+            Behaviour::STANDARD,
+            $serviceLocator->get('PermitsBilateralMetadataStandardFieldsGenerator')
+        );
+
+        $periodGenerator->registerFieldsGenerator(
+            Behaviour::MOROCCO,
+            $serviceLocator->get('PermitsBilateralMetadataMoroccoFieldsGenerator')
+        );
+
+        return $periodGenerator;
     }
 }

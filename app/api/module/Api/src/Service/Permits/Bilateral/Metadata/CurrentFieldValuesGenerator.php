@@ -29,13 +29,12 @@ class CurrentFieldValuesGenerator
             ]
         ];
 
-        if (is_object($irhpPermitApplication)) {
-            $irhpPermitApplicationStockId = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getId();
-            if ($irhpPermitApplicationStockId == $irhpPermitStock->getId()) {
-                $permitUsageSelection = $irhpPermitApplication->getBilateralPermitUsageSelection();
-                if (!is_null($permitUsageSelection)) {
-                    $currentFieldValues[$permitUsageSelection] = $irhpPermitApplication->getBilateralRequired();
-                }
+        if (is_object($irhpPermitApplication) &&
+            $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock() === $irhpPermitStock
+        ) {
+            $permitUsageSelection = $irhpPermitApplication->getBilateralPermitUsageSelection();
+            if (!is_null($permitUsageSelection)) {
+                $currentFieldValues[$permitUsageSelection] = $irhpPermitApplication->getBilateralRequired();
             }
         }
 

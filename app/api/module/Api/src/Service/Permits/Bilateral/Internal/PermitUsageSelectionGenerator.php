@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use RuntimeException;
 
 class PermitUsageSelectionGenerator

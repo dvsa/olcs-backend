@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\Bilateral\Metadata;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\Behaviour;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\PeriodArrayGenerator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\CountryGenerator;
 use Mockery as m;
@@ -64,7 +65,10 @@ class CountryGeneratorTest extends MockeryTestCase
         $this->countryGenerator = new CountryGenerator($this->periodArrayGenerator);
     }
 
-    public function testGenerate()
+    /**
+     * @dataProvider dpGenerate
+     */
+    public function testGenerate($isMorocco, $behaviour, $periodLabel)
     {
         $selectedPeriodId = 42;
 
@@ -78,14 +82,20 @@ class CountryGeneratorTest extends MockeryTestCase
             ->andReturn($irhpPermitApplication);
 
         $this->periodArrayGenerator->shouldReceive('generate')
-            ->with($this->country, $irhpPermitApplication)
+            ->with($behaviour, $this->country, $irhpPermitApplication)
             ->andReturn($this->periodArray);
+
+        $this->country->shouldReceive('isMorocco')
+            ->withNoArgs()
+            ->andReturn($isMorocco);
 
         $expected = [
             'id' => $this->countryId,
             'name' => $this->countryName,
+            'type' => $behaviour,
             'visible' => $this->hasCountryId,
             'selectedPeriodId' => $selectedPeriodId,
+            'periodLabel' => $periodLabel,
             'periods' => $this->periodArray
         ];
 
@@ -95,21 +105,30 @@ class CountryGeneratorTest extends MockeryTestCase
         );
     }
 
-    public function testGenerateNoPeriodSelected()
+    /**
+     * @dataProvider dpGenerate
+     */
+    public function testGenerateNoPeriodSelected($isMorocco, $behaviour, $periodLabel)
     {
         $this->irhpApplication->shouldReceive('getIrhpPermitApplicationByStockCountryId')
             ->with($this->countryId)
             ->andReturnNull();
 
         $this->periodArrayGenerator->shouldReceive('generate')
-            ->with($this->country, null)
+            ->with($behaviour, $this->country, null)
             ->andReturn($this->periodArray);
+
+        $this->country->shouldReceive('isMorocco')
+            ->withNoArgs()
+            ->andReturn($isMorocco);
 
         $expected = [
             'id' => $this->countryId,
             'name' => $this->countryName,
+            'type' => $behaviour,
             'visible' => $this->hasCountryId,
             'selectedPeriodId' => null,
+            'periodLabel' => $periodLabel,
             'periods' => $this->periodArray
         ];
 
@@ -117,5 +136,13 @@ class CountryGeneratorTest extends MockeryTestCase
             $expected,
             $this->countryGenerator->generate($this->country, $this->irhpApplication)
         );
+    }
+
+    public function dpGenerate()
+    {
+        return [
+            [false, Behaviour::STANDARD, 'Select period'],
+            [true, Behaviour::MOROCCO, 'Select stock'],
+        ];
     }
 }

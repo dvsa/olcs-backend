@@ -18,8 +18,7 @@ class PermitUsageAnswerSaverFactory implements FactoryInterface
     {
         return new PermitUsageAnswerSaver(
             $serviceLocator->get('QaGenericAnswerFetcher'),
-            $serviceLocator->get('QaApplicationAnswersClearer'),
-            $serviceLocator->get('QaGenericAnswerSaver')
+            $serviceLocator->get('PermitsBilateralCommonPermitUsageUpdater')
         );
     }
 }
