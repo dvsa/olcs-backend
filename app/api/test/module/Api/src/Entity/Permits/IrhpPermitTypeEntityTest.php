@@ -240,12 +240,20 @@ class IrhpPermitTypeEntityTest extends EntityTester
     }
 
     /**
-    * @dataProvider dpGenerateExpiryDateEcmtRemoval
+    * @dataProvider dpGenerateExpiryDate
     */
-    public function testGenerateExpiryDateEcmtRemoval($issueDateString, $expectedExpiryDateString)
-    {
+    public function testGenerateExpiryDate(
+        $isEcmtRemoval,
+        $isBilateral,
+        $issueDateString,
+        $expectedExpiryDateString
+    ) {
         $this->sut->shouldReceive('isEcmtRemoval')
-            ->andReturn(true);
+            ->withNoArgs()
+            ->andReturn($isEcmtRemoval);
+        $this->sut->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturn($isBilateral);
 
         $issueDate = new DateTime($issueDateString);
         $expiryDate = $this->sut->generateExpiryDate($issueDate);
@@ -258,22 +266,29 @@ class IrhpPermitTypeEntityTest extends EntityTester
         );
     }
 
-    public function dpGenerateExpiryDateEcmtRemoval()
+    public function dpGenerateExpiryDate()
     {
         return [
-            ['2019-04-15', '2020-04-14'],
-            ['2019-05-01', '2020-04-30'],
-            ['2019-01-01', '2019-12-31'],
+            [true, false, '2019-04-15', '2020-04-14'],
+            [true, false, '2019-05-01', '2020-04-30'],
+            [true, false, '2019-01-01', '2019-12-31'],
+            [false, true, '2019-04-15', '2019-07-15'],
+            [false, true, '2019-12-01', '2020-03-01'],
+            [false, true, '2019-12-31', '2020-03-31'],
         ];
     }
 
-    public function testApplyExpiryIntervalException()
+    public function testGenerateExpiryDateException()
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to generate an expiry date for permit type 77');
 
         $this->sut->shouldReceive('isEcmtRemoval')
-            ->andReturn(false);
+            ->withNoArgs()
+            ->andReturnFalse();
+        $this->sut->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturnFalse();
 
         $this->sut->setId(77);
         $this->sut->generateExpiryDate(new DateTime());
