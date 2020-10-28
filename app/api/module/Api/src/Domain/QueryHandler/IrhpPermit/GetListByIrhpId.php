@@ -22,7 +22,11 @@ class GetListByIrhpId extends AbstractQueryHandler
         'replaces',
         'irhpPermitRange' => [
             'journey',
-            'irhpPermitStock' => ['country', 'irhpPermitType'],
+            'irhpPermitStock' => [
+                'country',
+                'irhpPermitType',
+                'permitCategory',
+            ],
             'emissionsCategory',
         ],
         'irhpPermitApplication',

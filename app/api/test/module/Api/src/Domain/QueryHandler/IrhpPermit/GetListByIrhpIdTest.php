@@ -73,7 +73,11 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
             'replaces',
             'irhpPermitRange' => [
                 'journey',
-                'irhpPermitStock' => ['country', 'irhpPermitType'],
+                'irhpPermitStock' => [
+                    'country',
+                    'irhpPermitType',
+                    'permitCategory',
+                ],
                 'emissionsCategory',
             ],
             'irhpPermitApplication',
@@ -210,7 +214,11 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
             'replaces',
             'irhpPermitRange' => [
                 'journey',
-                'irhpPermitStock' => ['country', 'irhpPermitType'],
+                'irhpPermitStock' => [
+                    'country',
+                    'irhpPermitType',
+                    'permitCategory',
+                ],
                 'emissionsCategory',
             ],
             'irhpPermitApplication',
@@ -275,7 +283,11 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
             'replaces',
             'irhpPermitRange' => [
                 'journey',
-                'irhpPermitStock' => ['country', 'irhpPermitType'],
+                'irhpPermitStock' => [
+                    'country',
+                    'irhpPermitType',
+                    'permitCategory',
+                ],
                 'emissionsCategory',
             ],
             'irhpPermitApplication',

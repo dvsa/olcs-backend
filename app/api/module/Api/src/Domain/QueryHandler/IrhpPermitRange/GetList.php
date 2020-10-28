@@ -14,7 +14,15 @@ class GetList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermitRange';
 
-    private $bundle = ['countrys', 'irhpPermitStock' => ['irhpPermitType' => ['name']], 'emissionsCategory', 'journey'];
+    private $bundle = [
+        'countrys',
+        'irhpPermitStock' => [
+            'irhpPermitType' => ['name'],
+            'permitCategory',
+        ],
+        'emissionsCategory',
+        'journey'
+    ];
 
     public function handleQuery(QueryInterface $query)
     {
