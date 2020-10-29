@@ -404,6 +404,7 @@ return [
     // Licence Vehicle
     TransferQuery\LicenceVehicle\LicenceVehicle::class => QueryHandler\LicenceVehicle\LicenceVehicle::class,
     TransferQuery\LicenceVehicle\PsvLicenceVehicle::class => QueryHandler\LicenceVehicle\PsvLicenceVehicle::class,
+    TransferQuery\LicenceVehicle\LicenceVehiclesById::class => QueryHandler\LicenceVehicle\LicenceVehiclesById::class,
 
     // Inspection Request
     TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
