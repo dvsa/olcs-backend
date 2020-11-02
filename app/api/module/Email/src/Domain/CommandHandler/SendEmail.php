@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Email\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail as SendEmailCmd;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
@@ -323,7 +324,7 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
      */
     protected function translate($message, $locale = 'en_GB')
     {
-        return $this->getTranslator()->translate($message, 'email', $locale);
+        return $this->getTranslator()->translate($message, TranslationLoader::DEFAULT_TEXT_DOMAIN, $locale);
     }
 
     /**
