@@ -46,6 +46,7 @@ return [
     QueryHandler\Permits\StockScoringPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockAcceptPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockOperationsPermitted::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\StockAlignmentReport::class => IsSystemAdmin::class,
     QueryHandler\Permits\PostScoringReport::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\GetScoredPermitList::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintType::class => IsInternalAdmin::class,
