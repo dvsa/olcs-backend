@@ -90,7 +90,7 @@ class QueueAcceptScoringAndPostScoringReportPermittedTest extends QueryHandlerTe
         $this->assertEquals(
             [
                 'result' => false,
-                'message' => 'Acceptance and post scoring report are not permitted when stock status is \'stock status description\''
+                'message' => 'Acceptance, stock alignment and post scoring report are not permitted when stock status is \'stock status description\''
             ],
             $result
         );

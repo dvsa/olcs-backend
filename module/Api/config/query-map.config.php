@@ -668,6 +668,7 @@ return [
     TransferQuery\Permits\EmissionsByYear::class => QueryHandler\Permits\EmissionsByYear::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
+    TransferQuery\Permits\StockAlignmentReport::class => QueryHandler\Permits\StockAlignmentReport::class,
     TransferQuery\Permits\PostScoringReport::class => QueryHandler\Permits\PostScoringReport::class,
 
     // Permits - internal
