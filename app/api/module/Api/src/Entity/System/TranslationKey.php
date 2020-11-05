@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\System;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\DeletableInterface;
 
 /**
  * TranslationKey Entity
@@ -15,6 +16,32 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class TranslationKey extends AbstractTranslationKey
+class TranslationKey extends AbstractTranslationKey implements DeletableInterface
 {
+    /**
+     * Checks whether there are translated texts still attached to the key
+     *
+     * @return boolean
+     */
+    public function canDelete()
+    {
+        return $this->translationKeyTexts->isEmpty();
+    }
+
+    /**
+     * Creates a translation key record
+     *
+     * @param string $id
+     * @param string $description
+     * @return TranslationKey
+     */
+    public static function create($id, $description)
+    {
+        $instance = new self;
+
+        $instance->id = $id;
+        $instance->description = $description;
+
+        return $instance;
+    }
 }
