@@ -34,7 +34,7 @@ class AllocateCandidatePermits extends AbstractCommandHandler
         $irhpPermitApplicationId = $command->getId();
         $irhpPermitApplication = $this->getRepo()->fetchById($irhpPermitApplicationId);
 
-        $candidatePermits = $irhpPermitApplication->getSuccessfulIrhpCandidatePermits();
+        $candidatePermits = $irhpPermitApplication->getSuccessfulIrhpCandidatePermits(null, true);
         foreach ($candidatePermits as $candidatePermit) {
             $this->addIrhpPermit($candidatePermit);
         }

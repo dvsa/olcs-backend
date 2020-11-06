@@ -4317,16 +4317,19 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpTestCanViewCandidatePermits
      */
-    public function testCanViewCandidatePermits($isAwaitingFee, $allocationMode, $expected)
+    public function testCanViewCandidatePermits($isAwaitingFee, $isCandidatePermitsAllocationMode, $isApgg, $expected)
     {
         $this->sut->shouldReceive('isAwaitingFee')
-            ->once()
             ->withNoArgs()
             ->andReturn($isAwaitingFee);
 
-        $this->sut->shouldReceive('getAllocationMode')
+        $this->sut->shouldReceive('isCandidatePermitsAllocationMode')
             ->withNoArgs()
-            ->andReturn($allocationMode);
+            ->andReturn($isCandidatePermitsAllocationMode);
+
+        $this->sut->shouldReceive('isApgg')
+            ->withNoArgs()
+            ->andReturn($isApgg);
 
         $this->assertSame($expected, $this->sut->canViewCandidatePermits());
     }
@@ -4334,14 +4337,75 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpTestCanViewCandidatePermits()
     {
         return [
-            [true, IrhpPermitStock::ALLOCATION_MODE_STANDARD, false],
-            [true, IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES, false],
-            [true, IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY, false],
-            [true, IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS, true],
-            [false, IrhpPermitStock::ALLOCATION_MODE_STANDARD, false],
-            [false, IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES, false],
-            [false, IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY, false],
-            [false, IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS, false],
+            [false, false, false, false],
+            [false, false, true, false],
+            [false, true, false, false],
+            [false, true, true, false],
+            [true, false, false, false],
+            [true, false, true, false],
+            [true, true, false, false],
+            [true, true, true, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestCanSelectCandidatePermits
+     */
+    public function testCanSelectCandidatePermits($isAwaitingFee, $isCandidatePermitsAllocationMode, $isApsg, $expected)
+    {
+        $this->sut->shouldReceive('isAwaitingFee')
+            ->withNoArgs()
+            ->andReturn($isAwaitingFee);
+
+        $this->sut->shouldReceive('isCandidatePermitsAllocationMode')
+            ->withNoArgs()
+            ->andReturn($isCandidatePermitsAllocationMode);
+
+        $this->sut->shouldReceive('isApsg')
+            ->withNoArgs()
+            ->andReturn($isApsg);
+
+        $this->assertSame($expected, $this->sut->canSelectCandidatePermits());
+    }
+
+    public function dpTestCanSelectCandidatePermits()
+    {
+        return [
+            [false, false, false, false],
+            [false, false, true, false],
+            [false, true, false, false],
+            [false, true, true, false],
+            [true, false, false, false],
+            [true, false, true, false],
+            [true, true, false, false],
+            [true, true, true, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsCandidatePermitsAllocationMode
+     */
+    public function testIsCandidatePermitsAllocationMode($allocationMode, $expected)
+    {
+        $this->sut->shouldReceive('getAllocationMode')
+            ->withNoArgs()
+            ->andReturn($allocationMode);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->isCandidatePermitsAllocationMode()
+        );
+    }
+
+    public function dpTestIsCandidatePermitsAllocationMode()
+    {
+        return [
+            [IrhpPermitStock::ALLOCATION_MODE_STANDARD, false],
+            [IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES, false],
+            [IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY, false],
+            [IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS, true],
+            [IrhpPermitStock::ALLOCATION_MODE_BILATERAL, false],
+            [IrhpPermitStock::ALLOCATION_MODE_NONE, false],
         ];
     }
 
@@ -6241,7 +6305,33 @@ class IrhpApplicationEntityTest extends EntityTester
             [RefData::BUSINESS_PROCESS_AG, false],
         ];
     }
-       
+
+    /**
+     * @dataProvider dpIsApgg
+     */
+    public function testIsApgg($businessProcessId, $expected)
+    {
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn(isset($businessProcessId) ? new RefData($businessProcessId) : null);
+
+        $this->assertSame(
+            $expected,
+            $this->sut->isApgg()
+        );
+    }
+
+    public function dpIsApgg()
+    {
+        return [
+            [null, false],
+            [RefData::BUSINESS_PROCESS_APG, false],
+            [RefData::BUSINESS_PROCESS_APGG, true],
+            [RefData::BUSINESS_PROCESS_APSG, false],
+            [RefData::BUSINESS_PROCESS_AG, false],
+        ];
+    }
+        
     /**
      * @dataProvider dpIsOngoing
      */

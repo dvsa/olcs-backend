@@ -182,6 +182,15 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     protected $version = 1;
 
     /**
+     * Wanted
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="wanted", nullable=true, options={"default": 0})
+     */
+    protected $wanted = 0;
+
+    /**
      * Irhp permit
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -523,6 +532,30 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the wanted
+     *
+     * @param boolean $wanted new value being set
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setWanted($wanted)
+    {
+        $this->wanted = $wanted;
+
+        return $this;
+    }
+
+    /**
+     * Get the wanted
+     *
+     * @return boolean
+     */
+    public function getWanted()
+    {
+        return $this->wanted;
     }
 
     /**

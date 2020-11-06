@@ -40,6 +40,11 @@ class IrhpCandidatePermit extends AbstractRepository
                 ->setParameter('status', RefData::PERMIT_APP_STATUS_AWAITING_FEE);
             $qb->andWhere($qb->expr()->eq('ipa.irhpApplication', ':irhpApplicationId'))
                 ->setParameter('irhpApplicationId', $query->getIrhpApplication());
+
+            if ($query->getWantedOnly()) {
+                $qb->andWhere($qb->expr()->eq($this->alias . '.wanted', ':wanted'))
+                    ->setParameter('wanted', true);
+            }
         }
     }
 
