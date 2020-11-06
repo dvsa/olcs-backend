@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\System;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\DeletableInterface;
 
 /**
  * TranslationKeyText Entity
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class TranslationKeyText extends AbstractTranslationKeyText
+class TranslationKeyText extends AbstractTranslationKeyText implements DeletableInterface
 {
     /**
      * @param Language $language
@@ -45,5 +46,15 @@ class TranslationKeyText extends AbstractTranslationKeyText
     {
         $this->translatedText = $translatedText;
         return $this;
+    }
+
+    /**
+     * Required for abstract delete handler
+     *
+     * @return boolean
+     */
+    public function canDelete()
+    {
+        return true;
     }
 }

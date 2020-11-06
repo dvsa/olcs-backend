@@ -1220,9 +1220,12 @@ return [
 
     //TranslationKey
     TransferCommand\TranslationKey\Update::class => CommandHandler\TranslationKey\Update::class,
+    TransferCommand\TranslationKey\Create::class => CommandHandler\TranslationKey\Create::class,
+    TransferCommand\TranslationKey\Delete::class => CommandHandler\TranslationKey\Delete::class,
     TransferCommand\TranslationKey\GenerateCache::class => CommandHandler\TranslationKey\GenerateCache::class,
     Command\TranslationKeyText\Create::class => CommandHandler\TranslationKeyText\Create::class,
     Command\TranslationKeyText\Update::class => CommandHandler\TranslationKeyText\Update::class,
+    TransferCommand\TranslationKeyText\Delete::class => CommandHandler\TranslationKeyText\Delete::class,
 
     //Replacement
     TransferCommand\Replacement\Update::class => CommandHandler\Replacement\Update::class,
