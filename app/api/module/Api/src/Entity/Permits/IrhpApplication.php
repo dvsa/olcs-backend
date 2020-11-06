@@ -1660,7 +1660,30 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function canViewCandidatePermits(): bool
     {
         return $this->isAwaitingFee()
-            && $this->getAllocationMode() == IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS;
+            && $this->isCandidatePermitsAllocationMode()
+            && $this->isApgg();
+    }
+
+    /**
+     * Whether can select candidate permits
+     *
+     * @return bool
+     */
+    public function canSelectCandidatePermits(): bool
+    {
+        return $this->isAwaitingFee()
+            && $this->isCandidatePermitsAllocationMode()
+            && $this->isApsg();
+    }
+
+    /**
+     * Whether this application is associated with the candidate permits based allocation mode
+     *
+     * @return bool
+     */
+    public function isCandidatePermitsAllocationMode()
+    {
+        return $this->getAllocationMode() == IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS;
     }
 
     /**
@@ -2166,13 +2189,28 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function isApsg()
     {
+        return $this->isBusinessProcess(RefData::BUSINESS_PROCESS_APSG);
+    }
+
+    /**
+     * Whether the permit application is APGG
+     *
+     * @return bool
+     */
+    public function isApgg()
+    {
+        return $this->isBusinessProcess(RefData::BUSINESS_PROCESS_APGG);
+    }
+
+    private function isBusinessProcess($businessProcessId)
+    {
         $businessProcess = $this->getBusinessProcess();
 
         if ($businessProcess === null) {
             return false;
         }
 
-        return $businessProcess->getId() == RefData::BUSINESS_PROCESS_APSG;
+        return $businessProcess->getId() == $businessProcessId;
     }
 
     /**

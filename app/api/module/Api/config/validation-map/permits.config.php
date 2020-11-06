@@ -74,6 +74,7 @@ return [
     CommandHandler\IrhpApplication\SubmitApplication::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\RegenerateApplicationFee::class => IsSideEffect::class,
     CommandHandler\IrhpApplication\RegenerateIssueFee::class => IsSideEffect::class,
+    CommandHandler\IrhpApplication\UpdateCandidatePermitSelection::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\Permits\AcceptIrhpPermits::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\Permits\GeneratePermitDocuments::class => IsSideEffect::class,
     CommandHandler\Permits\PrintPermits::class => IsInternalAdmin::class,

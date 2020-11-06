@@ -152,6 +152,8 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $permitsAwarded = 10;
         $euro5PermitsAwarded = 7;
         $euro6PermitsAwarded = 3;
+        $euro5PermitsWanted = 5;
+        $euro6PermitsWanted = 2;
         $validPermitsCount = 14;
         $permitsRequired = 3;
 
@@ -172,6 +174,12 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $entity->shouldReceive('countPermitsAwarded')
             ->with(RefData::EMISSIONS_CATEGORY_EURO6_REF)
             ->andReturn($euro6PermitsAwarded);
+        $entity->shouldReceive('countPermitsAwarded')
+            ->with(RefData::EMISSIONS_CATEGORY_EURO5_REF, true)
+            ->andReturn($euro5PermitsWanted);
+        $entity->shouldReceive('countPermitsAwarded')
+            ->with(RefData::EMISSIONS_CATEGORY_EURO6_REF, true)
+            ->andReturn($euro6PermitsWanted);
         $entity->shouldReceive('countValidPermits')
             ->withNoArgs()
             ->andReturn($validPermitsCount);
@@ -184,6 +192,8 @@ class IrhpPermitApplicationEntityTest extends EntityTester
                 'permitsAwarded' => $permitsAwarded,
                 'euro5PermitsAwarded' => $euro5PermitsAwarded,
                 'euro6PermitsAwarded' => $euro6PermitsAwarded,
+                'euro5PermitsWanted' => $euro5PermitsWanted,
+                'euro6PermitsWanted' => $euro6PermitsWanted,
                 'validPermits' => $validPermitsCount,
                 'permitsRequired' => $permitsRequired,
                 'relatedApplication' => $serializedIrhpApplication,
@@ -241,7 +251,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestCountPermitsAwarded
+     * @dataProvider dpTestCountPermitsAwardedForAllocationModeEmissionsCategories
      */
     public function testCountPermitsAwardedForAllocationModeEmissionsCategories($emissionsCategoryId)
     {
@@ -265,11 +275,23 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         );
     }
 
-    /**
-     * @dataProvider dpTestCountPermitsAwarded
-     */
-    public function testCountPermitsAwardedForAllocationModeCandidatePermits($emissionsCategoryId)
+    public function dpTestCountPermitsAwardedForAllocationModeEmissionsCategories()
     {
+        return [
+            [null],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestCountPermitsAwardedForAllocationModeCandidatePermits
+     */
+    public function testCountPermitsAwardedForAllocationModeCandidatePermits(
+        $emissionsCategoryId,
+        $wantedOnly,
+        $expectedWantedOnly
+    ) {
         $successfulIrhpCandidatePermits = [
             m::mock(IrhpCandidatePermit::class),
             m::mock(IrhpCandidatePermit::class),
@@ -287,21 +309,27 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $entity->setIrhpPermitWindow($irhpPermitWindow);
 
         $entity->shouldReceive('getSuccessfulIrhpCandidatePermits')
-            ->with($emissionsCategoryId)
+            ->with($emissionsCategoryId, $expectedWantedOnly)
             ->andReturn($successfulIrhpCandidatePermits);
 
         $this->assertEquals(
             $expectedPermitsAwarded,
-            $entity->countPermitsAwarded($emissionsCategoryId)
+            $entity->countPermitsAwarded($emissionsCategoryId, $wantedOnly)
         );
     }
 
-    public function dpTestCountPermitsAwarded()
+    public function dpTestCountPermitsAwardedForAllocationModeCandidatePermits()
     {
         return [
-            [null],
-            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
-            [RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            [null, null, false],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, null, false],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, null, false],
+            [null, false, false],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, false, false],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, false, false],
+            [null, true, true],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, true, true],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, true, true],
         ];
     }
 
@@ -320,6 +348,19 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertEquals(3, $successfulIrhpCandidatePermits->count());
     }
 
+    public function testGetSuccessfulIrhpCandidatePermitsNoEmissionsCategoryWantedOnly()
+    {
+        $irhpCandidatePermits = $this->getPermitsAwardedMocks();
+        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
+            $this->sut->addIrhpCandidatePermits($irhpCandidatePermit);
+        }
+
+        $successfulIrhpCandidatePermits = $this->sut->getSuccessfulIrhpCandidatePermits(null, true);
+
+        $this->assertTrue($successfulIrhpCandidatePermits->contains($irhpCandidatePermits[2]));
+        $this->assertEquals(1, $successfulIrhpCandidatePermits->count());
+    }
+
     public function testGetSuccessfulIrhpCandidatePermitsEuro5EmissionsCategory()
     {
         $irhpCandidatePermits = $this->getPermitsAwardedMocks();
@@ -334,6 +375,22 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertTrue($successfulIrhpCandidatePermits->contains($irhpCandidatePermits[0]));
         $this->assertTrue($successfulIrhpCandidatePermits->contains($irhpCandidatePermits[2]));
         $this->assertEquals(2, $successfulIrhpCandidatePermits->count());
+    }
+
+    public function testGetSuccessfulIrhpCandidatePermitsEuro5EmissionsCategoryWantedOnly()
+    {
+        $irhpCandidatePermits = $this->getPermitsAwardedMocks();
+        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
+            $this->sut->addIrhpCandidatePermits($irhpCandidatePermit);
+        }
+
+        $successfulIrhpCandidatePermits = $this->sut->getSuccessfulIrhpCandidatePermits(
+            RefData::EMISSIONS_CATEGORY_EURO5_REF,
+            true
+        );
+
+        $this->assertTrue($successfulIrhpCandidatePermits->contains($irhpCandidatePermits[2]));
+        $this->assertEquals(1, $successfulIrhpCandidatePermits->count());
     }
 
     public function testGetSuccessfulIrhpCandidatePermitsEuro6EmissionsCategory()
@@ -351,6 +408,21 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertEquals(1, $successfulIrhpCandidatePermits->count());
     }
 
+    public function testGetSuccessfulIrhpCandidatePermitsEuro6EmissionsCategoryWantedOnly()
+    {
+        $irhpCandidatePermits = $this->getPermitsAwardedMocks();
+        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
+            $this->sut->addIrhpCandidatePermits($irhpCandidatePermit);
+        }
+
+        $successfulIrhpCandidatePermits = $this->sut->getSuccessfulIrhpCandidatePermits(
+            RefData::EMISSIONS_CATEGORY_EURO6_REF,
+            true
+        );
+
+        $this->assertEquals(0, $successfulIrhpCandidatePermits->count());
+    }
+
     private function getPermitsAwardedMocks()
     {
         $euro5EmissionsCategory = new RefData(RefData::EMISSIONS_CATEGORY_EURO5_REF);
@@ -359,17 +431,23 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $candidatePermit1 = m::mock(IrhpCandidatePermit::class);
         $candidatePermit1->shouldReceive('getSuccessful')
             ->andReturn(true);
+        $candidatePermit1->shouldReceive('getWanted')
+            ->andReturn(false);
         $candidatePermit1->shouldReceive('getAssignedEmissionsCategory')
             ->andReturn($euro5EmissionsCategory);
 
         $candidatePermit2 = m::mock(IrhpCandidatePermit::class);
         $candidatePermit2->shouldReceive('getSuccessful')
             ->andReturn(false);
+        $candidatePermit2->shouldReceive('getWanted')
+            ->andReturn(true);
         $candidatePermit2->shouldReceive('getAssignedEmissionsCategory')
             ->andReturn($euro5EmissionsCategory);
 
         $candidatePermit3 = m::mock(IrhpCandidatePermit::class);
         $candidatePermit3->shouldReceive('getSuccessful')
+            ->andReturn(true);
+        $candidatePermit3->shouldReceive('getWanted')
             ->andReturn(true);
         $candidatePermit3->shouldReceive('getAssignedEmissionsCategory')
             ->andReturn($euro5EmissionsCategory);
@@ -377,12 +455,16 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $candidatePermit4 = m::mock(IrhpCandidatePermit::class);
         $candidatePermit4->shouldReceive('getSuccessful')
             ->andReturn(false);
+        $candidatePermit4->shouldReceive('getWanted')
+            ->andReturn(true);
         $candidatePermit4->shouldReceive('getAssignedEmissionsCategory')
             ->andReturn($euro6EmissionsCategory);
 
         $candidatePermit5 = m::mock(IrhpCandidatePermit::class);
         $candidatePermit5->shouldReceive('getSuccessful')
             ->andReturn(true);
+        $candidatePermit5->shouldReceive('getWanted')
+            ->andReturn(false);
         $candidatePermit5->shouldReceive('getAssignedEmissionsCategory')
             ->andReturn($euro6EmissionsCategory);
 

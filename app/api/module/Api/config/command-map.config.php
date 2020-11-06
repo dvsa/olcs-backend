@@ -1133,7 +1133,6 @@ return [
     TransferCommand\Surrender\Withdraw::class => CommandHandler\Surrender\Withdraw::class,
     Command\Surrender\Clear::class => CommandHandler\Surrender\Clear::class,
 
-
     // Permits - IRHP application
     TransferCommand\IrhpApplication\UpdateCountries::class => CommandHandler\IrhpApplication\UpdateCountries::class,
     TransferCommand\IrhpApplication\UpdateMultipleNoOfPermits::class => CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class,
@@ -1155,6 +1154,7 @@ return [
     Command\IrhpApplication\CreateDefaultIrhpPermitApplications::class => CommandHandler\IrhpApplication\CreateDefaultIrhpPermitApplications::class,
     Command\IrhpApplication\Expire::class => CommandHandler\IrhpApplication\Expire::class,
     TransferCommand\IrhpApplication\UpdatePeriod::class => CommandHandler\IrhpApplication\UpdatePeriod::class,
+    TransferCommand\IrhpApplication\UpdateCandidatePermitSelection::class => CommandHandler\IrhpApplication\UpdateCandidatePermitSelection::class,
 
     // Irhp Permit Application
     Command\IrhpPermitApplication\CreateForIrhpApplication::class => CommandHandler\IrhpPermitApplication\CreateForIrhpApplication::class,
