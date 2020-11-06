@@ -19,6 +19,8 @@ class ForCpProviderFactory
 
         $unrestrictedWithLowestStartNumberProvider = new UnrestrictedWithLowestStartNumberProvider();
 
+        $highestAvailabilityRangeSelector = new HighestAvailabilityRangeSelector();
+
         $restrictedWithFewestCountriesProvider = new RestrictedWithFewestCountriesProvider(
             $restrictedRangesProvider
         );
@@ -33,11 +35,13 @@ class ForCpProviderFactory
 
         $forCpWithCountriesAndNoMatchingRangesProvider = new ForCpWithCountriesAndNoMatchingRangesProvider(
             $unrestrictedWithLowestStartNumberProvider,
-            $restrictedWithFewestCountriesProvider
+            $restrictedWithFewestCountriesProvider,
+            $highestAvailabilityRangeSelector
         );
 
         $forCpWithCountriesAndMultipleMatchingRangesProvider = new ForCpWithCountriesAndMultipleMatchingRangesProvider(
-            $withFewestNonRequestedCountriesProvider
+            $withFewestNonRequestedCountriesProvider,
+            $highestAvailabilityRangeSelector
         );
 
         $forCpWithCountriesProvider = new ForCpWithCountriesProvider(
@@ -48,7 +52,8 @@ class ForCpProviderFactory
 
         $forCpWithNoCountriesProvider = new ForCpWithNoCountriesProvider(
             $unrestrictedWithLowestStartNumberProvider,
-            $restrictedWithFewestCountriesProvider
+            $restrictedWithFewestCountriesProvider,
+            $highestAvailabilityRangeSelector
         );
 
         $entityIdsExtractor = new EntityIdsExtractor();

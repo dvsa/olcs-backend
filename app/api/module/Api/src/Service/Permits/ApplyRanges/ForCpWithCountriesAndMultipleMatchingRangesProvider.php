@@ -3,23 +3,29 @@
 namespace Dvsa\Olcs\Api\Service\Permits\ApplyRanges;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use RuntimeException;
 
 class ForCpWithCountriesAndMultipleMatchingRangesProvider
 {
     /** @var WithFewestNonRequestedCountriesProvider */
     private $withFewestNonRequestedCountriesProvider;
 
+    /** @var HighestAvailabilityRangeSelector */
+    private $highestAvailabilityRangeSelector;
+
     /**
      * Create service instance
      *
      * @param WithFewestNonRequestedCountriesProvider $withFewestNonRequestedCountriesProvider
+     * @param HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
      *
      * @return ForCpWithCountriesAndMultipleMatchingRangesProvider
      */
-    public function __construct(WithFewestNonRequestedCountriesProvider $withFewestNonRequestedCountriesProvider)
-    {
+    public function __construct(
+        WithFewestNonRequestedCountriesProvider $withFewestNonRequestedCountriesProvider,
+        HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
+    ) {
         $this->withFewestNonRequestedCountriesProvider = $withFewestNonRequestedCountriesProvider;
+        $this->highestAvailabilityRangeSelector = $highestAvailabilityRangeSelector;
     }
 
     /**
@@ -29,8 +35,6 @@ class ForCpWithCountriesAndMultipleMatchingRangesProvider
      * @param Result $result
      * @param array $ranges an array of the multiple matching ranges
      * @param array $applicationCountryIds The country ids specified in the application
-     *
-     * @throws RuntimeException
      *
      * @return array the single range identified as suitable
      */
@@ -52,9 +56,8 @@ class ForCpWithCountriesAndMultipleMatchingRangesProvider
         );
 
         if (count($matchingRanges) > 1) {
-            throw new RuntimeException(
-                'Assertion failed in method ' . __METHOD__ . ': count($matchingRanges) > 1'
-            );
+            $result->addMessage('    - multiple ranges have the fewest non-requested countries');
+            return $this->highestAvailabilityRangeSelector->getRange($result, $matchingRanges);
         }
 
         $matchingRange = $matchingRanges[0];
