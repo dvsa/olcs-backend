@@ -33,7 +33,7 @@ class QueueAcceptScoringAndPostScoringReportPermitted extends AbstractQueryHandl
             return [
                 'result' => false,
                 'message' => sprintf(
-                    'Acceptance and post scoring report are not permitted when stock status is \'%s\'',
+                    'Acceptance, stock alignment and post scoring report are not permitted when stock status is \'%s\'',
                     $stock->getStatusDescription()
                 )
             ];
