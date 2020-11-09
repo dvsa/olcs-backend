@@ -324,8 +324,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $data['custom-check-answers'] = [
             'section' => 'checkedAnswers',
             'slug' => 'custom-check-answers',
-            'questionShort' => 'section.name.application/check-answers',
-            'question' => 'section.name.application/check-answers',
+            'questionShort' => 'section.name.application-check-answers',
+            'question' => 'section.name.application-check-answers',
             'answer' => $answer,
             'status' => $status,
         ];
@@ -345,8 +345,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $data['custom-declaration'] = [
             'section' => 'declaration',
             'slug' => 'custom-declaration',
-            'questionShort' => 'section.name.application/declaration',
-            'question' => 'section.name.application/declaration',
+            'questionShort' => 'section.name.application-declaration',
+            'question' => 'section.name.application-declaration',
             'answer' => $answer,
             'status' => $status,
         ];
