@@ -2197,12 +2197,12 @@
         },
         {
             "name": "olcs/olcs-companies-house",
-            "version": "4.206.2",
+            "version": "4.206.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.2/olcs-olcs-companies-house-4.206.2.zip",
-                "reference": "35c6e75699331acdc71f5dc0524d21066cc7e2d8",
-                "shasum": "35c6e75699331acdc71f5dc0524d21066cc7e2d8"
+                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.3/olcs-olcs-companies-house-4.206.3.zip",
+                "reference": "651255b62319bb686dad9b4543132456639e1db3",
+                "shasum": "651255b62319bb686dad9b4543132456639e1db3"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2221,7 +2221,7 @@
                     "dev-master": "0.1.x-dev"
                 },
                 "nexus-push": {
-                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/olcs-companies-house",
+                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-companies-house",
                     "ignore": [
                         "tests"
                     ]
@@ -2263,16 +2263,16 @@
                 "proprietary"
             ],
             "description": "companies house api client",
-            "time": "2020-07-13T00:23:01+00:00"
+            "time": "2020-11-09T14:13:36+00:00"
         },
         {
             "name": "olcs/olcs-cpms",
-            "version": "4.206.1",
+            "version": "4.206.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.1/olcs-olcs-cpms-4.206.1.zip",
-                "reference": "90e3c971f0d4b6aa0a9e7347bb75cea5221cd000",
-                "shasum": "90e3c971f0d4b6aa0a9e7347bb75cea5221cd000"
+                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.2/olcs-olcs-cpms-4.206.2.zip",
+                "reference": "e6520fbf870544e636524ad0eb036e0f4a2ec508",
+                "shasum": "e6520fbf870544e636524ad0eb036e0f4a2ec508"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2289,7 +2289,7 @@
                     "dev-master": "0.1.x-dev"
                 },
                 "nexus-push": {
-                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/olcs-cpms",
+                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-cpms",
                     "ignore": [
                         "tests"
                     ]
@@ -2331,16 +2331,16 @@
                 "proprietary"
             ],
             "description": "CPMS Module",
-            "time": "2020-07-13T00:14:23+00:00"
+            "time": "2020-11-09T14:13:00+00:00"
         },
         {
             "name": "olcs/olcs-dvla-search",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-dvla-search/1.0.4/olcs-olcs-dvla-search-1.0.4.zip",
-                "reference": "ada28bc6d8619d18b8f61c608ddf8ffa93f5f789",
-                "shasum": "ada28bc6d8619d18b8f61c608ddf8ffa93f5f789"
+                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-dvla-search/1.0.5/olcs-olcs-dvla-search-1.0.5.zip",
+                "reference": "6c6b8c027dc49789f78dcde6093af885e0c5b5b4",
+                "shasum": "6c6b8c027dc49789f78dcde6093af885e0c5b5b4"
             },
             "require": {
                 "caseyamcl/guzzle_retry_middleware": "2.3.3",
@@ -2355,7 +2355,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/olcs-dvla-search/",
+                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-dvla-search/",
                     "ignore": [
                         "tests"
                     ]
@@ -2396,16 +2396,16 @@
                 "proprietary"
             ],
             "description": "DVSA Search API client",
-            "time": "2020-09-25T12:18:19+00:00"
+            "time": "2020-11-09T14:11:10+00:00"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "4.206.4",
+            "version": "4.206.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.4/olcs-olcs-logging-4.206.4.zip",
-                "reference": "87e845ad97a2c10b51f61076a82689e6aafaf269",
-                "shasum": "87e845ad97a2c10b51f61076a82689e6aafaf269"
+                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.5/olcs-olcs-logging-4.206.5.zip",
+                "reference": "4ab87296e5b724a1fcaa032cc8f97940e0b14759",
+                "shasum": "4ab87296e5b724a1fcaa032cc8f97940e0b14759"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2425,7 +2425,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/olcs-logging",
+                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-logging",
                     "ignore": [
                         "test/",
                         "sonar-project.properties"
@@ -2461,7 +2461,7 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2020-07-13T00:32:48+00:00"
+            "time": "2020-11-09T14:10:03+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
@@ -2536,12 +2536,12 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "4.206.4",
+            "version": "4.206.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.4/olcs-olcs-utils-4.206.4.zip",
-                "reference": "495f48ce2ce3c8833522967486386f3da649f9e2",
-                "shasum": "495f48ce2ce3c8833522967486386f3da649f9e2"
+                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.5/olcs-olcs-utils-4.206.5.zip",
+                "reference": "0bf27d3640bb28df7ce9132da61cb332210d42a1",
+                "shasum": "0bf27d3640bb28df7ce9132da61cb332210d42a1"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2561,7 +2561,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/olcs-utils",
+                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-utils",
                     "ignore": [
                         "test/",
                         "sonar-project.properties"
@@ -2597,7 +2597,7 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2020-10-06T10:05:19+00:00"
+            "time": "2020-11-09T14:08:09+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
@@ -7216,12 +7216,12 @@
         },
         {
             "name": "olcs/olcs-devtools",
-            "version": "4.206.4",
+            "version": "4.206.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-devtools/4.206.4/olcs-olcs-devtools-4.206.4.zip",
-                "reference": "e5e23d846bd46329309a93d36d3b42072251b0cf",
-                "shasum": "e5e23d846bd46329309a93d36d3b42072251b0cf"
+                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-devtools/4.206.5/olcs-olcs-devtools-4.206.5.zip",
+                "reference": "db16c3201e68aa8e2264c863c6a7cd2548bcf0ef",
+                "shasum": "db16c3201e68aa8e2264c863c6a7cd2548bcf0ef"
             },
             "require": {
                 "brianium/paratest": "^3.0",
@@ -7251,7 +7251,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/olcs-devtools/"
+                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-devtools/"
                 }
             },
             "autoload": {
@@ -7260,7 +7260,7 @@
                 }
             },
             "description": "Dev tools",
-            "time": "2020-07-28T10:26:39+00:00"
+            "time": "2020-11-09T14:12:24+00:00"
         },
         {
             "name": "pdepend/pdepend",
