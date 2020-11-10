@@ -49,6 +49,7 @@ class ById extends AbstractQueryHandler
             $this->bundle,
             [
                 'canViewCandidatePermits' => $irhpApplication->canViewCandidatePermits(),
+                'canSelectCandidatePermits' => $irhpApplication->canSelectCandidatePermits(),
                 'totalPermitsAwarded' => $totalPermitsAwarded,
                 'totalPermitsRequired' => $totalPermitsRequired,
             ]

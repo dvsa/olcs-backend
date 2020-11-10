@@ -2,15 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AcceptScoring as AcceptScoringCmd;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\AcceptScoringFeeCreationTrait;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
@@ -28,7 +27,7 @@ use Exception;
  */
 class AcceptScoring extends AbstractCommandHandler
 {
-    use QueueAwareTrait;
+    use QueueAwareTrait, AcceptScoringFeeCreationTrait;
 
     protected $repoServiceName = 'IrhpApplication';
 
@@ -217,7 +216,10 @@ class AcceptScoring extends AbstractCommandHandler
 
         $this->result->merge(
             $this->handleSideEffect(
-                $this->getCreateIssueFeeCommand($irhpApplication)
+                $this->getCreateIssueFeeCommand(
+                    $irhpApplication,
+                    $irhpApplication->getPermitsAwarded()
+                )
             )
         );
 
@@ -225,39 +227,6 @@ class AcceptScoring extends AbstractCommandHandler
 
         $irhpApplication->proceedToAwaitingFee(
             $this->refData(IrhpInterface::STATUS_AWAITING_FEE)
-        );
-    }
-
-    /**
-     * Get issue fee creation command for an application
-     *
-     * @param IrhpApplication $irhpApplication
-     *
-     * @return CreateFee
-     */
-    private function getCreateIssueFeeCommand(IrhpApplication $irhpApplication)
-    {
-        $productReference = $irhpApplication->getIssueFeeProductReference();
-
-        $feeType = $this->getRepo('FeeType')->getLatestByProductReference($productReference);
-        $permitsAwarded = $irhpApplication->getPermitsAwarded();
-
-        $feeDescription = sprintf(
-            '%s - %d permits',
-            $feeType->getDescription(),
-            $permitsAwarded
-        );
-
-        return CreateFee::create(
-            [
-                'licence' => $irhpApplication->getLicence()->getId(),
-                'irhpApplication' => $irhpApplication->getId(),
-                'invoicedDate' => date('Y-m-d'),
-                'description' => $feeDescription,
-                'feeType' => $feeType->getId(),
-                'feeStatus' => Fee::STATUS_OUTSTANDING,
-                'amount' => $feeType->getFixedValue() * $permitsAwarded
-            ]
         );
     }
 

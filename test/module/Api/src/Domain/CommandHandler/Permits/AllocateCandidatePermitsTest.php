@@ -57,7 +57,7 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
         $candidatePermit5 = $this->createIrhpCandidatePermitMock($range1, $irhpPermitApplication);
         $candidatePermit6 = $this->createIrhpCandidatePermitMock($range2, $irhpPermitApplication);
 
-        $successfulCandidatePermits = [
+        $successfulWantedCandidatePermits = [
             $candidatePermit1,
             $candidatePermit2,
             $candidatePermit3,
@@ -67,7 +67,8 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
         ];
 
         $irhpPermitApplication->shouldReceive('getSuccessfulIrhpCandidatePermits')
-            ->andReturn($successfulCandidatePermits);
+            ->with(null, true)
+            ->andReturn($successfulWantedCandidatePermits);
 
         $permitSaveCount = 0;
 

@@ -59,6 +59,45 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
+    public function testFetchListForGetListByIrhpApplicationWantedOnly()
+    {
+        $irhpApplicationId = 10;
+
+        $this->setUpSut(IrhpCandidatePermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf()
+            ->shouldReceive('order')->once()->andReturnSelf();
+
+        $query = GetListByIrhpApplication::create(
+            [
+                'irhpApplication' => $irhpApplicationId,
+                'page' => 1,
+                'limit' => 25,
+                'order' => 'id',
+                'sort' => 'ASC',
+                'wantedOnly' => true,
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.successful = [[true]] '
+            . 'AND ia.status = [['.RefData::PERMIT_APP_STATUS_AWAITING_FEE.']] '
+            . 'AND ipa.irhpApplication = [['.$irhpApplicationId.']] '
+            . 'AND m.wanted = [[true]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+
     public function testFetchListForGetListByIrhpApplicationPreGrant()
     {
         $irhpApplicationId = 10;
