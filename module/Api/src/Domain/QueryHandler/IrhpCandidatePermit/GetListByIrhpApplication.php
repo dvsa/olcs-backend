@@ -21,6 +21,7 @@ class GetListByIrhpApplication extends AbstractQueryHandler
             ],
             'emissionsCategory',
         ],
+        'irhpPermitApplication'
     ];
 
     /** @var RangeBasedRestrictedCountriesProvider */
