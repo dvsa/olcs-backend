@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntit
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetListByIrhpApplication;
+use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetListByIrhpApplicationUnpaged;
 use Mockery as m;
 
 /**
@@ -18,15 +19,18 @@ use Mockery as m;
  */
 class IrhpCandidatePermitTest extends RepositoryTestCase
 {
+    const IRHP_APPLICATION_ID = 10;
+
     public function setUp(): void
     {
         $this->setUpSut(IrhpCandidatePermit::class);
     }
 
-    public function testFetchListForGetListByIrhpApplication()
+    /**
+     * @dataProvider dpGetListByIrhpApplicationVariants
+     */
+    public function testFetchListForGetListByIrhpApplication($query, $paginateCallCount)
     {
-        $irhpApplicationId = 10;
-
         $this->setUpSut(IrhpCandidatePermit::class, true);
         $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
 
@@ -38,31 +42,39 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
             ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
-            ->shouldReceive('paginate')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->times($paginateCallCount)->andReturnSelf()
             ->shouldReceive('order')->once()->andReturnSelf();
 
-        $query = GetListByIrhpApplication::create(
-            [
-                'irhpApplication' => $irhpApplicationId,
-                'page' => 1,
-                'limit' => 25,
-                'order' => 'id',
-                'sort' => 'ASC',
-            ]
-        );
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
         $expectedQuery = 'BLAH '
             . 'AND m.successful = [[true]] '
             . 'AND ia.status = [['.RefData::PERMIT_APP_STATUS_AWAITING_FEE.']] '
-            . 'AND ipa.irhpApplication = [['.$irhpApplicationId.']]';
+            . 'AND ipa.irhpApplication = [['.self::IRHP_APPLICATION_ID.']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testFetchListForGetListByIrhpApplicationWantedOnly()
+    public function dpGetListByIrhpApplicationVariants()
     {
-        $irhpApplicationId = 10;
+        $params = [
+            'irhpApplication' => self::IRHP_APPLICATION_ID,
+            'page' => 1,
+            'limit' => 25,
+            'order' => 'id',
+            'sort' => 'ASC',
+        ];
 
+        return [
+            [GetListByIrhpApplication::create($params), 1],
+            [GetListByIrhpApplicationUnpaged::create($params), 0],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetListByIrhpApplicationWantedOnlyVariants
+     */
+    public function testFetchListForGetListByIrhpApplicationWantedOnly($query, $paginateCallCount)
+    {
         $this->setUpSut(IrhpCandidatePermit::class, true);
         $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
 
@@ -74,34 +86,41 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
             ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
-            ->shouldReceive('paginate')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->times($paginateCallCount)->andReturnSelf()
             ->shouldReceive('order')->once()->andReturnSelf();
 
-        $query = GetListByIrhpApplication::create(
-            [
-                'irhpApplication' => $irhpApplicationId,
-                'page' => 1,
-                'limit' => 25,
-                'order' => 'id',
-                'sort' => 'ASC',
-                'wantedOnly' => true,
-            ]
-        );
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
         $expectedQuery = 'BLAH '
             . 'AND m.successful = [[true]] '
             . 'AND ia.status = [['.RefData::PERMIT_APP_STATUS_AWAITING_FEE.']] '
-            . 'AND ipa.irhpApplication = [['.$irhpApplicationId.']] '
+            . 'AND ipa.irhpApplication = [['.self::IRHP_APPLICATION_ID.']] '
             . 'AND m.wanted = [[true]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-
-    public function testFetchListForGetListByIrhpApplicationPreGrant()
+    public function dpGetListByIrhpApplicationWantedOnlyVariants()
     {
-        $irhpApplicationId = 10;
+        $params = [
+            'irhpApplication' => self::IRHP_APPLICATION_ID,
+            'page' => 1,
+            'limit' => 25,
+            'order' => 'id',
+            'sort' => 'ASC',
+            'wantedOnly' => true,
+        ];
 
+        return [
+            [GetListByIrhpApplication::create($params), 1],
+            [GetListByIrhpApplicationUnpaged::create($params), 0],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetListByIrhpApplicationPreGrantVariants
+     */
+    public function testFetchListForGetListByIrhpApplicationPreGrant($query, $paginateCallCount)
+    {
         $this->setUpSut(IrhpCandidatePermit::class, true);
         $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
 
@@ -113,25 +132,32 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
             ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
-            ->shouldReceive('paginate')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->times($paginateCallCount)->andReturnSelf()
             ->shouldReceive('order')->once()->andReturnSelf();
 
-        $query = GetListByIrhpApplication::create(
-            [
-                'irhpApplication' => $irhpApplicationId,
-                'page' => 1,
-                'limit' => 25,
-                'order' => 'id',
-                'sort' => 'ASC',
-                'isPreGrant' => true
-            ]
-        );
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
         $expectedQuery = 'BLAH '
             . 'AND ia.status IN [[["'.RefData::PERMIT_APP_STATUS_UNDER_CONSIDERATION.'"]]] '
-            . 'AND ipa.irhpApplication = [['.$irhpApplicationId.']]';
+            . 'AND ipa.irhpApplication = [['.self::IRHP_APPLICATION_ID.']]';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function dpGetListByIrhpApplicationPreGrantVariants()
+    {
+        $params = [
+            'irhpApplication' => self::IRHP_APPLICATION_ID,
+            'page' => 1,
+            'limit' => 25,
+            'order' => 'id',
+            'sort' => 'ASC',
+            'isPreGrant' => true
+        ];
+
+        return [
+            [GetListByIrhpApplication::create($params), 1],
+            [GetListByIrhpApplicationUnpaged::create($params), 0],
+        ];
     }
 
     /**
