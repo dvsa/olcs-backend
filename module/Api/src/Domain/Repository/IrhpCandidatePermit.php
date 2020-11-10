@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetListByIrhpApplication;
+use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetListByIrhpApplicationUnpaged;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -28,12 +29,14 @@ class IrhpCandidatePermit extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        if ($query instanceof GetListByIrhpApplication && $query->getIsPreGrant()) {
+        if (($query instanceof GetListByIrhpApplication || $query instanceof GetListByIrhpApplicationUnpaged)
+            && $query->getIsPreGrant()
+        ) {
             $qb->andWhere($qb->expr()->in('ia.status', ':status'))
                 ->setParameter('status', IrhpInterface::PRE_GRANT_STATUSES);
             $qb->andWhere($qb->expr()->eq('ipa.irhpApplication', ':irhpApplicationId'))
                 ->setParameter('irhpApplicationId', $query->getIrhpApplication());
-        } elseif ($query instanceof GetListByIrhpApplication) {
+        } elseif ($query instanceof GetListByIrhpApplication || $query instanceof GetListByIrhpApplicationUnpaged) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.successful', ':successful'))
                 ->setParameter('successful', true);
             $qb->andWhere($qb->expr()->eq('ia.status', ':status'))
