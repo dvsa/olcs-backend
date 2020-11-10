@@ -58,7 +58,8 @@ class GetListByIrhpApplicationTest extends QueryHandlerTestCase
                     'country'
                 ],
                 'emissionsCategory',
-            ]
+            ],
+            'irhpPermitApplication'
         ];
 
         $bundledIrhpCandidatePermits = [];
@@ -110,7 +111,8 @@ class GetListByIrhpApplicationTest extends QueryHandlerTestCase
                     'country'
                 ],
                 'emissionsCategory',
-            ]
+            ],
+            'irhpPermitApplication'
         ];
 
         $this->sut->shouldReceive('resultList')
