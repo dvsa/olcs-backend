@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpCandidatePermit;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\Permits\Common\RangeBasedRestrictedCountriesProvider;
+use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -62,7 +63,11 @@ class GetListByIrhpApplication extends AbstractQueryHandler
 
         foreach ($irhpCandidatePermits as $i => $irhpCandidatePermit) {
             // set value of permit number
-            $irhpCandidatePermit['permitNumber'] = ($query->getPage() - 1) * $query->getLimit() + $i + 1;
+            $permitNumber = $i + 1;
+            if ($query instanceof PagedQueryInterface) {
+                $permitNumber += (($query->getPage() - 1) * $query->getLimit());
+            }
+            $irhpCandidatePermit['permitNumber'] = $permitNumber;
 
             // set value of constrained countries
             $irhpCandidatePermit['constrainedCountries']
