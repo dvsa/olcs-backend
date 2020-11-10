@@ -37,6 +37,7 @@ class ByIdTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $canViewCandidatePermits = true;
+        $canSelectCandidatePermits = false;
         $totalPermitsAwarded = 5;
         $totalPermitsRequired = 10;
 
@@ -49,6 +50,10 @@ class ByIdTest extends QueryHandlerTestCase
             ->once()
             ->withNoArgs()
             ->andReturn($canViewCandidatePermits)
+            ->shouldReceive('canSelectCandidatePermits')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($canSelectCandidatePermits)
             ->shouldReceive('calculateTotalPermitsRequired')
             ->once()
             ->withNoArgs()
@@ -72,6 +77,7 @@ class ByIdTest extends QueryHandlerTestCase
             [
                 'results' => ['serialized'],
                 'canViewCandidatePermits' => $canViewCandidatePermits,
+                'canSelectCandidatePermits' => $canSelectCandidatePermits,
                 'totalPermitsAwarded' => $totalPermitsAwarded,
                 'totalPermitsRequired' => $totalPermitsRequired,
             ],
@@ -82,6 +88,7 @@ class ByIdTest extends QueryHandlerTestCase
     public function testHandleQueryWithException()
     {
         $canViewCandidatePermits = true;
+        $canSelectCandidatePermits = false;
 
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
         $irhpApplication->shouldReceive('serialize')
@@ -92,6 +99,10 @@ class ByIdTest extends QueryHandlerTestCase
             ->once()
             ->withNoArgs()
             ->andReturn($canViewCandidatePermits)
+            ->shouldReceive('canSelectCandidatePermits')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($canSelectCandidatePermits)
             ->shouldReceive('calculateTotalPermitsRequired')
             ->once()
             ->withNoArgs()
@@ -115,6 +126,7 @@ class ByIdTest extends QueryHandlerTestCase
             [
                 'results' => ['serialized'],
                 'canViewCandidatePermits' => $canViewCandidatePermits,
+                'canSelectCandidatePermits' => $canSelectCandidatePermits,
                 'totalPermitsAwarded' => null,
                 'totalPermitsRequired' => null,
             ],

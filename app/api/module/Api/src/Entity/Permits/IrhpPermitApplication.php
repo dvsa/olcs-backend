@@ -201,6 +201,8 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
             'permitsAwarded' => $this->countPermitsAwarded(),
             'euro5PermitsAwarded' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO5_REF),
             'euro6PermitsAwarded' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO6_REF),
+            'euro5PermitsWanted' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO5_REF, true),
+            'euro6PermitsWanted' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO6_REF, true),
             'validPermits' => $this->countValidPermits(),
             'permitsRequired' => $this->countPermitsRequired(),
             'relatedApplication' => isset($relatedApplication) ? $relatedApplication->serialize(
@@ -217,18 +219,20 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
      * Get num of successful permit applications
      *
      * @param string $assignedEmissionsCategoryId (optional)
+     * @param bool $wantedOnly (optional)
      *
      * @return int
      */
-    public function countPermitsAwarded($assignedEmissionsCategoryId = null)
+    public function countPermitsAwarded($assignedEmissionsCategoryId = null, $wantedOnly = false)
     {
         $allocationMode = $this->irhpPermitWindow->getIrhpPermitStock()->getAllocationMode();
 
         switch ($allocationMode) {
             case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
+                // TODO: this allocation mode is now believed to be obsolete and would benefit from being removed
                 return $this->getTotalEmissionsCategoryPermitsRequired($assignedEmissionsCategoryId);
             case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
-                return count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId));
+                return count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId, $wantedOnly));
         }
 
         return 0;
@@ -254,15 +258,22 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
      * Get candidate permits marked as successful
      *
      * @param string $assignedEmissionsCategoryId (optional)
+     * @param bool $wantedOnly (optional)
      *
      * @return array
      */
-    public function getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId = null)
+    public function getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId = null, $wantedOnly = false)
     {
         $criteria = Criteria::create();
         $criteria->where(
             $criteria->expr()->eq('successful', true)
         );
+
+        if ($wantedOnly) {
+            $criteria->andWhere(
+                $criteria->expr()->eq('wanted', true)
+            );
+        }
 
         $candidatePermits = $this->getIrhpCandidatePermits()->matching($criteria);
 

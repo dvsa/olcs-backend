@@ -45,6 +45,7 @@ class IrhpCandidatePermitEntityTest extends EntityTester
         $this->assertEquals($intensityOfUse, $candidatePermit->getIntensityOfUse());
         $this->assertEquals($applicationScore, $candidatePermit->getApplicationScore());
         $this->assertEquals(0, $candidatePermit->getSuccessful());
+        $this->assertEquals(1, $candidatePermit->getWanted());
     }
 
     public function testCreateForApgg()
@@ -63,7 +64,8 @@ class IrhpCandidatePermitEntityTest extends EntityTester
         $this->assertSame($irhpPermitApplication, $candidatePermit->getIrhpPermitApplication());
         $this->assertSame($irhpPermitRange, $candidatePermit->getIrhpPermitRange());
         $this->assertSame($emissionsCategory, $candidatePermit->getAssignedEmissionsCategory());
-        $this->assertEquals(true, $candidatePermit->getSuccessful());
+        $this->assertEquals(1, $candidatePermit->getSuccessful());
+        $this->assertEquals(1, $candidatePermit->getWanted());
     }
 
     public function testPrepareForScoring()
@@ -301,5 +303,17 @@ class IrhpCandidatePermitEntityTest extends EntityTester
         $this->assertNull($candidatePermit->getIrhpPermitRange());
         $this->assertNull($candidatePermit->getRandomizedScore());
         $this->assertNull($candidatePermit->getRandomFactor());
+    }
+
+    public function testUpdateWanted()
+    {
+        $candidatePermit = m::mock(Entity::class)->makePartial();
+        $candidatePermit->setWanted(1);
+
+        $candidatePermit->updateWanted(1);
+        $this->assertEquals(1, $candidatePermit->getWanted());
+
+        $candidatePermit->updateWanted(0);
+        $this->assertEquals(0, $candidatePermit->getWanted());
     }
 }

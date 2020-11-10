@@ -47,6 +47,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
         $irhpCandidatePermit->intensityOfUse = $intensityOfUse;
         $irhpCandidatePermit->applicationScore = $applicationScore;
         $irhpCandidatePermit->successful = 0;
+        $irhpCandidatePermit->wanted = 1;
 
         return $irhpCandidatePermit;
     }
@@ -66,6 +67,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
         $irhpCandidatePermit->irhpPermitRange = $irhpPermitRange;
         $irhpCandidatePermit->assignedEmissionsCategory = $irhpPermitRange->getEmissionsCategory();
         $irhpCandidatePermit->successful = 1;
+        $irhpCandidatePermit->wanted = 1;
 
         return $irhpCandidatePermit;
     }
@@ -189,5 +191,15 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
         $this->randomizedScore = null;
         $this->randomFactor = null;
         $this->prepareForScoring();
+    }
+
+    /**
+     * Set whether this candidate permit is wanted by the applicant
+     *
+     * @param bool $wanted
+     */
+    public function updateWanted($wanted)
+    {
+        $this->wanted = $wanted;
     }
 }
