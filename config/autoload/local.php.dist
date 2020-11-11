@@ -155,6 +155,13 @@ return [
         ],
     ],
 
+    // Configuration for DVLA search
+    'dvla_search' => [
+        'base_uri' => 'https://api.dvla.search.dev.dvsacloud.uk/1.0/',
+        'api_key' => 'INSERT_KEY_HERE',
+        'proxy' => '',
+    ],
+
     // message queue URL key must be the class name followed by '_URL' i.e. ClassName_URL
     'message_queue' => [
         'CompanyProfile_URL' => '__QUEUE-URL__',
