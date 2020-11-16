@@ -2148,8 +2148,10 @@ class IrhpPermitStockEntityTest extends EntityTester
         $entity->setIrhpPermitType($irhpPermitType);
 
         $entity->shouldReceive('hasEuro5Range')
+            ->withNoArgs()
             ->andReturn($hasEuro5Range);
         $entity->shouldReceive('hasEuro6Range')
+            ->withNoArgs()
             ->andReturn($hasEuro6Range);
 
         $this->assertEquals(
@@ -2209,6 +2211,33 @@ class IrhpPermitStockEntityTest extends EntityTester
                 'hasEuro6Range' => true,
                 'expected' => [],
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsCertificateOfRoadworthiness
+     */
+    public function testIsCertificateOfRoadworthiness($isCertificateOfRoadworthiness)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturn($isCertificateOfRoadworthiness);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $isCertificateOfRoadworthiness,
+            $entity->isCertificateOfRoadworthiness()
+        );
+    }
+
+    public function dpIsCertificateOfRoadworthiness()
+    {
+        return [
+            [true],
+            [false],
         ];
     }
 }

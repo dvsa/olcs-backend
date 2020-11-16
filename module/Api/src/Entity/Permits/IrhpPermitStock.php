@@ -880,4 +880,14 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
 
         return $excludedRestrictedCountryIds;
     }
+
+    /**
+     * Whether this is a Certificate of Roadworthiness stock
+     *
+     * @return bool
+     */
+    public function isCertificateOfRoadworthiness()
+    {
+        return $this->irhpPermitType->isCertificateOfRoadworthiness();
+    }
 }
