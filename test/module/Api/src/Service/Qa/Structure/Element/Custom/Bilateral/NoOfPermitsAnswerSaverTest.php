@@ -6,8 +6,8 @@ use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\NoOfPermitsConditionalUpdater;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSaver;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsUpdater;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -32,21 +32,13 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
 
     private $namedAnswerFetcher;
 
-    private $noOfPermitsUpdater;
+    private $noOfPermitsConditionalUpdater;
 
     private $noOfPermitsAnswerSaver;
 
     public function setUp(): void
     {
-        $defaultBilateralRequired = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => null,
-        ];
-
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $this->irhpPermitApplication->shouldReceive('getDefaultBilateralRequired')
-            ->withNoArgs()
-            ->andReturn($defaultBilateralRequired);
 
         $this->applicationStep = m::mock(ApplicationStep::class);
 
@@ -60,211 +52,89 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
 
         $this->namedAnswerFetcher = m::mock(NamedAnswerFetcher::class);
 
-        $this->noOfPermitsUpdater = m::mock(NoOfPermitsUpdater::class);
+        $this->noOfPermitsConditionalUpdater = m::mock(NoOfPermitsConditionalUpdater::class);
 
         $this->noOfPermitsAnswerSaver = new NoOfPermitsAnswerSaver(
             $this->namedAnswerFetcher,
-            $this->noOfPermitsUpdater
+            $this->noOfPermitsConditionalUpdater
         );
     }
 
-    public function testSaveStandardOnlyUpdateRequired()
+    public function testSaveStandardOnly()
     {
-        $oldStandardPermitsRequired = 12;
-        $newStandardPermitsRequired = 14;
+        $standardPermitsRequired = 14;
 
-        $bilateralRequired = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => $oldStandardPermitsRequired,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => null,
-        ];
-
-        $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
-            ->withNoArgs()
-            ->andReturn($bilateralRequired);
         $this->irhpPermitApplication->shouldReceive('getBilateralCabotageSelection')
             ->withNoArgs()
             ->andReturn(Answer::BILATERAL_STANDARD_ONLY);
 
         $this->namedAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $this->postData, IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED)
-            ->andReturn($newStandardPermitsRequired);
+            ->andReturn($standardPermitsRequired);
 
         $expectedUpdatedAnswers = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => $newStandardPermitsRequired,
+            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => $standardPermitsRequired,
             IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => null,
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null,
         ];
 
-        $this->noOfPermitsUpdater->shouldReceive('update')
+        $this->noOfPermitsConditionalUpdater->shouldReceive('update')
             ->with($this->irhpPermitApplication, $expectedUpdatedAnswers)
             ->once();
 
         $this->noOfPermitsAnswerSaver->save($this->qaContext, $this->postData);
     }
 
-    public function testSaveStandardOnlyUpdateNotRequired()
+    public function testSaveCabotageOnly()
     {
-        $oldStandardPermitsRequired = 13;
-        $newStandardPermitsRequired = 13;
+        $cabotagePermitsRequired = 14;
 
-        $bilateralRequired = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => $oldStandardPermitsRequired,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => null,
-        ];
-
-        $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
-            ->withNoArgs()
-            ->andReturn($bilateralRequired);
-        $this->irhpPermitApplication->shouldReceive('getBilateralCabotageSelection')
-            ->withNoArgs()
-            ->andReturn(Answer::BILATERAL_STANDARD_ONLY);
-
-        $this->namedAnswerFetcher->shouldReceive('fetch')
-            ->with($this->applicationStep, $this->postData, IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED)
-            ->andReturn($newStandardPermitsRequired);
-
-        $this->noOfPermitsUpdater->shouldReceive('update')
-            ->never();
-
-        $this->noOfPermitsAnswerSaver->save($this->qaContext, $this->postData);
-    }
-
-    public function testSaveCabotageOnlyUpdateRequired()
-    {
-        $oldCabotagePermitsRequired = 12;
-        $newCabotagePermitsRequired = 14;
-
-        $bilateralRequired = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $oldCabotagePermitsRequired,
-        ];
-
-        $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
-            ->withNoArgs()
-            ->andReturn($bilateralRequired);
         $this->irhpPermitApplication->shouldReceive('getBilateralCabotageSelection')
             ->withNoArgs()
             ->andReturn(Answer::BILATERAL_CABOTAGE_ONLY);
 
         $this->namedAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $this->postData, IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED)
-            ->andReturn($newCabotagePermitsRequired);
+            ->andReturn($cabotagePermitsRequired);
 
         $expectedUpdatedAnswers = [
             IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $newCabotagePermitsRequired,
+            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $cabotagePermitsRequired,
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null,
         ];
 
-        $this->noOfPermitsUpdater->shouldReceive('update')
+        $this->noOfPermitsConditionalUpdater->shouldReceive('update')
             ->with($this->irhpPermitApplication, $expectedUpdatedAnswers)
             ->once();
 
         $this->noOfPermitsAnswerSaver->save($this->qaContext, $this->postData);
     }
 
-    public function testSaveCabotageOnlyUpdateNotRequired()
+    public function testSaveStandardAndCabotage()
     {
-        $oldCabotagePermitsRequired = 15;
-        $newCabotagePermitsRequired = 15;
+        $standardPermitsRequired = 17;
+        $cabotagePermitsRequired = 12;
 
-        $bilateralRequired = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $oldCabotagePermitsRequired,
-        ];
-
-        $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
-            ->withNoArgs()
-            ->andReturn($bilateralRequired);
-        $this->irhpPermitApplication->shouldReceive('getBilateralCabotageSelection')
-            ->withNoArgs()
-            ->andReturn(Answer::BILATERAL_CABOTAGE_ONLY);
-
-        $this->namedAnswerFetcher->shouldReceive('fetch')
-            ->with($this->applicationStep, $this->postData, IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED)
-            ->andReturn($newCabotagePermitsRequired);
-
-        $this->noOfPermitsUpdater->shouldReceive('update')
-            ->never();
-
-        $this->noOfPermitsAnswerSaver->save($this->qaContext, $this->postData);
-    }
-
-    /**
-     * @dataProvider dpSaveStandardAndCabotageUpdateRequired
-     */
-    public function testSaveStandardAndCabotageUpdateRequired($newStandardPermitsRequired, $newCabotagePermitsRequired)
-    {
-        $oldStandardPermitsRequired = 11;
-        $oldCabotagePermitsRequired = 12;
-
-        $bilateralRequired = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => $oldStandardPermitsRequired,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $oldCabotagePermitsRequired,
-        ];
-
-        $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
-            ->withNoArgs()
-            ->andReturn($bilateralRequired);
         $this->irhpPermitApplication->shouldReceive('getBilateralCabotageSelection')
             ->withNoArgs()
             ->andReturn(Answer::BILATERAL_STANDARD_AND_CABOTAGE);
 
         $this->namedAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $this->postData, IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED)
-            ->andReturn($newStandardPermitsRequired);
+            ->andReturn($standardPermitsRequired);
         $this->namedAnswerFetcher->shouldReceive('fetch')
             ->with($this->applicationStep, $this->postData, IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED)
-            ->andReturn($newCabotagePermitsRequired);
+            ->andReturn($cabotagePermitsRequired);
 
         $expectedUpdatedAnswers = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => $newStandardPermitsRequired,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $newCabotagePermitsRequired,
+            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => $standardPermitsRequired,
+            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $cabotagePermitsRequired,
+            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null
         ];
 
-        $this->noOfPermitsUpdater->shouldReceive('update')
+        $this->noOfPermitsConditionalUpdater->shouldReceive('update')
             ->with($this->irhpPermitApplication, $expectedUpdatedAnswers)
             ->once();
-
-        $this->noOfPermitsAnswerSaver->save($this->qaContext, $this->postData);
-    }
-
-    public function dpSaveStandardAndCabotageUpdateRequired()
-    {
-        return [
-            [14, 15],
-            [20, 12],
-            [11, 17],
-        ];
-    }
-
-    public function testSaveStandardAndCabotageUpdateNotRequired()
-    {
-        $oldStandardPermitsRequired = 16;
-        $oldCabotagePermitsRequired = 10;
-
-        $newStandardPermitsRequired = 16;
-        $newCabotagePermitsRequired = 10;
-
-        $bilateralRequired = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => $oldStandardPermitsRequired,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => $oldCabotagePermitsRequired,
-        ];
-
-        $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
-            ->withNoArgs()
-            ->andReturn($bilateralRequired);
-        $this->irhpPermitApplication->shouldReceive('getBilateralCabotageSelection')
-            ->withNoArgs()
-            ->andReturn(Answer::BILATERAL_STANDARD_AND_CABOTAGE);
-
-        $this->namedAnswerFetcher->shouldReceive('fetch')
-            ->with($this->applicationStep, $this->postData, IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED)
-            ->andReturn($newStandardPermitsRequired);
-        $this->namedAnswerFetcher->shouldReceive('fetch')
-            ->with($this->applicationStep, $this->postData, IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED)
-            ->andReturn($newCabotagePermitsRequired);
-
-        $this->noOfPermitsUpdater->shouldReceive('update')
-            ->never();
 
         $this->noOfPermitsAnswerSaver->save($this->qaContext, $this->postData);
     }

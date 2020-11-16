@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\NoOfPermitsConditionalUpdater;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
 use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
@@ -15,21 +16,23 @@ class NoOfPermitsMoroccoAnswerSaver implements AnswerSaverInterface
     /** @var GenericAnswerFetcher */
     private $genericAnswerFetcher;
 
-    /** @var NoOfPermitsUpdater */
-    private $noOfPermitsUpdater;
+    /** @var NoOfPermitsConditionalUpdater */
+    private $noOfPermitsConditionalUpdater;
 
     /**
      * Create service instance
      *
      * @param GenericAnswerFetcher $genericAnswerFetcher
-     * @param NoOfPermitsUpdater $noOfPermitsUpdater
+     * @param NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
      *
      * @return NoOfPermitsMoroccoAnswerSaver
      */
-    public function __construct(GenericAnswerFetcher $genericAnswerFetcher, NoOfPermitsUpdater $noOfPermitsUpdater)
-    {
+    public function __construct(
+        GenericAnswerFetcher $genericAnswerFetcher,
+        NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
+    ) {
         $this->genericAnswerFetcher = $genericAnswerFetcher;
-        $this->noOfPermitsUpdater = $noOfPermitsUpdater;
+        $this->noOfPermitsConditionalUpdater = $noOfPermitsConditionalUpdater;
     }
 
     /**
@@ -39,18 +42,12 @@ class NoOfPermitsMoroccoAnswerSaver implements AnswerSaverInterface
     {
         $irhpPermitApplication = $qaContext->getQaEntity();
 
-        $oldAnswers = $irhpPermitApplication->getBilateralRequired();
-
-        $updatedAnswers = $irhpPermitApplication->getDefaultBilateralRequired();
+        $updatedAnswers = IrhpPermitApplication::DEFAULT_BILATERAL_REQUIRED;
         $updatedAnswers[IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED] = $this->genericAnswerFetcher->fetch(
             $qaContext->getApplicationStepEntity(),
             $postData
         );
 
-        if ($oldAnswers == $updatedAnswers) {
-            return;
-        }
-
-        $this->noOfPermitsUpdater->update($irhpPermitApplication, $updatedAnswers);
+        $this->noOfPermitsConditionalUpdater->update($irhpPermitApplication, $updatedAnswers);
     }
 }

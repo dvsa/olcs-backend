@@ -21,11 +21,7 @@ class IrhpPermitApplicationCreatorFactory implements FactoryInterface
         return new IrhpPermitApplicationCreator(
             $repoServiceManager->get('IrhpPermitStock'),
             $repoServiceManager->get('IrhpPermitApplication'),
-            $serviceLocator->get('PermitsBilateralInternalIrhpPermitApplicationFactory'),
-            $serviceLocator->get('PermitsBilateralInternalPermitUsageSelectionGenerator'),
-            $serviceLocator->get('PermitsBilateralInternalBilateralRequiredGenerator'),
-            $serviceLocator->get('PermitsBilateralInternalOtherAnswersUpdater'),
-            $serviceLocator->get('QaBilateralNoOfPermitsUpdater')
+            $serviceLocator->get('PermitsBilateralInternalIrhpPermitApplicationFactory')
         );
     }
 }

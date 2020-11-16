@@ -21,11 +21,8 @@ class ExistingIrhpPermitApplicationHandlerFactory implements FactoryInterface
         return new ExistingIrhpPermitApplicationHandler(
             $repoServiceManager->get('IrhpPermitApplication'),
             $repoServiceManager->get('IrhpPermitStock'),
-            $serviceLocator->get('PermitsBilateralInternalPermitUsageSelectionGenerator'),
-            $serviceLocator->get('PermitsBilateralInternalBilateralRequiredGenerator'),
-            $serviceLocator->get('PermitsBilateralInternalOtherAnswersUpdater'),
-            $serviceLocator->get('QaBilateralNoOfPermitsUpdater'),
-            $serviceLocator->get('QaApplicationAnswersClearer')
+            $serviceLocator->get('QaApplicationAnswersClearer'),
+            $serviceLocator->get('PermitsBilateralInternalQuestionHandlerDelegator')
         );
     }
 }

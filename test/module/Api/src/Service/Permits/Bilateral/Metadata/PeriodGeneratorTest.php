@@ -6,10 +6,11 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\FieldsGenerator;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\FieldsGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\PeriodGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use RuntimeException;
 
 /**
  * PeriodGeneratorTest
@@ -18,45 +19,72 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class PeriodGeneratorTest extends MockeryTestCase
 {
+    const BEHAVIOUR_NAME = 'behaviourName';
+
+    const STOCK_ID = 99;
+
+    private $irhpPermitStockRepo;
+
+    private $periodGenerator;
+
+    private $fieldsGenerator;
+
+    public function setUp(): void
+    {
+        $this->irhpPermitStockRepo = m::mock(IrhpPermitStockRepository::class);
+
+        $this->periodGenerator = new PeriodGenerator($this->irhpPermitStockRepo);
+
+        $this->periodGenerator->registerFieldsGenerator(
+            'someBehaviour',
+            m::mock(FieldsGeneratorInterface::class)
+        );
+
+        $this->fieldsGenerator = m::mock(FieldsGeneratorInterface::class);
+        $this->periodGenerator->registerFieldsGenerator(
+            self::BEHAVIOUR_NAME,
+            $this->fieldsGenerator
+        );
+
+        $this->periodGenerator->registerFieldsGenerator(
+            'someBehaviour',
+            $this->fieldsGenerator
+        );
+    }
+
     /**
      * @dataProvider dpGenerate
      */
     public function testGenerate($irhpPermitApplication)
     {
-        $stockId = 99;
-
-        $periodNameKey = 'period.name.key';
-
         $fieldsResponse = [
             'fieldsResponseKey1' => 'fieldsResponseValue1',
             'fieldsResponseKey2' => 'fieldsResponseValue2'
         ];
 
+        $periodNameKey = 'period.name.key';
+
         $irhpPermitStock = m::mock(IrhpPermitStock::class);
         $irhpPermitStock->shouldReceive('getPeriodNameKey')
             ->andReturn($periodNameKey);
 
-        $irhpPermitStockRepo = m::mock(IrhpPermitStockRepository::class);
-        $irhpPermitStockRepo->shouldReceive('fetchById')
-            ->with($stockId)
+        $this->irhpPermitStockRepo->shouldReceive('fetchById')
+            ->with(self::STOCK_ID)
             ->andReturn($irhpPermitStock);
 
-        $fieldsGenerator = m::mock(FieldsGenerator::class);
-        $fieldsGenerator->shouldReceive('generate')
+        $this->fieldsGenerator->shouldReceive('generate')
             ->with($irhpPermitStock, $irhpPermitApplication)
             ->andReturn($fieldsResponse);
 
-        $periodGenerator = new PeriodGenerator($irhpPermitStockRepo, $fieldsGenerator);
-
         $expected = [
-            'id' => $stockId,
+            'id' => self::STOCK_ID,
             'key' => $periodNameKey,
             'fields' => $fieldsResponse
         ];
 
         $this->assertEquals(
             $expected,
-            $periodGenerator->generate($stockId, $irhpPermitApplication)
+            $this->periodGenerator->generate(self::STOCK_ID, self::BEHAVIOUR_NAME, $irhpPermitApplication)
         );
     }
 
@@ -66,5 +94,13 @@ class PeriodGeneratorTest extends MockeryTestCase
             [m::mock(IrhpPermitApplication::class)],
             [null]
         ];
+    }
+
+    public function testGenerateException()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No fields generator found for behaviour name unknownBehaviour');
+
+        $this->periodGenerator->generate(self::STOCK_ID, 'unknownBehaviour', m::mock(IrhpPermitApplication::class));
     }
 }

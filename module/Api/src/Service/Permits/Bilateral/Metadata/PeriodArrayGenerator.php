@@ -40,12 +40,13 @@ class PeriodArrayGenerator
     /**
      * Generate the period list part of the response
      *
+     * @param string $behaviour
      * @param Country $country
      * @param IrhpPermitApplication $irhpPermitApplication (optional)
      *
      * @return array
      */
-    public function generate(Country $country, ?IrhpPermitApplication $irhpPermitApplication)
+    public function generate($behaviour, Country $country, ?IrhpPermitApplication $irhpPermitApplication)
     {
         $stocks = $this->irhpPermitStockRepo->fetchOpenBilateralStocksByCountry(
             $country->getId(),
@@ -55,7 +56,7 @@ class PeriodArrayGenerator
         $responsePeriods = [];
 
         foreach ($stocks as $stock) {
-            $responsePeriods[] = $this->periodGenerator->generate($stock['id'], $irhpPermitApplication);
+            $responsePeriods[] = $this->periodGenerator->generate($stock['id'], $behaviour, $irhpPermitApplication);
         }
 
         return $responsePeriods;

@@ -24,6 +24,8 @@ class PeriodArrayGeneratorTest extends MockeryTestCase
      */
     public function testGenerate($irhpPermitApplication)
     {
+        $behaviour = 'behaviour';
+
         $countryId = 'FR';
 
         $stock1Id = 47;
@@ -58,10 +60,10 @@ class PeriodArrayGeneratorTest extends MockeryTestCase
 
         $periodGenerator = m::mock(PeriodGenerator::class);
         $periodGenerator->shouldReceive('generate')
-            ->with($stock1Id, $irhpPermitApplication)
+            ->with($stock1Id, $behaviour, $irhpPermitApplication)
             ->andReturn($responsePeriod1);
         $periodGenerator->shouldReceive('generate')
-            ->with($stock2Id, $irhpPermitApplication)
+            ->with($stock2Id, $behaviour, $irhpPermitApplication)
             ->andReturn($responsePeriod2);
 
         $currentDateTimeFactory = m::mock(CurrentDateTimeFactory::class);
@@ -82,7 +84,7 @@ class PeriodArrayGeneratorTest extends MockeryTestCase
 
         $this->assertEquals(
             $expected,
-            $periodArrayGenerator->generate($country, $irhpPermitApplication)
+            $periodArrayGenerator->generate($behaviour, $country, $irhpPermitApplication)
         );
     }
 

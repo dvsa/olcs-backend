@@ -2082,19 +2082,19 @@ class IrhpPermitStockEntityTest extends EntityTester
     /**
      * @dataProvider dpIsMorocco
      */
-    public function testIsMorocco($countryId, $expectedIsMorocco)
+    public function testIsMorocco($isMorocco)
     {
         $entity = m::mock(Entity::class)->makePartial();
 
         $country = m::mock(Country::class);
-        $country->shouldReceive('getId')
+        $country->shouldReceive('isMorocco')
             ->withNoArgs()
-            ->andReturn($countryId);
+            ->andReturn($isMorocco);
 
         $entity->setCountry($country);
 
         $this->assertEquals(
-            $expectedIsMorocco,
+            $isMorocco,
             $entity->isMorocco()
         );
     }
@@ -2102,9 +2102,8 @@ class IrhpPermitStockEntityTest extends EntityTester
     public function dpIsMorocco()
     {
         return [
-            [Country::ID_NORWAY, false],
-            [Country::ID_BELARUS, false],
-            [Country::ID_MOROCCO, true],
+            [true],
+            [false],
         ];
     }
 
