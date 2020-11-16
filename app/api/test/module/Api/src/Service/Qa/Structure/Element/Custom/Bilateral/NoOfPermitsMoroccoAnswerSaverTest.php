@@ -4,9 +4,9 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\NoOfPermitsConditionalUpdater;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsMoroccoAnswerSaver;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsUpdater;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -18,58 +18,37 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class NoOfPermitsMoroccoAnswerSaverTest extends MockeryTestCase
 {
-    const POST_DATA = [
-        'key1' => 'value1',
-        'key2' => 'value2',
-    ];
-
-    private $irhpPermitApplication;
-
-    private $applicationStep;
-
-    private $qaContext;
-
-    private $genericAnswerFetcher;
-
-    private $noOfPermitsUpdater;
-
-    private $noOfPermitsMoroccoAnswerSaver;
-
-    public function setUp(): void
+    public function testSave()
     {
+        $postData = [
+            'key1' => 'value1',
+            'key2' => 'value2',
+        ];
+
         $defaultBilateralRequired = [
             IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
             IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => null,
             IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null,
         ];
 
-        $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $this->irhpPermitApplication->shouldReceive('getDefaultBilateralRequired')
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getDefaultBilateralRequired')
             ->withNoArgs()
             ->andReturn($defaultBilateralRequired);
 
-        $this->applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep = m::mock(ApplicationStep::class);
 
-        $this->qaContext = m::mock(QaContext::class);
-        $this->qaContext->shouldReceive('getQaEntity')
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getQaEntity')
             ->withNoArgs()
-            ->andReturn($this->irhpPermitApplication);
-        $this->qaContext->shouldReceive('getApplicationStepEntity')
+            ->andReturn($irhpPermitApplication);
+        $qaContext->shouldReceive('getApplicationStepEntity')
             ->withNoArgs()
-            ->andReturn($this->applicationStep);
+            ->andReturn($applicationStep);
 
-        $this->genericAnswerFetcher = m::mock(GenericAnswerFetcher::class);
+        $genericAnswerFetcher = m::mock(GenericAnswerFetcher::class);
 
-        $this->noOfPermitsUpdater = m::mock(NoOfPermitsUpdater::class);
-
-        $this->noOfPermitsMoroccoAnswerSaver = new NoOfPermitsMoroccoAnswerSaver(
-            $this->genericAnswerFetcher,
-            $this->noOfPermitsUpdater
-        );
-    }
-
-    public function testSaveUpdateRequired()
-    {
+        $noOfPermitsConditionalUpdater = m::mock(NoOfPermitsConditionalUpdater::class);
         $oldPermitsRequired = 12;
         $newPermitsRequired = 14;
 
@@ -79,12 +58,12 @@ class NoOfPermitsMoroccoAnswerSaverTest extends MockeryTestCase
             IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => $oldPermitsRequired,
         ];
 
-        $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
+        $irhpPermitApplication->shouldReceive('getBilateralRequired')
             ->withNoArgs()
             ->andReturn($bilateralRequired);
 
-        $this->genericAnswerFetcher->shouldReceive('fetch')
-            ->with($this->applicationStep, self::POST_DATA)
+        $genericAnswerFetcher->shouldReceive('fetch')
+            ->with($applicationStep, $postData)
             ->andReturn($newPermitsRequired);
 
         $expectedUpdatedAnswers = [
@@ -93,35 +72,15 @@ class NoOfPermitsMoroccoAnswerSaverTest extends MockeryTestCase
             IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => $newPermitsRequired,
         ];
 
-        $this->noOfPermitsUpdater->shouldReceive('update')
-            ->with($this->irhpPermitApplication, $expectedUpdatedAnswers)
+        $noOfPermitsConditionalUpdater->shouldReceive('update')
+            ->with($irhpPermitApplication, $expectedUpdatedAnswers)
             ->once();
 
-        $this->noOfPermitsMoroccoAnswerSaver->save($this->qaContext, self::POST_DATA);
-    }
+        $noOfPermitsMoroccoAnswerSaver = new NoOfPermitsMoroccoAnswerSaver(
+            $genericAnswerFetcher,
+            $noOfPermitsConditionalUpdater
+        );
 
-    public function testSaveUpdateNotRequired()
-    {
-        $oldPermitsRequired = 13;
-        $newPermitsRequired = 13;
-
-        $bilateralRequired = [
-            IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => null,
-            IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => null,
-            IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => $oldPermitsRequired,
-        ];
-
-        $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
-            ->withNoArgs()
-            ->andReturn($bilateralRequired);
-
-        $this->genericAnswerFetcher->shouldReceive('fetch')
-            ->with($this->applicationStep, self::POST_DATA)
-            ->andReturn($newPermitsRequired);
-
-        $this->noOfPermitsUpdater->shouldReceive('update')
-            ->never();
-
-        $this->noOfPermitsMoroccoAnswerSaver->save($this->qaContext, self::POST_DATA);
+        $noOfPermitsMoroccoAnswerSaver->save($qaContext, $postData);
     }
 }

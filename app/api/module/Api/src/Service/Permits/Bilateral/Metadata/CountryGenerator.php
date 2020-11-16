@@ -7,6 +7,11 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 
 class CountryGenerator
 {
+    const PERIOD_LABELS = [
+        Behaviour::STANDARD => 'Select period',
+        Behaviour::MOROCCO => 'Select stock',
+    ];
+
     /** @var PeriodArrayGenerator */
     private $periodArrayGenerator;
 
@@ -42,12 +47,19 @@ class CountryGenerator
                 ->getId();
         }
 
+        $behaviour = Behaviour::STANDARD;
+        if ($country->isMorocco()) {
+            $behaviour = Behaviour::MOROCCO;
+        }
+
         return [
             'id' => $countryId,
             'name' => $country->getCountryDesc(),
+            'type' => $behaviour,
             'visible' => $irhpApplication->hasCountryId($countryId),
             'selectedPeriodId' => $selectedPeriodId,
-            'periods' => $this->periodArrayGenerator->generate($country, $irhpPermitApplication),
+            'periodLabel' => self::PERIOD_LABELS[$behaviour],
+            'periods' => $this->periodArrayGenerator->generate($behaviour, $country, $irhpPermitApplication),
         ];
     }
 }

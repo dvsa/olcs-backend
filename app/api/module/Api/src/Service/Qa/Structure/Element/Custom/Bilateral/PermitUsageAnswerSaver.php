@@ -2,11 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\PermitUsageUpdater;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
 class PermitUsageAnswerSaver implements AnswerSaverInterface
@@ -16,29 +15,23 @@ class PermitUsageAnswerSaver implements AnswerSaverInterface
     /** @var GenericAnswerFetcher */
     private $genericAnswerFetcher;
 
-    /** @var ApplicationAnswersClearer */
-    private $applicationAnswersClearer;
-
-    /** @var GenericAnswerSaver */
-    private $genericAnswerSaver;
+    /** @var PermitUsageUpdater */
+    private $permitUsageUpdater;
 
     /**
      * Create service instance
      *
      * @param GenericAnswerFetcher $genericAnswerFetcher
-     * @param ApplicationAnswersClearer $applicationAnswersClearer
-     * @param GenericAnswerSaver $genericAnswerSaver
+     * @param PermitUsageUpdater $permitUsageUpdater
      *
      * @return PermitUsageAnswerSaver
      */
     public function __construct(
         GenericAnswerFetcher $genericAnswerFetcher,
-        ApplicationAnswersClearer $applicationAnswersClearer,
-        GenericAnswerSaver $genericAnswerSaver
+        PermitUsageUpdater $permitUsageUpdater
     ) {
         $this->genericAnswerFetcher = $genericAnswerFetcher;
-        $this->applicationAnswersClearer = $applicationAnswersClearer;
-        $this->genericAnswerSaver = $genericAnswerSaver;
+        $this->permitUsageUpdater = $permitUsageUpdater;
     }
 
     /**
@@ -46,19 +39,11 @@ class PermitUsageAnswerSaver implements AnswerSaverInterface
      */
     public function save(QaContext $qaContext, array $postData)
     {
-        $existingAnswer = $qaContext->getQaEntity()->getBilateralPermitUsageSelection();
+        $newAnswer = $this->genericAnswerFetcher->fetch(
+            $qaContext->getApplicationStepEntity(),
+            $postData
+        );
 
-        if (!is_null($existingAnswer)) {
-            $newAnswer = $this->genericAnswerFetcher->fetch(
-                $qaContext->getApplicationStepEntity(),
-                $postData
-            );
-
-            if ($existingAnswer != $newAnswer) {
-                $this->applicationAnswersClearer->clearAfterApplicationStep($qaContext);
-            }
-        }
-
-        $this->genericAnswerSaver->save($qaContext, $postData);
+        $this->permitUsageUpdater->update($qaContext, $newAnswer);
     }
 }

@@ -18,4 +18,27 @@ class CountryEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    /**
+     * @dataProvider dpIsMorocco
+     */
+    public function testIsMorocco($countryId, $expectedIsMorocco)
+    {
+        $entity = new Entity();
+        $entity->setId($countryId);
+
+        $this->assertEquals(
+            $expectedIsMorocco,
+            $entity->isMorocco()
+        );
+    }
+
+    public function dpIsMorocco()
+    {
+        return [
+            [Entity::ID_NORWAY, false],
+            [Entity::ID_BELARUS, false],
+            [Entity::ID_MOROCCO, true],
+        ];
+    }
 }

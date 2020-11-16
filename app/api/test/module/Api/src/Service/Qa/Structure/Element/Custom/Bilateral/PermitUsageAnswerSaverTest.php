@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\PermitUsageUpdater;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\PermitUsageAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
@@ -18,89 +18,37 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class PermitUsageAnswerSaverTest extends MockeryTestCase
 {
-    const POST_DATA = [
-        'key1' => 'value1',
-        'key2' => 'value2',
-    ];
-
-    private $qaContext;
-
-    private $genericAnswerFetcher;
-
-    private $applicationAnswersClearer;
-
-    private $genericAnswerSaver;
-
-    private $permitUsageAnswerSaver;
-
-    public function setUp(): void
+    public function testSave()
     {
-        $this->qaContext = m::mock(QaContext::class);
+        $postData = [
+            'key1' => 'value1',
+            'key2' => 'value2',
+        ];
 
-        $this->genericAnswerFetcher = m::mock(GenericAnswerFetcher::class);
+        $answer = 'journey_multiple';
 
-        $this->applicationAnswersClearer = m::mock(ApplicationAnswersClearer::class);
+        $applicationStep = m::mock(ApplicationStep::class);
 
-        $this->genericAnswerSaver = m::mock(GenericAnswerSaver::class);
-        $this->genericAnswerSaver->shouldReceive('save')
-            ->with($this->qaContext, self::POST_DATA)
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getApplicationStepEntity')
+            ->withNoArgs()
+            ->andReturn($applicationStep);
+
+        $genericAnswerFetcher = m::mock(GenericAnswerFetcher::class);
+        $genericAnswerFetcher->shouldReceive('fetch')
+            ->with($applicationStep, $postData)
+            ->andReturn($answer);
+
+        $permitUsageUpdater = m::mock(PermitUsageUpdater::class);
+        $permitUsageUpdater->shouldReceive('update')
+            ->with($qaContext, $answer)
             ->once();
 
-        $this->permitUsageAnswerSaver = new PermitUsageAnswerSaver(
-            $this->genericAnswerFetcher,
-            $this->applicationAnswersClearer,
-            $this->genericAnswerSaver
+        $permitUsageAnswerSaver = new PermitUsageAnswerSaver(
+            $genericAnswerFetcher,
+            $permitUsageUpdater
         );
-    }
 
-    public function testSaveExistingAnswerNull()
-    {
-        $this->qaContext->shouldReceive('getQaEntity->getBilateralPermitUsageSelection')
-            ->withNoArgs()
-            ->andReturnNull();
-
-        $this->permitUsageAnswerSaver->save($this->qaContext, self::POST_DATA);
-    }
-
-    public function testSaveExistingAnswerMatchesNewAnswer()
-    {
-        $previousAndNewAnswer = 'journey_single';
-
-        $applicationStep = m::mock(ApplicationStep::class);
-
-        $this->qaContext->shouldReceive('getQaEntity->getBilateralPermitUsageSelection')
-            ->withNoArgs()
-            ->andReturn($previousAndNewAnswer);
-        $this->qaContext->shouldReceive('getApplicationStepEntity')
-            ->withNoArgs()
-            ->andReturn($applicationStep);
-
-        $this->genericAnswerFetcher->shouldReceive('fetch')
-            ->with($applicationStep, self::POST_DATA)
-            ->andReturn($previousAndNewAnswer);
-
-        $this->permitUsageAnswerSaver->save($this->qaContext, self::POST_DATA);
-    }
-
-    public function testSaveExistingAnswerDiffersFromNewAnswer()
-    {
-        $applicationStep = m::mock(ApplicationStep::class);
-
-        $this->qaContext->shouldReceive('getQaEntity->getBilateralPermitUsageSelection')
-            ->withNoArgs()
-            ->andReturn('journey_single');
-        $this->qaContext->shouldReceive('getApplicationStepEntity')
-            ->withNoArgs()
-            ->andReturn($applicationStep);
-
-        $this->genericAnswerFetcher->shouldReceive('fetch')
-            ->with($applicationStep, self::POST_DATA)
-            ->andReturn('journey_multiple');
-
-        $this->applicationAnswersClearer->shouldReceive('clearAfterApplicationStep')
-            ->with($this->qaContext)
-            ->once();
-
-        $this->permitUsageAnswerSaver->save($this->qaContext, self::POST_DATA);
+        $permitUsageAnswerSaver->save($qaContext, $postData);
     }
 }

@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicati
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsUpdater;
 
 class ExistingIrhpPermitApplicationHandler
 {
@@ -16,50 +15,32 @@ class ExistingIrhpPermitApplicationHandler
     /** @var IrhpPermitStockRepository */
     private $irhpPermitStockRepo;
 
-    /** @var PermitUsageSelectionGenerator */
-    private $permitUsageSelectionGenerator;
-
-    /** @var BilateralRequiredGenerator */
-    private $bilateralRequiredGenerator;
-
-    /** @var OtherAnswersUpdater */
-    private $otherAnswersUpdater;
-
-    /** @var NoOfPermitsUpdater */
-    private $noOfPermitsUpdater;
-
     /** @var ApplicationAnswersClearer */
     private $applicationAnswersClearer;
+
+    /** @var QuestionHandlerDelegator */
+    private $questionHandlerDelegator;
 
     /**
      * Create service instance
      *
      * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
      * @param IrhpPermitStockRepository $irhpPermitStockRepo
-     * @param PermitUsageSelectionGenerator $permitUsageSelectionGenerator
-     * @param BilateralRequiredGenerator $bilateralRequiredGenerator
-     * @param OtherAnswersUpdater $otherAnswersUpdater
-     * @param NoOfPermitsUpdater $noOfPermitsUpdater
-     * @param ApplicationAnswersClearer $applicationAnswersClearer $applicationAnswersClearer
+     * @param ApplicationAnswersClearer $applicationAnswersClearer
+     * @param QuestionHandlerDelegator $questionHandlerDelegator
      *
-     * @return IrhpPermitApplicationCreator
+     * @return ExistingIrhpPermitApplicationHandler
      */
     public function __construct(
         IrhpPermitApplicationRepository $irhpPermitApplicationRepo,
         IrhpPermitStockRepository $irhpPermitStockRepo,
-        PermitUsageSelectionGenerator $permitUsageSelectionGenerator,
-        BilateralRequiredGenerator $bilateralRequiredGenerator,
-        OtherAnswersUpdater $otherAnswersUpdater,
-        NoOfPermitsUpdater $noOfPermitsUpdater,
-        ApplicationAnswersClearer $applicationAnswersClearer
+        ApplicationAnswersClearer $applicationAnswersClearer,
+        QuestionHandlerDelegator $questionHandlerDelegator
     ) {
         $this->irhpPermitApplicationRepo = $irhpPermitApplicationRepo;
         $this->irhpPermitStockRepo = $irhpPermitStockRepo;
-        $this->permitUsageSelectionGenerator = $permitUsageSelectionGenerator;
-        $this->bilateralRequiredGenerator = $bilateralRequiredGenerator;
-        $this->otherAnswersUpdater = $otherAnswersUpdater;
-        $this->noOfPermitsUpdater = $noOfPermitsUpdater;
         $this->applicationAnswersClearer = $applicationAnswersClearer;
+        $this->questionHandlerDelegator = $questionHandlerDelegator;
     }
 
     /**
@@ -72,29 +53,25 @@ class ExistingIrhpPermitApplicationHandler
     public function handle(IrhpPermitApplication $irhpPermitApplication, $stockId, $requiredPermits)
     {
         $existingStockId = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getId();
-        $existingPermitUsageSelection = $irhpPermitApplication->getBilateralPermitUsageSelection();
-        $existingBilateralRequired = $irhpPermitApplication->getBilateralRequired();
+        if ($stockId != $existingStockId) {
+            $this->applicationAnswersClearer->clear($irhpPermitApplication);
 
-        $permitUsageSelection = $this->permitUsageSelectionGenerator->generate($requiredPermits);
-        $bilateralRequired = $this->bilateralRequiredGenerator->generate($requiredPermits, $permitUsageSelection);
-
-        if (($stockId == $existingStockId) &&
-            ($permitUsageSelection == $existingPermitUsageSelection) &&
-            ($bilateralRequired == $existingBilateralRequired)
-        ) {
-            $irhpPermitApplication->updateCheckAnswers();
-            $this->irhpPermitApplicationRepo->save($irhpPermitApplication);
-            return;
+            $irhpPermitStock = $this->irhpPermitStockRepo->fetchById($stockId);
+            $irhpPermitApplication->updateIrhpPermitWindow(
+                $irhpPermitStock->getOpenWindow()
+            );
         }
 
-        $this->applicationAnswersClearer->clear($irhpPermitApplication);
-
-        $irhpPermitStock = $this->irhpPermitStockRepo->fetchById($stockId);
-        $irhpPermitApplication->updateIrhpPermitWindow(
-            $irhpPermitStock->getOpenWindow()
-        );
-
-        $this->otherAnswersUpdater->update($irhpPermitApplication, $bilateralRequired, $permitUsageSelection);
-        $this->noOfPermitsUpdater->update($irhpPermitApplication, $bilateralRequired);
+        $applicationSteps = $irhpPermitApplication->getActiveApplicationPath()->getApplicationSteps();
+        foreach ($applicationSteps as $applicationStep) {
+            $this->questionHandlerDelegator->delegate(
+                $irhpPermitApplication,
+                $applicationStep,
+                $requiredPermits
+            );
+        }
+        
+        $irhpPermitApplication->updateCheckAnswers();
+        $this->irhpPermitApplicationRepo->save($irhpPermitApplication);
     }
 }

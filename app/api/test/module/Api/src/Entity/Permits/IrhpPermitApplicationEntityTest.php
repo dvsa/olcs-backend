@@ -1307,42 +1307,6 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($expected, $this->sut->getBilateralRequired());
     }
 
-    public function testGetDefaultBilateralRequired()
-    {
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('isBilateral')
-            ->withNoArgs()
-            ->andReturnTrue();
-
-        $this->sut->setIrhpApplication($irhpApplication);
-
-        $expected = [
-            Entity::BILATERAL_STANDARD_REQUIRED => null,
-            Entity::BILATERAL_CABOTAGE_REQUIRED => null,
-            Entity::BILATERAL_MOROCCO_REQUIRED => null,
-        ];
-
-        $this->assertEquals(
-            $expected,
-            $this->sut->getDefaultBilateralRequired()
-        );
-    }
-
-    public function testGetDefaultBilateralRequiredNotBilateral()
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('getDefaultBilateralRequired is applicable only to bilateral applications');
-
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('isBilateral')
-            ->withNoArgs()
-            ->andReturnFalse();
-
-        $this->sut->setIrhpApplication($irhpApplication);
-
-        $this->sut->clearBilateralRequired();
-    }
-
     /**
      * @dataProvider dpGetFilteredBilateralRequired
      */

@@ -47,10 +47,10 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
     const BILATERAL_CABOTAGE_REQUIRED = 'cabotage';
     const BILATERAL_MOROCCO_REQUIRED = 'morocco';
 
-    const BILATERAL_REQUIRED_KEYS = [
-        self::BILATERAL_STANDARD_REQUIRED,
-        self::BILATERAL_CABOTAGE_REQUIRED,
-        self::BILATERAL_MOROCCO_REQUIRED,
+    const DEFAULT_BILATERAL_REQUIRED = [
+        self::BILATERAL_STANDARD_REQUIRED => null,
+        self::BILATERAL_CABOTAGE_REQUIRED => null,
+        self::BILATERAL_MOROCCO_REQUIRED => null,
     ];
 
     const BILATERAL_FEE_PRODUCT_REFS_TYPE_1 = [
@@ -671,7 +671,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         }
 
         $inputArrayKeys = array_keys($required);
-        if ($inputArrayKeys != self::BILATERAL_REQUIRED_KEYS) {
+        if ($inputArrayKeys != array_keys(self::DEFAULT_BILATERAL_REQUIRED)) {
             throw new RuntimeException('Unexpected or missing array keys passed to ' . __FUNCTION__);
         }
 
@@ -685,21 +685,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
      */
     public function clearBilateralRequired()
     {
-        $this->updateBilateralRequired(
-            $this->getDefaultBilateralRequired()
-        );
-    }
-
-    /**
-     * Get an array in an empty/default state for use with updateBilateralRequired
-     *
-     * @return array
-     */
-    public function getDefaultBilateralRequired()
-    {
-        $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
-
-        return array_fill_keys(self::BILATERAL_REQUIRED_KEYS, null);
+        $this->updateBilateralRequired(self::DEFAULT_BILATERAL_REQUIRED);
     }
 
     /**

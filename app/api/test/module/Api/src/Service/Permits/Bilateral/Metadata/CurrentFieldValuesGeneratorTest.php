@@ -16,6 +16,8 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class CurrentFieldValuesGeneratorTest extends MockeryTestCase
 {
+    const PERIOD_NAME_KEY = 'period.name.key';
+
     private $irhpPermitApplication;
 
     private $irhpPermitStock;
@@ -27,6 +29,9 @@ class CurrentFieldValuesGeneratorTest extends MockeryTestCase
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 
         $this->irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $this->irhpPermitStock->shouldReceive('getPeriodNameKey')
+            ->withNoArgs()
+            ->andReturn(self::PERIOD_NAME_KEY);
 
         $this->currentFieldValuesGenerator = new CurrentFieldValuesGenerator();
     }
@@ -36,13 +41,9 @@ class CurrentFieldValuesGeneratorTest extends MockeryTestCase
      */
     public function testGenerate($bilateralRequired, $permitUsageSelection, $expected)
     {
-        $this->irhpPermitStock->shouldReceive('getId')
+        $this->irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
             ->withNoArgs()
-            ->andReturn(42);
-
-        $this->irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getId')
-            ->withNoArgs()
-            ->andReturn(42);
+            ->andReturn($this->irhpPermitStock);
         $this->irhpPermitApplication->shouldReceive('getBilateralRequired')
             ->withNoArgs()
             ->andReturn($bilateralRequired);
@@ -117,13 +118,9 @@ class CurrentFieldValuesGeneratorTest extends MockeryTestCase
 
     public function testGenerateNonMatchingIrhpPermitApplication()
     {
-        $this->irhpPermitStock->shouldReceive('getId')
+        $this->irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
             ->withNoArgs()
-            ->andReturn(44);
-
-        $this->irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getId')
-            ->withNoArgs()
-            ->andReturn(42);
+            ->andReturn(m::mock(IrhpPermitStock::class));
 
         $expected = [
             RefData::JOURNEY_SINGLE => [

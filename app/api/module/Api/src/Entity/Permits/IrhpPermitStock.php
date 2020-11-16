@@ -848,7 +848,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      */
     public function isMorocco()
     {
-        return $this->country->getId() == Country::ID_MOROCCO;
+        return $this->country->isMorocco();
     }
 
     /**

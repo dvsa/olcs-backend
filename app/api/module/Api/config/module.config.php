@@ -138,9 +138,9 @@ return [
                 => ApiSrv\Permits\Bilateral\Internal\IrhpPermitApplicationFactory::class,
             'PermitsBilateralInternalPermitUsageSelectionGenerator'
                 => ApiSrv\Permits\Bilateral\Internal\PermitUsageSelectionGenerator::class,
-            'PermitsBilateralInternalNullApplicationPathAnswersUpdater'
-                => ApiSrv\Permits\Bilateral\Internal\NullApplicationPathAnswersUpdater::class,
 
+            'PermitsBilateralMetadataMoroccoFieldsGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\MoroccoFieldsGenerator::class,
             'PermitsBilateralMetadataCurrentFieldValuesGenerator'
                 => ApiSrv\Permits\Bilateral\Metadata\CurrentFieldValuesGenerator::class,
         ],
@@ -374,8 +374,6 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerSaverFactory::class,
             'QaBilateralNoOfPermitsMoroccoAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsMoroccoAnswerSaverFactory::class,
-            'QaBilateralNoOfPermitsUpdater' =>
-                ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsUpdaterFactory::class,
             'QaBilateralNoOfPermitsAnswerClearer' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsAnswerClearerFactory::class,
 
@@ -467,24 +465,33 @@ return [
                 => ApiSrv\Permits\Bilateral\Internal\ApplicationCountryUpdaterFactory::class,
             'PermitsBilateralInternalApplicationUpdater'
                 => ApiSrv\Permits\Bilateral\Internal\ApplicationUpdaterFactory::class,
-            'PermitsBilateralInternalGenericAnswerUpdater'
-                => ApiSrv\Permits\Bilateral\Internal\GenericAnswerUpdaterFactory::class,
             'PermitsBilateralInternalExistingIrhpPermitApplicationHandler'
                 => ApiSrv\Permits\Bilateral\Internal\ExistingIrhpPermitApplicationHandlerFactory::class,
             'PermitsBilateralInternalIrhpPermitApplicationCreator'
                 => ApiSrv\Permits\Bilateral\Internal\IrhpPermitApplicationCreatorFactory::class,
-            'PermitsBilateralInternalOtherAnswersUpdater'
-                => ApiSrv\Permits\Bilateral\Internal\OtherAnswersUpdaterFactory::class,
-            'PermitsBilateralInternalApplicationPathAnswersUpdaterProvider'
-                => ApiSrv\Permits\Bilateral\Internal\ApplicationPathAnswersUpdaterProviderFactory::class,
-            'PermitsBilateralInternalCabotageOnlyApplicationPathAnswersUpdater'
-                => ApiSrv\Permits\Bilateral\Internal\CabotageOnlyApplicationPathAnswersUpdaterFactory::class,
-            'PermitsBilateralInternalStandardAndCabotageApplicationPathAnswersUpdater'
-                => ApiSrv\Permits\Bilateral\Internal\StandardAndCabotageApplicationPathAnswersUpdaterFactory::class,
-            'PermitsBilateralInternalTurkeyApplicationPathAnswersUpdater'
-                => ApiSrv\Permits\Bilateral\Internal\TurkeyApplicationPathAnswersUpdaterFactory::class,
-            'PermitsBilateralInternalUkraineApplicationPathAnswersUpdater'
-                => ApiSrv\Permits\Bilateral\Internal\UkraineApplicationPathAnswersUpdaterFactory::class,
+            'PermitsBilateralInternalQuestionHandlerDelegator'
+                => ApiSrv\Permits\Bilateral\Internal\QuestionHandlerDelegatorFactory::class,
+            'PermitsBilateralInternalCabotageOnlyQuestionHandler'
+                => ApiSrv\Permits\Bilateral\Internal\CabotageOnlyQuestionHandlerFactory::class,
+            'PermitsBilateralInternalEmissionsStandardsQuestionHandler'
+                => ApiSrv\Permits\Bilateral\Internal\EmissionsStandardsQuestionHandlerFactory::class,
+            'PermitsBilateralInternalThirdCountryQuestionHandler'
+                => ApiSrv\Permits\Bilateral\Internal\ThirdCountryQuestionHandlerFactory::class,
+            'PermitsBilateralInternalNumberOfPermitsQuestionHandler'
+                => ApiSrv\Permits\Bilateral\Internal\NumberOfPermitsQuestionHandlerFactory::class,
+            'PermitsBilateralInternalNumberOfPermitsMoroccoQuestionHandler'
+                => ApiSrv\Permits\Bilateral\Internal\NumberOfPermitsMoroccoQuestionHandlerFactory::class,
+            'PermitsBilateralInternalPermitUsageQuestionHandler'
+                => ApiSrv\Permits\Bilateral\Internal\PermitUsageQuestionHandlerFactory::class,
+            'PermitsBilateralInternalStandardAndCabotageQuestionHandler'
+                => ApiSrv\Permits\Bilateral\Internal\StandardAndCabotageQuestionHandlerFactory::class,
+    
+            'PermitsBilateralCommonNoOfPermitsUpdater'
+                => ApiSrv\Permits\Bilateral\Common\NoOfPermitsUpdaterFactory::class,
+            'PermitsBilateralCommonNoOfPermitsConditionalUpdater'
+                => ApiSrv\Permits\Bilateral\Common\NoOfPermitsConditionalUpdaterFactory::class,
+            'PermitsBilateralCommonPermitUsageUpdater'
+                => ApiSrv\Permits\Bilateral\Common\PermitUsageUpdaterFactory::class,
 
             'PermitsBilateralMetadataCountryGenerator'
                 => ApiSrv\Permits\Bilateral\Metadata\CountryGeneratorFactory::class,
@@ -492,8 +499,8 @@ return [
                 => ApiSrv\Permits\Bilateral\Metadata\PeriodArrayGeneratorFactory::class,
             'PermitsBilateralMetadataPeriodGenerator'
                 => ApiSrv\Permits\Bilateral\Metadata\PeriodGeneratorFactory::class,
-            'PermitsBilateralMetadataFieldsGenerator'
-                => ApiSrv\Permits\Bilateral\Metadata\FieldsGeneratorFactory::class,
+            'PermitsBilateralMetadataStandardFieldsGenerator'
+                => ApiSrv\Permits\Bilateral\Metadata\StandardFieldsGeneratorFactory::class,
 
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
