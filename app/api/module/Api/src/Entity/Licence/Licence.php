@@ -137,8 +137,16 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function canMakeIrhpApplication(IrhpPermitStock $stock, ?IrhpApplication $exclude = null): bool
     {
+        if (!$this->isEligibleForPermits()) {
+            return false;
+        }
+
+        if ($stock->isCertificateOfRoadworthiness()) {
+            return true;
+        }
+
         $activeApplication = $this->getActiveIrhpApplication($stock, $exclude);
-        return !$activeApplication instanceof IrhpApplication && $this->isEligibleForPermits();
+        return is_null($activeApplication);
     }
 
     /**
