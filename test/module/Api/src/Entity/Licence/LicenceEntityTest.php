@@ -2474,12 +2474,12 @@ class LicenceEntityTest extends EntityTester
      *
      * @return Entity|m\mockInterface
      */
-    private function createEligibleForPermits()
+    private function createEligibleForPermits($isEligibleForPermits)
     {
         $licence = m::mock(Entity::class)->makePartial();
-        $licence->setStatus(new RefData(Entity::LICENCE_STATUS_VALID));
-        $licence->setGoodsOrPsv(new RefData(Entity::LICENCE_CATEGORY_GOODS_VEHICLE));
-        $licence->setLicenceType(new RefData(Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL));
+        $licence->shouldReceive('isEligibleForPermits')
+            ->withNoArgs()
+            ->andReturn($isEligibleForPermits);
 
         return $licence;
     }
@@ -2487,7 +2487,7 @@ class LicenceEntityTest extends EntityTester
     /**
      * Bring back a list of Irhp applications, prove that non-matching apps  work as intended
      * The non-matching apps are an excluded app (same app id) and an app where the stock id does not match
-     * The final (active) application is a match and therefor an application can't be made
+     * The final (active) application is a match and therefore an application can't be made
      */
     public function testCanMakeIrhpApplication()
     {
@@ -2503,6 +2503,7 @@ class LicenceEntityTest extends EntityTester
         $stock = m::mock(IrhpPermitStock::class);
         $stock->shouldReceive('getIrhpPermitType')->withNoArgs()->andReturn($irhpPermitType);
         $stock->shouldReceive('getId')->once()->withNoArgs()->andReturn($stockId);
+        $stock->shouldReceive('isCertificateOfRoadworthiness')->withNoArgs()->andReturnFalse();
 
         $matchExcludedApp = m::mock(IrhpApplication::class);
         $matchExcludedApp->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
@@ -2530,7 +2531,7 @@ class LicenceEntityTest extends EntityTester
 
         $collection = new ArrayCollection([$matchExcludedApp, $nonMatchingStockApp, $activeApp]);
 
-        $licence = $this->createEligibleForPermits();
+        $licence = $this->createEligibleForPermits(true);
         $licence->shouldReceive('getIrhpApplications')
             ->withNoArgs()
             ->andReturn($collection);
@@ -2551,6 +2552,7 @@ class LicenceEntityTest extends EntityTester
         $stock = m::mock(IrhpPermitStock::class);
         $stock->shouldReceive('getIrhpPermitType')->withNoArgs()->andReturn($irhpPermitType);
         $stock->shouldReceive('getId')->once()->withNoArgs()->andReturn($stockId);
+        $stock->shouldReceive('isCertificateOfRoadworthiness')->withNoArgs()->andReturnFalse();
 
         $nonMatchingStockApp = m::mock(IrhpApplication::class);
         $nonMatchingStockApp->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
@@ -2561,7 +2563,7 @@ class LicenceEntityTest extends EntityTester
 
         $collection = new ArrayCollection([$nonMatchingStockApp]);
 
-        $licence = $this->createEligibleForPermits();
+        $licence = $this->createEligibleForPermits(true);
         $licence->shouldReceive('getIrhpApplications')
             ->withNoArgs()
             ->andReturn($collection);
@@ -2573,13 +2575,46 @@ class LicenceEntityTest extends EntityTester
     {
         $stock = m::mock(IrhpPermitStock::class);
         $stock->shouldReceive('getIrhpPermitType')->never();
+        $stock->shouldReceive('isCertificateOfRoadworthiness')->withNoArgs()->andReturnFalse();
 
-        $licence = $this->createEligibleForPermits();
+        $licence = $this->createEligibleForPermits(true);
         $licence->shouldReceive('getIrhpApplications')
             ->withNoArgs()
             ->andReturn(new ArrayCollection());
 
         $this->assertTrue($licence->canMakeIrhpApplication($stock, null));
+    }
+
+    /**
+     * @dataProvider dpCanMakeIrhpApplicationCertificateOfRoadworthiness
+     */
+    public function testCanMakeIrhpApplicationCertificateOfRoadworthiness($irhpApplication)
+    {
+        $stock = m::mock(IrhpPermitStock::class);
+        $stock->shouldReceive('isCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $licence = $this->createEligibleForPermits(true);
+
+        $this->assertTrue($licence->canMakeIrhpApplication($stock, $irhpApplication));
+    }
+
+    public function dpCanMakeIrhpApplicationCertificateOfRoadworthiness()
+    {
+        return [
+            [null],
+            [m::mock(IrhpApplication::class)],
+        ];
+    }
+
+    public function testCanMakeIrhpApplicationNotEligibleForPermits()
+    {
+        $stock = m::mock(IrhpPermitStock::class);
+        $licence = $this->createEligibleForPermits(false);
+        $irhpApplication = m::mock(IrhpApplication::class);
+
+        $this->assertFalse($licence->canMakeIrhpApplication($stock, $irhpApplication));
     }
 
     /**
