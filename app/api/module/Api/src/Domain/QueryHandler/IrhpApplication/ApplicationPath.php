@@ -2,10 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\Qa\Structure\FormFragmentGenerator;
-use Dvsa\Olcs\Transfer\Query\Qa\ApplicationPath as ApplicationPathQry;
+use Dvsa\Olcs\Transfer\Query\IrhpApplication\ApplicationPath as ApplicationPathQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -40,7 +39,7 @@ class ApplicationPath extends AbstractQueryHandler
     /**
      * Handle query
      *
-     * @param QueryInterface|ApplicationPathQuery $query query
+     * @param QueryInterface|ApplicationPathQry $query query
      *
      * @return array
      */

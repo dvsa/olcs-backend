@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAppSubmitted;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
@@ -6359,5 +6360,50 @@ class IrhpApplicationEntityTest extends EntityTester
             [false, true, true],
             [false, false, false],
         ];
+    }
+
+    public function testGetDocumentsByCategoryAndSubCategory()
+    {
+        $document2 = $this->createMockDocument(6, 8);
+        $document5 = $this->createMockDocument(6, 8);
+
+        $documentWithoutSubCategory = m::mock(Document::class);
+        $documentWithoutSubCategory->shouldReceive('getCategory->getId')
+            ->withNoArgs()
+            ->andReturn(6);
+        $documentWithoutSubCategory->shouldReceive('getSubCategory')
+            ->withNoArgs()
+            ->andReturnNull();
+
+        $documents = new ArrayCollection(
+            [
+                $this->createMockDocument(1, 2),
+                $document2,
+                $this->createMockDocument(3, 8),
+                $documentWithoutSubCategory,
+                $this->createMockDocument(6, 4),
+                $document5
+            ]
+        );
+
+        $this->sut->addDocuments($documents);
+        $matchingDocuments = $this->sut->getDocumentsByCategoryAndSubCategory(6, 8);
+
+        $this->assertEquals(2, $matchingDocuments->count());
+        $this->assertSame($document2, $matchingDocuments->get(0));
+        $this->assertSame($document5, $matchingDocuments->get(1));
+    }
+
+    private function createMockDocument($categoryId, $subCategoryId)
+    {
+        $document = m::mock(Document::class);
+        $document->shouldReceive('getCategory->getId')
+            ->withNoArgs()
+            ->andReturn($categoryId);
+        $document->shouldReceive('getSubCategory->getId')
+            ->withNoArgs()
+            ->andReturn($subCategoryId);
+
+        return $document;
     }
 }

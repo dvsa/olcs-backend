@@ -17,6 +17,7 @@ class MotExpiryDateGeneratorFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new MotExpiryDateGenerator(
+            $serviceLocator->get('QaCertRoadworthinessMotExpiryDateElementFactory'),
             $serviceLocator->get('QaCommonDateWithThresholdElementGenerator')
         );
     }

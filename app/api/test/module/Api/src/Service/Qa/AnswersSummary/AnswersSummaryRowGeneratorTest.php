@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
@@ -175,7 +176,7 @@ class AnswersSummaryRowGeneratorTest extends MockeryTestCase
             ->andReturn($element);
 
         $this->elementGeneratorContextGenerator->shouldReceive('generate')
-            ->with($qaContext)
+            ->with($qaContext, ElementContainer::ANSWERS_SUMMARY)
             ->andReturn($elementGeneratorContext);
 
         $this->supplementedApplicationStep->shouldReceive('getApplicationStep')
