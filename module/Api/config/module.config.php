@@ -100,6 +100,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsMoroccoAnswerSummaryProvider::class,
             'QaBilateralPermitUsageAnswerSummaryProvider' =>
                 ApiSrv\Qa\Structure\Element\Custom\Bilateral\PermitUsageAnswerSummaryProvider::class,
+            'QaCertRoadworthinessMotExpiryDateElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\CertRoadworthiness\MotExpiryDateFactory::class,
 
             'PermitsAnswersSummaryFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryFactory::class,
             'PermitsAnswersSummaryRowFactory' => ApiSrv\Permits\AnswersSummary\AnswersSummaryRowFactory::class,

@@ -2548,4 +2548,28 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         return $this->isNotYetSubmitted() || $this->isUnderConsideration();
     }
+
+    /**
+     * Fetch documents associated with this application matching the specified category and sub category
+     *
+     * @param int $categoryId
+     * @param int $subCategoryId
+     *
+     * @return ArrayCollection
+     */
+    public function getDocumentsByCategoryAndSubCategory($categoryId, $subCategoryId)
+    {
+        $matchingDocuments = new ArrayCollection();
+
+        foreach ($this->documents as $document) {
+            if ($document->getCategory()->getId() == $categoryId &&
+                is_object($document->getSubCategory()) &&
+                $document->getSubCategory()->getId() == $subCategoryId
+            ) {
+                $matchingDocuments->add($document);
+            }
+        }
+
+        return $matchingDocuments;
+    }
 }

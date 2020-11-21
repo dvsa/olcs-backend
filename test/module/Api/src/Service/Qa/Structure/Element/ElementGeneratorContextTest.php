@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -25,8 +26,6 @@ class ElementGeneratorContextTest extends MockeryTestCase
 
     private $qaContext;
 
-    private $elementGeneratorContext;
-
     public function setUp(): void
     {
         $this->validatorList = m::mock(ValidatorList::class);
@@ -42,42 +41,61 @@ class ElementGeneratorContextTest extends MockeryTestCase
         $this->qaContext->shouldReceive('getQaEntity')
             ->withNoArgs()
             ->andReturn($this->qaEntity);
-
-        $this->elementGeneratorContext = new ElementGeneratorContext(
-            $this->validatorList,
-            $this->qaContext
-        );
     }
 
     public function testGetValidatorList()
     {
+        $elementGeneratorContext = new ElementGeneratorContext(
+            $this->validatorList,
+            $this->qaContext,
+            ElementContainer::SELFSERVE_PAGE
+        );
+
         $this->assertSame(
             $this->validatorList,
-            $this->elementGeneratorContext->getValidatorList()
+            $elementGeneratorContext->getValidatorList()
         );
     }
 
     public function testGetApplicationStepEntity()
     {
+        $elementGeneratorContext = new ElementGeneratorContext(
+            $this->validatorList,
+            $this->qaContext,
+            ElementContainer::SELFSERVE_PAGE
+        );
+
         $this->assertSame(
             $this->applicationStepEntity,
-            $this->elementGeneratorContext->getApplicationStepEntity()
+            $elementGeneratorContext->getApplicationStepEntity()
         );
     }
 
     public function testGetQaEntity()
     {
+        $elementGeneratorContext = new ElementGeneratorContext(
+            $this->validatorList,
+            $this->qaContext,
+            ElementContainer::SELFSERVE_PAGE
+        );
+
         $this->assertSame(
             $this->qaEntity,
-            $this->elementGeneratorContext->getQaEntity()
+            $elementGeneratorContext->getQaEntity()
         );
     }
 
     public function testGetQaContext()
     {
+        $elementGeneratorContext = new ElementGeneratorContext(
+            $this->validatorList,
+            $this->qaContext,
+            ElementContainer::SELFSERVE_PAGE
+        );
+
         $this->assertSame(
             $this->qaContext,
-            $this->elementGeneratorContext->getQaContext()
+            $elementGeneratorContext->getQaContext()
         );
     }
 
@@ -89,6 +107,38 @@ class ElementGeneratorContextTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($answerValue);
 
-        $this->elementGeneratorContext->getAnswerValue();
+        $elementGeneratorContext = new ElementGeneratorContext(
+            $this->validatorList,
+            $this->qaContext,
+            ElementContainer::SELFSERVE_PAGE
+        );
+
+        $elementGeneratorContext->getAnswerValue();
+    }
+
+    /**
+     * @dataProvider dpIsSelfservePageContainer
+     */
+    public function testIsSelfservePageContainer($elementContainer, $expected)
+    {
+        $elementGeneratorContext = new ElementGeneratorContext(
+            $this->validatorList,
+            $this->qaContext,
+            $elementContainer
+        );
+
+        $this->assertEquals(
+            $expected,
+            $elementGeneratorContext->isSelfservePageContainer()
+        );
+    }
+
+    public function dpIsSelfservePageContainer()
+    {
+        return [
+            [ElementContainer::FORM_FRAGMENT, false],
+            [ElementContainer::SELFSERVE_PAGE, true],
+            [ElementContainer::ANSWERS_SUMMARY, false],
+        ];
     }
 }

@@ -582,7 +582,13 @@ return array(
                 'entity' => 'Submission',
                 'property' => 'document'
             )
-        )
+        ),
+        'irhp_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpApplication',
+                'property' => 'document'
+            )
+        ),
     ),
     'doc_template' => array(
         'is_ni' => array(

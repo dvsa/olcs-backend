@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePage;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageGenerator;
@@ -74,7 +75,7 @@ class SelfservePageGeneratorTest extends MockeryTestCase
        
         $applicationStepGenerator = m::mock(ApplicationStepGenerator::class);
         $applicationStepGenerator->shouldReceive('generate')
-            ->with($qaContext)
+            ->with($qaContext, ElementContainer::SELFSERVE_PAGE)
             ->andReturn($applicationStep);
 
         $formControlStrategy = m::mock(FormControlStrategyInterface::class);

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 
 class ElementGeneratorContext
@@ -14,18 +15,23 @@ class ElementGeneratorContext
     /** @var QaContext */
     private $qaContext;
 
+    /** @var string */
+    private $elementContainer;
+
     /**
      * Create instance
      *
      * @param ValidatorList $validatorList
      * @param QaContext $qaContext
+     * @param string $elementContainer
      *
      * @return ElementGeneratorContext
      */
-    public function __construct(ValidatorList $validatorList, QaContext $qaContext)
+    public function __construct(ValidatorList $validatorList, QaContext $qaContext, $elementContainer)
     {
         $this->validatorList = $validatorList;
         $this->qaContext = $qaContext;
+        $this->elementContainer = $elementContainer;
     }
 
     /**
@@ -68,7 +74,7 @@ class ElementGeneratorContext
         return $this->qaContext;
     }
 
-    /*
+    /**
      * Get the answer value associated with this context
      *
      * @return mixed
@@ -76,5 +82,15 @@ class ElementGeneratorContext
     public function getAnswerValue()
     {
         return $this->qaContext->getAnswerValue();
+    }
+
+    /**
+     * Whether the context was raised from within a selfserve page request
+     *
+     * @return bool
+     */
+    public function isSelfservePageContainer()
+    {
+        return $this->elementContainer == ElementContainer::SELFSERVE_PAGE;
     }
 }

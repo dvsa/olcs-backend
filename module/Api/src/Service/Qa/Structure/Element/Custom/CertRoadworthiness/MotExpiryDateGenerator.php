@@ -5,13 +5,16 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\CertRoadworthiness;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThresholdGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
-use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
+use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class MotExpiryDateGenerator implements ElementGeneratorInterface
 {
-    use AnyTrait;
+    use IrhpApplicationOnlyTrait;
 
     const DATE_THRESHOLD = 'P14M';
+
+    /** @var MotExpiryDateFactory */
+    private $motExpiryDateFactory;
 
     /** @var DateWithThresholdGenerator */
     private $dateWithThresholdGenerator;
@@ -19,12 +22,16 @@ class MotExpiryDateGenerator implements ElementGeneratorInterface
     /**
      * Create service instance
      *
+     * @param MotExpiryDateFactory $motExpiryDateFactory
      * @param DateWithThresholdGenerator $dateWithThresholdGenerator
      *
      * @return MotExpiryDateGenerator
      */
-    public function __construct(DateWithThresholdGenerator $dateWithThresholdGenerator)
-    {
+    public function __construct(
+        MotExpiryDateFactory $motExpiryDateFactory,
+        DateWithThresholdGenerator $dateWithThresholdGenerator
+    ) {
+        $this->motExpiryDateFactory = $motExpiryDateFactory;
         $this->dateWithThresholdGenerator = $dateWithThresholdGenerator;
     }
 
@@ -37,6 +44,12 @@ class MotExpiryDateGenerator implements ElementGeneratorInterface
      */
     public function generate(ElementGeneratorContext $context)
     {
-        return $this->dateWithThresholdGenerator->generate($context, self::DATE_THRESHOLD);
+        $irhpApplication = $context->getQaEntity();
+        $enableFileUploads = $context->isSelfservePageContainer() && $irhpApplication->getLicence()->isNi();
+
+        return $this->motExpiryDateFactory->create(
+            $enableFileUploads,
+            $this->dateWithThresholdGenerator->generate($context, self::DATE_THRESHOLD)
+        );
     }
 }
