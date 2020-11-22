@@ -5,6 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\TranslationKey;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Create as CreateTranslationKeyTextCmd;
 use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Update as UpdateTranslationKeyTextCmd;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\System\Language;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TranslationKey\GenerateCache;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -19,16 +21,11 @@ use Dvsa\Olcs\Api\Domain\Repository\TranslationKey as TranslationKeyRepo;
  */
 final class Update extends AbstractCommandHandler
 {
-    use HandleTranslationTrait;
-
     protected $repoServiceName = 'TranslationKey';
     protected $extraRepos = ['TranslationKeyText'];
 
     protected $createCmdClass = CreateTranslationKeyTextCmd::class;
     protected $updateCmdClass = UpdateTranslationKeyTextCmd::class;
-    protected $parentName = 'translationKey';
-    protected $textVar = 'translatedText';
-    protected $childRepo = null;
 
     public function handleCommand(CommandInterface $command): Result
     {
@@ -38,10 +35,8 @@ final class Update extends AbstractCommandHandler
          * @var TranslationKeyRepo $repo
          */
         $repo = $this->getRepo();
-        $this->childRepo = $this->getRepo('TranslationKeyText');
         $translationKey = $repo->fetchUsingId($command);
 
-        // Handled in included trait. Shared with PartialMarkup
         $this->processTranslations($command->getTranslationsArray(), $translationKey);
 
         //refresh the translation cache
@@ -51,5 +46,51 @@ final class Update extends AbstractCommandHandler
         $this->result->addMessage('Translations Updated');
 
         return $this->result;
+    }
+
+    /**
+     * @param array TranslationsArray
+     * @param $parentEntity
+     */
+    protected function processTranslations(array $translationsArray, $parentEntity)
+    {
+        foreach ($translationsArray as $isoCode => $translatedText) {
+            $translatedText = base64_decode($translatedText);
+            if (array_key_exists($isoCode, Language::SUPPORTED_LANGUAGES)) {
+                $this->updateOrCreate($parentEntity->getId(), Language::SUPPORTED_LANGUAGES[$isoCode]['id'], $translatedText);
+            } else {
+                throw new RuntimeException('Error processing translation. Invalid or unsupported language code');
+            }
+        }
+    }
+
+    /**
+     * @param mixed $parentEntityId
+     * @param int $languageId
+     * @param string $translatedText
+     */
+    protected function updateOrCreate($parentEntityId, int $languageId, string $translatedText)
+    {
+        $transRecord = $this->getRepo('TranslationKeyText')->fetchByParentLanguage($parentEntityId, $languageId);
+        if (empty($transRecord)) {
+            $this->result->merge($this->handleSideEffect(
+                $this->createCmdClass::create(
+                    [
+                        'translationKey' => $parentEntityId,
+                        'language' => $languageId,
+                        'translatedText' => $translatedText
+                    ]
+                )
+            ));
+        } else {
+            $this->result->merge($this->handleSideEffect(
+                $this->updateCmdClass::create(
+                    [
+                        'id' => $transRecord->getId(),
+                        'translatedText' => $translatedText
+                    ]
+                )
+            ));
+        }
     }
 }

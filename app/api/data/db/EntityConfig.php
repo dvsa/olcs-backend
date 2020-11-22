@@ -2358,28 +2358,4 @@ return array(
             )
         ),
     ),
-    'partial_markup' => [
-        'partial_id' => [
-            'inversedBy' => [
-                'entity' => 'Partial',
-                'property' => 'partialMarkup',
-            ]
-        ],
-    ],
-    'partial_category_link' => [
-        'partial_id' => [
-            'inversedBy' => [
-                'entity' => 'Partial',
-                'property' => 'partialCategoryLink',
-            ]
-        ],
-    ],
-    'partial_tag_link' => [
-        'partial_id' => [
-            'inversedBy' => [
-                'entity' => 'Partial',
-                'property' => 'partialTagLink',
-            ]
-        ],
-    ],
 );

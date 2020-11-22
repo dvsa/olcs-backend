@@ -754,8 +754,6 @@ return [
             'TranslationKeyText' => RepositoryFactory::class,
             'Language' => RepositoryFactory::class,
             'Replacement' => RepositoryFactory::class,
-            'Partial' => RepositoryFactory::class,
-            'PartialMarkup' => RepositoryFactory::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [
