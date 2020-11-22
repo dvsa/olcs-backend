@@ -210,9 +210,5 @@ return [
     'TranslationKeyText' => 'System',
     'Replacement' => 'System',
     'ReplacementCategoryLink' => 'System',
-    'ReplacementTagLink' => 'System',
-    'Partial' => 'System',
-    'PartialCategoryLink' => 'System',
-    'PartialTagLink' => 'System',
-    'PartialMarkup' => 'System',
+    'ReplacementTagLink' => 'System'
 ];
