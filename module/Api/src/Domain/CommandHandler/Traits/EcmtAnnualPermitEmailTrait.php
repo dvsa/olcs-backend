@@ -2,11 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Traits;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * ECMT Annual Permit email trait
@@ -36,9 +37,20 @@ trait EcmtAnnualPermitEmailTrait
 
         if ($recordObject->isAwaitingFee()) {
             /** @var IrhpPermitApplication $irhpPermitApplication */
-            $irhpPermitApplication = $recordObject->getIrhpPermitApplications()->first();
+            $irhpPermitApplication = $recordObject->getFirstIrhpPermitApplication();
 
-            $vars['awaitingFeeUrl'] = 'http://selfserve/permits/application/' . (int)$recordObject->getId() . '/awaiting-fee';
+            $vars['awaitingFeeUrl'] = sprintf(
+                'http://selfserve/permits/application/%s/awaiting-fee',
+                (int)$recordObject->getId()
+            );
+            $vars['euro5PermitsRequired'] = $irhpPermitApplication->getRequiredEuro5();
+            $vars['euro6PermitsRequired'] = $irhpPermitApplication->getRequiredEuro6();
+            $vars['euro5PermitsGranted'] = $irhpPermitApplication->countPermitsAwarded(
+                RefData::EMISSIONS_CATEGORY_EURO5_REF
+            );
+            $vars['euro6PermitsGranted'] = $irhpPermitApplication->countPermitsAwarded(
+                RefData::EMISSIONS_CATEGORY_EURO6_REF
+            );
             $vars['permitsRequired'] = $recordObject->calculateTotalPermitsRequired();
             $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
             // TODO - OLCS-21979
