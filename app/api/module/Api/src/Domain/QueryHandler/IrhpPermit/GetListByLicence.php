@@ -23,7 +23,8 @@ class GetListByLicence extends AbstractQueryHandler
             'journey',
             'irhpPermitStock' => [
                 'irhpPermitType' => ['name'],
-                'country'
+                'country',
+                'permitCategory',
             ],
             'emissionsCategory',
         ]

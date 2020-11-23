@@ -61,7 +61,8 @@ class GetListByLicenceTest extends QueryHandlerTestCase
                 'journey',
                 'irhpPermitStock' => [
                     'irhpPermitType' => ['name'],
-                    'country'
+                    'country',
+                    'permitCategory',
                 ],
                 'emissionsCategory',
             ]
@@ -188,7 +189,8 @@ class GetListByLicenceTest extends QueryHandlerTestCase
                 'journey',
                 'irhpPermitStock' => [
                     'irhpPermitType',
-                    'country'
+                    'country',
+                    'permitCategory',
                 ],
                 'emissionsCategory',
             ]
@@ -246,7 +248,8 @@ class GetListByLicenceTest extends QueryHandlerTestCase
                 'journey',
                 'irhpPermitStock' => [
                     'irhpPermitType' => ['name'],
-                    'country'
+                    'country',
+                    'permitCategory',
                 ],
                 'emissionsCategory',
             ]
