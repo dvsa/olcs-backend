@@ -19,6 +19,7 @@ class ReadyToPrint extends AbstractListQueryHandler
             'irhpPermitStock' => [
                 'irhpPermitType' => ['name'],
                 'country',
+                'permitCategory',
             ],
         ],
     ];
