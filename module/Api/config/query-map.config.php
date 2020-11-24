@@ -584,7 +584,6 @@ return [
 
     // IRHP Candidate Permits
     TransferQuery\IrhpCandidatePermit\ById::class => QueryHandler\IrhpCandidatePermit\ById::class,
-    TransferQuery\IrhpCandidatePermit\GetList::class => QueryHandler\IrhpCandidatePermit\GetList::class,
     TransferQuery\IrhpCandidatePermit\GetListByIrhpApplication::class
         => QueryHandler\IrhpCandidatePermit\GetListByIrhpApplication::class,
     TransferQuery\IrhpCandidatePermit\GetListByIrhpApplicationUnpaged::class
@@ -680,8 +679,6 @@ return [
     Query\Permits\CheckRunScoringPrerequisites::class => QueryHandler\Permits\CheckRunScoringPrerequisites::class,
     Query\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites::class =>
         QueryHandler\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites::class,
-    Query\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
-    Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
     Query\Permits\DeviationData::class => QueryHandler\Permits\DeviationData::class,
 
@@ -715,11 +712,6 @@ return [
     TransferQuery\Replacement\ById::class => QueryHandler\Replacement\ById::class,
     TransferQuery\Replacement\GetList::class => QueryHandler\Replacement\GetList::class,
 
-    //Partials
-    TransferQuery\PartialMarkup\ById::class => QueryHandler\Partial\ById::class,
-    TransferQuery\PartialMarkup\GetList::class => QueryHandler\Partial\GetList::class,
-
     //DvlaSearch
     TransferQuery\DvlaSearch\Vehicle::class => QueryHandler\DvlaSearch\Vehicle::class,
-
 ];
