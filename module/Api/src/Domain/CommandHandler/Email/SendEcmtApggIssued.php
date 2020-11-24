@@ -6,17 +6,17 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\EcmtAnnualPermitEmailTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
 
 /**
- * Send confirmation of ECMT Annual APSG permits being issued
+ * Send confirmation of ECMT Annual APGG permits being issued
  *
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class SendEcmtApsgIssued extends AbstractEmailHandler
+class SendEcmtApggIssued extends AbstractEmailHandler
 {
     use EcmtAnnualPermitEmailTrait;
     use PermitEmailTrait;
 
     protected $repoServiceName = 'IrhpApplication';
-    protected $template = 'ecmt-annual-apsg-app-issued';
+    protected $template = 'ecmt-annual-apgg-app-issued';
     protected $subject = 'email.ecmt.issued.subject';
     protected $extraRepos = ['FeeType'];
 }

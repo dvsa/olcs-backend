@@ -10,10 +10,13 @@ use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApggAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAutomaticallyWithdrawn;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApggIssued;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgIssued;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApggIssued;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgIssued;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
@@ -1974,7 +1977,17 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getIssuedEmailCommand()
     {
         if ($this->irhpPermitType->isEcmtAnnual()) {
-            return SendEcmtApsgIssued::class;
+            if ($this->isApsg()) {
+                return SendEcmtApsgIssued::class;
+            } elseif ($this->isApgg()) {
+                return SendEcmtApggIssued::class;
+            }
+        } elseif ($this->irhpPermitType->isEcmtShortTerm()) {
+            if ($this->isApsg()) {
+                return SendEcmtShortTermApsgIssued::class;
+            } elseif ($this->isApgg()) {
+                return SendEcmtShortTermApggIssued::class;
+            }
         }
 
         return null;

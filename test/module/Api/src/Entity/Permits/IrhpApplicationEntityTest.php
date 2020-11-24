@@ -13,11 +13,14 @@ use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApggAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApggIssued;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgIssued;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtApsgAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApggIssued;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgIssued;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
@@ -5158,14 +5161,25 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpGetIssuedEmailCommand
      */
-    public function testGetIssuedEmailCommand($isEcmtAnnual, $expectedCommand)
+    public function testGetIssuedEmailCommand($isEcmtAnnual, $isEcmtShortTerm, $isApsg, $isApgg, $expectedCommand)
     {
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
             ->andReturn($isEcmtAnnual);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn($isEcmtShortTerm);
 
         $application = m::mock(Entity::class)->makePartial();
         $application->setIrhpPermitType($irhpPermitType);
+
+        $application->shouldReceive('isApsg')
+            ->withNoArgs()
+            ->andReturn($isApsg);
+        $application->shouldReceive('isApgg')
+            ->withNoArgs()
+            ->andReturn($isApgg);
 
         $this->assertEquals(
             $expectedCommand,
@@ -5176,8 +5190,12 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpGetIssuedEmailCommand()
     {
         return [
-            [true, SendEcmtApsgIssued::class],
-            [false, null],
+            [true, false, true, false, SendEcmtApsgIssued::class],
+            [true, false, false, true, SendEcmtApggIssued::class],
+            [false, true, true, false, SendEcmtShortTermApsgIssued::class],
+            [false, true, false, true, SendEcmtShortTermApggIssued::class],
+            [false, false, true, false, null],
+            [false, false, false, true, null],
         ];
     }
 
