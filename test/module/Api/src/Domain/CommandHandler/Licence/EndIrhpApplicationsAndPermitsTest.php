@@ -65,8 +65,17 @@ class EndIrhpApplicationsAndPermitsTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->andReturn(IrhpInterface::STATUS_UNDER_CONSIDERATION);
 
+        $irhpApplicationAwaitingFeeId = 83;
+        $irhpApplicationAwaitingFee = m::mock(IrhpApplication::class);
+        $irhpApplicationAwaitingFee->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($irhpApplicationAwaitingFeeId);
+        $irhpApplicationAwaitingFee->shouldReceive('getStatus->getId')
+            ->withNoArgs()
+            ->andReturn(IrhpInterface::STATUS_AWAITING_FEE);
+
         $ongoingIrhpApplications = new ArrayCollection(
-            [$irhpApplicationNotYetSubmitted, $irhpApplicationUnderConsideration]
+            [$irhpApplicationNotYetSubmitted, $irhpApplicationUnderConsideration, $irhpApplicationAwaitingFee]
         );
 
         $licence = m::mock(Licence::class)->makePartial();
@@ -88,6 +97,15 @@ class EndIrhpApplicationsAndPermitsTest extends CommandHandlerTestCase
             Withdraw::class,
             [
                 'id' => $irhpApplicationUnderConsiderationId,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            Withdraw::class,
+            [
+                'id' => $irhpApplicationAwaitingFeeId,
                 'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
             ],
             new Result()
