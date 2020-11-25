@@ -11,10 +11,12 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
 use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument as DispatchDocumentCmd;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -38,7 +40,9 @@ final class GenerateAndStore extends AbstractCommandHandler implements
     protected $repoServiceName = 'Document';
 
     /**
-     * @param Cmd $command
+     * @param CommandInterface $command
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
