@@ -12,12 +12,12 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityCounter;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\EmissionsCategoryConditionalAdder;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\FieldNames;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermits;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -28,17 +28,26 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class NoOfPermitsGeneratorTest extends MockeryTestCase
 {
+    const ISSUE_FEE_PER_PERMIT = '5.00';
+
     /**
      * @dataProvider dpGenerate
      */
-    public function testGenerate($maxPermitted, $permitsRemaining, $expectedMaxCanApplyFor, $isApsg, $isUnderConsideration, $expectedSkipAvailabilityValidation)
-    {
+    public function testGenerate(
+        $maxPermitted,
+        $permitsRemaining,
+        $expectedMaxCanApplyFor,
+        $isApsg,
+        $isUnderConsideration,
+        $expectedSkipAvailabilityValidation,
+        $isOngoing,
+        $expectedIssueFeePerPermit
+    ) {
         $stockId = 22;
         $validityYear = 2015;
         $requiredEuro5 = 13;
         $requiredEuro6 = 7;
         $applicationFeePerPermit = '15.00';
-        $issueFeePerPermit = '5.00';
 
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
 
@@ -85,6 +94,9 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $irhpApplication->shouldReceive('isUnderConsideration')
             ->withNoArgs()
             ->andReturn($isUnderConsideration);
+        $irhpApplication->shouldReceive('isOngoing')
+            ->withNoArgs()
+            ->andReturn($isOngoing);
 
         $applicationFeeType = m::mock(FeeTypeEntity::class);
         $applicationFeeType->shouldReceive('getFixedValue')
@@ -92,7 +104,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
 
         $issueFeeType = m::mock(FeeTypeEntity::class);
         $issueFeeType->shouldReceive('getFixedValue')
-            ->andReturn($issueFeePerPermit);
+            ->andReturn(self::ISSUE_FEE_PER_PERMIT);
 
         $feeTypeRepo = m::mock(FeeTypeRepository::class);
         $feeTypeRepo->shouldReceive('getLatestByProductReference')
@@ -106,7 +118,13 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
 
         $noOfPermitsFactory = m::mock(NoOfPermitsFactory::class);
         $noOfPermitsFactory->shouldReceive('create')
-            ->with($expectedMaxCanApplyFor, $maxPermitted, $applicationFeePerPermit, $issueFeePerPermit, $expectedSkipAvailabilityValidation)
+            ->with(
+                $expectedMaxCanApplyFor,
+                $maxPermitted,
+                $applicationFeePerPermit,
+                $expectedIssueFeePerPermit,
+                $expectedSkipAvailabilityValidation
+            )
             ->once()
             ->andReturn($noOfPermits);
 
@@ -159,11 +177,16 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
     public function dpGenerate()
     {
         return [
-            [43, 19, 19, true, true, true],
-            [17, 40, 17, true, true, true],
-            [17, 40, 17, false, true, false],
-            [17, 40, 17, true, false, false],
-            [17, 40, 17, false, false, false],
+            [43, 19, 19, true, true, true, false, 'N/A'],
+            [17, 40, 17, true, true, true, false, 'N/A'],
+            [17, 40, 17, false, true, false, false, 'N/A'],
+            [17, 40, 17, true, false, false, false, 'N/A'],
+            [17, 40, 17, false, false, false, false, 'N/A'],
+            [43, 19, 19, true, true, true, true, self::ISSUE_FEE_PER_PERMIT],
+            [17, 40, 17, true, true, true, true, self::ISSUE_FEE_PER_PERMIT],
+            [17, 40, 17, false, true, false, true, self::ISSUE_FEE_PER_PERMIT],
+            [17, 40, 17, true, false, false, true, self::ISSUE_FEE_PER_PERMIT],
+            [17, 40, 17, false, false, false, true, self::ISSUE_FEE_PER_PERMIT],
         ];
     }
 }
