@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ExpireAllCommunityLicences as ExpireComLics;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -61,7 +62,9 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler implemen
                     // Void any discs associated to vehicles linked to the licence
                     $discsCommand,
                     // Create publication for a licence
-                    PublicationLicenceCmd::create(['id' => $licence->getId()])
+                    PublicationLicenceCmd::create(['id' => $licence->getId()]),
+                    // Expire/cancel active permit applications and terminate active permits
+                    EndIrhpApplicationsAndPermits::create(['id' => $licence->getId()]),
                 ]
             )
         );
@@ -73,6 +76,13 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler implemen
         return $result;
     }
 
+    /**
+     * Return the appropriate command to cease discs
+     *
+     * @param Entity $licence
+     *
+     * @return CeaseGoodsDiscs|CeasePsvDiscs
+     */
     private function createDiscsCommand($licence)
     {
         if ($licence->isGoods()) {
