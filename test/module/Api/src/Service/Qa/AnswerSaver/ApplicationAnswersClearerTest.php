@@ -54,8 +54,8 @@ class ApplicationAnswersClearerTest extends MockeryTestCase
         $formControlStrategy1->shouldReceive('clearAnswer')
             ->with($qaContext1)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $supplementedApplicationStep1 = m::mock(SupplementedApplicationStep::class);
         $supplementedApplicationStep1->shouldReceive('getFormControlStrategy')
@@ -77,8 +77,8 @@ class ApplicationAnswersClearerTest extends MockeryTestCase
         $formControlStrategy2->shouldReceive('clearAnswer')
             ->with($qaContext2)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $supplementedApplicationStep2 = m::mock(SupplementedApplicationStep::class);
         $supplementedApplicationStep2->shouldReceive('getFormControlStrategy')
@@ -138,8 +138,8 @@ class ApplicationAnswersClearerTest extends MockeryTestCase
         $formControlStrategy3->shouldReceive('clearAnswer')
             ->with($qaContext3)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $supplementedApplicationStep3 = m::mock(SupplementedApplicationStep::class);
         $supplementedApplicationStep3->shouldReceive('getFormControlStrategy')
@@ -161,8 +161,8 @@ class ApplicationAnswersClearerTest extends MockeryTestCase
         $formControlStrategy4->shouldReceive('clearAnswer')
             ->with($qaContext4)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $supplementedApplicationStep4 = m::mock(SupplementedApplicationStep::class);
         $supplementedApplicationStep4->shouldReceive('getFormControlStrategy')

@@ -68,8 +68,8 @@ class GrantTest extends CommandHandlerTestCase
         $irhpApplication->shouldReceive('grant')
             ->once()
             ->with($this->refData[IrhpInterface::STATUS_AWAITING_FEE])
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($irhpApplicationId)
@@ -117,8 +117,8 @@ class GrantTest extends CommandHandlerTestCase
         $this->repoMap['IrhpApplication']->shouldReceive('save')
             ->with($irhpApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
             ->with($irhpApplication, EventHistoryTypeEntity::IRHP_APPLICATION_GRANTED)

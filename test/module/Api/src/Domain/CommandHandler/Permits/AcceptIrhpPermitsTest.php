@@ -42,8 +42,8 @@ class AcceptIrhpPermitsTest extends CommandHandlerTestCase
         $irhpApplication->shouldReceive('proceedToIssuing')
             ->with($this->refData[IrhpInterface::STATUS_ISSUING])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('fetchById')
@@ -53,8 +53,8 @@ class AcceptIrhpPermitsTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($irhpApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->expectedQueueSideEffect($irhpApplicationId, Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE, []);
 

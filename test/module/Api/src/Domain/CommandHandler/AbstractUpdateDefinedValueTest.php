@@ -57,21 +57,21 @@ abstract class AbstractUpdateDefinedValueTest extends CommandHandlerTestCase
             $entity->shouldReceive($this->entityMethodName)
                 ->with($this->refData[$this->definedValue])
                 ->once()
-                ->ordered()
-                ->globally();
+                ->globally()
+                ->ordered();
         } else {
             $entity->shouldReceive($this->entityMethodName)
                 ->with($this->definedValue)
                 ->once()
-                ->ordered()
-                ->globally();
+                ->globally()
+                ->ordered();
         }
 
         $this->repoMap[$this->repoServiceName]->shouldReceive('save')
             ->with($entity)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand($command);
 
