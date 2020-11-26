@@ -492,6 +492,10 @@ return [
                 => ApiSrv\Permits\Bilateral\Common\NoOfPermitsConditionalUpdaterFactory::class,
             'PermitsBilateralCommonPermitUsageUpdater'
                 => ApiSrv\Permits\Bilateral\Common\PermitUsageUpdaterFactory::class,
+            'PermitsBilateralCommonStandardAndCabotageUpdater'
+                => ApiSrv\Permits\Bilateral\Common\StandardAndCabotageUpdaterFactory::class,
+            'PermitsBilateralCommonModifiedAnswerUpdater'
+                => ApiSrv\Permits\Bilateral\Common\ModifiedAnswerUpdaterFactory::class,
 
             'PermitsBilateralMetadataCountryGenerator'
                 => ApiSrv\Permits\Bilateral\Metadata\CountryGeneratorFactory::class,
