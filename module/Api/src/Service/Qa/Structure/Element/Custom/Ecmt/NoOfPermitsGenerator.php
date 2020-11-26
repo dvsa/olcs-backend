@@ -67,13 +67,18 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
         $irhpPermitStockId = $irhpPermitStock->getId();
         $licence = $irhpApplication->getLicence();
 
-        $applicationFee = $this->feeTypeRepo->getLatestByProductReference(
+        $applicationFeeType = $this->feeTypeRepo->getLatestByProductReference(
             $irhpApplication->getApplicationFeeProductReference()
         );
 
-        $issueFee = $this->feeTypeRepo->getLatestByProductReference(
-            $irhpApplication->getIssueFeeProductReference()
-        );
+        $issueFee = 'N/A';
+        if ($irhpApplication->isOngoing()) {
+            $issueFeeType = $this->feeTypeRepo->getLatestByProductReference(
+                $irhpApplication->getIssueFeeProductReference()
+            );
+
+            $issueFee = $issueFeeType->getFixedValue();
+        }
 
         // validation against the remaining stock should be skipped
         // when the application is APSG and under consideration
@@ -90,8 +95,8 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
         $noOfPermits = $this->noOfPermitsFactory->create(
             $maxCanApplyFor,
             $maxPermitted,
-            $applicationFee->getFixedValue(),
-            $issueFee->getFixedValue(),
+            $applicationFeeType->getFixedValue(),
+            $issueFee,
             $skipAvailabilityValidation
         );
 
