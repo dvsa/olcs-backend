@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Common;
 
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
-class PermitUsageUpdater
+class StandardAndCabotageUpdater
 {
     /** @var ModifiedAnswerUpdater */
     private $modifiedAnswerUpdater;
@@ -14,7 +14,7 @@ class PermitUsageUpdater
      *
      * @param ModifiedAnswerUpdater $modifiedAnswerUpdater
      *
-     * @return PermitUsageUpdater
+     * @return StandardAndCabotageUpdater
      */
     public function __construct(ModifiedAnswerUpdater $modifiedAnswerUpdater)
     {
@@ -22,7 +22,7 @@ class PermitUsageUpdater
     }
 
     /**
-     * Update the permit usage value relating to a specific country within a bilateral application
+     * Update the standard and cabotage value relating to a specific country within a bilateral application
      *
      * @param QaContext $qaContext
      * @param string $newAnswer
@@ -31,7 +31,7 @@ class PermitUsageUpdater
     {
         $this->modifiedAnswerUpdater->update(
             $qaContext,
-            $qaContext->getQaEntity()->getBilateralPermitUsageSelection(),
+            $qaContext->getQaEntity()->getBilateralCabotageSelection(),
             $newAnswer
         );
     }

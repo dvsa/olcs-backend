@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\StandardAndCabotageUpdater;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\StandardAndCabotageAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
@@ -30,7 +30,7 @@ class StandardAndCabotageAnswerSaverTest extends MockeryTestCase
 
     private $namedAnswerFetcher;
 
-    private $genericAnswerWriter;
+    private $standardAndCabotageUpdater;
 
     private $standardAndCabotageAnswerSaver;
 
@@ -55,11 +55,11 @@ class StandardAndCabotageAnswerSaverTest extends MockeryTestCase
 
         $this->namedAnswerFetcher = m::mock(NamedAnswerFetcher::class);
 
-        $this->genericAnswerWriter = m::mock(GenericAnswerWriter::class);
+        $this->standardAndCabotageUpdater = m::mock(StandardAndCabotageUpdater::class);
 
         $this->standardAndCabotageAnswerSaver = new StandardAndCabotageAnswerSaver(
             $this->namedAnswerFetcher,
-            $this->genericAnswerWriter
+            $this->standardAndCabotageUpdater
         );
     }
 
@@ -69,7 +69,7 @@ class StandardAndCabotageAnswerSaverTest extends MockeryTestCase
             ->with($this->applicationStep, $this->postData, 'qaElement')
             ->andReturn('N');
 
-        $this->genericAnswerWriter->shouldReceive('write')
+        $this->standardAndCabotageUpdater->shouldReceive('update')
             ->with($this->qaContext, Answer::BILATERAL_STANDARD_ONLY)
             ->once()
             ->globally()
@@ -91,7 +91,7 @@ class StandardAndCabotageAnswerSaverTest extends MockeryTestCase
             ->with($this->applicationStep, $this->postData, 'yesContent')
             ->andReturn($answerValue);
 
-        $this->genericAnswerWriter->shouldReceive('write')
+        $this->standardAndCabotageUpdater->shouldReceive('update')
             ->with($this->qaContext, $answerValue)
             ->once()
             ->globally()
