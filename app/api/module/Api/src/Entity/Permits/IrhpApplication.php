@@ -2546,6 +2546,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function isOngoing()
     {
-        return $this->isNotYetSubmitted() || $this->isUnderConsideration();
+        return $this->isNotYetSubmitted() || $this->isUnderConsideration() || $this->isAwaitingFee();
     }
 }

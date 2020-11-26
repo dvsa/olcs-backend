@@ -6335,7 +6335,7 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpIsOngoing
      */
-    public function testIsOngoing($isNotYetSubmitted, $isUnderConsideration, $expected)
+    public function testIsOngoing($isNotYetSubmitted, $isUnderConsideration, $isAwaitingFee, $expected)
     {
         $entity = m::mock(Entity::class)->makePartial();
         $entity->shouldReceive('isNotYetSubmitted')
@@ -6344,6 +6344,9 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->shouldReceive('isUnderConsideration')
             ->withNoArgs()
             ->andReturn($isUnderConsideration);
+        $entity->shouldReceive('isAwaitingFee')
+            ->withNoArgs()
+            ->andReturn($isAwaitingFee);
 
         $this->assertEquals(
             $expected,
@@ -6354,10 +6357,10 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpIsOngoing()
     {
         return [
-            [true, true, true],
-            [true, false, true],
-            [false, true, true],
-            [false, false, false],
+            [false, false, false, false],
+            [false, false, true, true],
+            [false, true, false, true],
+            [true, false, false, true],
         ];
     }
 }
