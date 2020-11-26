@@ -49,6 +49,7 @@ class EndIrhpApplicationsAndPermits extends AbstractCommandHandler implements Tr
                     );
                     break;
                 case IrhpInterface::STATUS_UNDER_CONSIDERATION:
+                case IrhpInterface::STATUS_AWAITING_FEE:
                     $this->result->merge(
                         $this->handleSideEffect(
                             Withdraw::create(
