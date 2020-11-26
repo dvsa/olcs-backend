@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ExpireAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ProcessContinuationNotSought as Command;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
@@ -109,6 +110,12 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             PublicationLicenceCmd::class,
+            ['id' => $licenceId],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
             ['id' => $licenceId],
             new Result()
         );
@@ -222,6 +229,12 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             PublicationLicenceCmd::class,
+            ['id' => $licenceId],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            EndIrhpApplicationsAndPermits::class,
             ['id' => $licenceId],
             new Result()
         );
