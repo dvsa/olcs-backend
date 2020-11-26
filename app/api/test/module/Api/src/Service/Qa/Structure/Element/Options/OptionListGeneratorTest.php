@@ -72,9 +72,7 @@ class OptionListGeneratorTest extends MockeryTestCase
 
         $this->directSource->shouldReceive('populateOptionList')
             ->with($optionList, $sourceOptions)
-            ->once()
-            ->globally()
-            ->ordered();
+            ->once();
 
         $this->assertEquals(
             $optionList,

@@ -103,14 +103,14 @@ class InitialiseScopeTest extends CommandHandlerTestCase
         $candidatePermit1->shouldReceive('applyRandomizedScore')
             ->with($deviationData, $candidatePermit1LicNo)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('saveOnFlush')
             ->with($candidatePermit1)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $candidatePermit2 = m::mock(IrhpCandidatePermit::class);
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('fetchById')
@@ -124,8 +124,8 @@ class InitialiseScopeTest extends CommandHandlerTestCase
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('saveOnFlush')
             ->with($candidatePermit2)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $candidatePermit3 = m::mock(IrhpCandidatePermit::class);
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('fetchById')
@@ -138,19 +138,19 @@ class InitialiseScopeTest extends CommandHandlerTestCase
         $candidatePermit3->shouldReceive('applyRandomizedScore')
             ->with($deviationData, $candidatePermit3LicNo)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('saveOnFlush')
             ->with($candidatePermit3)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('flushAll')
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand(
             InitialiseScopeCommand::create(['stockId' => $stockId])
@@ -249,14 +249,14 @@ class InitialiseScopeTest extends CommandHandlerTestCase
         $candidatePermit1->shouldReceive('applyRandomizedScore')
             ->with($deviationDataWithMeanDeviationOverride, $candidatePermit1LicNo)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('saveOnFlush')
             ->with($candidatePermit1)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $candidatePermit2 = m::mock(IrhpCandidatePermit::class);
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('fetchById')
@@ -270,8 +270,8 @@ class InitialiseScopeTest extends CommandHandlerTestCase
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('saveOnFlush')
             ->with($candidatePermit2)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $candidatePermit3 = m::mock(IrhpCandidatePermit::class);
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('fetchById')
@@ -284,19 +284,19 @@ class InitialiseScopeTest extends CommandHandlerTestCase
         $candidatePermit3->shouldReceive('applyRandomizedScore')
             ->with($deviationDataWithMeanDeviationOverride, $candidatePermit3LicNo)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('saveOnFlush')
             ->with($candidatePermit3)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('flushAll')
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand(
             InitialiseScopeCommand::create(

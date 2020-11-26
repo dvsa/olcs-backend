@@ -69,15 +69,15 @@ class RunScoringTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn($irhpPermitStock);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $irhpPermitStock->shouldReceive('statusAllowsRunScoring')
             ->andReturn(true);
@@ -103,14 +103,14 @@ class RunScoringTest extends CommandHandlerTestCase
         $irhpPermitStock->shouldReceive('proceedToScoringInProgress')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_SCORING_IN_PROGRESS])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('save')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $initialiseScopeResult = new Result();
         $initialiseScopeResult->addMessage('InitialiseScope output');
@@ -179,14 +179,14 @@ class RunScoringTest extends CommandHandlerTestCase
         $irhpPermitStock->shouldReceive('proceedToScoringSuccessful')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_SCORING_SUCCESSFUL])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('save')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand($command);
 
@@ -234,14 +234,14 @@ class RunScoringTest extends CommandHandlerTestCase
         $irhpPermitStock->shouldReceive('proceedToScoringPrerequisiteFail')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_SCORING_PREREQUISITE_FAIL])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('save')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand($command);
 
@@ -290,14 +290,14 @@ class RunScoringTest extends CommandHandlerTestCase
         $irhpPermitStock->shouldReceive('proceedToScoringPrerequisiteFail')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_SCORING_PREREQUISITE_FAIL])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('save')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand($command);
 

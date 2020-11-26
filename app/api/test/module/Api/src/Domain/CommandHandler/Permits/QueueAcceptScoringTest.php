@@ -58,8 +58,8 @@ class QueueAcceptScoringTest extends CommandHandlerTestCase
         $stock->shouldReceive('proceedToAcceptPending')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_PENDING])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
@@ -68,8 +68,8 @@ class QueueAcceptScoringTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']->shouldReceive('save')
             ->with($stock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand($command);
 

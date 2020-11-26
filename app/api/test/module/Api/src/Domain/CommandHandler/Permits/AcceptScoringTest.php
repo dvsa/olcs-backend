@@ -107,27 +107,27 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn($irhpPermitStock);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $irhpPermitStock->shouldReceive('proceedToAcceptInProgress')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_IN_PROGRESS])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('save')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $manualNotificationApplicationId = 1;
         $manualNotificationApplicationLicenceId = 2;
@@ -144,13 +144,13 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $manualNotificationApplication->shouldReceive('proceedToAwaitingFee')
             ->with($this->refData[IrhpInterface::STATUS_AWAITING_FEE])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
         $this->repoMap['IrhpApplication']->shouldReceive('save')
             ->with($manualNotificationApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $checkedSuccessfulApplicationId = 2;
         $checkedSuccessfulApplicationLicenceId = 30;
@@ -167,14 +167,14 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $checkedSuccessfulApplication->shouldReceive('proceedToAwaitingFee')
             ->with($this->refData[IrhpInterface::STATUS_AWAITING_FEE])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpApplication']->shouldReceive('save')
             ->with($checkedSuccessfulApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $uncheckedSuccessfulApplicationId = 52;
         $uncheckedSuccessfulApplicationLicenceId = 80;
@@ -203,13 +203,13 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $checkedPartSuccessfulApplication->shouldReceive('proceedToAwaitingFee')
             ->with($this->refData[IrhpInterface::STATUS_AWAITING_FEE])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
         $this->repoMap['IrhpApplication']->shouldReceive('save')
             ->with($checkedPartSuccessfulApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $uncheckedPartSuccessfulApplicationId = 53;
         $uncheckedPartSuccessfulApplicationLicenceId = 81;
@@ -236,13 +236,13 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $checkedUnsuccessfulApplication->shouldReceive('proceedToUnsuccessful')
             ->with($this->refData[IrhpInterface::STATUS_UNSUCCESSFUL])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
         $this->repoMap['IrhpApplication']->shouldReceive('save')
             ->with($checkedUnsuccessfulApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $uncheckedUnsuccessfulApplicationId = 54;
         $uncheckedUnsuccessfulApplication = $this->getIrhpApplicationMock(
@@ -257,13 +257,13 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $uncheckedUnsuccessfulApplication->shouldReceive('proceedToUnsuccessful')
             ->with($this->refData[IrhpInterface::STATUS_UNSUCCESSFUL])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
         $this->repoMap['IrhpApplication']->shouldReceive('save')
             ->with($uncheckedUnsuccessfulApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->sut->shouldReceive('handleQuery')->once()
             ->with(m::type(CheckAcceptScoringAndPostScoringReportPrerequisites::class))
@@ -289,14 +289,14 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $irhpPermitStock->shouldReceive('proceedToAcceptSuccessful')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_SUCCESSFUL])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('save')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($manualNotificationApplicationId)
@@ -510,27 +510,27 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn($irhpPermitStock);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $irhpPermitStock->shouldReceive('proceedToAcceptPrerequisiteFail')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_PREREQUISITE_FAIL])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('save')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand($command);
 
@@ -555,27 +555,27 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn($irhpPermitStock);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $irhpPermitStock->shouldReceive('proceedToAcceptPrerequisiteFail')
             ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_PREREQUISITE_FAIL])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('save')
             ->with($irhpPermitStock)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->sut->shouldReceive('handleQuery')
             ->with(m::type(CheckAcceptScoringAndPostScoringReportPrerequisites::class))
