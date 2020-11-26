@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEcmtApsgIssued as SendEcmtApsg
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 
 /**
- * Test the permit app APSG issued email
+ * Test the ECMT Annual APSG issued email
  */
 class SendEcmtApsgIssuedTest extends AbstractEcmtAnnualPermitTest
 {
