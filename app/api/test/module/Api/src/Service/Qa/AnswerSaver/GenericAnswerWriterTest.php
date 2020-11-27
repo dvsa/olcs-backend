@@ -99,13 +99,13 @@ class GenericAnswerWriterTest extends MockeryTestCase
         $this->answer->shouldReceive('setValue')
             ->with($expectedType, $this->answerValue)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
         $this->answerRepo->shouldReceive('save')
             ->with($this->answer)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->question->shouldReceive('getQuestionType')
             ->andReturn($questionType);
@@ -140,14 +140,14 @@ class GenericAnswerWriterTest extends MockeryTestCase
         $this->answer->shouldReceive('setValue')
             ->with($expectedType, $this->answerValue)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->answerRepo->shouldReceive('save')
             ->with($this->answer)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->answerFactory->shouldReceive('create')
             ->with($questionText, $this->qaEntity)

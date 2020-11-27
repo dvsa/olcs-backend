@@ -68,8 +68,8 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
         $formControlStrategy1->shouldReceive('saveFormData')
             ->with($qaContext1, $postData)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $supplementedApplicationStep1 = m::mock(SupplementedApplicationStep::class);
         $supplementedApplicationStep1->shouldReceive('getFormControlStrategy')
@@ -89,8 +89,8 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
         $formControlStrategy2->shouldReceive('saveFormData')
             ->with($qaContext2, $postData)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $supplementedApplicationStep2 = m::mock(SupplementedApplicationStep::class);
         $supplementedApplicationStep2->shouldReceive('getFormControlStrategy')

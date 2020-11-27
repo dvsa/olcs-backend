@@ -73,8 +73,8 @@ class UpdateTemplateSourceTest extends CommandHandlerTestCase
         $template->shouldReceive('setSource')
             ->once()
             ->with($source)
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['Template']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -83,8 +83,8 @@ class UpdateTemplateSourceTest extends CommandHandlerTestCase
         $this->repoMap['Template']->shouldReceive('save')
             ->with($template)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand($command);
 

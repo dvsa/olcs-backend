@@ -76,42 +76,42 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
         $this->connection->shouldReceive('beginTransaction')
             ->withNoArgs()
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->irhpPermitRangeRepo->shouldReceive('getCombinedRangeSize')
             ->with($irhpPermitStockId, $emissionsCategoryId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn(40);
 
         $this->irhpPermitStockRepo->shouldReceive('fetchById')
             ->with($irhpPermitStockId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn($irhpPermitStock);
 
         $this->irhpPermitApplicationRepo->shouldReceive('getRequiredPermitCountWhereApplicationAwaitingPayment')
             ->with($irhpPermitStockId, $emissionsCategoryId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn(8);
 
         $this->irhpPermitRepo->shouldReceive('getPermitCount')
             ->with($irhpPermitStockId, $emissionsCategoryId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn(14);
 
         $this->connection->shouldReceive('commit')
             ->withNoArgs()
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->assertEquals(
             18,
@@ -135,42 +135,42 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
         $this->connection->shouldReceive('beginTransaction')
             ->withNoArgs()
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->irhpPermitRangeRepo->shouldReceive('getCombinedRangeSize')
             ->with($irhpPermitStockId, $emissionsCategoryId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn(40);
 
         $this->irhpPermitStockRepo->shouldReceive('fetchById')
             ->with($irhpPermitStockId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn($irhpPermitStock);
 
         $this->irhpCandidatePermitRepo->shouldReceive('fetchCountInStockWhereApplicationAwaitingFee')
             ->with($irhpPermitStockId, $emissionsCategoryId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn(10);
 
         $this->irhpPermitRepo->shouldReceive('getPermitCount')
             ->with($irhpPermitStockId, $emissionsCategoryId)
             ->once()
-            ->ordered()
             ->globally()
+            ->ordered()
             ->andReturn(14);
 
         $this->connection->shouldReceive('commit')
             ->withNoArgs()
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->assertEquals(
             16,
@@ -190,8 +190,8 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
         $this->connection->shouldReceive('beginTransaction')
             ->withNoArgs()
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->irhpPermitRangeRepo->shouldReceive('getCombinedRangeSize')
             ->with($irhpPermitStockId, $emissionsCategoryId)
@@ -200,8 +200,8 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
         $this->connection->shouldReceive('commit')
             ->withNoArgs()
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->assertEquals(
             0,

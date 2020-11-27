@@ -137,14 +137,14 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             $irhpCandidatePermit->shouldReceive('applyRange')
                 ->with($selectedIrhpPermitRange)
                 ->once()
-                ->ordered()
-                ->globally();
+                ->globally()
+                ->ordered();
 
             $this->repoMap['IrhpCandidatePermit']->shouldReceive('saveOnFlush')
                 ->with($irhpCandidatePermit)
                 ->once()
-                ->ordered()
-                ->globally();
+                ->globally()
+                ->ordered();
 
             $irhpCandidatePermits[] = $irhpCandidatePermit;
         }
@@ -155,8 +155,8 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('flushAll')
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $expectedMessages = [
             '  - processing candidate permit 1 with randomised score 0.99',

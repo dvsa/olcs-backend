@@ -48,22 +48,22 @@ class SuccessfulCandidatePermitsWriterTest extends MockeryTestCase
         $candidatePermit1Entity->shouldReceive('markAsSuccessful')
             ->with($euro6RefData)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $candidatePermit2Entity = m::mock(IrhpCandidatePermit::class);
         $candidatePermit2Entity->shouldReceive('markAsSuccessful')
             ->with($euro5RefData)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $candidatePermit3Entity = m::mock(IrhpCandidatePermit::class);
         $candidatePermit3Entity->shouldReceive('markAsSuccessful')
             ->with($euro6RefData)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $irhpCandidatePermitRepo = m::mock(IrhpCandidatePermitRepository::class);
         $irhpCandidatePermitRepo->shouldReceive('fetchById')
@@ -83,8 +83,8 @@ class SuccessfulCandidatePermitsWriterTest extends MockeryTestCase
             ->andReturn($euro6RefData);
         $irhpCandidatePermitRepo->shouldReceive('flushAll')
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $successfulCandidatePermitsWriter = new SuccessfulCandidatePermitsWriter($irhpCandidatePermitRepo);
         $successfulCandidatePermitsWriter->write($candidatePermits);
