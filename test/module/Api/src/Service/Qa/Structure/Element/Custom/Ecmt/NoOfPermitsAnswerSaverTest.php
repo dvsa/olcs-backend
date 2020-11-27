@@ -40,13 +40,13 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
         $irhpPermitApplication->shouldReceive('getTotalEmissionsCategoryPermitsRequired')
             ->once()
             ->andReturn($oldTotal)
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
         $irhpPermitApplication->shouldReceive('updateEmissionsCategoryPermitsRequired')
             ->with($euro5Answer, $euro6Answer)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
         $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
@@ -69,8 +69,8 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
         $irhpPermitApplicationRepo->shouldReceive('save')
             ->with($irhpPermitApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $noOfPermitsAnswerFetcher = m::mock(NoOfPermitsAnswerFetcher::class);
         $noOfPermitsAnswerFetcher->shouldReceive('fetch')

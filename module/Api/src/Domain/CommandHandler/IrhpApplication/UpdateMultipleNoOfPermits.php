@@ -61,9 +61,6 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements Transa
 
             if ($maxPermits > 0) {
                 switch ($irhpApplicationTypeId) {
-                    case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
-                        $permitsRequired = $this->deriveBilateralPermitsRequired($row, $permitsRequiredData);
-                        break;
                     case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
                         $permitsRequired = $this->deriveMultilateralPermitsRequired($row, $permitsRequiredData);
                         break;
@@ -112,31 +109,6 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements Transa
         );
 
         return $this->result;
-    }
-
-    /**
-     * Retrieve the number of permits required from the bilateral form data array
-     *
-     * @param array $row
-     * @param array $permitsRequiredData
-     *
-     * @return int
-     *
-     * @throws RuntimeException
-     */
-    private function deriveBilateralPermitsRequired(array $row, array $permitsRequiredData)
-    {
-        $validToTimestamp = strtotime($row['validTo']);
-        $countryId = $row['countryId'];
-        $year = date('Y', $validToTimestamp);
-
-        if (isset($permitsRequiredData[$countryId][$year]) && is_numeric($permitsRequiredData[$countryId][$year])) {
-            return intval($permitsRequiredData[$countryId][$year]);
-        }
-
-        throw new RuntimeException(
-            sprintf('Missing data or incorrect type for country %s in year %s', $countryId, $year)
-        );
     }
 
     /**

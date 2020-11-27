@@ -44,14 +44,14 @@ abstract class AbstractCallEntityMethodTest extends CommandHandlerTestCase
         $entity->shouldReceive($this->entityMethodName)
             ->withNoArgs()
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap[$this->repoServiceName]->shouldReceive('save')
             ->with($entity)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand($command);
 

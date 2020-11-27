@@ -23,8 +23,8 @@ class NoOfPermitsAnswerClearerTest extends MockeryTestCase
         $irhpPermitApplication->shouldReceive('clearEmissionsCategoryPermitsRequired')
             ->once()
             ->withNoArgs()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
         $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
@@ -40,8 +40,8 @@ class NoOfPermitsAnswerClearerTest extends MockeryTestCase
         $irhpPermitApplicationRepo->shouldReceive('save')
             ->with($irhpPermitApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $noOfPermitsAnswerClearer = new NoOfPermitsAnswerClearer($irhpPermitApplicationRepo);
 
