@@ -29,7 +29,7 @@ class GetDistinctListTest extends QueryHandlerTestCase
         $feeTypes = [$item1, $item2];
 
         $this->repoMap['FeeType']
-            ->shouldReceive('fetchDistinctFeeTypes')
+            ->shouldReceive('fetchDistinctFeeTypesVisibleInInternal')
             ->withNoArgs()
             ->once()
             ->andReturn($feeTypes);

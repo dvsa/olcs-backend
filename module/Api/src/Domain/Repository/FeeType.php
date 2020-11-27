@@ -243,6 +243,8 @@ class FeeType extends AbstractRepository
 
         if (method_exists($query, 'getIsFeeRateAdmin')) {
             $qb->andWhere($qb->expr()->isNotNull('ft.goodsOrPsv'));
+            $qb->andWhere($this->alias.'.isVisibleInInternal = :isVisibleInInternal')
+                ->setParameter('isVisibleInInternal', 1);
             $qb->addOrderBy('ft.id', 'ASC');
         } else {
             $qb->andWhere(
@@ -368,11 +370,11 @@ class FeeType extends AbstractRepository
     }
 
     /**
-     * Returns distinct Fee Type string IDs
+     * Returns distinct Fee Type string IDs that are visible in the internal fee admin
      *
      * @return mixed
      */
-    public function fetchDistinctFeeTypes()
+    public function fetchDistinctFeeTypesVisibleInInternal()
     {
         $qb = $this->createQueryBuilder();
 
@@ -380,7 +382,9 @@ class FeeType extends AbstractRepository
 
         $qb->distinct()
             ->select(['ftft.id'])
-            ->orderBy('ftft.id', 'ASC');
+            ->orderBy('ftft.id', 'ASC')
+            ->where($this->alias . '.isVisibleInInternal = :isVisibleInInternal')
+            ->setParameter('isVisibleInInternal', 1);
 
         $result = $qb->getQuery()->getResult();
 
