@@ -187,6 +187,18 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     protected $isNi = 0;
 
     /**
+     * Is visible in internal
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="is_visible_in_internal",
+     *     nullable=false,
+     *     options={"default": 1})
+     */
+    protected $isVisibleInInternal = 1;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -623,6 +635,30 @@ abstract class AbstractFeeType implements BundleSerializableInterface, JsonSeria
     public function getIsNi()
     {
         return $this->isNi;
+    }
+
+    /**
+     * Set the is visible in internal
+     *
+     * @param boolean $isVisibleInInternal new value being set
+     *
+     * @return FeeType
+     */
+    public function setIsVisibleInInternal($isVisibleInInternal)
+    {
+        $this->isVisibleInInternal = $isVisibleInInternal;
+
+        return $this;
+    }
+
+    /**
+     * Get the is visible in internal
+     *
+     * @return boolean
+     */
+    public function getIsVisibleInInternal()
+    {
+        return $this->isVisibleInInternal;
     }
 
     /**

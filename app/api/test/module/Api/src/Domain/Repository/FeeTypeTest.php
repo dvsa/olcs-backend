@@ -302,9 +302,6 @@ class FeeTypeTest extends RepositoryTestCase
 
     public function testFetchListForGoodsOrPsv()
     {
-        $now = new DateTime();
-        $expectedDate = $now->format(DateTime::W3C);
-
         $qb = $this->createMockQb('QUERY');
 
         $this->mockCreateQueryBuilder($qb);
@@ -337,6 +334,7 @@ class FeeTypeTest extends RepositoryTestCase
         $expectedQuery = 'QUERY'
             . ' AND ft.goodsOrPsv = [[lcat_gv]]'
             . ' AND ft.goodsOrPsv IS NOT NULL'
+            . ' AND ft.isVisibleInInternal = [[1]]'
             . ' ORDER BY ft.id ASC';
 
         $this->assertEquals($expectedQuery, $this->query);
@@ -344,9 +342,6 @@ class FeeTypeTest extends RepositoryTestCase
 
     public function testFetchListForFeeType()
     {
-        $now = new DateTime();
-        $expectedDate = $now->format(DateTime::W3C);
-
         $qb = $this->createMockQb('QUERY');
 
         $this->mockCreateQueryBuilder($qb);
@@ -379,6 +374,7 @@ class FeeTypeTest extends RepositoryTestCase
         $expectedQuery = 'QUERY'
             . ' AND ft.feeType = [[ANN]]'
             . ' AND ft.goodsOrPsv IS NOT NULL'
+            . ' AND ft.isVisibleInInternal = [[1]]'
             . ' ORDER BY ft.id ASC';
 
         $this->assertEquals($expectedQuery, $this->query);
@@ -428,7 +424,7 @@ class FeeTypeTest extends RepositoryTestCase
         $this->sut->getLatestIrfoFeeType($irfoEntity, $feeTypeFeeType);
     }
 
-    public function testFetchDistinctFeeTypes()
+    public function testFetchDistinctFeeTypesVisibleInInternal()
     {
         $qb = m::mock(QueryBuilder::class);
         $repo = m::mock(FeeType::class)->shouldAllowMockingProtectedMethods();
@@ -450,8 +446,13 @@ class FeeTypeTest extends RepositoryTestCase
         $qb->shouldReceive('distinct')->once()->andReturnSelf();
         $qb->shouldReceive('select')->once()->with(['ftft.id'])->andReturnSelf();
         $qb->shouldReceive('orderBy')->once()->with('ftft.id', 'ASC')->andReturnSelf();
+        $qb->shouldReceive('where')
+           ->once()
+           ->with('ft.isVisibleInInternal = :isVisibleInInternal')
+           ->andReturnSelf();
+        $qb->shouldReceive('setParameter')->once()->with('isVisibleInInternal', 1)->andReturnSelf();
         $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
 
-        $this->assertSame(['RESULTS'], $this->sut->fetchDistinctFeeTypes());
+        $this->assertSame(['RESULTS'], $this->sut->fetchDistinctFeeTypesVisibleInInternal());
     }
 }
