@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Repository\FeeType;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Get a list of distinct FeeTypes
+ * Get a list of distinct FeeTypes visible within internal fee admin
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
@@ -21,8 +21,7 @@ class GetDistinctList extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         return [
-            'results' =>
-                $repo->fetchDistinctFeeTypes()
+            'results' => $repo->fetchDistinctFeeTypesVisibleInInternal()
         ];
     }
 }
