@@ -350,6 +350,7 @@ class AlignEntitiesToSchema
         );
 
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_EXPECTED_DELETES"');
+        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_EXPECTED_NULLS"');
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_TABLE_COUNTS"');
     }
 
