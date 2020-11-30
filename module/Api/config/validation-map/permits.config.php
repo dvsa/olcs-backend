@@ -22,6 +22,7 @@ return [
     QueryHandler\IrhpApplication\FeePerPermit::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\ApplicationStep::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\ApplicationPath::class => Permits\CanAccessIrhpApplicationWithId::class,
+    QueryHandler\IrhpApplication\Documents::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\PermitsAvailable::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\PermitsAvailableByYear::class => NotIsAnonymousUser::class,
     QueryHandler\IrhpApplication\AnswersSummary::class => Permits\CanAccessIrhpApplicationWithId::class,

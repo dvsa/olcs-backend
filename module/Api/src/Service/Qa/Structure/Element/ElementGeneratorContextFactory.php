@@ -12,11 +12,12 @@ class ElementGeneratorContextFactory
      *
      * @param ValidatorList $validatorList
      * @param QaContext $qaContext
+     * @param string $elementContainer
      *
      * @return ElementGeneratorContext
      */
-    public function create(ValidatorList $validatorList, QaContext $qaContext)
+    public function create(ValidatorList $validatorList, QaContext $qaContext, $elementContainer)
     {
-        return new ElementGeneratorContext($validatorList, $qaContext);
+        return new ElementGeneratorContext($validatorList, $qaContext, $elementContainer);
     }
 }

@@ -21,6 +21,8 @@ class ElementGeneratorContextGeneratorTest extends MockeryTestCase
 {
     public function testGenerate()
     {
+        $elementContainer = 'element-container';
+
         $applicationStep = m::mock(ApplicationStep::class);
 
         $qaContext = m::mock(QaContext::class);
@@ -40,7 +42,7 @@ class ElementGeneratorContextGeneratorTest extends MockeryTestCase
 
         $elementGeneratorContextFactory = m::mock(ElementGeneratorContextFactory::class);
         $elementGeneratorContextFactory->shouldReceive('create')
-            ->with($validatorList, $qaContext)
+            ->with($validatorList, $qaContext, $elementContainer)
             ->once()
             ->andReturn($elementGeneratorContext);
 
@@ -51,7 +53,7 @@ class ElementGeneratorContextGeneratorTest extends MockeryTestCase
 
         $this->assertSame(
             $elementGeneratorContext,
-            $elementGeneratorContextGenerator->generate($qaContext)
+            $elementGeneratorContextGenerator->generate($qaContext, $elementContainer)
         );
     }
 }

@@ -649,6 +649,7 @@ return [
     TransferQuery\IrhpApplication\FeePerPermit::class => QueryHandler\IrhpApplication\FeePerPermit::class,
     TransferQuery\IrhpApplication\ApplicationStep::class => QueryHandler\IrhpApplication\ApplicationStep::class,
     TransferQuery\IrhpApplication\ApplicationPath::class => QueryHandler\IrhpApplication\ApplicationPath::class,
+    TransferQuery\IrhpApplication\Documents::class => QueryHandler\IrhpApplication\Documents::class,
     TransferQuery\IrhpApplication\ApplicationPathGroupList::class => QueryHandler\IrhpApplication\ApplicationPathGroupList::class,
     TransferQuery\IrhpApplication\AnswersSummary::class => QueryHandler\IrhpApplication\AnswersSummary::class,
     TransferQuery\IrhpApplication\PermitsAvailable::class => QueryHandler\IrhpApplication\PermitsAvailable::class,

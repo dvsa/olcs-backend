@@ -40,15 +40,16 @@ class ApplicationStepGenerator
      * Build and return an ApplicationStep instance using the appropriate data sources
      *
      * @param QaContext $qaContext
+     * @param string $elementContainer
      *
      * @return ApplicationStep
      */
-    public function generate(QaContext $qaContext)
+    public function generate(QaContext $qaContext, $elementContainer)
     {
         $applicationStepEntity = $qaContext->getApplicationStepEntity();
 
         $formControlStrategy = $this->formControlServiceManager->getByApplicationStep($applicationStepEntity);
-        $elementGeneratorContext = $this->elementGeneratorContextGenerator->generate($qaContext);
+        $elementGeneratorContext = $this->elementGeneratorContextGenerator->generate($qaContext, $elementContainer);
         $element = $formControlStrategy->getElement($elementGeneratorContext);
         $question = $applicationStepEntity->getQuestion();
 

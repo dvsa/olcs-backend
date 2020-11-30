@@ -52,7 +52,7 @@ class FormFragmentGenerator
             $qaContext = $this->qaContextFactory->create($applicationStepEntity, $irhpApplicationEntity);
 
             $formFragment->addApplicationStep(
-                $this->applicationStepGenerator->generate($qaContext)
+                $this->applicationStepGenerator->generate($qaContext, ElementContainer::FORM_FRAGMENT)
             );
         }
 

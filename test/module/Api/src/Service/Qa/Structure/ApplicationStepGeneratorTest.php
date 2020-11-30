@@ -30,6 +30,7 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
         $questionShortKey = 'Cabotage';
         $questionId = 47;
         $questionSlug = 'question-slug';
+        $elementContainer = 'element-container';
 
         $question = m::mock(Question::class);
         $question->shouldReceive('getId')
@@ -81,7 +82,7 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
 
         $elementGeneratorContextGenerator = m::mock(ElementGeneratorContextGenerator::class);
         $elementGeneratorContextGenerator->shouldReceive('generate')
-            ->with($qaContext)
+            ->with($qaContext, $elementContainer)
             ->andReturn($elementGeneratorContext);
 
         $applicationStepGenerator = new ApplicationStepGenerator(
@@ -92,7 +93,7 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
 
         $this->assertSame(
             $applicationStep,
-            $applicationStepGenerator->generate($qaContext)
+            $applicationStepGenerator->generate($qaContext, $elementContainer)
         );
     }
 }
