@@ -186,7 +186,11 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication",
+     *     fetch="LAZY",
+     *     inversedBy="documents"
+     * )
      * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
      */
     protected $irhpApplication;

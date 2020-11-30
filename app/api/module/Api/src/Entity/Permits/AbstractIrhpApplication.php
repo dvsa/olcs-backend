@@ -270,6 +270,15 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $answers;
 
     /**
+     * Document
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", mappedBy="irhpApplication")
+     */
+    protected $documents;
+
+    /**
      * Fee
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -330,6 +339,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     {
         $this->countrys = new ArrayCollection();
         $this->answers = new ArrayCollection();
+        $this->documents = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->irhpPermitApplications = new ArrayCollection();
         $this->irhpPermitRequests = new ArrayCollection();
@@ -937,6 +947,69 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     {
         if ($this->answers->contains($answers)) {
             $this->answers->removeElement($answers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the document
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Get the documents
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Add a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     *
+     * @return IrhpApplication
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being removed
+     *
+     * @return IrhpApplication
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->removeElement($documents);
         }
 
         return $this;

@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApp
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
 use RuntimeException;
 use Zend\View\Renderer\RendererInterface;
 
@@ -77,7 +78,10 @@ class AnswersSummaryRowGenerator
         $applicationStep = $supplementedApplicationStep->getApplicationStep();
         $qaContext = $this->qaContextFactory->create($applicationStep, $qaEntity);
         $questionText = $formControlStrategy->getQuestionText($qaContext);
-        $elementGeneratorContext = $this->elementGeneratorContextGenerator->generate($qaContext);
+        $elementGeneratorContext = $this->elementGeneratorContextGenerator->generate(
+            $qaContext,
+            ElementContainer::ANSWERS_SUMMARY
+        );
 
         $templatePath = self::TEMPLATE_DIRECTORY . $answerSummaryProvider->getTemplateName();
         $templateVariables = $answerSummaryProvider->getTemplateVariables(

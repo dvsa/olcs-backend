@@ -36,12 +36,16 @@ class ElementGeneratorContextGenerator
      *
      * @return ElementGeneratorContext
      */
-    public function generate(QaContext $qaContext)
+    public function generate(QaContext $qaContext, $elementContainer)
     {
         $validatorList = $this->validatorListGenerator->generate(
             $qaContext->getApplicationStepEntity()
         );
 
-        return $this->elementGeneratorContextFactory->create($validatorList, $qaContext);
+        return $this->elementGeneratorContextFactory->create(
+            $validatorList,
+            $qaContext,
+            $elementContainer
+        );
     }
 }

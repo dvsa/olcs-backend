@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
 use Dvsa\Olcs\Api\Service\Qa\Structure\FormFragment;
 use Dvsa\Olcs\Api\Service\Qa\Structure\FormFragmentFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\FormFragmentGenerator;
@@ -45,10 +46,10 @@ class FormFragmentGeneratorTest extends MockeryTestCase
 
         $applicationStepGenerator = m::mock(ApplicationStepGenerator::class);
         $applicationStepGenerator->shouldReceive('generate')
-            ->with($qaContext1)
+            ->with($qaContext1, ElementContainer::FORM_FRAGMENT)
             ->andReturn($applicationStep1);
         $applicationStepGenerator->shouldReceive('generate')
-            ->with($qaContext2)
+            ->with($qaContext2, ElementContainer::FORM_FRAGMENT)
             ->andReturn($applicationStep2);
 
         $formFragment = m::mock(FormFragment::class);
