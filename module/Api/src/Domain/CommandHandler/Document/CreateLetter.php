@@ -213,6 +213,6 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
      */
     private function resolveTemplateIdentifier(string $template): string
     {
-        return ltrim($template, ['/']);
+        return ltrim($template, "/");
     }
 }
