@@ -116,7 +116,7 @@ class CreateLetterTest extends CommandHandlerTestCase
             'licence' => static::LICENCE_ID,
             'assignedToUser' => static::USER_ID,
             'assignedByUser' => static::USER_ID,
-            'urgent' => 'Y',
+            'urgent' => 'N',
             'actionDate' => $actionDate->format('Y-m-d')
         ];
         $this->expectedSideEffect(CreateTask::class, $createTaskData, $createTaskResult);
@@ -211,7 +211,7 @@ class CreateLetterTest extends CommandHandlerTestCase
             'licence' => static::LICENCE_ID,
             'assignedToUser' => static::USER_ID,
             'assignedByUser' => static::USER_ID,
-            'urgent' => 'Y',
+            'urgent' => 'N',
             'actionDate' => $actionDate->format('Y-m-d')
         ];
         $this->expectedSideEffect(CreateTask::class, $createTaskData, $createTaskResult);
