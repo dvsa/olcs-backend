@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Command\IrhpPermit\GenerateCoverLetterDocument;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermit\GeneratePermitDocument;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -62,7 +63,27 @@ final class GeneratePermitDocuments extends AbstractCommandHandler
     {
         $irhpPermitApplication = $irhpPermit->getIrhpPermitApplication();
 
-        $irhpPermitType = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getIrhpPermitType();
+        $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
+        $irhpPermitType = $irhpPermitStock->getIrhpPermitType();
+
+        if ($irhpPermitType->isBilateral()
+            && in_array(
+                $irhpPermitStock->getCountry()->getId(),
+                [
+                    CountryEntity::ID_BELARUS,
+                    CountryEntity::ID_GEORGIA,
+                    CountryEntity::ID_KAZAKHSTAN,
+                    CountryEntity::ID_MOROCCO,
+                    CountryEntity::ID_RUSSIA,
+                    CountryEntity::ID_TUNISIA,
+                    CountryEntity::ID_TURKEY,
+                    CountryEntity::ID_UKRAINE,
+                ]
+            )
+        ) {
+            // don't print cover letter for some countries
+            return;
+        }
 
         if ($irhpPermitType->isBilateral() || $irhpPermitType->isMultilateral() || $irhpPermitType->isEcmtShortTerm()
             || $irhpPermitType->isEcmtRemoval()
