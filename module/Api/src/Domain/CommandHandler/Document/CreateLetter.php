@@ -144,7 +144,7 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
             'licence' => $licenceId,
             'assignedToUser' => $currentUser,
             'assignedByUser' => $currentUser,
-            'urgent' => 'Y',
+            'urgent' => 'N',
             'actionDate' => $actionDate->format('Y-m-d')
         ]);
     }
@@ -188,7 +188,7 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
             'licence' => $licenceId,
             'assignedToUser' => $currentUser,
             'assignedByUser' => $currentUser,
-            'urgent' => 'Y',
+            'urgent' => 'N',
             'actionDate' => $actionDate->format('Y-m-d')
         ]);
     }
