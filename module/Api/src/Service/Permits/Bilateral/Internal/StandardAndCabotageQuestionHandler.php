@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\StandardAndCabotageUpdater;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class StandardAndCabotageQuestionHandler implements QuestionHandlerInterface
@@ -15,26 +15,26 @@ class StandardAndCabotageQuestionHandler implements QuestionHandlerInterface
     /** @var BilateralRequiredGenerator */
     private $bilateralRequiredGenerator;
 
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
+    /** @var StandardAndCabotageUpdater */
+    private $standardAndCabotageUpdater;
 
     /**
      * Create service instance
      *
      * @param PermitUsageSelectionGenerator $permitUsageSelectionGenerator
      * @param BilateralRequiredGenerator $bilateralRequiredGenerator
-     * @param GenericAnswerWriter $genericAnswerWriter
+     * @param StandardAndCabotageUpdater $standardAndCabotageUpdater
      *
      * @return StandardAndCabotageQuestionHandler
      */
     public function __construct(
         PermitUsageSelectionGenerator $permitUsageSelectionGenerator,
         BilateralRequiredGenerator $bilateralRequiredGenerator,
-        GenericAnswerWriter $genericAnswerWriter
+        StandardAndCabotageUpdater $standardAndCabotageUpdater
     ) {
         $this->permitUsageSelectionGenerator = $permitUsageSelectionGenerator;
         $this->bilateralRequiredGenerator = $bilateralRequiredGenerator;
-        $this->genericAnswerWriter = $genericAnswerWriter;
+        $this->standardAndCabotageUpdater = $standardAndCabotageUpdater;
     }
 
     /**
@@ -56,6 +56,6 @@ class StandardAndCabotageQuestionHandler implements QuestionHandlerInterface
             $answer = Answer::BILATERAL_CABOTAGE_ONLY;
         }
 
-        $this->genericAnswerWriter->write($qaContext, $answer);
+        $this->standardAndCabotageUpdater->update($qaContext, $answer);
     }
 }

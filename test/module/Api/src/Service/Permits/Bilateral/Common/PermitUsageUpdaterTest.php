@@ -2,9 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\Bilateral\Common;
 
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\ModifiedAnswerUpdater;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\PermitUsageUpdater;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -16,70 +15,22 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class PermitUsageUpdaterTest extends MockeryTestCase
 {
-    private $qaContext;
-
-    private $genericAnswerWriter;
-
-    private $applicationAnswersClearer;
-
-    private $permitUsageUpdater;
-
-    public function setUp(): void
+    public function testUpdate()
     {
-        $this->qaContext = m::mock(QaContext::class);
+        $oldPermitUsage = 'old_permit_usage_selection';
+        $newPermitUsage = 'new_permit_usage_selection';
 
-        $this->genericAnswerWriter = m::mock(GenericAnswerWriter::class);
-
-        $this->applicationAnswersClearer = m::mock(ApplicationAnswersClearer::class);
-
-        $this->permitUsageUpdater = new PermitUsageUpdater(
-            $this->genericAnswerWriter,
-            $this->applicationAnswersClearer
-        );
-    }
-
-    public function testUpdateAnswerChanged()
-    {
-        $newAnswer = 'new_answer';
-
-        $this->qaContext->shouldReceive('getQaEntity->getBilateralPermitUsageSelection')
+        $qaContext = m::mock(QaContext::class);
+        $qaContext->shouldReceive('getQaEntity->getBilateralPermitUsageSelection')
             ->withNoArgs()
-            ->andReturn('old_answer');
+            ->andReturn($oldPermitUsage);
 
-        $this->applicationAnswersClearer->shouldReceive('clearAfterApplicationStep')
-            ->with($this->qaContext)
+        $modifiedAnswerUpdater = m::mock(ModifiedAnswerUpdater::class);
+        $modifiedAnswerUpdater->shouldReceive('update')
+            ->with($qaContext, $oldPermitUsage, $newPermitUsage)
             ->once();
 
-        $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->qaContext, $newAnswer)
-            ->once();
-
-        $this->permitUsageUpdater->update($this->qaContext, $newAnswer);
-    }
-
-    /**
-     * @dataProvider dpUpdateOldAnswerNullOrAnswerNotChanged
-     */
-    public function testUpdateOldAnswerNullOrAnswerNotChanged($oldAnswer)
-    {
-        $newAnswer = 'answer';
-
-        $this->qaContext->shouldReceive('getQaEntity->getBilateralPermitUsageSelection')
-            ->withNoArgs()
-            ->andReturn($oldAnswer);
-
-        $this->genericAnswerWriter->shouldReceive('write')
-            ->with($this->qaContext, $newAnswer)
-            ->once();
-
-        $this->permitUsageUpdater->update($this->qaContext, $newAnswer);
-    }
-
-    public function dpUpdateOldAnswerNullOrAnswerNotChanged()
-    {
-        return [
-            ['answer'],
-            [null],
-        ];
+        $permitUsageUpdater = new PermitUsageUpdater($modifiedAnswerUpdater);
+        $permitUsageUpdater->update($qaContext, $newPermitUsage);
     }
 }
