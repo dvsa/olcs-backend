@@ -4,10 +4,10 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\Bilateral\Internal;
 
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\StandardAndCabotageUpdater;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\BilateralRequiredGenerator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\PermitUsageSelectionGenerator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\StandardAndCabotageQuestionHandler;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -44,15 +44,15 @@ class StandardAndCabotageQuestionHandlerTest extends MockeryTestCase
             ->with($requiredPermits, $permitUsageSelection)
             ->andReturn($bilateralRequired);
 
-        $genericAnswerWriter = m::mock(GenericAnswerWriter::class);
-        $genericAnswerWriter->shouldReceive('write')
+        $standardAndCabotageUpdater = m::mock(StandardAndCabotageUpdater::class);
+        $standardAndCabotageUpdater->shouldReceive('update')
             ->with($qaContext, $expectedAnswer)
             ->once();
 
         $standardAndCabotageQuestionHandler = new StandardAndCabotageQuestionHandler(
             $permitUsageSelectionGenerator,
             $bilateralRequiredGenerator,
-            $genericAnswerWriter
+            $standardAndCabotageUpdater
         );
 
         $standardAndCabotageQuestionHandler->handle($qaContext, $requiredPermits);

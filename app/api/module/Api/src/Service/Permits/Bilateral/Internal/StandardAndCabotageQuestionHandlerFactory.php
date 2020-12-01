@@ -19,7 +19,7 @@ class StandardAndCabotageQuestionHandlerFactory implements FactoryInterface
         return new StandardAndCabotageQuestionHandler(
             $serviceLocator->get('PermitsBilateralInternalPermitUsageSelectionGenerator'),
             $serviceLocator->get('PermitsBilateralInternalBilateralRequiredGenerator'),
-            $serviceLocator->get('QaGenericAnswerWriter')
+            $serviceLocator->get('PermitsBilateralCommonStandardAndCabotageUpdater')
         );
     }
 }

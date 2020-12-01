@@ -18,7 +18,7 @@ class StandardAndCabotageAnswerSaverFactory implements FactoryInterface
     {
         return new StandardAndCabotageAnswerSaver(
             $serviceLocator->get('QaNamedAnswerFetcher'),
-            $serviceLocator->get('QaGenericAnswerWriter')
+            $serviceLocator->get('PermitsBilateralCommonStandardAndCabotageUpdater')
         );
     }
 }

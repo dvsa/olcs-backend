@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
-use Dvsa\Olcs\Api\Entity\Generic\Question;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\StandardAndCabotageUpdater;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
@@ -17,21 +16,23 @@ class StandardAndCabotageAnswerSaver implements AnswerSaverInterface
     /** @var NamedAnswerFetcher */
     private $namedAnswerFetcher;
 
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
+    /** @var StandardAndCabotageUpdater */
+    private $standardAndCabotageUpdater;
 
     /**
      * Create service instance
      *
      * @param NamedAnswerFetcher $namedAnswerFetcher
-     * @param GenericAnswerWriter $genericAnswerWriter
+     * @param StandardAndCabotageUpdater $standardAndCabotageUpdater
      *
      * @return StandardAndCabotageAnswerSaver
      */
-    public function __construct(NamedAnswerFetcher $namedAnswerFetcher, GenericAnswerWriter $genericAnswerWriter)
-    {
+    public function __construct(
+        NamedAnswerFetcher $namedAnswerFetcher,
+        StandardAndCabotageUpdater $standardAndCabotageUpdater
+    ) {
         $this->namedAnswerFetcher = $namedAnswerFetcher;
-        $this->genericAnswerWriter = $genericAnswerWriter;
+        $this->standardAndCabotageUpdater = $standardAndCabotageUpdater;
     }
 
     /**
@@ -47,15 +48,15 @@ class StandardAndCabotageAnswerSaver implements AnswerSaverInterface
             'qaElement'
         );
 
-        $answerValue = Answer::BILATERAL_STANDARD_ONLY;
+        $newAnswer = Answer::BILATERAL_STANDARD_ONLY;
         if ($cabotageRequired == 'Y') {
-            $answerValue = $this->namedAnswerFetcher->fetch(
+            $newAnswer = $this->namedAnswerFetcher->fetch(
                 $applicationStepEntity,
                 $postData,
                 'yesContent'
             );
         }
 
-        $this->genericAnswerWriter->write($qaContext, $answerValue);
+        $this->standardAndCabotageUpdater->update($qaContext, $newAnswer);
     }
 }
