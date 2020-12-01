@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Translator;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Repository\Replacement;
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
@@ -20,7 +21,7 @@ class TranslationLoaderTest extends MockeryTestCase
     /**
      * test loading translations from the cache
      */
-    public function testLoadFromCache()
+    public function testLoadTranslationsFromCache()
     {
         $locale = 'en_GB';
         $textDomain = 'default';
@@ -38,9 +39,10 @@ class TranslationLoaderTest extends MockeryTestCase
             ->with($cacheIdentifier, $locale)
             ->andReturn($messages);
 
-        $mockRepo = m::mock(TranslationKeyText::class);
+        $mockTranslationTextRepo = m::mock(TranslationKeyText::class);
+        $mockReplacementRepo = m::mock(Replacement::class);
 
-        $loader = new TranslationLoader($mockCache, $mockRepo);
+        $loader = new TranslationLoader($mockCache, $mockTranslationTextRepo, $mockReplacementRepo);
         $textDomain = $loader->load($locale, $textDomain);
 
         self::assertInstanceOf(TextDomain::class, $textDomain);
@@ -50,18 +52,11 @@ class TranslationLoaderTest extends MockeryTestCase
     /**
      * test loading translations from the database it the cache is empty
      */
-    public function testLoadFromDatabase()
+    public function testLoadTranslationsFromDatabase()
     {
         $locale = 'en_GB';
         $textDomain = 'default';
-        $actualMessages = $this->actualMessages();
         $cacheIdentifier = CacheEncryption::TRANSLATION_KEY_IDENTIFIER;
-
-        $messages = [
-            $textDomain => [
-                $locale => $actualMessages,
-            ],
-        ];
 
         $dbTranslations = $this->dbTranslations($locale);
 
@@ -69,33 +64,28 @@ class TranslationLoaderTest extends MockeryTestCase
         $mockCache->expects('getCustomItem')
             ->with($cacheIdentifier, $locale)
             ->andReturnNull();
-        $mockCache->expects('setCustomItem')->with($cacheIdentifier, $messages, $locale);
 
-        $mockRepo = m::mock(TranslationKeyText::class);
-        $mockRepo->expects('fetchAll')->with($locale, Query::HYDRATE_ARRAY)->andReturn($dbTranslations);
+        $mockTranslationTextRepo = m::mock(TranslationKeyText::class);
+        $mockTranslationTextRepo->expects('fetchAll')
+            ->with($locale, Query::HYDRATE_ARRAY)
+            ->andReturn($dbTranslations);
+        $mockReplacementRepo = m::mock(Replacement::class);
 
-        $loader = new TranslationLoader($mockCache, $mockRepo);
+        $loader = new TranslationLoader($mockCache, $mockTranslationTextRepo, $mockReplacementRepo);
         $textDomain = $loader->load($locale, $textDomain);
 
         self::assertInstanceOf(TextDomain::class, $textDomain);
-        self::assertSame($actualMessages, $textDomain->getArrayCopy());
+        self::assertSame($this->actualTranslations(), $textDomain->getArrayCopy());
     }
 
     /**
-     * test loading translations from the database when cache is down (exceptions on load/save)
+     * test loading translations from the database when cache is down (exception on cache load)
      */
-    public function testCacheExceptionsStillLoadFromDatabase()
+    public function testCacheExceptionsStillLoadTranslationsFromDatabase()
     {
         $locale = 'en_GB';
         $textDomain = 'default';
-        $actualMessages = $this->actualMessages();
         $cacheIdentifier = CacheEncryption::TRANSLATION_KEY_IDENTIFIER;
-
-        $messages = [
-            $textDomain => [
-                $locale => $actualMessages,
-            ],
-        ];
 
         $dbTranslations = $this->dbTranslations($locale);
 
@@ -103,26 +93,80 @@ class TranslationLoaderTest extends MockeryTestCase
         $mockCache->expects('getCustomItem')
             ->with($cacheIdentifier, $locale)
             ->andThrow(\Exception::class);
-        $mockCache->expects('setCustomItem')
-            ->with($cacheIdentifier, $messages, $locale)
-            ->andThrow(\Exception::class);
 
-        $mockRepo = m::mock(TranslationKeyText::class);
-        $mockRepo->expects('fetchAll')->with($locale, Query::HYDRATE_ARRAY)->andReturn($dbTranslations);
+        $mockTranslationTextRepo = m::mock(TranslationKeyText::class);
+        $mockTranslationTextRepo->expects('fetchAll')
+            ->with($locale, Query::HYDRATE_ARRAY)
+            ->andReturn($dbTranslations);
+        $mockReplacementRepo = m::mock(Replacement::class);
 
-        $loader = new TranslationLoader($mockCache, $mockRepo);
+        $loader = new TranslationLoader($mockCache, $mockTranslationTextRepo, $mockReplacementRepo);
         $textDomain = $loader->load($locale, $textDomain);
 
         self::assertInstanceOf(TextDomain::class, $textDomain);
-        self::assertSame($actualMessages, $textDomain->getArrayCopy());
+        self::assertSame($this->actualTranslations(), $textDomain->getArrayCopy());
     }
 
-    private function actualMessages()
+    /**
+     * test loading replacements from the cache
+     */
+    public function testLoadReplacementsFromCache()
     {
-        return [
-            'translation_key1' => 'translated_text1',
-            'translation_key2' => 'translated_text2'
-        ];
+        $replacements = ['replacements'];
+
+        $mockCache = m::mock(CacheEncryption::class);
+        $mockCache->expects('getCustomItem')
+            ->with(CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER)
+            ->andReturn($replacements);
+
+        $mockTranslationTextRepo = m::mock(TranslationKeyText::class);
+        $mockReplacementRepo = m::mock(Replacement::class);
+
+        $loader = new TranslationLoader($mockCache, $mockTranslationTextRepo, $mockReplacementRepo);
+
+        self::assertSame($replacements, $loader->loadReplacements());
+    }
+
+    /**
+     * test loading replacements from the cache
+     */
+    public function testLoadReplacementsFromDatabase()
+    {
+        $mockCache = m::mock(CacheEncryption::class);
+        $mockCache->expects('getCustomItem')
+            ->with(CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER)
+            ->andReturnNull();
+
+        $mockTranslationTextRepo = m::mock(TranslationKeyText::class);
+        $mockReplacementRepo = m::mock(Replacement::class);
+        $mockReplacementRepo->expects('fetchAll')
+            ->with(Query::HYDRATE_ARRAY)
+            ->andReturn($this->dbReplacements());
+
+        $loader = new TranslationLoader($mockCache, $mockTranslationTextRepo, $mockReplacementRepo);
+
+        self::assertSame($this->actualReplacements(), $loader->loadReplacements());
+    }
+
+    /**
+     * test loading replacements from the database when cache is down (exception on cache load)
+     */
+    public function testCacheExceptionsStillLoadReplacementsFromDatabase()
+    {
+        $mockCache = m::mock(CacheEncryption::class);
+        $mockCache->expects('getCustomItem')
+            ->with(CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER)
+            ->andThrow(\Exception::class);
+
+        $mockTranslationTextRepo = m::mock(TranslationKeyText::class);
+        $mockReplacementRepo = m::mock(Replacement::class);
+        $mockReplacementRepo->expects('fetchAll')
+            ->with(Query::HYDRATE_ARRAY)
+            ->andReturn($this->dbReplacements());
+
+        $loader = new TranslationLoader($mockCache, $mockTranslationTextRepo, $mockReplacementRepo);
+
+        self::assertSame($this->actualReplacements(), $loader->loadReplacements());
     }
 
     private function dbTranslations($locale)
@@ -146,6 +190,36 @@ class TranslationLoaderTest extends MockeryTestCase
                 ],
                 'translatedText' => 'translated_text2',
             ],
+        ];
+    }
+
+    private function actualTranslations()
+    {
+        return [
+            'translation_key1' => 'translated_text1',
+            'translation_key2' => 'translated_text2'
+        ];
+    }
+
+    private function dbReplacements()
+    {
+        return [
+            0 => [
+                'placeholder' => 'placeholder1',
+                'replacementText' => 'replacementText1',
+            ],
+            1 => [
+                'placeholder' => 'placeholder2',
+                'replacementText' => 'replacementText2',
+            ],
+        ];
+    }
+
+    private function actualReplacements()
+    {
+        return [
+            'placeholder1' => 'replacementText1',
+            'placeholder2' => 'replacementText2',
         ];
     }
 }

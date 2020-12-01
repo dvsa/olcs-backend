@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\TranslationCache;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cache;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\TranslationLoaderAwareInterface;
@@ -13,14 +13,15 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class Key extends AbstractQueryHandler implements TranslationLoaderAwareInterface
+class TranslationKey extends AbstractQueryHandler implements TranslationLoaderAwareInterface
 {
     use TranslationLoaderAwareTrait;
 
-    protected $repoServiceName = 'TranslationKeyText';
-
     public function handleQuery(QueryInterface $query)
     {
-        return $this->translationLoader->getMessages($query->getId(), TranslationLoader::DEFAULT_TEXT_DOMAIN);
+        return $this->translationLoader->getMessagesFromDb(
+            $query->getUniqueId(),
+            TranslationLoader::DEFAULT_TEXT_DOMAIN
+        );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Replacement;
 
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Replacement\Update as UpdateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Replacement as ReplacementRepo;
@@ -61,11 +62,16 @@ class UpdateTest extends CommandHandlerTestCase
             ->ordered()
             ->with($entity);
 
+        $this->expectedCacheSideEffect(CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => ['Replacement' => $cmdData['id']],
-            'messages' => ["Replacement '" . $cmdData['id'] . "' updated"]
+            'messages' => [
+                "Replacement '" . $cmdData['id'] . "' updated",
+                'cache update message',
+            ],
         ];
 
         $this->assertEquals($expected, $result->toArray());
