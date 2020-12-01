@@ -9,8 +9,10 @@ use Dvsa\Olcs\Api\Domain\Command\Permits\GeneratePermitDocuments as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\GeneratePermitDocuments as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -44,37 +46,44 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
 
         $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
         $irhpPermitType->shouldReceive('isBilateral')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isMultilateral')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isEcmtRemoval')
+            ->withNoArgs()
             ->andReturn(false);
 
         $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
 
         $irhpPermit1 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication1);
-        $irhpPermit1->shouldReceive('getId')->andReturn($irhpPermitId1);
+        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication1);
+        $irhpPermit1->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId1);
 
         $irhpPermit2 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication2);
-        $irhpPermit2->shouldReceive('getId')->andReturn($irhpPermitId2);
+        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication2);
+        $irhpPermit2->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId2);
 
         $irhpPermit3 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication3);
-        $irhpPermit3->shouldReceive('getId')->andReturn($irhpPermitId3);
+        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication3);
+        $irhpPermit3->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId3);
 
         $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
             ->with($irhpPermitId1, Query::HYDRATE_OBJECT)
@@ -157,6 +166,8 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
 
     public function testHandleCommandForBilateral()
     {
+        $countryId = CountryEntity::ID_NORWAY;
+
         $irhpPermitId1 = 1;
         $irhpPermitId2 = 2;
         $irhpPermitId3 = 3;
@@ -174,43 +185,61 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
 
         $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
         $irhpPermitType->shouldReceive('isBilateral')
+            ->withNoArgs()
             ->andReturn(true)
             ->shouldReceive('isMultilateral')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isEcmtRemoval')
+            ->withNoArgs()
             ->andReturn(false);
 
+        $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
+        $irhpPermitStock->shouldReceive('getIrhpPermitType')
+            ->withNoArgs()
+            ->andReturn($irhpPermitType)
+            ->shouldReceive('getCountry->getId')
+            ->withNoArgs()
+            ->andReturn($countryId);
+
         $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
-        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
-            ->andReturn($irhpPermitType);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
         $irhpPermitApplication1->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId1);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
-        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
-            ->andReturn($irhpPermitType);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
         $irhpPermitApplication2->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId1);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
-        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
-            ->andReturn($irhpPermitType);
+        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
         $irhpPermitApplication3->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId2);
 
         $irhpPermit1 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication1);
-        $irhpPermit1->shouldReceive('getId')->andReturn($irhpPermitId1);
+        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication1);
+        $irhpPermit1->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId1);
 
         $irhpPermit2 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication2);
-        $irhpPermit2->shouldReceive('getId')->andReturn($irhpPermitId2);
+        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication2);
+        $irhpPermit2->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId2);
 
         $irhpPermit3 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication3);
-        $irhpPermit3->shouldReceive('getId')->andReturn($irhpPermitId3);
+        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication3);
+        $irhpPermit3->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId3);
 
         $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
             ->with($irhpPermitId1, Query::HYDRATE_OBJECT)
@@ -282,6 +311,128 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    public function dpHandleCommandForBilateralWithSuppressedCoverLetter()
+    {
+        return [
+            [CountryEntity::ID_BELARUS],
+            [CountryEntity::ID_GEORGIA],
+            [CountryEntity::ID_KAZAKHSTAN],
+            [CountryEntity::ID_MOROCCO],
+            [CountryEntity::ID_RUSSIA],
+            [CountryEntity::ID_TUNISIA],
+            [CountryEntity::ID_TURKEY],
+            [CountryEntity::ID_UKRAINE],
+        ];
+    }
+
+    /**
+    * @dataProvider dpHandleCommandForBilateralWithSuppressedCoverLetter
+    */
+    public function testHandleCommandForBilateralWithSuppressedCoverLetter($countryId)
+    {
+        $irhpPermitId1 = 1;
+        $irhpPermitId2 = 2;
+        $irhpPermitId3 = 3;
+
+        $command = Cmd::Create(
+            [
+                'ids' => [
+                    $irhpPermitId1, $irhpPermitId2, $irhpPermitId3
+                ]
+            ]
+        );
+
+        $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
+        $irhpPermitType->shouldReceive('isBilateral')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
+        $irhpPermitStock->shouldReceive('getIrhpPermitType')
+            ->withNoArgs()
+            ->andReturn($irhpPermitType)
+            ->shouldReceive('getCountry->getId')
+            ->withNoArgs()
+            ->andReturn($countryId);
+
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+
+        $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+
+        $irhpPermit1 = m::mock(IrhpPermitEntity::class);
+        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication1);
+        $irhpPermit1->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId1);
+
+        $irhpPermit2 = m::mock(IrhpPermitEntity::class);
+        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication2);
+        $irhpPermit2->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId2);
+
+        $irhpPermit3 = m::mock(IrhpPermitEntity::class);
+        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication3);
+        $irhpPermit3->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId3);
+
+        $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
+            ->with($irhpPermitId1, Query::HYDRATE_OBJECT)
+            ->andReturn($irhpPermit1)
+            ->shouldReceive('fetchById')
+            ->with($irhpPermitId2, Query::HYDRATE_OBJECT)
+            ->andReturn($irhpPermit2)
+            ->shouldReceive('fetchById')
+            ->with($irhpPermitId3, Query::HYDRATE_OBJECT)
+            ->andReturn($irhpPermit3);
+
+        $this->expectedSideEffect(
+            GeneratePermitDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId1,
+            ],
+            (new Result())->addId('permits', 201)->addMessage('Permit #1 generated')
+        );
+
+        $this->expectedSideEffect(
+            GeneratePermitDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId2,
+            ],
+            (new Result())->addId('permits', 202)->addMessage('Permit #2 generated')
+        );
+
+        $this->expectedSideEffect(
+            GeneratePermitDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId3,
+            ],
+            (new Result())->addId('permits', 203)->addMessage('Permit #3 generated')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(Result::class, $result);
+        $expected = [
+            'id' => [
+                'permits' => [201, 202, 203],
+            ],
+            'messages' => [
+                'Permit #1 generated',
+                'Permit #2 generated',
+                'Permit #3 generated'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
     public function testHandleCommandForMultilateral()
     {
         $irhpPermitId1 = 1;
@@ -301,43 +452,53 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
 
         $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
         $irhpPermitType->shouldReceive('isBilateral')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isMultilateral')
+            ->withNoArgs()
             ->andReturn(true)
             ->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isEcmtRemoval')
+            ->withNoArgs()
             ->andReturn(false);
 
         $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
         $irhpPermitApplication1->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId1);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
         $irhpPermitApplication2->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId1);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
         $irhpPermitApplication3->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId2);
 
         $irhpPermit1 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication1);
-        $irhpPermit1->shouldReceive('getId')->andReturn($irhpPermitId1);
+        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication1);
+        $irhpPermit1->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId1);
 
         $irhpPermit2 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication2);
-        $irhpPermit2->shouldReceive('getId')->andReturn($irhpPermitId2);
+        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication2);
+        $irhpPermit2->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId2);
 
         $irhpPermit3 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication3);
-        $irhpPermit3->shouldReceive('getId')->andReturn($irhpPermitId3);
+        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication3);
+        $irhpPermit3->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId3);
 
         $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
             ->with($irhpPermitId1, Query::HYDRATE_OBJECT)
@@ -428,43 +589,53 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
 
         $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
         $irhpPermitType->shouldReceive('isBilateral')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isMultilateral')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
             ->andReturn(true)
             ->shouldReceive('isEcmtRemoval')
+            ->withNoArgs()
             ->andReturn(false);
 
         $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
         $irhpPermitApplication1->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId1);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
         $irhpPermitApplication2->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId1);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
         $irhpPermitApplication3->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId2);
 
         $irhpPermit1 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication1);
-        $irhpPermit1->shouldReceive('getId')->andReturn($irhpPermitId1);
+        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication1);
+        $irhpPermit1->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId1);
 
         $irhpPermit2 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication2);
-        $irhpPermit2->shouldReceive('getId')->andReturn($irhpPermitId2);
+        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication2);
+        $irhpPermit2->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId2);
 
         $irhpPermit3 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication3);
-        $irhpPermit3->shouldReceive('getId')->andReturn($irhpPermitId3);
+        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication3);
+        $irhpPermit3->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId3);
 
         $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
             ->with($irhpPermitId1, Query::HYDRATE_OBJECT)
@@ -555,43 +726,53 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
 
         $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
         $irhpPermitType->shouldReceive('isBilateral')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isMultilateral')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isEcmtRemoval')
+            ->withNoArgs()
             ->andReturn(true);
 
         $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
         $irhpPermitApplication1->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId1);
 
         $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
         $irhpPermitApplication2->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId1);
 
         $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
         $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->withNoArgs()
             ->andReturn($irhpPermitType);
         $irhpPermitApplication3->shouldReceive('getIrhpApplication->getLicence->getId')
+            ->withNoArgs()
             ->andReturn($licenceId2);
 
         $irhpPermit1 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication1);
-        $irhpPermit1->shouldReceive('getId')->andReturn($irhpPermitId1);
+        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication1);
+        $irhpPermit1->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId1);
 
         $irhpPermit2 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication2);
-        $irhpPermit2->shouldReceive('getId')->andReturn($irhpPermitId2);
+        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication2);
+        $irhpPermit2->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId2);
 
         $irhpPermit3 = m::mock(IrhpPermitEntity::class);
-        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication3);
-        $irhpPermit3->shouldReceive('getId')->andReturn($irhpPermitId3);
+        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->withNoArgs()->andReturn($irhpPermitApplication3);
+        $irhpPermit3->shouldReceive('getId')->withNoArgs()->andReturn($irhpPermitId3);
 
         $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
             ->with($irhpPermitId1, Query::HYDRATE_OBJECT)

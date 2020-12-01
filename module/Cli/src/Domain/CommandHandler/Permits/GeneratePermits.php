@@ -55,8 +55,10 @@ final class GeneratePermits extends AbstractCommandHandler
             // print permits
             $this->printPermits($docs['permits'], $userId);
 
-            // print covering letters
-            $this->printLetters($docs['letters'], $userId);
+            if (!empty($docs['letters'])) {
+                // print covering letters
+                $this->printLetters($docs['letters'], $userId);
+            }
 
             // proceed to printed
             $this->proceedToStatus($ids, IrhpPermitEntity::STATUS_PRINTED);
@@ -133,13 +135,9 @@ final class GeneratePermits extends AbstractCommandHandler
             throw new RuntimeException('No permits generated.');
         }
 
-        if (empty($docs['coveringLetter'])) {
-            throw new RuntimeException('No covering letters generated.');
-        }
-
         // cast to array to make sure it's always a list of items (including one item list)
         $permits = (array)$docs['permit'];
-        $letters = (array)$docs['coveringLetter'];
+        $letters = !empty($docs['coveringLetter']) ? (array)$docs['coveringLetter'] : [];
 
         return [
             'permits' => $permits,

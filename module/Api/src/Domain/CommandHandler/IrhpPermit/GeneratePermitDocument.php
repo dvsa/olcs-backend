@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
@@ -34,6 +35,7 @@ final class GeneratePermitDocument extends AbstractCommandHandler
             => DocumentEntity::IRHP_PERMIT_ECMT_REMOVAL,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL => [
             CountryEntity::ID_AUSTRIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_AUSTRIA,
+            CountryEntity::ID_BELARUS => DocumentEntity::IRHP_PERMIT_ANN_BILAT_BELARUS,
             CountryEntity::ID_BELGIUM => DocumentEntity::IRHP_PERMIT_ANN_BILAT_BELGIUM,
             CountryEntity::ID_BULGARIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_BULGARIA,
             CountryEntity::ID_CROATIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_CROATIA,
@@ -43,26 +45,38 @@ final class GeneratePermitDocument extends AbstractCommandHandler
             CountryEntity::ID_ESTONIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_ESTONIA,
             CountryEntity::ID_FINLAND => DocumentEntity::IRHP_PERMIT_ANN_BILAT_FINLAND,
             CountryEntity::ID_FRANCE => DocumentEntity::IRHP_PERMIT_ANN_BILAT_FRANCE,
+            CountryEntity::ID_GEORGIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_GEORGIA,
             CountryEntity::ID_GERMANY => DocumentEntity::IRHP_PERMIT_ANN_BILAT_GERMANY,
             CountryEntity::ID_GREECE => DocumentEntity::IRHP_PERMIT_ANN_BILAT_GREECE,
             CountryEntity::ID_HUNGARY => DocumentEntity::IRHP_PERMIT_ANN_BILAT_HUNGARY,
             CountryEntity::ID_ICELAND => DocumentEntity::IRHP_PERMIT_ANN_BILAT_ICELAND,
             CountryEntity::ID_IRELAND => DocumentEntity::IRHP_PERMIT_ANN_BILAT_IRELAND,
             CountryEntity::ID_ITALY => DocumentEntity::IRHP_PERMIT_ANN_BILAT_ITALY,
+            CountryEntity::ID_KAZAKHSTAN => DocumentEntity::IRHP_PERMIT_ANN_BILAT_KAZAKHSTAN,
             CountryEntity::ID_LATVIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_LATVIA,
             CountryEntity::ID_LIECHTENSTEIN => DocumentEntity::IRHP_PERMIT_ANN_BILAT_LIECHTENSTEIN,
             CountryEntity::ID_LITHUANIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_LITHUANIA,
             CountryEntity::ID_LUXEMBOURG => DocumentEntity::IRHP_PERMIT_ANN_BILAT_LUXEMBOURG,
             CountryEntity::ID_MALTA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_MALTA,
+            CountryEntity::ID_MOROCCO => [
+                RefData::PERMIT_CAT_EMPTY_ENTRY => DocumentEntity::IRHP_PERMIT_ANN_BILAT_MOROCCO_EMPTY_ENTRY,
+                RefData::PERMIT_CAT_HORS_CONTINGENT => DocumentEntity::IRHP_PERMIT_ANN_BILAT_MOROCCO_HORS_CONTINGENT,
+                RefData::PERMIT_CAT_STANDARD_MULTIPLE_15 => DocumentEntity::IRHP_PERMIT_ANN_BILAT_MOROCCO_MULTI,
+                RefData::PERMIT_CAT_STANDARD_SINGLE => DocumentEntity::IRHP_PERMIT_ANN_BILAT_MOROCCO_SINGLE,
+            ],
             CountryEntity::ID_NETHERLANDS => DocumentEntity::IRHP_PERMIT_ANN_BILAT_NETHERLANDS,
             CountryEntity::ID_NORWAY => DocumentEntity::IRHP_PERMIT_ANN_BILAT_NORWAY,
             CountryEntity::ID_POLAND => DocumentEntity::IRHP_PERMIT_ANN_BILAT_POLAND,
             CountryEntity::ID_PORTUGAL => DocumentEntity::IRHP_PERMIT_ANN_BILAT_PORTUGAL,
             CountryEntity::ID_ROMANIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_ROMANIA,
+            CountryEntity::ID_RUSSIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_RUSSIA,
             CountryEntity::ID_SLOVAKIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_SLOVAKIA,
             CountryEntity::ID_SLOVENIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_SLOVENIA,
             CountryEntity::ID_SPAIN => DocumentEntity::IRHP_PERMIT_ANN_BILAT_SPAIN,
             CountryEntity::ID_SWEDEN => DocumentEntity::IRHP_PERMIT_ANN_BILAT_SWEDEN,
+            CountryEntity::ID_TUNISIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_TUNISIA,
+            CountryEntity::ID_TURKEY => DocumentEntity::IRHP_PERMIT_ANN_BILAT_TURKEY,
+            CountryEntity::ID_UKRAINE => DocumentEntity::IRHP_PERMIT_ANN_BILAT_UKRAINE,
         ],
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL
             => DocumentEntity::IRHP_PERMIT_ANN_MULTILAT,
@@ -126,12 +140,19 @@ final class GeneratePermitDocument extends AbstractCommandHandler
         switch ($irhpPermitTypeId) {
             case IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL:
                 // those templates are country specific
-                $countryId = $irhpPermitStock->getCountry()->getId();
-                $template = isset($this->templates[$irhpPermitTypeId][$countryId])
-                    ? $this->templates[$irhpPermitTypeId][$countryId] : null;
+                $country = $irhpPermitStock->getCountry();
+                $countryId = $country->getId();
+
+                $template = $this->templates[$irhpPermitTypeId][$countryId] ?? null;
+
+                if ($country->isMorocco()) {
+                    // Morocco has specific template for each category
+                    $permitCategory = $irhpPermitStock->getPermitCategory()->getId();
+                    $template = $this->templates[$irhpPermitTypeId][$countryId][$permitCategory] ?? null;
+                }
                 break;
             default:
-                $template = isset($this->templates[$irhpPermitTypeId]) ? $this->templates[$irhpPermitTypeId] : null;
+                $template = $this->templates[$irhpPermitTypeId] ?? null;
                 break;
         }
 
