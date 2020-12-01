@@ -36,10 +36,12 @@ class TranslationLoaderFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TranslationLoader
     {
         $parentLocator = $container->getServiceLocator();
+        $repoServiceManager = $parentLocator->get('RepositoryServiceManager');
 
         return new TranslationLoader(
             $parentLocator->get(CacheEncryption::class),
-            $parentLocator->get('RepositoryServiceManager')->get('TranslationKeyText')
+            $repoServiceManager->get('TranslationKeyText'),
+            $repoServiceManager->get('Replacement')
         );
     }
 }

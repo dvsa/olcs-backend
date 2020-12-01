@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Translator;
 
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText;
+use Dvsa\Olcs\Api\Domain\Repository\Replacement;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoaderFactory;
@@ -21,9 +22,11 @@ class TranslationLoaderFactoryTest extends MockeryTestCase
     public function testCreateService()
     {
         $mockCache = m::mock(CacheEncryption::class);
-        $mockRepo = m::mock(TranslationKeyText::class);
+        $mockTranslationKeyTextRepo = m::mock(TranslationKeyText::class);
+        $mockReplacementRepo = m::mock(Replacement::class);
         $mockRepoManager = m::mock(RepositoryServiceManager::class);
-        $mockRepoManager->expects('get')->with('TranslationKeyText')->andReturn($mockRepo);
+        $mockRepoManager->expects('get')->with('TranslationKeyText')->andReturn($mockTranslationKeyTextRepo);
+        $mockRepoManager->expects('get')->with('Replacement')->andReturn($mockReplacementRepo);
 
         $parentSl = m::mock(ServiceLocatorInterface::class);
         $parentSl->expects('get')->with('RepositoryServiceManager')->andReturn($mockRepoManager);

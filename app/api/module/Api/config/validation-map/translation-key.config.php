@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 return [
     QueryHandler\TranslationKey\ById::class => IsSystemAdmin::class,
     QueryHandler\TranslationKey\GetList::class => IsSystemAdmin::class,
-    QueryHandler\TranslationCache\Key::class => NoValidationRequired::class,
+    QueryHandler\TranslationCache\TranslationKey::class => NoValidationRequired::class,
     QueryHandler\Language\GetList::class => IsSystemAdmin::class,
 
     CommandHandler\TranslationKey\GenerateCache::class => NoValidationRequired::class,

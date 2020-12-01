@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\Replacement\Update as ReplacementUpdateCmd;
 use Dvsa\Olcs\Api\Entity\System\Replacement as ReplacementEntity;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 
 /**
  * Update a Replacement
@@ -38,6 +39,8 @@ final class Update extends AbstractCommandHandler
 
         $this->result->addId('Replacement', $replacement->getId());
         $this->result->addMessage("Replacement '{$replacement->getId()}' updated");
+
+        $this->result->merge($this->generateCache(CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER));
 
         return $this->result;
     }

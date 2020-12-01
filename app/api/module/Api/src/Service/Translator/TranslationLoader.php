@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Translator;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText as TranslationKeyTextRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Replacement as ReplacementRepo;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Olcs\Logging\Log\Logger;
 use Zend\I18n\Translator\Loader\PhpMemoryArray;
@@ -18,14 +19,7 @@ use Zend\I18n\Translator\TextDomain;
 class TranslationLoader implements RemoteLoaderInterface
 {
     const ERR_CACHE_LOAD = 'Translation cache load failure: %s';
-    const ERR_CACHE_SAVE = 'Translation cache save failure: %s';
     const DEFAULT_TEXT_DOMAIN = 'default';
-    const SUPPORTED_LOCALES = [
-        'en_GB',
-        'cy_GB',
-        'en_NI',
-        'cy_NI',
-    ];
 
     /** @var CacheEncryption $cache */
     private $cache;
@@ -33,16 +27,24 @@ class TranslationLoader implements RemoteLoaderInterface
     /** @var TranslationKeyTextRepo $translationKeyRepo */
     private $translationKeyRepo;
 
+    /** @var ReplacementRepo $replacementRepo */
+    private $replacementRepo;
+
     /**
      * TranslationLoader constructor.
      *
      * @param CacheEncryption $cache
      * @param TranslationKeyTextRepo $translationKeyRepo
+     * @param ReplacementRepo $replacementRepo
      */
-    public function __construct(CacheEncryption $cache, TranslationKeyTextRepo $translationKeyRepo)
-    {
+    public function __construct(
+        CacheEncryption $cache,
+        TranslationKeyTextRepo $translationKeyRepo,
+        ReplacementRepo $replacementRepo
+    ) {
         $this->cache = $cache;
         $this->translationKeyRepo = $translationKeyRepo;
+        $this->replacementRepo = $replacementRepo;
     }
 
     /**
@@ -83,13 +85,6 @@ class TranslationLoader implements RemoteLoaderInterface
         //if there has been a problem with the Redis cache, fall back to the database, repopulate cache
         if (!$messages) {
             $messages = $this->getMessagesFromDb($locale, $textDomain);
-
-            try {
-                $this->cache->setCustomItem(CacheEncryption::TRANSLATION_KEY_IDENTIFIER, $messages, $locale);
-            } catch (\Exception $e) {
-                $errorMessage = sprintf(self::ERR_CACHE_SAVE, $e->getMessage());
-                Logger::err($errorMessage);
-            }
         }
 
         return $messages;
@@ -114,5 +109,45 @@ class TranslationLoader implements RemoteLoaderInterface
         }
 
         return $messages;
+    }
+
+    /**
+     * Load translation replacements, try the cache first, fall back to the DB
+     *
+     * @return array
+     */
+    public function loadReplacements(): array
+    {
+        try {
+            $replacements = $this->cache->getCustomItem(CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER);
+        } catch (\Exception $e) {
+            $replacements = null;
+            $errorMessage = sprintf(self::ERR_CACHE_LOAD, $e->getMessage());
+            Logger::err($errorMessage);
+        }
+
+        //if there has been a problem with the Redis cache, fall back to the database, repopulate cache
+        if (!$replacements) {
+            $replacements = $this->getReplacementsFromDb();
+        }
+
+        return $replacements;
+    }
+
+    /**
+     * Get translation replacements from the database
+     *
+     * @return array
+     */
+    public function getReplacementsFromDb(): array
+    {
+        $replacements = [];
+        $dbReplacements = $this->replacementRepo->fetchAll(Query::HYDRATE_ARRAY);
+
+        foreach ($dbReplacements as $replacement) {
+            $replacements[$replacement['placeholder']] = $replacement['replacementText'];
+        }
+
+        return $replacements;
     }
 }
