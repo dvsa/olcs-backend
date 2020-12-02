@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
 use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -19,6 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="irfo_psv_auth_number",
  *    indexes={
  *        @ORM\Index(name="ix_irfo_psv_auth_number_created_by", columns={"created_by"}),
@@ -34,6 +36,7 @@ abstract class AbstractIrfoPsvAuthNumber implements BundleSerializableInterface,
     use ClearPropertiesTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
+    use SoftDeletableTrait;
 
     /**
      * Created by
