@@ -796,6 +796,43 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider trueOrFalseProvider
      */
+    public function testIsCertificateOfRoadworthinessVehicle($isCertificateOfRoadworthinessVehicle)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isCertificateOfRoadworthinessVehicle')
+            ->withNoArgs()
+            ->andReturn($isCertificateOfRoadworthinessVehicle);
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+
+        $this->assertEquals(
+            $isCertificateOfRoadworthinessVehicle,
+            $entity->isCertificateOfRoadworthinessVehicle()
+        );
+    }
+
+    /**
+     * @dataProvider trueOrFalseProvider
+     */
+    public function testIsCertificateOfRoadworthinessTrailer($isCertificateOfRoadworthinessTrailer)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isCertificateOfRoadworthinessTrailer')
+            ->withNoArgs()
+            ->andReturn($isCertificateOfRoadworthinessTrailer);
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+
+        $this->assertEquals(
+            $isCertificateOfRoadworthinessTrailer,
+            $entity->isCertificateOfRoadworthinessTrailer()
+        );
+    }
+
+
+    /**
+     * @dataProvider trueOrFalseProvider
+     */
     public function testIsMultiStock($isMultiStock)
     {
         $irhpPermitType = m::mock(IrhpPermitType::class);
@@ -3197,6 +3234,48 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->submit(m::mock(RefData::class));
     }
 
+    public function testSubmitExceptionUnknownType()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_SUBMIT);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeSubmitted')
+            ->withNoArgs()
+            ->andReturn(true);
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->andReturn('unknown_type');
+
+        $entity->submit(m::mock(RefData::class));
+    }
+
+    public function testGrant()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeGranted')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $status = m::mock(RefData::class);
+
+        $entity->grant($status);
+        $this->assertSame($status, $entity->getStatus());
+    }
+
+    public function testGrantException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_GRANT);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeGranted')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $entity->grant(m::mock(RefData::class));
+    }
+
     public function testProceedToIssuing()
     {
         $entity = m::mock(Entity::class)->makePartial();
@@ -3219,6 +3298,32 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false);
 
         $entity->proceedToIssuing(m::mock(RefData::class));
+    }
+
+    public function testProceedToUnderConsideration()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('hasOutstandingFees')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $status = m::mock(RefData::class);
+
+        $entity->proceedToUnderConsideration($status);
+        $this->assertSame($status, $entity->getStatus());
+    }
+
+    public function testProceedToUnderConsiderationException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_SUBMIT);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('hasOutstandingFees')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity->proceedToUnderConsideration(m::mock(RefData::class));
     }
 
     public function testProceedToValid()
@@ -4040,6 +4145,34 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
+    public function testGetAnswerUnknownCustomType()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Unable to retrieve answer status for form control type unknown_form_control_type'
+        );
+
+        $applicationPathLockedOn = m::mock(DateTime::class);
+        $this->sut->shouldReceive('getApplicationPathLockedOn')
+            ->withNoArgs()
+            ->andReturn($applicationPathLockedOn);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')
+            ->withNoArgs()
+            ->andReturnTrue();
+        $question->shouldReceive('getFormControlType')
+            ->withNoArgs()
+            ->andReturn('unknown_form_control_type');
+
+        $applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep->shouldReceive('getQuestion')
+            ->withNoArgs()
+            ->andReturn($question);
+
+        $this->sut->getAnswer($applicationStep);
+    }
+
     public function testGetOutstandingApplicationFees()
     {
         $fee1 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, true);
@@ -4575,7 +4708,7 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function updateCountries()
+    public function testUpdateCountries()
     {
         $arrayCollection = m::mock(ArrayCollection::class);
 
@@ -4586,6 +4719,122 @@ class IrhpApplicationEntityTest extends EntityTester
             $arrayCollection,
             $entity->getCountrys()
         );
+    }
+
+    /**
+     * @dataProvider dpCalculateTotalPermitsRequired
+     */
+    public function testCalculateTotalPermitsRequired(
+        $isEcmtShortTerm,
+        $isEcmtAnnual,
+        $requiredEuro5,
+        $requiredEuro6,
+        $expectedTotal
+    ) {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn($isEcmtAnnual);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->withNoArgs()
+            ->andReturn($requiredEuro5);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->withNoArgs()
+            ->andReturn($requiredEuro6);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpPermitType($irhpPermitType);
+        $entity->shouldReceive('getFirstIrhpPermitApplication')
+            ->withNoArgs()
+            ->andReturn($irhpPermitApplication);
+
+        $this->assertEquals(
+            $expectedTotal,
+            $entity->calculateTotalPermitsRequired()
+        );
+    }
+
+    public function dpCalculateTotalPermitsRequired()
+    {
+        return [
+            'ecmt short term' => [true, false, 5, 3, 8],
+            'ecmt annual' => [false, true, 4, 9, 13],
+        ];
+    }
+
+    public function testCalculateTotalPermitsRequiredIncorrectType()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'calculateTotalPermitsRequired is only applicable to ECMT short term and ECMT Annual'
+        );
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn(false);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpPermitType($irhpPermitType);
+
+        $entity->calculateTotalPermitsRequired();
+    }
+
+    /**
+     * @dataProvider dpCalculateTotalPermitsRequiredNotSet
+     */
+    public function testCalculateTotalPermitsRequiredNotSet(
+        $isEcmtShortTerm,
+        $isEcmtAnnual,
+        $requiredEuro5,
+        $requiredEuro6
+    ) {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('This IRHP Application has not had number of required permits set yet.');
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn($isEcmtAnnual);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->withNoArgs()
+            ->andReturn($requiredEuro5);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->withNoArgs()
+            ->andReturn($requiredEuro6);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpPermitType($irhpPermitType);
+        $entity->shouldReceive('getFirstIrhpPermitApplication')
+            ->withNoArgs()
+            ->andReturn($irhpPermitApplication);
+
+        $entity->calculateTotalPermitsRequired();
+    }
+
+    public function dpCalculateTotalPermitsRequiredNotSet()
+    {
+        return [
+            'ecmt short term, nothing set' => [true, false, null, null],
+            'ecmt short term, only euro 5' => [true, false, 5, null],
+            'ecmt short term, only euro 6' => [true, false, null, 10],
+            'ecmt annual, nothing set' => [false, true, null, null],
+            'ecmt annual, only euro 5' => [false, true, 5, null],
+            'ecmt annual, only euro 6' => [false, true, null, 10],
+        ];
     }
 
     /**
@@ -5602,6 +5851,18 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
+    public function testGetMotExpiryDateIncorrectType()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->assertNull(
+            $entity->getMotExpiryDate()
+        );
+    }
+
     /**
      * @dataProvider dpCanBeResetToNotYetSubmitted
      */
@@ -6084,6 +6345,22 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
+    public function testCreateAnswer()
+    {
+        $questionText = m::mock(QuestionText::class);
+        $answer = $this->sut->createAnswer($questionText, $this->sut);
+
+        $this->assertSame(
+            $questionText,
+            $answer->getQuestionText()
+        );
+
+        $this->assertSame(
+            $this->sut,
+            $answer->getIrhpApplication()
+        );
+    }
+
     public function testOnSubmitApplicationStep()
     {
         $this->sut->shouldReceive('resetCheckAnswersAndDeclaration')
@@ -6190,6 +6467,25 @@ class IrhpApplicationEntityTest extends EntityTester
             [null, 'NO'],
             [3322, 'DE'],
         ];
+    }
+
+    public function testGetIrhpPermitApplicationIdForCountryMissingIrhpPermitApplication()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Found irhp_permit_application instance without accompanying irhp_application_country_link'
+        );
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn('NO');
+
+        $this->sut->setIrhpPermitApplications([$irhpPermitApplication]);
+
+        $this->sut->getIrhpPermitApplicationIdForCountry(
+            m::mock(Country::class)
+        );
     }
 
     /**
