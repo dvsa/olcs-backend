@@ -116,7 +116,7 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn($application)
             ->once()
             ->shouldReceive('save')
-            ->once();
+            ->times(2);
 
         $this->mockedSmServices['ApplicationGrantValidationService']->shouldReceive('validate')->with($application)
             ->andReturn([]);
@@ -189,6 +189,8 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->repoMap['Application']->shouldReceive('save')->times(1);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -251,6 +253,8 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->repoMap['Application']->shouldReceive('save')->times(1);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -299,7 +303,7 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn($application)
             ->once()
             ->shouldReceive('save')
-            ->once();
+            ->times(2);
 
         $this->mockedSmServices['ApplicationGrantValidationService']->shouldReceive('validate')->with($application)
             ->andReturn([]);
