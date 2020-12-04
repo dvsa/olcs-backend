@@ -155,12 +155,12 @@ class Module implements ConsoleUsageProviderInterface
     public function onBootstrap()
     {
         // block session saving when running cli, as causes permissions errors
-        if (PHP_SAPI === 'cli') {
-            $handler = new Session\NullSaveHandler();
-            $manager = new \Zend\Session\SessionManager();
-            $manager->setSaveHandler($handler);
-            \Zend\Session\Container::setDefaultManager($manager);
-        }
+        // also block session saving when running api to avoid unnecessary creation of surplus sessions
+
+        $handler = new Session\NullSaveHandler();
+        $manager = new \Zend\Session\SessionManager();
+        $manager->setSaveHandler($handler);
+        \Zend\Session\Container::setDefaultManager($manager);
     }
 
     /**
