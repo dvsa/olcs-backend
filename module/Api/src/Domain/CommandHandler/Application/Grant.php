@@ -87,6 +87,8 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             $result->merge($this->proxyCommand($command, GrantPsvCmd::class));
         }
 
+        $application->setGrantAuthority($this->refData($command->getGrantAuthority()));
+
         if ($command->getShouldCreateInspectionRequest() == 'Y') {
             if ($application->isGoods()) {
                 $result->merge(

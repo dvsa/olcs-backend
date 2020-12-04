@@ -37,7 +37,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     /**
      * handleCommand
      *
-     * @param  CommandInterface $command Command
+     * @param  Cmd $command Command
      * @return Result                    Result
      */
     public function handleCommand(CommandInterface $command)
@@ -66,6 +66,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         }
 
         $this->updateStatusAndDate($application, ApplicationEntity::APPLICATION_STATUS_VALID);
+        $application->setGrantAuthority($this->refData($command->getGrantAuthority()));
         $this->getRepo()->save($application);
 
         if ($application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_REQUESTED) {

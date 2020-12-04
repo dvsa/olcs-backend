@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleConditio
 use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\Grant;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\Grant as GrantVariartionCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -36,7 +36,7 @@ class GrantTest extends CommandHandlerTestCase
 {
     public function setUp(): void
     {
-        $this->sut = new Grant();
+        $this->sut = new GrantVariartionCommandHandler();
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
         $this->mockRepo('GoodsDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
         $this->mockRepo('PsvDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
@@ -51,7 +51,8 @@ class GrantTest extends CommandHandlerTestCase
             ApplicationEntity::APPLICATION_STATUS_VALID,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE
+            ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE,
+            RefData::GRANT_AUTHORITY_DELEGATED
         ];
         $this->references = [];
 
@@ -61,7 +62,8 @@ class GrantTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'id' => 111
+            'id' => 111,
+            'grantAuthority' => RefData::GRANT_AUTHORITY_DELEGATED,
         ];
 
         $command = Cmd::create($data);
@@ -112,6 +114,11 @@ class GrantTest extends CommandHandlerTestCase
             ->shouldReceive('getLicenceVehicles')
             ->andReturn($newLicenceVehicles)
             ->once()
+            ->shouldReceive('setGrantAuthority')
+            ->with(m::on(function ($refData) {
+                return $refData instanceof RefData && $refData->getId() === RefData::GRANT_AUTHORITY_DELEGATED;
+            }))
+            ->once()
             ->getMock();
 
         $this->repoMap['LicenceVehicle']
@@ -158,17 +165,18 @@ class GrantTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('CreateDiscRecords');
-        $discData = $data;
-        $discData['currentTotAuth'] = 10;
-        $this->expectedSideEffectAsSystemUser(CreateDiscRecords::class, $discData, $result2);
+        $expectedCommandData = ['id' => $data['id']];
+        $expectedCommandData['currentTotAuth'] = 10;
+        $this->expectedSideEffectAsSystemUser(CreateDiscRecords::class, $expectedCommandData, $result2);
 
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');
-        $this->expectedSideEffectAsSystemUser(ProcessApplicationOperatingCentres::class, $data, $result3);
+        $this->expectedSideEffectAsSystemUser(ProcessApplicationOperatingCentres::class, ['id' => $data['id']], $result3);
 
         $result4 = new Result();
         $result4->addMessage('CommonGrant');
-        $this->expectedSideEffectAsSystemUser(CommonGrant::class, $data, $result4);
+        $expectedCommandData = ['id' => $data['id']];
+        $this->expectedSideEffectAsSystemUser(CommonGrant::class, $expectedCommandData, $result4);
 
         $result = $this->sut->handleCommand($command);
 
@@ -193,7 +201,8 @@ class GrantTest extends CommandHandlerTestCase
     public function testHandleCommandUpgradeGoods()
     {
         $data = [
-            'id' => 111
+            'id' => 111,
+            'grantAuthority' => RefData::GRANT_AUTHORITY_DELEGATED,
         ];
 
         $command = Cmd::create($data);
@@ -263,25 +272,17 @@ class GrantTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('CreateDiscRecords');
-        $discData = $data;
+        $discData = ['id' => $data['id']];
         $discData['currentTotAuth'] = 10;
         $this->expectedSideEffect(CreateDiscRecords::class, $discData, $result2);
 
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');
-        $this->expectedSideEffectAsSystemUser(
-            ProcessApplicationOperatingCentres::class,
-            $data,
-            $result3
-        );
+        $this->expectedSideEffectAsSystemUser(ProcessApplicationOperatingCentres::class, ['id' => $data['id']], $result3);
 
         $result4 = new Result();
         $result4->addMessage('CommonGrant');
-        $this->expectedSideEffectAsSystemUser(
-            CommonGrant::class,
-            $data,
-            $result4
-        );
+        $this->expectedSideEffectAsSystemUser(CommonGrant::class, ['id' => $data['id']], $result4);
 
         $result = $this->sut->handleCommand($command);
 
@@ -307,7 +308,8 @@ class GrantTest extends CommandHandlerTestCase
     public function testHandleCommandUpgradePsv()
     {
         $data = [
-            'id' => 111
+            'id' => 111,
+            'grantAuthority' => RefData::GRANT_AUTHORITY_DELEGATED,
         ];
 
         $command = Cmd::create($data);
@@ -360,7 +362,7 @@ class GrantTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('CreateDiscRecords');
-        $discData = $data;
+        $discData = ['id' => $data['id']];
         $discData['currentTotAuth'] = 10;
         $this->expectedSideEffectAsSystemUser(
             CreateDiscRecords::class,
@@ -370,19 +372,11 @@ class GrantTest extends CommandHandlerTestCase
 
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');
-        $this->expectedSideEffectAsSystemUser(
-            ProcessApplicationOperatingCentres::class,
-            $data,
-            $result3
-        );
+        $this->expectedSideEffectAsSystemUser(ProcessApplicationOperatingCentres::class, ['id' => $data['id']], $result3);
 
         $result4 = new Result();
         $result4->addMessage('CommonGrant');
-        $this->expectedSideEffectAsSystemUser(
-            CommonGrant::class,
-            $data,
-            $result4
-        );
+        $this->expectedSideEffectAsSystemUser(CommonGrant::class, ['id' => $data['id']], $result4);
 
         $result6 = new Result();
         $result6->addMessage('CreatePsvDiscs');
@@ -416,7 +410,8 @@ class GrantTest extends CommandHandlerTestCase
     public function testHandleCommandUpgradePsvNoPsvDiscs()
     {
         $data = [
-            'id' => 111
+            'id' => 111,
+            'grantAuthority' => RefData::GRANT_AUTHORITY_DELEGATED,
         ];
 
         $command = Cmd::create($data);
@@ -469,7 +464,7 @@ class GrantTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('CreateDiscRecords');
-        $discData = $data;
+        $discData = ['id' => $data['id']];
         $discData['currentTotAuth'] = 10;
         $this->expectedSideEffectAsSystemUser(
             CreateDiscRecords::class,
@@ -481,17 +476,13 @@ class GrantTest extends CommandHandlerTestCase
         $result3->addMessage('ProcessApplicationOperatingCentres');
         $this->expectedSideEffectAsSystemUser(
             ProcessApplicationOperatingCentres::class,
-            $data,
+            ['id' => $data['id']],
             $result3
         );
 
         $result4 = new Result();
         $result4->addMessage('CommonGrant');
-        $this->expectedSideEffectAsSystemUser(
-            CommonGrant::class,
-            $data,
-            $result4
-        );
+        $this->expectedSideEffectAsSystemUser(CommonGrant::class, ['id' => $data['id']], $result4);
 
         $result = $this->sut->handleCommand($command);
 
@@ -534,7 +525,8 @@ class GrantTest extends CommandHandlerTestCase
     public function testHandleCommandRefundInterim()
     {
         $data = [
-            'id' => 111
+            'id' => 111,
+            'grantAuthority' => RefData::GRANT_AUTHORITY_DELEGATED,
         ];
 
         $command = Cmd::create($data);
@@ -581,17 +573,17 @@ class GrantTest extends CommandHandlerTestCase
 
         $result2 = new Result();
         $result2->addMessage('CreateDiscRecords');
-        $discData = $data;
+        $discData = ['id' => $data['id']];
         $discData['currentTotAuth'] = 1;
         $this->expectedSideEffectAsSystemUser(CreateDiscRecords::class, $discData, $result2);
 
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');
-        $this->expectedSideEffectAsSystemUser(ProcessApplicationOperatingCentres::class, $data, $result3);
+        $this->expectedSideEffectAsSystemUser(ProcessApplicationOperatingCentres::class, ['id' => $data['id']], $result3);
 
         $result4 = new Result();
         $result4->addMessage('CommonGrant');
-        $this->expectedSideEffectAsSystemUser(CommonGrant::class, $data, $result4);
+        $this->expectedSideEffectAsSystemUser(CommonGrant::class, ['id' => $data['id']], $result4);
 
         $interimFeeRefundQueueCmdData = [
             'entityId' => 1,
