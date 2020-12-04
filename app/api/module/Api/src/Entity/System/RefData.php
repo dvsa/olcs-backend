@@ -123,6 +123,11 @@ class RefData extends AbstractRefData
     const ECMT_PERMIT_USAGE_FOUR_ECMT_WITHOUT = 'ecmt_per_usa_4_ecmt_without';
     const ECMT_PERMIT_USAGE_FOUR_ALL_JOURNEYS = 'ecmt_per_usa_4_all_journeys';
 
+    //Grant authorities
+    const GRANT_AUTHORITY_DELEGATED = 'grant_authority_dl';
+    const GRANT_AUTHORITY_TC = 'grant_authority_tc';
+    const GRANT_AUTHORITY_TR = 'grant_authority_tr';
+
     /**
      * RefData constructor.
      *
