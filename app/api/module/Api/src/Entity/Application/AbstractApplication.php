@@ -25,6 +25,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="application",
  *    indexes={
+ *        @ORM\Index(name="fk_application_grant_authority_ref_data_id", columns={"grant_authority"}),
  *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"}),
  *        @ORM\Index(name="ix_application_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_application_digital_signature_id", columns={"digital_signature_id"}),
@@ -160,6 +161,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=true)
      */
     protected $goodsOrPsv;
+
+    /**
+     * Grant authority
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="grant_authority", referencedColumnName="id", nullable=true)
+     */
+    protected $grantAuthority;
 
     /**
      * Granted date
@@ -1160,6 +1171,30 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getGoodsOrPsv()
     {
         return $this->goodsOrPsv;
+    }
+
+    /**
+     * Set the grant authority
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $grantAuthority entity being set as the value
+     *
+     * @return Application
+     */
+    public function setGrantAuthority($grantAuthority)
+    {
+        $this->grantAuthority = $grantAuthority;
+
+        return $this;
+    }
+
+    /**
+     * Get the grant authority
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getGrantAuthority()
+    {
+        return $this->grantAuthority;
     }
 
     /**
