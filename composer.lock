@@ -2460,12 +2460,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.100",
+            "version": "4.206.104",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.100/olcs-olcs-transfer-4.206.100.zip",
-                "reference": "87f5bf0cb12dc510df8668094e68e9a9aef96a4a",
-                "shasum": "87f5bf0cb12dc510df8668094e68e9a9aef96a4a"
+                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.104/olcs-olcs-transfer-4.206.104.zip",
+                "reference": "5e593db394e6dafddee7c82ec6ccd9a519c84476",
+                "shasum": "5e593db394e6dafddee7c82ec6ccd9a519c84476"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2527,7 +2527,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2020-11-10T22:22:09+00:00"
+            "time": "2020-12-04T09:55:07+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -2596,12 +2596,12 @@
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "4.206.5",
+            "version": "4.206.6",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-xmltools/4.206.5/olcs-olcs-xmltools-4.206.5.zip",
-                "reference": "aee569df834c3404d7bd00879cc52c5fc4d6b565",
-                "shasum": "aee569df834c3404d7bd00879cc52c5fc4d6b565"
+                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-xmltools/4.206.6/olcs-olcs-xmltools-4.206.6.zip",
+                "reference": "a4e2b4f6e68390b52de82cc2cb4d1bd374ad0492",
+                "shasum": "a4e2b4f6e68390b52de82cc2cb4d1bd374ad0492"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2618,7 +2618,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/olcs-xmltools",
+                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-xmltools",
                     "ignore": [
                         "test/",
                         "sonar-project.properties"
@@ -2654,7 +2654,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2020-07-12T23:57:28+00:00"
+            "time": "2020-11-23T17:35:34+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
