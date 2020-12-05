@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\Command\Cache\Generate;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
@@ -338,6 +339,27 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         return $result;
+    }
+
+    /**
+     * Runs the command to generate a specified cache
+     *
+     * @param string      $cacheId
+     * @param string|null $uniqueId
+     *
+     * @return Result
+     * @throws DisabledHandlerException
+     */
+    protected function generateCache($cacheId, $uniqueId = null): Result
+    {
+        $params = [
+            'id' => $cacheId,
+            'uniqueId' => $uniqueId,
+        ];
+
+        $cmd = Generate::create($params);
+
+        return $this->handleSideEffect($cmd);
     }
 
     /**

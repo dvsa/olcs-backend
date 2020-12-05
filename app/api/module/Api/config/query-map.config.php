@@ -705,7 +705,6 @@ return [
 
     //Editable Translations
     TransferQuery\TranslationKey\ById::class => QueryHandler\TranslationKey\ById::class,
-    TransferQuery\TranslationCache\Key::class => QueryHandler\TranslationCache\Key::class,
     TransferQuery\TranslationKey\GetList::class => QueryHandler\TranslationKey\GetList::class,
     TransferQuery\Language\GetList::class => QueryHandler\Language\GetList::class,
 
@@ -715,4 +714,9 @@ return [
 
     //DvlaSearch
     TransferQuery\DvlaSearch\Vehicle::class => QueryHandler\DvlaSearch\Vehicle::class,
+
+    //Cache
+    TransferQuery\Cache\ById::class => QueryHandler\Cache\ById::class,
+    Query\Cache\Replacements::class => QueryHandler\Cache\Replacements::class,
+    Query\Cache\TranslationKey::class => QueryHandler\Cache\TranslationKey::class,
 ];
