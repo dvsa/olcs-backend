@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\WithdrawApplicationInterface;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTestCase
 {
@@ -24,6 +25,10 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
         $this->mockRepo($this->repoServiceName, $this->repoClass);
         $this->sut = new $this->sutClass();
 
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
+
         parent::setUp();
     }
 
@@ -34,6 +39,7 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
             WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
             WithdrawableInterface::WITHDRAWN_REASON_UNPAID,
             WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+            WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED,
             $this->withdrawStatus,
         ];
 
@@ -43,7 +49,7 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
     /**
      * @dataProvider dpReasonProvider
      */
-    public function testHandleCommandWithEmail($withdrawReason)
+    public function testHandleCommandWithEmail($withdrawReason, $isInternalUser, $expectedCheckReasonAgainstStatus)
     {
         $id = 4096;
         $feeId1 = 111;
@@ -51,9 +57,15 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
 
         $emailCommand = 'Email\Command';
 
+        $this->setupIsInternalUser($isInternalUser);
+
         $application = m::mock(WithdrawableInterface::class);
         $application->shouldReceive('withdraw')
-            ->with($this->mapRefData($this->withdrawStatus), $this->mapRefData($withdrawReason))
+            ->with(
+                $this->mapRefData($this->withdrawStatus),
+                $this->mapRefData($withdrawReason),
+                $expectedCheckReasonAgainstStatus
+            )
             ->once()
             ->globally()
             ->ordered();
@@ -108,15 +120,21 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
     /**
      * @dataProvider dpReasonProvider
      */
-    public function testHandleCommandWithoutEmail($withdrawReason)
+    public function testHandleCommandWithoutEmail($withdrawReason, $isInternalUser, $expectedCheckReasonAgainstStatus)
     {
         $id = 4096;
         $feeId1 = 111;
         $feeId2 = 222;
 
+        $this->setupIsInternalUser($isInternalUser);
+
         $application = m::mock(WithdrawableInterface::class);
         $application->shouldReceive('withdraw')
-            ->with($this->mapRefData($this->withdrawStatus), $this->mapRefData($withdrawReason))
+            ->with(
+                $this->mapRefData($this->withdrawStatus),
+                $this->mapRefData($withdrawReason),
+                $expectedCheckReasonAgainstStatus
+            )
             ->once()
             ->globally()
             ->ordered();
@@ -168,10 +186,16 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
     public function dpReasonProvider()
     {
         return [
-            [WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS],
-            [WithdrawableInterface::WITHDRAWN_REASON_BY_USER],
-            [WithdrawableInterface::WITHDRAWN_REASON_DECLINED],
-            [WithdrawableInterface::WITHDRAWN_REASON_UNPAID],
+            [WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS, false, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_BY_USER, false, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_DECLINED, false, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_UNPAID, false, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED, false, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS, true, false],
+            [WithdrawableInterface::WITHDRAWN_REASON_BY_USER, true, false],
+            [WithdrawableInterface::WITHDRAWN_REASON_DECLINED, true, false],
+            [WithdrawableInterface::WITHDRAWN_REASON_UNPAID, true, false],
+            [WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED, true, false],
         ];
     }
 }

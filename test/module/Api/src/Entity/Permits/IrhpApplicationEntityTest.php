@@ -576,26 +576,67 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestCanBeWithdrawn
+     * @dataProvider dpCanBeWithdrawn
      */
-    public function testCanBeWithdrawn($status, $expected)
+    public function testCanBeWithdrawn($reasonRefData, $isUnderConsideration, $isAwaitingFee, $expected)
     {
-        $entity = $this->createNewEntity(null, new RefData($status));
-        $this->assertSame($expected, $entity->canBeWithdrawn());
+        $this->sut->shouldReceive('isUnderConsideration')
+            ->withNoArgs()
+            ->andReturn($isUnderConsideration);
+
+        $this->sut->shouldReceive('isAwaitingFee')
+            ->withNoArgs()
+            ->andReturn($isAwaitingFee);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->canBeWithdrawn($reasonRefData)
+        );
     }
 
-    public function dpTestCanBeWithdrawn()
+    public function dpCanBeWithdrawn()
     {
         return [
-            [IrhpInterface::STATUS_CANCELLED, false],
-            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
-            [IrhpInterface::STATUS_WITHDRAWN, false],
-            [IrhpInterface::STATUS_AWAITING_FEE, false],
-            [IrhpInterface::STATUS_FEE_PAID, false],
-            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUING, false],
-            [IrhpInterface::STATUS_VALID, false],
+            [null, false, false, false],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS), false, false, false],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_UNPAID), false, false, false],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER), false, false, false],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED), false, false, false],
+            [null, true, false, true],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS), true, false, true],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_UNPAID), true, false, true],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER), true, false, true],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED), true, false, true],
+            [null, false, true, true],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS), false, true, true],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_UNPAID), false, true, true],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER), false, true, true],
+            [new RefData(WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED), false, true, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanBeWithdrawnReasonDeclined
+     */
+    public function testCanBeWithdrawnReasonDeclined($canBeDeclined)
+    {
+        $declinedReasonRefData = new RefData(WithdrawableInterface::WITHDRAWN_REASON_DECLINED);
+
+        $this->sut->shouldReceive('canBeDeclined')
+            ->withNoArgs()
+            ->andReturn($canBeDeclined);
+
+        $this->assertEquals(
+            $canBeDeclined,
+            $this->sut->canBeWithdrawn($declinedReasonRefData)
+        );
+    }
+
+    public function dpCanBeWithdrawnReasonDeclined()
+    {
+        return [
+            [true],
+            [false],
         ];
     }
 
@@ -645,128 +686,139 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpWithdraw
      */
-    public function testWithdraw($status, $reason)
+    public function testWithdraw($withdrawReason, $checkReasonAgainstStatus, $expectedValidationWithdrawReason)
     {
-        $entity = $this->createNewEntity(null, new RefData($status));
-        $entity->withdraw(
-            new RefData(IrhpInterface::STATUS_WITHDRAWN),
-            new RefData($reason)
+        $withdrawStatus = m::mock(RefData::class);
+
+        $this->sut->shouldReceive('canBeWithdrawn')
+            ->with($expectedValidationWithdrawReason)
+            ->andReturnTrue();
+
+        $this->sut->withdraw(
+            $withdrawStatus,
+            $withdrawReason,
+            $checkReasonAgainstStatus
         );
-        $this->assertEquals(IrhpInterface::STATUS_WITHDRAWN, $entity->getStatus()->getId());
-        $this->assertEquals($reason, $entity->getWithdrawReason()->getId());
-        $this->assertEquals(date('Y-m-d'), $entity->getWithdrawnDate()->format('Y-m-d'));
+
+        $this->assertSame(
+            $withdrawStatus,
+            $this->sut->getStatus()
+        );
+
+        $this->assertEquals(
+            $withdrawReason,
+            $this->sut->getWithdrawReason()
+        );
+
+        $this->assertEquals(
+            date('Y-m-d'),
+            $this->sut->getWithdrawnDate()->format('Y-m-d')
+        );
     }
 
     public function dpWithdraw()
     {
+        $withdrawReason = m::mock(RefData::class);
+
         return [
-            [
-                IrhpInterface::STATUS_UNDER_CONSIDERATION,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER
-            ],
-            [
-                IrhpInterface::STATUS_AWAITING_FEE,
-                WithdrawableInterface::WITHDRAWN_REASON_DECLINED
-            ],
+            [$withdrawReason, true, $withdrawReason],
+            [$withdrawReason, false, null],
         ];
     }
 
     /**
      * @dataProvider dpWithdrawException
      */
-    public function testWithdrawException($status, $reason, $expectedError)
-    {
+    public function testWithdrawException(
+        $withdrawReasonRefData,
+        $checkReasonAgainstStatus,
+        $expectedValidationWithdrawReasonRefData,
+        $expectedError
+    ) {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage($expectedError);
-        $entity = $this->createNewEntity(null, new RefData($status));
-        $entity->withdraw(
-            new RefData(IrhpInterface::STATUS_WITHDRAWN),
-            new RefData($reason)
+
+        $withdrawStatusRefData = m::mock(RefData::class);
+
+        $this->sut->shouldReceive('canBeWithdrawn')
+            ->with($expectedValidationWithdrawReasonRefData)
+            ->andReturnFalse();
+
+        $this->sut->withdraw(
+            $withdrawStatusRefData,
+            $withdrawReasonRefData,
+            $checkReasonAgainstStatus
         );
     }
 
-    /**
-     * Pass array of app status to make sure an exception is thrown
-     *
-     * @return array
-     */
     public function dpWithdrawException()
     {
+        $notSuccessRefData = new RefData(WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS);
+        $unpaidRefData = new RefData(WithdrawableInterface::WITHDRAWN_REASON_UNPAID);
+        $byUserRefData = new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER);
+        $declinedRefData = new RefData(WithdrawableInterface::WITHDRAWN_REASON_DECLINED);
+        $permitsRevokedRefData = new RefData(WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED);
+
         return [
             [
-                IrhpInterface::STATUS_CANCELLED,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
-                Entity::ERR_CANT_WITHDRAW
+                $notSuccessRefData,
+                true,
+                $notSuccessRefData,
+                WithdrawableInterface::ERR_CANT_WITHDRAW,
             ],
             [
-                IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
-                Entity::ERR_CANT_WITHDRAW
+                $unpaidRefData,
+                true,
+                $unpaidRefData,
+                WithdrawableInterface::ERR_CANT_WITHDRAW,
             ],
             [
-                IrhpInterface::STATUS_WITHDRAWN,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
-                Entity::ERR_CANT_WITHDRAW
+                $byUserRefData,
+                true,
+                $byUserRefData,
+                WithdrawableInterface::ERR_CANT_WITHDRAW,
             ],
             [
-                IrhpInterface::STATUS_AWAITING_FEE,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
-                Entity::ERR_CANT_WITHDRAW
+                $declinedRefData,
+                true,
+                $declinedRefData,
+                WithdrawableInterface::ERR_CANT_DECLINE,
             ],
             [
-                IrhpInterface::STATUS_FEE_PAID,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
-                Entity::ERR_CANT_WITHDRAW
+                $permitsRevokedRefData,
+                true,
+                $permitsRevokedRefData,
+                WithdrawableInterface::ERR_CANT_WITHDRAW,
             ],
             [
-                IrhpInterface::STATUS_UNSUCCESSFUL,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
-                Entity::ERR_CANT_WITHDRAW
+                $notSuccessRefData,
+                false,
+                null,
+                WithdrawableInterface::ERR_CANT_WITHDRAW,
             ],
             [
-                IrhpInterface::STATUS_ISSUING,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
-                Entity::ERR_CANT_WITHDRAW
+                $unpaidRefData,
+                false,
+                null,
+                WithdrawableInterface::ERR_CANT_WITHDRAW,
             ],
             [
-                IrhpInterface::STATUS_VALID,
-                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
-                Entity::ERR_CANT_WITHDRAW
+                $byUserRefData,
+                false,
+                null,
+                WithdrawableInterface::ERR_CANT_WITHDRAW,
             ],
             [
-                IrhpInterface::STATUS_CANCELLED,
-                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
-                Entity::ERR_CANT_DECLINE
+                $declinedRefData,
+                false,
+                null,
+                WithdrawableInterface::ERR_CANT_DECLINE,
             ],
             [
-                IrhpInterface::STATUS_NOT_YET_SUBMITTED,
-                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
-                Entity::ERR_CANT_DECLINE
-            ],
-            [
-                IrhpInterface::STATUS_WITHDRAWN,
-                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
-                Entity::ERR_CANT_DECLINE
-            ],
-            [
-                IrhpInterface::STATUS_FEE_PAID,
-                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
-                Entity::ERR_CANT_DECLINE
-            ],
-            [
-                IrhpInterface::STATUS_UNSUCCESSFUL,
-                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
-                Entity::ERR_CANT_DECLINE
-            ],
-            [
-                IrhpInterface::STATUS_ISSUING,
-                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
-                Entity::ERR_CANT_DECLINE
-            ],
-            [
-                IrhpInterface::STATUS_VALID,
-                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
-                Entity::ERR_CANT_DECLINE
+                $permitsRevokedRefData,
+                false,
+                null,
+                WithdrawableInterface::ERR_CANT_WITHDRAW,
             ],
         ];
     }

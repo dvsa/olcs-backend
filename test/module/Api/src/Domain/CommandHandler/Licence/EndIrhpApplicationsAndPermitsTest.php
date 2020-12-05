@@ -44,7 +44,10 @@ class EndIrhpApplicationsAndPermitsTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpHandleCommand
+     */
+    public function testHandleCommand($withdrawReason)
     {
         $licenceId = 52;
 
@@ -98,7 +101,7 @@ class EndIrhpApplicationsAndPermitsTest extends CommandHandlerTestCase
             Withdraw::class,
             [
                 'id' => $irhpApplicationUnderConsiderationId,
-                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+                'reason' => $withdrawReason
             ],
             new Result()
         );
@@ -107,7 +110,7 @@ class EndIrhpApplicationsAndPermitsTest extends CommandHandlerTestCase
             Withdraw::class,
             [
                 'id' => $irhpApplicationAwaitingFeeId,
-                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+                'reason' => $withdrawReason
             ],
             new Result()
         );
@@ -175,12 +178,25 @@ class EndIrhpApplicationsAndPermitsTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $command = Command::create(['id' => $licenceId]);
+        $command = Command::create(
+            [
+                'id' => $licenceId,
+                'reason' => $withdrawReason
+            ]
+        );
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals(
             ['Cleared IRHP applications and permits for licence 52'],
             $result->getMessages()
         );
+    }
+
+    public function dpHandleCommand()
+    {
+        return [
+            [WithdrawableInterface::WITHDRAWN_REASON_BY_USER],
+            [WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED],
+        ];
     }
 }
