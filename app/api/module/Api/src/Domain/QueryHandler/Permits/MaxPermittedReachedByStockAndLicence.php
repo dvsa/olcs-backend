@@ -4,14 +4,14 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
-use Dvsa\Olcs\Transfer\Query\Permits\MaxPermittedReached as MaxPermittedReachedQuery;
+use Dvsa\Olcs\Transfer\Query\Permits\MaxPermittedReachedByStockAndLicence as MaxPermittedReachedByStockAndLicenceQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Max permitted reached
+ * Max permitted reached by stock and licence
  */
-class MaxPermittedReached extends AbstractQueryHandler
+class MaxPermittedReachedByStockAndLicence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermitStock';
 
@@ -41,7 +41,7 @@ class MaxPermittedReached extends AbstractQueryHandler
     /**
      * Handle query
      *
-     * @param QueryInterface|MaxPermittedReachedQuery $query query
+     * @param QueryInterface|MaxPermittedReachedByStockAndLicenceQuery $query query
      *
      * @return array
      */
