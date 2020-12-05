@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Publication\Licence as PublicationLicenceCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ProcessContinuationNotSought as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as Repo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
@@ -116,7 +117,10 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => $licenceId],
+            [
+                'id' => $licenceId,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+            ],
             new Result()
         );
 
@@ -235,7 +239,10 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => $licenceId],
+            [
+                'id' => $licenceId,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+            ],
             new Result()
         );
 
