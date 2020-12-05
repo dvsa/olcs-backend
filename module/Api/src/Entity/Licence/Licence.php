@@ -1594,4 +1594,18 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
 
         return new ArrayCollection($ongoingIrhpApplications);
     }
+
+    /**
+     * Get a list of associated irhp applications with a status of valid
+     *
+     * @return ArrayCollection
+     */
+    public function getValidIrhpApplications()
+    {
+        return $this->getIrhpApplications()->filter(
+            function ($element) {
+                return $element->isValid();
+            }
+        );
+    }
 }

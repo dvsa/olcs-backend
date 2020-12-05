@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\EndIrhpApplicationsAndPermits as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\Expire;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepository;
@@ -141,6 +142,36 @@ class EndIrhpApplicationsAndPermitsTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             Terminate::class,
             ['id' => $activeIrhpPermit2Id],
+            new Result()
+        );
+
+        $validIrhpApplication1Id = 123;
+        $validIrhpApplication1 = m::mock(IrhpApplication::class);
+        $validIrhpApplication1->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($validIrhpApplication1Id);
+
+        $validIrhpApplication2Id = 456;
+        $validIrhpApplication2 = m::mock(IrhpApplication::class);
+        $validIrhpApplication2->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($validIrhpApplication2Id);
+
+        $validIrhpApplications = new ArrayCollection([$validIrhpApplication1, $validIrhpApplication2]);
+
+        $licence->shouldReceive('getValidIrhpApplications')
+            ->withNoArgs()
+            ->andReturn($validIrhpApplications);
+
+        $this->expectedSideEffect(
+            Expire::class,
+            ['id' => $validIrhpApplication1Id],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            Expire::class,
+            ['id' => $validIrhpApplication2Id],
             new Result()
         );
 
