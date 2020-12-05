@@ -3,18 +3,20 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\MaxPermittedReached as MaxPermittedReachedHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\MaxPermittedReachedByStockAndLicence
+    as MaxPermittedReachedByStockAndLicenceHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
-use Dvsa\Olcs\Transfer\Query\Permits\MaxPermittedReached as MaxPermittedReachedQry;
+use Dvsa\Olcs\Transfer\Query\Permits\MaxPermittedReachedByStockAndLicence
+    as MaxPermittedReachedByStockAndLicenceQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
-class MaxPermittedReachedTest extends QueryHandlerTestCase
+class MaxPermittedReachedByStockAndLicenceTest extends QueryHandlerTestCase
 {
     const IRHP_PERMIT_STOCK_ID = 40;
 
@@ -26,7 +28,7 @@ class MaxPermittedReachedTest extends QueryHandlerTestCase
 
     public function setUp(): void
     {
-        $this->sut = new MaxPermittedReachedHandler();
+        $this->sut = new MaxPermittedReachedByStockAndLicenceHandler();
 
         $this->mockRepo('Licence', LicenceRepo::class);
         $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
@@ -60,7 +62,7 @@ class MaxPermittedReachedTest extends QueryHandlerTestCase
         ];
 
         $result = $this->sut->handleQuery(
-            MaxPermittedReachedQry::create(
+            MaxPermittedReachedByStockAndLicenceQry::create(
                 [
                     'irhpPermitStock' => self::IRHP_PERMIT_STOCK_ID,
                     'licence' => self::LICENCE_ID
@@ -99,7 +101,7 @@ class MaxPermittedReachedTest extends QueryHandlerTestCase
         ];
 
         $result = $this->sut->handleQuery(
-            MaxPermittedReachedQry::create(
+            MaxPermittedReachedByStockAndLicenceQry::create(
                 [
                     'irhpPermitStock' => self::IRHP_PERMIT_STOCK_ID,
                     'licence' => self::LICENCE_ID
