@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\Expire;
 use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits as EndIrhpApplicationsAndPermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -78,6 +79,21 @@ class EndIrhpApplicationsAndPermits extends AbstractCommandHandler implements Tr
                 $this->handleSideEffect(
                     Terminate::create(
                         ['id' => $irhpPermit->getId()]
+                    )
+                )
+            );
+        }
+
+        // Valid irhp applications are normally expired by the above terminate command, but only when the permit type
+        // makes use of entries in the irhp permit table. Certificate of Roadworthiness doesn't make use the irhp
+        // permit table so we need an additional step here to expire these applications
+
+        $validIrhpApplications = $licence->getValidIrhpApplications();
+        foreach ($validIrhpApplications as $irhpApplication) {
+            $this->result->merge(
+                $this->handleSideEffect(
+                    Expire::create(
+                        ['id' => $irhpApplication->getId()]
                     )
                 )
             );

@@ -2711,4 +2711,34 @@ class LicenceEntityTest extends EntityTester
         $this->assertSame($irhpApplication1, $ongoingIrhpApplicationsArray[0]);
         $this->assertSame($irhpApplication3, $ongoingIrhpApplicationsArray[1]);
     }
+
+    public function testGetValidIrhpApplications()
+    {
+        $irhpApplication1 = m::mock(IrhpApplication::class);
+        $irhpApplication1->shouldReceive('isValid')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $irhpApplication2 = m::mock(IrhpApplication::class);
+        $irhpApplication2->shouldReceive('isValid')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $irhpApplication3 = m::mock(IrhpApplication::class);
+        $irhpApplication3->shouldReceive('isValid')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->setIrhpApplications(
+            new ArrayCollection([$irhpApplication1, $irhpApplication2, $irhpApplication3])
+        );
+
+        $validIrhpApplications = $licence->getValidIrhpApplications();
+
+        $this->assertCount(2, $validIrhpApplications);
+        $this->assertContains($irhpApplication1, $validIrhpApplications);
+        $this->assertContains($irhpApplication3, $validIrhpApplications);
+    }
 }
