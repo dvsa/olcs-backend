@@ -1233,4 +1233,7 @@ return [
     //Replacement
     TransferCommand\Replacement\Update::class => CommandHandler\Replacement\Update::class,
     TransferCommand\Replacement\Create::class => CommandHandler\Replacement\Create::class,
+
+    //Caches
+    Command\Cache\Generate::class => CommandHandler\Cache\Generate::class,
 ];

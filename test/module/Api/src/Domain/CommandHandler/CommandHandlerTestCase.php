@@ -2,12 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Command\Cache\Generate as GenerateCacheCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
-use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseVsOlcsDiffs;
-use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
@@ -219,6 +218,21 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             $this->mockedSmServices,
             $this->pidIdentityProvider
         );
+    }
+
+    public function expectedCacheSideEffect($cacheId, $uniqueId = null, $result = null, $times = 1)
+    {
+        $data = [
+            'id' => $cacheId,
+            'uniqueId' => $uniqueId,
+        ];
+
+        if ($result === null) {
+            $result = new Result();
+            $result->addMessage('cache update message');
+        }
+
+        $this->expectedSideEffect(GenerateCacheCmd::class, $data, $result, $times);
     }
 
     /**

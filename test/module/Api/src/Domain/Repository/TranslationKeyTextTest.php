@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText as Repo;
 
