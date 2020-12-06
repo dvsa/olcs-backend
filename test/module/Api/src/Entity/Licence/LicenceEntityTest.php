@@ -2741,4 +2741,66 @@ class LicenceEntityTest extends EntityTester
         $this->assertContains($irhpApplication1, $validIrhpApplications);
         $this->assertContains($irhpApplication3, $validIrhpApplications);
     }
+
+    /**
+     * @dataProvider dpHasUnderConsiderationOrAwaitingFeeApplicationForStock
+     */
+    public function testHasUnderConsiderationOrAwaitingFeeApplicationForStock(
+        $irhpPermitStock,
+        $irhpApplications,
+        $expected
+    ) {
+        $licence = $this->instantiate(Entity::class);
+        $licence->setIrhpApplications($irhpApplications);
+
+        $this->assertEquals(
+            $expected,
+            $licence->hasUnderConsiderationOrAwaitingFeeApplicationForStock($irhpPermitStock)
+        );
+    }
+
+    public function dpHasUnderConsiderationOrAwaitingFeeApplicationForStock()
+    {
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+
+        $irhpApplicationSatisfyingCriteria = m::mock(IrhpApplication::class);
+        $irhpApplicationSatisfyingCriteria->shouldReceive('isUnderConsiderationOrAwaitingFeeAndAssociatedWithStock')
+            ->with($irhpPermitStock)
+            ->andReturnTrue();
+
+        $irhpApplicationNotSatisfyingCriteria = m::mock(IrhpApplication::class);
+        $irhpApplicationNotSatisfyingCriteria->shouldReceive('isUnderConsiderationOrAwaitingFeeAndAssociatedWithStock')
+            ->with($irhpPermitStock)
+            ->andReturnFalse();
+
+        return [
+            [
+                $irhpPermitStock,
+                [
+                    $irhpApplicationNotSatisfyingCriteria,
+                    $irhpApplicationNotSatisfyingCriteria,
+                    $irhpApplicationNotSatisfyingCriteria
+                ],
+                false
+            ],
+            [
+                $irhpPermitStock,
+                [
+                    $irhpApplicationNotSatisfyingCriteria,
+                    $irhpApplicationSatisfyingCriteria,
+                    $irhpApplicationNotSatisfyingCriteria
+                ],
+                true
+            ],
+            [
+                $irhpPermitStock,
+                [
+                    $irhpApplicationSatisfyingCriteria,
+                    $irhpApplicationSatisfyingCriteria,
+                    $irhpApplicationSatisfyingCriteria
+                ],
+                true
+            ],
+        ];
+    }
 }

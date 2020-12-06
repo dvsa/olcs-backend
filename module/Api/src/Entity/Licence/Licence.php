@@ -1608,4 +1608,22 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             }
         );
     }
+
+    /**
+     * Whether this licence has one or more under consideration applications associated with the specified stock
+     *
+     * @param IrhpPermitStock $irhpPermitStock
+     *
+     * @return bool
+     */
+    public function hasUnderConsiderationOrAwaitingFeeApplicationForStock(IrhpPermitStock $irhpPermitStock)
+    {
+        foreach ($this->irhpApplications as $irhpApplication) {
+            if ($irhpApplication->isUnderConsiderationOrAwaitingFeeAndAssociatedWithStock($irhpPermitStock)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
