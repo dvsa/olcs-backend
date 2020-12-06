@@ -508,6 +508,9 @@ return [
             'PermitsBilateralMetadataStandardFieldsGenerator'
                 => ApiSrv\Permits\Bilateral\Metadata\StandardFieldsGeneratorFactory::class,
 
+            'PermitsFeesEcmtApplicationFeeCommandCreator'
+                => ApiSrv\Permits\Fees\EcmtApplicationFeeCommandCreatorFactory::class,
+
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
 

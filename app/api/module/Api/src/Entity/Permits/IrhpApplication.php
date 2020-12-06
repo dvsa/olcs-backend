@@ -224,7 +224,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canBeGranted' => $this->canBeGranted(),
             'canBeDeclined' => $this->canBeDeclined(),
             'canBeSubmitted' => $this->canBeSubmitted(),
-            'canBeResetToNotYetSubmitted' => $this->canBeResetToNotYetSubmitted(),
+            'canBeResetToNotYetSubmittedFromValid' => $this->canBeResetToNotYetSubmittedFromValid(),
+            'canBeResetToNotYetSubmittedFromCancelled' => $this->canBeResetToNotYetSubmittedFromCancelled(),
             'canBeRevivedFromWithdrawn' => $this->canBeRevivedFromWithdrawn(),
             'canBeRevivedFromUnsuccessful' => $this->canBeRevivedFromUnsuccessful(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
@@ -896,12 +897,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function canBeSubmitted()
     {
-        if (!$this->isNotYetSubmitted()) {
-            return false;
-        }
-
-        //currently can't do this check for bilateral and multilateral
-        if (!$this->isMultiStock() && !$this->licence->canMakeIrhpApplication($this->getAssociatedStock(), $this)) {
+        if (!$this->isNotYetSubmitted() || !$this->licence->isEligibleForPermits()) {
             return false;
         }
 
@@ -2527,25 +2523,60 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Whether the permit application can be reset to NotYetSubmitted
+     * Whether the permit application can be reset to NotYetSubmitted from Valid
      *
      * @return bool
      */
-    public function canBeResetToNotYetSubmitted()
+    public function canBeResetToNotYetSubmittedFromValid()
     {
         return $this->isValid() && $this->isCertificateOfRoadworthiness();
     }
 
     /**
-     * Reset to NotYetSubmitted
+     * Reset to NotYetSubmitted from Valid
      *
      * @param RefData $status
      *
      * @throws ForbiddenException
      */
-    public function resetToNotYetSubmitted(RefData $status)
+    public function resetToNotYetSubmittedFromValid(RefData $status)
     {
-        if (!$this->canBeResetToNotYetSubmitted()) {
+        if (!$this->canBeResetToNotYetSubmittedFromValid()) {
+            throw new ForbiddenException('Unable to reset this application to Not Yet Submitted');
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Whether the permit application can be reset to NotYetSubmitted from Cancelled
+     *
+     * @return bool
+     */
+    public function canBeResetToNotYetSubmittedFromCancelled()
+    {
+        $statusAndPermitTypeEligible = $this->isCancelled() &&
+            ($this->irhpPermitType->isEcmtShortTerm() || $this->irhpPermitType->isEcmtAnnual());
+
+        if (!$statusAndPermitTypeEligible) {
+            return false;
+        }
+
+        return !$this->licence->hasUnderConsiderationOrAwaitingFeeApplicationForStock(
+            $this->getAssociatedStock()
+        );
+    }
+
+    /**
+     * Reset to NotYetSubmitted from Cancelled
+     *
+     * @param RefData $status
+     *
+     * @throws ForbiddenException
+     */
+    public function resetToNotYetSubmittedFromCancelled(RefData $status)
+    {
+        if (!$this->canBeResetToNotYetSubmittedFromCancelled()) {
             throw new ForbiddenException('Unable to reset this application to Not Yet Submitted');
         }
 
@@ -2584,5 +2615,18 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $matchingDocuments;
+    }
+
+    /**
+     * Whether this application is either under consideration or awating fee, and associated with the specified stock
+     *
+     * @param IrhpPermitStock $irhpPermitStock
+     *
+     * @return bool
+     */
+    public function isUnderConsiderationOrAwaitingFeeAndAssociatedWithStock(IrhpPermitStock $irhpPermitStock)
+    {
+        return ($this->isUnderConsideration() || $this->isAwaitingFee())
+            && $this->getAssociatedStock() === $irhpPermitStock;
     }
 }
