@@ -7,8 +7,8 @@ use Dvsa\Olcs\Api\Service\Template\StrategySelectingViewRenderer;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Twig\Loader\LoaderInterface as TwigLoader;
-use Zend\View\Renderer\RendererInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\View\Renderer\RendererInterface;
+use Laminas\View\Model\ViewModel;
 
 /**
  * StrategySelectingViewRendererTest

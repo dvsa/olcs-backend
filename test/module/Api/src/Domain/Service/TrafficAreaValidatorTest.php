@@ -42,7 +42,7 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $repositoryServiceManager->shouldReceive('get')->with('AdminAreaTrafficArea')->once()
             ->andReturn($adminAreaTrafficAreaRepo);
 
-        $serviceLocator = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->shouldReceive('get')->with('AddressService')->once()->andReturn($addressService);
         $serviceLocator->shouldReceive('get')->with('RepositoryServiceManager')->once()
             ->andReturn($repositoryServiceManager);
@@ -65,7 +65,7 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $repositoryServiceManager->shouldReceive('get')->with('AdminAreaTrafficArea')->once()
             ->andReturn($adminAreaTrafficAreaRepo);
 
-        $serviceLocator = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->shouldReceive('get')->with('AddressService')->once()->andReturn($addressService);
         $serviceLocator->shouldReceive('get')->with('RepositoryServiceManager')->once()
             ->andReturn($repositoryServiceManager);

@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Si;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequestFailure as Entity;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Zend\Serializer\Adapter\Json;
+use Laminas\Serializer\Adapter\Json;
 use Mockery as m;
 
 /**

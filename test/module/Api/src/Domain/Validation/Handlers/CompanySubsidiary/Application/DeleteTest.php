@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\CompanySubsidiary\Application\Delete;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Dvsa\Olcs\Transfer\Command\Application\DeleteCompanySubsidiary as Cmd;
 
 /**

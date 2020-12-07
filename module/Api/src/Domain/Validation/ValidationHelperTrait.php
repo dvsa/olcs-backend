@@ -10,7 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Validation;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
 

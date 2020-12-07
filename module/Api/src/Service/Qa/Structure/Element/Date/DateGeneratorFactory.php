@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class DateGeneratorFactory implements FactoryInterface
 {

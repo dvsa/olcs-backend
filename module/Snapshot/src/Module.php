@@ -8,8 +8,8 @@
 namespace Dvsa\Olcs\Snapshot;
 
 use Dvsa\Olcs\Utils\Translation\MissingTranslationProcessor;
-use Zend\Cache\Storage\Adapter\Redis;
-use Zend\I18n\Translator\Translator;
+use Laminas\Cache\Storage\Adapter\Redis;
+use Laminas\I18n\Translator\Translator;
 
 /**
  * Module
@@ -18,7 +18,7 @@ use Zend\I18n\Translator\Translator;
  */
 class Module
 {
-    public function onBootstrap(\Zend\Mvc\MvcEvent $e)
+    public function onBootstrap(\Laminas\Mvc\MvcEvent $e)
     {
         $sm = $e->getApplication()->getServiceManager();
 
@@ -48,7 +48,7 @@ class Module
     public function getAutoloaderConfig()
     {
         return [
-            'Zend\Loader\StandardAutoloader' => [
+            'Laminas\Loader\StandardAutoloader' => [
                 'namespaces' => [
                     __NAMESPACE__ => __DIR__,
                 ],

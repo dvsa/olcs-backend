@@ -8,8 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\Service;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceOperatingCentre;
 
@@ -56,7 +56,6 @@ class VariationOperatingCentreHelper implements FactoryInterface
         }
 
         foreach ($aocs as $aoc) {
-
             $aoc['source'] = 'A';
             $aoc['id'] = 'A' . $aoc['id'];
             $aoc['sort'] = $this->addCustomSort($aoc, $sort);
@@ -65,7 +64,6 @@ class VariationOperatingCentreHelper implements FactoryInterface
         }
 
         foreach ($locs as $loc) {
-
             $loc['source'] = 'L';
             $loc['id'] = 'L' . $loc['id'];
             $loc['sort'] = $this->addCustomSort($loc, $sort);

@@ -18,7 +18,7 @@ class LoaderTest extends \PHPUnit\Framework\TestCase
 
     public function testConstructorWithCache()
     {
-        $cache = m::mock(\Zend\Cache\Storage\StorageInterface::class);
+        $cache = m::mock(\Laminas\Cache\Storage\StorageInterface::class);
         $sut = new Loader($cache);
         $this->assertSame($cache, $sut->getCacheAdapter());
     }
@@ -44,13 +44,13 @@ class LoaderTest extends \PHPUnit\Framework\TestCase
 
     public function testLoadFederationUrlNoCache()
     {
-        $mockResponse = m::mock(\Zend\Http\Response::class);
+        $mockResponse = m::mock(\Laminas\Http\Response::class);
         $mockResponse->shouldReceive('isOk')->with()->once()->andReturn(true);
         $mockResponse->shouldReceive('getBody')->with()->once()->andReturn(
             file_get_contents(__DIR__ .'/Metadata/federation.xml')
         );
 
-        $mockHttpClient = m::mock(\Zend\Http\Client::class);
+        $mockHttpClient = m::mock(\Laminas\Http\Client::class);
         $mockHttpClient->shouldReceive('reset')->with()->once();
         $mockHttpClient->shouldReceive('setUri')->with('http:/foo.bar')->once();
         $mockHttpClient->shouldReceive('send')->with()->once()->andReturn($mockResponse);
@@ -66,10 +66,10 @@ class LoaderTest extends \PHPUnit\Framework\TestCase
 
     public function testLoadFederationUrlNoCacheError()
     {
-        $mockResponse = m::mock(\Zend\Http\Response::class);
+        $mockResponse = m::mock(\Laminas\Http\Response::class);
         $mockResponse->shouldReceive('isOk')->with()->once()->andReturn(false);
 
-        $mockHttpClient = m::mock(\Zend\Http\Client::class);
+        $mockHttpClient = m::mock(\Laminas\Http\Client::class);
         $mockHttpClient->shouldReceive('reset')->with()->once();
         $mockHttpClient->shouldReceive('setUri')->with('http:/foo.bar')->once();
         $mockHttpClient->shouldReceive('send')->with()->once()->andReturn($mockResponse);
@@ -88,15 +88,15 @@ class LoaderTest extends \PHPUnit\Framework\TestCase
     {
         $xml = file_get_contents(__DIR__ .'/Metadata/federation.xml');
 
-        $mockCache = m::mock(\Zend\Cache\Storage\StorageInterface::class);
+        $mockCache = m::mock(\Laminas\Cache\Storage\StorageInterface::class);
         $mockCache->shouldReceive('hasItem')->with(md5('http:/foo.bar'))->once()->andReturn(false);
         $mockCache->shouldReceive('setItem')->with(md5('http:/foo.bar'), $xml)->once()->andReturn(false);
 
-        $mockResponse = m::mock(\Zend\Http\Response::class);
+        $mockResponse = m::mock(\Laminas\Http\Response::class);
         $mockResponse->shouldReceive('isOk')->with()->once()->andReturn(true);
         $mockResponse->shouldReceive('getBody')->with()->once()->andReturn($xml);
 
-        $mockHttpClient = m::mock(\Zend\Http\Client::class);
+        $mockHttpClient = m::mock(\Laminas\Http\Client::class);
         $mockHttpClient->shouldReceive('reset')->with()->once();
         $mockHttpClient->shouldReceive('setUri')->with('http:/foo.bar')->once();
         $mockHttpClient->shouldReceive('send')->with()->once()->andReturn($mockResponse);
@@ -114,7 +114,7 @@ class LoaderTest extends \PHPUnit\Framework\TestCase
     {
         $xml = file_get_contents(__DIR__ .'/Metadata/federation.xml');
 
-        $mockCache = m::mock(\Zend\Cache\Storage\StorageInterface::class);
+        $mockCache = m::mock(\Laminas\Cache\Storage\StorageInterface::class);
         $mockCache->shouldReceive('hasItem')->with(md5('http:/foo.bar'))->once()->andReturn(true);
         $mockCache->shouldReceive('getItem')->with(md5('http:/foo.bar'))->once()->andReturn($xml);
 
@@ -129,6 +129,6 @@ class LoaderTest extends \PHPUnit\Framework\TestCase
     public function testGetHttpClient()
     {
         $sut = new Loader();
-        $this->assertInstanceOf(\Zend\Http\Client::class, $sut->getHttpClient());
+        $this->assertInstanceOf(\Laminas\Http\Client::class, $sut->getHttpClient());
     }
 }

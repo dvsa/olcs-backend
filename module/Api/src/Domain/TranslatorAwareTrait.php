@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
-use Zend\I18n\Translator\Translator;
-use Zend\I18n\Translator\TranslatorInterface;
+use Laminas\I18n\Translator\Translator;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Translator Aware

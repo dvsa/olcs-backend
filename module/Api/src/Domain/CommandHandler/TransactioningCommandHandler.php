@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class TransactioningCommandHandler

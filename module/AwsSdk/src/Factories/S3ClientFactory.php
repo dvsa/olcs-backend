@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\AwsSdk\Factories;
 
 use Aws\S3\S3Client;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class S3ClientFactory

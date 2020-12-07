@@ -18,8 +18,8 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 use Dvsa\Olcs\Cpms\Service\ApiService;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Cpms Version 2 Helper Service

@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**

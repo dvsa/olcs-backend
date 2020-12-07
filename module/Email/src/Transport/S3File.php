@@ -4,12 +4,12 @@ namespace Dvsa\Olcs\Email\Transport;
 
 use Aws\S3\Exception\S3Exception;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Zend\I18n\Filter\Alnum;
-use Zend\Log\Logger;
-use Zend\Mail\Transport\Exception\RuntimeException;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\File;
-use Zend\Mail\Transport\TransportInterface;
+use Laminas\I18n\Filter\Alnum;
+use Laminas\Log\Logger;
+use Laminas\Mail\Transport\Exception\RuntimeException;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\File;
+use Laminas\Mail\Transport\TransportInterface;
 
 /**
  * Class S3File
@@ -85,10 +85,10 @@ class S3File implements TransportInterface
                 'Body' => file_get_contents($file)
             ]);
         } catch (S3Exception $e) {
-            
             throw new RuntimeException('Cannot send mail to S3 : ' . $e->getAwsErrorMessage());
-        } finally{
-            $this->deleteFile($file); //clean up email file
+        } finally {
+            //clean up email file
+            $this->deleteFile($file);
         }
     }
 

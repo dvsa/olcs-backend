@@ -28,7 +28,7 @@ final class Publish extends AbstractCommandHandler implements TransactionedInter
      */
     private $variationValidationService;
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->applicationValidationService = $mainServiceLocator->get('ApplicationPublishValidationService');

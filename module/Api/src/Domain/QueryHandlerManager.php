@@ -10,11 +10,11 @@ namespace Dvsa\Olcs\Api\Domain;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Transfer\Query\LoggerOmitResponseInterface;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Laminas\ServiceManager\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandlerInterface;
 
 /**

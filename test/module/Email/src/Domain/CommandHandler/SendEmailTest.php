@@ -6,7 +6,7 @@ use Dvsa\Olcs\Email\Service\Email;
 use Mockery as m;
 use Dvsa\Olcs\Email\Domain\CommandHandler\SendEmail;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail as Cmd;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;

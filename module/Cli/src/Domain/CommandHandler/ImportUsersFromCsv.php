@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service\OpenAm;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Validators\EmailAddress;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>
@@ -205,7 +205,6 @@ class ImportUsersFromCsv extends AbstractCommandHandler
             $user->setContactDetails($contactDetails);
 
             $this->getRepo()->save($user);
-
         } catch (\Exception $e) {
             $this->transMngr->rollback();
 
@@ -224,7 +223,6 @@ class ImportUsersFromCsv extends AbstractCommandHandler
                 OpenAm\Client::REALM_INTERNAL,
                 $password
             );
-
         } catch (OpenAm\FailedRequestException $e) {
             $this->transMngr->rollback();
 

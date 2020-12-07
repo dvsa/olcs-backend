@@ -17,7 +17,7 @@ class SearchFactoryTest extends \PHPUnit\Framework\TestCase
         $mockClient = m::mock('Elastica\Client');
         $mockAuthService = m::mock(AuthorizationService::class);
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('ElasticSearch\Client')->andReturn($mockClient);
         $mockSl->shouldReceive('get')->with(AuthorizationService::class)->andReturn($mockAuthService);
 

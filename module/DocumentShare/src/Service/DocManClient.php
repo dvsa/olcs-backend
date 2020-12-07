@@ -4,9 +4,9 @@ namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Olcs\Logging\Log\Logger;
-use Zend\Http\Client as HttpClient;
-use Zend\Http\Request;
-use Zend\Http\Response;
+use Laminas\Http\Client as HttpClient;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
 
 class DocManClient implements DocumentStoreInterface
 {
@@ -80,7 +80,7 @@ class DocManClient implements DocumentStoreInterface
     /**
      * Return Http Client
      *
-     * @return \Zend\Http\Client
+     * @return \Laminas\Http\Client
      */
     public function getHttpClient()
     {
@@ -125,7 +125,7 @@ class DocManClient implements DocumentStoreInterface
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
         try {
-            /** @var  \Zend\Http\Response\Stream $response */
+            /** @var  \Laminas\Http\Response\Stream $response */
             $response = $this->getHttpClient()
                 ->setRequest($this->getRequest())
                 ->setUri(

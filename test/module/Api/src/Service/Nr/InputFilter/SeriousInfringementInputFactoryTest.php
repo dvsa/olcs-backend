@@ -17,10 +17,10 @@ class SeriousInfringementInputFactoryTest extends TestCase
 {
     public function testCreateService()
     {
-        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
-        $mockValidator = m::mock('Zend\Validator\AbstractValidator');
+        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
+        $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with(IsExecuted::class)->andReturn($mockFilter);
@@ -28,10 +28,10 @@ class SeriousInfringementInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(SiPenaltyImposedDate::class)->andReturn($mockValidator);
 
         $sut = new SeriousInfringementInputFactory();
-        /** @var \Zend\InputFilter\Input $service */
+        /** @var \Laminas\InputFilter\Input $service */
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(2, $service->getFilterChain());
         $this->assertCount(1, $service->getValidatorChain());
     }

@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory;
 use Dvsa\Olcs\Transfer\Util\Annotation\AnnotationBuilder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * PayloadValidationListenerFactory Test

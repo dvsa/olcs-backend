@@ -23,7 +23,7 @@ final class CreateTaxiPhv extends AbstractCommandHandler implements Transactione
      */
     private $trafficAreaValidator;
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
 

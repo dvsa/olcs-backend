@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Queue\Factories;
 
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MessageBuilderFactory implements FactoryInterface
 {

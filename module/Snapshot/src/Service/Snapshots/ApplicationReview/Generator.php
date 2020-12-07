@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService;
-use Zend\Filter\Word\UnderscoreToCamelCase;
+use Laminas\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * Application Review

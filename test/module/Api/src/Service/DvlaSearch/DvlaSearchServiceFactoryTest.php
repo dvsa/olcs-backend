@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\DvlaSearch;
 
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
 use Dvsa\Olcs\DvlaSearch\Service\Client as DvlaSearchServiceClient;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery as m;
 
@@ -21,7 +21,7 @@ class DvlaSearchServiceFactoryTest extends TestCase
             ]
         ];
 
-        $logger = new \Zend\Log\Logger();
+        $logger = new \Laminas\Log\Logger();
 
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);

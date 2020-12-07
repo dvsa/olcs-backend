@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CreateCommentCmd;
-use Zend\Stdlib\ArraySerializableInterface;
+use Laminas\Stdlib\ArraySerializableInterface;
 
 /**
  * SubmissionSectionComment

@@ -11,7 +11,7 @@ use Dvsa\Olcs\DvlaSearch\Service\Client as DvlaSearchService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\DvlaSearch\Vehicle as VehicleQuery;
 use GuzzleHttp\Exception\GuzzleException;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class Vehicle extends AbstractQueryHandler
 {

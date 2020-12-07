@@ -54,8 +54,8 @@ require 'init_autoloader.php';
 
 // Run the application!
 try {
-    Zend\Mvc\Application::init(require 'config/application.config.php')->run();
-} catch (Zend\ServiceManager\Exception\ServiceNotCreatedException $e) {
+    Laminas\Mvc\Application::init(require 'config/application.config.php')->run();
+} catch (Laminas\ServiceManager\Exception\ServiceNotCreatedException $e) {
     do {
         $lastException = sprintf(
             "%s:%d %s (%d) [%s]\n",

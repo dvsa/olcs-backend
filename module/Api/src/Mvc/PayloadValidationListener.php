@@ -2,15 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Mvc;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
-use Zend\EventManager\ListenerAggregateTrait;
-use Zend\Http\Header\ContentType;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\EventManager\ListenerAggregateInterface;
+use Laminas\EventManager\ListenerAggregateTrait;
+use Laminas\Http\Header\ContentType;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\Router;
 use Dvsa\Olcs\Transfer\Util\Annotation\AnnotationBuilder;
-use Zend\Http\Request as HttpRequest;
-use Zend\Http\Response;
+use Laminas\Http\Request as HttpRequest;
+use Laminas\Http\Response;
 
 /**
  * Class PayloadValidationListener

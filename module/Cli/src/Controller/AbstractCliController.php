@@ -6,8 +6,8 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
-use Zend\Mvc\Controller\AbstractConsoleController;
-use Zend\View\Model\ConsoleModel;
+use Laminas\Mvc\Controller\AbstractConsoleController;
+use Laminas\View\Model\ConsoleModel;
 
 class AbstractCliController extends AbstractConsoleController
 {
@@ -26,12 +26,12 @@ class AbstractCliController extends AbstractConsoleController
      * Write verbose messages, ie only if verbose flag is set
      *
      * @param array|string $messages Message to write
-     * @param int $logPriority One of \Zend\Log\Logger::*
+     * @param int $logPriority One of \Laminas\Log\Logger::*
      *
      * @return void
      * @throws \Exception
      */
-    protected function writeVerboseMessages($messages, $logPriority = \Zend\Log\Logger::DEBUG)
+    protected function writeVerboseMessages($messages, $logPriority = \Laminas\Log\Logger::DEBUG)
     {
         if (!is_array($messages)) {
             $messages = [$messages];
@@ -51,7 +51,7 @@ class AbstractCliController extends AbstractConsoleController
      *
      * @param int $result exit code, should be non-zero if there was an error
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     protected function handleExitStatus($result)
     {
@@ -82,13 +82,13 @@ class AbstractCliController extends AbstractConsoleController
                 $this->writeVerboseMessages($result->getMessages());
             }
         } catch (NotFoundException $e) {
-            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
+            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Laminas\Log\Logger::WARN);
             return 404;
         } catch (Exception\Exception $e) {
-            $this->writeVerboseMessages($e->getMessages(), \Zend\Log\Logger::ERR);
+            $this->writeVerboseMessages($e->getMessages(), \Laminas\Log\Logger::ERR);
             return 400;
         } catch (\Exception $e) {
-            $this->writeVerboseMessages($e->getMessage(), \Zend\Log\Logger::ERR);
+            $this->writeVerboseMessages($e->getMessage(), \Laminas\Log\Logger::ERR);
             return 500;
         }
 
@@ -134,11 +134,11 @@ class AbstractCliController extends AbstractConsoleController
             $this->writeVerboseMessages("Handle query " . get_class($dto));
             return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         } catch (NotFoundException $e) {
-            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
+            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Laminas\Log\Logger::WARN);
         } catch (Exception\Exception $e) {
-            $this->writeVerboseMessages($e->getMessages(), \Zend\Log\Logger::ERR);
+            $this->writeVerboseMessages($e->getMessages(), \Laminas\Log\Logger::ERR);
         } catch (\Exception $e) {
-            $this->writeVerboseMessages([$e->getMessage()], \Zend\Log\Logger::ERR);
+            $this->writeVerboseMessages([$e->getMessage()], \Laminas\Log\Logger::ERR);
         }
 
         return false;

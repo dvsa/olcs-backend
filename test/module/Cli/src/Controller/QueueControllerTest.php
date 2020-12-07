@@ -11,8 +11,8 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Cli\Controller\QueueController;
 use OlcsTest\Bootstrap;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\Router\RouteMatch;
 
 /**
  * Queue Controller Test
@@ -31,13 +31,13 @@ class QueueControllerTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->request = m::mock('Zend\Console\Request');
+        $this->request = m::mock('Laminas\Console\Request');
 
         $this->routeMatch = new RouteMatch([]);
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
         $this->sm = Bootstrap::getServiceManager();
-        $this->console = m::mock('Zend\Console\Adapter\AdapterInterface');
+        $this->console = m::mock('Laminas\Console\Adapter\AdapterInterface');
 
         $this->sut = new QueueController();
         $this->sut->setEvent($this->event);
@@ -245,7 +245,7 @@ class QueueControllerTest extends MockeryTestCase
 
         // Assertions
         $this->routeMatch->setParam('action', 'index');
-        /** @var \Zend\View\Model\ConsoleModel $model */
+        /** @var \Laminas\View\Model\ConsoleModel $model */
         $model = $this->sut->dispatch($this->request);
 
         $this->assertEquals(1, $model->getErrorLevel());

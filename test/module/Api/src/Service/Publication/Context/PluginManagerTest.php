@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Publication\Context\ContextInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Publication\Context\PluginManager
@@ -28,7 +28,7 @@ class PluginManagerTest extends MockeryTestCase
 
         //  expect
         $this->expectException(
-            \Zend\ServiceManager\Exception\RuntimeException::class,
+            \Laminas\ServiceManager\Exception\RuntimeException::class,
             'stdClass should implement: ' . ContextInterface::class
         );
 

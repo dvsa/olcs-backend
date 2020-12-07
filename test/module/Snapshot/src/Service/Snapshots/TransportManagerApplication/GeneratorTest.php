@@ -15,8 +15,8 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Generator;
 use OlcsTest\Bootstrap;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Generator Test

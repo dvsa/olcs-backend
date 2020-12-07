@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Nr\Mapping;
 
 use Olcs\XmlTools\Filter\MapXmlFile;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class ComplianceEpisodeXmlFactory

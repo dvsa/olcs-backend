@@ -9,12 +9,12 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Domain\Command\Cases\Si\SendResponse as SendResponseCmd;
-use Zend\Http\Response;
-use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
+use Laminas\Http\Response;
+use Laminas\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\InrClientException;
 
 /**

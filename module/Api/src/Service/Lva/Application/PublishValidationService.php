@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class PublishValidationService implements \Zend\ServiceManager\FactoryInterface
+class PublishValidationService implements \Laminas\ServiceManager\FactoryInterface
 {
     const ERROR_MUST_COMPETE_OC = 'APP-PUB-OC';
     const ERROR_MUST_COMPETE_TM = 'APP-PUB-TM';
@@ -24,7 +24,7 @@ class PublishValidationService implements \Zend\ServiceManager\FactoryInterface
      */
     private $feesHelper;
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->feesHelper = $serviceLocator->get('FeesHelperService');
 

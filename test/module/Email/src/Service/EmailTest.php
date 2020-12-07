@@ -10,12 +10,12 @@ namespace Dvsa\OlcsTest\Email\Service;
 use Dvsa\Olcs\Email\Service\Email;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\Mail\Message;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mail\Transport\TransportInterface;
-use Zend\Mime\Mime as ZendMime;
-use Zend\Mime\Part as ZendMimePart;
-use Zend\Mail\AddressList;
+use Laminas\Mail\Message;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Mail\Transport\TransportInterface;
+use Laminas\Mime\Mime as LaminasMime;
+use Laminas\Mime\Part as LaminasMimePart;
+use Laminas\Mail\AddressList;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 
 /**
@@ -37,7 +37,7 @@ class EmailTest extends MockeryTestCase
 
     public function testCreateServiceMissingConfig()
     {
-        $this->expectException(\Zend\Mail\Exception\RuntimeException::class);
+        $this->expectException(\Laminas\Mail\Exception\RuntimeException::class);
 
         $config = [];
 
@@ -96,8 +96,8 @@ class EmailTest extends MockeryTestCase
                         'Bcc: bcc@foo.com',
                         'Subject: Subject',
                         'MIME-Version: 1.0',
-                        'Content-Type: ' . ZendMime::TYPE_TEXT,
-                        'Content-Transfer-Encoding: ' . ZendMime::ENCODING_QUOTEDPRINTABLE,
+                        'Content-Type: ' . LaminasMime::TYPE_TEXT,
+                        'Content-Transfer-Encoding: ' . LaminasMime::ENCODING_QUOTEDPRINTABLE,
                         '',
                         'This is the content'
                     ];
@@ -137,41 +137,41 @@ class EmailTest extends MockeryTestCase
                     $this->assertCount(3, $parts);
 
                     /**
-                     * @var ZendMimePart $messagePart
-                     * @var ZendMimePart $attachmentPart
+                     * @var LaminasMimePart $messagePart
+                     * @var LaminasMimePart $attachmentPart
                      */
                     $messagePart = $parts[0];
                     $attachmentPart1 = $parts[1];
                     $attachmentPart2 = $parts[2];
 
-                    $expectedPlainText = "Content-Type: " . ZendMime::TYPE_TEXT . "\n" .
-                        "Content-Transfer-Encoding: " . ZendMime::ENCODING_QUOTEDPRINTABLE . "\n\n" .
+                    $expectedPlainText = "Content-Type: " . LaminasMime::TYPE_TEXT . "\n" .
+                        "Content-Transfer-Encoding: " . LaminasMime::ENCODING_QUOTEDPRINTABLE . "\n\n" .
                         "plain content";
 
-                    $expectedHtml = "Content-Type: " . ZendMime::TYPE_HTML . "\n" .
-                        "Content-Transfer-Encoding: " . ZendMime::ENCODING_QUOTEDPRINTABLE . "\n\n" .
+                    $expectedHtml = "Content-Type: " . LaminasMime::TYPE_HTML . "\n" .
+                        "Content-Transfer-Encoding: " . LaminasMime::ENCODING_QUOTEDPRINTABLE . "\n\n" .
                         "html content";
 
                     //test part one (this is a generated multipart message body, so we check both parts are included)
                     $this->assertStringContainsString($expectedPlainText, $messagePart->getRawContent());
                     $this->assertStringContainsString($expectedHtml, $messagePart->getRawContent());
-                    $this->assertInstanceOf(ZendMimePart::class, $messagePart);
+                    $this->assertInstanceOf(LaminasMimePart::class, $messagePart);
 
                     //test part two (the first attachment)
-                    $this->assertEquals(ZendMime::TYPE_OCTETSTREAM, $attachmentPart1->type);
-                    $this->assertEquals(ZendMime::ENCODING_BASE64, $attachmentPart1->encoding);
-                    $this->assertEquals(ZendMime::DISPOSITION_ATTACHMENT, $attachmentPart1->disposition);
+                    $this->assertEquals(LaminasMime::TYPE_OCTETSTREAM, $attachmentPart1->type);
+                    $this->assertEquals(LaminasMime::ENCODING_BASE64, $attachmentPart1->encoding);
+                    $this->assertEquals(LaminasMime::DISPOSITION_ATTACHMENT, $attachmentPart1->disposition);
                     $this->assertEquals('docFilename', $attachmentPart1->filename);
                     $this->assertEquals('docContent', $attachmentPart1->getRawContent());
-                    $this->assertInstanceOf(ZendMimePart::class, $attachmentPart1);
+                    $this->assertInstanceOf(LaminasMimePart::class, $attachmentPart1);
 
                     //test part three (the second attachment)
-                    $this->assertEquals(ZendMime::TYPE_OCTETSTREAM, $attachmentPart2->type);
-                    $this->assertEquals(ZendMime::ENCODING_BASE64, $attachmentPart2->encoding);
-                    $this->assertEquals(ZendMime::DISPOSITION_ATTACHMENT, $attachmentPart2->disposition);
+                    $this->assertEquals(LaminasMime::TYPE_OCTETSTREAM, $attachmentPart2->type);
+                    $this->assertEquals(LaminasMime::ENCODING_BASE64, $attachmentPart2->encoding);
+                    $this->assertEquals(LaminasMime::DISPOSITION_ATTACHMENT, $attachmentPart2->disposition);
                     $this->assertEquals('docFilename2', $attachmentPart2->filename);
                     $this->assertEquals('docContent2', $attachmentPart2->getRawContent());
-                    $this->assertInstanceOf(ZendMimePart::class, $attachmentPart2);
+                    $this->assertInstanceOf(LaminasMimePart::class, $attachmentPart2);
 
                     /**
                      * @var AddressList $from
@@ -186,7 +186,7 @@ class EmailTest extends MockeryTestCase
                     $bccList = $headers->get('bcc')->getAddressList();
 
                     //test mail headers
-                    $this->assertEquals(ZendMime::MULTIPART_MIXED, $headers->get('content-type')->getType());
+                    $this->assertEquals(LaminasMime::MULTIPART_MIXED, $headers->get('content-type')->getType());
                     $this->assertEquals('msg subject', $headers->get('subject')->getFieldValue());
                     $this->assertEquals(true, $from->has('foo@bar.com'));
                     $this->assertEquals(1, $from->count());
@@ -248,23 +248,23 @@ class EmailTest extends MockeryTestCase
                     $this->assertCount(2, $parts);
 
                     /**
-                     * @var ZendMimePart $plainPart
-                     * @var ZendMimePart $htmlPart
+                     * @var LaminasMimePart $plainPart
+                     * @var LaminasMimePart $htmlPart
                      */
                     $plainPart = $parts[0];
                     $htmlPart = $parts[1];
 
                     //test part one (plain text)
                     $this->assertEquals('plain content', $plainPart->getRawContent());
-                    $this->assertEquals(ZendMime::TYPE_TEXT, $plainPart->type);
-                    $this->assertEquals(ZendMime::ENCODING_QUOTEDPRINTABLE, $plainPart->encoding);
-                    $this->assertInstanceOf(ZendMimePart::class, $plainPart);
+                    $this->assertEquals(LaminasMime::TYPE_TEXT, $plainPart->type);
+                    $this->assertEquals(LaminasMime::ENCODING_QUOTEDPRINTABLE, $plainPart->encoding);
+                    $this->assertInstanceOf(LaminasMimePart::class, $plainPart);
 
                     //test part two (html)
                     $this->assertEquals('html content', $htmlPart->getRawContent());
-                    $this->assertEquals(ZendMime::TYPE_HTML, $htmlPart->type);
-                    $this->assertEquals(ZendMime::ENCODING_QUOTEDPRINTABLE, $htmlPart->encoding);
-                    $this->assertInstanceOf(ZendMimePart::class, $htmlPart);
+                    $this->assertEquals(LaminasMime::TYPE_HTML, $htmlPart->type);
+                    $this->assertEquals(LaminasMime::ENCODING_QUOTEDPRINTABLE, $htmlPart->encoding);
+                    $this->assertInstanceOf(LaminasMimePart::class, $htmlPart);
 
                     /**
                      * @var AddressList $from
@@ -279,7 +279,7 @@ class EmailTest extends MockeryTestCase
                     $bccList = $headers->get('bcc')->getAddressList();
 
                     //test mail headers
-                    $this->assertEquals(ZendMime::MULTIPART_ALTERNATIVE, $headers->get('content-type')->getType());
+                    $this->assertEquals(LaminasMime::MULTIPART_ALTERNATIVE, $headers->get('content-type')->getType());
                     $this->assertEquals('msg subject', $headers->get('subject')->getFieldValue());
                     $this->assertEquals(true, $from->has('foo@bar.com'));
                     $this->assertEquals(1, $from->count());

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\DeletePeopleViaVariation as DeletePeopleV
 use Dvsa\Olcs\Transfer\Command\Variation\GrantDirectorChange;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Zend\Stdlib\ArraySerializableInterface;
+use Laminas\Stdlib\ArraySerializableInterface;
 
 class DeletePeopleViaVariationTest extends CommandHandlerTestCase
 {

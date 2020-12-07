@@ -8,8 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\Service;
 
 use Dvsa\Olcs\Api\Entity\User\Permission;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -72,7 +72,6 @@ class UpdateOperatingCentreHelper implements FactoryInterface
         }
 
         if ($totals['noOfOperatingCentres'] >= 2) {
-
             if ($command->getTotAuthVehicles() < $totals['minVehicleAuth']) {
                 $this->addMessage('totAuthVehicles', self::ERR_OC_V_2);
             }
@@ -94,7 +93,6 @@ class UpdateOperatingCentreHelper implements FactoryInterface
         }
 
         if ($totals['noOfOperatingCentres'] >= 2) {
-
             if ($command->getTotAuthTrailers() < $totals['minTrailerAuth']) {
                 $this->addMessage('totAuthTrailers', self::ERR_OC_T_2);
             }

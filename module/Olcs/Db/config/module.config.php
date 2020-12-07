@@ -16,7 +16,7 @@ return [
     ],
     'service_manager' => [
         'abstract_factories' => [
-            'Zend\Log\LoggerAbstractServiceFactory'
+            'Laminas\Log\LoggerAbstractServiceFactory'
         ],
         'factories' => [
             'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',

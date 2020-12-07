@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service\Document\PrintLetter;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\Document\PrintLetter

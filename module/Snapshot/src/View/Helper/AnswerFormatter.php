@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Snapshot\View\Helper;
 
 use Dvsa\Olcs\Api\Entity\Generic\Question;
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 
 /**
  * Format data passed in q&a format

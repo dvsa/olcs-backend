@@ -6,10 +6,10 @@ use Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
-use Zend\Http\Client as RestClient;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Client as RestClient;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
 
 /**

@@ -10,11 +10,11 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Zend\Filter\Word\CamelCaseToUnderscore;
-use Zend\Filter\Word\UnderscoreToCamelCase;
+use Laminas\Filter\Word\CamelCaseToUnderscore;
+use Laminas\Filter\Word\UnderscoreToCamelCase;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateOperatingCentresCmd;
@@ -585,7 +585,6 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     protected function updateSectionsRequiringAttention($currentSection)
     {
         foreach ($this->requireAttentionMap as $section => $triggers) {
-
             // Skip the current section, or updated sections
             if ($section === $currentSection || $this->isUpdated($section)) {
                 continue;
@@ -626,7 +625,6 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     {
         // If the old licence type was restricted and it is being upgraded
         if ($this->application->isLicenceUpgrade()) {
-
             $relatedSections = [
                 'addresses',
                 'financial_evidence',
@@ -714,7 +712,9 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         }
 
         $this->updateHelper->validateTotalAuthVehicles(
-            $this->application, $command, $this->getAuthorityTotals()
+            $this->application,
+            $command,
+            $this->getAuthorityTotals()
         );
 
         return $this->updateHelper->getMessages();
@@ -738,7 +738,6 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         ];
 
         foreach ($aocs as $aoc) {
-
             if (in_array($aoc['action'], ['D', 'C'])) {
                 continue;
             }

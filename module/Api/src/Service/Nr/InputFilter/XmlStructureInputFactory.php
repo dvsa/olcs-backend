@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\InputFilter;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;

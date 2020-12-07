@@ -4,8 +4,8 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\Mapping;
 
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Xml\Specification\FixedValue;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Xml\Specification\NodeValue;
 use Olcs\XmlTools\Xml\Specification\Recursion;
 use Olcs\XmlTools\Xml\Specification\MultiNodeValue;

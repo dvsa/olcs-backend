@@ -7,9 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\Exception\RuntimeException;
 
 /**
  * Validator Manager

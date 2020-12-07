@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Filesystem\Filesystem;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class FileProcessorFactory

@@ -81,7 +81,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
         //  call & check
         $actual = $this->sut->download($identifier, $path);
 
-        static::assertInstanceOf(\Zend\Http\Response\Stream::class, $actual);
+        static::assertInstanceOf(\Laminas\Http\Response\Stream::class, $actual);
         static::assertEquals($tmpFilePath, $actual->getStreamName());
         static::assertEquals($expectContent, $actual->getBody());
 

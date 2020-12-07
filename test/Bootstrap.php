@@ -3,7 +3,7 @@
 namespace OlcsTest;
 
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 
 /**
@@ -37,8 +37,8 @@ class Bootstrap
 
     public static function setupLogger()
     {
-        $logWriter = new \Zend\Log\Writer\Mock();
-        $logger = new \Zend\Log\Logger();
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
         $logger->addWriter($logWriter);
 
         Logger::setLogger($logger);

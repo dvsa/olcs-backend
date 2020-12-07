@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\Filter\Format;
 
-use Zend\Filter\AbstractFilter as ZendAbstractFilter;
+use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
 
 /**
  * Class Via
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter\Format
  */
-class Via extends ZendAbstractFilter
+class Via extends LaminasAbstractFilter
 {
 
     /**

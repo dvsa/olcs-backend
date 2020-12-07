@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Delete as DeleteQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteQueueCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>

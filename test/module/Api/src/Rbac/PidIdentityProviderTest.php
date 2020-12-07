@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use Zend\Http\PhpEnvironment\Request;
+use Laminas\Http\PhpEnvironment\Request;
 
 /**
  * Pid Identity Provider Test
@@ -64,7 +64,7 @@ class PidIdentityProviderTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $mockRequest = m::mock(\Zend\Console\Request::class);
+        $mockRequest = m::mock(\Laminas\Console\Request::class);
 
         $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid');
 

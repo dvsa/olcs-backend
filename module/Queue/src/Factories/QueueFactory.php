@@ -4,8 +4,8 @@ namespace Dvsa\Olcs\Queue\Factories;
 
 use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\Queue\Service\Queue;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class QueueFactory implements FactoryInterface
 {

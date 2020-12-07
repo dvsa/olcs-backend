@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RuntimeException;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Renderer\RendererInterface;
 
 /**
  * AnswersSummaryRowGeneratorTest

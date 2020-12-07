@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory;
 
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Cpid Organisation Export Factory
@@ -23,7 +23,7 @@ class CpidOrganisationExportFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \Zend\ServiceManager\ServiceManager $sl */
+        /** @var \Laminas\ServiceManager\ServiceManager $sl */
         $sl = $serviceLocator->getServiceLocator();
 
         $repo = $sl->get('RepositoryServiceManager')->get('Organisation');

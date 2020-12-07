@@ -38,9 +38,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
@@ -115,7 +115,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         try {
             $this->applyInterfaces($mainServiceLocator);
-        } catch (ZendServiceException $e) {
+        } catch (LaminasServiceException $e) {
             $this->logServiceExceptions($e);
         }
 
@@ -139,7 +139,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
-     * Zend ServiceManager masks exceptions behind a simple 'service not created'
+     * Laminas ServiceManager masks exceptions behind a simple 'service not created'
      * message so here we inspect the 'previous exception' chain and log out
      * what the actual errors were, before rethrowing the original execption.
      *

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;

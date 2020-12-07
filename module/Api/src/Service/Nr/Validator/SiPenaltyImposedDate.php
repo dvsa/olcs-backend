@@ -2,15 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Validator;
 
-use Zend\Validator\Exception;
-use Zend\Validator\Date;
-use Zend\Validator\AbstractValidator as ZendAbstractValidator;
+use Laminas\Validator\Exception;
+use Laminas\Validator\Date;
+use Laminas\Validator\AbstractValidator as LaminasAbstractValidator;
 
 /**
  * Class SiPenaltyImposedDate
  * @package Dvsa\Olcs\Api\Service\Nr\Validator
  */
-class SiPenaltyImposedDate extends ZendAbstractValidator
+class SiPenaltyImposedDate extends LaminasAbstractValidator
 {
     const IMPOSED_PENALTY_INCORRECT_DECISION_START_DATE = 'imposed-penalty-incorrect-decision-start-date';
     const IMPOSED_PENALTY_INCORRECT_DECISION_END_DATE = 'imposed-penalty-incorrect-decision-end-date';

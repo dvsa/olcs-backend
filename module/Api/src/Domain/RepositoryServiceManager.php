@@ -7,8 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\ConfigInterface;
 
 /**
  * Repository Service Manager
@@ -26,6 +26,5 @@ class RepositoryServiceManager extends AbstractPluginManager
 
     public function validatePlugin($plugin)
     {
-
     }
 }

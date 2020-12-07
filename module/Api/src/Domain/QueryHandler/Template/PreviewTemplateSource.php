@@ -9,7 +9,7 @@ use Dvsa\Olcs\Transfer\Query\Template\PreviewTemplateSource as PreviewTemplateSo
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Exception;
 use RuntimeException;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Preview template source

@@ -56,7 +56,7 @@ class BusRegBrowseExportTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertInstanceOf(\Zend\Http\Response\Stream::class, $result);
+        $this->assertInstanceOf(\Laminas\Http\Response\Stream::class, $result);
         $this->assertNotEmpty($result->getBody());
         $this->assertEquals(
             'Content-Type: text/csv',

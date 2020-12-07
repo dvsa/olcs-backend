@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\FeatureToggle as FeatureToggleRepo;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle as FeatureToggleEntity;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Mockery as m;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory;
 
 /**

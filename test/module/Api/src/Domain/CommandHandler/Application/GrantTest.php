@@ -408,7 +408,7 @@ class GrantTest extends CommandHandlerTestCase
         $validationService = $services[static::SERVICE_VALIDATION] ?? $this->newMockValidationService();
         $queryHandler = $services[static::SERVICE_QUERY_HANDLER] ?? $this->getMockBuilder(QueryHandlerInterface::class)
                 ->disableOriginalConstructor()->getMock();
-        $serviceLocator = $this->getMockBuilder(\Zend\ServiceManager\ServiceLocatorInterface::class)
+        $serviceLocator = $this->getMockBuilder(\Laminas\ServiceManager\ServiceLocatorInterface::class)
             ->disableOriginalConstructor()
             ->addMethods(['getServiceLocator', 'handleCommand'])
             ->onlyMethods(['get', 'has'])

@@ -15,7 +15,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees as CancelAllInterimFeesCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateFeeCommand;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateDeclaration as UpdateDeclarationCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;

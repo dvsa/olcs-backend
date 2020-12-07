@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\Console\Adapter\AdapterInterface as ConsoleAdapter;
+use Laminas\Console\Adapter\AdapterInterface as ConsoleAdapter;
 
 final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implements OpenAmUserAwareInterface, AuthAwareInterface
 {

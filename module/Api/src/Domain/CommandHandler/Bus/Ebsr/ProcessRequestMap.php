@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Olcs\XmlTools\Xml\TemplateBuilder;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Olcs\Logging\Log\Logger;

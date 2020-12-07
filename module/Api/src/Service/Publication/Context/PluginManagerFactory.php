@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context;
 
-use Zend\Mvc\Service\AbstractPluginManagerFactory;
+use Laminas\Mvc\Service\AbstractPluginManagerFactory;
 
 /**
  * Class PluginManagerFactory

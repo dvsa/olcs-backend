@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
-use Zend\Filter\FilterPluginManager;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Filter\FilterPluginManager;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Validator\Xsd;
-use Zend\Http\Client as RestClient;
+use Laminas\Http\Client as RestClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 
 /**

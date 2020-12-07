@@ -6,8 +6,8 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
-use Zend\Filter\Word\UnderscoreToCamelCase;
-use Zend\View\Model\ViewModel;
+use Laminas\Filter\Word\UnderscoreToCamelCase;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Continuation Review generator

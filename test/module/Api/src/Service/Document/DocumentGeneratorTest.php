@@ -43,8 +43,8 @@ class DocumentGeneratorTest extends MockeryTestCase
         $this->namingService = m::mock(NamingService::class);
         $this->documentRepo = m::mock();
 
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface $sm */
-        $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+        /** @var \Laminas\ServiceManager\ServiceLocatorInterface $sm */
+        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)
             ->shouldReceive('get')->with('ContentStore')->andReturn($this->contentStore)
             ->shouldReceive('get')->with('Document')->andReturn($this->document)
             ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandlerManager)

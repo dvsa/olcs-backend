@@ -6,8 +6,8 @@ use Doctrine\ORM\OptimisticLockException;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Olcs\Logging\Log\Logger;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractRestfulController;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\AbstractRestfulController;
 
 /**
  * Generic Controller
@@ -20,7 +20,7 @@ class GenericController extends AbstractRestfulController
      *
      * @param int $id Identifier (ignorred)
      *
-     * @return Response|Response\Stream|\Zend\View\Model\JsonModel
+     * @return Response|Response\Stream|\Laminas\View\Model\JsonModel
      */
     public function get($id)
     {
@@ -40,7 +40,7 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            Logger::logException($ex, \Laminas\Log\Logger::ERR);
             return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
@@ -48,7 +48,7 @@ class GenericController extends AbstractRestfulController
     /**
      * Get list of data by passed Query Fqcl
      *
-     * @return Response|\Zend\View\Model\JsonModel
+     * @return Response|\Laminas\View\Model\JsonModel
      */
     public function getList()
     {
@@ -79,7 +79,7 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            Logger::logException($ex, \Laminas\Log\Logger::ERR);
             return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
@@ -91,7 +91,7 @@ class GenericController extends AbstractRestfulController
      * @param mixed $data Ignored
      *
      * @inheritdoc
-     * @return Response|\Zend\View\Model\JsonModel
+     * @return Response|\Laminas\View\Model\JsonModel
      */
     public function update($id, $data)
     {
@@ -113,7 +113,7 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            Logger::logException($ex, \Laminas\Log\Logger::ERR);
             return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
@@ -123,7 +123,7 @@ class GenericController extends AbstractRestfulController
      *
      * @param mixed $data Ignored
      *
-     * @return Response|\Zend\View\Model\JsonModel
+     * @return Response|\Laminas\View\Model\JsonModel
      */
     public function replaceList($data)
     {
@@ -139,7 +139,7 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            Logger::logException($ex, \Laminas\Log\Logger::ERR);
             return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
@@ -149,7 +149,7 @@ class GenericController extends AbstractRestfulController
      *
      * @param mixed $data Ignored as we use DTO parameter
      *
-     * @return Response|\Zend\View\Model\JsonModel
+     * @return Response|\Laminas\View\Model\JsonModel
      */
     public function create($data)
     {
@@ -165,7 +165,7 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            Logger::logException($ex, \Laminas\Log\Logger::ERR);
             return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
@@ -175,7 +175,7 @@ class GenericController extends AbstractRestfulController
      *
      * @param mixed $id Ignored
      *
-     * @return Response|\Zend\View\Model\JsonModel
+     * @return Response|\Laminas\View\Model\JsonModel
      */
     public function delete($id)
     {
@@ -191,7 +191,7 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            Logger::logException($ex, \Laminas\Log\Logger::ERR);
             return $this->response()->error(500, [$ex->getMessage()]);
         }
     }
@@ -201,7 +201,7 @@ class GenericController extends AbstractRestfulController
      *
      * @param mixed $data Ignored
      *
-     * @return Response|\Zend\View\Model\JsonModel
+     * @return Response|\Laminas\View\Model\JsonModel
      */
     public function deleteList($data = null)
     {
@@ -217,7 +217,7 @@ class GenericController extends AbstractRestfulController
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
         } catch (\Exception $ex) {
-            Logger::logException($ex, \Zend\Log\Logger::ERR);
+            Logger::logException($ex, \Laminas\Log\Logger::ERR);
             return $this->response()->error(500, [$ex->getMessage()]);
         }
     }

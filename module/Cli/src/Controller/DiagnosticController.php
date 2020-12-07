@@ -7,10 +7,10 @@ use Dvsa\Olcs\Api\Domain\Query\Diagnostics\GenerateCheckFkIntegritySql;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Zend\Console\Response;
-use Zend\Mvc\Controller\AbstractConsoleController;
-use Zend\View\Model\ConsoleModel;
-use Zend\Http\Client;
+use Laminas\Console\Response;
+use Laminas\Mvc\Controller\AbstractConsoleController;
+use Laminas\View\Model\ConsoleModel;
+use Laminas\Http\Client;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Transfer\Query\Document\DownloadGuide;
 use Dvsa\Olcs\Transfer\Query\Document\Download;
@@ -94,7 +94,7 @@ class DiagnosticController extends AbstractConsoleController
     /**
      * Index action
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     public function indexAction()
     {
@@ -378,8 +378,7 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function companiesHouseXmlSection()
     {
-        if (
-            $this->getValueFromConfig('CH_XML_USERID') === false
+        if ($this->getValueFromConfig('CH_XML_USERID') === false
             || $this->getValueFromConfig('CH_XML_PASSWORD') === false
         ) {
             return;
@@ -397,7 +396,6 @@ class DiagnosticController extends AbstractConsoleController
             } else {
                 $this->outputPass();
             }
-
         } catch (\Exception $e) {
             $this->outputFailEx($e);
         }
@@ -426,7 +424,6 @@ class DiagnosticController extends AbstractConsoleController
             } else {
                 $this->outputPass();
             }
-
         } catch (\Exception $e) {
             $this->outputFailEx($e);
         }
@@ -470,7 +467,6 @@ class DiagnosticController extends AbstractConsoleController
             } else {
                 $this->outputFail();
             }
-
         } catch (\Exception $e) {
             $this->outputFailEx($e);
         }
@@ -501,11 +497,9 @@ class DiagnosticController extends AbstractConsoleController
             $messages = $service->getMessages();
             $total = count($messages);
             $this->outputPass(' (found ' . $total . 'messages)');
-
         } catch (\Exception $e) {
             $this->outputFailEx($e);
         }
-
     }
 
     /**

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as Cpms;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 

@@ -4,8 +4,8 @@ namespace Dvsa\Olcs\Api\Service\Translator;
 
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * TranslationLoaderFactory for API nodes

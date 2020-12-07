@@ -4,9 +4,9 @@ namespace Dvsa\Olcs\Api\Service\File;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
-use Zend\Http\Response;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Response;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Content Store File Uploader

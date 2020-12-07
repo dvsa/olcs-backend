@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr;
 
-use Zend\Serializer\Adapter\Json as ZendJson;
+use Laminas\Serializer\Adapter\Json as LaminasJson;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPackFailed as Cmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
@@ -20,7 +20,7 @@ class ProcessPackFailed extends AbstractCommandConsumer
      */
     public function getCommandData(QueueEntity $item)
     {
-        $json = new ZendJson();
+        $json = new LaminasJson();
         return $json->unserialize($item->getOptions());
     }
 }

@@ -4,8 +4,8 @@ namespace Dvsa\Olcs\Api\Service\Toggle;
 
 use Dvsa\Olcs\Api\Domain\Repository\FeatureToggle as FeatureToggleRepo;
 use Dvsa\Olcs\Api\Domain\Query\FeatureToggle\FetchList;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Qandidate\Toggle\Serializer\InMemoryCollectionSerializer;
 use Qandidate\Toggle\ToggleManager;
 

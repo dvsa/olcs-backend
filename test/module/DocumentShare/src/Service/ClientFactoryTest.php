@@ -8,7 +8,7 @@ use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Service\AuthorizationService;
 
@@ -27,7 +27,7 @@ class ClientFactoryTest extends MockeryTestCase
      */
     public function testGetOptions($config, $expected)
     {
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->once()->with('Configuration')->andReturn($config);
 
         $sut = new ClientFactory();
@@ -110,7 +110,7 @@ class ClientFactoryTest extends MockeryTestCase
 
             if ($client === User::USER_OS_TYPE_WINDOWS_7) {
                 $this->assertInstanceOf(DocManClient::class, $service);
-                $this->assertInstanceOf('\Zend\Http\Client', $service->getHttpClient());
+                $this->assertInstanceOf('\Laminas\Http\Client', $service->getHttpClient());
                 $this->assertEquals($config['document_share']['client']['workspace'], $service->getWorkspace());
                 $this->assertEquals($config['document_share']['client']['baseuri'], $service->getBaseUri());
                 if (isset($config['document_share']['client']['uuid'])) {

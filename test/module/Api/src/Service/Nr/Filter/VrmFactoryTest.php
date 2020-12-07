@@ -7,7 +7,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class VrmFactoryTest

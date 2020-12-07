@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as Cmd;
 use Dvsa\Olcs\Api\Entity\Task\Task;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
@@ -41,7 +41,6 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
         $taskId = null;
 
         if ($this->shouldCreateTask()) {
-
             $taskResult = $this->handleSideEffect($this->createCreateTaskCommand($command));
             $result->merge($taskResult);
 

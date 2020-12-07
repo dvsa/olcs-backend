@@ -14,7 +14,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendErruErrors;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendErruErrors as SendErruErrorsCmd;
-use Zend\Json\Json;
+use Laminas\Json\Json;
 use Dvsa\Olcs\Email\Data\Message;
 
 /**

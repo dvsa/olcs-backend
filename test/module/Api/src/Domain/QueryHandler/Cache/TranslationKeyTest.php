@@ -7,7 +7,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cache\TranslationKey as Handler;
 use Dvsa\Olcs\Api\Domain\Query\Cache\TranslationKey as Qry;
 use Mockery as m;
-use Zend\I18n\Translator\LoaderPluginManager;
+use Laminas\I18n\Translator\LoaderPluginManager;
 
 /**
  * Tests the translation cache query handler calls the translation loader correctly

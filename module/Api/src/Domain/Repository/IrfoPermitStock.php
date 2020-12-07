@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock as Entity;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
 
 /**
  * IrfoPermitStock

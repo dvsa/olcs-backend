@@ -8,7 +8,7 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as Cmd;
-use Zend\Serializer\Adapter\Json as ZendJson;
+use Laminas\Serializer\Adapter\Json as LaminasJson;
 
 /**
  * Update TM name with Nysiis data
@@ -34,7 +34,7 @@ class UpdateTmNysiisName extends AbstractCommandConsumer
      */
     public function getCommandData(QueueEntity $item)
     {
-        $json = new ZendJson();
+        $json = new LaminasJson();
         return array_merge(
             [
                 'id' => $item->getEntityId()

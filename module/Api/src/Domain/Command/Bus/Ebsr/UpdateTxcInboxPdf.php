@@ -25,9 +25,9 @@ final class UpdateTxcInboxPdf extends AbstractIdOnlyCommand
     }
     /**
      * @var String
-     * @Transfer\Filter({"name":"Zend\Filter\StringTrim"})
+     * @Transfer\Filter({"name":"Laminas\Filter\StringTrim"})
      * @Transfer\Validator({
-     *      "name":"Zend\Validator\InArray",
+     *      "name":"Laminas\Validator\InArray",
      *      "options": {
      *          "haystack": {"Route","Pdf"}
      *          }

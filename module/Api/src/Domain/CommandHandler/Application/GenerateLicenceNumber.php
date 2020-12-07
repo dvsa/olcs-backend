@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Doctrine\ORM\Query;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Generate Licence Number
@@ -49,7 +49,6 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
         }
 
         if ($licence->getLicNo() === null) {
-
             $newLicNo = $this->getNewLicNo($licence, $application);
 
             $licence->setLicNo($newLicNo);
@@ -58,7 +57,6 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
             $result->addId('licenceNumber', $licence->getLicNo());
             $result->addMessage('Licence number generated');
             return $result;
-
         }
 
         $licNo = $licence->getLicNo();

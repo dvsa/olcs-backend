@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
@@ -139,7 +139,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             // rethrow as Domain exception
             throw new RestResponseException(
                 sprintf('Error from CPMS service [%s] %s', $e->getMessage(), json_encode($e->getResponse())),
-                \Zend\Http\Response::STATUS_CODE_500,
+                \Laminas\Http\Response::STATUS_CODE_500,
                 $e
             );
         }

@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update FinancialHistory Status

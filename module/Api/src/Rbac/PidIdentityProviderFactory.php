@@ -5,8 +5,8 @@
  */
 namespace Dvsa\Olcs\Api\Rbac;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Pid Identity Provider Factory

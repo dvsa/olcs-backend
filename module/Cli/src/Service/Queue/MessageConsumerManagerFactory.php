@@ -8,9 +8,9 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
-use Zend\ServiceManager\Config;
-use Zend\Mvc\Service\AbstractPluginManagerFactory;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Config;
+use Laminas\Mvc\Service\AbstractPluginManagerFactory;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Message Consumer Manager Factory

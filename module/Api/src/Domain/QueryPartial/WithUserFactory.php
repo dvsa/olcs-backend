@@ -5,8 +5,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * With Refdata Factory

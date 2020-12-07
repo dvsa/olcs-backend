@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
-use Zend\Filter\Word\UnderscoreToCamelCase;
+use Laminas\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * Licence History

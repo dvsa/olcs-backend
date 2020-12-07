@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator;
 
-use Zend\Validator\AbstractValidator;
+use Laminas\Validator\AbstractValidator;
 
 /**
  * Class ServiceNo

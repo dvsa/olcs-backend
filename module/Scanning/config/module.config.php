@@ -4,7 +4,7 @@ return array(
     'router' => array(
         'routes' => array(
             'document' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Laminas\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route' => '/scanning/document',
                     'defaults' => array(

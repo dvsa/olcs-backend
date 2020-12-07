@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\OlcsTest\Snapshot\Service\Snapshots\TransportManagerApplication\Section\Stub\AbstractReviewServiceStub;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\I18n\Translator\TranslatorInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * @covers Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\AbstractReviewService
