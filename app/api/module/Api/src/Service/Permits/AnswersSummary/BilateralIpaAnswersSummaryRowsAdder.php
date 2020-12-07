@@ -6,7 +6,7 @@ use DateTime;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Renderer\RendererInterface;
 
 class BilateralIpaAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
 {

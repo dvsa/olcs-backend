@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use RuntimeException;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Apply ranges to successful permit applications

@@ -4,7 +4,7 @@
 namespace Dvsa\Olcs\Cli\Controller;
 
 use Olcs\Logging\Log\Logger;
-use Zend\View\Model\ConsoleModel;
+use Laminas\View\Model\ConsoleModel;
 
 class AbstractQueueController extends AbstractCliController
 {
@@ -55,7 +55,7 @@ class AbstractQueueController extends AbstractCliController
         $content = 'ORM Error: ' . $exception->getMessage();
 
         Logger::log(
-            \Zend\Log\Logger::ERR,
+            \Laminas\Log\Logger::ERR,
             'Failed to process next item in the queue',
             ['errorLevel' => 1, 'content' => $content]
         );

@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
-use Zend\Filter\Word\CamelCaseToUnderscore;
-use Zend\Filter\Word\UnderscoreToCamelCase;
+use Laminas\Filter\Word\CamelCaseToUnderscore;
+use Laminas\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * Bookmark factory class

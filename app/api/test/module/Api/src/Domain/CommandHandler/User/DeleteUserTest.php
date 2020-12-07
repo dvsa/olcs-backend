@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUser as Cmd;
-use Zend\Http\Response;
+use Laminas\Http\Response;
 use ZfcRbac\Service\AuthorizationService;
 
 /**

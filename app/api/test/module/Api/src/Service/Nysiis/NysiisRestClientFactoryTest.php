@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Data;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClientFactory;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

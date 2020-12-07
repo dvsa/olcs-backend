@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\CompanySubsidiary\Licence\Update;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateCompanySubsidiary as Cmd;
 
 /**

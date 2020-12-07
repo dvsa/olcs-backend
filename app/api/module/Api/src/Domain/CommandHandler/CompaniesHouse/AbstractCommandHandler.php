@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler as DomainAbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
@@ -20,7 +20,7 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
     protected $api;
 
     /**
-     * @var \Zend\Filter\Word\UnderscoreToCamelCase
+     * @var \Laminas\Filter\Word\UnderscoreToCamelCase
      */
     protected $wordFilter;
 
@@ -35,7 +35,7 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
     {
         $this->api = $serviceLocator->getServiceLocator()->get(CompaniesHouseClient::class);
 
-        $this->wordFilter = new \Zend\Filter\Word\UnderscoreToCamelCase();
+        $this->wordFilter = new \Laminas\Filter\Word\UnderscoreToCamelCase();
         return parent::createService($serviceLocator);
     }
 

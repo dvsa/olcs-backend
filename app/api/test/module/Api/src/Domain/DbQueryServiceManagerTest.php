@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
-use Zend\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\ConfigInterface;
 
 /**
  * Db Query Service Manager Test

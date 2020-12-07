@@ -9,7 +9,7 @@ use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as CompanyNotFo
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Query\CompaniesHouse\ByNumber as Qry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class ByNumber extends AbstractQueryHandler
 {
@@ -32,7 +32,6 @@ class ByNumber extends AbstractQueryHandler
         $this->companiesHouseApi = $mainServiceLocator->get(CompaniesHouseClient::class);
 
         return parent::createService($serviceLocator);
-
     }
 
     /**

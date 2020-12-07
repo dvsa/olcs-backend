@@ -16,10 +16,10 @@ use Dvsa\Olcs\Api\Domain\ValidationHandlerManager;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\Exception\RuntimeException;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\Exception\RuntimeException;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Command Handler Manager Test

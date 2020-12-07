@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;

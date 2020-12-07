@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 final class Delete extends AbstractCommandHandler implements TransactionedInterface
 {

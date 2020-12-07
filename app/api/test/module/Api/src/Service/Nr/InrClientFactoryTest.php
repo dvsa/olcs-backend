@@ -7,10 +7,10 @@ use Dvsa\Olcs\Api\Service\Nr\InrClientFactory;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
-use Zend\Http\Client as RestClient;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Client as RestClient;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
-use Zend\Http\Client\Adapter\Curl;
+use Laminas\Http\Client\Adapter\Curl;
 
 /**
  * Class InrClientFactoryTest

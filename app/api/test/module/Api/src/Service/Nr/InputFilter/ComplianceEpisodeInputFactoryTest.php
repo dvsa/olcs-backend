@@ -20,17 +20,17 @@ class ComplianceEpisodeInputFactoryTest extends MockeryTestCase
         $mockLicenceNumberFilter = m::mock(Filter\LicenceNumber::class);
         $mockMemberStateFilter = m::mock(Filter\Format\MemberStateCode::class);
 
-        $mockSl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $mockSl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with(Filter\Vrm::class)->andReturn($mockVrmFilter);
         $mockSl->shouldReceive('get')->with(Filter\LicenceNumber::class)->andReturn($mockLicenceNumberFilter);
         $mockSl->shouldReceive('get')->with(Filter\Format\MemberStateCode::class)->andReturn($mockMemberStateFilter);
 
         $sut = new ComplianceEpisodeInputFactory();
-        /** @var \Zend\InputFilter\Input $service */
+        /** @var \Laminas\InputFilter\Input $service */
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(3, $service->getFilterChain());
     }
 }

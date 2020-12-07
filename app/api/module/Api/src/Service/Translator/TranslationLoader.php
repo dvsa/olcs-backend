@@ -7,9 +7,9 @@ use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText as TranslationKeyTextRepo
 use Dvsa\Olcs\Api\Domain\Repository\Replacement as ReplacementRepo;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Olcs\Logging\Log\Logger;
-use Zend\I18n\Translator\Loader\PhpMemoryArray;
-use Zend\I18n\Translator\Loader\RemoteLoaderInterface;
-use Zend\I18n\Translator\TextDomain;
+use Laminas\I18n\Translator\Loader\PhpMemoryArray;
+use Laminas\I18n\Translator\Loader\RemoteLoaderInterface;
+use Laminas\I18n\Translator\TextDomain;
 
 /**
  * Translation loader service for API nodes
@@ -59,9 +59,9 @@ class TranslationLoader implements RemoteLoaderInterface
     public function load($locale, $textDomain)
     {
         $messages = $this->getMessages($locale, $textDomain);
-        $zendMemoryArray = new PhpMemoryArray($messages);
+        $phpMemoryArray = new PhpMemoryArray($messages);
 
-        return $zendMemoryArray->load($locale, $textDomain);
+        return $phpMemoryArray->load($locale, $textDomain);
     }
 
     /**

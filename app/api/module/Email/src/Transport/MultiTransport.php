@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Email\Transport;
 
-use Zend\Mail\Message;
-use Zend\Mail\Transport\TransportInterface;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\TransportInterface;
 
 /**
  * Mail Transport that allows sending to multiple Transports

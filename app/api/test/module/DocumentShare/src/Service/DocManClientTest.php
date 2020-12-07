@@ -9,7 +9,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\Http\Request;
+use Laminas\Http\Request;
 
 /**
  * @covers \Dvsa\Olcs\DocumentShare\Service\DocManClient
@@ -22,17 +22,17 @@ class DocManClientTest extends MockeryTestCase
     /** @var  DocManClient */
     protected $sut;
 
-    /** @var  MockObj | \Zend\Http\Client */
+    /** @var  MockObj | \Laminas\Http\Client */
     private $mockClient;
     /** @var  m\MockInterface|DsFile */
     private $mockFile;
 
-    /** @var  m\MockInterface|\Zend\Log\Logger */
+    /** @var  m\MockInterface|\Laminas\Log\Logger */
     private $logger;
 
     public function setUp(): void
     {
-        $this->mockClient = $this->createMock(\Zend\Http\Client::class);
+        $this->mockClient = $this->createMock(\Laminas\Http\Client::class);
 
         $this->sut = new DocManClient(
             $this->mockClient,
@@ -44,9 +44,9 @@ class DocManClientTest extends MockeryTestCase
         $this->mockFile = m::mock(DsFile::class);
 
         // Mock the logger
-        $logWriter = m::mock(\Zend\Log\Writer\WriterInterface::class);
+        $logWriter = m::mock(\Laminas\Log\Writer\WriterInterface::class);
 
-        $this->logger = m::mock(\Zend\Log\Logger::class, [])->makePartial();
+        $this->logger = m::mock(\Laminas\Log\Logger::class, [])->makePartial();
         $this->logger->addWriter($logWriter);
 
         Logger::setLogger($this->logger);
@@ -63,7 +63,7 @@ class DocManClientTest extends MockeryTestCase
         $expectContent = 'unit_ABCD1234';
         $content = '{"content":"' . base64_encode($expectContent) . '"}';
 
-        $mockResponse = m::mock(\Zend\Http\Response::class)
+        $mockResponse = m::mock(\Laminas\Http\Response::class)
             ->shouldReceive('isSuccess')->once()->andReturn(true)
             ->getMock();
 
@@ -123,7 +123,7 @@ class DocManClientTest extends MockeryTestCase
 
     public function testReadNullNotSuccess()
     {
-        $mockResponse = m::mock(\Zend\Http\Response::class)
+        $mockResponse = m::mock(\Laminas\Http\Response::class)
             ->shouldReceive('isSuccess')->once()->andReturn(false)
             ->shouldReceive('getStatusCode')->times(3)->andReturn(600)
             ->getMock();
@@ -139,7 +139,7 @@ class DocManClientTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('log')
             ->once()
-            ->with(\Zend\Log\Logger::ERR, $expectedLog, []);
+            ->with(\Laminas\Log\Logger::ERR, $expectedLog, []);
 
         //  call & check
         $actual = $this->sut->read('test');
@@ -151,7 +151,7 @@ class DocManClientTest extends MockeryTestCase
     {
         $content = '{"message":"unit_ErrMsg"}';
 
-        $mockResponse = m::mock(\Zend\Http\Response::class)
+        $mockResponse = m::mock(\Laminas\Http\Response::class)
             ->shouldReceive('isSuccess')->once()->andReturn(true)
             ->getMock();
 
@@ -173,7 +173,7 @@ class DocManClientTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('log')
             ->once()
-            ->with(\Zend\Log\Logger::INFO, 'unit_ErrMsg', []);
+            ->with(\Laminas\Log\Logger::INFO, 'unit_ErrMsg', []);
 
         //  call & check
         $actual = $this->sut->read('test');

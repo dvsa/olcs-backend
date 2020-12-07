@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Mvc\OlcsBlameableListener;
 use Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * OlcsBlameableListenerFactory Test

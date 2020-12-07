@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 /**
  * BusRegBrowseExport
@@ -81,7 +81,7 @@ class BusRegBrowseExport extends AbstractQueryHandler
 
         $filename = 'Bus_registration_decisions_'.$acceptedDate.'.csv';
 
-        $response = new \Zend\Http\Response\Stream();
+        $response = new \Laminas\Http\Response\Stream();
         $response->setStatusCode(Response::STATUS_CODE_200);
 
         $response->setStream($fp);

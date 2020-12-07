@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Validator\Xsd;
-use Zend\Http\Client as RestClient;
+use Laminas\Http\Client as RestClient;
 use Olcs\Logging\Log\Logger;
 
 /**

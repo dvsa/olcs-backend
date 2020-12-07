@@ -7,9 +7,9 @@ use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use League\Flysystem\Filesystem;
 use League\Flysystem\WebDAV\WebDAVAdapter;
 use RuntimeException;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Http\Client as HttpClient;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Client as HttpClient;
 use Sabre\DAV\Client as SabreClient;
 use ZfcRbac\Service\AuthorizationService;
 

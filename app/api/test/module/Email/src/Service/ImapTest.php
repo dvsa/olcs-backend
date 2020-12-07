@@ -28,7 +28,7 @@ class ImapTest extends TestCase
             ]
         ];
 
-        $sl = new \Zend\ServiceManager\ServiceManager();
+        $sl = new \Laminas\ServiceManager\ServiceManager();
         $sl->setService('Config', $config);
 
         $this->assertSame(
@@ -48,10 +48,10 @@ class ImapTest extends TestCase
 
     public function testCreateServiceThrowsException()
     {
-        $sl = new \Zend\ServiceManager\ServiceManager();
+        $sl = new \Laminas\ServiceManager\ServiceManager();
         $sl->setService('Config', []);
 
-        $this->expectException('Zend\Mail\Exception\RuntimeException', 'No mailbox config found');
+        $this->expectException('Laminas\Mail\Exception\RuntimeException', 'No mailbox config found');
 
         $this->imapService->createService($sl);
     }
@@ -66,7 +66,7 @@ class ImapTest extends TestCase
             ]
         ];
 
-        $sl = new \Zend\ServiceManager\ServiceManager();
+        $sl = new \Laminas\ServiceManager\ServiceManager();
         $sl->setService('Config', $config);
 
         $this->assertSame(
@@ -76,14 +76,14 @@ class ImapTest extends TestCase
 
         $this->imapService->createService($sl);
 
-        $this->expectException('Zend\Mail\Exception\RuntimeException', 'No config found for mailbox \'bar\'');
+        $this->expectException('Laminas\Mail\Exception\RuntimeException', 'No config found for mailbox \'bar\'');
 
         $this->imapService->connect('bar');
     }
 
     public function testGetSetStore()
     {
-        $store = m::mock('\Zend\Mail\Storage\Imap');
+        $store = m::mock('\Laminas\Mail\Storage\Imap');
         $store->shouldReceive('close'); // called by destructor
 
         $this->imapService->setStore($store);
@@ -99,7 +99,7 @@ class ImapTest extends TestCase
         $id = 432432;
         $number = 99;
 
-        $store = m::mock('\Zend\Mail\Storage\Imap');
+        $store = m::mock('\Laminas\Mail\Storage\Imap');
         $message = m::mock();
 
         $store
@@ -139,13 +139,13 @@ class ImapTest extends TestCase
     {
         $id = 99;
 
-        $store = m::mock('\Zend\Mail\Storage\Imap');
+        $store = m::mock('\Laminas\Mail\Storage\Imap');
 
         $store
             ->shouldReceive('getNumberByUniqueId')
             ->with($id)
             ->once()
-            ->andThrow(new \Zend\Mail\Exception\RuntimeException('error'))
+            ->andThrow(new \Laminas\Mail\Exception\RuntimeException('error'))
             ->shouldReceive('close'); // called by destructor!
 
         $this->imapService->setStore($store);
@@ -160,7 +160,7 @@ class ImapTest extends TestCase
 
     public function testGetMessages()
     {
-        $store = m::mock('\Zend\Mail\Storage\Imap');
+        $store = m::mock('\Laminas\Mail\Storage\Imap');
 
         $store
             ->shouldReceive('countMessages')
@@ -188,12 +188,12 @@ class ImapTest extends TestCase
 
     public function testGetMessagesWithExceptionFromStore()
     {
-        $store = m::mock('\Zend\Mail\Storage\Imap');
+        $store = m::mock('\Laminas\Mail\Storage\Imap');
 
         $store
             ->shouldReceive('countMessages')
             ->once()
-            ->andThrow(new \Zend\Mail\Exception\RuntimeException('error'))
+            ->andThrow(new \Laminas\Mail\Exception\RuntimeException('error'))
             ->shouldReceive('close'); // called by destructor!
 
         $this->imapService->setStore($store);
@@ -211,7 +211,7 @@ class ImapTest extends TestCase
         $id = 432432;
         $number = 99;
 
-        $store = m::mock('\Zend\Mail\Storage\Imap');
+        $store = m::mock('\Laminas\Mail\Storage\Imap');
 
         $store
             ->shouldReceive('getNumberByUniqueId')
@@ -232,13 +232,13 @@ class ImapTest extends TestCase
     {
         $id = 432432;
 
-        $store = m::mock('\Zend\Mail\Storage\Imap');
+        $store = m::mock('\Laminas\Mail\Storage\Imap');
 
         $store
             ->shouldReceive('getNumberByUniqueId')
             ->with($id)
             ->once()
-            ->andThrow(new \Zend\Mail\Exception\RuntimeException('error'))
+            ->andThrow(new \Laminas\Mail\Exception\RuntimeException('error'))
             ->shouldReceive('close');
 
         $this->imapService->setStore($store);

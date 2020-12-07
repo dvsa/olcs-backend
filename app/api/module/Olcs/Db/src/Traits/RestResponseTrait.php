@@ -7,7 +7,7 @@
  */
 namespace Olcs\Db\Traits;
 
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 /**
  * RestResponseTrait

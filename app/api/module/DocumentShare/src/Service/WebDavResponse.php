@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\DocumentShare\Service;
 
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 /**
  * Class WebDavResponse

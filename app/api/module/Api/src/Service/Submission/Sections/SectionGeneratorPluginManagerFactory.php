@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
-use Zend\Mvc\Service\AbstractPluginManagerFactory;
+use Laminas\Mvc\Service\AbstractPluginManagerFactory;
 
 /**
  * Class SectionGeneratorPluginManagerFactory

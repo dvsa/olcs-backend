@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Snapshot\View\Helper;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Snapshot\View\Helper\AnswerFormatter;
 use Mockery as m;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Renderer\RendererInterface;
 
 /**
  * Class AnswerFormatterTest

@@ -5,10 +5,10 @@ namespace Dvsa\Olcs\Api;
 use Dvsa\Olcs\Api\Domain\Util\BlockCipher\PhpSecLib;
 use Olcs\Logging\Log\Logger;
 use phpseclib\Crypt;
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\ResponseSender\SendResponseEvent;
+use Laminas\EventManager\EventInterface;
+use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\ResponseSender\SendResponseEvent;
 
 /**
  * Module class
@@ -34,7 +34,7 @@ class Module implements BootstrapListenerInterface
         $payloadValidationListener->attach($eventManager, 1);
 
         $eventManager->getSharedManager()->attach(
-            'Zend\Mvc\SendResponseListener',
+            'Laminas\Mvc\SendResponseListener',
             SendResponseEvent::EVENT_SEND_RESPONSE,
             function (SendResponseEvent $e) {
                 $this->logResponse($e->getResponse());
@@ -58,11 +58,11 @@ class Module implements BootstrapListenerInterface
     /**
      * Set the user ID in the log processor so that it can be included in the log files
      *
-     * @param \Zend\ServiceManager\ServiceManager $serviceManager Service Manager
+     * @param \Laminas\ServiceManager\ServiceManager $serviceManager Service Manager
      *
      * @return void
      */
-    private function setLoggerUser(\Zend\ServiceManager\ServiceManager $serviceManager)
+    private function setLoggerUser(\Laminas\ServiceManager\ServiceManager $serviceManager)
     {
         $authService = $serviceManager->get(\ZfcRbac\Service\AuthorizationService::class);
         $serviceManager->get('LogProcessorManager')->get(\Olcs\Logging\Log\Processor\UserId::class)
@@ -72,19 +72,19 @@ class Module implements BootstrapListenerInterface
     /**
      * Add details of the response to the log
      *
-     * @param \Zend\Stdlib\ResponseInterface $response Response
+     * @param \Laminas\Stdlib\ResponseInterface $response Response
      *
      * @return void
      */
-    protected function logResponse(\Zend\Stdlib\ResponseInterface $response)
+    protected function logResponse(\Laminas\Stdlib\ResponseInterface $response)
     {
         $content = $response->getContent();
         if (strlen($content) > 1000) {
             $content = substr($content, 0, 1000) . '...';
         }
 
-        if ($response instanceof \Zend\Console\Response) {
-            $priority = $response->getErrorLevel() === 0 ? \Zend\Log\Logger::DEBUG : \Zend\Log\Logger::ERR;
+        if ($response instanceof \Laminas\Console\Response) {
+            $priority = $response->getErrorLevel() === 0 ? \Laminas\Log\Logger::DEBUG : \Laminas\Log\Logger::ERR;
             Logger::log(
                 $priority,
                 'CLI Response Sent',
@@ -92,7 +92,7 @@ class Module implements BootstrapListenerInterface
             );
         }
 
-        if ($response instanceof \Zend\Http\PhpEnvironment\Response) {
+        if ($response instanceof \Laminas\Http\PhpEnvironment\Response) {
             Logger::logResponse(
                 $response->getStatusCode(),
                 'API Response Sent',

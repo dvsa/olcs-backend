@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Abstract Review Service

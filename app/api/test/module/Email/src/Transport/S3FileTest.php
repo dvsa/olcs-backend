@@ -12,10 +12,10 @@ use Dvsa\Olcs\Email\Transport\S3File;
 use Dvsa\Olcs\Email\Transport\S3FileOptions;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\Exception\RuntimeException;
-use Zend\Mail\Transport\File;
-use Zend\Mail\Transport\Sendmail;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\Exception\RuntimeException;
+use Laminas\Mail\Transport\File;
+use Laminas\Mail\Transport\Sendmail;
 use Mockery as m;
 
 /**

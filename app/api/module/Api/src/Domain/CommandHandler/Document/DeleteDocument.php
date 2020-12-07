@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteEbsrSubmission;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox;
 use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate;

@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
-use Zend\Json\Json as ZendJson;
+use Laminas\Json\Json as LaminasJson;
 
 /**
  * EbsrSubmission Entity Unit Tests
@@ -132,7 +132,7 @@ class EbsrSubmissionEntityTest extends EntityTester
         $ebsrSubmissionStatus->setId(Entity::FAILED_STATUS);
 
         $ebsrSubmissionResult = ['submission result'];
-        $encodedSubmissionResult = ZendJson::encode($ebsrSubmissionResult);
+        $encodedSubmissionResult = LaminasJson::encode($ebsrSubmissionResult);
 
         $entity = $this->instantiate(Entity::class);
 
@@ -151,7 +151,7 @@ class EbsrSubmissionEntityTest extends EntityTester
     {
         $ebsrSubmissionStatus = m::mock(RefData::class)->makePartial();
         $ebsrSubmissionResult = ['submission result'];
-        $encodedSubmissionResult = ZendJson::encode($ebsrSubmissionResult);
+        $encodedSubmissionResult = LaminasJson::encode($ebsrSubmissionResult);
 
         $entity = $this->instantiate(Entity::class);
 
@@ -367,7 +367,7 @@ class EbsrSubmissionEntityTest extends EntityTester
         $ebsrSubmissionStatus->shouldReceive('getId')->once()->andReturn(Entity::FAILED_STATUS);
 
         $entity->setEbsrSubmissionStatus($ebsrSubmissionStatus);
-        $entity->setEbsrSubmissionResult(ZendJson::encode($errors));
+        $entity->setEbsrSubmissionResult(LaminasJson::encode($errors));
 
         $this->assertEquals($errorArray, $entity->getErrors());
     }

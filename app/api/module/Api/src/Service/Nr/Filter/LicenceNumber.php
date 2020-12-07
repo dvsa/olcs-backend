@@ -2,16 +2,16 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\Filter\AbstractFilter as ZendAbstractFilter;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class LicenceNumber
  * @package Dvsa\Olcs\Api\Service\Nr\Filter
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class LicenceNumber extends ZendAbstractFilter
+class LicenceNumber extends LaminasAbstractFilter
 {
     /**
      * Returns the result of filtering $value

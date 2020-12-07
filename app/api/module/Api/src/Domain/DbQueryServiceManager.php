@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\ConfigInterface;
 
 /**
  * Db Query Service Manager
@@ -23,6 +23,5 @@ class DbQueryServiceManager extends AbstractPluginManager
 
     public function validatePlugin($plugin)
     {
-
     }
 }

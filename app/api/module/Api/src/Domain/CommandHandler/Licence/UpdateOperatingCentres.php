@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 
 /**
@@ -111,7 +111,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         /** @var LicenceOperatingCentre $loc */
         foreach ($locs as $loc) {
-
             $this->totals['noOfOperatingCentres']++;
 
             $this->totals['minVehicleAuth'] = max([$this->totals['minVehicleAuth'], $loc->getNoOfVehiclesRequired()]);

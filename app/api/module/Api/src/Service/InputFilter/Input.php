@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\InputFilter;
 
-use Zend\InputFilter\Input as ZendInput;
+use Laminas\InputFilter\Input as LaminasInput;
 
 /**
  * Class Input
  * @package Dvsa\Olcs\Api\Service\InputFilter
  */
-class Input extends ZendInput
+class Input extends LaminasInput
 {
     /**
      * @var mixed

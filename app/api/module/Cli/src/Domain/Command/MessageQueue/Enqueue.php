@@ -12,7 +12,7 @@ class Enqueue extends AbstractCommand implements LoggerOmitContentInterface
     /**
      * @Transfer\Validator(
      *  {
-     *      "name":"Zend\Validator\InArray",
+     *      "name":"Laminas\Validator\InArray",
      *      "options": {
      *          "haystack": {
      *              "Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile",
@@ -26,7 +26,7 @@ class Enqueue extends AbstractCommand implements LoggerOmitContentInterface
     /**
      * @Transfer\Validator(
      *  {
-     *      "name":"Zend\Validator\InArray",
+     *      "name":"Laminas\Validator\InArray",
      *      "options": {
      *          "haystack": {
      *              "Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile",

@@ -8,8 +8,8 @@
 namespace Dvsa\Olcs\Address\Service;
 
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Address Factory

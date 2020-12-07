@@ -8,10 +8,10 @@ use Mockery as m;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
-use Zend\Http\Client as RestClient;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Client as RestClient;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class TransExchangeClientTest

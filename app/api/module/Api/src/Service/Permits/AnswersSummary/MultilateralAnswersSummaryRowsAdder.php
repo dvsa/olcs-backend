@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Renderer\RendererInterface;
 
 class MultilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
 {

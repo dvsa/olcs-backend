@@ -7,10 +7,10 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
 use phpseclib\Crypt\Base;
-use Zend\EventManager\Event;
-use Zend\Mvc\Application;
-use Zend\Mvc\ResponseSender\SendResponseEvent;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\EventManager\Event;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\ResponseSender\SendResponseEvent;
+use Laminas\ServiceManager\ServiceManager;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
 
@@ -34,7 +34,7 @@ class ModuleTest extends MockeryTestCase
         $mockShm = m::mock();
         $mockShm->shouldReceive('attach')->once()
             ->with(
-                'Zend\Mvc\SendResponseListener',
+                'Laminas\Mvc\SendResponseListener',
                 SendResponseEvent::EVENT_SEND_RESPONSE,
                 m::type('callable')
             );
@@ -72,14 +72,14 @@ class ModuleTest extends MockeryTestCase
     {
         $logWriter = $this->setupLogger();
 
-        $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
+        $mockRespone = m::mock(\Laminas\Http\PhpEnvironment\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('CONTENT');
         $mockRespone->shouldReceive('getStatusCode')->with()->twice()->andReturn(200);
 
         $this->sut->logResponse($mockRespone);
 
         $this->assertCount(1, $logWriter->events);
-        $this->assertSame(\Zend\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
+        $this->assertSame(\Laminas\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
         $this->assertSame('API Response Sent', $logWriter->events[0]['message']);
         $this->assertSame(['status' => 200, 'content' => 'CONTENT'], $logWriter->events[0]['extra']);
     }
@@ -88,7 +88,7 @@ class ModuleTest extends MockeryTestCase
     {
         $logWriter = $this->setupLogger();
 
-        $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
+        $mockRespone = m::mock(\Laminas\Http\PhpEnvironment\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('');
         $mockRespone->shouldReceive('getStatusCode')->with()->andReturn(206);
 
@@ -102,14 +102,14 @@ class ModuleTest extends MockeryTestCase
     {
         $logWriter = $this->setupLogger();
 
-        $mockRespone = m::mock(\Zend\Console\Response::class);
+        $mockRespone = m::mock(\Laminas\Console\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('CONTENT');
         $mockRespone->shouldReceive('getErrorLevel')->with()->twice()->andReturn(0);
 
         $this->sut->logResponse($mockRespone);
 
         $this->assertCount(1, $logWriter->events);
-        $this->assertSame(\Zend\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
+        $this->assertSame(\Laminas\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
         $this->assertSame('CLI Response Sent', $logWriter->events[0]['message']);
         $this->assertSame(['errorLevel' => 0, 'content' => 'CONTENT'], $logWriter->events[0]['extra']);
     }
@@ -118,14 +118,14 @@ class ModuleTest extends MockeryTestCase
     {
         $logWriter = $this->setupLogger();
 
-        $mockRespone = m::mock(\Zend\Console\Response::class);
+        $mockRespone = m::mock(\Laminas\Console\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('CONTENT');
         $mockRespone->shouldReceive('getErrorLevel')->with()->twice()->andReturn(1);
 
         $this->sut->logResponse($mockRespone);
 
         $this->assertCount(1, $logWriter->events);
-        $this->assertSame(\Zend\Log\Logger::ERR, $logWriter->events[0]['priority']);
+        $this->assertSame(\Laminas\Log\Logger::ERR, $logWriter->events[0]['priority']);
         $this->assertSame('CLI Response Sent', $logWriter->events[0]['message']);
         $this->assertSame(['errorLevel' => 1, 'content' => 'CONTENT'], $logWriter->events[0]['extra']);
     }
@@ -136,14 +136,14 @@ class ModuleTest extends MockeryTestCase
 
         $content = str_repeat('X', 1010);
 
-        $mockRespone = m::mock(\Zend\Http\PhpEnvironment\Response::class);
+        $mockRespone = m::mock(\Laminas\Http\PhpEnvironment\Response::class);
         $mockRespone->shouldReceive('getContent')->with()->once()->andReturn($content);
         $mockRespone->shouldReceive('getStatusCode')->with()->twice()->andReturn(200);
 
         $this->sut->logResponse($mockRespone);
 
         $this->assertCount(1, $logWriter->events);
-        $this->assertSame(\Zend\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
+        $this->assertSame(\Laminas\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
         $this->assertSame('API Response Sent', $logWriter->events[0]['message']);
         $this->assertSame(str_repeat('X', 1000) .'...', $logWriter->events[0]['extra']['content']);
     }
@@ -165,12 +165,12 @@ class ModuleTest extends MockeryTestCase
     /**
      * Setup the logger, return the mock writer
      *
-     * @return \Zend\Log\Writer\Mock
+     * @return \Laminas\Log\Writer\Mock
      */
     private function setupLogger()
     {
-        $logWriter = new \Zend\Log\Writer\Mock();
-        $logger = new \Zend\Log\Logger();
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
         $logger->addWriter($logWriter);
         Logger::setLogger($logger);
 

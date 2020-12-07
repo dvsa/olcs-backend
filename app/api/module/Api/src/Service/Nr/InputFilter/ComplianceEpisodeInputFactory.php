@@ -6,8 +6,8 @@ use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm as VrmFilter;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class ComplianceEpisodeInputFactory

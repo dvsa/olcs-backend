@@ -20,7 +20,7 @@ use Dvsa\Olcs\Transfer\Command\Report\Upload as UploadCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
-use Zend\Json\Json as ZendJson;
+use Laminas\Json\Json as LaminasJson;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -115,7 +115,7 @@ class UploadTest extends CommandHandlerTestCase
                 'entityId' => null,
                 'type' => Queue::TYPE_COMM_LIC_BULK_REPRINT,
                 'status' => Queue::STATUS_QUEUED,
-                'options' => ZendJson::encode(
+                'options' => LaminasJson::encode(
                     [
                         'identifier' => self::IDENTIFIER,
                         'user' => self::USER_ID,
@@ -192,7 +192,7 @@ class UploadTest extends CommandHandlerTestCase
                 'entityId' => null,
                 'type' => Queue::TYPE_EMAIL_BULK_UPLOAD,
                 'status' => Queue::STATUS_QUEUED,
-                'options' => ZendJson::encode(
+                'options' => LaminasJson::encode(
                     [
                         'identifier' => self::IDENTIFIER,
                         'user' => self::USER_ID,
@@ -270,7 +270,7 @@ class UploadTest extends CommandHandlerTestCase
                 'entityId' => null,
                 'type' => Queue::TYPE_LETTER_BULK_UPLOAD,
                 'status' => Queue::STATUS_QUEUED,
-                'options' => ZendJson::encode(
+                'options' => LaminasJson::encode(
                     [
                         'identifier' => self::IDENTIFIER,
                         'user' => self::USER_ID,
@@ -338,7 +338,7 @@ class UploadTest extends CommandHandlerTestCase
                 'entityId' => null,
                 'type' => Queue::TYPE_POST_SCORING_EMAIL,
                 'status' => Queue::STATUS_QUEUED,
-                'options' => ZendJson::encode(
+                'options' => LaminasJson::encode(
                     [
                         'identifier' => self::IDENTIFIER,
                     ]

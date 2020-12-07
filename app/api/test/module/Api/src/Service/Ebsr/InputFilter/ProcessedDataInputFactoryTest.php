@@ -22,9 +22,9 @@ class ProcessedDataInputFactoryTest extends TestCase
      */
     public function testCreateService()
     {
-        $mockValidator = m::mock('Zend\Validator\AbstractValidator');
+        $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
@@ -37,7 +37,7 @@ class ProcessedDataInputFactoryTest extends TestCase
         $sut = new ProcessedDataInputFactory();
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(5, $service->getValidatorChain());
     }
 
@@ -54,13 +54,13 @@ class ProcessedDataInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
 
         $sut = new ProcessedDataInputFactory();
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(0, $service->getValidatorChain());
     }
 }

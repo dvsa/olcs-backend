@@ -19,9 +19,9 @@ class ShortNoticeInputFactoryTest extends TestCase
      */
     public function testCreateService()
     {
-        $mockValidator = m::mock('Zend\Validator\AbstractValidator');
+        $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
@@ -31,7 +31,7 @@ class ShortNoticeInputFactoryTest extends TestCase
         $sut = new ShortNoticeInputFactory();
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(2, $service->getValidatorChain());
     }
 
@@ -48,13 +48,13 @@ class ShortNoticeInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
 
         $sut = new ShortNoticeInputFactory();
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(0, $service->getValidatorChain());
     }
 }

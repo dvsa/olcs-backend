@@ -5,7 +5,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Gedmo\Blameable\BlameableListener as GedmoBlameableListener;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 

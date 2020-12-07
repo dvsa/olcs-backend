@@ -37,11 +37,11 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     /**
      * Create service
      *
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator service locator
+     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator service locator
      *
      * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 

@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Secti
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Abstract Review Service

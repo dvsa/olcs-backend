@@ -18,8 +18,8 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * Generator Test

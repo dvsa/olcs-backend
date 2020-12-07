@@ -147,7 +147,7 @@ return [
                 => ApiSrv\Permits\Bilateral\Metadata\CurrentFieldValuesGenerator::class,
         ],
         'abstract_factories' => [
-            \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
+            \Laminas\Cache\Service\StorageCacheAbstractServiceFactory::class,
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,

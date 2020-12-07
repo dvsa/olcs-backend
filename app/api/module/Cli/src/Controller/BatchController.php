@@ -13,8 +13,8 @@ use Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile;
 use Dvsa\Olcs\Transfer\Command as TransferCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Zend\Http\Response;
-use Zend\View\Model\ConsoleModel;
+use Laminas\Http\Response;
+use Laminas\View\Model\ConsoleModel;
 
 /**
  * BatchController
@@ -26,7 +26,7 @@ class BatchController extends AbstractCliController
     /**
      * Perform database management tasks, eg changing is_irfo flags
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     public function databaseMaintenanceAction()
     {
@@ -43,7 +43,7 @@ class BatchController extends AbstractCliController
     /**
      * Find continuations that have not been process and generate reminders
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     public function digitalContinuationRemindersAction()
     {
@@ -55,7 +55,7 @@ class BatchController extends AbstractCliController
     /**
      * Run data retention rules
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      * @throws \Exception
      */
     public function dataRetentionRuleAction()
@@ -88,7 +88,7 @@ class BatchController extends AbstractCliController
     /**
      * Clean abandoned variations
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     public function cleanUpVariationsAction()
     {
@@ -98,7 +98,7 @@ class BatchController extends AbstractCliController
     /**
      * Expire bus registrations that have passed the end date
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     public function expireBusRegistrationAction()
     {
@@ -108,7 +108,7 @@ class BatchController extends AbstractCliController
     /**
      * Flag tasks as urgent
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     public function flagUrgentTasksAction()
     {
@@ -118,7 +118,7 @@ class BatchController extends AbstractCliController
     /**
      * Remove read audit action
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     public function removeReadAuditAction()
     {
@@ -128,7 +128,7 @@ class BatchController extends AbstractCliController
     /**
      * Inspection request email action
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     public function inspectionRequestEmailAction()
     {

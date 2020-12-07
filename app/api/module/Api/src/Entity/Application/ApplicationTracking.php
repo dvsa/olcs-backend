@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Application;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Filter\Word\UnderscoreToCamelCase;
+use Laminas\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * ApplicationTracking Entity

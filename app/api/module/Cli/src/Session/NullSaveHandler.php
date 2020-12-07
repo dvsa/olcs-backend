@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Cli\Session;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class NullSaveHandler implements \Zend\Session\SaveHandler\SaveHandlerInterface
+class NullSaveHandler implements \Laminas\Session\SaveHandler\SaveHandlerInterface
 {
     /**
      * Open Session - retrieve resources

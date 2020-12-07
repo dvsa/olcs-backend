@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Publish an application
@@ -28,7 +28,7 @@ class Publish extends AbstractQueryHandler
     private $variationValidationService;
 
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->applicationValidationService = $mainServiceLocator->get('ApplicationPublishValidationService');

@@ -11,8 +11,8 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
 

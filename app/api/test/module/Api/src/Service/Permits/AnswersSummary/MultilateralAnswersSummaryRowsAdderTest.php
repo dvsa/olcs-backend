@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowFactory;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\MultilateralAnswersSummaryRowsAdder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Renderer\RendererInterface;
 
 /**
  * MultilateralAnswersSummaryRowsAdderTest

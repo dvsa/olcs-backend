@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 use Mockery as m;
 
 /**

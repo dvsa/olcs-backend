@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Api\Service;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Financial Standing Helper Service

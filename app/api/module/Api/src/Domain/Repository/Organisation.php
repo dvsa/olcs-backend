@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Organisation\FixIsIrfo;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Organisation\FixIsUnlicenced;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 

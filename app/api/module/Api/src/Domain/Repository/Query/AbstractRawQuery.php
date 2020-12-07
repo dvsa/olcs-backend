@@ -12,8 +12,8 @@ use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
@@ -133,7 +133,6 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
         try {
             $paramTypes = array_merge($this->getParamTypes(), $paramTypes);
             return $this->connection->executeQuery($query, $params, $paramTypes);
-
         } catch (\Exception $ex) {
             throw new RuntimeException(
                 'An unexpected error occurred while running query: ' .  get_class($this) . ' ' . $ex->getMessage()

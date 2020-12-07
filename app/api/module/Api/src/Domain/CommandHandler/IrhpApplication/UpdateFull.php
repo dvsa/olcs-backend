@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as Cmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Irhp Permit Application

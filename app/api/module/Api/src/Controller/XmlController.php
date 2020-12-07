@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Controller;
 
-use Zend\Log\Logger;
-use Zend\Mvc\Controller\AbstractRestfulController;
+use Laminas\Log\Logger;
+use Laminas\Mvc\Controller\AbstractRestfulController;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response as ResponsePlugin;
 

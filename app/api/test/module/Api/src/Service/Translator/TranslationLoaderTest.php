@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\I18n\Translator\TextDomain;
+use Laminas\I18n\Translator\TextDomain;
 
 /**
  * TranslationLoaderTest

@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot as Command;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator;
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class SnapshotTest extends CommandHandlerTestCase
 {

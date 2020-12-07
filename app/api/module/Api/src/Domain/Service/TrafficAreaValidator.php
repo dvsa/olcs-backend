@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
+class TrafficAreaValidator implements \Laminas\ServiceManager\FactoryInterface
 {
     const ERR_TA_GOODS = 'ERR_TA_GOODS';   // Operator already has Goods licence/application in same Traffic Area
     const ERR_TA_PSV = 'ERR_TA_PSV';       // Operator already has PSV licence/application in same Traffic Area
@@ -29,7 +29,7 @@ class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
      */
     protected $adminAreaTrafficAreaRepo;
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->addressService = $serviceLocator->get('AddressService');
         $this->adminAreaTrafficAreaRepo = $serviceLocator->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');

@@ -3,10 +3,10 @@
 namespace Olcs\Db\Controller;
 
 use Olcs\Logging\Log\Logger;
-use Zend\Mvc\Controller\AbstractRestfulController as ZendAbstractRestfulController;
-use Zend\Mvc\Exception;
-use Zend\Mvc\MvcEvent;
-use Zend\Http\Response;
+use Laminas\Mvc\Controller\AbstractRestfulController as LaminasAbstractRestfulController;
+use Laminas\Mvc\Exception;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Http\Response;
 use Olcs\Db\Exceptions\RestResponseException;
 use Olcs\Db\Traits\RestResponseTrait;
 
@@ -15,7 +15,7 @@ use Olcs\Db\Traits\RestResponseTrait;
  *
  * @author someone <someone@valtech.co.uk>
  */
-abstract class AbstractController extends ZendAbstractRestfulController
+abstract class AbstractController extends LaminasAbstractRestfulController
 {
     use RestResponseTrait;
 

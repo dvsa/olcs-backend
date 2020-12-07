@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class GrantValidationService implements \Zend\ServiceManager\FactoryInterface
+class GrantValidationService implements \Laminas\ServiceManager\FactoryInterface
 {
     const ERROR_S4_EMPTY = 'APP-GRA-S4-EMPTY';
     const ERROR_OOOD_UNKNOWN = 'APP-GRA-OOOD-UNKNOWN';
@@ -26,7 +26,7 @@ class GrantValidationService implements \Zend\ServiceManager\FactoryInterface
      */
     private $sectionAccessService;
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->sectionAccessService = $serviceLocator->get('SectionAccessService');
 

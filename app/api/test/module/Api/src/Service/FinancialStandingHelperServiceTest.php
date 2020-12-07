@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Financial Standing Helper Service Test
@@ -239,6 +239,5 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
             ->shouldReceive('fetchById')->with($organisationId)->once()->andReturn($organisation);
 
         $this->assertEquals(86500, $this->sut->getFinanceCalculationForOrganisation($organisationId));
-
     }
 }

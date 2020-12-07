@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Generator;
 
 /**

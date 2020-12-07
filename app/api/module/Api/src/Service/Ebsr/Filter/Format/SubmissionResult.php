@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\Filter\Format;
 
-use Zend\Filter\AbstractFilter;
+use Laminas\Filter\AbstractFilter;
 use Doctrine\Common\Util\Debug as DoctrineDebug;
 
 /**

@@ -8,8 +8,8 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\Utils\Helper\FileHelper;
-use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Response;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Abstract class for download handler
@@ -60,7 +60,7 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
             throw new NotFoundException();
         }
 
-        $response = new \Zend\Http\Response\Stream();
+        $response = new \Laminas\Http\Response\Stream();
         $response->setStatusCode(Response::STATUS_CODE_200);
 
         $fileName = $file->getResource();

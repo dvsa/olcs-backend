@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Address\Service;
 
-use Zend\Http\Client as HttpClient;
+use Laminas\Http\Client as HttpClient;
 
 /**
  * Client

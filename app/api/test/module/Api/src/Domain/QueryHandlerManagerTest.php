@@ -15,9 +15,9 @@ use Dvsa\Olcs\Api\Domain\ValidationHandlerManager;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\Exception\RuntimeException;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\Exception\RuntimeException;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Query Handler Manager Test

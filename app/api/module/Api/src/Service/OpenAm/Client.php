@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
-use Zend\Http\Client as HttpClient;
-use Zend\Http\Request;
-use Zend\Uri\Http as Uri;
+use Laminas\Http\Client as HttpClient;
+use Laminas\Http\Request;
+use Laminas\Uri\Http as Uri;
 
 /**
  * Class Client

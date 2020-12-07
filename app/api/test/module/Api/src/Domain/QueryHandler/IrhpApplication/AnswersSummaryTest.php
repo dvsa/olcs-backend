@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\IpaAnswersSummaryGenerator;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\AnswersSummary as AnswersSummaryQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 class AnswersSummaryTest extends QueryHandlerTestCase
 {

@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\EntityManager;
 
 /**

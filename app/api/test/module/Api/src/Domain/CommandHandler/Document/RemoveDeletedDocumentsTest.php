@@ -12,8 +12,8 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\RemoveDeletedDocuments;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Document\RemoveDeletedDocuments as Cmd;
-use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Response;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * RemoveDeletedDocumentsTest

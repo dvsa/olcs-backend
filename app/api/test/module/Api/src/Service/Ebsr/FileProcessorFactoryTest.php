@@ -6,8 +6,8 @@ use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorFactory;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
-use Zend\Filter\Decompress;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Filter\Decompress;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class FileProcessorFactoryTest

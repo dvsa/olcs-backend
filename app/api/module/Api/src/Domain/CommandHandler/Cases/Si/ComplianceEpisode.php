@@ -42,7 +42,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 
 /**
@@ -446,7 +446,6 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
                 } catch (NotFoundException $e) {
                     $this->errors[] = sprintf(self::MISSING_IMPOSED_PENALTY_ERROR, $imposedValue);
                 }
-
             }
         }
 

@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\View\Model\ViewModel;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Abstract Generator

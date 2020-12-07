@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Cli\Domain\Command;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Zend\Console\Adapter\AdapterInterface as ConsoleAdapter;
+use Laminas\Console\Adapter\AdapterInterface as ConsoleAdapter;
 
 /**
  * Class ImportUsersFromCsv

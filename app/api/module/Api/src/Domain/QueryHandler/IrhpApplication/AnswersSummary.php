@@ -8,8 +8,8 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryGenerator;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\IpaAnswersSummaryGenerator;
 use Dvsa\Olcs\Transfer\Query\Qa\AnswersSummary as AnswersSummaryQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\I18n\Translator\Translator;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\I18n\Translator\Translator;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Answers summary

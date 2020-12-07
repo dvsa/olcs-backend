@@ -327,8 +327,8 @@ class ImportUsersFromCsvTest extends CommandHandlerTestCase
 
         $excMsg = 'OpenAM Save Error Message ' . "\nX\rY";
 
-        /** @var \Zend\Http\Response $mockResp */
-        $mockResp = m::mock(\Zend\Http\Response::class)
+        /** @var \Laminas\Http\Response $mockResp */
+        $mockResp = m::mock(\Laminas\Http\Response::class)
             ->shouldReceive('getContent')->andReturn($excMsg)
             ->getMock();
         $this->mockOpenAmCli

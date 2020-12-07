@@ -13,8 +13,8 @@ use Exception;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Mvc\Router\RouteMatch;
 use Hamcrest\Core\IsEqual;
 
 class SQSControllerTest extends MockeryTestCase
@@ -29,13 +29,13 @@ class SQSControllerTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->request = m::mock('Zend\Console\Request');
+        $this->request = m::mock('Laminas\Console\Request');
 
         $this->routeMatch = new RouteMatch([]);
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
         $this->sm = Bootstrap::getServiceManager();
-        $this->console = m::mock('Zend\Console\Adapter\AdapterInterface');
+        $this->console = m::mock('Laminas\Console\Adapter\AdapterInterface');
 
         $this->sut = new SQSController();
         $this->sut->setEvent($this->event);

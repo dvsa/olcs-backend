@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory;
 use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class WebServiceClientFactoryTest

@@ -15,10 +15,10 @@ use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Dvsa\Olcs\Transfer\Command\Application\NotTakenUpApplication;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\Console\Adapter\AdapterInterface;
-use Zend\Http\Response;
-use Zend\Mvc\Controller\PluginManager;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\Console\Adapter\AdapterInterface;
+use Laminas\Http\Response;
+use Laminas\Mvc\Controller\PluginManager;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Controller\BatchController
@@ -91,7 +91,7 @@ class BatchControllerTest extends MockeryTestCase
             ->once()
             ->andThrow(Exception\NotFoundException::class);
 
-        /* @var $result \Zend\View\Model\ConsoleModel */
+        /* @var $result \Laminas\View\Model\ConsoleModel */
         $result = $this->sut->licenceStatusRulesAction();
 
         static::assertSame(404, $result->getErrorLevel());
@@ -106,7 +106,7 @@ class BatchControllerTest extends MockeryTestCase
             ->once()
             ->andThrow(Exception\RuntimeException::class);
 
-        /* @var $result \Zend\View\Model\ConsoleModel */
+        /* @var $result \Laminas\View\Model\ConsoleModel */
         $result = $this->sut->licenceStatusRulesAction();
 
         static::assertSame(Response::STATUS_CODE_400, $result->getErrorLevel());
@@ -121,7 +121,7 @@ class BatchControllerTest extends MockeryTestCase
             ->once()
             ->andThrow(\Exception::class);
 
-        /* @var $result \Zend\View\Model\ConsoleModel */
+        /* @var $result \Laminas\View\Model\ConsoleModel */
         $result = $this->sut->licenceStatusRulesAction();
 
         static::assertSame(500, $result->getErrorLevel());
@@ -879,7 +879,7 @@ class BatchControllerTest extends MockeryTestCase
 
     private function mockParamsPlugin(array $map)
     {
-        $mockParams = m::mock(\Zend\Mvc\Controller\Plugin\Params::class)
+        $mockParams = m::mock(\Laminas\Mvc\Controller\Plugin\Params::class)
             ->shouldReceive('__invoke')
             ->andReturnUsing(
                 function ($param) use ($map) {

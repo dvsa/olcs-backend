@@ -24,7 +24,7 @@ use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 
 class ProcessInsolvency extends AbstractConsumer

@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Api\Service\Document;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Utils\Helper\ValueHelper;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>
@@ -32,8 +32,7 @@ class PrintLetter implements FactoryInterface
 
         // if the allow email preference is off
         $org = $licence->getOrganisation();
-        if (
-            !ValueHelper::isOn($org->getAllowEmail())
+        if (!ValueHelper::isOn($org->getAllowEmail())
             || !$org->hasAdminEmailAddresses()
         ) {
             return false;

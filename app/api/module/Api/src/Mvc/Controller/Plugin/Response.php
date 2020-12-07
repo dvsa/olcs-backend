@@ -4,9 +4,9 @@ namespace Dvsa\Olcs\Api\Mvc\Controller\Plugin;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result as QueryResult;
-use Zend\Http\Response as HttpResponse;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\View\Model\JsonModel;
+use Laminas\Http\Response as HttpResponse;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\View\Model\JsonModel;
 use Olcs\Logging\Log\Logger;
 
 /**
@@ -128,7 +128,7 @@ class Response extends AbstractPlugin
 
     /**
      * Echo stream (used for download, because SimpleStreamResponseSender fail on big
-     * files @see \Zend\Mvc\ResponseSender\SimpleStreamResponseSender
+     * files @see \Laminas\Mvc\ResponseSender\SimpleStreamResponseSender
      *
      * @param HttpResponse\Stream $result File Stream
      *

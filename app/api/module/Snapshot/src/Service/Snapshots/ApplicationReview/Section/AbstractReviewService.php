@@ -9,8 +9,8 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\FormatReviewDataTrait;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as ChNotFoundException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\I18n\Validator\Alnum;
+use Laminas\I18n\Validator\Alnum;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>

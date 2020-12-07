@@ -4,9 +4,9 @@ namespace Dvsa\OlcsTest\Api\Service\Nysiis;
 
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
-use Zend\Http\Client as RestClient;
-use Zend\Http\Request as HttpRequest;
-use Zend\Http\Response as HttpResponse;
+use Laminas\Http\Client as RestClient;
+use Laminas\Http\Request as HttpRequest;
+use Laminas\Http\Response as HttpResponse;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

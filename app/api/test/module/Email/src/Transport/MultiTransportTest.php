@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Email\Transport;
 use Dvsa\Olcs\Email\Transport\MultiTransport;
 use Dvsa\Olcs\Email\Transport\MultiTransportOptions;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\Mail\Message;
+use Laminas\Mail\Message;
 use Mockery as m;
 
 /**

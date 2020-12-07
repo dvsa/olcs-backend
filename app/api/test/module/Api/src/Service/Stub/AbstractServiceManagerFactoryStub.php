@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Stub;
 
 use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Stub class for testing AbstractServiceManagerFactory

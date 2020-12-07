@@ -24,7 +24,7 @@ class TemplateRendererFactoryTest extends MockeryTestCase
     public function testCreateService()
     {
         $mockViewRenderer = m::mock(StrategySelectingViewRenderer::class);
-        $sl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $sl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $sl->shouldReceive('get')->with('TemplateStrategySelectingViewRenderer')->once()->andReturn($mockViewRenderer);
         $service = $this->sut->createService($sl);
 

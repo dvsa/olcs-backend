@@ -60,7 +60,7 @@ return array(
     ),
     'document_share' => [
         'http' => [
-            'adapter' => Zend\Http\Client\Adapter\Curl::class,
+            'adapter' => Laminas\Http\Client\Adapter\Curl::class,
             'curloptions' => [
                 CURLOPT_TIMEOUT => 180,
             ],
@@ -70,12 +70,12 @@ return array(
     ],
     'email' => array(
         'http' => array(
-            'adapter' => Zend\Http\Client\Adapter\Curl::class,
+            'adapter' => Laminas\Http\Client\Adapter\Curl::class,
         ),
     ),
     'companies_house' => array(
         'http' => array(
-            'adapter' => Zend\Http\Client\Adapter\Curl::class,
+            'adapter' => Laminas\Http\Client\Adapter\Curl::class,
         ),
     ),
     'soflomo_purifier' => array(

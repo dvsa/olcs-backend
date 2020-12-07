@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Zend\Mail\Transport\Sendmail;
+use Laminas\Mail\Transport\Sendmail;
 
 class LastTmLetterTest extends CommandHandlerTestCase
 {

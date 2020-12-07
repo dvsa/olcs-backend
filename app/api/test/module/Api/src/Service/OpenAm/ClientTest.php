@@ -6,11 +6,11 @@
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Service\OpenAm\Client;
-use Zend\Http\Client as HttpClient;
+use Laminas\Http\Client as HttpClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\Http\Request;
-use Zend\Http\Response;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
 
 /**
  * Client Test

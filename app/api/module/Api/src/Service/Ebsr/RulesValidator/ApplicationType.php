@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator;
 
-use Zend\Validator\AbstractValidator;
-use Zend\Validator\Exception;
+use Laminas\Validator\AbstractValidator;
+use Laminas\Validator\Exception;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 
 /**

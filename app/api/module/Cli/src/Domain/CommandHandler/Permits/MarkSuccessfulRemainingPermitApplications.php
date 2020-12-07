@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulRemainingPermitApplications
     as MarkSuccessfulRemainingPermitApplicationsCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Set the remaining successful permit applications

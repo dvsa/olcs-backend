@@ -13,7 +13,7 @@ use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 /**
  * Abstract permit email tester

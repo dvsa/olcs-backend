@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Mockery as m;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * ContinueLicenceTest

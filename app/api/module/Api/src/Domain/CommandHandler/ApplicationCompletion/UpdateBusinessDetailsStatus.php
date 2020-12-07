@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion;
 
 use Doctrine\ORM\Query;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
@@ -45,7 +45,6 @@ final class UpdateBusinessDetailsStatus extends AbstractUpdateStatus
         $limitedCo = [Organisation::ORG_TYPE_REGISTERED_COMPANY, Organisation::ORG_TYPE_LLP];
 
         if (in_array($organisation->getType()->getId(), $limitedCo)) {
-
             if ($organisation->getCompanyOrLlpNo() === null) {
                 return false;
             }

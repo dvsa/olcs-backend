@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Dvsa\OlcsTest\Snapshot\Service\Snapshots\ContinuationReview\Section\Stub\AbstractReviewServiceStub;
 use OlcsTest\Bootstrap;
 
