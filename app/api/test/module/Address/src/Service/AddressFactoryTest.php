@@ -11,7 +11,7 @@ use Dvsa\Olcs\Address\Service\Address;
 use Dvsa\Olcs\Address\Service\AddressFactory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Address Factory Test

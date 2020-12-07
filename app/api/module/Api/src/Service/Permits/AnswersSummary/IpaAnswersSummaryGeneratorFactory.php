@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class IpaAnswersSummaryGeneratorFactory implements FactoryInterface
 {

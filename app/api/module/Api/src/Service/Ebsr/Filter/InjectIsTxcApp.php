@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\Filter;
 
-use Zend\Filter\AbstractFilter;
-use Zend\Filter\Exception;
+use Laminas\Filter\AbstractFilter;
+use Laminas\Filter\Exception;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**

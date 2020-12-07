@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Overpayment Fee
@@ -53,7 +53,6 @@ final class CreateOverpaymentFee extends AbstractCommandHandler implements
         $overpaymentAmount = $this->feesHelper->getOverpaymentAmount($receivedAmount, $fees);
 
         if ($overpaymentAmount > 0) {
-
             // sort fees
             $fees = $this->feesHelper->sortFeesByInvoiceDate($fees);
 

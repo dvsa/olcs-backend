@@ -29,7 +29,7 @@ class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestC
     {
         $this->feesHelperService = m::mock();
 
-        $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('FeesHelperService')->once()->andReturn($this->feesHelperService);
 
         $this->sut = (new PublishValidationService())->createService($sm);

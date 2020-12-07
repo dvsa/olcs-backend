@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Gedmo\Mapping\Event\AdapterInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 
 /**

@@ -13,7 +13,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as Cmd;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 
 /**
@@ -74,7 +74,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         // For new apps we are also potentially updating the TA, EA and community licences
         if ($application->isNew()) {
-
             if ($application->canHaveCommunityLicences()) {
                 $application->setTotCommunityLicences($command->getTotCommunityLicences());
             }
@@ -120,7 +119,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
             && $command->getPartialAction() == 'add'
             && $application->getLicence()->getTrafficArea() === null
         ) {
-
             $trafficArea = $command->getTrafficArea();
 
             if (empty($trafficArea) && $application->getOperatingCentres()->count() >= 1) {
@@ -146,7 +144,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
             }
         }
         if (!$command->getPartial()) {
-
             if ($this->shouldValidateEnforcementArea($application)) {
                 $this->updateHelper->validateEnforcementArea($application, $command);
             }
@@ -203,7 +200,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         $this->totals['maxTrailerAuth'] = 0;
 
         foreach ($aocs as $aoc) {
-
             if ($application->isVariation()
                 && in_array($aoc['action'], ['D', 'C'])) {
                 continue;

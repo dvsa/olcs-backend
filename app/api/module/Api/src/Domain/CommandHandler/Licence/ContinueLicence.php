@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * ContinueLicence
@@ -150,7 +150,6 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
 
         // If licence type is Restricted or Standard International
         if ($licence->isRestricted() || $licence->isStandardInternational()) {
-
             //Void all community licences
             $result->merge(
                 $this->handleSideEffect(
@@ -198,7 +197,6 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
 
         //If licence type is Standard International
         if ($licence->isStandardInternational()) {
-
             //Void all community licences
             $result->merge(
                 $this->handleSideEffect(

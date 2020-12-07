@@ -13,7 +13,7 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateService()
     {
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn(
             ['elastic_search' => ['host' => 'google.com', 'port' =>4034]]
         );
@@ -26,20 +26,19 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateServiceWithException()
     {
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
 
         $sut = new ClientFactory();
         $passed = false;
         try {
             $service = $sut->createService($mockSl);
-        } catch (\Zend\ServiceManager\Exception\RuntimeException $e) {
+        } catch (\Laminas\ServiceManager\Exception\RuntimeException $e) {
             if ($e->getMessage() === 'Elastic search config not found') {
                 $passed = true;
             }
         }
 
         $this->assertTrue($passed, 'Expected exception not thrown or message didn\'t match');
-
     }
 }

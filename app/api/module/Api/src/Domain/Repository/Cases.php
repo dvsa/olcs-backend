@@ -6,7 +6,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 

@@ -8,8 +8,8 @@
 namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\AddDays;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Date Service

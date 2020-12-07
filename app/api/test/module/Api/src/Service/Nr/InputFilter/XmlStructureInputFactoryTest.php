@@ -33,14 +33,14 @@ class XmlStructureInputFactoryTest extends TestCase
             'xml_valid_message_exclude' => $xmlExclude
         ];
 
-        $mockXsdValidator = m::mock('Zend\Validator\AbstractValidator');
+        $mockXsdValidator = m::mock('Laminas\Validator\AbstractValidator');
         $mockXsdValidator->shouldReceive('setXsd')->once()->with($xmlNs);
         $mockXsdValidator->shouldReceive('setMaxErrors')->once()->with($maxSchemaErrors);
         $mockXsdValidator->shouldReceive('setXmlMessageExclude')->once()->with($xmlExclude);
 
-        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
@@ -50,7 +50,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $sut = new XmlStructureInputFactory();
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(1, $service->getFilterChain());
         $this->assertCount(1, $service->getValidatorChain());
     }
@@ -67,7 +67,7 @@ class XmlStructureInputFactoryTest extends TestCase
     public function testCreateServiceMissingConfig($config, $exceptionName, $exceptionMessage)
     {
         $this->expectException($exceptionName, $exceptionMessage);
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
 
         $sut = new XmlStructureInputFactory();

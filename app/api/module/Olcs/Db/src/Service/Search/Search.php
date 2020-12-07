@@ -2,13 +2,12 @@
 
 namespace Olcs\Db\Service\Search;
 
-
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Elastica\ResultSet;
 use Olcs\Db\Exceptions\SearchDateFilterParseException;
-use Zend\Filter\Word\CamelCaseToUnderscore;
-use Zend\Filter\Word\UnderscoreToCamelCase;
+use Laminas\Filter\Word\CamelCaseToUnderscore;
+use Laminas\Filter\Word\UnderscoreToCamelCase;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
@@ -268,7 +267,6 @@ class Search implements AuthAwareInterface
         $f = new CamelCaseToUnderscore();
 
         foreach ($filters as $filterName => $value) {
-
             $this->filters[strtolower($f->filter($filterName))] = $value;
         }
 

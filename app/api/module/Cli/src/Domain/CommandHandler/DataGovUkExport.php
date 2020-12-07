@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendIntlGoodsEm
 use Dvsa\Olcs\Cli\Domain\CommandHandler\AbstractDataExport;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;

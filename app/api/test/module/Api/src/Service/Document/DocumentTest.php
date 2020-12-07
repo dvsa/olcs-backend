@@ -8,8 +8,8 @@ use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Document
@@ -169,8 +169,8 @@ TXT;
 
         $helperMock = $this->createMock(\Dvsa\Olcs\Api\Service\Date::class);
 
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
-        $serviceLocator = $this->createMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        /** @var \Laminas\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
+        $serviceLocator = $this->createMock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->expects($this->once())
             ->method('get')
             ->with('DateService')
@@ -214,7 +214,7 @@ TXT;
 
         $translatorMock = $this->createMock(TranslatorInterface::class);
 
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
+        /** @var \Laminas\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator->expects($this->once())
             ->method('get')
@@ -236,7 +236,7 @@ TXT;
     private function setServiceManager(): void
     {
         $this->docManClient = m::mock(DocManClient::class);
-        $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)
             ->shouldReceive('get')->with('ContentStore')->andReturn(
                 $this->docManClient
             )->getMock();

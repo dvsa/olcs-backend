@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Renderer\RendererInterface;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 class HeaderAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface

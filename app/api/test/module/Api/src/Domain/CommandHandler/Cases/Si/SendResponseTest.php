@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
-use Zend\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
+use Laminas\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 

@@ -4,10 +4,10 @@ namespace Olcs\Db\Service\Search;
 
 use Elastica\Client;
 use Olcs\Logging\Log\Logger;
-use Olcs\Logging\Log\ZendLogPsr3Adapter;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\Exception;
+use Olcs\Logging\Log\LaminasLogPsr3Adapter;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Exception;
 
 /**
  * Class ClientFactory
@@ -19,7 +19,7 @@ class ClientFactory implements FactoryInterface
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @throws \Zend\ServiceManager\Exception\RuntimeException
+     * @throws \Laminas\ServiceManager\Exception\RuntimeException
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -32,7 +32,7 @@ class ClientFactory implements FactoryInterface
         $service = new Client($config['elastic_search']);
 
         if (isset($config['elastic_search']['log'])) {
-            $log = new ZendLogPsr3Adapter(Logger::getLogger());
+            $log = new LaminasLogPsr3Adapter(Logger::getLogger());
             $service->setLogger($log);
         }
 

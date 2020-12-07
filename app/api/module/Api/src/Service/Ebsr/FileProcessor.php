@@ -5,9 +5,9 @@ namespace Dvsa\Olcs\Api\Service\Ebsr;
 use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Symfony\Component\Finder\Finder;
-use Zend\Filter\Decompress;
+use Laminas\Filter\Decompress;
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
-use Zend\Filter\Exception\RuntimeException as ZendFilterRuntimeException;
+use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
 
 /**
  * Class FileProcessor
@@ -100,7 +100,7 @@ class FileProcessor implements FileProcessorInterface
         //attempt to decompress the zip file
         try {
             $this->decompressFilter->filter($filePath);
-        } catch (ZendFilterRuntimeException $e) {
+        } catch (LaminasFilterRuntimeException $e) {
             throw new EbsrPackException(self::DECOMPRESS_ERROR_PREFIX . $e->getMessage());
         }
 

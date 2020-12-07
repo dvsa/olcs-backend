@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Olcs\Logging\Log\Logger;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
-use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
+use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
 
 /**
  * Abstract Command Queue Consumer
@@ -75,29 +75,29 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
         try {
             $result = $this->handleCommand($command);
         } catch (NotReadyException $e) {
-            Logger::logException($e, \Zend\Log\Logger::WARN);
+            Logger::logException($e, \Laminas\Log\Logger::WARN);
             return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (EmailNotSentException $e) {
-            Logger::logException($e, \Zend\Log\Logger::WARN);
+            Logger::logException($e, \Laminas\Log\Logger::WARN);
             return $this->retry($item, $this->retryAfter, $e->getMessage());
         } catch (NysiisException $e) {
-            Logger::logException($e, \Zend\Log\Logger::WARN);
+            Logger::logException($e, \Laminas\Log\Logger::WARN);
             return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (DomainException $e) {
-            Logger::logException($e, \Zend\Log\Logger::ERR);
+            Logger::logException($e, \Laminas\Log\Logger::ERR);
             $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
             return $this->failed($item, $message);
-        } catch (ZendServiceException $e) {
-            Logger::logException($e, \Zend\Log\Logger::ERR);
-            return $this->handleZendServiceException($item, $e);
+        } catch (LaminasServiceException $e) {
+            Logger::logException($e, \Laminas\Log\Logger::ERR);
+            return $this->handleLaminasServiceException($item, $e);
         } catch (\Doctrine\ORM\ORMException $e) {
-            Logger::logException($e, \Zend\Log\Logger::ERR);
+            Logger::logException($e, \Laminas\Log\Logger::ERR);
             return $this->failed($item, $e->getMessage());
         } catch (DBALException $e) {
-            Logger::logException($e, \Zend\Log\Logger::ERR);
+            Logger::logException($e, \Laminas\Log\Logger::ERR);
             return $this->failed($item, $e->getMessage());
         } catch (\Exception $e) {
-            Logger::logException($e, \Zend\Log\Logger::ERR);
+            Logger::logException($e, \Laminas\Log\Logger::ERR);
             return $this->failed($item, $e->getMessage());
         }
 
@@ -116,7 +116,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
      *
      * @return string
      */
-    protected function handleZendServiceException(QueueEntity $item, \Exception $e)
+    protected function handleLaminasServiceException(QueueEntity $item, \Exception $e)
     {
         return $this->failed($item, $e->getMessage());
     }

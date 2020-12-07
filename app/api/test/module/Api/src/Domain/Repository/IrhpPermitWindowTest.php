@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Mockery as m;
-use Zend\Db\Sql\Predicate\Between;
+use Laminas\Db\Sql\Predicate\Between;
 
 /**
  * IRHP Permit Window test

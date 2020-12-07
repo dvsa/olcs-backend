@@ -4,8 +4,8 @@ namespace Dvsa\Olcs\Cli;
 
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataDvaNiExport;
-use Zend\Console\Adapter\AdapterInterface as ConsoleAdapterInterface;
-use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Laminas\Console\Adapter\AdapterInterface as ConsoleAdapterInterface;
+use Laminas\ModuleManager\Feature\ConsoleUsageProviderInterface;
 
 /**
  * Cli Module
@@ -158,9 +158,9 @@ class Module implements ConsoleUsageProviderInterface
         // also block session saving when running api to avoid unnecessary creation of surplus sessions
 
         $handler = new Session\NullSaveHandler();
-        $manager = new \Zend\Session\SessionManager();
+        $manager = new \Laminas\Session\SessionManager();
         $manager->setSaveHandler($handler);
-        \Zend\Session\Container::setDefaultManager($manager);
+        \Laminas\Session\Container::setDefaultManager($manager);
     }
 
     /**
@@ -181,7 +181,7 @@ class Module implements ConsoleUsageProviderInterface
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__,
                 ),

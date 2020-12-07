@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowFactory;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\HeaderAnswersSummaryRowsAdder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Renderer\RendererInterface;
 
 /**
  * HeaderAnswersSummaryRowsAdderTest

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 
 /**

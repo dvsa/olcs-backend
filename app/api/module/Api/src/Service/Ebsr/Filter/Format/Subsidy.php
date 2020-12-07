@@ -2,14 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\Filter\Format;
 
-use Zend\Filter\Exception;
-use Zend\Filter\AbstractFilter as ZendAbstractFilter;
+use Laminas\Filter\Exception;
+use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
 
 /**
  * Class Subsidy
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter\Format
  */
-class Subsidy extends ZendAbstractFilter
+class Subsidy extends LaminasAbstractFilter
 {
     protected $map = [
         'none' => 'bs_no',

@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion;
 
 use Doctrine\ORM\Query;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 
@@ -42,7 +42,6 @@ final class UpdateLicenceHistoryStatus extends AbstractUpdateStatus
         // Separate foreachs is more efficient, if any of the answers are not Y/N then we won't bother fetching the
         // other licences
         foreach ($licenceTypes as $licenceType => $answer) {
-
             if (!in_array($answer, $yn)) {
                 return false;
             }
@@ -61,12 +60,10 @@ final class UpdateLicenceHistoryStatus extends AbstractUpdateStatus
         $otherLicences = $application->getOtherLicences();
 
         foreach ($yesLicenceTypes as $licenceType) {
-
             $hasLicences = false;
 
             /** @var OtherLicence $otherLicence */
             foreach ($otherLicences as $otherLicence) {
-
                 if ($otherLicence->getPreviousLicenceType()->getId() === $licenceType) {
                     $hasLicences = true;
                     continue 2;

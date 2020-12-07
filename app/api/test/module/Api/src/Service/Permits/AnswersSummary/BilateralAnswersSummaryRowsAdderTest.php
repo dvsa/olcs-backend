@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\BilateralAnswersSummaryRowsAdde
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\BilateralIpaAnswersSummaryRowsAdder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Renderer\RendererInterface;
 
 /**
  * BilateralAnswersSummaryRowsAdderTest

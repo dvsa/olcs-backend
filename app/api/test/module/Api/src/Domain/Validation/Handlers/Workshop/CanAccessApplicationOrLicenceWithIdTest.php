@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Workshop;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Workshop\CanAccessApplicationOrLicenceWithId;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 use Dvsa\Olcs\Transfer\Query\Workshop\Workshop as Qry;
 
 /**

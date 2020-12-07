@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
 use RuntimeException;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Renderer\RendererInterface;
 
 class AnswersSummaryRowGenerator
 {

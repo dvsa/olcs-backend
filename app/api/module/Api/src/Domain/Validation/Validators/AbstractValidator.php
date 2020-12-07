@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\ValidationHelperTrait;
-use Zend\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\FactoryInterface;
 
 /**
  * Abstract Validator

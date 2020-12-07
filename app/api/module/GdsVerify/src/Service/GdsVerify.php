@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\GdsVerify\Service;
 
-use Zend\Cache\Storage\StorageInterface;
-use Zend\Log\LoggerInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Cache\Storage\StorageInterface;
+use Laminas\Log\LoggerInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use \RobRichards\XMLSecLibs;
 use Dvsa\Olcs\GdsVerify\Data;
 
@@ -15,7 +15,7 @@ use Dvsa\Olcs\GdsVerify\Data;
  *
  * @package Dvsa\Olcs\GdsVerify\Service
  */
-class GdsVerify implements \Zend\ServiceManager\FactoryInterface
+class GdsVerify implements \Laminas\ServiceManager\FactoryInterface
 {
     const CONFIG_KEY = 'gds_verify';
     const CONFIG_ENTITY_ID = 'entity_identifier';
@@ -90,7 +90,7 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
      */
     private function getContainer(LoggerInterface $logger)
     {
-        $Psrlogger = new \Olcs\Logging\Log\ZendLogPsr3Adapter($logger);
+        $Psrlogger = new \Olcs\Logging\Log\LaminasLogPsr3Adapter($logger);
         $container = new Data\Container($Psrlogger);
         if (!empty($this->config[self::CONFIG_ENABLED_DEBUG_LOG])) {
             $container->setDebugLog($Psrlogger);
@@ -108,7 +108,7 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
     {
         $cache = null;
         if (!empty($this->config[self::CONFIG_CACHE]) && is_array($this->config[self::CONFIG_CACHE])) {
-            $cache = \Zend\Cache\StorageFactory::factory($this->config[self::CONFIG_CACHE]);
+            $cache = \Laminas\Cache\StorageFactory::factory($this->config[self::CONFIG_CACHE]);
         }
 
         return $cache;

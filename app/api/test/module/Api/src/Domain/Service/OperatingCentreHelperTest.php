@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreateOperatingCentre;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Operating Centre Helper Test

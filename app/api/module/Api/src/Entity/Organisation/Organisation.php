@@ -133,7 +133,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function hasAdminEmailAddresses()
     {
-        $emailValidator = new \Zend\Validator\EmailAddress;
+        $emailValidator = new \Laminas\Validator\EmailAddress;
 
         /** @var OrganisationUser $orgUser */
         foreach ($this->getAdminOrganisationUsers() as $orgUser) {

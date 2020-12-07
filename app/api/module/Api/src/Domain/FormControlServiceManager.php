@@ -7,8 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 

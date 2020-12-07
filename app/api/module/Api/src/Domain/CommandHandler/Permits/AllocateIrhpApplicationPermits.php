@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Service\Permits\Allocate\IrhpPermitAllocator;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\RangeMatchingCriteriaInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use RuntimeException;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Allocate permits for an IRHP Permit application

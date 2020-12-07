@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
-use Zend\Validator\AbstractValidator;
-use Zend\Validator\Exception;
+use Laminas\Validator\AbstractValidator;
+use Laminas\Validator\Exception;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LaEntity;
 

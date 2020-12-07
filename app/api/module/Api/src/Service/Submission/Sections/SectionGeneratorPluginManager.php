@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\Exception\RuntimeException;
 
 /**
  * Class PluginManager

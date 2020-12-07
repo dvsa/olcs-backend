@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Service\Nysiis;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Http\Client as RestClient;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Client as RestClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 
 /**

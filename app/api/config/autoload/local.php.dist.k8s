@@ -8,7 +8,7 @@
 * .dist extension at the end and populate values as needed.
 *
 * @NOTE: This file is ignored from Git by default with the .gitignore included
-* in ZendSkeletonApplication. This is a good practice, as it prevents sensitive
+* in LaminasSkeletonApplication. This is a good practice, as it prevents sensitive
 * credentials from accidentally being committed into version control.
 */
 
@@ -160,7 +160,7 @@ return [
 
     // CPMS service
     'cpms_api' => [
-        'logger_alias' => 'Logger', // Zend logger service manager alias - use 'Logger' for the main OLCS log
+        'logger_alias' => 'Logger', // Laminas logger service manager alias - use 'Logger' for the main OLCS log
         'identity_provider' => 'CpmsIdentityProvider', // Should implement CpmsClient\Authenticate\IdentityProviderInterface
         'enable_cache' => true,
         'cache_storage' => 'array',
@@ -275,7 +275,7 @@ return [
         // @to-do currently waiting on the actual nr address
         'inr_service' => [
             'uri' => 'Not Available in NonProd',
-            'adapter'   => Zend\Http\Client\Adapter\Curl::class,
+            'adapter'   => Laminas\Http\Client\Adapter\Curl::class,
             'options' => [
                 'sslcert' => '/opt/dvsa/inr/certs/inr_client_cert.pem',
                 'sslverifypeer' => 1, //debug only, must be set to 1 in production
@@ -320,7 +320,7 @@ return [
                             'priority' => [
                                 'name' => 'priority',
                                 'options' => [
-                                    'priority' => \Zend\Log\Logger::DEBUG
+                                    'priority' => \Laminas\Log\Logger::DEBUG
                                 ]
                             ],
                         ]
@@ -427,7 +427,7 @@ return [
     ],
 
     'http_external' => [
-        'adapter' => \Zend\Http\Client\Adapter\Curl::class,
+        'adapter' => \Laminas\Http\Client\Adapter\Curl::class,
         //'curl_options' => [
         //    CURLOPT_PROXY => 'proxy.shd.proxy.nonprod.dvsa.aws:3128',
         //],
@@ -447,7 +447,7 @@ return [
     ],
 
     'caches' => [
-        \Zend\Cache\Storage\Adapter\Redis::class => [
+        \Laminas\Cache\Storage\Adapter\Redis::class => [
             'adapter' => [
                 'name' => 'redis',
                 'options' => [

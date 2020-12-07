@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * GetAuthRequest

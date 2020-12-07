@@ -21,7 +21,7 @@ use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
@@ -651,9 +651,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             ->andReturn($submission)
             ->getMock();
 
-
         $this->sut->handleCommand($command);
-
     }
 
     public function informationCompleteDateDataProvider()
@@ -771,7 +769,6 @@ class AssignSubmissionTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
         $this->assertEquals($expected, $result->toArray());
-
     }
 
     /**
@@ -894,7 +891,5 @@ class AssignSubmissionTest extends CommandHandlerTestCase
                 ''
             ]
         ];
-
     }
-
 }

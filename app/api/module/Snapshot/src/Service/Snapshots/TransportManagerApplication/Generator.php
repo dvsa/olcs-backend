@@ -11,8 +11,8 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
-use Zend\Filter\Word\UnderscoreToCamelCase;
-use Zend\View\Model\ViewModel;
+use Laminas\Filter\Word\UnderscoreToCamelCase;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Generator

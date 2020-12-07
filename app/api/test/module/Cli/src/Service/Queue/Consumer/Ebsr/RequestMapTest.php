@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
-use Zend\Serializer\Adapter\Json as ZendJson;
+use Laminas\Serializer\Adapter\Json as LaminasJson;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap
@@ -52,7 +52,7 @@ class RequestMapTest extends AbstractConsumerTestCase
         $user = new User('pid', 'type');
         $user->setId($userId);
 
-        $json = new ZendJson();
+        $json = new LaminasJson();
 
         $options = [
             'id' => $busRegId,

@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\ValidationHandlerManager;
-use Zend\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\ConfigInterface;
 
 /**
  * Validation Handler Manager Test
@@ -44,7 +44,7 @@ class ValidationHandlerManagerTest extends MockeryTestCase
 
     public function testGetInvalid()
     {
-        $this->expectException(\Zend\ServiceManager\Exception\RuntimeException::class);
+        $this->expectException(\Laminas\ServiceManager\Exception\RuntimeException::class);
 
         $this->sut->setService('Foo', m::mock());
 

@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Zend\Json\Json as ZendJson;
+use Laminas\Json\Json as LaminasJson;
 
 /**
  * Queue Aware
@@ -61,7 +61,7 @@ trait QueueAwareTrait
                 'entityId' => $entityId,
                 'type' => $type,
                 'status' => Queue::STATUS_QUEUED,
-                'options' => ZendJson::encode($options),
+                'options' => LaminasJson::encode($options),
                 'processAfterDate' => $processAfterDate
             ]
         );

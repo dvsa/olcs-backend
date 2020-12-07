@@ -2,16 +2,16 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\Filter\AbstractFilter as ZendAbstractFilter;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
 use Dvsa\Olcs\Transfer\Filter\Vrm as VrmFilter;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class Vrm
  * @package Dvsa\Olcs\Api\Service\Nr\Filter
  */
-class Vrm extends ZendAbstractFilter
+class Vrm extends LaminasAbstractFilter
 {
     /**
      * @var VrmFilter

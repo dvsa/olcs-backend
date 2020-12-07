@@ -7,12 +7,12 @@ use Dvsa\Olcs\Api\Controller\XmlController;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\Http\Response as HttpResponse;
+use Laminas\Http\Response as HttpResponse;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
-use Zend\Mvc\Controller\Plugin\Params;
-use Zend\Mvc\Controller\PluginManager;
+use Laminas\Mvc\Controller\Plugin\Params;
+use Laminas\Mvc\Controller\PluginManager;
 use Dvsa\Olcs\Api\Domain\Exception;
 
 /**

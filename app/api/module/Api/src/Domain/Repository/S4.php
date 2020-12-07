@@ -10,7 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Application\S4 as Entity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
 
 /**
  * S4 Repository.

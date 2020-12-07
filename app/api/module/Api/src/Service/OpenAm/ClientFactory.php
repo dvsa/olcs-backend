@@ -5,11 +5,11 @@
  */
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
-use Zend\Http\Client as HttpClient;
-use Zend\Http\Request;
-use Zend\ServiceManager\Exception\RuntimeException;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Client as HttpClient;
+use Laminas\Http\Request;
+use Laminas\ServiceManager\Exception\RuntimeException;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 
 /**

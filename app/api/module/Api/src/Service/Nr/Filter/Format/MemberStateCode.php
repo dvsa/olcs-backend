@@ -2,12 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter\Format;
 
-use Zend\Filter\AbstractFilter as ZendAbstractFilter;
+use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>
  */
-class MemberStateCode extends ZendAbstractFilter
+class MemberStateCode extends LaminasAbstractFilter
 {
     /**
      * Change 'UK' to 'GB'

@@ -13,7 +13,7 @@ class PostScoringEmail extends AbstractCommand
 {
     /**
      * @var String
-     * @Transfer\Filter({"name":"Zend\Filter\StringTrim"})
+     * @Transfer\Filter({"name":"Laminas\Filter\StringTrim"})
      */
     protected $documentIdentifier;
 

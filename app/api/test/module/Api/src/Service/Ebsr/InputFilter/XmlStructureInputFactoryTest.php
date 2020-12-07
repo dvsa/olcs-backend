@@ -38,16 +38,16 @@ class XmlStructureInputFactoryTest extends TestCase
             'xml_valid_message_exclude' => $xmlMessageExclude
         ];
 
-        $mockXsdValidator = m::mock('Zend\Validator\AbstractValidator');
+        $mockXsdValidator = m::mock('Laminas\Validator\AbstractValidator');
         $mockXsdValidator->shouldReceive('setXsd')->once()
             ->with('http://www.transxchange.org.uk/schema/' . $schemaVersion . '/TransXChange_registration.xsd');
         $mockXsdValidator->shouldReceive('setMaxErrors')->once()->with($maxSchemaErrors);
         $mockXsdValidator->shouldReceive('setXmlMessageExclude')->once()->with($xmlMessageExclude);
 
-        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
-        $mockValidator = m::mock('Zend\Validator\AbstractValidator');
+        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
+        $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
@@ -62,7 +62,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $sut = new XmlStructureInputFactory();
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(1, $service->getFilterChain());
         $this->assertCount(5, $service->getValidatorChain());
     }
@@ -80,9 +80,9 @@ class XmlStructureInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->andReturn($mockFilter);
@@ -90,7 +90,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $sut = new XmlStructureInputFactory();
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(1, $service->getFilterChain());
         $this->assertCount(0, $service->getValidatorChain());
     }
@@ -111,9 +111,9 @@ class XmlStructureInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
@@ -139,9 +139,9 @@ class XmlStructureInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
@@ -168,9 +168,9 @@ class XmlStructureInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);

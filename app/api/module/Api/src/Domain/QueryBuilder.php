@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain;
 
 use Doctrine\ORM\QueryBuilder as DoctrineQueryBuilder;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Query Builder

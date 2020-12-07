@@ -8,19 +8,19 @@ use Dvsa\Olcs\Email\Transport\MultiTransportOptions;
 use Dvsa\Olcs\Email\Transport\S3File;
 use Dvsa\Olcs\Email\Transport\S3FileOptions;
 use Dvsa\Olcs\Email\Transport\S3FileOptionsFactory;
-use Zend\Mail\Header\GenericHeader;
-use Zend\Mail\Transport\Factory;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mail as ZendMail;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as ZendMimePart;
-use Zend\Mime\Mime as ZendMime;
-use Zend\Mail\Address as ZendAddress;
-use Zend\Mail\AddressList;
-use Zend\Mail\Exception\InvalidArgumentException as ZendAddressException;
-use Zend\Mail\Exception\RuntimeException as ZendMailRuntimeException;
-use Zend\Mail\Transport\TransportInterface;
+use Laminas\Mail\Header\GenericHeader;
+use Laminas\Mail\Transport\Factory;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Mail as LaminasMail;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Part as LaminasMimePart;
+use Laminas\Mime\Mime as LaminasMime;
+use Laminas\Mail\Address as LaminasAddress;
+use Laminas\Mail\AddressList;
+use Laminas\Mail\Exception\InvalidArgumentException as LaminasAddressException;
+use Laminas\Mail\Exception\RuntimeException as LaminasMailRuntimeException;
+use Laminas\Mail\Transport\TransportInterface;
 use Olcs\Logging\Log\Logger;
 
 /**
@@ -73,7 +73,7 @@ class Email implements FactoryInterface
         $config = $serviceLocator->get('Config');
 
         if (!isset($config['mail'])) {
-            throw new ZendMailRuntimeException('No mail config found');
+            throw new LaminasMailRuntimeException('No mail config found');
         }
 
         $transport = Factory::create($config['mail']);
@@ -131,9 +131,9 @@ class Email implements FactoryInterface
 
             try {
                 //olcs-14825 we no longer pass in the name, as this occasionally caused problems with postfix
-                $address = new ZendAddress($email);
+                $address = new LaminasAddress($email);
                 $addressList->add($address);
-            } catch (ZendAddressException $e) {
+            } catch (LaminasAddressException $e) {
                 //address is invalid in some way, right now these addresses are ignored
             }
         }
@@ -185,52 +185,52 @@ class Email implements FactoryInterface
             throw new EmailNotSentException(self::MISSING_TO_ERROR);
         }
 
-        $mail = new ZendMail\Message();
+        $mail = new LaminasMail\Message();
         $mail->setFrom($fromAddress);
         $mail->addTo($toAddresses);
         $mail->addCc($this->validateAddresses($cc));
         $mail->addBcc($this->validateAddresses($bcc));
         $mail->setSubject($subject);
 
-        $plainPart = new ZendMimePart($plainBody);
-        $plainPart->encoding = ZendMime::ENCODING_QUOTEDPRINTABLE;
-        $plainPart->type = ZendMime::TYPE_TEXT;
+        $plainPart = new LaminasMimePart($plainBody);
+        $plainPart->encoding = LaminasMime::ENCODING_QUOTEDPRINTABLE;
+        $plainPart->type = LaminasMime::TYPE_TEXT;
 
         //if we've no html version we can safely send a plain text email without attachments
         //the only current (and likely future) use case for plain text only is the inspection request email
         if ($htmlBody === null) {
             $emailBody->addPart($plainPart);
-            $messageType = ZendMime::TYPE_TEXT;
+            $messageType = LaminasMime::TYPE_TEXT;
         } else {
-            $htmlPart = new ZendMimePart($htmlBody);
-            $htmlPart->encoding = ZendMime::ENCODING_QUOTEDPRINTABLE;
-            $htmlPart->type = ZendMime::TYPE_HTML;
+            $htmlPart = new LaminasMimePart($htmlBody);
+            $htmlPart->encoding = LaminasMime::ENCODING_QUOTEDPRINTABLE;
+            $htmlPart->type = LaminasMime::TYPE_HTML;
 
             $parts = [$plainPart, $htmlPart];
 
             if (!empty($docs)) {
-                $messageType = ZendMime::MULTIPART_MIXED;
+                $messageType = LaminasMime::MULTIPART_MIXED;
 
                 $messageBody = new MimeMessage();
                 $messageBody->setParts($parts);
 
-                $messagePart = new ZendMimePart($messageBody->generateMessage());
-                $messagePart->type = ZendMime::MULTIPART_ALTERNATIVE . ";\n boundary=\"" .
+                $messagePart = new LaminasMimePart($messageBody->generateMessage());
+                $messagePart->type = LaminasMime::MULTIPART_ALTERNATIVE . ";\n boundary=\"" .
                     $messageBody->getMime()->boundary() . '"';
 
                 $emailBody->addPart($messagePart);
 
                 foreach ($docs as $doc) {
-                    $attachment = new ZendMimePart($doc['content']);
+                    $attachment = new LaminasMimePart($doc['content']);
                     $attachment->filename = $doc['fileName'];
-                    $attachment->type = ZendMime::TYPE_OCTETSTREAM;
-                    $attachment->encoding = ZendMime::ENCODING_BASE64;
-                    $attachment->disposition = ZendMime::DISPOSITION_ATTACHMENT;
+                    $attachment->type = LaminasMime::TYPE_OCTETSTREAM;
+                    $attachment->encoding = LaminasMime::ENCODING_BASE64;
+                    $attachment->disposition = LaminasMime::DISPOSITION_ATTACHMENT;
                     $emailBody->addPart($attachment);
                 }
             } else {
                 $emailBody->setParts($parts);
-                $messageType = ZendMime::MULTIPART_ALTERNATIVE;
+                $messageType = LaminasMime::MULTIPART_ALTERNATIVE;
             }
         }
 
@@ -252,7 +252,7 @@ class Email implements FactoryInterface
         }
     }
 
-    private function setHighPriority(ZendMail\Message $mail): void
+    private function setHighPriority(LaminasMail\Message $mail): void
     {
         $headers = $mail->getHeaders();
         $importanceHeader = new GenericHeader('Importance', 'High');

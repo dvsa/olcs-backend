@@ -9,8 +9,8 @@ namespace Cli;
 
 use Pdo;
 use DirectoryIterator;
-use Zend\Filter\Word\CamelCaseToSeparator;
-use Zend\Mvc\Application;
+use Laminas\Filter\Word\CamelCaseToSeparator;
+use Laminas\Mvc\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 

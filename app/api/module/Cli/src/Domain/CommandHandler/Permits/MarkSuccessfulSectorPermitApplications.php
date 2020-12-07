@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulSectorPermitApplications
     as MarkSuccessfulSectorPermitApplicationsCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Set successful permit applications for each sector

@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter\Format;
 
-use Zend\Filter\AbstractFilter as ZendAbstractFilter;
+use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
 
 /**
  * Class SiDates
  * @package Dvsa\Olcs\Api\Service\Nr\Filter\Format
  */
-class SiDates extends ZendAbstractFilter
+class SiDates extends LaminasAbstractFilter
 {
     /**
      * Returns the result of filtering $value

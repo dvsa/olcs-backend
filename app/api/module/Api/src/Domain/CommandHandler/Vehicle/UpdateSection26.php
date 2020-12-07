@@ -20,7 +20,7 @@ final class UpdateSection26 extends AbstractCommandHandler implements Transactio
      */
     private $searchService;
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         $this->searchService = $serviceLocator->getServiceLocator()->get('ElasticSearch\Search');
 

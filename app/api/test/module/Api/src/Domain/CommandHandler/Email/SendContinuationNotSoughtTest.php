@@ -32,7 +32,7 @@ class SendContinuationNotSoughtTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
-            'translator' => m::mock(\Zend\I18n\Translator\TranslatorInterface::class),
+            'translator' => m::mock(\Laminas\I18n\Translator\TranslatorInterface::class),
         ];
 
         parent::setUp();

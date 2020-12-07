@@ -7,8 +7,8 @@ use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use ZfcRbac\Service\AuthorizationService;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Audit as AuditCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
+use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
 
 /**
  * Abstract Query Handler
@@ -79,7 +79,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
 
         try {
             $this->applyInterfaces($mainServiceLocator);
-        } catch (ZendServiceException $e) {
+        } catch (LaminasServiceException $e) {
             $this->logServiceExceptions($e);
         }
 
@@ -278,7 +278,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     }
 
     /**
-     * Zend ServiceManager masks exceptions behind a simple 'service not created'
+     * Laminas ServiceManager masks exceptions behind a simple 'service not created'
      * message so here we inspect the 'previous exception' chain and log out
      * what the actual errors were, before rethrowing the original execption.
      *

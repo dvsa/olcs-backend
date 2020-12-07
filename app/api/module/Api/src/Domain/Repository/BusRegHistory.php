@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\View\BusRegHistoryView as Entity;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\Bus\HistoryList as DTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;

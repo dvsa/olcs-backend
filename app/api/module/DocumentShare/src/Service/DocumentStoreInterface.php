@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Exception;
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 interface DocumentStoreInterface
 {

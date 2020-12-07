@@ -33,7 +33,7 @@ class SearchControllerTest extends \PHPUnit\Framework\TestCase
         $mockElastic->shouldReceive('setSort')->with('someField');
         $mockElastic->shouldReceive('setOrder')->with('desc');
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('ElasticSearch\Search')->andReturn($mockElastic);
 
         $sut = new SearchController();
@@ -53,7 +53,7 @@ class SearchControllerTest extends \PHPUnit\Framework\TestCase
     protected function getMockPlugin($class)
     {
         if (strpos($class, '\\') === false) {
-            $class = 'Zend\Mvc\Controller\Plugin\\' . $class;
+            $class = 'Laminas\Mvc\Controller\Plugin\\' . $class;
         }
 
         $mockPlugin = m::mock($class);
@@ -63,11 +63,11 @@ class SearchControllerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param $plugins
-     * @return m\MockInterface|\Zend\Mvc\Controller\PluginManager
+     * @return m\MockInterface|\Laminas\Mvc\Controller\PluginManager
      */
     protected function getMockPluginManager($plugins)
     {
-        $mockPluginManager = m::mock('Zend\Mvc\Controller\PluginManager');
+        $mockPluginManager = m::mock('Laminas\Mvc\Controller\PluginManager');
         $mockPluginManager->shouldReceive('setController');
 
         foreach ($plugins as $name => $class) {

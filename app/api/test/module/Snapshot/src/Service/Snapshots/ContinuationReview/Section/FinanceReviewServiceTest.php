@@ -9,7 +9,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use OlcsTest\Bootstrap;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * FinanceReviewServiceTest

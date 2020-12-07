@@ -24,7 +24,7 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
     {
         $this->sectionAccessService = m::mock();
 
-        $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('SectionAccessService')->once()->andReturn($this->sectionAccessService);
 
         $this->sut = (new \Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService)->createService($sm);

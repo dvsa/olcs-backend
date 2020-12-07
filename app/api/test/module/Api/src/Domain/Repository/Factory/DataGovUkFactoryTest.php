@@ -6,8 +6,8 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Factory\DataGovUkFactory;
 use Dvsa\Olcs\Api\Domain\Repository\DataGovUk;
 use Mockery as m;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * @covers  Dvsa\Olcs\Api\Domain\Repository\Factory\DataGovUkFactory

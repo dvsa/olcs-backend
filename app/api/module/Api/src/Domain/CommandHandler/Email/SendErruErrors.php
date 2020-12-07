@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendErruErrors as SendErruErrorsCmd;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Email\Data\Message;
-use Zend\Json\Json;
+use Laminas\Json\Json;
 
 /**
  * Send Erru Email

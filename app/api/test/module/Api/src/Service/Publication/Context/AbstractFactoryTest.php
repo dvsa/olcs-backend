@@ -12,16 +12,16 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class AbstractFactoryTest extends MockeryTestCase
 {
-    /** @var  \Zend\ServiceManager\ServiceLocatorInterface | m\MockInterface */
+    /** @var  \Laminas\ServiceManager\ServiceLocatorInterface | m\MockInterface */
     private $mockSl;
-    /** @var  \Zend\ServiceManager\ServiceManager | m\MockInterface */
+    /** @var  \Laminas\ServiceManager\ServiceManager | m\MockInterface */
     private $mockSm;
 
     public function setUp(): void
     {
-        $this->mockSl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $this->mockSl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
 
-        $this->mockSm = m::mock(\Zend\ServiceManager\ServiceManager::class)
+        $this->mockSm = m::mock(\Laminas\ServiceManager\ServiceManager::class)
             ->shouldReceive('getServiceLocator')->andReturn($this->mockSl)
             ->getMock();
     }

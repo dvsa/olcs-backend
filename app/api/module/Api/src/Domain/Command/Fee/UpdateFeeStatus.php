@@ -10,10 +10,10 @@ class UpdateFeeStatus extends AbstractCommand
     use Identity;
 
     /**
-     * @Transfer\Filter({"name":"Zend\Filter\StringTrim"})
-     * @Transfer\Validator({"name":"Zend\Validator\StringLength", "options":{"min": 1}})
+     * @Transfer\Filter({"name":"Laminas\Filter\StringTrim"})
+     * @Transfer\Validator({"name":"Laminas\Validator\StringLength", "options":{"min": 1}})
      * @Transfer\Validator({
-     *     "name":"Zend\Validator\InArray",
+     *     "name":"Laminas\Validator\InArray",
      *     "options": {
      *         "haystack": {"lfs_ot","lfs_pd","lfs_cn", "lfs_refund_pending", "lfs_refund_failed", "lfs_refunded"}
      *     }

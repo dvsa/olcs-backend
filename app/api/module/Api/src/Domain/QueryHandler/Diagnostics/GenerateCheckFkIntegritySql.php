@@ -9,7 +9,7 @@ use Dvsa\Olcs\Cli\Domain\QueryHandler\DataRetention\EscapeMysqlIdentifierTrait;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use PDO;
 use RuntimeException;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
 {

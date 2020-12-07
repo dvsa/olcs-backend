@@ -7,7 +7,7 @@
  */
 namespace OlcsTest\Db\Service;
 
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 /**
  * Tests RestResponseTrait
@@ -95,8 +95,7 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
             ->method('getNewResponse')
             ->will($this->returnValue($mockResponse));
 
-        switch(count($input)) {
-
+        switch (count($input)) {
             case 1:
                 $response = $trait->respond($input[0]);
                 break;

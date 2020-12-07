@@ -4,10 +4,10 @@ namespace Dvsa\Olcs\Api\Rbac;
 
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Zend\Http\Header\GenericHeader;
+use Laminas\Http\Header\GenericHeader;
 use ZfcRbac\Identity\IdentityProviderInterface;
 use ZfcRbac\Identity\IdentityInterface;
-use Zend\Http\Request;
+use Laminas\Http\Request;
 
 /**
  * Identity Provider
@@ -51,7 +51,7 @@ class PidIdentityProvider implements IdentityProviderInterface
 
     private function authenticate()
     {
-        if ($this->request instanceof \Zend\Console\Request) {
+        if ($this->request instanceof \Laminas\Console\Request) {
             $auth = self::SYSTEM_USER;
             return $this->repository->fetchById($auth);
         } else {
