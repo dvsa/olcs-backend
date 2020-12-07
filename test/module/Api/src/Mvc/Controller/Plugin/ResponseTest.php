@@ -9,9 +9,9 @@ use Dvsa\Olcs\Api\Mvc\Controller\Plugin;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
-use Zend\Http\Headers;
-use Zend\Http\Response as HttpResponse;
-use Zend\View\Model\JsonModel;
+use Laminas\Http\Headers;
+use Laminas\Http\Response as HttpResponse;
+use Laminas\View\Model\JsonModel;
 
 /**
  * @covers \Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response

@@ -13,8 +13,8 @@ class FailedRequestExceptionTest extends MockeryTestCase
 {
     public function testGet()
     {
-        /** @var \Zend\Http\Response | m\MockInterface $mockResp */
-        $mockResp = m::mock(\Zend\Http\Response::class);
+        /** @var \Laminas\Http\Response | m\MockInterface $mockResp */
+        $mockResp = m::mock(\Laminas\Http\Response::class);
         $mockResp->shouldReceive('getContent')->once()->andReturn('unit_RespCtx');
 
         $mockExp = m::mock(\Exception::class);

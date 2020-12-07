@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Email\Transport;
 
-use Zend\Mail\Transport\Factory;
-use Zend\Stdlib\AbstractOptions;
+use Laminas\Mail\Transport\Factory;
+use Laminas\Stdlib\AbstractOptions;
 
 /**
  * MultiTransport Options
@@ -54,7 +54,7 @@ class MultiTransportOptions extends AbstractOptions
     /**
      * Get list of Mail transports
      *
-     * @return array of Zend\Mail\Transport\TransportInterface
+     * @return array of Laminas\Mail\Transport\TransportInterface
      */
     public function getTransport()
     {

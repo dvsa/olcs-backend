@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\ConvertToPdf;
 
-use Zend\Http\Client as HttpClient;
+use Laminas\Http\Client as HttpClient;
 use \Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
 
 /**
@@ -60,7 +60,7 @@ class WebServiceClient
     public function convert($fileName, $destination)
     {
         $this->getHttpClient()->reset();
-        $this->getHttpClient()->setMethod(\Zend\Http\Request::METHOD_POST);
+        $this->getHttpClient()->setMethod(\Laminas\Http\Request::METHOD_POST);
         $this->getHttpClient()->setFileUpload($fileName, 'file');
 
         $response = $this->getHttpClient()->send();

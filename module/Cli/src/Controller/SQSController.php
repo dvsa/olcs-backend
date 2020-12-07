@@ -13,7 +13,7 @@ use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessIns
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfileDlq;
 use Olcs\Logging\Log\Logger;
-use Zend\View\Model\ConsoleModel;
+use Laminas\View\Model\ConsoleModel;
 
 /**
  * SQSController
@@ -31,7 +31,7 @@ class SQSController extends AbstractQueueController
     /**
      * Index Action
      *
-     * @return \Zend\View\Model\ConsoleModel
+     * @return \Laminas\View\Model\ConsoleModel
      */
     public function indexAction()
     {
@@ -58,7 +58,7 @@ class SQSController extends AbstractQueueController
                 $content = 'Error: ' . $exception->getMessage();
                 $this->getConsole()->writeLine($content);
                 Logger::log(
-                    \Zend\Log\Logger::ERR,
+                    \Laminas\Log\Logger::ERR,
                     'Failed to process next item in the queue',
                     ['errorLevel' => 1, 'content' => $content]
                 );

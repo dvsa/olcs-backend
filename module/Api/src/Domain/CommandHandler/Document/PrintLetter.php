@@ -135,9 +135,9 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
      *
      * @return AbstractCommandHandler
      */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface $sm  */
+        /** @var \Laminas\ServiceManager\ServiceLocatorInterface $sm  */
         $sm = $serviceLocator->getServiceLocator();
 
         $this->srvPrintLetter = $sm->get(Service\Document\PrintLetter::class);

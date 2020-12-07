@@ -10,8 +10,8 @@ use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProviderFactory;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Pid Identity Provider Factory Test

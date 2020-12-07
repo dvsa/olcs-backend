@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
-use Zend\Serializer\Adapter\Json as ZendJson;
+use Laminas\Serializer\Adapter\Json as LaminasJson;
 
 /**
  * Request Map
@@ -33,7 +33,7 @@ class RequestMap extends AbstractCommandConsumer
      */
     public function getCommandData(QueueEntity $item)
     {
-        $json = new ZendJson();
+        $json = new LaminasJson();
         return array_merge($json->unserialize($item->getOptions()), ['user' => $item->getCreatedBy()->getId()]);
     }
 

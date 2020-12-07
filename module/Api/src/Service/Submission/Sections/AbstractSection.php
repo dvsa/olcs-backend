@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Person\Person;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
@@ -21,7 +21,7 @@ abstract class AbstractSection implements SectionGeneratorInterface
     private $queryHandler;
 
     /**
-     * @var /Zend\View\Renderer\PhpRenderer
+     * @var /Laminas\View\Renderer\PhpRenderer
      */
     private $viewRenderer;
 

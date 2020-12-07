@@ -10,7 +10,7 @@ use Dvsa\Olcs\DocumentShare\Service\WebDavClient as ContentStoreClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader

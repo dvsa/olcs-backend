@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
 
 /**
  * Print Scheduler Interface
@@ -16,7 +16,7 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
  */
 interface PrintSchedulerInterface extends ServiceLocatorAwareInterface
 {
-    CONST OPTION_DOUBLE_SIDED = 1;
+    const OPTION_DOUBLE_SIDED = 1;
 
     public function enqueueFile($fileId, $jobName, $options = []);
 }

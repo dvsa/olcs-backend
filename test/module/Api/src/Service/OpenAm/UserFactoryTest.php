@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\OpenAm\User;
 use Dvsa\Olcs\Api\Service\OpenAm\UserFactory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * User Factory Test

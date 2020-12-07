@@ -7,7 +7,7 @@ use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as CreateDocumentDto;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadDto;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Can Create a Document

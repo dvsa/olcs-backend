@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter\Format;
 
-use Zend\Filter\AbstractFilter as ZendAbstractFilter;
+use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
 
 /**
  * Class IsExecuted
  * @package Dvsa\Olcs\Api\Service\Nr\Filter\Format
  */
-class IsExecuted extends ZendAbstractFilter
+class IsExecuted extends LaminasAbstractFilter
 {
     const YES_EXECUTED_KEY = 'pen_erru_imposed_executed_yes';
     const NO_EXECUTED_KEY = 'pen_erru_imposed_executed_no';

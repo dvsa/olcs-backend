@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\Mapping;
 use Olcs\XmlTools\Xml\Specification\MultiNodeValue;
 use Olcs\XmlTools\Xml\Specification\NodeValue;
 use Olcs\XmlTools\Xml\Specification\Recursion;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class TransExchangePublisherXmlFactory

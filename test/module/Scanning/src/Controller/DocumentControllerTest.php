@@ -21,15 +21,15 @@ class DocumentControllerTest extends MockeryTestCase
     private $mockCommandHandlerManager;
 
     /**
-     * @var \Zend\Http\PhpEnvironment\Request|m\Mock
+     * @var \Laminas\Http\PhpEnvironment\Request|m\Mock
      */
     private $request;
 
     protected function setUp(): void
     {
         $this->sm = \OlcsTest\Bootstrap::getServiceManager();
-        $this->request  = m::mock('\Zend\Http\Request')->makePartial();
-        $this->response = m::mock('\Zend\Http\Response')->makePartial();
+        $this->request  = m::mock('\Laminas\Http\Request')->makePartial();
+        $this->response = m::mock('\Laminas\Http\Response')->makePartial();
 
         $this->sut = m::mock(\Dvsa\Olcs\Scanning\Controller\DocumentController::class)
             ->makePartial()
@@ -47,7 +47,7 @@ class DocumentControllerTest extends MockeryTestCase
 
     public function testMissingDescription()
     {
-        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        /** @var \Laminas\View\Model\JsonModel $jsonModel */
         $jsonModel = $this->sut->create([]);
         $this->assertSame(400, $jsonModel->getVariable('status'));
         $this->assertSame('POST "description" is not a valid number', $jsonModel->getVariable('title'));
@@ -56,7 +56,7 @@ class DocumentControllerTest extends MockeryTestCase
     public function testInvalidDescription()
     {
         $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('X');
-        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        /** @var \Laminas\View\Model\JsonModel $jsonModel */
         $jsonModel = $this->sut->create([]);
         $this->assertSame(400, $jsonModel->getVariable('status'));
         $this->assertSame('POST "description" is not a valid number', $jsonModel->getVariable('title'));
@@ -65,7 +65,7 @@ class DocumentControllerTest extends MockeryTestCase
     public function testMissingImage()
     {
         $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
-        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        /** @var \Laminas\View\Model\JsonModel $jsonModel */
         $jsonModel = $this->sut->create([]);
 
         $this->assertSame(400, $jsonModel->getVariable('status'));
@@ -76,7 +76,7 @@ class DocumentControllerTest extends MockeryTestCase
     {
         $this->request->shouldReceive('getPost')->with('description')->once()->andReturn('12');
         $this->request->shouldReceive('getFiles->get')->with('image')->once()->andReturn('FOO');
-        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        /** @var \Laminas\View\Model\JsonModel $jsonModel */
         $jsonModel = $this->sut->create([]);
 
         $this->assertSame(400, $jsonModel->getVariable('status'));
@@ -90,7 +90,7 @@ class DocumentControllerTest extends MockeryTestCase
         $this->request->shouldReceive('getFiles->get')->with('image')->once()->andReturn(
             ['name' => 'foo', 'tmp_name' => 'bar', 'error' => 6]
         );
-        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        /** @var \Laminas\View\Model\JsonModel $jsonModel */
         $jsonModel = $this->sut->create([]);
 
         $this->assertSame(400, $jsonModel->getVariable('status'));
@@ -107,7 +107,7 @@ class DocumentControllerTest extends MockeryTestCase
         $e = new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(['SCAN_INVALID_MIME' => 'foo']);
         $this->mockCommandHandlerManager->shouldReceive('handleCommand')->once()->andThrow($e);
 
-        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        /** @var \Laminas\View\Model\JsonModel $jsonModel */
         $jsonModel = $this->sut->create([]);
 
         $this->assertSame(415, $jsonModel->getVariable('status'));
@@ -124,7 +124,7 @@ class DocumentControllerTest extends MockeryTestCase
         $e = new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(['SCAN_NOT_FOUND' => 'foo']);
         $this->mockCommandHandlerManager->shouldReceive('handleCommand')->once()->andThrow($e);
 
-        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        /** @var \Laminas\View\Model\JsonModel $jsonModel */
         $jsonModel = $this->sut->create([]);
 
         $this->assertSame(400, $jsonModel->getVariable('status'));
@@ -142,7 +142,7 @@ class DocumentControllerTest extends MockeryTestCase
         $e = new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(['FOO' => 'foo']);
         $this->mockCommandHandlerManager->shouldReceive('handleCommand')->once()->andThrow($e);
 
-        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        /** @var \Laminas\View\Model\JsonModel $jsonModel */
         $jsonModel = $this->sut->create([]);
 
         $this->assertSame(500, $jsonModel->getVariable('status'));
@@ -160,7 +160,7 @@ class DocumentControllerTest extends MockeryTestCase
         $e = new \Exception('FOO');
         $this->mockCommandHandlerManager->shouldReceive('handleCommand')->once()->andThrow($e);
 
-        /** @var \Zend\View\Model\JsonModel $jsonModel */
+        /** @var \Laminas\View\Model\JsonModel $jsonModel */
         $jsonModel = $this->sut->create([]);
 
         $this->assertSame(500, $jsonModel->getVariable('status'));
@@ -184,7 +184,7 @@ class DocumentControllerTest extends MockeryTestCase
             }
         );
 
-        /** @var \Zend\Http\PhpEnvironment\Response $response*/
+        /** @var \Laminas\Http\PhpEnvironment\Response $response*/
         $response = $this->sut->create([]);
         $this->assertSame(204, $response->getStatusCode());
     }

@@ -17,7 +17,7 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
     /** @var  TransportManagerApplication\Section\TransportManagerResponsibilityReviewService */
     protected $sut;
 
-    /** @var  \Zend\ServiceManager\ServiceManager */
+    /** @var  \Laminas\ServiceManager\ServiceManager */
     protected $sm;
 
     public function setUp(): void

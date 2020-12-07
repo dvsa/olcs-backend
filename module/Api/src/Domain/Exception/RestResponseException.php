@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Exception;
 
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 /**
  * RestResponseException

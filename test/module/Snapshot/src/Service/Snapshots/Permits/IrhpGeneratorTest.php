@@ -10,8 +10,8 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * Class IrhpGeneratorTest

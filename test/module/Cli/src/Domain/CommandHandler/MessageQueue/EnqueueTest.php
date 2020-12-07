@@ -94,9 +94,9 @@ class EnqueueTest extends CommandHandlerTestCase
         $this->mockedSmServices[Queue::class]->shouldReceive('sendMessage')->times(1)->andThrow(\Exception::class);
 
 
-        $logWriter = m::mock(\Zend\Log\Writer\WriterInterface::class);
+        $logWriter = m::mock(\Laminas\Log\Writer\WriterInterface::class);
         $logWriter->shouldReceive('write')->once();
-        $this->logger = m::mock(\Zend\Log\Logger::class, [])->makePartial();
+        $this->logger = m::mock(\Laminas\Log\Logger::class, [])->makePartial();
         $this->logger->addWriter($logWriter);
 
         Logger::setLogger($this->logger);

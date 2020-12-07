@@ -208,7 +208,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->andReturn('TEMP_FILE.rtf');
 
         $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once()
-            ->andThrow(\Zend\Http\Client\Adapter\Exception\TimeoutException::class, 'Timeout');
+            ->andThrow(\Laminas\Http\Client\Adapter\Exception\TimeoutException::class, 'Timeout');
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 

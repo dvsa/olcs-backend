@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager as ContextPluginManager;
 use Dvsa\Olcs\Api\Service\Publication\Process\PluginManager as ProcessPluginManager;
 

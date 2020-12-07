@@ -2,11 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Nysiis;
 
-use Zend\Http\Client as RestClient;
-use Zend\Http\Request as HttpRequest;
-use Zend\Http\Response as HttpResponse;
+use Laminas\Http\Client as RestClient;
+use Laminas\Http\Request as HttpRequest;
+use Laminas\Http\Response as HttpResponse;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
-use Zend\Json\Json as ZendJson;
+use Laminas\Json\Json as LaminasJson;
 use Olcs\Logging\Log\Logger;
 
 /**
@@ -25,7 +25,7 @@ class NysiisRestClient
     /**
      * Nysiis client constructor
      *
-     * @param RestClient $restClient Zend rest client
+     * @param RestClient $restClient Laminas rest client
      *
      * @return void
      */
@@ -54,14 +54,14 @@ class NysiisRestClient
 
         $this->restClient->setEncType('application/json; charset=UTF-8');
         $this->restClient->getRequest()->setMethod(HttpRequest::METHOD_POST);
-        $this->restClient->getRequest()->setContent(ZendJson::encode($inputData));
+        $this->restClient->getRequest()->setContent(LaminasJson::encode($inputData));
 
         try {
             $response = $this->restClient->send();
             Logger::info('Nysiis response', ['data' => $response]);
 
             if ($response instanceof HttpResponse && $response->isSuccess()) {
-                return ZendJson::decode($this->cleanJson($response->getContent()), ZendJson::TYPE_ARRAY);
+                return LaminasJson::decode($this->cleanJson($response->getContent()), LaminasJson::TYPE_ARRAY);
             }
         } catch (\Exception $e) {
             Logger::info('Nysiis exception object', ['data' => $e->__toString()]);

@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Email\Service;
 
-use Zend\View\Model\ViewModel;
+use Laminas\View\Model\ViewModel;
 use Dvsa\Olcs\Api\Service\Template\StrategySelectingViewRenderer;
 use Dvsa\Olcs\Email\Data\Message;
 

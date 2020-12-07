@@ -8,8 +8,8 @@
 namespace Dvsa\Olcs\Scanning\Controller;
 
 use Olcs\Logging\Log\Logger;
-use Zend\Mvc\Controller\AbstractRestfulController;
-use Zend\View\Model\JsonModel;
+use Laminas\Mvc\Controller\AbstractRestfulController;
+use Laminas\View\Model\JsonModel;
 
 /**
  * Abstract controller
@@ -201,7 +201,7 @@ abstract class AbstractController extends AbstractRestfulController
      * @param string $message Message to debug
      * @param array  $data    Query to add to log
      *
-     * @return \Zend\Log\LoggerInterface
+     * @return \Laminas\Log\LoggerInterface
      */
     protected function debug($message, $data = [])
     {

@@ -7,8 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Query Builder Factory

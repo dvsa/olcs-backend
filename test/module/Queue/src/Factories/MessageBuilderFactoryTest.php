@@ -6,7 +6,7 @@ use Dvsa\Olcs\Queue\Factories\MessageBuilderFactory;
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
 use PHPUnit\Framework\TestCase;
 use Mockery as m;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MessageBuilderFactoryTest extends TestCase
 {

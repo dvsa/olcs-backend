@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\AwsSdk\Factories;
 
 use Aws\Credentials\CredentialProvider;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class AwsCredentailsProviderFactory

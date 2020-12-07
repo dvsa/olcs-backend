@@ -8,8 +8,8 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
-use Zend\Serializer\Adapter\Json as ZendJson;
-use Zend\ServiceManager\Exception\RuntimeException as ZendServiceException;
+use Laminas\Serializer\Adapter\Json as LaminasJson;
+use Laminas\ServiceManager\Exception\RuntimeException as LaminasServiceException;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send
@@ -24,7 +24,7 @@ class SendTest extends AbstractConsumerTestCase
 
     public function testProcessMessageSuccess()
     {
-        $json = new ZendJson();
+        $json = new LaminasJson();
         $options = $json->serialize(
             [
                 'commandClass' => SampleEmail::class,
@@ -66,7 +66,7 @@ class SendTest extends AbstractConsumerTestCase
 
     public function testProcessMessageHandlesEmailNotSentException()
     {
-        $json = new ZendJson();
+        $json = new LaminasJson();
         $options = $json->serialize(
             [
                 'commandClass' => SampleEmail::class,
@@ -106,9 +106,9 @@ class SendTest extends AbstractConsumerTestCase
         );
     }
 
-    public function testProcessMessageHandlesZendServiceException()
+    public function testProcessMessageHandlesLaminasServiceException()
     {
-        $json = new ZendJson();
+        $json = new LaminasJson();
         $options = $json->serialize(
             [
                 'commandClass' => SampleEmail::class,
@@ -127,7 +127,7 @@ class SendTest extends AbstractConsumerTestCase
         $this->chm
             ->shouldReceive('handleCommand')
             ->with(SampleEmail::class)
-            ->andThrow(new ZendServiceException($message));
+            ->andThrow(new LaminasServiceException($message));
 
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
@@ -149,7 +149,7 @@ class SendTest extends AbstractConsumerTestCase
 
     public function testProcessMessageHandlesException()
     {
-        $json = new ZendJson();
+        $json = new LaminasJson();
         $options = $json->serialize(
             [
                 'commandClass' => SampleEmail::class,
@@ -190,7 +190,7 @@ class SendTest extends AbstractConsumerTestCase
 
     public function testProcessMessageHandlesMaxAttempts()
     {
-        $json = new ZendJson();
+        $json = new LaminasJson();
         $options = $json->serialize(
             [
                 'commandClass' => SampleEmail::class,

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository\PostcodeEnforcementArea;
 use Dvsa\Olcs\Api\Service\Exception;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 /**
  * @covers Dvsa\Olcs\Address\Service\Address

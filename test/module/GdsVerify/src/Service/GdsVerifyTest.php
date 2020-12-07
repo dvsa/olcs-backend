@@ -3,7 +3,7 @@ namespace Dvsa\OlcsTest\GdsVerify\Data;
 
 use Dvsa\Olcs\GdsVerify\Service\GdsVerify;
 use Mockery as m;
-use Zend\Log\Writer\Noop;
+use Laminas\Log\Writer\Noop;
 
 /**
  * GdsVerifyTest test
@@ -321,15 +321,15 @@ class GdsVerifyTest extends \PHPUnit\Framework\TestCase
     private function getSut(array $config = [])
     {
         $writer = new Noop();
-        $logger = new \Zend\Log\Logger();
+        $logger = new \Laminas\Log\Logger();
         $logger->addWriter($writer);
-        $serviceLocator = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->shouldReceive('get')->with('config')->once()->andReturn($config);
         $serviceLocator->shouldReceive('get')->with('logger')->once()->andReturn($logger);
         $serviceLocator->shouldReceive('has')->with(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
             ->once()->andReturn(true);
         $serviceLocator->shouldReceive('get')->with(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
-            ->once()->andReturn(m::mock(\Zend\Http\Client::class));
+            ->once()->andReturn(m::mock(\Laminas\Http\Client::class));
 
         $factory = new GdsVerify();
 

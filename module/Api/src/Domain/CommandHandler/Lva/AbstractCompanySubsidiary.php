@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class with common function to Save Company Subsidiary
@@ -82,7 +82,9 @@ abstract class AbstractCompanySubsidiary extends AbstractCommandHandler implemen
 
         /** @var Entity\Organisation\CompanySubsidiary $companySubsidiary */
         $companySubsidiary = $this->repo->fetchUsingId(
-            $command, Query::HYDRATE_OBJECT, $version
+            $command,
+            Query::HYDRATE_OBJECT,
+            $version
         );
 
         //  update record data

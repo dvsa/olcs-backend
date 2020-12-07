@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\Filter\Format;
 
-use Zend\Filter\AbstractFilter as ZendAbstractFilter;
+use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
 
 /**
  * Class ExistingRegNo
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter\Format
  */
-class ExistingRegNo extends ZendAbstractFilter
+class ExistingRegNo extends LaminasAbstractFilter
 {
     /**
      * Returns the result of filtering $value, a regNo we can use to retreive the previous bus reg

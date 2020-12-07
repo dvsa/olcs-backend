@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr;
 
-use Zend\Http\Client as RestClient;
-use Zend\Http\Request;
+use Laminas\Http\Client as RestClient;
+use Laminas\Http\Request;
 use Olcs\Logging\Log\Logger;
 
 /**

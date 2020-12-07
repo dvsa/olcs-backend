@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Email\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 
 /**
  * Provide inline email CSS styles

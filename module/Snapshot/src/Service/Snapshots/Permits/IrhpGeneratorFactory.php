@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Permits;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class IrhpGeneratorFactory implements FactoryInterface
 {

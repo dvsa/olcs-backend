@@ -66,7 +66,7 @@ class FeesHelperServiceTest extends MockeryTestCase
     {
         $mockRepoManager = m::mock();
 
-        $sm = m::mock('\Zend\ServiceManager\ServiceLocatorInterface');
+        $sm = m::mock('\Laminas\ServiceManager\ServiceLocatorInterface');
         $sm
             ->shouldReceive('get')
             ->with('RepositoryServiceManager')

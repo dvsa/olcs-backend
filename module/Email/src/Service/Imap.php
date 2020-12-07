@@ -2,10 +2,10 @@
 
 namespace Dvsa\Olcs\Email\Service;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mail\Storage;
-use Zend\Mail\Exception\RuntimeException as ZendMailRuntimeException;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Mail\Storage;
+use Laminas\Mail\Exception\RuntimeException as LaminasMailRuntimeException;
 
 /**
  * Class Imap
@@ -30,7 +30,7 @@ class Imap implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
         if (!isset($config['mailboxes'])) {
-            throw new ZendMailRuntimeException('No mailbox config found');
+            throw new LaminasMailRuntimeException('No mailbox config found');
         }
 
         $this->setConfig($config['mailboxes']);
@@ -77,8 +77,7 @@ class Imap implements FactoryInterface
             }
 
             return $messages;
-
-        } catch (ZendMailRuntimeException $e) {
+        } catch (LaminasMailRuntimeException $e) {
             return $e->getMessage();
         }
     }
@@ -101,7 +100,7 @@ class Imap implements FactoryInterface
                 'subject'  => $message->subject,
                 'content'  => $message->getContent(),
             ];
-        } catch (ZendMailRuntimeException $e) {
+        } catch (LaminasMailRuntimeException $e) {
             return $e->getMessage();
         }
     }
@@ -118,7 +117,7 @@ class Imap implements FactoryInterface
             $store = $this->getStore();
             $number = $store->getNumberByUniqueId($id);
             return $store->removeMessage($number);
-        } catch (ZendMailRuntimeException $e) {
+        } catch (LaminasMailRuntimeException $e) {
             return $e->getMessage();
         }
     }
@@ -126,7 +125,7 @@ class Imap implements FactoryInterface
     /**
      * Get Store.
      *
-     * @return \Zend\Mail\Storage\AbstractStorage
+     * @return \Laminas\Mail\Storage\AbstractStorage
      */
     public function getStore()
     {
@@ -136,7 +135,7 @@ class Imap implements FactoryInterface
     /**
      * Set Store.
      *
-     * @param Zend\Mail\Storage\AbstractStorage
+     * @param Laminas\Mail\Storage\AbstractStorage
      * @return $this
      */
     public function setStore(Storage\AbstractStorage $store)
@@ -155,7 +154,7 @@ class Imap implements FactoryInterface
     {
         $config = $this->getConfig();
         if (!isset($config[$mailbox])) {
-            throw new ZendMailRuntimeException("No config found for mailbox '$mailbox'");
+            throw new LaminasMailRuntimeException("No config found for mailbox '$mailbox'");
         }
 
         $this->store = new Storage\Imap($config[$mailbox]);

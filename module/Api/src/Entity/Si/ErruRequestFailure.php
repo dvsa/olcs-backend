@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Si;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Zend\Serializer\Adapter\Json;
+use Laminas\Serializer\Adapter\Json;
 
 /**
  * ErruRequestFailure Entity

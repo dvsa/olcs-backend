@@ -22,8 +22,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Repository\ValidateMockRepoTypeTrait;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\Json\Json as ZendJson;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Json\Json as LaminasJson;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -260,7 +260,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             'entityId' => $entityId,
             'type' => $queueType,
             'status' => QueueEntity::STATUS_QUEUED,
-            'options' => ZendJson::encode($options),
+            'options' => LaminasJson::encode($options),
             'processAfterDate' => $processAfterDate
         ];
 
@@ -293,7 +293,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             'entityId' => $entityId,
             'type' => QueueEntity::TYPE_EMAIL,
             'status' => QueueEntity::STATUS_QUEUED,
-            'options' => ZendJson::encode($emailOptions),
+            'options' => LaminasJson::encode($emailOptions),
             'processAfterDate' => $processAfterDate
         ];
 

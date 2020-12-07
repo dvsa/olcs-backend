@@ -7,10 +7,10 @@ use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
-use Zend\Filter\Decompress;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Filter\Decompress;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use org\bovigo\vfs\vfsStream;
-use Zend\Filter\Exception\RuntimeException as ZendFilterRuntimeException;
+use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
 
 /**
  * Class FileProcessorTest
@@ -156,7 +156,7 @@ class FileProcessorTest extends TestCase
         $mockFilter->shouldReceive('setTarget')->with($extractDir);
         $mockFilter->shouldReceive('filter')
             ->with($tmpEbsrFile)
-            ->andThrow(ZendFilterRuntimeException::class, $exceptionMessage);
+            ->andThrow(LaminasFilterRuntimeException::class, $exceptionMessage);
 
         $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
 

@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Service\ConvertToPdf;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Http\Client as HttpClient;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Client as HttpClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 
 /**

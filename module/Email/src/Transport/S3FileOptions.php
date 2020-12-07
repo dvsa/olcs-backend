@@ -1,7 +1,7 @@
 <?php
 namespace Dvsa\Olcs\Email\Transport;
 
-use Zend\Stdlib\AbstractOptions;
+use Laminas\Stdlib\AbstractOptions;
 use Aws\S3\S3Client;
 
 /**

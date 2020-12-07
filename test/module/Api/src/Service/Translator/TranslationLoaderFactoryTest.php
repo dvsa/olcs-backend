@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Translator\TranslationLoaderFactory;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * TranslationLoaderFactoryTest

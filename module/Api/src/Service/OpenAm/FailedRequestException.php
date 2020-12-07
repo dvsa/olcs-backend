@@ -6,7 +6,7 @@
 
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 /**
  * Failed Request Exception

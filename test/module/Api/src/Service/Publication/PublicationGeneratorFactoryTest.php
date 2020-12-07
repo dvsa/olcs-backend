@@ -16,8 +16,8 @@ class PublicationGeneratorFactoryTest extends MockeryTestCase
 {
     public function testCanCreateServiceWithName()
     {
-        /** @var  \Zend\ServiceManager\ServiceLocatorInterface $mockSl */
-        $mockSl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+        /** @var  \Laminas\ServiceManager\ServiceLocatorInterface $mockSl */
+        $mockSl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)
             ->shouldReceive('get')
             ->andReturnUsing(
                 function ($class) {

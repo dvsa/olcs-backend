@@ -10,7 +10,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use OlcsTest\Bootstrap;
-use Zend\I18n\View\Helper\Translate;
+use Laminas\I18n\View\Helper\Translate;
 
 class UsersReviewServiceTest extends MockeryTestCase
 {

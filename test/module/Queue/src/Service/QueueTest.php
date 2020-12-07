@@ -17,7 +17,7 @@ class QueueTest extends TestCase
 
     protected $queue;
 
-    /** @var  m\MockInterface|\Zend\Log\Logger */
+    /** @var  m\MockInterface|\Laminas\Log\Logger */
     protected $logger;
 
     public function setUp(): void
@@ -42,7 +42,7 @@ class QueueTest extends TestCase
 
     public function testSendMessageWithExceptionThrown()
     {
-        $this->logger = m::mock(\Zend\Log\Logger::class);
+        $this->logger = m::mock(\Laminas\Log\Logger::class);
         $this->logger->shouldReceive('err')
             ->with('Failed to send message. Error code: contents error. Error msg: message failed', [])
             ->once();
@@ -124,7 +124,7 @@ class QueueTest extends TestCase
 
     public function testFetchMessagesWithExceptionThrown()
     {
-        $this->logger = m::mock(\Zend\Log\Logger::class);
+        $this->logger = m::mock(\Laminas\Log\Logger::class);
         $this->logger->shouldReceive('err')
             ->with('Failed to fetch message. Error code: contents error. Error msg: message failed', [])
             ->once();
@@ -155,7 +155,7 @@ class QueueTest extends TestCase
 
     public function testDeleteMessageWithExceptionThrown()
     {
-        $this->logger = m::mock(\Zend\Log\Logger::class);
+        $this->logger = m::mock(\Laminas\Log\Logger::class);
         $this->logger->shouldReceive('err')
             ->with('Failed to delete message. Error code: contents error. Error msg: message failed', [])
             ->once();
@@ -180,7 +180,7 @@ class QueueTest extends TestCase
 
     public function testDelete()
     {
-       $this->queue->shouldReceive('deleteMessage')->with([
+        $this->queue->shouldReceive('deleteMessage')->with([
             'QueueUrl' => 'queue_url',
             'ReceiptHandle' => 'receipt_handle'
         ])->once()->andReturn(new Result([]));

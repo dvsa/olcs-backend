@@ -9,7 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Validation;
 
 use Dvsa\Olcs\Api\Domain\ValidationHandlerManager;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\Config;
+use Laminas\ServiceManager\Config;
 
 /**
  * Implementation Test

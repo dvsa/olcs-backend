@@ -34,14 +34,14 @@ class BusRegistrationInputFactoryTest extends TestCase
     {
         $mockMappings = m::mock(SpecificationInterface::class);
 
-        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
-        $mockValidator = m::mock('Zend\Validator\AbstractValidator');
-        $mockBreakValidator = m::mock('Zend\Validator\AbstractValidator');
+        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
+        $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
+        $mockBreakValidator = m::mock('Laminas\Validator\AbstractValidator');
 
         $mockMapFilter = m::mock(MapXmlFile::class);
         $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
@@ -65,10 +65,10 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(EndDate::class)->andReturn($mockValidator);
 
         $sut = new BusRegistrationInputFactory();
-        /** @var \Zend\InputFilter\Input $service */
+        /** @var \Laminas\InputFilter\Input $service */
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(9, $service->getFilterChain());
         $this->assertCount(5, $service->getValidatorChain());
 
@@ -95,12 +95,12 @@ class BusRegistrationInputFactoryTest extends TestCase
         ];
         $mockMappings = m::mock(SpecificationInterface::class);
 
-        $mockFilter = m::mock('Zend\Filter\AbstractFilter');
+        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
         $mockMapFilter = m::mock(MapXmlFile::class);
         $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);
 
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
 
@@ -117,10 +117,10 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(MiscSnJustification::class)->andReturn($mockFilter);
 
         $sut = new BusRegistrationInputFactory();
-        /** @var \Zend\InputFilter\Input $service */
+        /** @var \Laminas\InputFilter\Input $service */
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Zend\InputFilter\Input', $service);
+        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(9, $service->getFilterChain());
         $this->assertCount(0, $service->getValidatorChain());
     }

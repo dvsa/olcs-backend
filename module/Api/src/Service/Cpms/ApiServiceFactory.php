@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Cpms;
 
 use Dvsa\Olcs\Cpms\Service\ApiServiceFactory as CpmsApiService;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 
 class ApiServiceFactory implements FactoryInterface

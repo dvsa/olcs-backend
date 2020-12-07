@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\ConfigInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager
@@ -31,7 +31,7 @@ class SectionGeneratorPluginManagerTest extends MockeryTestCase
 
         //  expect
         $this->expectException(
-            \Zend\ServiceManager\Exception\RuntimeException::class,
+            \Laminas\ServiceManager\Exception\RuntimeException::class,
             'stdClass should implement: ' . SectionGeneratorInterface::class
         );
 

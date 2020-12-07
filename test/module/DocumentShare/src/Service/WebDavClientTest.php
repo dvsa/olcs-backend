@@ -31,7 +31,7 @@ class WebDavClientTest extends MockeryTestCase
     /** @var  m\MockInterface|DsFile */
     private $mockFile;
 
-    /** @var  m\MockInterface|\Zend\Log\Logger */
+    /** @var  m\MockInterface|\Laminas\Log\Logger */
     private $logger;
 
     public function setUp(): void
@@ -43,9 +43,9 @@ class WebDavClientTest extends MockeryTestCase
         $this->mockFile = m::mock(DsFile::class);
 
         // Mock the logger
-        $logWriter = m::mock(\Zend\Log\Writer\WriterInterface::class);
+        $logWriter = m::mock(\Laminas\Log\Writer\WriterInterface::class);
 
-        $this->logger = m::mock(\Zend\Log\Logger::class, [])->makePartial();
+        $this->logger = m::mock(\Laminas\Log\Logger::class, [])->makePartial();
         $this->logger->addWriter($logWriter);
 
         Logger::setLogger($this->logger);

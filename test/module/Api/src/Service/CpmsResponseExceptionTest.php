@@ -13,7 +13,7 @@ class CpmsResponseExceptionTest extends MockeryTestCase
 {
     public function testSetGet()
     {
-        $mockResp = m::mock(\Zend\Http\Response::class);
+        $mockResp = m::mock(\Laminas\Http\Response::class);
 
         $sut = new CpmsResponseException();
         $sut->setResponse($mockResp);

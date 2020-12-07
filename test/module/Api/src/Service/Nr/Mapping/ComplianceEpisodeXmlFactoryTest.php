@@ -7,7 +7,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXmlFactory;
 use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXml;
 use Olcs\XmlTools\Filter\MapXmlFile;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class ComplianceEpisodeXmlFactoryTest

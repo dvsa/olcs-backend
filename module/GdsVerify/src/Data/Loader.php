@@ -9,21 +9,21 @@ namespace Dvsa\Olcs\GdsVerify\Data;
 class Loader
 {
     /**
-     * @var \Zend\Http\Client
+     * @var \Laminas\Http\Client
      */
     private $httpClient;
 
     /**
-     * @var \Zend\Cache\Storage\StorageInterface
+     * @var \Laminas\Cache\Storage\StorageInterface
      */
     private $cacheAdapter;
 
     /**
      * Loader constructor.
      *
-     * @param \Zend\Cache\Storage\StorageInterface|null $cacheAdapter Cache adapter
+     * @param \Laminas\Cache\Storage\StorageInterface|null $cacheAdapter Cache adapter
      */
-    public function __construct(\Zend\Cache\Storage\StorageInterface $cacheAdapter = null)
+    public function __construct(\Laminas\Cache\Storage\StorageInterface $cacheAdapter = null)
     {
         if ($cacheAdapter !== null) {
             $this->setCacheAdapter($cacheAdapter);
@@ -101,7 +101,7 @@ class Loader
     /**
      * Get the cache adapter
      *
-     * @return \Zend\Cache\Storage\StorageInterface|null
+     * @return \Laminas\Cache\Storage\StorageInterface|null
      */
     public function getCacheAdapter()
     {
@@ -111,11 +111,11 @@ class Loader
     /**
      * Set the cache adapter
      *
-     * @param \Zend\Cache\Storage\StorageInterface $cacheAdapter Cache adapter
+     * @param \Laminas\Cache\Storage\StorageInterface $cacheAdapter Cache adapter
      *
      * @return void
      */
-    public function setCacheAdapter(\Zend\Cache\Storage\StorageInterface $cacheAdapter)
+    public function setCacheAdapter(\Laminas\Cache\Storage\StorageInterface $cacheAdapter)
     {
         $this->cacheAdapter = $cacheAdapter;
     }
@@ -123,12 +123,12 @@ class Loader
     /**
      * Get the HTTP client
      *
-     * @return \Zend\Http\Client
+     * @return \Laminas\Http\Client
      */
     public function getHttpClient()
     {
         if ($this->httpClient === null) {
-            $this->setHttpClient(new \Zend\Http\Client());
+            $this->setHttpClient(new \Laminas\Http\Client());
         }
         $this->httpClient->reset();
 
@@ -138,11 +138,11 @@ class Loader
     /**
      * Set the Http client
      *
-     * @param \Zend\Http\Client $client Http client
+     * @param \Laminas\Http\Client $client Http client
      *
      * @return void
      */
-    public function setHttpClient(\Zend\Http\Client $client)
+    public function setHttpClient(\Laminas\Http\Client $client)
     {
         $this->httpClient = $client;
     }

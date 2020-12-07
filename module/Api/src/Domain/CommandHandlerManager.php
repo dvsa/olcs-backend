@@ -7,11 +7,11 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Transfer\Command\LoggerOmitContentInterface;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Laminas\ServiceManager\Exception\RuntimeException;
 
 /**
  * Command Handler Manager

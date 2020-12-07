@@ -8,10 +8,10 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\RuntimeException;
-use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\RuntimeException;
+use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 
 /**

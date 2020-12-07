@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 
 /**

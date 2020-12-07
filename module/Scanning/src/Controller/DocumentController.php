@@ -12,11 +12,11 @@ class DocumentController extends AbstractController
      *
      * @param array|null $postData POST data
      *
-     * @return \Zend\Stdlib\ResponseInterface|\Zend\View\Model\JsonModel
+     * @return \Laminas\Stdlib\ResponseInterface|\Laminas\View\Model\JsonModel
      */
     public function create($postData = null)
     {
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        /** @var \Laminas\Http\PhpEnvironment\Request $request */
         $request = $this->getRequest();
 
         $scanId = (int) $request->getPost('description');
@@ -75,7 +75,7 @@ class DocumentController extends AbstractController
             throw new \RuntimeException('POST "image" is missing');
         }
 
-        $validator = new \Zend\Validator\File\UploadFile();
+        $validator = new \Laminas\Validator\File\UploadFile();
         if (!$validator->isValid($uploadImage)) {
             throw new \RuntimeException(implode(' AND ', $validator->getMessages()));
         }

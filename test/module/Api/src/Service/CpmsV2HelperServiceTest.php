@@ -79,8 +79,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     private function createService($api, $feesHelper, $config = [])
     {
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface | m\MockInterface $sm */
-        $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        /** @var \Laminas\ServiceManager\ServiceLocatorInterface | m\MockInterface $sm */
+        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
         $sm
             ->shouldReceive('get')
             ->with(ApiServiceFactory::class)

@@ -5,9 +5,9 @@ namespace Dvsa\OlcsTest\Api\Service\Nr;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use Zend\Http\Client as RestClient;
-use Zend\Http\Request;
-use Zend\Http\Response;
+use Laminas\Http\Client as RestClient;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
 
 /**
  * Class InrClientTest

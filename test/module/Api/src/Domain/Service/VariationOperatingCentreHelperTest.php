@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceOperatingCentre;
 use Dvsa\Olcs\Transfer\Query\Application\OperatingCentres as Qry;

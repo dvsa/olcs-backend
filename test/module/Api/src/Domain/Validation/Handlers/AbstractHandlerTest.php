@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\CompanySubsidiary\Modify;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Abstract Handler Test

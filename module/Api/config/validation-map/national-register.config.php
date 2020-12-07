@@ -15,7 +15,7 @@ return [
     QueryHandler\Licence\Exists::class => Misc\IsAnonymousUser::class,
 
     /**
-     * This is incoming xml from ATOS. The xml will have been validated on the transfer side using ZendXml/Security.
+     * This is incoming xml from ATOS. The xml will have been validated on the transfer side using Laminas\Xml/Security.
      * The schema and other data is validated by national register itself \Dvsa\Olcs\Api\Service\Nr\InputFilter
      */
     CommandHandler\Cases\Si\ComplianceEpisodeDocument::class => Misc\IsAnonymousUser::class,

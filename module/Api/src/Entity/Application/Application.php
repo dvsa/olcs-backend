@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Transfer\Validators;
-use Zend\Filter\Word\CamelCaseToUnderscore;
+use Laminas\Filter\Word\CamelCaseToUnderscore;
 
 /**
  * Application Entity

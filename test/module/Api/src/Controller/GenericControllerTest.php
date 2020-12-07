@@ -12,10 +12,10 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Zend\Http\Response as HttpResponse;
-use Zend\Mvc\Controller\Plugin\Params;
-use Zend\Mvc\Controller\PluginManager;
-use Zend\View\Model\JsonModel;
+use Laminas\Http\Response as HttpResponse;
+use Laminas\Mvc\Controller\Plugin\Params;
+use Laminas\Mvc\Controller\PluginManager;
+use Laminas\View\Model\JsonModel;
 
 /**
  * @covers \Dvsa\Olcs\Api\Controller\GenericController
@@ -242,7 +242,7 @@ class GenericControllerTest extends TestCase
     {
         $dto = new Application();
 
-        $mockStream = m::mock(\Zend\Http\Response\Stream::class);
+        $mockStream = m::mock(\Laminas\Http\Response\Stream::class);
 
         $mockResponse = m::mock(Response::class);
         $mockResponse->shouldReceive('streamResult')->with($mockStream)->andReturn('EXPECT');

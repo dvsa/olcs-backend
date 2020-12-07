@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\ThirdCountryAnswerSaver;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class ThirdCountryQuestionHandlerFactory implements FactoryInterface
 {

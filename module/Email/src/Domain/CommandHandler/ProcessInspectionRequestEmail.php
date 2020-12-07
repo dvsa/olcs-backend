@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Email\Domain\Command\UpdateInspectionRequest as UpdateInspectionRequestCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Email\Service\Imap as Mailbox;
 
 /**
@@ -71,7 +71,6 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
 
         // loop through emails and process
         foreach ($emails as $uniqueId) {
-
             $this->outputLine('=Processing email id ' . $uniqueId);
 
             $email = $this->getEmail($uniqueId);

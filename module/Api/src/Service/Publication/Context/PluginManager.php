@@ -4,10 +4,10 @@ namespace Dvsa\Olcs\Api\Service\Publication\Context;
 
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\InvalidServiceException;
-use Zend\ServiceManager\Exception\RuntimeException;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\Exception\RuntimeException;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class PluginManager

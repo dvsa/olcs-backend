@@ -7,8 +7,8 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\ServiceManager\ServiceLocatorAwareInterface;
+use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Abstract Queue Consumer
@@ -36,7 +36,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         $content = $item->getId() . ' ' . $item->getOptions() . ($message ? ' ' . $message : '');
 
         Logger::log(
-            \Zend\Log\Logger::DEBUG,
+            \Laminas\Log\Logger::DEBUG,
             $description,
             ['errorLevel' => 0, 'content' => $content]
         );
@@ -66,7 +66,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         $content = $item->getId() . ' ' . $item->getOptions() . ' ' .  $reason;
 
         Logger::log(
-            \Zend\Log\Logger::ERR,
+            \Laminas\Log\Logger::ERR,
             $description,
             ['errorLevel' => 1, 'content' => $content]
         );
@@ -92,7 +92,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
         $content = $item->getId() . ' ' . $item->getOptions() . ' for retry in ' .  $retryAfter . ' ' .  $reason;
 
         Logger::log(
-            \Zend\Log\Logger::WARN,
+            \Laminas\Log\Logger::WARN,
             $description,
             ['errorLevel' => 0, 'content' => $content]
         );

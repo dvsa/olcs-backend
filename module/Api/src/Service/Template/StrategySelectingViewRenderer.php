@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Template;
 
 use Twig\Loader\LoaderInterface as TwigLoader;
-use Zend\View\Model\ViewModel;
-use Zend\View\Renderer\RendererInterface;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\RendererInterface;
 
 class StrategySelectingViewRenderer
 {

@@ -14,7 +14,7 @@ class TransExchangePublisherXmlFactoryTest extends TestCase
 {
     public function testCreateService()
     {
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
 
         $sut = new TransExchangePublisherXmlFactory();
 

@@ -9,9 +9,9 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Doctrine\ORM\Query;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
 
 /**
  * Class TransactionManager

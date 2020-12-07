@@ -10,7 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 

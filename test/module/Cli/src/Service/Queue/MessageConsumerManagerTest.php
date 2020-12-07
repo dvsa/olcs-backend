@@ -34,7 +34,7 @@ class MessageConsumerManagerTest extends MockeryTestCase
 
     public function testConstructWithConfig()
     {
-        $config = m::mock('\Zend\ServiceManager\ConfigInterface');
+        $config = m::mock('\Laminas\ServiceManager\ConfigInterface');
 
         $config->shouldReceive('configureServiceManager')
             ->with(m::type('\Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager'));
@@ -53,7 +53,7 @@ class MessageConsumerManagerTest extends MockeryTestCase
 
     public function testInitializeWithInterface()
     {
-        $instance = m::mock('\Zend\ServiceManager\ServiceLocatorAwareInterface');
+        $instance = m::mock('\Laminas\ServiceManager\ServiceLocatorAwareInterface');
         $instance->shouldReceive('setServiceLocator')
             ->once()
             ->with($this->sm);
@@ -63,7 +63,7 @@ class MessageConsumerManagerTest extends MockeryTestCase
 
     public function testValidatePluginInvalid()
     {
-        $this->expectException('\Zend\ServiceManager\Exception\RuntimeException');
+        $this->expectException('\Laminas\ServiceManager\Exception\RuntimeException');
 
         $plugin = m::mock();
 

@@ -13,8 +13,8 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\View\Model\ViewModel;
 
 class GeneratorTest extends MockeryTestCase
 {

@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Scoring;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class SuccessfulCandidatePermitsFacadeFactory implements FactoryInterface
 {

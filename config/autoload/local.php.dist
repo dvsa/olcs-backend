@@ -8,7 +8,7 @@
  * .dist extension at the end and populate values as needed.
  *
  * @NOTE: This file is ignored from Git by default with the .gitignore included
- * in ZendSkeletonApplication. This is a good practice, as it prevents sensitive
+ * in LaminasSkeletonApplication. This is a good practice, as it prevents sensitive
  * credentials from accidentally being committed into version control.
  */
 
@@ -266,7 +266,7 @@ return [
         // @to-do currently waiting on the actual nr address
         'inr_service' => [
             'uri' => 'http://testServiceAddress',
-            'adapter' => Zend\Http\Client\Adapter\Curl::class,
+            'adapter' => Laminas\Http\Client\Adapter\Curl::class,
             'options' => [
                 'sslcert' => 'client_cert.pem',
                 'sslverifypeer' => 1, //debug only, must be set to 1 in production
@@ -309,7 +309,7 @@ return [
                             'priority' => [
                                 'name' => 'priority',
                                 'options' => [
-                                    'priority' => \Zend\Log\Logger::DEBUG
+                                    'priority' => \Laminas\Log\Logger::DEBUG
                                 ]
                             ],
                         ]
@@ -421,7 +421,7 @@ return [
     ],
 
     'http_external' => [
-        'adapter' => \Zend\Http\Client\Adapter\Curl::class,
+        'adapter' => \Laminas\Http\Client\Adapter\Curl::class,
         //'curl_options' => [
         //    CURLOPT_PROXY => 'proxy.shd.proxy.nonprod.dvsa.aws:3128',
         //],
@@ -439,7 +439,7 @@ return [
         ],
     ],
     'caches' => [
-        \Zend\Cache\Storage\Adapter\Redis::class => [
+        \Laminas\Cache\Storage\Adapter\Redis::class => [
             'adapter' => [
                 'name' => 'redis',
                 'options' => [

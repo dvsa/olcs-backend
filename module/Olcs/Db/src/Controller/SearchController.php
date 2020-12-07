@@ -3,7 +3,7 @@
 namespace Olcs\Db\Controller;
 
 use Olcs\Db\Exceptions\SearchDateFilterParseException;
-use Zend\Http\PhpEnvironment\Response;
+use Laminas\Http\PhpEnvironment\Response;
 
 /**
  * Class SearchController
@@ -15,7 +15,7 @@ class SearchController extends AbstractController
     /**
      * Get list from search
      *
-     * @return \Zend\Http\Response $response http response
+     * @return \Laminas\Http\Response $response http response
      */
     public function getList()
     {
