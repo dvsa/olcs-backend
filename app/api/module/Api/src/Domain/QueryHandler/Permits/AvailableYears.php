@@ -68,19 +68,20 @@ class AvailableYears extends AbstractQueryHandler
         $availableYears = [];
         foreach ($openWindows as $window) {
             $irhpPermitStock = $window->getIrhpPermitStock();
+            $irhpPermitStockId = $irhpPermitStock->getId();
 
             $includeYear = true;
             if ($permitType == IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM) {
-                $includeYear = $this->stockAvailabilityChecker->hasAvailability($irhpPermitStock->getId());
+                $includeYear = $this->stockAvailabilityChecker->hasAvailability($irhpPermitStockId);
             }
             
             if ($includeYear) {
-                $availableYears[] = $irhpPermitStock->getValidityYear();
+                $availableYears[$irhpPermitStockId] = $irhpPermitStock->getValidityYear();
             }
         }
 
         $availableYears = array_unique($availableYears);
-        sort($availableYears);
+        asort($availableYears);
 
         return [
             'hasYears' => (count($availableYears) > 0),
