@@ -6,15 +6,15 @@
             "packagist": false
         },
         {
-            "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS",
+            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS",
             "type": "composer"
         },
         {
-            "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
+            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
             "type": "composer"
         },
         {
-            "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/league",
+            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/league",
             "type": "composer"
         }
     ],
@@ -115,7 +115,7 @@
     },
     "extra": {
         "nexus-push": {
-            "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-backend",
+            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-backend",
             "ignore": [
                 "test/",
                 "config/autoload/local.php"
