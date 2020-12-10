@@ -27,41 +27,58 @@ class AvailableStocksTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQueryEcmtShortTerm()
+    /**
+     * @dataProvider dpTestHandleQueryEcmtShortTerm
+     */
+    public function testHandleQueryEcmtShortTerm($queryParams, $expectedRepoMethod, $expectedRepoParams)
     {
-        $irhpPermitType = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
-        $year = 2020;
-
         $ips1Id = 20;
         $ips2Id = 40;
         $ips3Id = 60;
 
+        $ips1Year = 2021;
+        $ips2Year = 2022;
+
         $ips1 = m::mock(IrhpPermitStock::class);
         $ips1->shouldReceive('getId')
+            ->withNoArgs()
             ->andReturn($ips1Id);
         $ips1->shouldReceive('getPeriodNameKey')
+            ->withNoArgs()
             ->andReturn('period.name.key.1');
+        $ips1->shouldReceive('getValidityYear')
+            ->withNoArgs()
+            ->andReturn($ips1Year);
 
         $ips2 = m::mock(IrhpPermitStock::class);
         $ips2->shouldReceive('getId')
+            ->withNoArgs()
             ->andReturn($ips2Id);
         $ips2->shouldReceive('getPeriodNameKey')
+            ->withNoArgs()
             ->andReturn('period.name.key.2');
+        $ips2->shouldReceive('getValidityYear')
+            ->withNoArgs()
+            ->andReturn($ips2Year);
 
         $ips3 = m::mock(IrhpPermitStock::class);
         $ips3->shouldReceive('getId')
+            ->withNoArgs()
             ->andReturn($ips3Id);
 
         $ipw1 = m::mock(IrhpPermitWindow::class);
         $ipw1->shouldReceive('getIrhpPermitStock')
+            ->withNoArgs()
             ->andReturn($ips1);
 
         $ipw2 = m::mock(IrhpPermitWindow::class);
         $ipw2->shouldReceive('getIrhpPermitStock')
+            ->withNoArgs()
             ->andReturn($ips2);
 
         $ipw3 = m::mock(IrhpPermitWindow::class);
         $ipw3->shouldReceive('getIrhpPermitStock')
+            ->withNoArgs()
             ->andReturn($ips3);
 
         $irhpPermitWindows = [
@@ -70,20 +87,10 @@ class AvailableStocksTest extends QueryHandlerTestCase
             $ipw1,
         ];
 
-        $query = AvailableStocksQuery::create(
-            [
-                'irhpPermitType' => $irhpPermitType,
-                'year' => $year,
-            ]
-        );
+        $query = AvailableStocksQuery::create($queryParams);
 
-        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByTypeYear')
-            ->with(
-                $query->getIrhpPermitType(),
-                m::type(DateTime::class),
-                $query->getYear(),
-                false
-            )
+        $this->repoMap['IrhpPermitWindow']->shouldReceive($expectedRepoMethod)
+            ->withArgs($expectedRepoParams)
             ->andReturn($irhpPermitWindows);
 
         $this->mockedSmServices['PermitsAvailabilityStockAvailabilityChecker']->shouldReceive('hasAvailability')
@@ -105,10 +112,12 @@ class AvailableStocksTest extends QueryHandlerTestCase
                     $ips1Id => [
                         'id' => $ips1Id,
                         'periodNameKey' => 'period.name.key.1',
+                        'year' => $ips1Year
                     ],
                     $ips2Id => [
                         'id' => $ips2Id,
                         'periodNameKey' => 'period.name.key.2',
+                        'year' => $ips2Year
                     ],
                 ],
                 'hasStocks' => true,
@@ -117,18 +126,57 @@ class AvailableStocksTest extends QueryHandlerTestCase
         );
     }
 
-    public function testHandleQueryEcmtAnnual()
+    public function dpTestHandleQueryEcmtShortTerm()
     {
-        $irhpPermitType = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT;
+        $irhpPermitType = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
         $year = 2020;
 
+        return [
+            'with year' => [
+                [
+                    'irhpPermitType' => $irhpPermitType,
+                    'year' => $year,
+                ],
+                'fetchOpenWindowsByTypeYear',
+                [
+                    $irhpPermitType,
+                    m::type(DateTime::class),
+                    $year,
+                    false
+                ]
+            ],
+            'without year' => [
+                [
+                    'irhpPermitType' => $irhpPermitType,
+                ],
+                'fetchOpenWindowsByType',
+                [
+                    $irhpPermitType,
+                    m::type(DateTime::class),
+                    false
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestHandleQueryEcmtAnnual
+     */
+    public function testHandleQueryEcmtAnnual($queryParams, $expectedRepoMethod, $expectedRepoParams)
+    {
         $ips1Id = 20;
+        $ips1Year = 2020;
 
         $ips1 = m::mock(IrhpPermitStock::class);
         $ips1->shouldReceive('getId')
+            ->withNoArgs()
             ->andReturn($ips1Id);
         $ips1->shouldReceive('getPeriodNameKey')
+            ->withNoArgs()
             ->andReturn('');
+        $ips1->shouldReceive('getValidityYear')
+            ->withNoArgs()
+            ->andReturn($ips1Year);
 
         $ipw1 = m::mock(IrhpPermitWindow::class);
         $ipw1->shouldReceive('getIrhpPermitStock')
@@ -138,20 +186,10 @@ class AvailableStocksTest extends QueryHandlerTestCase
             $ipw1,
         ];
 
-        $query = AvailableStocksQuery::create(
-            [
-                'irhpPermitType' => $irhpPermitType,
-                'year' => $year,
-            ]
-        );
+        $query = AvailableStocksQuery::create($queryParams);
 
-        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByTypeYear')
-            ->with(
-                $query->getIrhpPermitType(),
-                m::type(DateTime::class),
-                $query->getYear(),
-                false
-            )
+        $this->repoMap['IrhpPermitWindow']->shouldReceive($expectedRepoMethod)
+            ->withArgs($expectedRepoParams)
             ->andReturn($irhpPermitWindows);
 
         $this->mockedSmServices['PermitsAvailabilityStockAvailabilityChecker']->shouldReceive('hasAvailability')
@@ -163,6 +201,7 @@ class AvailableStocksTest extends QueryHandlerTestCase
                     $ips1Id => [
                         'id' => $ips1Id,
                         'periodNameKey' => '',
+                        'year' => $ips1Year
                     ],
                 ],
                 'hasStocks' => true,
@@ -170,6 +209,40 @@ class AvailableStocksTest extends QueryHandlerTestCase
             $this->sut->handleQuery($query)
         );
     }
+
+    public function dpTestHandleQueryEcmtAnnual()
+    {
+        $irhpPermitType = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT;
+        $year = 2020;
+
+        return [
+            'with year' => [
+                [
+                    'irhpPermitType' => $irhpPermitType,
+                    'year' => $year,
+                ],
+                'fetchOpenWindowsByTypeYear',
+                [
+                    $irhpPermitType,
+                    m::type(DateTime::class),
+                    $year,
+                    false
+                ]
+            ],
+            'without year' => [
+                [
+                    'irhpPermitType' => $irhpPermitType,
+                ],
+                'fetchOpenWindowsByType',
+                [
+                    $irhpPermitType,
+                    m::type(DateTime::class),
+                    false
+                ]
+            ]
+        ];
+    }
+
 
     /**
      * @dataProvider dpTestHandleQueryUnsupportedType

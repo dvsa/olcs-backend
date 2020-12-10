@@ -94,7 +94,10 @@ class AvailableYearsTest extends QueryHandlerTestCase
         $this->assertEquals(
             [
                 'hasYears' => true,
-                'years' => [3030, 3031],
+                'years' => [
+                    20 => 3030,
+                    40 => 3031
+                ],
             ],
             $this->sut->handleQuery($query)
         );
@@ -148,7 +151,10 @@ class AvailableYearsTest extends QueryHandlerTestCase
         $this->assertEquals(
             [
                 'hasYears' => true,
-                'years' => [3030, 3031]
+                'years' => [
+                    20 => 3030,
+                    40 => 3031
+                ]
             ],
             $this->sut->handleQuery($query)
         );
