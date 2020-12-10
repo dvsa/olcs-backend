@@ -4,48 +4,38 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
-use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Service\Common\CurrentDateTimeFactory;
 use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
+use Dvsa\Olcs\Api\Service\Permits\Fees\EcmtApplicationFeeCommandCreator;
 
 class FeeUpdater
 {
-    /** @var FeeTypeRepository */
-    private $feeTypeRepo;
-
     /** @var CommandCreator */
     private $commandCreator;
 
     /** @var CommandHandlerManager */
     private $commandHandlerManager;
 
-    /** @var CurrentDateTimeFactory */
-    private $currentDateTimeFactory;
+    /** @var EcmtApplicationFeeCommandCreator */
+    private $ecmtApplicationFeeCommandCreator;
 
     /**
      * Create service instance
      *
-     * @param FeeTypeRepository $feeTypeRepo
      * @param CommandCreator $commandCreator
      * @param CommandHandlerManager $commandHandlerManager
-     * @param CurrentDateTimeFactory $currentDateTimeFactory
+     * @param EcmtApplicationFeeCommandCreator $ecmtApplicationFeeCommandCreator
      *
-     * @return FeeCreator
+     * @return FeeUpdater
      */
     public function __construct(
-        FeeTypeRepository $feeTypeRepo,
         CommandCreator $commandCreator,
         CommandHandlerManager $commandHandlerManager,
-        CurrentDateTimeFactory $currentDateTimeFactory
+        EcmtApplicationFeeCommandCreator $ecmtApplicationFeeCommandCreator
     ) {
-        $this->feeTypeRepo = $feeTypeRepo;
         $this->commandCreator = $commandCreator;
         $this->commandHandlerManager = $commandHandlerManager;
-        $this->currentDateTimeFactory = $currentDateTimeFactory;
+        $this->ecmtApplicationFeeCommandCreator = $ecmtApplicationFeeCommandCreator;
     }
 
     /**
@@ -67,30 +57,7 @@ class FeeUpdater
             );
         }
 
-        $feeType = $this->feeTypeRepo->getLatestByProductReference(
-            $irhpApplication->getApplicationFeeProductReference()
-        );
-
-        $feeDescription = sprintf(
-            '%s - %d permits',
-            $feeType->getDescription(),
-            $permitsRequired
-        );
-
-        $currentDateTime = $this->currentDateTimeFactory->create();
-
-        $feeCommands[] = $this->commandCreator->create(
-            CreateFee::class,
-            [
-                'licence' => $irhpApplication->getLicence()->getId(),
-                'irhpApplication' => $irhpApplication->getId(),
-                'invoicedDate' => $currentDateTime->format('Y-m-d'),
-                'description' => $feeDescription,
-                'feeType' => $feeType->getId(),
-                'feeStatus' => Fee::STATUS_OUTSTANDING,
-                'quantity' => $permitsRequired
-            ]
-        );
+        $feeCommands[] = $this->ecmtApplicationFeeCommandCreator->create($irhpApplication, $permitsRequired);
 
         foreach ($feeCommands as $command) {
             $this->commandHandlerManager->handleCommand($command, false);
