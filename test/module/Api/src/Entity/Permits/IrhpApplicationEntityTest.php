@@ -102,7 +102,11 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
-            ->shouldReceive('canBeResetToNotYetSubmitted')
+            ->shouldReceive('canBeResetToNotYetSubmittedFromValid')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
+            ->shouldReceive('canBeResetToNotYetSubmittedFromCancelled')
             ->once()
             ->withNoArgs()
             ->andReturn(false)
@@ -216,7 +220,8 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canBeGranted' => false,
                 'canBeDeclined' => false,
                 'canBeSubmitted' => false,
-                'canBeResetToNotYetSubmitted' => false,
+                'canBeResetToNotYetSubmittedFromValid' => false,
+                'canBeResetToNotYetSubmittedFromCancelled' => false,
                 'canBeRevivedFromWithdrawn' => false,
                 'canBeRevivedFromUnsuccessful' => false,
                 'hasOutstandingFees' => false,
@@ -1130,95 +1135,45 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpCanBeSubmittedStatusIncorrect
+     * @dataProvider dpCanBeSubmitted
      */
-    public function testCanBeSubmittedStatusIncorrect(string $statusId)
-    {
-        $status = m::mock(RefData::class);
-        $status->expects('getId')->withNoArgs()->andReturn($statusId);
-        $entity = $this->createNewEntity(null, $status);
-        self::assertFalse($entity->canBeSubmitted());
-    }
+    public function testCanBeSubmittedFalseIfAlreadySubmittedOrNotEligible(
+        $isNotYetSubmitted,
+        $isEligibleForPermits,
+        $allSectionsCompleted,
+        $expectedCanBeSubmitted
+    ) {
+        $sections = ['allCompleted' => $allSectionsCompleted];
 
-    public function dpCanBeSubmittedStatusIncorrect()
-    {
-        return [
-            [IrhpInterface::STATUS_CANCELLED],
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
-            [IrhpInterface::STATUS_WITHDRAWN],
-            [IrhpInterface::STATUS_AWAITING_FEE],
-            [IrhpInterface::STATUS_FEE_PAID],
-            [IrhpInterface::STATUS_UNSUCCESSFUL],
-            [IrhpInterface::STATUS_ISSUING],
-            [IrhpInterface::STATUS_VALID],
-            [IrhpInterface::STATUS_EXPIRED],
-        ];
-    }
-
-    /**
-     * @dataProvider trueOrFalseProvider
-     */
-    public function testCanBeSubmittedMultiStock($allSectionsCompleted)
-    {
-        $status = m::mock(RefData::class);
-        $status->expects()->getId()->withNoArgs()->andReturn(IrhpInterface::STATUS_NOT_YET_SUBMITTED);
-        $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->expects()->isMultiStock()->withNoArgs()->andReturnTrue();
-
-        $this->sut->setStatus($status);
-        $this->sut->setIrhpPermitType($irhpPermitType);
-
-        $this->sut->expects()
-            ->getSectionCompletion()
+        $this->sut->shouldReceive('isNotYetSubmitted')
             ->withNoArgs()
-            ->andReturn(['allCompleted' => $allSectionsCompleted]);
-
-        $this->assertSame($allSectionsCompleted, $this->sut->canBeSubmitted());
-    }
-
-    /**
-     * @dataProvider canBeSubmittedWithLicenceCheckProvider
-     */
-    public function testCanBeSubmittedWithLicenceCheck($licenceAllowed, $allSectionsCompleted, $result)
-    {
-        $status = m::mock(RefData::class);
-        $status->expects('getId')->withNoArgs()->andReturn(IrhpInterface::STATUS_NOT_YET_SUBMITTED);
-
-        $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->expects('isMultiStock')->twice()->withNoArgs()->andReturnFalse();
-
-        $irhpPermitStock = m::mock(IrhpPermitStock::class);
-
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->expects('getIrhpPermitWindow->getIrhpPermitStock')
+            ->andReturn($isNotYetSubmitted);
+        $this->sut->shouldReceive('getSectionCompletion')
             ->withNoArgs()
-            ->andReturn($irhpPermitStock);
+            ->andReturn($sections);
 
         $licence = m::mock(Licence::class);
-
-        $this->sut->setStatus($status);
-        $this->sut->setIrhpPermitType($irhpPermitType);
-        $this->sut->setLicence($licence);
-        $this->sut->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
-
-        $licence->expects()->canMakeIrhpApplication($irhpPermitStock, $this->sut)->andReturn($licenceAllowed);
-
-        $this->sut->expects()
-            ->getSectionCompletion()
-            ->times($licenceAllowed ? 1 : 0)
+        $licence->shouldReceive('isEligibleForPermits')
             ->withNoArgs()
-            ->andReturn(['allCompleted' => $allSectionsCompleted]);
+            ->andReturn($isEligibleForPermits);
 
-        $this->assertSame($result, $this->sut->canBeSubmitted());
+        $this->sut->setLicence($licence);
+
+        $this->assertEquals(
+            $expectedCanBeSubmitted,
+            $this->sut->canBeSubmitted()
+        );
     }
 
-    public function canBeSubmittedWithLicenceCheckProvider()
+    public function dpCanBeSubmitted()
     {
         return [
-            [false, false, false],
-            [true, false, false],
-            [false, true, false],
-            [true, true, true]
+            'not yet submitted, not eligible, incomplete' => [true, false, false, false],
+            'not yet submitted, not eligible, complete' => [true, false, true, false],
+            'not yet submitted, eligible, incomplete' => [true, true, false, false],
+            'not yet submitted, eligible, complete' => [true, true, true, true],
+            'already submitted, not eligible, complete' => [false, false, true, false],
+            'already submitted, eligible, complete' => [false, true, true, false],
         ];
     }
 
@@ -5864,9 +5819,9 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpCanBeResetToNotYetSubmitted
+     * @dataProvider dpCanBeResetToNotYetSubmittedFromValid
      */
-    public function testCanBeResetToNotYetSubmitted($isValid, $isCertificateOfRoadworthiness, $expected)
+    public function testCanBeResetToNotYetSubmittedFromValid($isValid, $isCertificateOfRoadworthiness, $expected)
     {
         $this->sut->shouldReceive('isValid')
             ->withNoArgs()
@@ -5878,11 +5833,11 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->assertEquals(
             $expected,
-            $this->sut->canBeResetToNotYetSubmitted()
+            $this->sut->canBeResetToNotYetSubmittedFromValid()
         );
     }
 
-    public function dpCanBeResetToNotYetSubmitted()
+    public function dpCanBeResetToNotYetSubmittedFromValid()
     {
         return [
             [true, true, true],
@@ -5892,31 +5847,116 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testResetToNotYetSubmitted()
+    public function testResetToNotYetSubmittedFromValid()
     {
         $status = m::mock(RefData::class);
 
-        $this->sut->shouldReceive('canBeResetToNotYetSubmitted')
+        $this->sut->shouldReceive('canBeResetToNotYetSubmittedFromValid')
             ->withNoArgs()
             ->andReturn(true);
 
-        $this->sut->resetToNotYetSubmitted($status);
+        $this->sut->resetToNotYetSubmittedFromValid($status);
 
         $this->assertSame($status, $this->sut->getStatus());
     }
 
-    public function testResetToNotYetSubmittedException()
+    public function testResetToNotYetSubmittedFromValidException()
     {
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage('Unable to reset this application to Not Yet Submitted');
 
         $status = m::mock(RefData::class);
 
-        $this->sut->shouldReceive('canBeResetToNotYetSubmitted')
+        $this->sut->shouldReceive('canBeResetToNotYetSubmittedFromValid')
             ->withNoArgs()
             ->andReturn(false);
 
-        $this->sut->resetToNotYetSubmitted($status);
+        $this->sut->resetToNotYetSubmittedFromValid($status);
+    }
+
+    /**
+     * @dataProvider dpCanBeResetToNotYetSubmittedFromCancelled
+     */
+    public function testCanBeResetToNotYetSubmittedFromCancelled(
+        $isCancelled,
+        $isEcmtShortTerm,
+        $isEcmtAnnual,
+        $hasUnderConsiderationOrAwaitingFeeApplicationForStock,
+        $expected
+    ) {
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+
+        $this->sut->shouldReceive('getAssociatedStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+        $this->sut->shouldReceive('isCancelled')
+            ->withNoArgs()
+            ->andReturn($isCancelled);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->withNoArgs()
+            ->andReturn($isEcmtAnnual);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('hasUnderConsiderationOrAwaitingFeeApplicationForStock')
+            ->with($irhpPermitStock)
+            ->andReturn($hasUnderConsiderationOrAwaitingFeeApplicationForStock);
+        $this->sut->setLicence($licence);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->canBeResetToNotYetSubmittedFromCancelled()
+        );
+    }
+
+    public function dpCanBeResetToNotYetSubmittedFromCancelled()
+    {
+        return [
+            [false, false, true, false, false],
+            [false, true, false, false, false],
+            [false, false, false, false, false],
+            [true, false, true, false, true],
+            [true, true, false, false, true],
+            [true, false, false, false, false],
+            [false, false, true, true, false],
+            [false, true, false, true, false],
+            [false, false, false, true, false],
+            [true, false, true, true, false],
+            [true, true, false, true, false],
+            [true, false, false, true, false],
+        ];
+    }
+
+    public function testResetToNotYetSubmittedFromCancelled()
+    {
+        $status = m::mock(RefData::class);
+
+        $this->sut->shouldReceive('canBeResetToNotYetSubmittedFromCancelled')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $this->sut->resetToNotYetSubmittedFromCancelled($status);
+
+        $this->assertSame($status, $this->sut->getStatus());
+    }
+
+    public function testResetToNotYetSubmittedFromCancelledException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Unable to reset this application to Not Yet Submitted');
+
+        $status = m::mock(RefData::class);
+
+        $this->sut->shouldReceive('canBeResetToNotYetSubmittedFromCancelled')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $this->sut->resetToNotYetSubmittedFromCancelled($status);
     }
 
     /**
@@ -6722,5 +6762,48 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn($subCategoryId);
 
         return $document;
+    }
+
+    /**
+     * @dataProvider dpIsUnderConsiderationOrAwaitingFeeAndAssociatedWithStock
+     */
+    public function testIsUnderConsiderationOrAwaitingFeeAndAssociatedWithStock(
+        $isUnderConsideration,
+        $isAwaitingFee,
+        $irhpApplicationStock,
+        $paramStock,
+        $expected
+    ) {
+        $this->sut->shouldReceive('isUnderConsideration')
+            ->withNoArgs()
+            ->andReturn($isUnderConsideration);
+
+        $this->sut->shouldReceive('isAwaitingFee')
+            ->withNoArgs()
+            ->andReturn($isAwaitingFee);
+
+        $this->sut->shouldReceive('getAssociatedStock')
+            ->withNoArgs()
+            ->andReturn($irhpApplicationStock);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->isUnderConsiderationOrAwaitingFeeAndAssociatedWithStock($paramStock)
+        );
+    }
+
+    public function dpIsUnderConsiderationOrAwaitingFeeAndAssociatedWithStock()
+    {
+        $irhpPermitStock1 = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock2 = m::mock(IrhpPermitStock::class);
+
+        return [
+            [false, false, $irhpPermitStock1, $irhpPermitStock2, false],
+            [true, false, $irhpPermitStock1, $irhpPermitStock2, false],
+            [false, true, $irhpPermitStock1, $irhpPermitStock2, false],
+            [false, false, $irhpPermitStock1, $irhpPermitStock1, false],
+            [true, false, $irhpPermitStock1, $irhpPermitStock1, true],
+            [false, true, $irhpPermitStock1, $irhpPermitStock1, true],
+        ];
     }
 }

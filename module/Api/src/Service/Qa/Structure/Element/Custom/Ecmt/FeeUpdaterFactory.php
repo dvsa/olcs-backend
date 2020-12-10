@@ -17,10 +17,9 @@ class FeeUpdaterFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new FeeUpdater(
-            $serviceLocator->get('RepositoryServiceManager')->get('FeeType'),
             $serviceLocator->get('CqrsCommandCreator'),
             $serviceLocator->get('CommandHandlerManager'),
-            $serviceLocator->get('CommonCurrentDateTimeFactory')
+            $serviceLocator->get('PermitsFeesEcmtApplicationFeeCommandCreator')
         );
     }
 }
