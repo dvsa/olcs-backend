@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\SurrenderLicence as Command;
 use Mockery as m;
 
@@ -130,7 +131,10 @@ class SurrenderTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => 532],
+            [
+                'id' => 532,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+            ],
             new Result()
         );
 
@@ -216,7 +220,10 @@ class SurrenderTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => 532],
+            [
+                'id' => 532,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+            ],
             new Result()
         );
 
@@ -297,7 +304,10 @@ class SurrenderTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => 532],
+            [
+                'id' => 532,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+            ],
             new Result()
         );
 
@@ -392,7 +402,10 @@ class SurrenderTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => 532],
+            [
+                'id' => 532,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+            ],
             new Result()
         );
 

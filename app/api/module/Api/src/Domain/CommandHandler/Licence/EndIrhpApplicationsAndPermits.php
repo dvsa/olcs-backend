@@ -56,7 +56,7 @@ class EndIrhpApplicationsAndPermits extends AbstractCommandHandler implements Tr
                             Withdraw::create(
                                 [
                                     'id' => $irhpApplication->getId(),
-                                    'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+                                    'reason' => $command->getReason(),
                                 ]
                             )
                         )

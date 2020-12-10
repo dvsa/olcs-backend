@@ -7,22 +7,23 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Application\DeleteApplication;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
+use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as ReturnComLics;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Transfer\Command\Application\RefuseApplication;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
-use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Pi\Decision as DecisionEntity;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
+use Dvsa\Olcs\Transfer\Command\Application\RefuseApplication;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Surrender a licence
@@ -115,7 +116,10 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
         $result->merge(
             $this->handleSideEffect(
                 EndIrhpApplicationsAndPermits::create(
-                    ['id' => $licence->getId()]
+                    [
+                        'id' => $licence->getId(),
+                        'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+                    ]
                 )
             )
         );

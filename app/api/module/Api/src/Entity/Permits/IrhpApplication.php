@@ -797,7 +797,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return $this->canBeDeclined();
         }
 
-        return $this->isUnderConsideration() || ($this->isAwaitingFee() && $this->issueFeeOverdue());
+        return $this->isUnderConsideration() || $this->isAwaitingFee();
     }
 
     /**
@@ -1206,13 +1206,25 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @param RefData $withdrawStatus
      * @param RefData $withdrawReason
+     * @param bool $checkReasonAgainstStatus
      *
-     * @throws ForbiddenException
+     * @throws ValidationException
+     *
      * @return void
      */
-    public function withdraw(RefData $withdrawStatus, RefData $withdrawReason): void
+    public function withdraw(RefData $withdrawStatus, RefData $withdrawReason, $checkReasonAgainstStatus): void
     {
-        if (!$this->canBeWithdrawn($withdrawReason)) {
+        // when withdrawing an application from internal, we need to allow any withdrawal reason to be specified
+        // regardless of the application status. in this situation, we pass a false value for
+        // checkReasonAgainstStatus, which in turn passes a null reason into canBeWithdrawn and should therefore
+        // run the most generalised form of the validation check applicable to all withdrawal reasons
+
+        $validationWithdrawReason = null;
+        if ($checkReasonAgainstStatus) {
+            $validationWithdrawReason = $withdrawReason;
+        }
+
+        if (!$this->canBeWithdrawn($validationWithdrawReason)) {
             $error = ($withdrawReason->getId() === WithdrawableInterface::WITHDRAWN_REASON_DECLINED)
                 ? WithdrawableInterface::ERR_CANT_DECLINE : WithdrawableInterface::ERR_CANT_WITHDRAW;
 
@@ -1221,7 +1233,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         $this->status = $withdrawStatus;
         $this->withdrawReason = $withdrawReason;
-        $this->withdrawnDate = new \DateTime();
+        $this->withdrawnDate = new DateTime();
     }
 
     /**

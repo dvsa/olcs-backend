@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -17,9 +19,9 @@ use Dvsa\Olcs\Transfer\Command\WithdrawApplicationInterface;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-abstract class AbstractWithdrawApplicationHandler extends AbstractCommandHandler
+abstract class AbstractWithdrawApplicationHandler extends AbstractCommandHandler implements AuthAwareInterface
 {
-    use QueueAwareTrait;
+    use AuthAwareTrait, QueueAwareTrait;
 
     protected $repoServiceName = 'changeMe';
     protected $withdrawStatus = IrhpInterface::STATUS_WITHDRAWN; //override for non-permits entities
@@ -46,7 +48,13 @@ abstract class AbstractWithdrawApplicationHandler extends AbstractCommandHandler
         $withdrawReason = $command->getReason();
 
         $application = $repo->fetchById($id);
-        $application->withdraw($this->refData($this->withdrawStatus), $this->refData($withdrawReason));
+        $checkReasonAgainstStatus = !$this->isInternalUser();
+
+        $application->withdraw(
+            $this->refData($this->withdrawStatus),
+            $this->refData($withdrawReason),
+            $checkReasonAgainstStatus
+        );
 
         $repo->save($application);
 

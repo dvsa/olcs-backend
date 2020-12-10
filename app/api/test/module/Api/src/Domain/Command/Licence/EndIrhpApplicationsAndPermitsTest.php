@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Cli\Domain\Command\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,16 +13,22 @@ class EndIrhpApplicationsAndPermitsTest extends TestCase
 {
     public function testStructure()
     {
+        $id = 100;
+        $reason = WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED;
+
         $sut = EndIrhpApplicationsAndPermits::create(
             [
-                'id' => 100,
+                'id' => $id,
+                'reason' => $reason,
             ]
         );
 
-        static::assertEquals(100, $sut->getId());
+        static::assertEquals($id, $sut->getId());
+        static::assertEquals($reason, $sut->getReason());
         static::assertEquals(
             [
-                'id' => 100,
+                'id' => $id,
+                'reason' => $reason,
             ],
             $sut->getArrayCopy()
         );
