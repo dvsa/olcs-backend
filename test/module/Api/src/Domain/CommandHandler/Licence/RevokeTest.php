@@ -8,24 +8,25 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
-use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Licence;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Revoke as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\Licence\RevokeLicence as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Revoke as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
+use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
-use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
-use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
+use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim;
+use Dvsa\Olcs\Api\Domain\Repository\Licence;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Transfer\Command\Licence\RevokeLicence as Command;
+use Mockery as m;
 
 /**
  * RevokeTest
@@ -138,7 +139,10 @@ class RevokeTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => 532],
+            [
+                'id' => 532,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED
+            ],
             new Result()
         );
 
@@ -222,7 +226,10 @@ class RevokeTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => 532],
+            [
+                'id' => 532,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED
+            ],
             new Result()
         );
 
@@ -295,7 +302,10 @@ class RevokeTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => 532],
+            [
+                'id' => 532,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED
+            ],
             new Result()
         );
 
@@ -370,7 +380,10 @@ class RevokeTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             EndIrhpApplicationsAndPermits::class,
-            ['id' => 532],
+            [
+                'id' => 532,
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED
+            ],
             new Result()
         );
 

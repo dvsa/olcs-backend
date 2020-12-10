@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Publication\Licence as PublicationLicenceCmd;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
@@ -64,7 +65,12 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler implemen
                     // Create publication for a licence
                     PublicationLicenceCmd::create(['id' => $licence->getId()]),
                     // Expire/cancel active permit applications and terminate active permits
-                    EndIrhpApplicationsAndPermits::create(['id' => $licence->getId()]),
+                    EndIrhpApplicationsAndPermits::create(
+                        [
+                            'id' => $licence->getId(),
+                            'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+                        ]
+                    ),
                 ]
             )
         );
