@@ -61,12 +61,20 @@ class AvailableStocks extends AbstractQueryHandler
 
         $year = $query->getYear();
 
-        $openWindows = $this->getRepo()->fetchOpenWindowsByTypeYear(
-            $irhpPermitType,
-            new DateTime(),
-            $year,
-            $this->isInternalUser()
-        );
+        if ($query->getYear()) {
+            $openWindows = $this->getRepo()->fetchOpenWindowsByTypeYear(
+                $irhpPermitType,
+                new DateTime(),
+                $year,
+                $this->isInternalUser()
+            );
+        } else {
+            $openWindows = $this->getRepo()->fetchOpenWindowsByType(
+                $irhpPermitType,
+                new DateTime(),
+                $this->isInternalUser()
+            );
+        }
 
         $availableStocks = [];
 
@@ -83,6 +91,7 @@ class AvailableStocks extends AbstractQueryHandler
                 $availableStocks[$irhpPermitStockId] = [
                     'id' => $irhpPermitStockId,
                     'periodNameKey' => $irhpPermitStock->getPeriodNameKey(),
+                    'year' => $irhpPermitStock->getValidityYear(),
                 ];
             }
         }
