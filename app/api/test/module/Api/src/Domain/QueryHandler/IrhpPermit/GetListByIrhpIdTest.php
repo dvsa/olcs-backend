@@ -8,13 +8,14 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Permits\Common\RangeBasedRestrictedCountriesProvider;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId as GetListByIrhpIdQuery;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * GetListByLicence Test
+ * GetListByIrhpId Test
  */
 class GetListByIrhpIdTest extends QueryHandlerTestCase
 {
@@ -33,7 +34,7 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQueryForEcmtShortTerm()
+    public function testHandleQueryForConstrainedCountriesTrue()
     {
         $irhpApplicationId = 10;
 
@@ -48,9 +49,9 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
         );
 
         $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+        $irhpApplication->shouldReceive('getIrhpPermitType->isConstrainedCountriesType')
             ->withNoArgs()
-            ->andReturn(true);
+            ->andReturnTrue();
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($irhpApplicationId)
@@ -178,7 +179,10 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function testHandleQueryForEcmtShortTermWithEmptyList()
+    /**
+     * @dataProvider dpHandleQueryWithEmptyList
+     */
+    public function testHandleQueryWithEmptyList($isConstrainedCountriesType)
     {
         $irhpApplicationId = 10;
 
@@ -193,9 +197,9 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
         );
 
         $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+        $irhpApplication->shouldReceive('getIrhpPermitType->isConstrainedCountriesType')
             ->withNoArgs()
-            ->andReturn(true);
+            ->andReturn($isConstrainedCountriesType);
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($irhpApplicationId)
@@ -243,7 +247,15 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function testHandleQueryForOtherPermitTypes()
+    public function dpHandleQueryWithEmptyList()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    public function testHandleQueryForConstrainedCountriesFalse()
     {
         $irhpApplicationId = 10;
 
@@ -258,9 +270,9 @@ class GetListByIrhpIdTest extends QueryHandlerTestCase
         );
 
         $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+        $irhpApplication->shouldReceive('getIrhpPermitType->isConstrainedCountriesType')
             ->withNoArgs()
-            ->andReturn(false);
+            ->andReturnFalse();
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($irhpApplicationId)

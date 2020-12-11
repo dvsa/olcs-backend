@@ -31,12 +31,11 @@ class GetListByLicenceTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQueryForEcmtShortTerm()
+    public function testHandleQuery()
     {
         $query = GetListByLicenceQuery::create(
             [
                 'licence' => 10,
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 'page' => 1,
                 'limit' => 25,
             ]
@@ -45,9 +44,13 @@ class GetListByLicenceTest extends QueryHandlerTestCase
         $irhpPermits = [
             m::mock(IrhpPermit::class),
             m::mock(IrhpPermit::class),
-            m::mock(IrhpPermit::class)
+            m::mock(IrhpPermit::class),
+            m::mock(IrhpPermit::class),
+            m::mock(IrhpPermit::class),
+            m::mock(IrhpPermit::class),
+            m::mock(IrhpPermit::class),
         ];
-        $irhpPermitsCount = 3;
+        $irhpPermitsCount = 7;
 
         $this->repoMap['IrhpPermit']->shouldReceive('fetchList')
             ->with($query, Query::HYDRATE_OBJECT)
@@ -73,18 +76,77 @@ class GetListByLicenceTest extends QueryHandlerTestCase
                 'id' => 463,
                 'irhpPermitRange' => [
                     'id' => 101,
+                    'irhpPermitStock' => [
+                        'irhpPermitType' => [
+                            'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT
+                        ]
+                    ]
                 ]
             ],
             [
                 'id' => 464,
                 'irhpPermitRange' => [
                     'id' => 102,
+                    'irhpPermitStock' => [
+                        'irhpPermitType' => [
+                            'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
+                        ]
+                    ]
                 ]
             ],
             [
                 'id' => 465,
                 'irhpPermitRange' => [
                     'id' => 103,
+                    'irhpPermitStock' => [
+                        'irhpPermitType' => [
+                            'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'id' => 466,
+                'irhpPermitRange' => [
+                    'id' => 104,
+                    'irhpPermitStock' => [
+                        'irhpPermitType' => [
+                            'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'id' => 467,
+                'irhpPermitRange' => [
+                    'id' => 105,
+                    'irhpPermitStock' => [
+                        'irhpPermitType' => [
+                            'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'id' => 468,
+                'irhpPermitRange' => [
+                    'id' => 106,
+                    'irhpPermitStock' => [
+                        'irhpPermitType' => [
+                            'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'id' => 469,
+                'irhpPermitRange' => [
+                    'id' => 107,
+                    'irhpPermitStock' => [
+                        'irhpPermitType' => [
+                            'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER
+                        ]
+                    ]
                 ]
             ],
         ];
@@ -112,13 +174,6 @@ class GetListByLicenceTest extends QueryHandlerTestCase
                     ['id' => 'IT', 'countryDesc' => 'Italy'],
                     ['id' => 'RU', 'countryDesc' => 'Russia'],
                 ]
-            )
-            ->shouldReceive('getList')
-            ->with(103)
-            ->andReturn(
-                [
-                    ['id' => 'RU', 'countryDesc' => 'Russia'],
-                ]
             );
 
         $expectedResult = [
@@ -127,6 +182,11 @@ class GetListByLicenceTest extends QueryHandlerTestCase
                     'id' => 463,
                     'irhpPermitRange' => [
                         'id' => 101,
+                        'irhpPermitStock' => [
+                            'irhpPermitType' => [
+                                'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT
+                            ]
+                        ]
                     ],
                     'constrainedCountries' => [
                         ['id' => 'AT', 'countryDesc' => 'Austria'],
@@ -140,6 +200,11 @@ class GetListByLicenceTest extends QueryHandlerTestCase
                     'id' => 464,
                     'irhpPermitRange' => [
                         'id' => 102,
+                        'irhpPermitStock' => [
+                            'irhpPermitType' => [
+                                'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
+                            ]
+                        ]
                     ],
                     'constrainedCountries' => [
                         ['id' => 'IT', 'countryDesc' => 'Italy'],
@@ -150,25 +215,70 @@ class GetListByLicenceTest extends QueryHandlerTestCase
                     'id' => 465,
                     'irhpPermitRange' => [
                         'id' => 103,
-                    ],
-                    'constrainedCountries' => [
-                        ['id' => 'RU', 'countryDesc' => 'Russia']
+                        'irhpPermitStock' => [
+                            'irhpPermitType' => [
+                                'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL
+                            ]
+                        ]
                     ]
-                ]
+                ],
+                [
+                    'id' => 466,
+                    'irhpPermitRange' => [
+                        'id' => 104,
+                        'irhpPermitStock' => [
+                            'irhpPermitType' => [
+                                'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    'id' => 467,
+                    'irhpPermitRange' => [
+                        'id' => 105,
+                        'irhpPermitStock' => [
+                            'irhpPermitType' => [
+                                'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    'id' => 468,
+                    'irhpPermitRange' => [
+                        'id' => 106,
+                        'irhpPermitStock' => [
+                            'irhpPermitType' => [
+                                'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    'id' => 469,
+                    'irhpPermitRange' => [
+                        'id' => 107,
+                        'irhpPermitStock' => [
+                            'irhpPermitType' => [
+                                'id' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER
+                            ]
+                        ]
+                    ]
+                ],
             ],
-            'count' => 3
+            'count' => 7
         ];
 
         $result = $this->sut->handleQuery($query);
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function testHandleQueryForEcmtShortTermWithEmptyList()
+    public function testHandleQueryWithEmptyList()
     {
         $query = GetListByLicenceQuery::create(
             [
                 'licence' => 10,
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 'page' => 1,
                 'limit' => 25,
             ]
@@ -213,112 +323,5 @@ class GetListByLicenceTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
         $this->assertEquals($expectedResult, $result);
-    }
-
-    /**
-     * @dataProvider dpTestHandleQueryForOtherPermitTypes
-     */
-    public function testHandleQueryForOtherPermitTypes($irhpPermitTypeId)
-    {
-        $query = GetListByLicenceQuery::create(
-            [
-                'licence' => 10,
-                'irhpPermitType' => $irhpPermitTypeId,
-                'page' => 1,
-                'limit' => 25,
-            ]
-        );
-
-        $irhpPermits = [
-            m::mock(IrhpPermit::class),
-            m::mock(IrhpPermit::class),
-            m::mock(IrhpPermit::class)
-        ];
-        $irhpPermitsCount = 3;
-
-        $this->repoMap['IrhpPermit']->shouldReceive('fetchList')
-            ->with($query, Query::HYDRATE_OBJECT)
-            ->andReturn($irhpPermits);
-        $this->repoMap['IrhpPermit']->shouldReceive('fetchCount')
-            ->andReturn($irhpPermitsCount);
-
-        $expectedBundle = [
-            'irhpPermitApplication',
-            'irhpPermitRange' => [
-                'journey',
-                'irhpPermitStock' => [
-                    'irhpPermitType' => ['name'],
-                    'country',
-                    'permitCategory',
-                ],
-                'emissionsCategory',
-            ]
-        ];
-
-        $bundledIrhpPermits = [
-            [
-                'id' => 463,
-                'irhpPermitRange' => [
-                    'id' => 101,
-                ]
-            ],
-            [
-                'id' => 464,
-                'irhpPermitRange' => [
-                    'id' => 102,
-                ]
-            ],
-            [
-                'id' => 465,
-                'irhpPermitRange' => [
-                    'id' => 103,
-                ]
-            ],
-        ];
-
-        $this->sut->shouldReceive('resultList')
-            ->with($irhpPermits, $expectedBundle)
-            ->andReturn($bundledIrhpPermits);
-
-        $this->mockedSmServices['PermitsCommonRangeBasedRestrictedCountriesProvider']
-            ->shouldReceive('getList')
-            ->never();
-
-        $expectedResult = [
-            'results' => [
-                [
-                    'id' => 463,
-                    'irhpPermitRange' => [
-                        'id' => 101,
-                    ],
-                ],
-                [
-                    'id' => 464,
-                    'irhpPermitRange' => [
-                        'id' => 102,
-                    ],
-                ],
-                [
-                    'id' => 465,
-                    'irhpPermitRange' => [
-                        'id' => 103,
-                    ],
-                ]
-            ],
-            'count' => 3
-        ];
-
-        $result = $this->sut->handleQuery($query);
-        $this->assertEquals($expectedResult, $result);
-    }
-
-    public function dpTestHandleQueryForOtherPermitTypes()
-    {
-        return [
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
-        ];
     }
 }
