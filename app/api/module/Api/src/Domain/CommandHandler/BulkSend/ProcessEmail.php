@@ -65,10 +65,7 @@ class ProcessEmail extends AbstractEmailHandler
 
     protected function getRecipients($recordObject): array
     {
-        return $this->organisationRecipients(
-            $recordObject->getOrganisation(),
-            $recordObject->getCreatedBy()
-        );
+        return $this->organisationRecipients($recordObject->getOrganisation());
     }
 
     /**
