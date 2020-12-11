@@ -72,12 +72,12 @@ trait EmailAwareTrait
      * Need to decide what to do in those situations (throw an exception here?)
      *
      * @param Organisation $organisation
-     * @param User         $user
+     * @param User|null    $user
      *
      * @return array
      * @throws MissingEmailException
      */
-    public function organisationRecipients(Organisation $organisation, ?User $user): array
+    public function organisationRecipients(Organisation $organisation, ?User $user = null): array
     {
         $toEmail = '';
         $orgEmailAddresses = $organisation->getAdminEmailAddresses();
