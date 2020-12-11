@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\BulkSend\ProcessEmail as ProcessEmailHan
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
@@ -51,21 +50,10 @@ class ProcessEmailTest extends CommandHandlerTestCase
 
         $command = SendEmailCmd::create(['id' => 7, 'templateName' => $templateName]);
 
-        $createUser = m::mock(User::class);
-        $createUser->shouldReceive('isInternal')
-            ->once()
-            ->withNoArgs()
-            ->andReturnTrue();
-
         $licenceEntity->shouldReceive('getId')
             ->once()
             ->withNoArgs()
             ->andReturn(7);
-
-        $licenceEntity->shouldReceive('getCreatedBy')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($createUser);
 
         $licenceEntity->shouldReceive('getOrganisation')
             ->once()
