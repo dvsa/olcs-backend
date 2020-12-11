@@ -37,6 +37,11 @@ class IrhpPermitType extends AbstractIrhpPermitType
         self::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
     ];
 
+    const CONSTRAINED_COUNTRIES_TYPES = [
+        self::IRHP_PERMIT_TYPE_ID_ECMT,
+        self::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+    ];
+
     /**
      * Gets calculated values
      *
@@ -199,5 +204,15 @@ class IrhpPermitType extends AbstractIrhpPermitType
     public function usesMultiStockLicenceBehaviour(): bool
     {
         return $this->isMultiStock() || $this->isEcmtRemoval() || $this->isCertificateOfRoadworthiness();
+    }
+
+    /**
+     * Whether this permit type is one to which the concept of constrained countries applies
+     *
+     * @return bool
+     */
+    public function isConstrainedCountriesType()
+    {
+        return in_array($this->id, self::CONSTRAINED_COUNTRIES_TYPES);
     }
 }
