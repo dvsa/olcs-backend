@@ -17,6 +17,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class GetListByLicence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermit';
+
     protected $bundle = [
         'irhpPermitApplication',
         'irhpPermitRange' => [
@@ -67,10 +68,10 @@ class GetListByLicence extends AbstractQueryHandler
             $this->bundle
         );
 
-        if ($query->getIrhpPermitType() == IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM) {
-            // calculate constrainedCountries for ECMT Short-term
-            foreach ($irhpPermits as $i => $irhpPermit) {
-                // set value of constrained countries
+        foreach ($irhpPermits as $i => $irhpPermit) {
+            $currentPermitTypeId = $irhpPermit['irhpPermitRange']['irhpPermitStock']['irhpPermitType']['id'];
+
+            if (in_array($currentPermitTypeId, IrhpPermitType::CONSTRAINED_COUNTRIES_TYPES)) {
                 $irhpPermit['constrainedCountries']
                     = $this->restrictedCountriesProvider->getList($irhpPermit['irhpPermitRange']['id']);
 

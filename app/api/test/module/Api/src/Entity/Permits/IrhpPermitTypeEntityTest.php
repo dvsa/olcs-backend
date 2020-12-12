@@ -357,4 +357,27 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [true, true, true, true],
         ];
     }
+
+    /**
+    * @dataProvider dpIsConstrainedCountriesType
+    */
+    public function testIsConstrainedCountriesType($id, $expected)
+    {
+        $this->sut->setId($id);
+
+        $this->assertEquals($expected, $this->sut->isConstrainedCountriesType());
+    }
+
+    public function dpIsConstrainedCountriesType()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER, false],
+        ];
+    }
 }
