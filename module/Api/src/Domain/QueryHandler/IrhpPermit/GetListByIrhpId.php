@@ -73,8 +73,8 @@ class GetListByIrhpId extends AbstractQueryHandler
         /** @var IrhpApplication $irhpApplication */
         $irhpApplication = $this->getRepo('IrhpApplication')->fetchById($query->getIrhpApplication());
 
-        if ($irhpApplication->getIrhpPermitType()->isEcmtShortTerm()) {
-            // calculate constrainedCountries for ECMT Short-term
+        if ($irhpApplication->getIrhpPermitType()->isConstrainedCountriesType()) {
+            // calculate constrainedCountries as applicable
             foreach ($irhpPermits as $i => $irhpPermit) {
                 // set value of constrained countries
                 $irhpPermit['constrainedCountries']
