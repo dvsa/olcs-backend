@@ -66,7 +66,7 @@ class ApplicationPsvOcTotalAuthReviewServiceTest extends \PHPUnit\Framework\Test
                                 'value' => 60
                             ],
                             [
-                                'label' => 'review-operating-centres-authorisation-community-licences',
+                                'label' => 'review-operating-centres-authorisation-community-licences.psv',
                                 'value' => 50
                             ]
                         ]
@@ -84,7 +84,7 @@ class ApplicationPsvOcTotalAuthReviewServiceTest extends \PHPUnit\Framework\Test
                                 'value' => 60
                             ],
                             [
-                                'label' => 'review-operating-centres-authorisation-community-licences',
+                                'label' => 'review-operating-centres-authorisation-community-licences.psv',
                                 'value' => 50
                             ]
                         ]
