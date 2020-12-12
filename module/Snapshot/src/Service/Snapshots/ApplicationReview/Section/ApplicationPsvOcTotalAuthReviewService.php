@@ -57,7 +57,7 @@ class ApplicationPsvOcTotalAuthReviewService extends AbstractReviewService
         // Conditionally add the community licences, if the licence type is restricted or standard international
         if (in_array($data['licenceType']['id'], $this->licenceTypesWithCommunityLicences)) {
             $config['multiItems'][0][] = [
-                'label' => 'review-operating-centres-authorisation-community-licences',
+                'label' => 'review-operating-centres-authorisation-community-licences.psv',
                 'value' => $data['totCommunityLicences']
             ];
         }
