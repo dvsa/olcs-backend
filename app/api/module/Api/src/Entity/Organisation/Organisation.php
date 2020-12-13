@@ -509,12 +509,11 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         /** @var OrganisationUserEntity $orgUser */
         foreach ($adminUsers as $orgUser) {
             try {
-                $orgUser = $orgUser->getUser();
+                $adminEmails[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
             } catch (EntityNotFoundException $ex) {
                 //soft delete means no organisation user
                 continue;
             }
-            $adminEmails[] = $orgUser->getContactDetails()->getEmailAddress();
         }
 
         return $adminEmails;
