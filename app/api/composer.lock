@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b66e6972edd9ccf7def3d1c301a067c",
+    "content-hash": "8b6360386b2313f7cdfe2d91b20a909b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4214,12 +4214,12 @@
         },
         {
             "name": "olcs/olcs-companies-house",
-            "version": "4.206.4",
+            "version": "4.206.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.4/olcs-olcs-companies-house-4.206.4.zip",
-                "reference": "5e87140b4c77973d45e5dc9425618043292d24ab",
-                "shasum": "5e87140b4c77973d45e5dc9425618043292d24ab"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.5/olcs-olcs-companies-house-4.206.5.zip",
+                "reference": "3034d0a0b723b97d1d0d2a9622774515f3f6ae3f",
+                "shasum": "3034d0a0b723b97d1d0d2a9622774515f3f6ae3f"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4239,7 +4239,7 @@
                     "dev-master": "0.1.x-dev"
                 },
                 "nexus-push": {
-                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-companies-house",
+                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-companies-house",
                     "ignore": [
                         "tests"
                     ]
@@ -4281,16 +4281,16 @@
                 "proprietary"
             ],
             "description": "companies house api client",
-            "time": "2020-12-07T10:09:27+00:00"
+            "time": "2020-12-09T10:22:19+00:00"
         },
         {
             "name": "olcs/olcs-cpms",
-            "version": "4.206.2",
+            "version": "4.206.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.2/olcs-olcs-cpms-4.206.2.zip",
-                "reference": "e6520fbf870544e636524ad0eb036e0f4a2ec508",
-                "shasum": "e6520fbf870544e636524ad0eb036e0f4a2ec508"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.3/olcs-olcs-cpms-4.206.3.zip",
+                "reference": "bd3dbbd2f358d940107d539766b3b39372eacd71",
+                "shasum": "bd3dbbd2f358d940107d539766b3b39372eacd71"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4307,7 +4307,7 @@
                     "dev-master": "0.1.x-dev"
                 },
                 "nexus-push": {
-                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-cpms",
+                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-cpms",
                     "ignore": [
                         "tests"
                     ]
@@ -4349,16 +4349,16 @@
                 "proprietary"
             ],
             "description": "CPMS Module",
-            "time": "2020-11-09T14:13:00+00:00"
+            "time": "2020-12-09T10:26:34+00:00"
         },
         {
             "name": "olcs/olcs-dvla-search",
-            "version": "1.0.5",
+            "version": "1.0.6",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-dvla-search/1.0.5/olcs-olcs-dvla-search-1.0.5.zip",
-                "reference": "6c6b8c027dc49789f78dcde6093af885e0c5b5b4",
-                "shasum": "6c6b8c027dc49789f78dcde6093af885e0c5b5b4"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-dvla-search/1.0.6/olcs-olcs-dvla-search-1.0.6.zip",
+                "reference": "98d1b0726a2b0a0e6f554ba6e1d35de2727d8712",
+                "shasum": "98d1b0726a2b0a0e6f554ba6e1d35de2727d8712"
             },
             "require": {
                 "caseyamcl/guzzle_retry_middleware": "2.3.3",
@@ -4373,7 +4373,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-dvla-search/",
+                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-dvla-search/",
                     "ignore": [
                         "tests"
                     ]
@@ -4414,16 +4414,16 @@
                 "proprietary"
             ],
             "description": "DVSA Search API client",
-            "time": "2020-11-09T14:11:10+00:00"
+            "time": "2020-12-09T10:32:45+00:00"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "4.206.6",
+            "version": "4.206.7",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.6/olcs-olcs-logging-4.206.6.zip",
-                "reference": "84498152e02e43acfc5a055f884863ac94c31a5a",
-                "shasum": "84498152e02e43acfc5a055f884863ac94c31a5a"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.7/olcs-olcs-logging-4.206.7.zip",
+                "reference": "88d06564ef6aa55c00c77850d0b54a485d2351c4",
+                "shasum": "88d06564ef6aa55c00c77850d0b54a485d2351c4"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4444,7 +4444,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-logging",
+                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-logging",
                     "ignore": [
                         "test/",
                         "sonar-project.properties"
@@ -4480,16 +4480,16 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2020-12-07T09:52:59+00:00"
+            "time": "2020-12-09T10:36:44+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.107",
+            "version": "4.206.111",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.107/olcs-olcs-transfer-4.206.107.zip",
-                "reference": "453e0139cedfa82bbc2964997450bbf4f5fdb76c",
-                "shasum": "453e0139cedfa82bbc2964997450bbf4f5fdb76c"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.111/olcs-olcs-transfer-4.206.111.zip",
+                "reference": "101625e9319a87c812d88d574bf00a448d491f6d",
+                "shasum": "101625e9319a87c812d88d574bf00a448d491f6d"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4515,7 +4515,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-transfer",
+                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-transfer",
                     "ignore": [
                         "test/",
                         "sonar-project.properties",
@@ -4552,16 +4552,16 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2020-12-07T10:08:29+00:00"
+            "time": "2020-12-10T23:05:45+00:00"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "4.206.7",
+            "version": "4.206.9",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.7/olcs-olcs-utils-4.206.7.zip",
-                "reference": "d3d2b7806eacc34deb54e5d4cac25bde052d62be",
-                "shasum": "d3d2b7806eacc34deb54e5d4cac25bde052d62be"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.9/olcs-olcs-utils-4.206.9.zip",
+                "reference": "c4435a9b2e0524e1e8490ce249f37abf9f876556",
+                "shasum": "c4435a9b2e0524e1e8490ce249f37abf9f876556"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4582,7 +4582,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-utils",
+                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-utils",
                     "ignore": [
                         "test/",
                         "sonar-project.properties"
@@ -4618,7 +4618,7 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2020-12-07T11:39:16+00:00"
+            "time": "2020-12-09T10:45:17+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
@@ -6970,7 +6970,7 @@
             "version": "v1.0.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/brianium/habitat/v1.0.0/brianium-habitat-v1.0.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/brianium/habitat/v1.0.0/brianium-habitat-v1.0.0.zip",
                 "reference": "d0979e3bb379cbc78ecb42b3ac171bc2b7e06d96",
                 "shasum": ""
             },
@@ -7005,7 +7005,7 @@
             "version": "3.1.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/brianium/paratest/3.1.2/brianium-paratest-3.1.2.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/brianium/paratest/3.1.2/brianium-paratest-3.1.2.zip",
                 "reference": "be62103b00485442ed2909b69854d6c7ec4614ed",
                 "shasum": ""
             },
@@ -7063,7 +7063,7 @@
             "version": "1.7.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/semver/1.7.2/composer-semver-1.7.2.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/semver/1.7.2/composer-semver-1.7.2.zip",
                 "reference": "647490bbcaf7fc4891c58f47b825eb99d19c377a",
                 "shasum": ""
             },
@@ -7132,7 +7132,7 @@
             "version": "1.4.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/xdebug-handler/1.4.5/composer-xdebug-handler-1.4.5.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/xdebug-handler/1.4.5/composer-xdebug-handler-1.4.5.zip",
                 "reference": "f28d44c286812c714741478d968104c5e604a1d4",
                 "shasum": ""
             },
@@ -7184,7 +7184,7 @@
             "version": "v0.1.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dms/phpunit-arraysubset-asserts/v0.1.1/dms-phpunit-arraysubset-asserts-v0.1.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dms/phpunit-arraysubset-asserts/v0.1.1/dms-phpunit-arraysubset-asserts-v0.1.1.zip",
                 "reference": "1fc5a0f3db1d0c440a7c6b8834917888247f8f42",
                 "shasum": ""
             },
@@ -7219,7 +7219,7 @@
             "version": "v2.0.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/hamcrest/hamcrest-php/v2.0.1/hamcrest-hamcrest-php-v2.0.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/hamcrest/hamcrest-php/v2.0.1/hamcrest-hamcrest-php-v2.0.1.zip",
                 "reference": "8c3d0a3f6af734494ad8f6fbbee0ba92422859f3",
                 "shasum": ""
             },
@@ -7260,7 +7260,7 @@
             "version": "v3.2.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/johnkary/phpunit-speedtrap/v3.2.0/johnkary-phpunit-speedtrap-v3.2.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/johnkary/phpunit-speedtrap/v3.2.0/johnkary-phpunit-speedtrap-v3.2.0.zip",
                 "reference": "8c0e149b80c6e86c33315f05699512678655c158",
                 "shasum": ""
             },
@@ -7302,7 +7302,7 @@
             "version": "v1.4.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/mikey179/vfsstream/v1.4.0/mikey179-vfsstream-v1.4.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/mikey179/vfsstream/v1.4.0/mikey179-vfsstream-v1.4.0.zip",
                 "reference": "61b12172292cf539685507aa65b076c1530e83c1",
                 "shasum": ""
             },
@@ -7334,7 +7334,7 @@
             "version": "1.2.4",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/mockery/mockery/1.2.4/mockery-mockery-1.2.4.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/mockery/mockery/1.2.4/mockery-mockery-1.2.4.zip",
                 "reference": "b3453f75fd23d9fd41685f2148f4abeacabc6405",
                 "shasum": ""
             },
@@ -7393,7 +7393,7 @@
             "version": "1.10.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/myclabs/deep-copy/1.10.2/myclabs-deep-copy-1.10.2.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/myclabs/deep-copy/1.10.2/myclabs-deep-copy-1.10.2.zip",
                 "reference": "776f831124e9c62e1a2c601ecc52e776d8bb7220",
                 "shasum": ""
             },
@@ -7441,7 +7441,7 @@
             "version": "4.206.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/coding-standards/4.206.0/olcs-coding-standards-4.206.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/coding-standards/4.206.0/olcs-coding-standards-4.206.0.zip",
                 "reference": "92e78dd7b6d4e374b44ded6f89f0b63c7dbd51e8",
                 "shasum": "92e78dd7b6d4e374b44ded6f89f0b63c7dbd51e8"
             },
@@ -7467,12 +7467,12 @@
         },
         {
             "name": "olcs/olcs-devtools",
-            "version": "4.206.5",
+            "version": "4.206.6",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-devtools/4.206.5/olcs-olcs-devtools-4.206.5.zip",
-                "reference": "db16c3201e68aa8e2264c863c6a7cd2548bcf0ef",
-                "shasum": "db16c3201e68aa8e2264c863c6a7cd2548bcf0ef"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-devtools/4.206.6/olcs-olcs-devtools-4.206.6.zip",
+                "reference": "83c4ea1da99c300f25dde3b4aa3b9fb7aef717b9",
+                "shasum": "83c4ea1da99c300f25dde3b4aa3b9fb7aef717b9"
             },
             "require": {
                 "brianium/paratest": "^3.0",
@@ -7502,7 +7502,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-devtools/"
+                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-devtools/"
                 }
             },
             "autoload": {
@@ -7511,14 +7511,14 @@
                 }
             },
             "description": "Dev tools",
-            "time": "2020-11-09T14:12:24+00:00"
+            "time": "2020-12-09T10:29:17+00:00"
         },
         {
             "name": "pdepend/pdepend",
             "version": "2.8.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/pdepend/pdepend/2.8.0/pdepend-pdepend-2.8.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/pdepend/pdepend/2.8.0/pdepend-pdepend-2.8.0.zip",
                 "reference": "c64472f8e76ca858c79ad9a4cf1e2734b3f8cc38",
                 "shasum": ""
             },
@@ -7565,7 +7565,7 @@
             "version": "2.0.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phar-io/manifest/2.0.1/phar-io-manifest-2.0.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phar-io/manifest/2.0.1/phar-io-manifest-2.0.1.zip",
                 "reference": "85265efd3af7ba3ca4b2a2c34dbfc5788dd29133",
                 "shasum": ""
             },
@@ -7615,7 +7615,7 @@
             "version": "3.0.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phar-io/version/3.0.3/phar-io-version-3.0.3.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phar-io/version/3.0.3/phar-io-version-3.0.3.zip",
                 "reference": "726c026815142e4f8677b7cb7f2249c9ffb7ecae",
                 "shasum": ""
             },
@@ -7656,7 +7656,7 @@
             "version": "2.2.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpdocumentor/reflection-common/2.2.0/phpdocumentor-reflection-common-2.2.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpdocumentor/reflection-common/2.2.0/phpdocumentor-reflection-common-2.2.0.zip",
                 "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b",
                 "shasum": ""
             },
@@ -7699,7 +7699,7 @@
             "version": "5.2.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpdocumentor/reflection-docblock/5.2.2/phpdocumentor-reflection-docblock-5.2.2.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpdocumentor/reflection-docblock/5.2.2/phpdocumentor-reflection-docblock-5.2.2.zip",
                 "reference": "069a785b2141f5bcf49f3e353548dc1cce6df556",
                 "shasum": ""
             },
@@ -7745,7 +7745,7 @@
             "version": "1.4.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpdocumentor/type-resolver/1.4.0/phpdocumentor-type-resolver-1.4.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpdocumentor/type-resolver/1.4.0/phpdocumentor-type-resolver-1.4.0.zip",
                 "reference": "6a467b8989322d92aa1c8bf2bebcc6e5c2ba55c0",
                 "shasum": ""
             },
@@ -7784,7 +7784,7 @@
             "version": "2.9.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpmd/phpmd/2.9.1/phpmd-phpmd-2.9.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpmd/phpmd/2.9.1/phpmd-phpmd-2.9.1.zip",
                 "reference": "ce10831d4ddc2686c1348a98069771dd314534a8",
                 "shasum": ""
             },
@@ -7856,7 +7856,7 @@
             "version": "1.12.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpspec/prophecy/1.12.1/phpspec-prophecy-1.12.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpspec/prophecy/1.12.1/phpspec-prophecy-1.12.1.zip",
                 "reference": "8ce87516be71aae9b956f81906aaf0338e0d8a2d",
                 "shasum": ""
             },
@@ -7913,7 +7913,7 @@
             "version": "1.0.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/extension-installer/1.0.5/phpstan-extension-installer-1.0.5.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/extension-installer/1.0.5/phpstan-extension-installer-1.0.5.zip",
                 "reference": "5c2da3846819f951385cb6a25d3277051481c48a",
                 "shasum": ""
             },
@@ -7952,7 +7952,7 @@
             "version": "0.12.58",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/phpstan/0.12.58/phpstan-phpstan-0.12.58.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/phpstan/0.12.58/phpstan-phpstan-0.12.58.zip",
                 "reference": "2a4847df6047b30af28854ed9dc95304cdb56ae5",
                 "shasum": ""
             },
@@ -8002,7 +8002,7 @@
             "version": "0.12.25",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/phpstan-doctrine/0.12.25/phpstan-phpstan-doctrine-0.12.25.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/phpstan-doctrine/0.12.25/phpstan-phpstan-doctrine-0.12.25.zip",
                 "reference": "1d32c427a1d8687b86f0ce5dd9a42e312e51256d",
                 "shasum": ""
             },
@@ -8061,7 +8061,7 @@
             "version": "0.12.7",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/phpstan-mockery/0.12.7/phpstan-phpstan-mockery-0.12.7.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/phpstan-mockery/0.12.7/phpstan-phpstan-mockery-0.12.7.zip",
                 "reference": "afe0af2cab68836360121b4e12b74b9d765d386c",
                 "shasum": ""
             },
@@ -8109,7 +8109,7 @@
             "version": "0.12.16",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/phpstan-phpunit/0.12.16/phpstan-phpstan-phpunit-0.12.16.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpstan/phpstan-phpunit/0.12.16/phpstan-phpstan-phpunit-0.12.16.zip",
                 "reference": "1dd916d181b0539dea5cd37e91546afb8b107e17",
                 "shasum": ""
             },
@@ -8159,7 +8159,7 @@
             "version": "7.0.14",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-code-coverage/7.0.14/phpunit-php-code-coverage-7.0.14.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-code-coverage/7.0.14/phpunit-php-code-coverage-7.0.14.zip",
                 "reference": "bb7c9a210c72e4709cdde67f8b7362f672f2225c",
                 "shasum": ""
             },
@@ -8222,7 +8222,7 @@
             "version": "2.0.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-file-iterator/2.0.3/phpunit-php-file-iterator-2.0.3.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-file-iterator/2.0.3/phpunit-php-file-iterator-2.0.3.zip",
                 "reference": "4b49fb70f067272b659ef0174ff9ca40fdaa6357",
                 "shasum": ""
             },
@@ -8272,7 +8272,7 @@
             "version": "1.2.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-text-template/1.2.1/phpunit-php-text-template-1.2.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-text-template/1.2.1/phpunit-php-text-template-1.2.1.zip",
                 "reference": "31f8b717e51d9a2afca6c9f046f5d69fc27c8686",
                 "shasum": ""
             },
@@ -8307,7 +8307,7 @@
             "version": "2.1.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-timer/2.1.3/phpunit-php-timer-2.1.3.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-timer/2.1.3/phpunit-php-timer-2.1.3.zip",
                 "reference": "2454ae1765516d20c4ffe103d85a58a9a3bd5662",
                 "shasum": ""
             },
@@ -8356,7 +8356,7 @@
             "version": "3.1.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-token-stream/3.1.2/phpunit-php-token-stream-3.1.2.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-token-stream/3.1.2/phpunit-php-token-stream-3.1.2.zip",
                 "reference": "472b687829041c24b25f475e14c2f38a09edf1c2",
                 "shasum": ""
             },
@@ -8406,7 +8406,7 @@
             "version": "6.0.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/phpcov/6.0.1/phpunit-phpcov-6.0.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/phpcov/6.0.1/phpunit-phpcov-6.0.1.zip",
                 "reference": "63c32ed2a7dd18e5bd07f58aed1982d2ec9f1960",
                 "shasum": ""
             },
@@ -8452,7 +8452,7 @@
             "version": "8.5.13",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/phpunit/8.5.13/phpunit-phpunit-8.5.13.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/phpunit/8.5.13/phpunit-phpunit-8.5.13.zip",
                 "reference": "8e86be391a58104ef86037ba8a846524528d784e",
                 "shasum": ""
             },
@@ -8539,7 +8539,7 @@
             "version": "1.0.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/code-unit-reverse-lookup/1.0.2/sebastian-code-unit-reverse-lookup-1.0.2.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/code-unit-reverse-lookup/1.0.2/sebastian-code-unit-reverse-lookup-1.0.2.zip",
                 "reference": "1de8cd5c010cb153fcd68b8d0f64606f523f7619",
                 "shasum": ""
             },
@@ -8584,7 +8584,7 @@
             "version": "3.0.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/comparator/3.0.3/sebastian-comparator-3.0.3.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/comparator/3.0.3/sebastian-comparator-3.0.3.zip",
                 "reference": "1071dfcef776a57013124ff35e1fc41ccd294758",
                 "shasum": ""
             },
@@ -8648,7 +8648,7 @@
             "version": "3.0.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/diff/3.0.3/sebastian-diff-3.0.3.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/diff/3.0.3/sebastian-diff-3.0.3.zip",
                 "reference": "14f72dd46eaf2f2293cbe79c93cc0bc43161a211",
                 "shasum": ""
             },
@@ -8704,7 +8704,7 @@
             "version": "4.2.4",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/environment/4.2.4/sebastian-environment-4.2.4.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/environment/4.2.4/sebastian-environment-4.2.4.zip",
                 "reference": "d47bbbad83711771f167c72d4e3f25f7fcc1f8b0",
                 "shasum": ""
             },
@@ -8757,7 +8757,7 @@
             "version": "3.1.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/exporter/3.1.3/sebastian-exporter-3.1.3.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/exporter/3.1.3/sebastian-exporter-3.1.3.zip",
                 "reference": "6b853149eab67d4da22291d36f5b0631c0fd856e",
                 "shasum": ""
             },
@@ -8824,7 +8824,7 @@
             "version": "1.2.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/finder-facade/1.2.3/sebastian-finder-facade-1.2.3.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/finder-facade/1.2.3/sebastian-finder-facade-1.2.3.zip",
                 "reference": "167c45d131f7fc3d159f56f191a0a22228765e16",
                 "shasum": ""
             },
@@ -8862,7 +8862,7 @@
             "version": "3.0.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/global-state/3.0.1/sebastian-global-state-3.0.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/global-state/3.0.1/sebastian-global-state-3.0.1.zip",
                 "reference": "474fb9edb7ab891665d3bfc6317f42a0a150454b",
                 "shasum": ""
             },
@@ -8916,7 +8916,7 @@
             "version": "3.0.4",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/object-enumerator/3.0.4/sebastian-object-enumerator-3.0.4.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/object-enumerator/3.0.4/sebastian-object-enumerator-3.0.4.zip",
                 "reference": "e67f6d32ebd0c749cf9d1dbd9f226c727043cdf2",
                 "shasum": ""
             },
@@ -8963,7 +8963,7 @@
             "version": "1.1.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/object-reflector/1.1.2/sebastian-object-reflector-1.1.2.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/object-reflector/1.1.2/sebastian-object-reflector-1.1.2.zip",
                 "reference": "9b8772b9cbd456ab45d4a598d2dd1a1bced6363d",
                 "shasum": ""
             },
@@ -9008,7 +9008,7 @@
             "version": "3.0.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/recursion-context/3.0.1/sebastian-recursion-context-3.0.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/recursion-context/3.0.1/sebastian-recursion-context-3.0.1.zip",
                 "reference": "367dcba38d6e1977be014dc4b22f47a484dac7fb",
                 "shasum": ""
             },
@@ -9061,7 +9061,7 @@
             "version": "2.0.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/resource-operations/2.0.2/sebastian-resource-operations-2.0.2.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/resource-operations/2.0.2/sebastian-resource-operations-2.0.2.zip",
                 "reference": "31d35ca87926450c44eae7e2611d45a7a65ea8b3",
                 "shasum": ""
             },
@@ -9103,7 +9103,7 @@
             "version": "1.1.4",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/type/1.1.4/sebastian-type-1.1.4.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/type/1.1.4/sebastian-type-1.1.4.zip",
                 "reference": "0150cfbc4495ed2df3872fb31b26781e4e077eb4",
                 "shasum": ""
             },
@@ -9149,7 +9149,7 @@
             "version": "2.0.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/version/2.0.1/sebastian-version-2.0.1.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sebastian/version/2.0.1/sebastian-version-2.0.1.zip",
                 "reference": "99732be0ddb3361e16ad77b68ba41efc8e979019",
                 "shasum": ""
             },
@@ -9186,7 +9186,7 @@
             "version": "3.5.8",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/squizlabs/php_codesniffer/3.5.8/squizlabs-php_codesniffer-3.5.8.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/squizlabs/php_codesniffer/3.5.8/squizlabs-php_codesniffer-3.5.8.zip",
                 "reference": "9d583721a7157ee997f235f327de038e7ea6dac4",
                 "shasum": ""
             },
@@ -9231,7 +9231,7 @@
             "version": "v5.2.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/config/v5.2.0/symfony-config-v5.2.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/config/v5.2.0/symfony-config-v5.2.0.zip",
                 "reference": "fa1219ecbf96bb5db59f2599cba0960a0d9c3aea",
                 "shasum": ""
             },
@@ -9300,7 +9300,7 @@
             "version": "v5.2.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/dependency-injection/v5.2.0/symfony-dependency-injection-v5.2.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/dependency-injection/v5.2.0/symfony-dependency-injection-v5.2.0.zip",
                 "reference": "98cec9b9f410a4832e239949a41d47182862c3a4",
                 "shasum": ""
             },
@@ -9378,7 +9378,7 @@
             "version": "v2.2.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/deprecation-contracts/v2.2.0/symfony-deprecation-contracts-v2.2.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/deprecation-contracts/v2.2.0/symfony-deprecation-contracts-v2.2.0.zip",
                 "reference": "5fa56b4074d1ae755beb55617ddafe6f5d78f665",
                 "shasum": ""
             },
@@ -9436,7 +9436,7 @@
             "version": "v5.2.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/process/v5.2.0/symfony-process-v5.2.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/process/v5.2.0/symfony-process-v5.2.0.zip",
                 "reference": "240e74140d4d956265048f3025c0aecbbc302d54",
                 "shasum": ""
             },
@@ -9489,7 +9489,7 @@
             "version": "v2.2.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/service-contracts/v2.2.0/symfony-service-contracts-v2.2.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/service-contracts/v2.2.0/symfony-service-contracts-v2.2.0.zip",
                 "reference": "d15da7ba4957ffb8f1747218be9e1a121fd298a1",
                 "shasum": ""
             },
@@ -9559,7 +9559,7 @@
             "version": "1.6.6",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/theseer/fdomdocument/1.6.6/theseer-fdomdocument-1.6.6.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/theseer/fdomdocument/1.6.6/theseer-fdomdocument-1.6.6.zip",
                 "reference": "6e8203e40a32a9c770bcb62fe37e68b948da6dca",
                 "shasum": ""
             },
@@ -9593,7 +9593,7 @@
             "version": "1.2.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/theseer/tokenizer/1.2.0/theseer-tokenizer-1.2.0.zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/theseer/tokenizer/1.2.0/theseer-tokenizer-1.2.0.zip",
                 "reference": "75a63c33a8577608444246075ea0af0d052e452a",
                 "shasum": ""
             },
