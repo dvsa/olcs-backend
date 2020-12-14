@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
@@ -62,7 +63,7 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
      *
      * @return Result
      * @throws NotFoundException
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -167,7 +168,7 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
                 );
                 break;
             default:
-                throw new RuntimeException('Unsupported permit type' . $permitTypeId);
+                throw new RuntimeException('Unsupported permit type ' . $permitTypeId);
         }
     }
 }

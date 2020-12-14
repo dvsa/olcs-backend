@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
 use Dvsa\Olcs\Api\Domain\Command\Permits\ProceedToStatus;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\PrintPermits as PrintPermitsHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
@@ -37,11 +38,33 @@ class PrintPermitsTest extends CommandHandlerTestCase
 
     public function testHandleMaxBatchSizeReached()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('ERR_PERMIT_PRINTING_MAX_BATCH_SIZE_REACHED');
 
         $cmdData = [
             'ids' => range(1, PrintPermitsHandler::MAX_BATCH_SIZE+1),
+        ];
+
+        $command = PrintPermitsCmd::create($cmdData);
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleMaxBatchSizeReachedConfig()
+    {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('ERR_PERMIT_PRINTING_MAX_BATCH_SIZE_REACHED');
+
+        $maxBatchSize = 10000;
+
+        $this->sut->setConfig(
+            [
+                'permit_printing' => ['max_batch_size' => $maxBatchSize],
+            ]
+        );
+
+        $cmdData = [
+            'ids' => range(1, $maxBatchSize+1),
         ];
 
         $command = PrintPermitsCmd::create($cmdData);

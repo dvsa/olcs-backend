@@ -89,6 +89,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             'feeType' => 99,
             'feeStatus' => FeeEntity::STATUS_OUTSTANDING,
             'amount' => 10.5,
+            'quantity' => 2,
             'task' => 11,
             'application' => 22,
             'licence' => 33,
@@ -143,8 +144,8 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertSame($this->references[Task::class][11], $savedFee->getTask());
         $this->assertSame($this->references[IrhpApplication::class][77], $savedFee->getIrhpApplication());
         $this->assertSame($this->references[IrhpPermitApplication::class][88], $savedFee->getIrhpPermitApplication());
-        $this->assertEquals(10.5, $savedFee->getNetAmount());
-        $this->assertEquals(10.5, $savedFee->getGrossAmount());
+        $this->assertEquals(21, $savedFee->getNetAmount());
+        $this->assertEquals(21, $savedFee->getGrossAmount());
         $this->assertEquals(0, $savedFee->getVatAmount());
         $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
         $this->assertSame($this->references[FeeType::class][99], $savedFee->getFeeType());
@@ -153,6 +154,7 @@ class CreateFeeTest extends CommandHandlerTestCase
     public function testHandleCommandForApplicationFee()
     {
         $data = [
+            'quantity' => 2,
             'feeType' => 99,
             'application' => 22,
             'invoicedDate' => '2015-01-01',
@@ -166,7 +168,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             ->shouldReceive('getDescription')
             ->andReturn('some fee type')
             ->shouldReceive('getAmount')
-            ->andReturn('123.45');
+            ->andReturn(123.45);
 
         $this->mapReference(Application::class, 22)
             ->setLicence($this->mapReference(Licence::class, 33));
@@ -202,8 +204,8 @@ class CreateFeeTest extends CommandHandlerTestCase
         $this->assertEquals('2015-01-01', $savedFee->getInvoicedDate()->format('Y-m-d'));
         $this->assertSame($this->references[Licence::class][33], $savedFee->getLicence());
         $this->assertSame($this->references[Application::class][22], $savedFee->getApplication());
-        $this->assertEquals('123.45', $savedFee->getNetAmount());
-        $this->assertEquals('123.45', $savedFee->getGrossAmount());
+        $this->assertEquals(246.9, $savedFee->getNetAmount());
+        $this->assertEquals(246.9, $savedFee->getGrossAmount());
         $this->assertEquals(0, $savedFee->getVatAmount());
         $this->assertSame($this->refData[FeeEntity::STATUS_OUTSTANDING], $savedFee->getFeeStatus());
         $this->assertSame($this->references[FeeType::class][99], $savedFee->getFeeType());
