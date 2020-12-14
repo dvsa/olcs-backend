@@ -78,9 +78,6 @@ class UpdateTest extends CommandHandlerTestCase
 
         $command = UpdateCommand::create($data);
 
-        /** @var $note NonPiEntity */
-        $note = null;
-
         $this->repoMap['NonPi']
             ->shouldReceive('fetchById')
             ->with($id, \Doctrine\Orm\Query::HYDRATE_OBJECT, $version)
@@ -93,29 +90,29 @@ class UpdateTest extends CommandHandlerTestCase
                             ->andReturn('non_pi_type_off_proc')
                             ->getMock()
                     )
-                    ->shouldreceive('getId')
+                    ->shouldReceive('getId')
                     ->andReturn($id)
-                    ->shouldreceive('setCase')
+                    ->shouldReceive('setCase')
                     ->with(m::type(Entity\Cases\Cases::class))
-                    ->shouldreceive('setVenue')
+                    ->shouldReceive('setVenue')
                     ->with(m::type(Entity\Venue::class))
-                    ->shouldreceive('setVenueOther')
+                    ->shouldReceive('setVenueOther')
                     ->with(null)
-                    ->shouldreceive('setPresidingStaffName')
+                    ->shouldReceive('setPresidingStaffName')
                     ->with('Ed')
                     ->shouldReceive('processDate')
                     ->with($agreedByTcDate)
                     ->once()
                     ->andReturn($agreedByTcDateTime)
-                    ->shouldreceive('setAgreedByTcDate')
+                    ->shouldReceive('setAgreedByTcDate')
                     ->with($agreedByTcDateTime)
                     ->shouldReceive('processDate')
                     ->with($hearingDate, \DateTime::ISO8601, false)
                     ->once()
                     ->andReturn($hearingDateTime)
-                    ->shouldreceive('setHearingDate')
+                    ->shouldReceive('setHearingDate')
                     ->with($hearingDateTime)
-                    ->shouldreceive('setWitnessCount')
+                    ->shouldReceive('setWitnessCount')
                     ->with($outputWitnesses)
                     ->shouldReceive('setOutcome')
                     ->andReturn(
