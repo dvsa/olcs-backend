@@ -87,7 +87,7 @@ class UpdatePreviousConvictionTest extends CommandHandlerTestCase
                     ->andReturn(50)
                     ->getMock()
                 )
-                ->shouldreceive('getId')
+                ->shouldReceive('getId')
                 ->andReturn(123)
                 ->getMock()
             )
@@ -95,7 +95,9 @@ class UpdatePreviousConvictionTest extends CommandHandlerTestCase
             ->once();
 
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCommand::class, ['id' => 50, 'section' => 'convictionsPenalties'], new Result()
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 50, 'section' => 'convictionsPenalties'],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

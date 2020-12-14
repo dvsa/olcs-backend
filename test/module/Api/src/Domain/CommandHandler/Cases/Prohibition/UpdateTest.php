@@ -52,7 +52,6 @@ class UpdateTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $id = 150;
-        $case = 50;
         $version = 2;
 
         $data = [
@@ -66,9 +65,6 @@ class UpdateTest extends CommandHandlerTestCase
         ];
 
         $command = UpdateCommand::create($data);
-
-        /** @var $note ProhibitionEntity */
-        $note = null;
 
         $this->repoMap['Prohibition']
             ->shouldReceive('fetchById')
@@ -85,22 +81,22 @@ class UpdateTest extends CommandHandlerTestCase
                     )
 
                     // Get ID
-                    ->shouldreceive('getId')
+                    ->shouldReceive('getId')
                     ->andReturn($id)
 
-                    ->shouldreceive('setProhibitionDate')
+                    ->shouldReceive('setProhibitionDate')
                     ->with("Yes")
 
-                    ->shouldreceive('setProhibitionDate')
+                    ->shouldReceive('setProhibitionDate')
                     ->with(m::type(\DateTime::class))
 
-                    ->shouldreceive('setClearedDate')
+                    ->shouldReceive('setClearedDate')
                     ->with(m::type(\DateTime::class))
 
-                    ->shouldreceive('setIsTrailer')
+                    ->shouldReceive('setIsTrailer')
                     ->with("N")
 
-                    ->shouldreceive('setImposedAt')
+                    ->shouldReceive('setImposedAt')
                     ->with("test imposed at")
 
                     ->getMock()
