@@ -3,7 +3,7 @@
 /**
  * Create Note Test
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Note;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Processing\Note;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Processing\Note\Create as CreateCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Create as CreateCommand;

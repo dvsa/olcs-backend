@@ -3,7 +3,7 @@
 /**
  * Create Note Test
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Note;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Processing\Note;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;

@@ -4,6 +4,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock\Delete as DeleteHandler;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdictionQuota as IrhpPermitJurisdictionQuotaRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitSectorQuota as IrhpPermitSectorQuotaRepo;
@@ -12,7 +14,6 @@ use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Delete as DeleteCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as PermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota as JurisdictionEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota as SectorEntity;
-
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -140,7 +141,7 @@ class DeleteTest extends CommandHandlerTestCase
      */
     public function testHandleCantDelete()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('irhp-permit-stock-cannot-delete-active-dependencies');
 
         $cmdData = [
@@ -169,5 +170,55 @@ class DeleteTest extends CommandHandlerTestCase
             ->never();
 
         $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandNotFoundException()
+    {
+        $cmdData = [
+            'id' => '1'
+        ];
+
+        $command = DeleteCmd::create($cmdData);
+
+        $id = $cmdData['id'];
+
+        $irhpPermitStock = m::mock(PermitStockEntity::class);
+
+        $this->repoMap['IrhpPermitStock']
+            ->shouldReceive('fetchById')
+            ->with($id)
+            ->once()
+            ->andReturn($irhpPermitStock);
+
+        $irhpPermitStock
+            ->shouldReceive('canDelete')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true);
+
+        $irhpPermitStock
+            ->shouldReceive('getIrhpPermitJurisdictionQuotas')
+            ->once()
+            ->andReturn(new ArrayCollection([]));
+
+        $irhpPermitStock
+            ->shouldReceive('getIrhpPermitSectorQuotas')
+            ->once()
+            ->andReturn(new ArrayCollection([]));
+
+        $this->repoMap['IrhpPermitStock']
+            ->shouldReceive('delete')
+            ->with($irhpPermitStock)
+            ->once()
+            ->andThrow(NotFoundException::class);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => ['Id 1 not found']
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 }

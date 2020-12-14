@@ -4,10 +4,12 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermitRange;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitRange\Create as CreateHandler;
+use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as PermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Create as CreateCmd;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as PermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
@@ -23,6 +25,7 @@ class CreateTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new CreateHandler();
+        $this->mockRepo('Country', CountryRepo::class);
         $this->mockRepo('IrhpPermitRange', PermitRangeRepo::class);
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);
 
@@ -36,6 +39,12 @@ class CreateTest extends CommandHandlerTestCase
             RefData::EMISSIONS_CATEGORY_EURO6_REF,
             RefData::EMISSIONS_CATEGORY_NA_REF,
             RefData::JOURNEY_SINGLE,
+        ];
+
+        $this->references = [
+            Country::class => [
+                Country::ID_FRANCE => m::mock(Country::class),
+            ]
         ];
 
         parent::initReferences();
@@ -56,7 +65,7 @@ class CreateTest extends CommandHandlerTestCase
             'toNo' => '100',
             'isReserve' => '0',
             'isReplacement' => '0',
-            'countrys' => [],
+            'countrys' => [Country::ID_FRANCE],
             'journey' => RefData::JOURNEY_SINGLE,
             'cabotage' => '0',
         ];
@@ -92,6 +101,11 @@ class CreateTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (PermitRangeEntity $permitRange) {
                     $permitRange->setId(1);
+
+                    $this->assertEquals(
+                        [$this->references[Country::class][Country::ID_FRANCE]],
+                        $permitRange->getCountrys()
+                    );
                 }
             );
 

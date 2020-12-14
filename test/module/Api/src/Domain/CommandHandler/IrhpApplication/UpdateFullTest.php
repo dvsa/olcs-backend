@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateFull as CreateHandler;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
@@ -39,7 +40,7 @@ class UpdateFullTest extends CommandHandlerTestCase
 
     public function testHandleCommandBilateral()
     {
-        $permitTypeId = 1;
+        $permitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL;
         $licenceId = 2;
 
         $cmdData = [
@@ -98,7 +99,7 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
             ->withNoArgs()
             ->once()
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+            ->andReturn($permitTypeId);
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
@@ -144,7 +145,7 @@ class UpdateFullTest extends CommandHandlerTestCase
 
     public function testHandleCommandMultilateral()
     {
-        $permitTypeId = 4;
+        $permitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL;
         $licenceId = 2;
 
         $cmdData = [
@@ -194,7 +195,7 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
             ->withNoArgs()
             ->once()
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+            ->andReturn($permitTypeId);
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
@@ -310,11 +311,144 @@ class UpdateFullTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    /**
+     * @dataProvider dpTestHandleCommandQandA
+     */
+    public function testHandleCommandQandAWithDeclaration($irhpPermitTypeId)
+    {
+        $licenceId = 2;
+
+        $cmdData = [
+            'id' => 34,
+            'type' => $irhpPermitTypeId,
+            'licence' => $licenceId,
+            'dateReceived' => '2090-01-03',
+            'declaration' => 1,
+            'postData' => ['key' => 'val'],
+            'checked' => 1
+        ];
+
+        $command = CreateCmd::create($cmdData);
+
+        $irhpApplicationEntity = m::mock(IrhpApplication::class);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('fetchById')
+            ->with(34)
+            ->once()
+            ->andReturn($irhpApplicationEntity);
+
+        $irhpApplicationEntity->shouldReceive('getId')
+            ->times(2)
+            ->andReturn(34);
+
+        $this->mockedSmServices['PermitsCheckableCheckedValueUpdater']->shouldReceive('updateIfRequired')
+            ->with($irhpApplicationEntity, $cmdData['checked'])
+            ->once();
+
+        $irhpApplicationEntity
+            ->shouldReceive('updateDateReceived')
+            ->once()
+            ->with($cmdData['dateReceived'])
+            ->shouldReceive('isApplicationPathEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true)
+            ->shouldReceive('updateCheckAnswers')
+            ->withNoArgs()
+            ->once()
+            ->shouldReceive('resetSectionCompletion')
+            ->withNoArgs()
+            ->once()
+            ->shouldReceive('makeDeclaration')
+            ->withNoArgs()
+            ->once();
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('save')
+            ->with($irhpApplicationEntity)
+            ->times(3)
+            ->shouldReceive('refresh')
+            ->with($irhpApplicationEntity)
+            ->once();
+
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with($irhpApplicationEntity, EventHistoryTypeEntity::IRHP_APPLICATION_UPDATED)
+            ->once();
+
+        $result2 = new Result();
+
+        $sideEffectData = [
+            'id' => 34,
+            'postData' => ['key' => 'val']
+        ];
+        $this->expectedSideEffect(SubmitApplicationPath::class, $sideEffectData, $result2);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'irhpApplication' => 34,
+            ],
+            'messages' => [
+                0 => 'IRHP Application updated successfully',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
     public function dpTestHandleCommandQandA()
     {
         return [
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL]
         ];
+    }
+
+    public function testHandleCommandUnsupportedNoneQandAPermitType()
+    {
+        $id = 44;
+        $permitTypeId = 'unsupported';
+
+        $cmdData = [
+            'id' => $id,
+            'type' => $permitTypeId,
+        ];
+
+        $command = CreateCmd::create($cmdData);
+
+        $irhpApplicationEntity = m::mock(IrhpApplication::class);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('fetchById')
+            ->with($id)
+            ->once()
+            ->andReturn($irhpApplicationEntity);
+
+        $irhpApplicationEntity->shouldReceive('isApplicationPathEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($permitTypeId);
+
+        $irhpApplicationEntity->shouldReceive('resetSectionCompletion')
+            ->withNoArgs()
+            ->once();
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('refresh')
+            ->with($irhpApplicationEntity)
+            ->once()
+            ->andReturnSelf();
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unsupported permit type unsupported');
+
+        $this->sut->handleCommand($command);
     }
 }
