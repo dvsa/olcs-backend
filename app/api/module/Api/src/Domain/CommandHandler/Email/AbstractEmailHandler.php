@@ -2,9 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
+use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
 use Dvsa\Olcs\Api\Domain\Repository\ReadonlyRepositoryInterface;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Email\Data\Message;
@@ -71,9 +73,7 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
         try {
             $recipients = $this->getRecipients($recordObject);
         } catch (MissingEmailException $e) {
-            /** @todo create a task in these situations OLCS-21735 */
-            $result->addMessage($e->getMessage());
-            return $result;
+                return $this->createMissingEmailTask($recordObject, $result, $e);
         }
 
         $templateVariables = $this->getTemplateVariables($recordObject);
@@ -138,6 +138,16 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
      * @throws MissingEmailException
      */
     abstract protected function getRecipients($recordObject): array;
+
+    /**
+     * Allows creation of task with suitable attributes/context.
+     *
+     * @param mixed $recordObject
+     * @param Result $result
+     * @param MissingEmailException $exception
+     * @return Result
+     */
+    abstract protected function createMissingEmailTask($recordObject, Result $result, MissingEmailException $exception): Result;
 
     /**
      * Returns the message object, used to assist with UT
