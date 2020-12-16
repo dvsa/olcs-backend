@@ -307,6 +307,92 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         );
     }
 
+    public function dpUnsupportedPermitType()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER],
+        ];
+    }
+
+    /**
+     * @dataProvider dpUnsupportedPermitType
+     */
+    public function testUnsupportedPermitType($irhpPermitTypeId)
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Unsupported permit type ' . $irhpPermitTypeId
+        );
+
+        $irhpApplicationId = 44;
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitTypeId);
+        $irhpApplication->shouldReceive('storeFeesRequired')
+            ->once();
+        $irhpApplication->shouldReceive('isReadyForNoOfPermits')
+            ->andReturn(true);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->sut->shouldReceive('handleQuery')
+            ->andReturnUsing(function ($query) use ($irhpApplicationId) {
+                $this->assertInstanceOf(MaxStockPermitsByApplication::class, $query);
+                $this->assertEquals($irhpApplicationId, $query->getId());
+
+                return [
+                    'result' => [
+                        7 => 12,
+                        8 => 4,
+                    ]
+                ];
+            });
+
+        $irhpPermitApplication2019 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2020 = m::mock(IrhpPermitApplication::class);
+
+        $irhpApplicationWithStockInfoResponse = [
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2019,
+                'validTo' => '2019-12-31',
+                'countryId' => null,
+                'stockId' => 7
+            ],
+            [
+                'irhpPermitApplication' => $irhpPermitApplication2020,
+                'validTo' => '2020-12-31',
+                'countryId' => null,
+                'stockId' => 8
+            ],
+        ];
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('getByIrhpApplicationWithStockInfo')
+            ->andReturn($irhpApplicationWithStockInfoResponse);
+
+        $commandPermitsRequired = [
+            2019 => 2,
+            2020 => 7,
+        ];
+
+        $command = m::mock(CommandInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+        $command->shouldReceive('getPermitsRequired')
+            ->andReturn($commandPermitsRequired);
+
+        $this->sut->handleCommand($command);
+    }
+
     public function testMultilateralPermitsRequiredOutOfRange()
     {
         $this->expectException(RuntimeException::class);

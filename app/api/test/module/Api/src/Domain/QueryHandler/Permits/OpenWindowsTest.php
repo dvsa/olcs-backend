@@ -51,30 +51,15 @@ class OpenWindowsTest extends QueryHandlerTestCase
     {
         /** @var IrhpPermitType $irhpPermitType */
         $irhpPermitType = $this->references[IrhpPermitType::class][10];
-        /** @var IrhpPermitWindow $irhpPermitWindowA */
-        $irhpPermitWindowA = $this->references[IrhpPermitWindow::class][1];
         /** @var IrhpPermitWindow $irhpPermitWindowB */
         $irhpPermitWindowB = $this->references[IrhpPermitWindow::class][2];
-        /** @var IrhpPermitWindow $irhpPermitWindowC */
-        $irhpPermitWindowC = $this->references[IrhpPermitWindow::class][3];
 
         $stocks = $this->references[IrhpPermitStock::class];
-
-        $irhpPermitWindowA->setEndDate(new DateTime('yesterday'));
-        $irhpPermitWindowA->setIrhpPermitStock($stocks[100]);
-
-        $irhpPermitWindowB->setEndDate(new DateTime('monday next week'));
-        $irhpPermitWindowB->setIrhpPermitStock($stocks[200]);
-
-        $irhpPermitWindowC->setEndDate(new DateTime('monday last week'));
-        $irhpPermitWindowC->setIrhpPermitStock($stocks[300]);
 
         $dateTime = new DateTime('now');
         $dateTimeAsString = $dateTime->format('Y-m-d H:i:s');
 
         $query = m::mock(QueryInterface::class);
-        $query->shouldReceive('getCurrentDateTime')
-            ->andReturn($dateTimeAsString);
 
         $query->shouldReceive('getPermitType')
             ->andReturn(10);
@@ -93,22 +78,55 @@ class OpenWindowsTest extends QueryHandlerTestCase
             ->with(100, m::on(function ($dateTime) use ($dateTimeAsString) {
                 return ($dateTime->format('Y-m-d H:i:s') == $dateTimeAsString);
             }))
+            ->once()
             ->andReturn([]);
 
         $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindows')
             ->with(200, m::on(function ($dateTime) use ($dateTimeAsString) {
                 return ($dateTime->format('Y-m-d H:i:s') == $dateTimeAsString);
             }))
+            ->once()
             ->andReturn([$irhpPermitWindowB]);
 
         $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindows')
-            ->with(300, m::on(function ($dateTime) use ($dateTimeAsString) {
-                return ($dateTime->format('Y-m-d H:i:s') == $dateTimeAsString);
-            }))
-            ->andReturn([]);
+            ->with(300, m::type(DataTime::class))
+            ->never();
 
         $this->assertEquals(
             ['windows' => [$irhpPermitWindowB]],
+            $this->sut->handleQuery($query)
+        );
+    }
+
+    public function testHandleQueryWhenNoOpenWindow()
+    {
+        $irhpPermitTypeId = 10;
+
+        /** @var IrhpPermitType $irhpPermitType */
+        $irhpPermitType = $this->references[IrhpPermitType::class][$irhpPermitTypeId];
+
+        $stocks = $this->references[IrhpPermitStock::class];
+
+        $query = m::mock(QueryInterface::class);
+
+        $query->shouldReceive('getPermitType')
+            ->andReturn($irhpPermitTypeId);
+
+        $this->repoMap['IrhpPermitType']
+            ->shouldReceive('fetchById')
+            ->with($irhpPermitTypeId)
+            ->andReturn($irhpPermitType);
+
+        $this->repoMap['IrhpPermitStock']
+            ->shouldReceive('fetchByIrhpPermitType')
+            ->with($irhpPermitTypeId)
+            ->andReturn($stocks);
+
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindows')
+            ->andReturn([]);
+
+        $this->assertEquals(
+            ['windows' => []],
             $this->sut->handleQuery($query)
         );
     }

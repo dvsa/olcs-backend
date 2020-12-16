@@ -579,4 +579,34 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
             $result->getId('irhpApplication')
         );
     }
+
+    public function testHandleCommandUnknownAllocationMode()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unknown allocation mode: unknown-allocation-mode');
+
+        $irhpPermitApplication1Id = 57;
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getId')
+            ->andReturn($irhpPermitApplication1Id);
+
+        $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1]);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIssuedEmailCommand')
+            ->andReturnNull();
+        $irhpApplication->shouldReceive('getIrhpPermitApplications')
+            ->andReturn($irhpPermitApplications);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
+            ->andReturn('unknown-allocation-mode');
+        $this->repoMap['IrhpApplication']->shouldReceive('refresh')
+            ->with($irhpApplication)
+            ->once();
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($this->irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->sut->handleCommand($this->command);
+    }
 }

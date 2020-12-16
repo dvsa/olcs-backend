@@ -31,7 +31,7 @@ class CreateFullTest extends CommandHandlerTestCase
 {
     public function setUp(): void
     {
-        $this->sut = new CreateHandler();
+        $this->sut = m::mock(CreateHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('IrhpPermitApplication', IrhpPermitApplicationRepo::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
@@ -95,15 +95,12 @@ class CreateFullTest extends CommandHandlerTestCase
 
         $command = CreateCmd::create($cmdData);
 
-        $irhpApplication = null;
-
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
             ->with(m::type(IrhpApplication::class))
             ->once()
             ->andReturnUsing(
-                function (IrhpApplication $app) use (&$irhpApplication) {
-                    $irhpApplication = $app;
+                function (IrhpApplication $app) {
                     $app->setId(4);
                 }
             );
@@ -210,6 +207,99 @@ class CreateFullTest extends CommandHandlerTestCase
                     return $openWindows;
                 }
             );
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('save')
+            ->andReturn($irhpApplication);
+
+        $result2 = new Result();
+        $result2->addMessage('section updated');
+        $sideEffectData = [
+            'id' => 4,
+            'permitsRequired' => $command->getPermitsRequired()
+        ];
+        $this->expectedSideEffect(UpdateMultipleNoOfPermits::class, $sideEffectData, $result2);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'irhpApplication' => 4,
+            ],
+            'messages' => [
+                0 => 'section updated',
+                1 => 'IRHP Application created successfully',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWithDeclaration()
+    {
+        $permitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL;
+        $licenceId = 2;
+        $dateReceived = '2020-01-01';
+
+        $cmdData = [
+            'irhpPermitType' => $permitTypeId,
+            'licence' => $licenceId,
+            'dateReceived' => $dateReceived,
+            'declaration' => 1,
+            'permitsRequired' => [
+                '2020' => 10,
+                '2021' => 12
+            ]
+        ];
+
+        $command = CreateCmd::create($cmdData);
+
+        $irhpApplication = m::mock(IrhpApplication::class)->makePartial();
+        $irhpApplication->shouldReceive('resetSectionCompletion')
+            ->withNoArgs()
+            ->times(3)
+            ->shouldReceive('updateCheckAnswers')
+            ->withNoArgs()
+            ->once()
+            ->shouldReceive('makeDeclaration')
+            ->withNoArgs()
+            ->once();
+
+        $this->sut->shouldReceive('createNewIrhpApplication')
+            ->with(
+                $this->references[IrhpPermitType::class][$permitTypeId],
+                $this->references[Licence::class][$licenceId],
+                $dateReceived
+            )
+            ->once()
+            ->andReturn($irhpApplication);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('save')
+            ->with(m::type(IrhpApplication::class))
+            ->times(3)
+            ->andReturnUsing(
+                function (IrhpApplication $app) use (&$irhpApplication) {
+                    $irhpApplication = $app;
+                    $app->setId(4);
+                }
+            );
+
+        $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
+            ->with(m::type(IrhpApplication::class), EventHistoryTypeEntity::IRHP_APPLICATION_CREATED)
+            ->once();
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('refresh')
+            ->times(3)
+            ->andReturnSelf();
+
+        $openWindow1 = m::mock(IrhpPermitWindow::class);
+        $openWindow2 = m::mock(IrhpPermitWindow::class);
+        $openWindows = [$openWindow1, $openWindow2];
+
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByType')
+            ->once()
+            ->andReturn($openWindows);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('save')
             ->andReturn($irhpApplication);

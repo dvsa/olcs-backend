@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateCountries;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
@@ -47,9 +48,9 @@ class UpdateCountriesTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandWhenCannotUpdate()
+    public function testHandleCommandWhenNoCountrySelected()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('At least one country must be selected.');
 
         $id = 1;
@@ -74,6 +75,41 @@ class UpdateCountriesTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitApplication']->shouldReceive('saveOnFlush')
             ->never()
             ->shouldReceive('deleteOnFlush')
+            ->never();
+
+        $command = UpdateCountriesCmd::create(
+            [
+                'id' => $id,
+                'countries' => $countries,
+            ]
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandWhenCannotUpdate()
+    {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('IRHP application cannot be updated.');
+
+        $id = 1;
+        $countries = ['DE', 'FR', 'NL'];
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('canUpdateCountries')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse()
+            ->shouldReceive('setCountrys')
+            ->never();
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($id)
+            ->once()
+            ->andReturn($irhpApplication)
+            ->shouldReceive('saveOnFlush')
+            ->never()
+            ->shouldReceive('flushAll')
             ->never();
 
         $command = UpdateCountriesCmd::create(

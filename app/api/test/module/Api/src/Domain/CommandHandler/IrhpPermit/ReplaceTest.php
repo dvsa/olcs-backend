@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermit\ReplacementIrhpPermit;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Query\IrhpPermitRange\ByPermitNumber as RangeByPermitNumber;
 use Dvsa\Olcs\Api\Domain\Query\IrhpPermit\ByPermitNumber as PermitByPermitNumber;
@@ -113,9 +114,8 @@ class ReplaceTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(IrhpPermit::class))
             ->andReturnUsing(
-                function (IrhpPermit $irhpPermit) use (&$savedIrhpPermit) {
+                function (IrhpPermit $irhpPermit) {
                     $irhpPermit->setId(1);
-                    $savedIrhpPermit = $irhpPermit;
                 }
             );
 
@@ -194,10 +194,59 @@ class ReplaceTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('handleQuery')
             ->once()
+            ->andReturn([]);
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testNewPermitException()
+    {
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The inputted Permit Number is not available. Please input a different number from the same range');
+
+        $cmdData = [
+            'id' => 9,
+            'replacementIrhpPermit' => 1245
+        ];
+
+        $command = Replace::create($cmdData);
+
+        /** @var IrhpPermit $oldPermit */
+        $oldPermit = m::mock(IrhpPermit::class)->makePartial();
+        $oldPermit->setIrhpCandidatePermit(m::mock(IrhpCandidatePermit::class)->makePartial());
+        $oldPermit->setStatus(new RefData(IrhpPermit::STATUS_PRINTED));
+        /** @var IrhpPermitRange $oldRange */
+        $oldRange = m::mock(IrhpPermitRange::class)->makePartial();
+        /** @var IrhpPermitStock $oldStock */
+        $oldStock = m::mock(IrhpPermitStock::class)->makePartial();
+        $oldStock->setValidTo(new DateTime());
+        $oldRange->setIrhpPermitStock($oldStock);
+        $oldPermit->setIrhpPermitRange($oldRange);
+        $oldPermit->setId($cmdData['id']);
+
+        $this->repoMap['IrhpPermit']
+            ->shouldReceive('fetchById')
+            ->with($cmdData['id'])
+            ->andReturn($oldPermit);
+
+        $oldPermit->shouldReceive('getStatus->getId')
+            ->andReturn(IrhpPermit::STATUS_PRINTED);
+
+        $this->sut->shouldReceive('handleQuery')
+            ->once()
             ->andReturnUsing(function ($query) {
+                $targetRange = m::mock(IrhpPermitRange::class)->makePartial();
+                $targetRange->setId(7);
                 return [
+                    $targetRange
                 ];
             });
+
+        $newPermit = m::mock(IrhpPermit::class);
+
+        $this->sut->shouldReceive('handleQuery')
+            ->once()
+            ->andReturn([$newPermit]);
 
         $this->sut->handleCommand($command);
     }
