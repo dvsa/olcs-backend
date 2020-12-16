@@ -25,7 +25,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 /**
  * Create Irhp Permit Application
  */
-final class CreateFull extends AbstractCommandHandler implements TransactionedInterface
+class CreateFull extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'IrhpApplication';
     protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitApplication'];
@@ -73,9 +73,7 @@ final class CreateFull extends AbstractCommandHandler implements TransactionedIn
             throw new NotFoundException('Permit type not found');
         }
 
-        $irhpApplication = IrhpApplicationEntity::createNew(
-            $this->refData(IrhpInterface::SOURCE_INTERNAL),
-            $this->refData(IrhpInterface::STATUS_NOT_YET_SUBMITTED),
+        $irhpApplication = $this->createNewIrhpApplication(
             $permitType,
             $irhpApplicationRepo->getReference(LicenceEntity::class, $command->getLicence()),
             $command->getDateReceived()
@@ -124,6 +122,24 @@ final class CreateFull extends AbstractCommandHandler implements TransactionedIn
         $this->result->addMessage('IRHP Application created successfully');
 
         return $this->result;
+    }
+
+    /**
+     * Creates new instance of IrhpApplication
+     *
+     * @param IrhpPermitTypeEntity $permitType
+     * @param LicenceEntity $licence
+     * @param string $dateReceived
+     */
+    protected function createNewIrhpApplication(IrhpPermitTypeEntity $permitType, LicenceEntity $licence, $dateReceived)
+    {
+        return IrhpApplicationEntity::createNew(
+            $this->refData(IrhpInterface::SOURCE_INTERNAL),
+            $this->refData(IrhpInterface::STATUS_NOT_YET_SUBMITTED),
+            $permitType,
+            $licence,
+            $dateReceived
+        );
     }
 
     /**

@@ -604,4 +604,33 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
         ];
         $this->assertEquals($expectedResult, $result->toArray());
     }
+
+    public function testHandleCommandNoInspectionRequest()
+    {
+        $inspectionRequestId = 189781;
+        $inspectionRequest = null;
+
+        $data = [
+            'id' => $inspectionRequestId
+        ];
+        $this->mockAuthService();
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['InspectionRequest']
+            ->shouldReceive('fetchForInspectionRequest')
+            ->with($inspectionRequestId)
+            ->once()
+            ->andReturn($inspectionRequest);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expectedResult = [
+            'messages' => [
+                'No inspection request'
+            ],
+            'id' => []
+        ];
+        $this->assertEquals($expectedResult, $result->toArray());
+    }
 }

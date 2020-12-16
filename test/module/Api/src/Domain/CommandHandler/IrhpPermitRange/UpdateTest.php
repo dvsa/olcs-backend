@@ -4,10 +4,12 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermitRange;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitRange\Update as UpdateHandler;
+use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as PermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Update as UpdateCmd;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as PermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
@@ -25,6 +27,7 @@ class UpdateTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new UpdateHandler();
+        $this->mockRepo('Country', CountryRepo::class);
         $this->mockRepo('IrhpPermitRange', PermitRangeRepo::class);
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);
 
@@ -38,6 +41,12 @@ class UpdateTest extends CommandHandlerTestCase
             RefData::EMISSIONS_CATEGORY_EURO6_REF,
             RefData::EMISSIONS_CATEGORY_NA_REF,
             RefData::JOURNEY_SINGLE,
+        ];
+
+        $this->references = [
+            Country::class => [
+                Country::ID_FRANCE => m::mock(Country::class),
+            ]
         ];
 
         parent::initReferences();
@@ -57,7 +66,7 @@ class UpdateTest extends CommandHandlerTestCase
             'toNo' => 100,
             'ssReserve' => 0,
             'lostReplacement' => 0,
-            'countrys' => [],
+            'countrys' => [Country::ID_FRANCE],
             'journey' => RefData::JOURNEY_SINGLE,
             'cabotage' => '0',
         ];
@@ -88,7 +97,7 @@ class UpdateTest extends CommandHandlerTestCase
                 '100',
                 '0',
                 '0',
-                [],
+                [$this->references[Country::class][Country::ID_FRANCE]],
                 $this->refData[RefData::JOURNEY_SINGLE],
                 0
             )

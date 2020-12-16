@@ -64,20 +64,17 @@ class UpdateTest extends CommandHandlerTestCase
 
         $command = UpdateCommand::create($data);
 
-        /** @var $note ProhibitionDefectEntity */
-        $note = null;
-
         $this->repoMap['ProhibitionDefect']
             ->shouldReceive('fetchById')
             ->with($id, \Doctrine\Orm\Query::HYDRATE_OBJECT, $version)
             ->andReturn(
                 m::mock(ProhibitionDefectEntity::class)
 
-                    ->shouldreceive('setProhibition')
+                    ->shouldReceive('setProhibition')
                     ->with(m::type(Entity\Prohibition\Prohibition::class))
 
                     // Get ID
-                    ->shouldreceive('getId')
+                    ->shouldReceive('getId')
                     ->andReturn($id)
 
                     ->shouldReceive('setDefectType')
