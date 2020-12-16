@@ -19,11 +19,20 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="ix_scan_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_scan_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_scan_category_id", columns={"category_id"}),
- *        @ORM\Index(name="ix_scan_irfo_organisation_id", columns={"irfo_organisation_id"})
+ *        @ORM\Index(name="ix_scan_irfo_organisation_id", columns={"irfo_organisation_id"}),
+ *        @ORM\Index(name="ix_scan_irhp_application_id", columns={"irhp_application_id"})
  *    }
  * )
  */
 class Scan extends AbstractScan
 {
-
+    /**
+     * Whether this scan is a back scan
+     *
+     * @return bool
+     */
+    public function isBackScan()
+    {
+        return !is_null($this->dateReceived);
+    }
 }
