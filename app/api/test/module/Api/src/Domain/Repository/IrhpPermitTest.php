@@ -295,6 +295,7 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
         $query = ReadyToPrint::create([]);
@@ -306,8 +307,7 @@ class IrhpPermitTest extends RepositoryTestCase
                 . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
                 . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
                 . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
-            . ']]] '
-            . 'ORDER BY m.permitNumber ASC';
+            . ']]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -323,6 +323,7 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
         $query = ReadyToPrint::create(['irhpPermitStock' => 100]);
@@ -337,8 +338,7 @@ class IrhpPermitTest extends RepositoryTestCase
                 . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
                 . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
                 . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
-            . ']]] '
-            . 'ORDER BY m.permitNumber ASC';
+            . ']]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -357,6 +357,7 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
         $query = ReadyToPrint::create(
@@ -378,8 +379,7 @@ class IrhpPermitTest extends RepositoryTestCase
                 . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
                 . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
                 . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
-            . ']]] '
-            . 'ORDER BY m.permitNumber ASC';
+            . ']]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -421,6 +421,7 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
             ->shouldReceive('paginate')->andReturnSelf();
 
         $query = ReadyToPrintConfirm::create(['ids' => [1, 2, 3]]);
@@ -489,6 +490,7 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
         $query = GetListByLicence::create(
@@ -597,6 +599,7 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
         $query = GetListByIrhpId::create(['irhpApplication' => 2, 'page' => 1, 'limit' => 10]);

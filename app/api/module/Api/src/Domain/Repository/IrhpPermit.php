@@ -151,7 +151,6 @@ class IrhpPermit extends AbstractRepository
 
             $qb->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
                 ->setParameter('statuses', Entity::$readyToPrintStatuses);
-            $qb->orderBy($this->alias . '.permitNumber', 'ASC');
         } elseif ($query instanceof ReadyToPrintConfirm) {
             $qb->andWhere($qb->expr()->in($this->alias . '.id', ':ids'))
                 ->setParameter('ids', $query->getIds());
@@ -215,7 +214,8 @@ class IrhpPermit extends AbstractRepository
     protected function applyListJoins(QueryBuilder $qb)
     {
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->with('irhpPermitApplication', 'ipa');
+            ->with('irhpPermitApplication', 'ipa')
+            ->with('ipa.irhpApplication', 'ia');
     }
 
     /**
