@@ -43,7 +43,7 @@ class TransExchangeClient implements TransExchangeClientInterface
     /**
      * TransExchangeClient constructor.
      *
-     * @param RestClient     $restClient   zend rest client
+     * @param RestClient     $restClient   Laminas rest client
      * @param MapXmlFile     $xmlFilter    olcs-xmltools xml filter
      * @param ParseXmlString $xmlParser    olcs-xmltools xml parser
      * @param Xsd            $xsdValidator olcs-xmltools xml validator

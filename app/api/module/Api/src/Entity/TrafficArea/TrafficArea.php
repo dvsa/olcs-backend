@@ -31,7 +31,7 @@ class TrafficArea extends AbstractTrafficArea
     const NORTHERN_IRELAND_TRAFFIC_AREA_CODE = 'N';
 
     /**
-     * Gets the recipients for a publication, formatted ready for zend mail
+     * Gets the recipients for a publication, formatted ready for Laminas mail
      *
      * @param string $isPolice Y or N depending on whether this is a police document
      * @param string $pubType  A&D or N&P

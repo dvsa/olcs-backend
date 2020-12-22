@@ -14,7 +14,7 @@ use Laminas\View\Model\JsonModel;
 /**
  * Abstract controller
  *
- * @NOTE This abstract extends zends abstract restful controller to standardise response
+ * @NOTE This abstract extends Laminas abstract restful controller to standardise response
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
