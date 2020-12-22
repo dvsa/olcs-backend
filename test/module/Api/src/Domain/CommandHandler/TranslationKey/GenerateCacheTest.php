@@ -38,7 +38,7 @@ class GenerateCacheTest extends CommandHandlerTestCase
         $expectedMessages = [];
 
         /**
-         * For each locale that we support, create an assertion for the load, the save, and the zend cache delete
+         * For each locale that we support, create an assertion for the load, the save, and the cache delete
          */
         foreach (array_keys(Language::SUPPORTED_LANGUAGES) as $locale) {
             $updateCacheResult = new Result();
