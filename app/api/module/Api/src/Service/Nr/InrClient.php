@@ -18,9 +18,9 @@ class InrClient implements InrClientInterface
     protected $restClient;
 
     /**
-     * Contructor, expects zend rest client
+     * Contructor, expects Laminas rest client
      *
-     * @param RestClient $restClient zend rest client
+     * @param RestClient $restClient Laminas rest client
      *
      * @return void
      */
