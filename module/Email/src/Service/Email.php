@@ -94,7 +94,7 @@ class Email implements FactoryInterface
     }
 
     /**
-     * Validates the array of email addresses, excluding those which fail, and returns a zend AddressList object
+     * Validates the array of email addresses, excluding those which fail, and returns an AddressList object
      *
      * The array of cc/bcc can either be in the format [email_address => name] or [0 => email_address]
      * If the key is a string, it is assumed that is the email address, and the value is the name of the recipient
