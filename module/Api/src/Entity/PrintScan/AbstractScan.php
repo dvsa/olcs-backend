@@ -27,6 +27,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_scan_category_id", columns={"category_id"}),
  *        @ORM\Index(name="ix_scan_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_scan_irfo_organisation_id", columns={"irfo_organisation_id"}),
+ *        @ORM\Index(name="ix_scan_irhp_application_id", columns={"irhp_application_id"}),
  *        @ORM\Index(name="ix_scan_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_scan_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_scan_sub_category_id", columns={"sub_category_id"}),
@@ -94,6 +95,15 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     protected $createdBy;
 
     /**
+     * Date received
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="date_received", nullable=true)
+     */
+    protected $dateReceived;
+
+    /**
      * Description
      *
      * @var string
@@ -122,6 +132,16 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
      * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoOrganisation;
+
+    /**
+     * Irhp application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irhpApplication;
 
     /**
      * Last modified by
@@ -295,6 +315,36 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     }
 
     /**
+     * Set the date received
+     *
+     * @param \DateTime $dateReceived new value being set
+     *
+     * @return Scan
+     */
+    public function setDateReceived($dateReceived)
+    {
+        $this->dateReceived = $dateReceived;
+
+        return $this;
+    }
+
+    /**
+     * Get the date received
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getDateReceived($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->dateReceived);
+        }
+
+        return $this->dateReceived;
+    }
+
+    /**
      * Set the description
      *
      * @param string $description new value being set
@@ -364,6 +414,30 @@ abstract class AbstractScan implements BundleSerializableInterface, JsonSerializ
     public function getIrfoOrganisation()
     {
         return $this->irfoOrganisation;
+    }
+
+    /**
+     * Set the irhp application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication $irhpApplication entity being set as the value
+     *
+     * @return Scan
+     */
+    public function setIrhpApplication($irhpApplication)
+    {
+        $this->irhpApplication = $irhpApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     */
+    public function getIrhpApplication()
+    {
+        return $this->irhpApplication;
     }
 
     /**

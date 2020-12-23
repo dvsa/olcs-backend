@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity;
@@ -38,7 +39,8 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
         'Cases',
         'Category',
         'SubCategory',
-        'SubCategoryDescription'
+        'SubCategoryDescription',
+        'IrhpApplication'
     ];
 
     /**
@@ -53,6 +55,7 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
     {
         $catId = $command->getCategoryId();
         $subCatId = $command->getSubCategoryId();
+        $dateReceived = $command->getDateReceived();
 
         if (empty($command->getDescription()) && empty($command->getDescriptionId())) {
             throw new ValidationException(
@@ -78,6 +81,7 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
         $scan->setCategory($category);
         $scan->setSubCategory($subCategory);
         $scan->setDescription($descriptionName);
+        $scan->setDateReceived($dateReceived);
 
         $this->setScanProperties($catId, $scan, $entity);
 
@@ -151,6 +155,10 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
                 $scan->setBusReg($entity);
                 $scan->setLicence($entity->getLicence());
                 break;
+            case Category::CATEGORY_PERMITS:
+                $scan->setIrhpApplication($entity);
+                $scan->setLicence($entity->getLicence());
+                break;
         }
     }
 
@@ -166,6 +174,7 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
      *         | Entity\Tm\TransportManager
      *         | Entity\Organisation\Organisation
      *         | Entity\BusReg
+     *         | Entity\Permits\IrhpApplication
      * @throws ValidationException
      */
     protected function getEntityForCategory($categoryId, $entityIdentifier)
@@ -185,6 +194,8 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
                 /* @var $busRegSearch \Dvsa\Olcs\Api\Entity\View\BusRegSearchView */
                 $busRegSearch = $this->getRepo('BusRegSearchView')->fetchByRegNo($entityIdentifier);
                 return $this->getRepo('Bus')->fetchById($busRegSearch->getId());
+            case Category::CATEGORY_PERMITS:
+                return $this->getIrhpApplicationByCombinedLicNoAndIrhpApplicationId($entityIdentifier);
             default:
                 throw new ValidationException(
                     [self::ERR_NO_ENTITY_FOR_CATEGORY => 'Cannot get an entity for category Id ' . $categoryId]
@@ -209,7 +220,8 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
             Category::CATEGORY_LICENSING         => 'Licence',
             Category::CATEGORY_ENVIRONMENTAL     => 'Licence',
             Category::CATEGORY_IRFO              => 'IRFO',
-            Category::CATEGORY_TRANSPORT_MANAGER => 'Transport Manager'
+            Category::CATEGORY_TRANSPORT_MANAGER => 'Transport Manager',
+            Category::CATEGORY_PERMITS           => 'IRHP Application'
         ];
 
         if (!isset($names[$categoryId])) {
@@ -239,6 +251,44 @@ class CreateSeparatorSheet extends AbstractCommandHandler implements Transaction
         }
 
         return 'Unknown';
+    }
+
+    /**
+     * Get an IRHP application by a identifier consisting of the licence number, followed by a forward slash,
+     * followed by the IRHP application id
+     *
+     * @param string $entityIdentifier
+     *
+     * @return Entity\Permits\IrhpApplication
+     *
+     * @throws NotFoundException
+     */
+    protected function getIrhpApplicationByCombinedLicNoAndIrhpApplicationId($entityIdentifier)
+    {
+        $identifierElements = explode('/', $entityIdentifier);
+        if (count($identifierElements) != 2) {
+            throw new NotFoundException(
+                'Identifier must contain a licence number, forward slash and IRHP application id'
+            );
+        }
+
+        $licNo = trim($identifierElements[0]);
+        $irhpApplicationId = trim($identifierElements[1]);
+
+        $licence = $this->getRepo('Licence')->fetchByLicNo($licNo);
+        $irhpApplication = $this->getRepo('IrhpApplication')->fetchById($irhpApplicationId);
+
+        if ($irhpApplication->getLicence()->getId() !== $licence->getId()) {
+            throw new NotFoundException(
+                sprintf(
+                    'IRHP application %s does not belong to licence %s',
+                    $irhpApplication->getId(),
+                    $licence->getLicNo()
+                )
+            );
+        }
+
+        return $irhpApplication;
     }
 
     protected function generateDocument($knownValues)
