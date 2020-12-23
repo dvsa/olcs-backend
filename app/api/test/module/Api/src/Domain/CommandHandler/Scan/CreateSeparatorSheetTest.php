@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Scan;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Scan\CreateSeparatorSheet as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
@@ -44,6 +45,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
         $this->mockRepo('Cases', \Dvsa\Olcs\Api\Domain\Repository\Cases::class);
         $this->mockRepo('Organisation', \Dvsa\Olcs\Api\Domain\Repository\Organisation::class);
         $this->mockRepo('TransportManager', \Dvsa\Olcs\Api\Domain\Repository\TransportManager::class);
+        $this->mockRepo('IrhpApplication', \Dvsa\Olcs\Api\Domain\Repository\IrhpApplication::class);
         $this->mockRepo('Category', \Dvsa\Olcs\Api\Domain\Repository\Category::class);
         $this->mockRepo('SubCategory', \Dvsa\Olcs\Api\Domain\Repository\SubCategory::class);
         $this->mockRepo('SubCategoryDescription', \Dvsa\Olcs\Api\Domain\Repository\SubCategoryDescription::class);
@@ -65,6 +67,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
             1 => $this->mockCat,
             2 => $this->mockCat,
             3 => $this->mockCat,
+            4 => $this->mockCat,
             5 => $this->mockCat,
             7 => $this->mockCat,
             8 => $this->mockCat,
@@ -346,7 +349,8 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) {
                     $scan->setId(self::SCAN_ID);
                     $this->assertSame(
-                        $this->categoryReferences[Category::CATEGORY_ENVIRONMENTAL], $scan->getCategory()
+                        $this->categoryReferences[Category::CATEGORY_ENVIRONMENTAL],
+                        $scan->getCategory()
                     );
                     $this->assertSame($this->subCategoryReferences[self::SUB_CAT_ID], $scan->getSubCategory());
                     $this->assertSame('TEST 1', $scan->getDescription());
@@ -557,7 +561,8 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) {
                     $scan->setId(self::SCAN_ID);
                     $this->assertSame(
-                        $this->categoryReferences[Category::CATEGORY_TRANSPORT_MANAGER], $scan->getCategory()
+                        $this->categoryReferences[Category::CATEGORY_TRANSPORT_MANAGER],
+                        $scan->getCategory()
                     );
                     $this->assertSame($this->subCategoryReferences[self::SUB_CAT_ID], $scan->getSubCategory());
                     $this->assertSame('TEST 1', $scan->getDescription());
@@ -638,7 +643,8 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) use ($busReg) {
                     $scan->setId(self::SCAN_ID);
                     $this->assertSame(
-                        $this->categoryReferences[Category::CATEGORY_BUS_REGISTRATION], $scan->getCategory()
+                        $this->categoryReferences[Category::CATEGORY_BUS_REGISTRATION],
+                        $scan->getCategory()
                     );
                     $this->assertSame($this->subCategoryReferences[self::SUB_CAT_ID], $scan->getSubCategory());
                     $this->assertSame('TEST 1', $scan->getDescription());
@@ -687,5 +693,153 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
 
         $this->assertSame(['document' => 123, 'scan' => self::SCAN_ID], $result->getIds());
         $this->assertSame(['Create Document', 'Scan ID ' . self::SCAN_ID . ' created'], $result->getMessages());
+    }
+
+    public function testHandleCommandCategoryPermits()
+    {
+        $command = Cmd::create(
+            [
+                'categoryId' => Category::CATEGORY_PERMITS,
+                'subCategoryId' => self::SUB_CAT_ID,
+                'entityIdentifier' => 'OB1234567 / 100007',
+                'descriptionId' => null,
+                'description' => 'TEST 1',
+            ]
+        );
+
+        /** @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication $irhpApplication */
+        $irhpApplication = m::mock(\Dvsa\Olcs\Api\Entity\Permits\IrhpApplication::class)->makePartial();
+        $irhpApplication->setId(35);
+        $irhpApplication->setLicence($this->mockLic);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with('100007')
+            ->andReturn($irhpApplication);
+
+        $this->repoMap['Licence']->shouldReceive('fetchByLicNo')
+            ->with('OB1234567')
+            ->andReturn($this->mockLic);
+
+        $this->repoMap['Scan']->shouldReceive('save')->with(m::type(\Dvsa\Olcs\Api\Entity\PrintScan\Scan::class))
+            ->once()->andReturnUsing(
+                function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) use ($irhpApplication) {
+                    $scan->setId(self::SCAN_ID);
+                    $this->assertSame($this->categoryReferences[Category::CATEGORY_PERMITS], $scan->getCategory());
+                    $this->assertSame($this->subCategoryReferences[self::SUB_CAT_ID], $scan->getSubCategory());
+                    $this->assertSame('TEST 1', $scan->getDescription());
+                    $this->assertSame($irhpApplication, $scan->getIrhpApplication());
+                    $this->assertSame($irhpApplication->getLicence(), $scan->getLicence());
+                }
+            );
+
+        $result1 = new Result();
+        $result1->addMessage('Create Document');
+        $result1->addId('document', 124);
+        $dtoData = [
+            'template' => 'Scanning_SeparatorSheet',
+            'query' => [],
+            'knownValues' => [
+                'DOC_CATEGORY_ID_SCAN'       => Category::CATEGORY_PERMITS,
+                'DOC_CATEGORY_NAME_SCAN'     => 'CAT_NAME (' . Category::CATEGORY_PERMITS . ')',
+                'LICENCE_NUMBER_SCAN'        => 'LIC001',
+                'LICENCE_NUMBER_REPEAT_SCAN' => 'LIC001',
+                'ENTITY_ID_TYPE_SCAN'        => 'IRHP Application',
+                'ENTITY_ID_SCAN'             => 35,
+                'ENTITY_ID_REPEAT_SCAN'      => 35,
+                'DOC_SUBCATEGORY_ID_SCAN'    => self::SUB_CAT_ID,
+                'DOC_SUBCATEGORY_NAME_SCAN'  => 'SUB_CAT_NAME (' . self::SUB_CAT_ID . ')',
+                'DOC_DESCRIPTION_ID_SCAN'    => self::SCAN_ID,
+                'DOC_DESCRIPTION_NAME_SCAN'  => 'TEST 1 (' . self::SCAN_ID . ')',
+            ],
+            'description' => 'Scanning separator',
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => SubCategory::DOC_SUB_CATEGORY_SCANNING_SEPARATOR,
+            'isExternal' => false,
+            'isScan' => false
+        ];
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $result1);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue::class,
+            [
+                'documentId' => 124,
+                'jobName' => 'Scanning Separator Sheet'
+            ],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['document' => 124, 'scan' => self::SCAN_ID], $result->getIds());
+        $this->assertSame(['Create Document', 'Scan ID ' . self::SCAN_ID . ' created'], $result->getMessages());
+    }
+
+    /**
+     * @dataProvider dpHandleCommandCategoryPermitsBadIdentifierFormat
+     */
+    public function testHandleCommandCategoryPermitsBadIdentifierFormat($entityIdentifier)
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage(
+            'Identifier must contain a licence number, forward slash and IRHP application id'
+        );
+
+        $command = Cmd::create(
+            [
+                'categoryId' => Category::CATEGORY_PERMITS,
+                'subCategoryId' => self::SUB_CAT_ID,
+                'entityIdentifier' => $entityIdentifier,
+                'descriptionId' => null,
+                'description' => 'TEST 1',
+            ]
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function dpHandleCommandCategoryPermitsBadIdentifierFormat()
+    {
+        return [
+            ['OB1234567 100007'],
+            ['OB1234567 / 100007/'],
+            ['OB1234567 . 100007'],
+            ['OB1234567'],
+        ];
+    }
+
+    public function testHandleCommandCategoryPermitsApplicationLicenceMismatch()
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('IRHP application 35 does not belong to licence LIC001');
+
+        $command = Cmd::create(
+            [
+                'categoryId' => Category::CATEGORY_PERMITS,
+                'subCategoryId' => self::SUB_CAT_ID,
+                'entityIdentifier' => 'LIC001 / 35',
+                'descriptionId' => null,
+                'description' => 'TEST 1',
+            ]
+        );
+
+        $otherLicence = m::mock(Licence::class);
+        $otherLicence->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(456);
+
+        /** @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication $irhpApplication */
+        $irhpApplication = m::mock(\Dvsa\Olcs\Api\Entity\Permits\IrhpApplication::class)->makePartial();
+        $irhpApplication->setId(35);
+        $irhpApplication->setLicence($otherLicence);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with('35')
+            ->andReturn($irhpApplication);
+
+        $this->repoMap['Licence']->shouldReceive('fetchByLicNo')
+            ->with('LIC001')
+            ->andReturn($this->mockLic);
+
+        $this->sut->handleCommand($command);
     }
 }

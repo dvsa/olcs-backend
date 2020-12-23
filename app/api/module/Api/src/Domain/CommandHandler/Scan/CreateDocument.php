@@ -4,13 +4,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Scan;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Entity\PrintScan\Scan;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\Olcs\Transfer\Command\Scan\CreateDocument as Cmd;
 
@@ -45,9 +45,11 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
 
         $this->result->merge($this->generateDocument($scan, $command, $content));
 
-        $this->result->merge(
-            $this->handleSideEffect($this->getCreateTaskCommand($scan))
-        );
+        if (!$scan->isBackScan()) {
+            $this->result->merge(
+                $this->handleSideEffect($this->getCreateTaskCommand($scan))
+            );
+        }
 
         $this->result->addId('scan', $scan->getId());
         $this->result->addMessage("Scan ID {$scan->getId()} document created");
@@ -93,13 +95,24 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
 
     protected function generateDocument(Scan $scan, Cmd $command, $content)
     {
+        $isBackScan = $scan->isBackScan();
+
+        $descriptionPostfix = '';
+        if ($isBackScan) {
+            $descriptionPostfix = ' (Back scan)';
+        }
+
         $data = [
             'content'       => base64_encode($content),
             'filename'      => $command->getFilename(),
-            'description'   => $scan->getDescription(),
+            'description'   => $scan->getDescription() . $descriptionPostfix,
             'isExternal'    => false,
             'isScan'        => true
         ];
+
+        if ($isBackScan) {
+            $data['issuedDate'] = $scan->getDateReceived(true)->format('Y-m-d');
+        }
 
         if ($scan->getLicence()) {
             $data['licence'] = $scan->getLicence()->getId();
@@ -121,6 +134,9 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
         }
         if ($scan->getIrfoOrganisation()) {
             $data['irfoOrganisation'] = $scan->getIrfoOrganisation()->getId();
+        }
+        if ($scan->getIrhpApplication()) {
+            $data['irhpApplication'] = $scan->getIrhpApplication()->getId();
         }
 
         return $this->handleSideEffect(Upload::create($data));
@@ -156,6 +172,9 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
         }
         if ($scan->getIrfoOrganisation()) {
             $params['irfoOrganisation'] = $scan->getIrfoOrganisation()->getId();
+        }
+        if ($scan->getIrhpApplication()) {
+            $params['irhpApplication'] = $scan->getIrhpApplication()->getId();
         }
 
         return \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::create($params);
