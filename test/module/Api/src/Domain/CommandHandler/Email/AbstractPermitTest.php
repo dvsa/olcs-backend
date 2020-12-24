@@ -93,7 +93,8 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $this->applicationEntity->shouldReceive('getApplicationRef')->withNoArgs()->andReturn($this->applicationRef);
         $this->applicationEntity->shouldReceive('getId')->withNoArgs()->andReturn($this->permitAppId);
         $this->applicationEntity->shouldReceive('getLicence->getOrganisation')
-            ->once()
+            ->atMost(2)
+            ->atLeast(1)
             ->withNoArgs()
             ->andReturn($this->organisation);
 

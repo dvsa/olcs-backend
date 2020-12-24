@@ -3,11 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
@@ -293,6 +295,19 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
     {
         $this->organisation->shouldReceive('getAdminEmailAddresses')->once()->withNoArgs()->andReturn([]);
         $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn(null);
+
+        $this->organisation->shouldReceive('getName')->once()->withNoArgs()->andReturn('SOME ORG');
+
+        $this->applicationEntity->shouldReceive('getLicence->getId')->once()->withNoArgs()->andReturn(7);
+
+        $expectedData = [
+            'category' => Category::CATEGORY_PERMITS,
+            'subCategory' => Category::TASK_SUB_CATEGORY_PERMITS_GENERAL_TASK,
+            'description' => 'Unable to send email - no organisation recipients found for Org: SOME ORG - Please update the organisation admin user contacts to ensure at least one has a valid email address.',
+            'actionDate' => (new DateTime())->format('Y-m-d'),
+        ];
+
+        $this->expectedSideEffect(CreateTask::class, $expectedData, new Result());
 
         $result = $this->sut->handleCommand($this->commandEntity);
 
