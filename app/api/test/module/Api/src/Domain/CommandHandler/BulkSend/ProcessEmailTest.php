@@ -4,10 +4,13 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\BulkSend\ProcessEmail as SendEmailCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\BulkSend\ProcessEmail as ProcessEmailHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
@@ -113,5 +116,49 @@ class ProcessEmailTest extends CommandHandlerTestCase
             ['report-gv-r', 'Important information about your goods vehicle licence'],
             ['report-psv-r', 'Important information about your PSV licence']
         ];
+    }
+
+    /**
+     * test handle command no emails for organisation
+     */
+    public function testHandleCommandNoEmails()
+    {
+        $licenceEntity = m::mock(Licence::class);
+        $organisation = m::mock(Organisation::class);
+
+        $command = SendEmailCmd::create(['id' => 7, 'templateName' => 'report-gv-r']);
+
+        $licenceEntity->shouldReceive('getId')
+            ->twice()
+            ->withNoArgs()
+            ->andReturn(7);
+
+        $licenceEntity->shouldReceive('getOrganisation')
+            ->twice()
+            ->withNoArgs()
+            ->andReturn($organisation);
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->once()
+            ->andReturn($licenceEntity);
+
+        $organisation->shouldReceive('getAdminEmailAddresses')->once()->andReturn([]);
+
+        $organisation->shouldReceive('getName')->once()->withNoArgs()->andReturn('SOME ORG');
+
+        $expectedData = [
+            'category' => Category::CATEGORY_PERMITS,
+            'subCategory' => Category::TASK_SUB_CATEGORY_PERMITS_GENERAL_TASK,
+            'description' => 'Unable to send email - no organisation recipients found for Org: SOME ORG - Please update the organisation admin user contacts to ensure at least one has a valid email address.',
+            'actionDate' => (new DateTime())->format('Y-m-d'),
+        ];
+
+        $this->expectedSideEffect(CreateTask::class, $expectedData, new Result());
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['No email address available for the organisation'], $result->getMessages());
     }
 }
