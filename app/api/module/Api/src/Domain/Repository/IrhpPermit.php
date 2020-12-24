@@ -129,6 +129,9 @@ class IrhpPermit extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query instanceof ReadyToPrint) {
+            // this join would appear not to be required, but is used later when sorting the table by application id
+            $qb->innerJoin('ipa.irhpApplication', 'ia');
+
             if ($query->getIrhpPermitStock() || $query->getIrhpPermitRangeType()) {
                 $qb->innerJoin($this->alias . '.irhpPermitRange', 'ipr');
 
@@ -214,8 +217,7 @@ class IrhpPermit extends AbstractRepository
     protected function applyListJoins(QueryBuilder $qb)
     {
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->with('irhpPermitApplication', 'ipa')
-            ->with('ipa.irhpApplication', 'ia');
+            ->with('irhpPermitApplication', 'ipa');
     }
 
     /**
