@@ -71,7 +71,7 @@
         "laminas/laminas-uri": "^2.5",
         "laminas/laminas-validator": "^2.5",
         "laminas/laminas-view": "^2.5",
-        "zf-commons/zfc-rbac": "~2.5.0",
+        "lm-commons/lmc-rbac-mvc": "^2.6",
         "laminas/laminas-dependency-plugin": "^2.0"
     },
     "require-dev": {
