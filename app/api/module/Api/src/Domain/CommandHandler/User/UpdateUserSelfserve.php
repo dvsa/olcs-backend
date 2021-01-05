@@ -5,9 +5,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\Grant;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
@@ -24,9 +25,11 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
     TransactionedInterface,
+    CacheAwareInterface,
     OpenAmUserAwareInterface
 {
     use OpenAmUserAwareTrait;
+    use CacheAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -109,9 +112,13 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
             $command->getContactDetails()['emailAddress']
         );
 
+        $userId = $user->getId();
+
         $result = new Result();
-        $result->addId('user', $user->getId());
+        $result->addId('user', $userId);
         $result->addMessage('User updated successfully');
+
+        $this->clearUserCaches([$userId]);
 
         return $result;
     }

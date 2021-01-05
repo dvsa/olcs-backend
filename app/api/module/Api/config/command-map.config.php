@@ -1237,4 +1237,6 @@ return [
 
     //Caches
     Command\Cache\Generate::class => CommandHandler\Cache\Generate::class,
+    Command\Cache\ClearForLicence::class => CommandHandler\Cache\ClearForLicence::class,
+    Command\Cache\ClearForOrganisation::class => CommandHandler\Cache\ClearForOrganisation::class,
 ];

@@ -14,5 +14,7 @@ return [
     QueryHandler\Cache\Replacements::class => NoValidationRequired::class,
     QueryHandler\Cache\TranslationKey::class => NoValidationRequired::class,
 
+    CommandHandler\Cache\ClearForOrganisation::class => IsSideEffect::class,
+    CommandHandler\Cache\ClearForLicence::class => IsSideEffect::class,
     CommandHandler\Cache\Generate::class => IsSideEffect::class
 ];

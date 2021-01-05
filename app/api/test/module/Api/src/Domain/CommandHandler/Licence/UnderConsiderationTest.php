@@ -6,6 +6,9 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForLicence;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UnderConsideration as CommandHandler;
@@ -25,6 +28,10 @@ class UnderConsiderationTest extends CommandHandlerTestCase
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Licence', Licence::class);
+
+        $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
+        ];
 
         parent::setUp();
     }
@@ -55,8 +62,12 @@ class UnderConsiderationTest extends CommandHandlerTestCase
             }
         );
 
+        $cacheClearResult = new Result();
+        $cacheClearResult->addMessage('cache clear msg');
+        $this->expectedSideEffect(ClearForLicence::class, ['id' => 532], $cacheClearResult);
+
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(["Licence 532 has been set to under consideration"], $result->getMessages());
+        $this->assertSame(["Licence 532 has been set to under consideration","cache clear msg"], $result->getMessages());
     }
 }

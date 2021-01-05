@@ -63,6 +63,9 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
         $result = new Result();
         $result->addId('organisation', $organisation->getId());
         $result->addMessage($message);
+        $result->merge(
+            $this->clearOrganisationCacheSideEffect($organisation->getId())
+        );
 
         return $result;
     }
@@ -105,7 +108,9 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
             $person = new PersonEntity();
         } else {
             $person = $this->getRepo('Person')->fetchById(
-                $command->getPersonId(), Query::HYDRATE_OBJECT, $command->getPersonVersion()
+                $command->getPersonId(),
+                Query::HYDRATE_OBJECT,
+                $command->getPersonVersion()
             );
         }
         $person->updatePerson(
@@ -119,7 +124,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     /**
      * @param $command
      * @param $organisation OrganisationEntity
-     * @return Organisation
+     * @return OrganisationEntity
      */
     private function updateOrganisation($command, $organisation)
     {
@@ -128,7 +133,6 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
         $cpid = $this->getRepo()->getRefdataReference($command->getCpid());
 
         if ($this->updatingBusinessType($organisation, $businessType)) {
-
             $data = [
                 'id' => $organisation->getId(),
                 'businessType' => $command->getBusinessType(),

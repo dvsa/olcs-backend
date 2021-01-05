@@ -9,6 +9,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -25,9 +27,10 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateOperatingCentre extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class CreateOperatingCentre extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface, CacheAwareInterface
 {
     use AuthAwareTrait;
+    use CacheAwareTrait;
 
     protected $repoServiceName = 'Licence';
 
@@ -78,6 +81,7 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
 
         // Create a AOC record
         $this->createLicenceOperatingCentre($licence, $operatingCentre, $command);
+        $this->clearLicenceCaches($licence);
 
         return $this->result;
     }

@@ -55,6 +55,7 @@ class GrantTest extends CommandHandlerTestCase
             }
         );
 
+        $this->expectedLicenceCacheClearSideEffect(532);
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence 532 has been granted"], $result->getMessages());

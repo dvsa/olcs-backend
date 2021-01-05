@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
@@ -35,6 +36,7 @@ class DeleteUserTest extends CommandHandlerTestCase
         $this->mockRepo('OrganisationUser', OrganisationUserRepo::class);
 
         $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class)
         ];
@@ -94,6 +96,7 @@ class DeleteUserTest extends CommandHandlerTestCase
 
         $this->expectDeleteUser();
         $this->expectDeleteOrganisationUser();
+        $this->expectedUserCacheClear(['DUMMY-USER-ID']);
 
         $this->assertEquals(
             ['id' => ['user' => 'DUMMY-USER-ID'], 'messages' => ['User deleted successfully']],
@@ -109,6 +112,7 @@ class DeleteUserTest extends CommandHandlerTestCase
         $this->expectDeleteUser();
         $this->expectDeleteOrganisationUser();
         $this->expectDisableOpenAmUser();
+        $this->expectedUserCacheClear(['DUMMY-USER-ID']);
 
         $this->assertEquals(
             ['id' => ['user' => 'DUMMY-USER-ID'], 'messages' => ['User deleted successfully']],

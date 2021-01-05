@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -25,8 +27,10 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class ContinueLicence extends AbstractCommandHandler implements TransactionedInterface
+final class ContinueLicence extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
+
     protected $repoServiceName = 'Licence';
     protected $extraRepos = ['ContinuationDetail', 'GoodsDisc'];
 
@@ -108,6 +112,7 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
             $this->createTaskForOtherFinances($continuationDetail, $result);
         }
 
+        $this->clearLicenceCaches($licence);
         $result->addMessage('Licence ' . $licence->getId() . ' continued');
 
         return $result;

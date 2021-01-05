@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -51,6 +50,10 @@ final class Curtail extends AbstractCommandHandler implements TransactionedInter
                 )
             );
         }
+
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
 
         $result->addMessage("Licence ID {$licence->getId()} curtailed");
 

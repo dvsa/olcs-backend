@@ -7,9 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
-use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Suspend as CommandHandler;
@@ -74,6 +71,7 @@ class SuspendTest extends CommandHandlerTestCase
             $removeRulesResult
         );
 
+        $this->expectedLicenceCacheClearSideEffect(532);
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 suspended"], $result->getMessages());

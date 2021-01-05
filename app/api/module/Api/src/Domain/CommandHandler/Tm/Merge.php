@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -14,8 +16,10 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class Merge extends AbstractCommandHandler implements TransactionedInterface
+final class Merge extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
+
     protected $repoServiceName = 'TransportManager';
     protected $extraRepos = ['Task', 'Note', 'EventHistory'];
 
@@ -42,6 +46,7 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
         $this->transferTasks($donorTm, $recipientTm);
         $this->transferNotes($donorTm, $recipientTm);
         $this->transferEventHistory($donorTm, $recipientTm);
+        $this->clearEntityUserCaches($donorTm);
         $this->transferUserAccount($donorTm, $recipientTm);
 
         // record what has been merge on donarTm

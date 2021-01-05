@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateOperatingCentre as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
@@ -38,6 +39,7 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['OperatingCentreHelper'] = m::mock(OperatingCentreHelper::class);
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
+        $this->mockedSmServices[CacheEncryption::class] = m::mock(CacheEncryption::class);
 
         parent::setUp();
     }
@@ -105,6 +107,7 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
                 $this->repoMap['LicenceOperatingCentre']
             );
 
+        $this->expectedLicenceCacheClear($licence);
         $this->sut->handleCommand($command);
 
         $this->assertEquals(1, $licence->getOperatingCentres()->count());

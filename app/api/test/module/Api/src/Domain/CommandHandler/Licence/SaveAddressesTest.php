@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\SaveAddresses;
 
@@ -42,6 +43,10 @@ class SaveAddressesTest extends CommandHandlerTestCase
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('PhoneContact', PhoneContact::class);
         $this->mockRepo('Address', Address::class);
+
+        $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
+        ];
 
         parent::setUp();
     }
@@ -172,6 +177,8 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->shouldReceive('getTransportConsultantCd')
             ->andReturn($transportConsultantCd)
             ->getMock();
+
+        $this->expectedLicenceCacheClear($licence);
 
         $result = new Result();
 
@@ -326,6 +333,8 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->andReturn($correspondenceCd)
             ->getMock();
 
+        $this->expectedLicenceCacheClear($licence);
+
         $result = new Result();
 
         $result->setFlag('hasChanged', false);
@@ -452,6 +461,8 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->shouldReceive('getCorrespondenceCd')
             ->andReturn($correspondenceCd)
             ->getMock();
+
+        $this->expectedLicenceCacheClear($licence);
 
         $result = new Result();
 
@@ -583,6 +594,7 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->with(null)
             ->getMock();
 
+        $this->expectedLicenceCacheClear($licence);
 
         $result = new Result();
 
@@ -709,6 +721,8 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->with(null)
             ->getMock();
 
+        $this->expectedLicenceCacheClear($licence);
+
         $result = new Result();
 
         $result->setFlag('hasChanged', false);
@@ -830,6 +844,8 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->shouldReceive('setTransportConsultantCd')
             ->with(null)
             ->getMock();
+
+        $this->expectedLicenceCacheClear($licence);
 
         $result = new Result();
 

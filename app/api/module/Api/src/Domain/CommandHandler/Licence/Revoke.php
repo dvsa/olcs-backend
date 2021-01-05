@@ -140,7 +140,12 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
             $result->merge($this->publish($licence));
         }
 
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
+
         $this->getRepo()->save($licence);
+
         $result->addMessage("Licence ID {$licence->getId()} revoked");
 
         return $result;

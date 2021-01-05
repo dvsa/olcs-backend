@@ -55,7 +55,12 @@ class GenerateName extends AbstractCommandHandler implements TransactionedInterf
 
         //  save new name
         $organisation->setName($name);
+
         $this->getRepo()->save($organisation);
+
+        $this->result->merge(
+            $this->clearOrganisationCacheSideEffect($organisation->getId())
+        );
 
         return $this->result->addMessage('Name succesfully generated');
     }

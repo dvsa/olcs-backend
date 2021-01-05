@@ -2,11 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ReturnAllCommunityLicences as CommandHandler;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -24,6 +23,10 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
         $this->mockRepo('CommunityLic', \Dvsa\Olcs\Api\Domain\Repository\CommunityLic::class);
+
+        $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
+        ];
 
         parent::setUp();
     }
@@ -44,8 +47,9 @@ class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
-        $licence = new Licence(new \Dvsa\Olcs\Api\Entity\Organisation\Organisation(), new RefData());
-        $licence->setId(608);
+        $licence = m::mock(Licence::class);
+        $licence->expects('getId')->andReturn(608);
+        $this->expectedLicenceCacheClear($licence);
 
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(608)

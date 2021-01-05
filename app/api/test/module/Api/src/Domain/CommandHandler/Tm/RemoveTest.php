@@ -7,12 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
 
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Remove;
 use Dvsa\Olcs\Transfer\Command\Tm\Remove as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 
 /**
@@ -27,6 +27,10 @@ class RemoveTest extends CommandHandlerTestCase
     {
         $this->sut = new Remove();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
+
+        $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
+        ];
 
         parent::setUp();
     }
@@ -47,17 +51,17 @@ class RemoveTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        $mockTransportManager = m::mock(TransportManagerEntity::class);
+        $mockTransportManager->expects('setRemovedDate')->with(m::type(\DateTime::class));
+        $mockTransportManager->expects('setTmStatus')
+            ->with($this->refData[TransportManagerEntity::TRANSPORT_MANAGER_STATUS_REMOVED]);
+        $mockTransportManager = $this->expectedCacheClearFromUserCollection($mockTransportManager);
+
         $this->repoMap['TransportManager']
             ->shouldReceive('fetchById')
             ->with(1)
             ->andReturn(
-                m::mock()
-                    ->shouldReceive('setRemovedDate')
-                    ->once()
-                    ->shouldReceive('setTmStatus')
-                    ->with($this->refData[TransportManagerEntity::TRANSPORT_MANAGER_STATUS_REMOVED])
-                    ->once()
-                    ->getMock()
+                $mockTransportManager
             )->shouldReceive('save');
 
         $result = $this->sut->handleCommand($command);
