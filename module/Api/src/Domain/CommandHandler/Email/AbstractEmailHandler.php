@@ -2,11 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
-use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
 use Dvsa\Olcs\Api\Domain\Repository\ReadonlyRepositoryInterface;
-use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Email\Data\Message;

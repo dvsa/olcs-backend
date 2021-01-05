@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -83,12 +84,16 @@ trait EmailAwareTrait
         $orgEmailAddresses = $organisation->getAdminEmailAddresses();
 
         //on rare occasions a user may have been soft deleted, or may not have contact details
-        if ($user instanceof User && !$user->isInternal()) {
-            $contactDetails = $user->getContactDetails();
+        try {
+            if ($user instanceof User && !$user->isInternal()) {
+                $contactDetails = $user->getContactDetails();
 
-            if ($contactDetails instanceof ContactDetails) {
-                $toEmail = $contactDetails->getEmailAddress();
+                if ($contactDetails instanceof ContactDetails) {
+                    $toEmail = $contactDetails->getEmailAddress();
+                }
             }
+        } catch (EntityNotFoundException $ex) {
+            // user or contact details entry may have been soft deleted and lazy loading can throw
         }
 
         if (empty($toEmail) && !empty($orgEmailAddresses)) {
