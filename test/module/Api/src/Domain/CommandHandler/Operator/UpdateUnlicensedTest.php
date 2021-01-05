@@ -126,6 +126,8 @@ class UpdateUnlicensedTest extends CommandHandlerTestCase
             ->with($licence)
             ->once();
 
+        $this->expectedLicenceCacheClearSideEffect(7);
+
         $this->repoMap['ContactDetails']
             ->shouldReceive('populateRefDataReference')
             ->with($contactDetailsData)

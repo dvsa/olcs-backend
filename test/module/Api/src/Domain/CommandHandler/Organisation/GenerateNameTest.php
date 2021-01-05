@@ -3,6 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Organisation;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForOrganisation;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\GenerateName;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -39,6 +41,7 @@ class GenerateNameTest extends CommandHandlerTestCase
 
         //  mock Entity
         $this->mockOrg = m::mock(Entity\Organisation\Organisation::class)->makePartial();
+        $this->mockOrg->shouldReceive('getId')->withNoArgs()->andReturn(self::ORG_ID);
 
         $this->mockApp = m::mock(Entity\Application\Application::class)->makePartial();
         $this->mockApp
@@ -100,6 +103,7 @@ class GenerateNameTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedSideEffect(ClearForOrganisation::class, ['id' => self::ORG_ID], new Result());
         $this->sut->handleCommand($cmd);
     }
 
@@ -177,6 +181,7 @@ class GenerateNameTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedSideEffect(ClearForOrganisation::class, ['id' => self::ORG_ID], new Result());
         $actual = $this->sut->handleCommand($cmd);
 
         static::assertEquals(['Name succesfully generated'], $actual->getMessages());

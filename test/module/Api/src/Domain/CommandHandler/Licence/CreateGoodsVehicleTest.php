@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as  LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateGoodsVehicle;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateGoodsVehicle as Cmd;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as VehicleCmd;
@@ -25,6 +26,10 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateGoodsVehicle();
         $this->mockRepo('Licence', LicenceRepo::class);
+
+        $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
+        ];
 
         parent::setUp();
     }
@@ -102,6 +107,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $result2->addMessage('Goods Disc Created');
         $this->expectedSideEffect(CreateGoodsDiscsCmd::class, $data, $result2);
 
+        $this->expectedLicenceCacheClear($licence);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

@@ -55,6 +55,7 @@ class WithdrawTest extends CommandHandlerTestCase
             }
         );
 
+        $this->expectedLicenceCacheClearSideEffect(532);
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence 532 withdrawn"], $result->getMessages());

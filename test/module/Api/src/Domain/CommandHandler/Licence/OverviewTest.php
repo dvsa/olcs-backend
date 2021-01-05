@@ -10,7 +10,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Overview;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
@@ -80,6 +79,7 @@ class OverviewTest extends CommandHandlerTestCase
             ->with($licence)
             ->once();
 
+        $this->expectedLicenceCacheClearSideEffect($licenceId);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

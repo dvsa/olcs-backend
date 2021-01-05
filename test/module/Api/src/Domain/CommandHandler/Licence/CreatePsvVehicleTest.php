@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreatePsvVehicle as CommandHandler;
@@ -32,6 +33,7 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
         $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
 
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class)->makePartial();
+        $this->mockedSmServices[CacheEncryption::class] = m::mock(CacheEncryption::class);
 
         parent::setUp();
     }
@@ -132,7 +134,8 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                     $licenceVehicle->setId(321);
                     $this->assertEquals('2015-01-01', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
                     $this->assertEquals(
-                        '2015-01-01 12:00:00', $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+                        '2015-01-01 12:00:00',
+                        $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
                     );
                     $this->assertSame($savedVehicle, $licenceVehicle->getVehicle());
                     $this->assertSame($licence, $licenceVehicle->getLicence());
@@ -143,6 +146,7 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
             ->with(Entity\User\Permission::INTERNAL_USER, null)
             ->andReturn(true);
 
+        $this->expectedLicenceCacheClear($licence);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -217,6 +221,7 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
             ->with(Entity\User\Permission::INTERNAL_USER, null)
             ->andReturn(false);
 
+        $this->expectedLicenceCacheClear($licence);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -287,6 +292,7 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
             ->with(Entity\User\Permission::INTERNAL_USER, null)
             ->andReturn(false);
 
+        $this->expectedLicenceCacheClear($licence);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

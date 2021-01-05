@@ -119,6 +119,10 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             $result->merge($this->closeTexTask($application));
         }
 
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($application->getLicence()->getId())
+        );
+
         return $result;
     }
 

@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
@@ -110,6 +111,7 @@ class GrantTest extends CommandHandlerTestCase
         $application->shouldReceive('setRequestInspection')
             ->with(false)
             ->once();
+        $application->expects('getLicence->getId')->andReturn(222);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -135,6 +137,8 @@ class GrantTest extends CommandHandlerTestCase
             ['id' => 111],
             new Result()
         );
+
+        $this->expectedLicenceCacheClearSideEffect(222);
 
         $result = $this->sut->handleCommand($command);
 
@@ -166,6 +170,7 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn(false);
         $application->shouldReceive('getTrafficArea->getId')
             ->andReturn('TA');
+        $application->expects('getLicence->getId')->andReturn(222);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -188,6 +193,8 @@ class GrantTest extends CommandHandlerTestCase
             ['id' => 111],
             new Result()
         );
+
+        $this->expectedLicenceCacheClearSideEffect(222);
 
         $this->repoMap['Application']->shouldReceive('save')->times(1);
 
@@ -221,6 +228,7 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn(false);
         $application->shouldReceive('getTrafficArea->getId')
             ->andReturn('TA');
+        $application->expects('getLicence->getId')->andReturn(222);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -252,6 +260,8 @@ class GrantTest extends CommandHandlerTestCase
             ['id' => 111],
             new Result()
         );
+
+        $this->expectedLicenceCacheClearSideEffect(222);
 
         $this->repoMap['Application']->shouldReceive('save')->times(1);
 
@@ -297,6 +307,7 @@ class GrantTest extends CommandHandlerTestCase
             ->with('foo')
             ->once()
             ->getMock();
+        $application->expects('getLicence->getId')->andReturn(222);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -323,6 +334,8 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedLicenceCacheClearSideEffect(222);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -342,7 +355,11 @@ class GrantTest extends CommandHandlerTestCase
         $command = Cmd::create(['grantAuthority' => RefData::GRANT_AUTHORITY_DELEGATED]);
         $expectedRefData = new RefData(RefData::GRANT_AUTHORITY_DELEGATED);
 
+        $licence = m::mock(Licence::class);
+        $licence->expects('getId')->withNoArgs()->andReturn(222);
+
         $application = $this->getMockBuilder(ApplicationEntity::class)->disableOriginalConstructor()->getMock();
+        $application->method('getLicence')->willReturn($licence);
 
         $applicationRepository = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
         $applicationRepository->method('fetchUsingId')->with($command)->willReturn($application);
@@ -366,8 +383,12 @@ class GrantTest extends CommandHandlerTestCase
         $command = Cmd::create(['grantAuthority' => RefData::GRANT_AUTHORITY_DELEGATED]);
         $expectedRefData = new RefData(RefData::GRANT_AUTHORITY_DELEGATED);
 
+        $licence = m::mock(Licence::class);
+        $licence->expects('getId')->withNoArgs()->andReturn(222);
+
         $application = $this->getMockBuilder(ApplicationEntity::class)->disableOriginalConstructor()->getMock();
         $application->method('isGoods')->willReturn(true);
+        $application->method('getLicence')->willReturn($licence);
 
         $applicationRepository = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
         $applicationRepository->method('fetchUsingId')->with($command)->willReturn($application);

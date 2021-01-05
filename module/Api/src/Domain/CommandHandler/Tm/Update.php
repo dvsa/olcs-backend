@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull as UpdatePersonCmd;
 use Dvsa\Olcs\Transfer\Command\Tm\Update as UpdateTmCmd;
@@ -24,13 +26,14 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-final class Update extends AbstractCommandHandler implements TransactionedInterface
+final class Update extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
     protected $repoServiceName = 'TransportManager';
 
     protected $extraRepos = ['ContactDetails'];
 
     use QueueAwareTrait;
+    use CacheAwareTrait;
 
     /**
      * Handle command
@@ -91,6 +94,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
         $contactDetails = $this->updateHomeContactDetails($command);
         $transportManager = $this->updateTransportManager($command, $workCdId);
+        $this->clearEntityUserCaches($transportManager);
 
         $result->addId('transportManager', $transportManager->getId());
         $result->addMessage('Transport Manager updated successfully');

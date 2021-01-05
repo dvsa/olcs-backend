@@ -49,6 +49,10 @@ final class Suspend extends AbstractCommandHandler implements TransactionedInter
             );
         }
 
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
+
         $result->addMessage("Licence ID {$licence->getId()} suspended");
 
         return $result;

@@ -13,10 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Person as  PersonRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\DeletePeople as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Licence\DeletePeople as Command;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as VehicleCmd;
-use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs as CreateGoodsDiscsCmd;
 
 /**
  * DeletePeopleTest
@@ -58,6 +55,7 @@ class DeletePeopleTest extends CommandHandlerTestCase
         $organisation->setType($this->refData['org_t_p']);
         $organisation->setId(48);
         $licence = new LicenceEntity($organisation, new \Dvsa\Olcs\Api\Entity\System\RefData());
+        $licence->setId(52);
         $op1 = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();
         $p1 = (new \Dvsa\Olcs\Api\Entity\Person\Person())->setId(185);
         $op1->setId(3)->setPerson($p1);
@@ -81,6 +79,8 @@ class DeletePeopleTest extends CommandHandlerTestCase
             ['ids' => [54]],
             (new \Dvsa\Olcs\Api\Domain\Command\Result())->addMessage('54 DELETED')
         );
+
+        $this->expectedLicenceCacheClearSideEffect(52);
 
         $response = $this->sut->handleCommand($command);
 

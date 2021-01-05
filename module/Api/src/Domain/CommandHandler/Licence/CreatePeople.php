@@ -57,6 +57,10 @@ final class CreatePeople extends AbstractCommandHandler implements Transactioned
         $orgPersonRepo = $this->getRepo('OrganisationPerson');
         $orgPersonRepo->save($organisationPerson);
 
+        $this->result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
+
         return $this->result
             ->addMessage('OrganisationPerson created')
             ->addId('organisationPerson', $organisationPerson->getId())

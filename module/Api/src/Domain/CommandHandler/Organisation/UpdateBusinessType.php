@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType as ChangeBusinessTypeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -26,9 +28,10 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface, CacheAwareInterface
 {
     use AuthAwareTrait;
+    use CacheAwareTrait;
 
     const ERROR_NO_TYPE = 'ORG-BT-1';
     const ERROR_CANT_CHANGE_TYPE = 'ORG-BT-2';
@@ -62,10 +65,8 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
             }
         } else {
             // If we can't change business type...
-
             // A) But we are attempting to change it
             if ($this->businessTypeWillChange($organisation, $command)) {
-
                 throw new ValidationException(
                     [self::ERROR_CANT_CHANGE_TYPE => 'Attempted to change business type when update is not allowed']
                 );
@@ -89,7 +90,6 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
 
             $this->handleSideEffect(ChangeBusinessTypeCmd::create($data));
         } else {
-
             $organisation->setType($this->getRepo()->getRefdataReference($command->getBusinessType()));
             $this->getRepo()->save($organisation);
         }
@@ -97,6 +97,7 @@ final class UpdateBusinessType extends AbstractCommandHandler implements AuthAwa
         $result->addMessage('Business type updated');
 
         $this->maybeUpdateApplicationCompletion($command, $result);
+        $this->clearOrganisationCaches($organisation);
 
         return $result;
     }

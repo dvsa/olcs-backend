@@ -8,6 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -23,8 +25,10 @@ use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as DeleteLicenceVehi
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class TransferVehicles extends AbstractCommandHandler implements TransactionedInterface
+final class TransferVehicles extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
+
     protected $repoServiceName = 'Licence';
 
     protected $extraRepos = ['LicenceVehicle'];
@@ -54,6 +58,9 @@ final class TransferVehicles extends AbstractCommandHandler implements Transacti
 
         // Create new licence vehicles (and discs)
         $this->createNewLicenceVehicles($targetLicence, $vehicles, $result);
+
+        $this->clearLicenceCaches($sourceLicence);
+        $this->clearLicenceCaches($targetLicence);
 
         return $result;
     }
@@ -121,7 +128,6 @@ final class TransferVehicles extends AbstractCommandHandler implements Transacti
 
         $activeLicenceVehicles = $targetLicence->getActiveVehicles();
         foreach ($activeLicenceVehicles as $activeLicenceVehicle) {
-
             $activeVehicle = $activeLicenceVehicle->getVehicle();
             if (in_array($activeVehicle->getVrm(), $selectedVrms)) {
                 $overlappingVrms[] = $activeVehicle->getVrm();

@@ -138,6 +138,8 @@ class SurrenderTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedLicenceCacheClearSideEffect(532);
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 surrendered"], $result->getMessages());
@@ -227,6 +229,8 @@ class SurrenderTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedLicenceCacheClearSideEffect(532);
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 surrendered"], $result->getMessages());
@@ -310,6 +314,8 @@ class SurrenderTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $this->expectedLicenceCacheClearSideEffect(532);
 
         $result = $this->sut->handleCommand($command);
 
@@ -408,6 +414,8 @@ class SurrenderTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $this->expectedLicenceCacheClearSideEffect(532);
 
         $result = $this->sut->handleCommand($command);
 

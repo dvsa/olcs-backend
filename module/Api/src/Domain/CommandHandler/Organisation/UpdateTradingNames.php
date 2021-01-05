@@ -29,7 +29,9 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
 
     public function handleCommand(CommandInterface $command)
     {
-        if ($command->getLicence() !== null) {
+        $fromLicence = $command->getLicence() !== null;
+
+        if ($fromLicence) {
             /** @var Licence $licence */
             $licence = $this->getRepo()->fetchById($command->getLicence());
             $organisation = null;
@@ -47,7 +49,6 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
         }
 
         if ($this->haveTradingNamesChanged($current, $command->getTradingNames())) {
-
             $this->result->setFlag('hasChanged', true);
 
             list($newCount, $unchangedCount, $removedCount) = $this->updateTradingNames(
@@ -57,10 +58,19 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
                 $licence
             );
 
+            if ($fromLicence) {
+                $this->result->merge(
+                    $this->clearLicenceCacheSideEffect($licence->getId())
+                );
+            } else {
+                $this->result->merge(
+                    $this->clearOrganisationCacheSideEffect($organisation->getId())
+                );
+            }
+
             $this->result->addMessage($newCount . ' new trading name(s)');
             $this->result->addMessage($unchangedCount . ' unchanged trading name(s)');
             $this->result->addMessage($removedCount . ' trading name(s) removed');
-
         } else {
             $this->result->setFlag('hasChanged', false);
             $this->result->addMessage('Trading names are unchanged');
@@ -78,11 +88,9 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
         // Differentiate between trading names to keep and trading names to remove
         list($maintain, $remove) = $current->partition(
             function ($key, $tradingName) use (&$new) {
-
                 $index = array_search($tradingName->getName(), $new);
 
                 if ($index !== false) {
-
                     unset($new[$index]);
 
                     return true;
@@ -134,7 +142,6 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
 
             /** @var TradingName $tradingName */
             foreach ($current as $tradingName) {
-
                 if ($tradingName->getName() === $name) {
                     $matched = true;
                     break;

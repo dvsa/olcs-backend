@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -26,9 +28,11 @@ use Dvsa\Olcs\Transfer\Command\User\DeleteUser as DeleteUserCommand;
 final class DeleteUser extends AbstractCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
+    CacheAwareInterface,
     OpenAmUserAwareInterface
 {
     use AuthAwareTrait,
+        CacheAwareTrait,
         OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
@@ -54,6 +58,8 @@ final class DeleteUser extends AbstractCommandHandler implements
         $this->guardAgainstOpenTasks($user);
 
         $this->deleteUser($user);
+
+        $this->clearUserCaches([$user->getId()]);
 
         return $this->createResult($user);
     }
