@@ -36,7 +36,8 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $id = 'TEST_STR_ID';
+        $id = 4095;
+        $translationKey = 'TEST_STR_ID';
         $translationsArray = [
             'en_GB' => base64_encode('English'),
             'cy_GB' => base64_encode('Welsh'),
@@ -46,6 +47,7 @@ class UpdateTest extends CommandHandlerTestCase
 
         $cmdData = [
             'id' => $id,
+            'translationKey' => $translationKey,
             'translationsArray' => $translationsArray
         ];
 
@@ -56,8 +58,8 @@ class UpdateTest extends CommandHandlerTestCase
         $tktEntity = m::mock(TranslationKeyTextEntity::class);
 
         $this->repoMap['TranslationKey']
-            ->shouldReceive('fetchUsingId')
-            ->with($command)
+            ->shouldReceive('fetchById')
+            ->with($command->getId())
             ->once()
             ->andReturn($entity);
 
@@ -147,7 +149,7 @@ class UpdateTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'TranslationKey' => 'TEST_STR_ID'
+                'TranslationKey' => 4095
             ],
             'messages' => [
                 'Generate cache result message',
@@ -175,8 +177,8 @@ class UpdateTest extends CommandHandlerTestCase
         $command = UpdateCmd::create($cmdData);
 
         $this->repoMap['TranslationKey']
-            ->shouldReceive('fetchUsingId')
-            ->with($command)
+            ->shouldReceive('fetchById')
+            ->with($command->getId())
             ->once()
             ->andReturn($entity);
 
