@@ -40,7 +40,7 @@ class CreateTest extends CommandHandlerTestCase
         ];
 
         $cmdData = [
-            'id' => $id,
+            'translationKey' => $id,
             'description' => $description,
             'translationsArray' => $translationsArray
         ];
@@ -53,15 +53,16 @@ class CreateTest extends CommandHandlerTestCase
             ->once()
             ->andReturnUsing(
                 function (TranslationKeyEntity $translationKey) {
-                    $this->assertSame('TEST_STR_ID', $translationKey->getId());
+                    $this->assertSame('TEST_STR_ID', $translationKey->getTranslationKey());
                     $this->assertSame('description', $translationKey->getDescription());
+                    $translationKey->setId(4095);
                 }
             );
 
         $this->expectedSideEffect(
             UpdateCmd::class,
             [
-                'id' => $id,
+                'id' => 4095,
                 'translationsArray' => $translationsArray
             ],
             new Result(),
@@ -94,7 +95,7 @@ class CreateTest extends CommandHandlerTestCase
         ];
 
         $cmdData = [
-            'id' => $id,
+            'translationKey' => $id,
             'description' => $description,
             'translationsArray' => $translationsArray
         ];

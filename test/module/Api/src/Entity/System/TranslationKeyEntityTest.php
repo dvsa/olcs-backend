@@ -50,10 +50,10 @@ class TranslationKeyEntityTest extends EntityTester
      */
     public function testCreate()
     {
-        $entity = Entity::create('id', 'description');
+        $entity = Entity::create('transKey', 'description');
 
         $this->assertInstanceOf(Entity::class, $entity);
-        $this->assertEquals('id', $entity->getId());
+        $this->assertEquals('transKey', $entity->getTranslationKey());
         $this->assertEquals('description', $entity->getDescription());
     }
 }
