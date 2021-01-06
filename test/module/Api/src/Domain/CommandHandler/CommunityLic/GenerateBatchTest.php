@@ -47,7 +47,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $systemParam,
         $isPsv,
         $niFlag,
-        $template
+        $template,
+        $subCategory
     ) {
         $licenceId = 1;
         $identifier = null;
@@ -64,7 +65,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $mockLicence = m::mock()
             ->shouldReceive('isPsv')
             ->andReturn($isPsv)
-            ->once()
+            ->twice()
             ->shouldReceive('getNiFlag')
             ->andReturn($niFlag)
             ->shouldReceive('getId')
@@ -94,7 +95,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
             ],
             'description' => 'Community licence',
             'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+            'subCategory' => $subCategory,
             'isExternal' => false,
             'isScan' => false
         ];
@@ -137,7 +138,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $systemParam,
         $isPsv,
         $niFlag,
-        $template
+        $template,
+        $subCategory
     ) {
         $licenceId = 1;
         $identifier = 2;
@@ -159,7 +161,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $mockApplication = m::mock()
             ->shouldReceive('isPsv')
             ->andReturn($isPsv)
-            ->once()
+            ->twice()
             ->shouldReceive('getNiFlag')
             ->andReturn($niFlag)
             ->shouldReceive('getId')
@@ -191,7 +193,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
             ],
             'description' => 'Community licence',
             'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+            'subCategory' => $subCategory,
             'isExternal' => false,
             'isScan' => false
         ];
@@ -234,7 +236,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
                 true,
                 'N',
-                'PSV_European_Community_Licence'
+                'PSV_European_Community_Licence',
+                SubCategory::DOC_SUB_CATEGORY_PSV_CERTIFIED_COPY,
             ],
             'reprint of GV NI with new template switched off' => [
                 1,
@@ -242,7 +245,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
                 false,
                 'Y',
-                'GV_NI_European_Community_Licence'
+                'GV_NI_European_Community_Licence',
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             ],
             'reprint of GV GB with new template switched off' => [
                 1,
@@ -250,7 +254,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
                 false,
                 'N',
-                'GV_GB_European_Community_Licence'
+                'GV_GB_European_Community_Licence',
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             ],
             'new PSV with new template switched off' => [
                 1,
@@ -258,7 +263,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
                 true,
                 'N',
-                'PSV_European_Community_Licence'
+                'PSV_European_Community_Licence',
+                SubCategory::DOC_SUB_CATEGORY_PSV_CERTIFIED_COPY,
             ],
             'new GV NI with new template switched off' => [
                 1,
@@ -266,7 +272,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
                 false,
                 'Y',
-                'GV_NI_European_Community_Licence'
+                'GV_NI_European_Community_Licence',
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             ],
             'new GV GB with new template switched off' => [
                 1,
@@ -274,7 +281,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
                 false,
                 'N',
-                'GV_GB_European_Community_Licence'
+                'GV_GB_European_Community_Licence',
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             ],
             'reprint PSV with new template switched on' => [
                 0,
@@ -282,7 +290,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
                 true,
                 'N',
-                Document::GV_UK_COMMUNITY_LICENCE_PSV
+                Document::GV_UK_COMMUNITY_LICENCE_PSV,
+                SubCategory::DOC_SUB_CATEGORY_PSV_CERTIFIED_COPY,
             ],
             'reprint GV NI with new template switched on' => [
                 0,
@@ -290,7 +299,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
                 false,
                 'Y',
-                Document::GV_UK_COMMUNITY_LICENCE_NI
+                Document::GV_UK_COMMUNITY_LICENCE_NI,
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             ],
             'reprint GV GB with new template switched on' => [
                 0,
@@ -298,7 +308,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
                 false,
                 'N',
-                Document::GV_UK_COMMUNITY_LICENCE_GB
+                Document::GV_UK_COMMUNITY_LICENCE_GB,
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             ],
             'new PSV with new template switched on' => [
                 0,
@@ -306,7 +317,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
                 true,
                 'N',
-                Document::GV_UK_COMMUNITY_LICENCE_PSV
+                Document::GV_UK_COMMUNITY_LICENCE_PSV,
+                SubCategory::DOC_SUB_CATEGORY_PSV_CERTIFIED_COPY,
             ],
             'new GV NI with new template switched on' => [
                 0,
@@ -314,7 +326,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
                 false,
                 'Y',
-                Document::GV_UK_COMMUNITY_LICENCE_NI
+                Document::GV_UK_COMMUNITY_LICENCE_NI,
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             ],
             'new GV GB with new template switched on' => [
                 0,
@@ -322,7 +335,8 @@ class GenerateBatchTest extends CommandHandlerTestCase
                 SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
                 false,
                 'N',
-                Document::GV_UK_COMMUNITY_LICENCE_GB
+                Document::GV_UK_COMMUNITY_LICENCE_GB,
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
             ],
         ];
     }
