@@ -137,7 +137,12 @@ return [
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'image/jpeg',
             'image/png',
+            'image/bmp',
             'image/tiff',
+            'application/zip',
+            'application/x-7z-compressed',
+            'text/plain',
+            'audio/aac',
         ]
     ],
 
