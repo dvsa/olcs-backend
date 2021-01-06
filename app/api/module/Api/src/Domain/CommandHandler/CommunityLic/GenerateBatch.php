@@ -44,10 +44,12 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
             $licence = $application->getLicence();
             $identifier = $application->getId();
             $template = $this->getTemplateForEntity($application, $isBatchReprint);
+            $subCategory = $this->getDocumentSubCategory($application);
         } else {
             $licenceId = $command->getLicence();
             $licence = $this->getRepo('Licence')->fetchById($licenceId);
             $template = $this->getTemplateForEntity($licence, $isBatchReprint);
+            $subCategory = $this->getDocumentSubCategory($licence);
             $identifier = null;
         }
 
@@ -63,7 +65,7 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
                 'application' => $identifier
             ];
 
-            $docId = $this->generateDocument($template, $query);
+            $docId = $this->generateDocument($template, $query, $subCategory);
 
             $printQueue = EnqueueFileCommand::create(
                 [
@@ -81,14 +83,14 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
         return $this->result;
     }
 
-    protected function generateDocument($template, $query)
+    protected function generateDocument($template, $query, $subCategory)
     {
         $dtoData = [
             'template' => $template,
             'query' => $query,
             'description' => 'Community licence',
             'category' => Entity\System\Category::CATEGORY_LICENSING,
-            'subCategory' => Entity\System\SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+            'subCategory' => $subCategory,
             'isExternal' => false,
             'isScan' => false
         ];
@@ -177,5 +179,21 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
         }
 
         return DocumentEntity::GV_UK_COMMUNITY_LICENCE_GB;
+    }
+
+    /**
+     * Get the sub category for the document
+     *
+     * @param Entity\Application\Application|Entity\Licence\Licence $entity
+     *
+     * @return int
+     */
+    private function getDocumentSubCategory($entity): int
+    {
+        if ($entity->isPsv()) {
+            return Entity\System\SubCategory::DOC_SUB_CATEGORY_PSV_CERTIFIED_COPY;
+        }
+
+        return Entity\System\SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE;
     }
 }
