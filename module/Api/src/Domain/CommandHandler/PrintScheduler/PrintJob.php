@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Laminas\Stdlib\Glob;
 
 /**
  * Print Job
@@ -186,7 +187,7 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
         if (!empty($this->filesPrefix)) {
             // remove temporary rtf|pdf files
             $pattern = self::TEMP_DIR . $this->filesPrefix . '*.{rtf,pdf}';
-            $files = glob($pattern, GLOB_BRACE);
+            $files = Glob::glob($pattern, Glob::GLOB_BRACE);
 
             if (is_array($files)) {
                 array_map('unlink', $files);
