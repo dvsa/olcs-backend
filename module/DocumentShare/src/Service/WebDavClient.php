@@ -121,8 +121,8 @@ class WebDavClient implements DocumentStoreInterface
             $response->setResponse(false);
             $response->setStatusCode(WebDavResponse::STATUS_CODE_500);
         } catch (InvalidMimeTypeException $exception) {
-          $response->setResponse(false);
-          $response->setStatusCode(WebDavResponse::STATUS_CODE_415);
+            $response->setResponse(false);
+            $response->setStatusCode(WebDavResponse::STATUS_CODE_415);
         } finally {
             @fclose($fh);
         }

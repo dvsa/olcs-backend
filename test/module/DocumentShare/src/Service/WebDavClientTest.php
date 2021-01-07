@@ -86,7 +86,6 @@ class WebDavClientTest extends MockeryTestCase
 
         $actual = $this->sut->read($testPath);
         $this->assertEquals(false, $actual);
-
     }
 
     public function testWriteSuccess()

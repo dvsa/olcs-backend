@@ -51,17 +51,22 @@ class ClientFactoryTest extends MockeryTestCase
 
     public function provideSetOptions()
     {
-        return array(
-            array(array(), new \RuntimeException('Options could not be found in "document_share.testkey".')),
-            array(
-                array('document_share' => array()),
-                new \RuntimeException('Options could not be found in "document_share.testkey".')
-            ),
-            array(
-                array('document_share' => array('testkey' => array('foo' => 'bar'))),
-                array('foo' => 'bar')
-            )
-        );
+        return [
+            [
+                [],
+                new \RuntimeException('Options could not be found in "document_share.testkey"')
+            ],
+            [
+                [
+                    'document_share' => []
+                ],
+                new \RuntimeException('Options could not be found in "document_share.testkey"')
+            ],
+            [
+                ['document_share' => ['testkey' => ['foo' => 'bar']]],
+                ['foo' => 'bar']
+            ]
+        ];
     }
 
     /**
