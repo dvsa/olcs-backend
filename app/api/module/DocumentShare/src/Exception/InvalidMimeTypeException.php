@@ -2,4 +2,6 @@
 
 namespace Dvsa\Olcs\DocumentShare\Exception;
 
-class InvalidMimeTypeException extends \Exception {}
+class InvalidMimeTypeException extends \Exception
+{
+}
