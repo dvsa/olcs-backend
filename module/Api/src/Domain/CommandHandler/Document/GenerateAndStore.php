@@ -11,16 +11,14 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
 use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument as DispatchDocumentCmd;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore as Cmd;
 
 /**
  * Generate And Store
@@ -68,7 +66,7 @@ final class GenerateAndStore extends AbstractCommandHandler implements
             $this->determineEntityFromCommand($queryData)
         );
 
-        $file = $this->getDocumentGenerator()->uploadGeneratedContent($document, $fileName);
+        $file = $this->getDocumentGenerator()->uploadGeneratedContent($document, $fileName, File::MIME_TYPE_RTF);
 
         // Most Document params are stored in the command
         $documentData = $command->getArrayCopy();
