@@ -1,18 +1,17 @@
 <?php
-/**
- * Community Licence
- */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLic as CommunityLicDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 
-/**
- * Community Licence
- */
 class CommunityLic extends AbstractRepository
 {
     protected $entity = CommunityLicEntity::class;
@@ -186,5 +185,24 @@ class CommunityLic extends AbstractRepository
             ->setParameter('endDate', $date);
 
         return $qb->getQuery()->execute();
+    }
+
+    /**
+     * Counts the number of active community licences that relate to a licence which is identified by a given id.
+     *
+     * @param int $licenceId
+     * @return int
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function countActiveByLicenceId(int $licenceId): int
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->select(new Func('COUNT', [$this->getColumnIdentifier('id')]));
+        $qb->andWhere(new Comparison($this->getColumnIdentifier('issueNo'), Comparison::NEQ, ':issueNo'));
+        $qb->andWhere(new Comparison($this->getColumnIdentifier('licence'), Comparison::EQ, ':licence'));
+        $qb->andWhere(new Comparison($this->getColumnIdentifier('status'), Comparison::EQ, ':status'));
+        $qb->setParameters(['licence' => $licenceId, 'issueNo' => 0, 'status' => CommunityLicEntity::STATUS_ACTIVE]);
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }
