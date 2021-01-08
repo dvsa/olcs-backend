@@ -25,17 +25,15 @@ class IrhpPermitWindow extends AbstractIrhpPermitWindow
      * @param IrhpPermitStock $irhpPermitStock
      * @param string $startDate
      * @param string $endDate
-     * @param int $daysForPayment
      * @return IrhpPermitWindow
      */
-    public static function create($irhpPermitStock, $startDate, $endDate, $daysForPayment)
+    public static function create($irhpPermitStock, $startDate, $endDate)
     {
         $instance = new self;
 
         $instance->irhpPermitStock = $irhpPermitStock;
         $instance->startDate = new DateTime($startDate);
         $instance->endDate = new DateTime($endDate);
-        $instance->daysForPayment = intval($daysForPayment) > 0 ? $daysForPayment : 0;
 
         return $instance;
     }
@@ -44,15 +42,13 @@ class IrhpPermitWindow extends AbstractIrhpPermitWindow
      * @param IrhpPermitStock $irhpPermitStock
      * @param string $startDate
      * @param string $endDate
-     * @param int $daysForPayment
      * @return $this
      */
-    public function update($irhpPermitStock, $startDate, $endDate, $daysForPayment)
+    public function update($irhpPermitStock, $startDate, $endDate)
     {
         $this->irhpPermitStock = $irhpPermitStock;
         $this->startDate = new DateTime($startDate);
         $this->endDate = new DateTime($endDate);
-        $this->daysForPayment = intval($daysForPayment) > 0 ? $daysForPayment : 0;
 
         return $this;
     }

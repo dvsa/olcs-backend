@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
 use Laminas\I18n\Translator\Translator;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
@@ -24,6 +25,9 @@ class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler
     /** @var Translator */
     private $translator;
 
+    /** @var DaysToPayIssueFeeProvider */
+    private $daysToPayIssueFeeProvider;
+
     /**
      * Create service
      *
@@ -36,6 +40,7 @@ class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         $this->translator = $mainServiceLocator->get('translator');
+        $this->daysToPayIssueFeeProvider = $mainServiceLocator->get('PermitsFeesDaysToPayIssueFeeProvider');
 
         return parent::createService($serviceLocator);
     }
@@ -72,14 +77,16 @@ class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler
 
         $this->translator->setLocale($previousLocale);
 
+        $daysToPayIssueFee = $this->daysToPayIssueFeeProvider->getDays();
+
         return [
             'applicationRef' => $recordObject->getApplicationRef(),
             'euro5PermitsGranted' => $euro5PermitsGranted,
             'euro6PermitsGranted' => $euro6PermitsGranted,
             'issueFeeAmount' => $this->formatCurrency($issueFee->getFeeTypeAmount()),
             'issueFeeTotal' => $this->formatCurrency($issueFee->getOutstandingAmount()),
-            'paymentDeadlineNumDays' => '10', // TODO - OLCS-21979
-            'issueFeeDeadlineDate' => $this->calculateDueDate($invoicedDateTime),
+            'paymentDeadlineNumDays' => $daysToPayIssueFee,
+            'issueFeeDeadlineDate' => $this->calculateDueDate($invoicedDateTime, $daysToPayIssueFee),
             'paymentUrl' => 'http://selfserve/permits/application/' . $irhpApplicationId . '/awaiting-fee',
             'periodName' => $periodName
         ];

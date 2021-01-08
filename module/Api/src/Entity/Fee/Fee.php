@@ -62,6 +62,9 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     // CPMS enforces 'valid' postcodes :(
     const DEFAULT_POSTCODE = 'LS9 6NF';
 
+    /** @var int */
+    private $daysToPayIssueFee;
+
     public function __construct(FeeType $feeType, $netAmount, RefData $feeStatus)
     {
         parent::__construct();
@@ -592,12 +595,27 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     }
 
     /**
+     * Set the value of days to pay issue fee, used in the getDueDate method
+     *
+     * @param int $daysToPayIssueFee
+     */
+    public function setDaysToPayIssueFee($daysToPayIssueFee)
+    {
+        $this->daysToPayIssueFee = $daysToPayIssueFee;
+    }
+
+    /**
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
      * @return DateTime|string|null
      */
     public function getDueDate($asDateTime = false)
     {
+        if (!isset($this->daysToPayIssueFee)) {
+            // we can only calculate the due date if setDaysToPayIssueFee has been previously called
+            return null;
+        }
+
         if (!$this->isOutstanding()) {
             // don't need to calculate a due date for anything but outstanding
             return null;
@@ -612,8 +630,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             }
 
             $date = clone $invoicedDate;
-            // TODO - OLCS-21979
-            $date->add(\DateInterval::createFromDateString('+10 weekdays'));
+            $date->add(\DateInterval::createFromDateString('+' . $this->daysToPayIssueFee . ' weekdays'));
 
             return ($asDateTime === true) ? $date : $date->format(DateTime::ISO8601);
         }
