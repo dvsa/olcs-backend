@@ -707,4 +707,15 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     {
         return new Paginator($query, $this->fetchJoinCollection);
     }
+
+    /**
+     * Builds a string identifier for a column.
+     *
+     * @param string $columnName
+     * @return string
+     */
+    protected function getColumnIdentifier(string $columnName): string
+    {
+        return sprintf('%s.%s', $this->alias, $columnName);
+    }
 }
