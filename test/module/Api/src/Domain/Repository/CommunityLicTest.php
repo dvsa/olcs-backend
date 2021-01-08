@@ -1,12 +1,12 @@
 <?php
 
-/**
- * Community Lic test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLic;
+use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
+use Hamcrest\Core\IsEqual;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
@@ -214,5 +214,141 @@ class CommunityLicTest extends RepositoryTestCase
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->execute')->once()->andReturn('result');
         $this->assertEquals('result', $this->sut->fetchForActivation('foo'));
+    }
+
+    public function testCountActiveByLicenceIdIsDefined()
+    {
+        $this->assertIsCallable([$this->sut, 'countActiveByLicenceId']);
+    }
+
+    /**
+     * @depends testCountActiveByLicenceIdIsDefined
+     */
+    public function testCountActiveByLicenceIdFiltersResultsByLicenceId()
+    {
+        // Set Up
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+        $expectedCondition = new Comparison('m.licence', Comparison::EQ, ':licence');
+
+        // Define Expectations
+        $queryBuilder->shouldReceive('andWhere')->once()->with(IsEqual::equalTo($expectedCondition));
+
+        // Execute
+        $this->sut->countActiveByLicenceId(1);
+    }
+
+    /**
+     * @depends testCountActiveByLicenceIdIsDefined
+     */
+    public function testCountActiveByLicenceIdSetsALicenceIdParameterWithTheProvidedLicenceIdValue()
+    {
+        // Set Up
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+        $expectedLicenceId = 8;
+        $parameterMatcher = IsArrayContainingKeyValuePair::hasKeyValuePair('licence', $expectedLicenceId);
+
+        // Expect
+        $queryBuilder->shouldReceive('setParameters')->once()->with($parameterMatcher);
+
+        // Execute
+        $this->sut->countActiveByLicenceId($expectedLicenceId);
+    }
+
+    /**
+     * @depends testCountActiveByLicenceIdIsDefined
+     */
+    public function testCountActiveByLicenceIdFiltersResultsToCommunityLicencesByStatus()
+    {
+        // Set Up
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+        $expectedCondition = new Comparison('m.status', Comparison::EQ, ':status');
+
+        // Define Expectations
+        $queryBuilder->shouldReceive('andWhere')->once()->with(IsEqual::equalTo($expectedCondition));
+
+        // Execute
+        $this->sut->countActiveByLicenceId(1);
+    }
+
+    /**
+     * @depends testCountActiveByLicenceIdIsDefined
+     */
+    public function testCountActiveByLicenceIdFiltersResultsToCommunityLicencesThatAreActive()
+    {
+        // Set Up
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+        $parameterMatcher = IsArrayContainingKeyValuePair::hasKeyValuePair('status', CommunityLicEntity::STATUS_ACTIVE);
+
+        // Expect
+        $queryBuilder->shouldReceive('setParameters')->once()->with($parameterMatcher);
+
+        // Execute
+        $this->sut->countActiveByLicenceId(1);
+    }
+
+    /**
+     * @depends testCountActiveByLicenceIdIsDefined
+     */
+    public function testCountActiveByLicenceIdFiltersResultsByIssueNumber()
+    {
+        // Set Up
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+        $expectedCondition = new Comparison('m.issueNo', Comparison::NEQ, ':issueNo');
+
+        // Define Expectations
+        $queryBuilder->shouldReceive('andWhere')->once()->with(IsEqual::equalTo($expectedCondition));
+
+        // Execute
+        $this->sut->countActiveByLicenceId(1);
+    }
+
+    /**
+     * @depends testCountActiveByLicenceIdIsDefined
+     */
+    public function testCountActiveByLicenceIdFiltersResultsToCommunityLicencesWithAZeroIssueNumber()
+    {
+        // Set Up
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+        $parameterMatcher = IsArrayContainingKeyValuePair::hasKeyValuePair('issueNo', 0);
+
+        // Expect
+        $queryBuilder->shouldReceive('setParameters')->once()->with($parameterMatcher);
+
+        // Execute
+        $this->sut->countActiveByLicenceId(1);
+    }
+
+    /**
+     * @depends testCountActiveByLicenceIdIsDefined
+     */
+    public function testCountActiveByLicenceIdCountsCommunityLicenceIds()
+    {
+        // Set Up
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+        $expectedExpression = new Func('COUNT', ['m.id']);
+
+        // Define Expectations
+        $queryBuilder->shouldReceive('select')->once()->with(IsEqual::equalTo($expectedExpression));
+
+        // Execute
+        $this->sut->countActiveByLicenceId(1);
+    }
+
+    /**
+     * @depends testCountActiveByLicenceIdIsDefined
+     */
+    public function testCountActiveByLicenceIdReturnsTheIntegerFromTheExecutedQueryResult()
+    {
+        // Set Up
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+        $query = m::mock()->shouldIgnoreMissing();
+        $query->shouldReceive('getSingleScalarResult')->andReturn($expectedCount = 997);
+        $queryBuilder->shouldReceive('getQuery')->andReturn($query);
+
+        // Execute
+        $this->sut->countActiveByLicenceId(1);
+
+        // Assert
+        $this->assertEquals($expectedCount, $this->sut->countActiveByLicenceId(1));
     }
 }

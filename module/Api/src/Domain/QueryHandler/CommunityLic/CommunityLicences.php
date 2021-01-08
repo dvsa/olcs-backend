@@ -1,21 +1,22 @@
 <?php
 
-/**
- * Community Licences
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepository;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicences as CommunityLicencesQuery;
 
 /**
  * Community Licence
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @see CommunityLicencesQuery
  */
 class CommunityLicences extends AbstractQueryHandler
 {
@@ -26,18 +27,25 @@ class CommunityLicences extends AbstractQueryHandler
     /**
      * Handle query
      *
-     * @param \Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicences $query query
-     *
+     * @param CommunityLicencesQuery|QueryInterface $query
      * @return array
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws NotFoundException
+     * @throws RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
-        /** @var CommunityLicRepo $repo */
-        $repo = $this->getRepo();
-        $licence = $this->getRepo('Licence')->fetchById($query->getLicence());
+        assert($query instanceof CommunityLicencesQuery, 'Expected instance of CommunityLicencesQuery');
 
-        $officeCopy = $repo->fetchOfficeCopy($query->getLicence());
+        $communityLicenceRepository = $this->getRepo();
+        assert($communityLicenceRepository instanceof CommunityLicRepo, 'Expected instance of CommunityLicRepo');
+
+        $licenceRepository = $this->getRepo('Licence');
+        assert($licenceRepository instanceof LicenceRepository, 'Expected instance of LicenceRepository');
+
+        $licence = $licenceRepository->fetchById($query->getLicence());
+        assert($licence instanceof Licence, 'Expected instance of Licence');
+
+        $officeCopy = $communityLicenceRepository->fetchOfficeCopy($query->getLicence());
 
         $data = $query->getArrayCopy();
 
@@ -47,11 +55,12 @@ class CommunityLicences extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT)
+                $communityLicenceRepository->fetchList($query, Query::HYDRATE_OBJECT)
             ),
-            'count' =>  $repo->fetchCount($query),
-            'count-unfiltered' => $repo->hasRows($unfilteredQuery),
+            'count' =>  $communityLicenceRepository->fetchCount($query),
+            'count-unfiltered' => $communityLicenceRepository->hasRows($unfilteredQuery),
             'totCommunityLicences' => $licence->getTotCommunityLicences(),
+            'totActiveCommunityLicences' => $communityLicenceRepository->countActiveByLicenceId($licence->getId()),
             'officeCopy' => $this->result($officeCopy)->serialize()
         ];
     }
