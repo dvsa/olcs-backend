@@ -1,20 +1,27 @@
 <?php
 
-/**
- * CommunityLic Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\CommunityLic;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\CommunityLic\CommunityLicences as CommunityLicencesQueryHandler;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicences as Qry;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\OlcsTest\Api\Domain\CommandHandlerManagerMockBuilder;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicences as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandlerManagerMockBuilder;
+use Dvsa\OlcsTest\Api\Domain\Repository\CommunityLicenceRepositoryMockBuilder;
+use Dvsa\OlcsTest\Api\Domain\Repository\LicenceRepositoryMockBuilder;
+use Dvsa\OlcsTest\Api\Domain\Repository\RepositoryServiceManagerBuilder;
+use Dvsa\OlcsTest\Api\Domain\Repository\ResolvesMockRepositoriesFromServiceLocatorsTrait;
+use Dvsa\OlcsTest\Builder\AuthorizationServiceMockBuilder;
+use Dvsa\OlcsTest\Builder\ServiceManagerBuilder;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * CommunityLic Test
@@ -23,25 +30,112 @@ use Doctrine\ORM\Query;
  */
 class CommunityLicencesTest extends QueryHandlerTestCase
 {
+    use ResolvesMockRepositoriesFromServiceLocatorsTrait;
+
     public function setUp(): void
     {
         $this->sut = new CommunityLicencesQueryHandler();
-        $this->mockRepo('CommunityLic', CommunityLicRepo::class);
-        $this->mockRepo('Licence', LicenceRepo::class);
-
-        parent::setUp();
     }
 
+    /**
+     * @return array
+     */
+    protected function setUpDefaultRepositories(): array
+    {
+        return [
+            CommunityLicenceRepositoryMockBuilder::ALIAS => (new CommunityLicenceRepositoryMockBuilder())->build(),
+            LicenceRepositoryMockBuilder::ALIAS => (new LicenceRepositoryMockBuilder())->build(),
+        ];
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return array
+     */
+    public function setUpDefaultServices(ServiceLocatorInterface $serviceLocator): array
+    {
+        return [
+            RepositoryServiceManagerBuilder::ALIAS => (new RepositoryServiceManagerBuilder(static::setUpDefaultRepositories()))->build(),
+            AuthorizationService::class => (new AuthorizationServiceMockBuilder())->build(),
+            CommandHandlerManagerMockBuilder::ALIAS => (new CommandHandlerManagerMockBuilder($serviceLocator))->build(),
+            QueryHandlerManager::class => (new QueryHandlerManagerMockBuilder($serviceLocator))->build(),
+        ];
+    }
+
+    public function testHandleQueryIsDefined()
+    {
+        // Assert
+        $this->assertIsCallable([$this->sut, 'handleQuery']);
+    }
+
+    /**
+     * @depends testHandleQueryIsDefined
+     */
+    public function testHandleQueryReturnsAnArray()
+    {
+        // SetUp
+        $serviceManager = (new ServiceManagerBuilder([$this, 'setUpDefaultServices']))->build();
+        $query = Qry::create(['licence' => 1]);
+        $queryHandler = $this->initializeQueryHandler($this->sut, $serviceManager);
+
+        // Execute
+        $result = $queryHandler->handleQuery($query);
+
+        // Assert
+        $this->assertIsArray($result);
+
+        return $result;
+    }
+
+    /**
+     * @depends testHandleQueryReturnsAnArray
+     * @param array $result
+     */
+    public function testHandleQueryReturnsAnArrayWithTheTotActiveCommunityLicencesKey(array $result)
+    {
+        $this->assertArrayHasKey('totActiveCommunityLicences', $result);
+    }
+
+    /**
+     * @depends testHandleQueryReturnsAnArrayWithTheTotActiveCommunityLicencesKey
+     */
+    public function testHandleQueryReturnsAnArrayWithTheTotActiveCommunityLicencesValue()
+    {
+        // SetUp
+        $serviceManager = (new ServiceManagerBuilder([$this, 'setUpDefaultServices']))->build();
+        $query = Qry::create(['licence' => 1]);
+        $queryHandler = $this->initializeQueryHandler($this->sut, $serviceManager);
+        $communityLicenceRepository = $this->resolveMockRepository($serviceManager, CommunityLicenceRepositoryMockBuilder::ALIAS);
+        $expectedCount = 1234;
+        $communityLicenceRepository->shouldReceive('countActiveByLicenceId')->andReturn($expectedCount);
+
+        // Execute
+        $result = $queryHandler->handleQuery($query);
+
+        // Assert
+        $this->assertEquals($expectedCount, $result['totActiveCommunityLicences']);
+    }
+
+    /**
+     * @depends testHandleQueryIsDefined
+     */
     public function testHandleQuery()
     {
+        $this->mockRepo('CommunityLic', CommunityLicRepo::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
+        parent::setUp();
+
         $licenceId = 1;
         $query = Qry::create(['licence' => $licenceId]);
 
-        $mockLicence = m::mock()
+        $mockLicence = m::mock(Licence::class)
             ->shouldReceive('getTotCommunityLicences')
             ->andReturn(2)
             ->once()
-            ->getMock();
+            ->getMock()
+            ->shouldIgnoreMissing();
+
+        $mockLicence->shouldReceive('getId')->andReturn(1);
 
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with($licenceId)
@@ -73,7 +167,8 @@ class CommunityLicencesTest extends QueryHandlerTestCase
             ->with(m::type(Qry::class))
             ->andReturn(1)
             ->once()
-            ->getMock();
+            ->getMock()
+            ->shouldIgnoreMissing();
 
         $result = $this->sut->handleQuery($query);
 
@@ -82,6 +177,7 @@ class CommunityLicencesTest extends QueryHandlerTestCase
             'count' =>  15,
             'count-unfiltered' => 1,
             'totCommunityLicences' => 2,
+            'totActiveCommunityLicences' => 0,
             'officeCopy' => ['item']
         ];
 

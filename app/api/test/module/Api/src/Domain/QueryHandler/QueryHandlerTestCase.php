@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -266,5 +267,20 @@ class QueryHandlerTestCase extends MockeryTestCase
 
             $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');
         }
+    }
+
+    /**
+     * Initializes a query handler.
+     *
+     * @param QueryHandlerInterface $queryHandler
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return QueryHandlerInterface
+     */
+    protected function initializeQueryHandler(QueryHandlerInterface $queryHandler, ServiceLocatorInterface $serviceLocator): QueryHandlerInterface
+    {
+        $queryHandlerManager = $serviceLocator->get(QueryHandlerManager::class);
+        assert($queryHandlerManager instanceof QueryHandlerManager, 'Expected instance of QueryHandlerManager');
+        $queryHandler->createService($queryHandlerManager);
+        return $queryHandler;
     }
 }
