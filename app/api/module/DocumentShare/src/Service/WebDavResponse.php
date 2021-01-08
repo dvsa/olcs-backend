@@ -30,20 +30,5 @@ class WebDavResponse extends Response
     public function setResponse(bool $response)
     {
         $this->response = $response;
-        $this->setStatusCode($response);
-    }
-
-    /**
-     * @param int $code
-     *
-     * @return void|Response
-     */
-    public function setStatusCode($code)
-    {
-        if ($code) {
-            parent::setStatusCode(200);
-        } else {
-            parent::setStatusCode(500);
-        }
     }
 }
