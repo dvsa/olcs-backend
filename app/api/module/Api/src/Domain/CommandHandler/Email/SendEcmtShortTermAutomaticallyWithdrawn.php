@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
+use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Send confirmation of ECMT short term app being automatically withdrawn
@@ -17,6 +19,25 @@ class SendEcmtShortTermAutomaticallyWithdrawn extends AbstractEmailHandler
     protected $template = 'ecmt-short-term-automatically-withdrawn';
     protected $subject = 'email.ecmt.short.term.automatically.withdrawn.subject';
 
+    /** @var DaysToPayIssueFeeProvider */
+    private $daysToPayIssueFeeProvider;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->daysToPayIssueFeeProvider = $mainServiceLocator->get('PermitsFeesDaysToPayIssueFeeProvider');
+
+        return parent::createService($serviceLocator);
+    }
+
     /**
      * Get template variables
      *
@@ -28,7 +49,7 @@ class SendEcmtShortTermAutomaticallyWithdrawn extends AbstractEmailHandler
     {
         return [
             'applicationRef' => $recordObject->getApplicationRef(),
-            'paymentDeadlineNumDays' => '10', // TODO - OLCS-21979
+            'paymentDeadlineNumDays' => $this->daysToPayIssueFeeProvider->getDays(),
         ];
     }
 }

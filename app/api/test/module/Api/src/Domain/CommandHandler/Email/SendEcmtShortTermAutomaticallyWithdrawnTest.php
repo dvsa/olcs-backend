@@ -29,10 +29,17 @@ class SendEcmtShortTermAutomaticallyWithdrawnTest extends AbstractPermitTest
      */
     public function testHandleCommand()
     {
+        $paymentDeadlineNumDays = 10;
+
         $templateVars = [
             'applicationRef' => $this->applicationRef,
-            'paymentDeadlineNumDays' => '10',
+            'paymentDeadlineNumDays' => $paymentDeadlineNumDays,
         ];
+
+        $this->mockedSmServices['PermitsFeesDaysToPayIssueFeeProvider']->shouldReceive('getDays')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($paymentDeadlineNumDays);
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
             m::type(Message::class),
@@ -71,10 +78,17 @@ class SendEcmtShortTermAutomaticallyWithdrawnTest extends AbstractPermitTest
 
     public function testHandleCommandForCreatedByInternalUser()
     {
+        $paymentDeadlineNumDays = 10;
+
         $templateVars = [
             'applicationRef' => $this->applicationRef,
-            'paymentDeadlineNumDays' => '10',
+            'paymentDeadlineNumDays' => $paymentDeadlineNumDays,
         ];
+
+        $this->mockedSmServices['PermitsFeesDaysToPayIssueFeeProvider']->shouldReceive('getDays')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($paymentDeadlineNumDays);
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
             m::type(Message::class),

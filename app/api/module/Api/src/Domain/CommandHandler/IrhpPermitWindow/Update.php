@@ -60,8 +60,7 @@ class Update extends AbstractCommandHandler
             $window->update(
                 $permitStock,
                 $command->getStartDate(),
-                $command->getEndDate(),
-                $command->getDaysForPayment()
+                $command->getEndDate()
             );
 
             $this->getRepo()->save($window);

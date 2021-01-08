@@ -8,12 +8,33 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * ECMT Annual Permit email trait
  */
 trait EcmtAnnualPermitEmailTrait
 {
+    /** @var DaysToPayIssueFeeProvider */
+    private $daysToPayIssueFeeProvider;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->daysToPayIssueFeeProvider = $mainServiceLocator->get('PermitsFeesDaysToPayIssueFeeProvider');
+
+        return parent::createService($serviceLocator);
+    }
+
     /**
      * Get template variables
      *
@@ -36,6 +57,8 @@ trait EcmtAnnualPermitEmailTrait
         ];
 
         if ($recordObject->isAwaitingFee()) {
+            $daysToPayIssueFee = $this->daysToPayIssueFeeProvider->getDays();
+
             /** @var IrhpPermitApplication $irhpPermitApplication */
             $irhpPermitApplication = $recordObject->getFirstIrhpPermitApplication();
 
@@ -53,8 +76,7 @@ trait EcmtAnnualPermitEmailTrait
             );
             $vars['permitsRequired'] = $recordObject->calculateTotalPermitsRequired();
             $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
-            // TODO - OLCS-21979
-            $vars['paymentDeadlineNumDays'] = '10';
+            $vars['paymentDeadlineNumDays'] = $daysToPayIssueFee;
             $vars['validityYear'] = $irhpPermitApplication->getIrhpPermitWindow()
                 ->getIrhpPermitStock()
                 ->getValidityYear();
@@ -85,7 +107,11 @@ trait EcmtAnnualPermitEmailTrait
                 throw new \Exception('There should be exactly one issuing fee.');
             }
 
-            $vars['issueFeeDeadlineDate'] = $this->calculateDueDate($feeTypesAmounts[0]['invoicedDate']);
+            $vars['issueFeeDeadlineDate'] = $this->calculateDueDate(
+                $feeTypesAmounts[0]['invoicedDate'],
+                $daysToPayIssueFee
+            );
+
             $vars['issueFeeAmount'] = $this->formatCurrency($feeTypesAmounts[0]['issueFeeAmount']);
             $vars['issueFeeTotal'] = $this->formatCurrency($feeTypesAmounts[0]['issueFeeTotal']);
         }

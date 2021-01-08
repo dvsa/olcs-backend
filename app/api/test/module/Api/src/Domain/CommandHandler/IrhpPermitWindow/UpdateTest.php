@@ -39,7 +39,6 @@ class UpdateTest extends CommandHandlerTestCase
             'irhpPermitStock' => 1,
             'startDate' => '2019-12-01',
             'endDate' => '2019-12-30',
-            'daysForPayment' => 14,
         ];
 
         $command = UpdateCmd::create($cmdData);
@@ -80,8 +79,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->with(
                 $permitStockEntity,
                 $cmdData['startDate'],
-                $cmdData['endDate'],
-                $cmdData['daysForPayment']
+                $cmdData['endDate']
             );
 
         $this->repoMap['IrhpPermitWindow']
@@ -128,7 +126,6 @@ class UpdateTest extends CommandHandlerTestCase
             'irhpPermitStock' => 1,
             'startDate' => '2017-12-01',
             'endDate' => '2017-12-30',
-            'daysForPayment' => 14
         ];
 
         $command = UpdateCmd::create($cmdData);
@@ -162,7 +159,6 @@ class UpdateTest extends CommandHandlerTestCase
             'irhpPermitStock' => 1,
             'startDate' => '2017-12-01',
             'endDate' => '2017-12-30',
-            'daysForPayment' => 14,
         ];
 
         $command = UpdateCmd::create($cmdData);
@@ -204,7 +200,6 @@ class UpdateTest extends CommandHandlerTestCase
             'irhpPermitStock' => 1,
             'startDate' => '2017-12-01',
             'endDate' => '2017-12-30',
-            'daysForPayment' => 14,
         ];
 
         $command = UpdateCmd::create($cmdData);
@@ -247,7 +242,6 @@ class UpdateTest extends CommandHandlerTestCase
             'irhpPermitStock' => 1,
             'startDate' => '2019-12-01',
             'endDate' => '2019-12-30',
-            'daysForPayment' => 14,
         ];
 
         $command = UpdateCmd::create($cmdData);

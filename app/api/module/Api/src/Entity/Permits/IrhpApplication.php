@@ -607,7 +607,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return ArrayCollection
      */
-    public function getFeesByAge(int $days = 10): ArrayCollection
+    public function getFeesByAge(int $days): ArrayCollection
     {
         $cutoff = new \DateTime('-' . $days . ' weekdays');
 
@@ -620,14 +620,15 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Is there an overdue issue fee for this application?
-     * @todo paramatarise cutoff number of days https://jira.i-env.net/browse/OLCS-21979
      * @todo save overhead here by skipping these checks once we can easily identify which permit types have issue fees
+     *
+     * @param int $days
      *
      * @return bool
      */
-    public function issueFeeOverdue()
+    public function issueFeeOverdue($days)
     {
-        $matchedFees = $this->getFeesByAge();
+        $matchedFees = $this->getFeesByAge($days);
 
         /**
          * @var Fee $fee
