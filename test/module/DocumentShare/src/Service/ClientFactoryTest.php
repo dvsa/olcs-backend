@@ -51,17 +51,22 @@ class ClientFactoryTest extends MockeryTestCase
 
     public function provideSetOptions()
     {
-        return array(
-            array(array(), new \RuntimeException('Options could not be found in "document_share.testkey".')),
-            array(
-                array('document_share' => array()),
-                new \RuntimeException('Options could not be found in "document_share.testkey".')
-            ),
-            array(
-                array('document_share' => array('testkey' => array('foo' => 'bar'))),
-                array('foo' => 'bar')
-            )
-        );
+        return [
+            [
+                [],
+                new \RuntimeException('Options could not be found in "document_share.testkey"')
+            ],
+            [
+                [
+                    'document_share' => []
+                ],
+                new \RuntimeException('Options could not be found in "document_share.testkey"')
+            ],
+            [
+                ['document_share' => ['testkey' => ['foo' => 'bar']]],
+                ['foo' => 'bar']
+            ]
+        ];
     }
 
     /**
@@ -187,6 +192,9 @@ class ClientFactoryTest extends MockeryTestCase
                     'password' => 'ttestwebdavest',
                     'webdav_baseuri' => 'http://testdocument_share',
                     'uuid' => 'u1234'
+                ],
+                'valid_mime_types' => [
+                    'application/msword'
                 ]
             ]
         ];
@@ -224,6 +232,20 @@ class ClientFactoryTest extends MockeryTestCase
                     'uuid' => 'u1234'
                 ]
             ],
+        ];
+
+        $webDavConfigMissingValidMimeTypes = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
+                    'baseuri' => 'http://testdocument_share',
+                    'workspace' => 'testwebdav',
+                    'username' => 'testwebdav',
+                    'password' => 'ttestwebdavest',
+                    'webdav_baseuri' => 'http://testdocument_share',
+                    'uuid' => 'u1234'
+                ]
+            ]
         ];
 
         return [
@@ -271,9 +293,15 @@ class ClientFactoryTest extends MockeryTestCase
                 User::USER_OS_TYPE_WINDOWS_10
 
             ],
-            "WebDavConfigMissingPWebDavBaseUri" => [
+            "WebDavConfigMissingWebDavBaseUri" => [
                 $webDavConfigMissingBaseUri,
                 new \RuntimeException('Missing required option document_share.client.webdav_baseuri'),
+                User::USER_OS_TYPE_WINDOWS_10
+
+            ],
+            "WebDavConfigMissingWebDavValidMimeTypes" => [
+                $webDavConfigMissingValidMimeTypes,
+                new \RuntimeException('Options could not be found in "document_share.valid_mime_types"'),
                 User::USER_OS_TYPE_WINDOWS_10
 
             ]

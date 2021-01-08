@@ -128,6 +128,22 @@ return [
             'potm' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
             'ppsm' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
         ],
+        'valid_mime_types' => [
+            'application/msword',
+            'application/pdf',
+            'application/rtf',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg',
+            'image/png',
+            'image/bmp',
+            'image/tiff',
+            'application/zip',
+            'application/x-7z-compressed',
+            'text/plain',
+            'audio/aac',
+        ]
     ],
 
     // Asset path, URI to olcs-static (CSS, JS, etc) *Environment specific*
