@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use ZfcRbac\Service\AuthorizationService;
@@ -99,7 +100,7 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
             ->andReturn($document)
             ->shouldReceive('uploadGeneratedContent')
             ->once()
-            ->with($document, '/foo/bar/cake.rtf')
+            ->with($document, '/foo/bar/cake.rtf', File::MIME_TYPE_RTF)
             ->andReturn($file);
 
         $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
@@ -178,7 +179,7 @@ class GenerateAndStoreTest extends CommandHandlerTestCase
             ->andReturn($document)
             ->shouldReceive('uploadGeneratedContent')
             ->once()
-            ->with($document, '/foo/bar/cake.rtf')
+            ->with($document, '/foo/bar/cake.rtf', File::MIME_TYPE_RTF)
             ->andReturn($file);
 
         $this->mockedSmServices['DocumentNamingService']->shouldReceive('generateName')
