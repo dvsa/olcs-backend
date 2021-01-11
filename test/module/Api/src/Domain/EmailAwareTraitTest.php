@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Dvsa\Olcs\Api\Domain\CommandHandler\EmailAwareTraitTestStub;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -101,5 +102,24 @@ class EmailAwareTraitTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $sut = new EmailAwareTraitTestStub();
         $sut->organisationRecipients($organisation, null);
+    }
+
+    public function testOrganisationRecipientsEntityNotFoundException()
+    {
+        $organisation = m::mock(Organisation::class);
+        $organisation->shouldReceive('getAdminEmailAddresses')->once()->withNoArgs()->andReturn(['orgEmail1@test.com']);
+
+        $user = m::mock(User::class);
+        $user->shouldReceive('isInternal')->once()->withNoArgs()->andReturn(false);
+        $user->shouldReceive('getContactDetails')->once()->withNoArgs()->andThrow(EntityNotFoundException::class);
+
+        $expected = [
+            'to' => 'orgEmail1@test.com',
+            'cc' => [],
+            'bcc' => []
+        ];
+
+        $sut = new EmailAwareTraitTestStub();
+        $this->assertEquals($expected, $sut->organisationRecipients($organisation, $user));
     }
 }
