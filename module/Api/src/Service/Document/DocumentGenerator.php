@@ -116,15 +116,18 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     /**
      * Upload the generated content
      *
-     * @param string $content  File Content
+     * @param string $content File Content
      * @param string $fileName File name at Storage
-     *
+     * @param string $mimeType
      * @return DsFile
+     * @throws \Dvsa\Olcs\Api\Service\File\Exception
+     * @throws \Dvsa\Olcs\Api\Service\File\MimeNotAllowedException
      */
-    public function uploadGeneratedContent($content, $fileName)
+    public function uploadGeneratedContent($content, $fileName, string $mimeType)
     {
         $file = new DsFile();
         $file->setContent($content);
+        $file->setMimeType($mimeType);
 
         try {
             return $this->uploader->upload($fileName, $file);
