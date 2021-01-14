@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
-use Dvsa\Olcs\DocumentShare\Exception\InvalidMimeTypeException;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
@@ -31,20 +30,13 @@ class WebDavClient implements DocumentStoreInterface
     protected $cache = [];
 
     /**
-     * @var array
-     */
-    private $validMimeTypes = [];
-
-    /**
      * Client constructor.
      *
      * @param FilesystemInterface $filesystem File System
-     * @param array $validMimeTypes Array of valid mime types to upload
      */
-    public function __construct(FilesystemInterface $filesystem, array $validMimeTypes)
+    public function __construct(FilesystemInterface $filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->validMimeTypes = $validMimeTypes;
     }
 
     /**
@@ -110,33 +102,14 @@ class WebDavClient implements DocumentStoreInterface
     public function write($path, File $file)
     {
         $response = new WebDavResponse();
-
         try {
             $fh = fopen($file->getResource(), 'rb');
-            $this->checkFileMimeType($file);
             $response->setResponse($this->filesystem->writeStream($path, $fh));
-            $statusCode = $response->isSuccess() ? WebDavResponse::STATUS_CODE_200 : WebDavResponse::STATUS_CODE_500;
-            $response->setStatusCode($statusCode);
         } catch (FileExistsException $e) {
             $response->setResponse(false);
-            $response->setStatusCode(WebDavResponse::STATUS_CODE_500);
-        } catch (InvalidMimeTypeException $exception) {
-            $response->setResponse(false);
-            $response->setStatusCode(WebDavResponse::STATUS_CODE_415);
         } finally {
             @fclose($fh);
         }
         return $response;
-    }
-
-    /**
-     * @param File $file
-     * @throws InvalidMimeTypeException
-     */
-    protected function checkFileMimeType(File $file)
-    {
-        if (!in_array($file->getMimeType(), $this->validMimeTypes)) {
-            throw new InvalidMimeTypeException();
-        }
     }
 }
