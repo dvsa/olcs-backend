@@ -65,7 +65,7 @@ class ClientFactory implements FactoryInterface
         if (null === $options) {
             throw new RuntimeException(
                 sprintf(
-                    'Options could not be found in "document_share.%s"',
+                    'Options could not be found in "document_share.%s".',
                     $key
                 )
             );
@@ -95,7 +95,7 @@ class ClientFactory implements FactoryInterface
 
             $adapter = new WebDAVAdapter($sabreClient, $clientOptions['workspace']);
             $fileSystem = new Filesystem($adapter);
-            return new WebDavClient($fileSystem, $this->getOptions($serviceLocator, 'valid_mime_types'));
+            return new WebDavClient($fileSystem);
         } else {
             $this->validateDocManConfig($clientOptions);
             $client = new DocManClient(

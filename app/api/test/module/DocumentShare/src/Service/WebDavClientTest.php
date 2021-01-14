@@ -4,8 +4,7 @@
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
-use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
-use Dvsa\Olcs\DocumentShare\Service\WebDavResponse;
+use Dvsa\Olcs\DocumentShare\Service\WebDavClient as Client;
 use Hamcrest\Core\IsTypeOf;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
@@ -22,9 +21,8 @@ class WebDavClientTest extends MockeryTestCase
 {
     const BASE_URI = 'http://testing';
     const WORKSPACE = 'unit_Workspace';
-    const VALID_MIME_TYPE = 'application/msword';
 
-    /** @var  WebDavClient */
+    /** @var  Client */
     protected $sut;
 
     /** @var  m\MockInterface | FilesystemInterface */
@@ -40,7 +38,7 @@ class WebDavClientTest extends MockeryTestCase
     {
         $this->mockFileSystem = m::mock(FilesystemInterface::class);
 
-        $this->sut = new WebDavClient($this->mockFileSystem, [static::VALID_MIME_TYPE]);
+        $this->sut = new Client($this->mockFileSystem);
 
         $this->mockFile = m::mock(DsFile::class);
 
@@ -101,7 +99,6 @@ class WebDavClientTest extends MockeryTestCase
         /** @var DsFile $mockFile */
         $mockFile = m::mock(DsFile::class)
             ->shouldReceive('getResource')->once()->andReturn($res)
-            ->shouldReceive('getMimeType')->once()->andReturn(static::VALID_MIME_TYPE)
             ->getMock();
 
         $this->mockFileSystem->expects('writeStream')->with($expectPath, new IsTypeOf('resource'))->andReturn(true);
@@ -109,7 +106,6 @@ class WebDavClientTest extends MockeryTestCase
         $actual = $this->sut->write($expectPath, $mockFile);
 
         static::assertEquals(true, $actual->isSuccess());
-        static::assertEquals(WebDavResponse::STATUS_CODE_200, $actual->getStatusCode());
     }
 
     public function testWriteFail()
@@ -125,7 +121,6 @@ class WebDavClientTest extends MockeryTestCase
         /** @var DsFile $mockFile */
         $mockFile = m::mock(DsFile::class)
             ->shouldReceive('getResource')->once()->andReturn($res)
-            ->shouldReceive('getMimeType')->once()->andReturn(static::VALID_MIME_TYPE)
             ->getMock();
 
         $this->mockFileSystem->expects('writeStream')->with($expectPath, new IsTypeOf('resource'))->andReturn(false);
@@ -133,7 +128,6 @@ class WebDavClientTest extends MockeryTestCase
         $actual = $this->sut->write($expectPath, $mockFile);
 
         static::assertEquals(false, $actual->isSuccess());
-        static::assertEquals(WebDavResponse::STATUS_CODE_500, $actual->getStatusCode());
     }
 
     public function testWriteFileAlreadyExists()
@@ -149,7 +143,6 @@ class WebDavClientTest extends MockeryTestCase
         /** @var DsFile $mockFile */
         $mockFile = m::mock(DsFile::class)
             ->shouldReceive('getResource')->once()->andReturn($res)
-            ->shouldReceive('getMimeType')->once()->andReturn(static::VALID_MIME_TYPE)
             ->getMock();
 
         $this->mockFileSystem->expects('writeStream')->with($expectPath, new IsTypeOf('resource'))->andThrow(
@@ -159,29 +152,6 @@ class WebDavClientTest extends MockeryTestCase
         $actual = $this->sut->write($expectPath, $mockFile);
 
         static::assertEquals(false, $actual->isSuccess());
-        static::assertEquals(WebDavResponse::STATUS_CODE_500, $actual->getStatusCode());
-    }
-
-    public function testWriteIncorrectMimeType()
-    {
-        $expectPath = 'unit_Path';
-        $expectContent = 'unit_ABCDE123';
-
-        $res = vfsStream::newFile('res')
-            ->withContent($expectContent)
-            ->at(vfsStream::setup('temp'))
-            ->url();
-
-        /** @var DsFile $mockFile */
-        $mockFile = m::mock(DsFile::class)
-            ->shouldReceive('getResource')->once()->andReturn($res)
-            ->shouldReceive('getMimeType')->once()->andReturn('application/pdf')
-            ->getMock();
-
-        $actual = $this->sut->write($expectPath, $mockFile);
-
-        static::assertEquals(false, $actual->isSuccess());
-        static::assertEquals(WebDavResponse::STATUS_CODE_415, $actual->getStatusCode());
     }
 
     public function testRemoveSuccess()
