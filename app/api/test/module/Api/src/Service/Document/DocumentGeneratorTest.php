@@ -278,7 +278,6 @@ class DocumentGeneratorTest extends MockeryTestCase
     {
         $expectFileName = 'fileName';
         $expectBody = 'expect_Body';
-        $expectMimeType = DsFile::MIME_TYPE_RTF;
 
         $this->fileUploader
             ->shouldReceive('upload')
@@ -291,7 +290,7 @@ class DocumentGeneratorTest extends MockeryTestCase
                 }
             );
 
-        static::assertEquals('EXPECT', $this->sut->uploadGeneratedContent($expectBody, $expectFileName, $expectMimeType));
+        static::assertEquals('EXPECT', $this->sut->uploadGeneratedContent($expectBody, $expectFileName));
     }
 
     public function testUploadGeneratedContentError()
@@ -302,7 +301,7 @@ class DocumentGeneratorTest extends MockeryTestCase
             ->shouldReceive('upload')
             ->andThrow(new \Exception('any error'));
 
-        $this->sut->uploadGeneratedContent('fileName', 'body', 'mimeType');
+        $this->sut->uploadGeneratedContent('fileName', 'body');
     }
 
     public function testGenerateFromTemplateWithDocumentId()
@@ -361,7 +360,6 @@ class DocumentGeneratorTest extends MockeryTestCase
 
         $expectFileName = 'myTemplate';
         $expectBody = 'expect_Body';
-        $expectMimeType = DsFile::MIME_TYPE_RTF;
 
         $this->fileUploader
             ->shouldReceive('upload')
@@ -374,7 +372,7 @@ class DocumentGeneratorTest extends MockeryTestCase
                 }
             );
 
-        static::assertEquals('EXPECT', $this->sut->uploadGeneratedContent($expectBody, $expectFileName, $expectMimeType));
+        static::assertEquals('EXPECT', $this->sut->uploadGeneratedContent($expectBody, $expectFileName));
     }
 
     public function testDisableBookmarksFlagWithN()
@@ -417,7 +415,6 @@ class DocumentGeneratorTest extends MockeryTestCase
 
         $expectFileName = 'myTemplate';
         $expectBody = 'expect_Body';
-        $expectMimeType = DsFile::MIME_TYPE_RTF;
 
         $this->fileUploader
             ->shouldReceive('upload')
@@ -430,6 +427,6 @@ class DocumentGeneratorTest extends MockeryTestCase
                 }
             );
 
-        static::assertEquals('EXPECT', $this->sut->uploadGeneratedContent($expectBody, $expectFileName, $expectMimeType));
+        static::assertEquals('EXPECT', $this->sut->uploadGeneratedContent($expectBody, $expectFileName));
     }
 }
