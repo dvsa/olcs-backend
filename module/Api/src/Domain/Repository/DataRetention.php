@@ -4,14 +4,12 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Driver\PDOConnection;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as DataRetentionEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Transfer\Query\DataRetention\Records;
-use Dvsa\Olcs\Transfer\Query\DataRetention\Records as RecordsQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\DataRetention\Records;
+use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as DataRetentionEntity;
+use Dvsa\Olcs\Transfer\Query\DataRetention\Records as RecordsQry;
 
 /**
  * DataRetention
@@ -55,17 +53,6 @@ class DataRetention extends AbstractRepository
                 $qb->setParameter('assignedToUser', $query->getAssignedToUser());
             } elseif ($query->getAssignedToUser() == 'unassigned') {
                 $qb->andWhere($qb->expr()->isNull($this->alias . '.assignedTo'));
-            }
-
-            if (! empty($query->getGoodsOrPsv())) {
-                $qb->leftJoin(
-                    LicenceEntity::class,
-                    'l',
-                    Join::WITH,
-                    $this->alias . '.licNo = l.licNo'
-                );
-                $qb->andWhere($qb->expr()->eq('l.goodsOrPsv', ':goodsOrPsv'));
-                $qb->setParameter('goodsOrPsv', $query->getGoodsOrPsv());
             }
 
             $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1));
