@@ -1442,7 +1442,9 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * Tests logic for finding overdue issue fees, and checks that the 4 fees over 10 days old are returned initially
+     * @dataProvider dpIssueFeeOverdue
+     *
+     * Tests logic for finding overdue issue fees
      *
      * $fee1 isn't overdue, so is ignored
      * $fee2 is overdue, but doesn't need to be checked because $fee5 is more recent and will match
@@ -1450,47 +1452,62 @@ class IrhpApplicationEntityTest extends EntityTester
      * $fee4 would be overdue, but is not outstanding, so the fee type is not checked
      * $fee5 is overdue, outstanding and the correct fee type, causes the method to return true
      */
-    public function testIssueFeeOverdue()
+    public function testIssueFeeOverdue($thresholdDays, $dateAfterThreshold, $dateOfThreshold, $dateBeforeThreshold)
     {
-        $dateTimeMinus9 = new \DateTime('-9 weekdays');
-        $dateTimeMinus10 = new \DateTime('-10 weekdays');
-        $dateTimeMinus11 = new \DateTime('-11 weekdays');
-
         $fee1 = m::mock(Fee::class)->makePartial();
         $fee1->shouldReceive('isOutstanding')->never();
         $fee1->shouldReceive('getFeeType->isIrhpApplicationIssue')->never();
-        $fee1->setInvoicedDate($dateTimeMinus9);
+        $fee1->setInvoicedDate($dateAfterThreshold);
 
         $fee2 = m::mock(Fee::class)->makePartial();
         $fee2->shouldReceive('isOutstanding')->never();
         $fee2->shouldReceive('getFeeType->isIrhpApplicationIssue')->never();
-        $fee2->setInvoicedDate($dateTimeMinus11);
+        $fee2->setInvoicedDate($dateBeforeThreshold);
 
         $fee3 = m::mock(Fee::class)->makePartial();
         $fee3->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(true);
         $fee3->shouldReceive('getFeeType->isIrhpApplicationIssue')->once()->withNoArgs()->andReturn(false);
-        $fee3->setInvoicedDate($dateTimeMinus10);
+        $fee3->setInvoicedDate($dateOfThreshold);
 
         $fee4 = m::mock(Fee::class)->makePartial();
         $fee4->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(false);
         $fee4->shouldReceive('getFeeType->isIrhpApplicationIssue')->never();
-        $fee4->setInvoicedDate($dateTimeMinus10);
+        $fee4->setInvoicedDate($dateOfThreshold);
 
         $fee5 = m::mock(Fee::class)->makePartial();
         $fee5->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(true);
         $fee5->shouldReceive('getFeeType->isIrhpApplicationIssue')->once()->withNoArgs()->andReturn(true);
-        $fee5->setInvoicedDate($dateTimeMinus10);
+        $fee5->setInvoicedDate($dateOfThreshold);
 
         $feesCollection = new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5]);
 
         $this->sut->setFees($feesCollection);
 
-        $this->assertEquals(4, $this->sut->getFeesByAge()->count());
-        $this->assertTrue($this->sut->issueFeeOverdue());
+        $this->assertEquals(4, $this->sut->getFeesByAge($thresholdDays)->count());
+
+        $this->assertTrue($this->sut->issueFeeOverdue($thresholdDays));
+    }
+
+    public function dpIssueFeeOverdue()
+    {
+        return [
+            [
+                10,
+                new \DateTime('-9 weekdays'),
+                new \DateTime('-10 weekdays'),
+                new \DateTime('-11 weekdays')
+            ],
+            [
+                5,
+                new \DateTime('-4 weekdays'),
+                new \DateTime('-5 weekdays'),
+                new \DateTime('-6 weekdays')
+            ]
+        ];
     }
 
     /**
-     * @dataProvider dpIssueFeeOverdueProvider
+     * @dataProvider dpIssueFeeOverdueBoundary
      */
     public function testIssueFeeOverdueBoundary($days, $expected)
     {
@@ -1505,11 +1522,13 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->sut->setFees($feesCollection);
 
-        $this->assertEquals($expected, $this->sut->getFeesByAge()->count());
-        $this->assertEquals($expected, $this->sut->issueFeeOverdue());
+        $this->assertEquals(
+            $expected,
+            $this->sut->issueFeeOverdue(10)
+        );
     }
 
-    public function dpIssueFeeOverdueProvider()
+    public function dpIssueFeeOverdueBoundary()
     {
         return [
             [9, 0],

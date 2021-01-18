@@ -1704,6 +1704,7 @@ class FeeEntityTest extends EntityTester
     public function testGetDueDate($status, $type, $invoicedDate, $expected)
     {
         $this->sut->setFeeStatus(new RefData($status));
+        $this->sut->setDaysToPayIssueFee(10);
 
         $feeTypeType = new RefData($type);
         $feeType = new FeeType();

@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication\ById as IrhpApplicationByIdHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\ById as QryClass;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Exception;
@@ -31,6 +32,8 @@ class ByIdTest extends QueryHandlerTestCase
         $this->sut = m::mock(IrhpApplicationByIdHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
+        $this->mockedSmServices['PermitsFeesDaysToPayIssueFeeProvider'] = m::mock(DaysToPayIssueFeeProvider::class);
+
         parent::setUp();
     }
 
@@ -40,6 +43,21 @@ class ByIdTest extends QueryHandlerTestCase
         $canSelectCandidatePermits = false;
         $totalPermitsAwarded = 5;
         $totalPermitsRequired = 10;
+        $daysToPayIssueFee = 10;
+
+        $this->mockedSmServices['PermitsFeesDaysToPayIssueFeeProvider']->shouldReceive('getDays')
+            ->withNoArgs()
+            ->andReturn($daysToPayIssueFee);
+
+        $fee1 = m::mock(Fee::class);
+        $fee1->shouldReceive('setDaysToPayIssueFee')
+            ->with($daysToPayIssueFee)
+            ->once();
+        $fee2 = m::mock(Fee::class);
+        $fee2->shouldReceive('setDaysToPayIssueFee')
+            ->with($daysToPayIssueFee)
+            ->once();
+        $fees = [$fee1, $fee2];
 
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
         $irhpApplication->shouldReceive('serialize')
@@ -61,7 +79,11 @@ class ByIdTest extends QueryHandlerTestCase
             ->shouldReceive('getPermitsAwarded')
             ->once()
             ->withNoArgs()
-            ->andReturn($totalPermitsAwarded);
+            ->andReturn($totalPermitsAwarded)
+            ->shouldReceive('getFees')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($fees);
 
         $query = QryClass::create(['id' => 1]);
 
@@ -89,6 +111,21 @@ class ByIdTest extends QueryHandlerTestCase
     {
         $canViewCandidatePermits = true;
         $canSelectCandidatePermits = false;
+        $daysToPayIssueFee = 10;
+
+        $this->mockedSmServices['PermitsFeesDaysToPayIssueFeeProvider']->shouldReceive('getDays')
+            ->withNoArgs()
+            ->andReturn($daysToPayIssueFee);
+
+        $fee1 = m::mock(Fee::class);
+        $fee1->shouldReceive('setDaysToPayIssueFee')
+            ->with($daysToPayIssueFee)
+            ->once();
+        $fee2 = m::mock(Fee::class);
+        $fee2->shouldReceive('setDaysToPayIssueFee')
+            ->with($daysToPayIssueFee)
+            ->once();
+        $fees = [$fee1, $fee2];
 
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
         $irhpApplication->shouldReceive('serialize')
@@ -110,7 +147,11 @@ class ByIdTest extends QueryHandlerTestCase
             ->shouldReceive('getPermitsAwarded')
             ->once()
             ->withNoArgs()
-            ->andThrow(new Exception('error'));
+            ->andThrow(new Exception('error'))
+            ->shouldReceive('getFees')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($fees);
 
         $query = QryClass::create(['id' => 1]);
 

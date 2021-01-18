@@ -510,10 +510,11 @@ return [
 
             'PermitsFeesEcmtApplicationFeeCommandCreator'
                 => ApiSrv\Permits\Fees\EcmtApplicationFeeCommandCreatorFactory::class,
+            'PermitsFeesDaysToPayIssueFeeProvider'
+                => ApiSrv\Permits\Fees\DaysToPayIssueFeeProviderFactory::class,
 
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
-
         ],
     ],
     'view_manager' => [
