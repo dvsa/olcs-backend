@@ -4,8 +4,10 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Exception;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Retrieve IRHP application by id
@@ -22,6 +24,25 @@ class ById extends AbstractQueryHandler
         'countrys',
     ];
 
+    /** @var DaysToPayIssueFeeProvider */
+    private $daysToPayIssueFeeProvider;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->daysToPayIssueFeeProvider = $mainServiceLocator->get('PermitsFeesDaysToPayIssueFeeProvider');
+
+        return parent::createService($serviceLocator);
+    }
+
     /**
      * Handle query
      *
@@ -33,6 +54,11 @@ class ById extends AbstractQueryHandler
     {
         /** @var IrhpApplication $irhpApplication */
         $irhpApplication = $this->getRepo()->fetchUsingId($query);
+
+        $daysToPayIssueFee = $this->daysToPayIssueFeeProvider->getDays();
+        foreach ($irhpApplication->getFees() as $fee) {
+            $fee->setDaysToPayIssueFee($daysToPayIssueFee);
+        }
 
         $this->auditRead($irhpApplication);
 

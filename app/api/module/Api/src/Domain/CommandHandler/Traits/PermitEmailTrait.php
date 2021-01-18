@@ -71,13 +71,13 @@ trait PermitEmailTrait
      * Calculate due date for payment
      *
      * @param string $date
+     * @param int $daysToPayIssueFee
      *
      * @return string
      */
-    protected function calculateDueDate(\DateTime $date)
+    protected function calculateDueDate(\DateTime $date, $daysToPayIssueFee)
     {
-        // TODO - OLCS-21979
-        $date->add(\DateInterval::createFromDateString('+9 weekdays'));
+        $date->add(\DateInterval::createFromDateString('+' . ($daysToPayIssueFee - 1) . ' weekdays'));
         return $date->format('d F Y');
     }
 }

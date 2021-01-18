@@ -49,15 +49,6 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     protected $createdBy;
 
     /**
-     * Days for payment
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="days_for_payment", nullable=true)
-     */
-    protected $daysForPayment;
-
-    /**
      * End date
      *
      * @var \DateTime
@@ -143,30 +134,6 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the days for payment
-     *
-     * @param int $daysForPayment new value being set
-     *
-     * @return IrhpPermitWindow
-     */
-    public function setDaysForPayment($daysForPayment)
-    {
-        $this->daysForPayment = $daysForPayment;
-
-        return $this;
-    }
-
-    /**
-     * Get the days for payment
-     *
-     * @return int
-     */
-    public function getDaysForPayment()
-    {
-        return $this->daysForPayment;
     }
 
     /**

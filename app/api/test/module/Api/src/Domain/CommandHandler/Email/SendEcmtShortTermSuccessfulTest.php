@@ -46,6 +46,8 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
     {
         parent::setUp();
 
+        $paymentDeadlineNumDays = 10;
+
         $issueFee = m::mock(Fee::class);
         $issueFee->shouldReceive('getFeeTypeAmount')
             ->andReturn($this->issueFeeAmount);
@@ -60,11 +62,16 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
             'euro6PermitsGranted' => $this->euro6PermitsGranted,
             'issueFeeAmount' => $this->issueFeeAmountFormatted,
             'issueFeeTotal' => $this->issueFeeTotalFormatted,
-            'paymentDeadlineNumDays' => '10',
+            'paymentDeadlineNumDays' => $paymentDeadlineNumDays,
             'issueFeeDeadlineDate' => '21 March 2019',
             'paymentUrl' => 'http://selfserve/permits/application/' . $this->permitAppId . '/awaiting-fee',
             'periodName' => 'Permits for journeys in January and Feburary 2020',
         ];
+
+        $this->mockedSmServices['PermitsFeesDaysToPayIssueFeeProvider']->shouldReceive('getDays')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($paymentDeadlineNumDays);
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
             m::type(Message::class),

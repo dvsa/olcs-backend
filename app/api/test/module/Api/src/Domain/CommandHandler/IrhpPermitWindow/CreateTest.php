@@ -38,7 +38,6 @@ class CreateTest extends CommandHandlerTestCase
             'irhpPermitStock' => '1',
             'startDate' => $this->today,
             'endDate' => $this->tomorrow,
-            'daysForPayment' => '14',
         ];
 
         $this->repoMap['IrhpPermitWindow']
@@ -92,7 +91,6 @@ class CreateTest extends CommandHandlerTestCase
             'irhpPermitStock' => '1',
             'startDate' => $this->today,
             'endDate' => $this->tomorrow,
-            'daysForPayment' => '14'
         ];
 
         $command = CreateCmd::create($cmdData);

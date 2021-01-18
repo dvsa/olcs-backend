@@ -189,6 +189,11 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
             'validityYear' => $validityYear,
         ];
 
+        $this->mockedSmServices['PermitsFeesDaysToPayIssueFeeProvider']->shouldReceive('getDays')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($paymentDeadlineNumDays);
+
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('calculateTotalPermitsRequired')
             ->withNoArgs()

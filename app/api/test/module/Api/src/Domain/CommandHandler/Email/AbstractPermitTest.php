@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -76,6 +77,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
             'translator' => m::mock(Translator::class),
+            'PermitsFeesDaysToPayIssueFeeProvider' => m::mock(DaysToPayIssueFeeProvider::class),
         ];
 
         $this->userEmail = 'email1@test.com';

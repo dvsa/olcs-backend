@@ -45,8 +45,7 @@ class Create extends AbstractCommandHandler
         $window = WindowEntity::create(
             $irhpPermitStock,
             $command->getStartDate(),
-            $command->getEndDate(),
-            $command->getDaysForPayment()
+            $command->getEndDate()
         );
 
         $this->getRepo()->save($window);
