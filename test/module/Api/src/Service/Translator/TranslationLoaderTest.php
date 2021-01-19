@@ -177,7 +177,7 @@ class TranslationLoaderTest extends MockeryTestCase
                     'isoCode' => $locale,
                 ],
                 'translationKey' => [
-                    'id' => 'translation_key1',
+                    'translationKey' => 'translation_key1',
                 ],
                 'translatedText' => 'translated_text1',
             ],
@@ -186,7 +186,7 @@ class TranslationLoaderTest extends MockeryTestCase
                     'isoCode' => $locale,
                 ],
                 'translationKey' => [
-                    'id' => 'translation_key2',
+                    'translationKey' => 'translation_key2',
                 ],
                 'translatedText' => 'translated_text2',
             ],

@@ -31,15 +31,15 @@ class TranslationKey extends AbstractTranslationKey implements DeletableInterfac
     /**
      * Creates a translation key record
      *
-     * @param string $id
+     * @param string $translationKey
      * @param string $description
      * @return TranslationKey
      */
-    public static function create($id, $description)
+    public static function create(string $translationKey, string $description)
     {
         $instance = new self;
 
-        $instance->id = $id;
+        $instance->translationKey = $translationKey;
         $instance->description = $description;
 
         return $instance;

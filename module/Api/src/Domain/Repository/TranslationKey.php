@@ -28,6 +28,7 @@ class TranslationKey extends AbstractRepository
             if ($query->getTranslationSearch() != null) {
                 $qb->orWhere($this->alias . '.id LIKE :translationSearch')
                     ->orWhere($this->alias . '.description LIKE :translationSearch')
+                    ->orWhere($this->alias . '.translationKey LIKE :translationSearch')
                     ->leftJoin($this->alias . '.translationKeyTexts', 'tkt')
                     ->orWhere('tkt.translatedText LIKE :translationSearch')
                     ->leftJoin($this->alias . '.translationKeyTagLinks', 'tktl')

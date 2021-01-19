@@ -35,7 +35,7 @@ final class Update extends AbstractCommandHandler
          * @var TranslationKeyRepo $repo
          */
         $repo = $this->getRepo();
-        $translationKey = $repo->fetchUsingId($command);
+        $translationKey = $repo->fetchById($command->getId());
 
         $this->processTranslations($command->getTranslationsArray(), $translationKey);
 
@@ -65,7 +65,7 @@ final class Update extends AbstractCommandHandler
     }
 
     /**
-     * @param mixed $parentEntityId
+     * @param int $parentEntityId
      * @param int $languageId
      * @param string $translatedText
      */

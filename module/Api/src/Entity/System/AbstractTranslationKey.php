@@ -25,6 +25,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_translation_key_users_created_by", columns={"created_by"}),
  *        @ORM\Index(name="fk_translation_key_users_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="translation_key_translation_key_uindex", columns={"translation_key"})
  *    }
  * )
  */
@@ -59,10 +62,11 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     /**
      * Identifier - Id
      *
-     * @var string
+     * @var int
      *
      * @ORM\Id
-     * @ORM\Column(type="string", name="id", length=512)
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
@@ -76,6 +80,15 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
+
+    /**
+     * Translation key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="translation_key", length=512, nullable=false)
+     */
+    protected $translationKey;
 
     /**
      * Version
@@ -196,7 +209,7 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param string $id new value being set
+     * @param int $id new value being set
      *
      * @return TranslationKey
      */
@@ -210,7 +223,7 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     /**
      * Get the id
      *
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -239,6 +252,30 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the translation key
+     *
+     * @param string $translationKey new value being set
+     *
+     * @return TranslationKey
+     */
+    public function setTranslationKey($translationKey)
+    {
+        $this->translationKey = $translationKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the translation key
+     *
+     * @return string
+     */
+    public function getTranslationKey()
+    {
+        return $this->translationKey;
     }
 
     /**

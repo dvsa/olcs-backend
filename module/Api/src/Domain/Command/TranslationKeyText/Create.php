@@ -21,7 +21,7 @@ final class Create extends AbstractCommand
     protected $translatedText;
 
     /**
-     * @return string
+     * @return int
      */
     public function getTranslationKey()
     {
