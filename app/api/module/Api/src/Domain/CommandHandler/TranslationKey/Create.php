@@ -32,17 +32,20 @@ final class Create extends AbstractCommandHandler
          */
         $repo = $this->getRepo('TranslationKey');
 
+        $translationKey = TranslationKey::create($command->getTranslationKey(), $command->getDescription());
         try {
-            $repo->save(TranslationKey::create($command->getId(), $command->getDescription()));
+            $repo->save($translationKey);
         } catch (\Exception $e) {
             throw new NotFoundException('editable-translations-cant-save');
         }
 
-        $this->result->addId('TranslationKey', $command->getId());
+        $this->result->addId('TranslationKey', $command->getTranslationKey());
         $this->result->addMessage('TranslationKey created');
 
+        $cmdData = array_merge($command->getArrayCopy(), ['id' => $translationKey->getId()]);
+
         // Add the translation Texts to the newly created key, this also regenerates the redis cache.
-        $this->handleSideEffect(UpdateTranslationKeyCmd::create($command->getArrayCopy()));
+        $this->handleSideEffect(UpdateTranslationKeyCmd::create($cmdData));
 
         return $this->result;
     }

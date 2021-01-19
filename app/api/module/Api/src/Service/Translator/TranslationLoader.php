@@ -105,7 +105,7 @@ class TranslationLoader implements RemoteLoaderInterface
         $messages = [];
 
         foreach ($translationKeys as $key) {
-            $messages[$textDomain][$key['language']['isoCode']][$key['translationKey']['id']] = $key['translatedText'];
+            $messages[$textDomain][$key['language']['isoCode']][$key['translationKey']['translationKey']] = $key['translatedText'];
         }
 
         return $messages;
