@@ -59,6 +59,18 @@ abstract class AbstractApplicationPathGroup implements BundleSerializableInterfa
     protected $id;
 
     /**
+     * Is visible in internal
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="is_visible_in_internal",
+     *     nullable=false,
+     *     options={"default": 1})
+     */
+    protected $isVisibleInInternal = 1;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -166,6 +178,30 @@ abstract class AbstractApplicationPathGroup implements BundleSerializableInterfa
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the is visible in internal
+     *
+     * @param boolean $isVisibleInInternal new value being set
+     *
+     * @return ApplicationPathGroup
+     */
+    public function setIsVisibleInInternal($isVisibleInInternal)
+    {
+        $this->isVisibleInInternal = $isVisibleInInternal;
+
+        return $this;
+    }
+
+    /**
+     * Get the is visible in internal
+     *
+     * @return boolean
+     */
+    public function getIsVisibleInInternal()
+    {
+        return $this->isVisibleInInternal;
     }
 
     /**
