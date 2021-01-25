@@ -5,6 +5,8 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
+use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -13,8 +15,12 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as GoodsDiscEntity;
 use Dvsa\Olcs\Transfer\Query\Application\GoodsVehicles as AppGoodsVehicles;
+use Dvsa\Olcs\Transfer\Query\Licence\FiltersByVehicleIdsInterface;
 use Dvsa\Olcs\Transfer\Query\Licence\GoodsVehicles as LicGoodsVehicles;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\Variation\GoodsVehicles as VarGoodsVehicles;
+use Hamcrest\Core\IsEqual;
+use Hamcrest\Core\IsIdentical;
 use Mockery as m;
 
 /**
@@ -714,5 +720,82 @@ class LicenceVehicleTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn('result');
 
         $this->assertSame('result', $this->sut->fetchForRemoval());
+    }
+
+    public function testCreatePaginatedVehiclesDataForLicenceQueryIfAccessorIsNotDefinedOnAQueryDoesNotSetAnExpressionToFilterByVehicleId()
+    {
+        // Setup
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+
+        $dbQueryManager = m::mock(DbQueryServiceManager::class);
+        $dbQueryManager->shouldIgnoreMissing($dbQueryManager);
+        $sut = new LicenceVehicle($this->em, $queryBuilder, $dbQueryManager);
+
+        $query = m::mock(QueryInterface::class);
+        $query->shouldIgnoreMissing($query);
+
+        // Define Expectations
+        $queryBuilder->shouldNotReceive('andWhere')->withArgs(function ($expression) {
+            return $expression instanceof Query\Expr\Func && $expression->getName() === 'v.id IN';
+        });
+
+        // Execute
+        $sut->createPaginatedVehiclesDataForLicenceQuery($query, 1);
+    }
+
+    public function testCreatePaginatedVehiclesDataForLicenceQueryIfAccessorIsDefinedOnAQuerySetsAnExpressionToFilterByVehicleId()
+    {
+        // Setup
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+
+        $dbQueryManager = m::mock(DbQueryServiceManager::class);
+        $dbQueryManager->shouldIgnoreMissing($dbQueryManager);
+        $sut = new LicenceVehicle($this->em, $queryBuilder, $dbQueryManager);
+
+        $query = m::mock(QueryInterface::class, FiltersByVehicleIdsInterface::class);
+        $query->shouldReceive('getVehicleIds')->andReturn([1, 2, 3, 4]);
+        $query->shouldIgnoreMissing($query);
+
+        // Define Expectations
+        $expressionExpectation = IsEqual::equalTo(new Query\Expr\Func('v.id IN', [":vehicleIds"]));
+        $queryBuilder->shouldReceive('andWhere')->once()->with($expressionExpectation);
+
+        // Execute
+        $sut->createPaginatedVehiclesDataForLicenceQuery($query, 1);
+    }
+
+    public function vehiclesIdsDataProvider(): array
+    {
+        return [
+            'integer array of vehicle ids' => [[1, 2, 3, 4]],
+            'mixed key integer array of vehicle ids' => [['foo' => 1, 2, 3, 4]],
+            'mixed type array of vehicle ids provider' => [['1', 2, 3, 4]],
+        ];
+    }
+
+    /**
+     * @dataProvider vehiclesIdsDataProvider
+     */
+    public function testCreatePaginatedVehiclesDataForLicenceQueryIfAccessorIsDefinedOnAQuerySetsAParameterForVehicleIds(array $vehicleIds)
+    {
+        // Setup
+        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+
+        $dbQueryManager = m::mock(DbQueryServiceManager::class);
+        $dbQueryManager->shouldIgnoreMissing($dbQueryManager);
+        $sut = new LicenceVehicle($this->em, $queryBuilder, $dbQueryManager);
+
+        $query = m::mock(QueryInterface::class, FiltersByVehicleIdsInterface::class);
+        $query->shouldReceive('getVehicleIds')->andReturn($vehicleIds);
+        $query->shouldIgnoreMissing($query);
+
+        $expectedVehicleIds = [1, 2, 3, 4];
+
+        // Define Expectations
+        $argumentsExpectation = [IsEqual::equalTo("vehicleIds"), IsIdentical::identicalTo($expectedVehicleIds)];
+        $queryBuilder->shouldReceive('setParameter')->once()->withArgs($argumentsExpectation);
+
+        // Execute
+        $sut->createPaginatedVehiclesDataForLicenceQuery($query, 1);
     }
 }

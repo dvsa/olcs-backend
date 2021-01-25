@@ -77,7 +77,7 @@ class RepositoryTestCase extends MockeryTestCase
      */
     protected function setUpQueryBuilderMock(EntityManager $entityManager)
     {
-        $queryBuilder = m::mock(QueryBuilder::class);
+        $queryBuilder = m::mock(QueryBuilder::class, QueryBuilderInterface::class);
         $queryBuilder->shouldIgnoreMissing($queryBuilder);
         $query = m::mock()->shouldIgnoreMissing();
         $queryBuilder->shouldReceive('getQuery')->andReturn($query)->byDefault();
