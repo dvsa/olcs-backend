@@ -19,6 +19,9 @@ class SelfservePage
     private $questionText;
 
     /** @var string */
+    private $submitOptionsName;
+
+    /** @var string */
     private $nextStepSlug;
 
     /**
@@ -28,6 +31,7 @@ class SelfservePage
      * @param array $additionalViewData
      * @param ApplicationStep $applicationStep
      * @param QuestionText $questionText
+     * @param string $submitOptionsName
      * @param string $nextStepSlug
      *
      * @return SelfservePage
@@ -37,12 +41,14 @@ class SelfservePage
         array $additionalViewData,
         ApplicationStep $applicationStep,
         QuestionText $questionText,
+        $submitOptionsName,
         $nextStepSlug
     ) {
         $this->title = $title;
         $this->additionalViewData = $additionalViewData;
         $this->applicationStep = $applicationStep;
         $this->questionText = $questionText;
+        $this->submitOptionsName = $submitOptionsName;
         $this->nextStepSlug = $nextStepSlug;
     }
 
@@ -58,6 +64,7 @@ class SelfservePage
             'additionalViewData' => $this->additionalViewData,
             'applicationStep' => $this->applicationStep->getRepresentation(),
             'questionText' => $this->questionText->getRepresentation(),
+            'submitOptions' => $this->submitOptionsName,
             'nextStepSlug' => $this->nextStepSlug,
         ];
     }

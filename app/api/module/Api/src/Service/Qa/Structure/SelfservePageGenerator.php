@@ -48,12 +48,14 @@ class SelfservePageGenerator
         $qaEntity = $qaContext->getQaEntity();
 
         $formControlStrategy = $this->formControlServiceManager->getByApplicationStep($applicationStepEntity);
+        $question = $applicationStepEntity->getQuestion();
 
         $selfservePage = $this->selfservePageFactory->create(
-            $applicationStepEntity->getQuestion()->getActiveQuestionText()->getTranslationKeyFromQuestionKey(),
+            $question->getActiveQuestionText()->getTranslationKeyFromQuestionKey(),
             $qaEntity->getAdditionalQaViewData($applicationStepEntity),
             $this->applicationStepGenerator->generate($qaContext, ElementContainer::SELFSERVE_PAGE),
             $formControlStrategy->getQuestionText($qaContext),
+            $question->getSubmitOptions()->getId(),
             $applicationStepEntity->getNextStepSlug()
         );
 

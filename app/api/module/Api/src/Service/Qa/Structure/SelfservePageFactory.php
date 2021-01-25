@@ -13,6 +13,7 @@ class SelfservePageFactory
      * @param string $applicationReference
      * @param ApplicationStep $applicationStep
      * @param QuestionText $questionText
+     * @param string $submitOptionsName
      * @param string $nextStepSlug
      *
      * @return SelfservePage
@@ -22,8 +23,16 @@ class SelfservePageFactory
         $applicationReference,
         ApplicationStep $applicationStep,
         QuestionText $questionText,
+        $submitOptionsName,
         $nextStepSlug
     ) {
-        return new SelfservePage($title, $applicationReference, $applicationStep, $questionText, $nextStepSlug);
+        return new SelfservePage(
+            $title,
+            $applicationReference,
+            $applicationStep,
+            $questionText,
+            $submitOptionsName,
+            $nextStepSlug
+        );
     }
 }

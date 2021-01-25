@@ -24,6 +24,8 @@ class SelfservePageTest extends MockeryTestCase
 
     private $questionText;
 
+    private $submitOptionsName;
+
     private $nextStepSlug;
 
     private $selfservePage;
@@ -41,6 +43,8 @@ class SelfservePageTest extends MockeryTestCase
 
         $this->questionText = m::mock(QuestionText::class);
 
+        $this->submitOptionsName = 'submit_options_name';
+
         $this->nextStepSlug = 'removals-cabotage';
 
         $this->selfservePage = new SelfservePage(
@@ -48,6 +52,7 @@ class SelfservePageTest extends MockeryTestCase
             $this->additionalViewData,
             $this->applicationStep,
             $this->questionText,
+            $this->submitOptionsName,
             $this->nextStepSlug
         );
     }
@@ -69,6 +74,7 @@ class SelfservePageTest extends MockeryTestCase
             'additionalViewData' => $this->additionalViewData,
             'applicationStep' => $applicationStepRepresentation,
             'questionText' => $questionTextRepresentation,
+            'submitOptions' => $this->submitOptionsName,
             'nextStepSlug' => $this->nextStepSlug
         ];
 
