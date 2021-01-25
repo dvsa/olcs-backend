@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as Entity;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as GoodsDiscEntity;
+use Dvsa\Olcs\Transfer\Query\Licence\FiltersByVehicleIdsInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -244,9 +245,10 @@ class LicenceVehicle extends AbstractRepository
     {
         $qb = $this->createDefaultListQuery($query);
 
-        $qb->innerJoin('m.vehicle', 'v');
+        $qb->innerJoin('m.vehicle', $vehiclesTable = 'v');
         $qb->leftJoin('m.interimApplication', 'in');
 
+        $this->filterByVehicleIds($qb, $query, $vehiclesTable);
         $this->filterByDisc($qb, $query);
         $this->filterByVrm($qb, $query);
         $this->filterByRemovalDate($qb, $query);
@@ -328,6 +330,24 @@ class LicenceVehicle extends AbstractRepository
     }
 
     /**
+     * Filter a query to those that have a vehicle id provided by a query.
+     *
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     * @param string $vehicleTable
+     */
+    private function filterByVehicleIds(QueryBuilder $qb, QueryInterface $query, string $vehicleTable)
+    {
+        if ($query instanceof FiltersByVehicleIdsInterface && is_array($vehicleIds = $query->getVehicleIds())) {
+            $vehicleIds = array_values(array_map(function ($vehicleId) {
+                return (int) $vehicleId;
+            }, $vehicleIds));
+            $qb->andWhere(new Expr\Func(sprintf('%s.id IN', $vehicleTable), [':vehicleIds']));
+            $qb->setParameter('vehicleIds', $vehicleIds);
+        }
+    }
+
+    /**
      * Filter a query that must either HAVE a disc or NOT HAVE a disc
      *
      * @param QueryBuilder $qb
@@ -347,7 +367,6 @@ class LicenceVehicle extends AbstractRepository
                 $qb->andWhere($qb->expr()->isNull('gd.id'));
                 break;
         }
-
     }
 
     /**
