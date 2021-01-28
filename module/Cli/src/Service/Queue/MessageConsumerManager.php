@@ -11,7 +11,6 @@ namespace Dvsa\Olcs\Cli\Service\Queue;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\RuntimeException;
 use Laminas\ServiceManager\ConfigInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 
 /**
@@ -27,14 +26,9 @@ class MessageConsumerManager extends AbstractPluginManager
             $config->configureServiceManager($this);
         }
 
-        $this->addInitializer(array($this, 'initialize'));
-    }
-
-    public function initialize($instance)
-    {
-        if ($instance instanceof ServiceLocatorAwareInterface) {
-            $instance->setServiceLocator($this->getServiceLocator());
-        }
+        $this->addInitializer(
+            new ServiceLocatorInitializer()
+        );
     }
 
     public function validatePlugin($plugin)

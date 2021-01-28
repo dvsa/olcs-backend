@@ -42,25 +42,6 @@ class MessageConsumerManagerTest extends MockeryTestCase
         new MessageConsumerManager($config);
     }
 
-    public function testInitializeWithoutInterface()
-    {
-        $instance = m::mock();
-        $instance->shouldReceive('setServiceLocator')
-            ->never();
-
-        $this->sut->initialize($instance);
-    }
-
-    public function testInitializeWithInterface()
-    {
-        $instance = m::mock('\Laminas\ServiceManager\ServiceLocatorAwareInterface');
-        $instance->shouldReceive('setServiceLocator')
-            ->once()
-            ->with($this->sm);
-
-        $this->sut->initialize($instance);
-    }
-
     public function testValidatePluginInvalid()
     {
         $this->expectException('\Laminas\ServiceManager\Exception\RuntimeException');
