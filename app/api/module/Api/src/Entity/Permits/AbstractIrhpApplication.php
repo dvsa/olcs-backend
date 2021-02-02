@@ -74,6 +74,15 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $checkedAnswers = 0;
 
     /**
+     * Cor certificate number
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="cor_certificate_number", length=12, nullable=true)
+     */
+    protected $corCertificateNumber;
+
+    /**
      * Country
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -422,6 +431,30 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getCheckedAnswers()
     {
         return $this->checkedAnswers;
+    }
+
+    /**
+     * Set the cor certificate number
+     *
+     * @param string $corCertificateNumber new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setCorCertificateNumber($corCertificateNumber)
+    {
+        $this->corCertificateNumber = $corCertificateNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get the cor certificate number
+     *
+     * @return string
+     */
+    public function getCorCertificateNumber()
+    {
+        return $this->corCertificateNumber;
     }
 
     /**

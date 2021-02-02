@@ -1114,33 +1114,42 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpCanBeUpdated
      */
-    public function testCanBeUpdated($status, $expectedCanBeUpdated)
-    {
-        $statusRefData = m::mock(RefData::class);
-        $statusRefData->shouldReceive('getId')
-            ->andReturn($status);
-
-        $irhpApplication = new Entity();
-        $irhpApplication->setStatus($statusRefData);
+    public function testCanBeUpdated(
+        $isNotYetSubmitted,
+        $isUnderConsideration,
+        $isValid,
+        $isCertificateOfRoadworthiness,
+        $expectedCanBeUpdated
+    ) {
+        $this->sut->shouldReceive('isNotYetSubmitted')
+            ->withNoArgs()
+            ->andReturn($isNotYetSubmitted);
+        $this->sut->shouldReceive('isUnderConsideration')
+            ->withNoArgs()
+            ->andReturn($isUnderConsideration);
+        $this->sut->shouldReceive('isValid')
+            ->withNoArgs()
+            ->andReturn($isValid);
+        $this->sut->shouldReceive('isCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturn($isCertificateOfRoadworthiness);
 
         $this->assertEquals(
             $expectedCanBeUpdated,
-            $irhpApplication->canBeUpdated()
+            $this->sut->canBeUpdated()
         );
     }
 
     public function dpCanBeUpdated()
     {
         return [
-            [IrhpInterface::STATUS_CANCELLED, false],
-            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true],
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
-            [IrhpInterface::STATUS_WITHDRAWN, false],
-            [IrhpInterface::STATUS_AWAITING_FEE, false],
-            [IrhpInterface::STATUS_FEE_PAID, false],
-            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUING, false],
-            [IrhpInterface::STATUS_VALID, false],
+            [false, false, false, false, false],
+            [true, false, false, false, true],
+            [false, true, false, false, true],
+            [false, false, true, false, false],
+            [true, false, false, true, true],
+            [false, true, false, true, true],
+            [false, false, true, true, true],
         ];
     }
 
@@ -6876,5 +6885,17 @@ class IrhpApplicationEntityTest extends EntityTester
             [true, false, $irhpPermitStock1, $irhpPermitStock1, true],
             [false, true, $irhpPermitStock1, $irhpPermitStock1, true],
         ];
+    }
+
+    public function testUpdateCorCertificateNumber()
+    {
+        $corCertificateNumber = 'UKCR43/01234';
+
+        $this->sut->updateCorCertificateNumber($corCertificateNumber);
+
+        $this->assertEquals(
+            $corCertificateNumber,
+            $this->sut->getCorCertificateNumber()
+        );
     }
 }

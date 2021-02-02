@@ -47,6 +47,7 @@ class UpdateFullTest extends CommandHandlerTestCase
             'id' => 4,
             'type' => $permitTypeId,
             'licence' => $licenceId,
+            'corCertificateNumber' => 'UKCR32/00123',
             'dateReceived' => '2019-01-03',
             'declaration' => 0,
             'countries' => ['DE', 'FR', 'NL'],
@@ -83,6 +84,10 @@ class UpdateFullTest extends CommandHandlerTestCase
         $this->mockedSmServices['PermitsCheckableCheckedValueUpdater']->shouldReceive('updateIfRequired')
             ->with($irhpApplicationEntity, $cmdData['checked'])
             ->once();
+
+        $irhpApplicationEntity->shouldReceive('updateCorCertificateNumber')
+            ->once()
+            ->with($cmdData['corCertificateNumber']);
 
         $irhpApplicationEntity->shouldReceive('updateDateReceived')
             ->once()
@@ -152,6 +157,7 @@ class UpdateFullTest extends CommandHandlerTestCase
             'id' => 44,
             'type' => $permitTypeId,
             'licence' => $licenceId,
+            'corCertificateNumber' => 'UKCR32/00123',
             'dateReceived' => '2020-01-03',
             'declaration' => 0,
             'countries' => ['DE', 'FR', 'NL'],
@@ -179,6 +185,10 @@ class UpdateFullTest extends CommandHandlerTestCase
         $this->mockedSmServices['PermitsCheckableCheckedValueUpdater']->shouldReceive('updateIfRequired')
             ->with($irhpApplicationEntity, $cmdData['checked'])
             ->once();
+
+        $irhpApplicationEntity->shouldReceive('updateCorCertificateNumber')
+            ->once()
+            ->with($cmdData['corCertificateNumber']);
 
         $irhpApplicationEntity->shouldReceive('updateDateReceived')
             ->once()
@@ -246,6 +256,7 @@ class UpdateFullTest extends CommandHandlerTestCase
             'id' => 34,
             'type' => $irhpPermitTypeId,
             'licence' => $licenceId,
+            'corCertificateNumber' => 'UKCR32/00123',
             'dateReceived' => '2090-01-03',
             'declaration' => 0,
             'postData' => ['key' => 'val'],
@@ -269,6 +280,10 @@ class UpdateFullTest extends CommandHandlerTestCase
         $this->mockedSmServices['PermitsCheckableCheckedValueUpdater']->shouldReceive('updateIfRequired')
             ->with($irhpApplicationEntity, $cmdData['checked'])
             ->once();
+
+        $irhpApplicationEntity->shouldReceive('updateCorCertificateNumber')
+            ->once()
+            ->with($cmdData['corCertificateNumber']);
 
         $irhpApplicationEntity->shouldReceive('updateDateReceived')
             ->once()
@@ -322,6 +337,7 @@ class UpdateFullTest extends CommandHandlerTestCase
             'id' => 34,
             'type' => $irhpPermitTypeId,
             'licence' => $licenceId,
+            'corCertificateNumber' => 'UKCR32/00123',
             'dateReceived' => '2090-01-03',
             'declaration' => 1,
             'postData' => ['key' => 'val'],
@@ -347,6 +363,9 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->once();
 
         $irhpApplicationEntity
+            ->shouldReceive('updateCorCertificateNumber')
+            ->once()
+            ->with($cmdData['corCertificateNumber'])
             ->shouldReceive('updateDateReceived')
             ->once()
             ->with($cmdData['dateReceived'])
