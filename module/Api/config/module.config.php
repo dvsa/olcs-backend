@@ -789,6 +789,8 @@ return [
                 QaStrategy\EcmtAnnualTripsAbroadFormControlStrategyFactory::class,
             Question::FORM_CONTROL_ECMT_SECTORS =>
                 QaStrategy\EcmtSectorsFormControlStrategyFactory::class,
+            Question::FORM_CONTROL_ECMT_CHECK_ECMT_NEEDED =>
+                QaStrategy\EcmtCheckEcmtNeededFormControlStrategyFactory::class,
             Question::FORM_CONTROL_ECMT_SHORT_TERM_EARLIEST_PERMIT_DATE =>
                 QaStrategy\EcmtShortTermEarliestPermitDateFormControlStrategyFactory::class,
             Question::FORM_CONTROL_ECMT_ANNUAL_2018_NO_OF_PERMITS =>
