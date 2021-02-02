@@ -106,6 +106,7 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
 
         $this->checkedValueUpdater->updateIfRequired($irhpApplication, $command->getChecked());
 
+        $irhpApplication->updateCorCertificateNumber($command->getCorCertificateNumber());
         $irhpApplication->updateDateReceived($command->getDateReceived());
         $irhpApplicationRepo->save($irhpApplication);
 

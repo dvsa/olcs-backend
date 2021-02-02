@@ -1098,7 +1098,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function canBeUpdated()
     {
-        return $this->isNotYetSubmitted() || $this->isUnderConsideration();
+        return $this->isNotYetSubmitted()
+            || $this->isUnderConsideration()
+            || ($this->isValid() && $this->isCertificateOfRoadworthiness());
     }
 
     /**
@@ -2641,5 +2643,15 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         return ($this->isUnderConsideration() || $this->isAwaitingFee())
             && $this->getAssociatedStock() === $irhpPermitStock;
+    }
+
+    /**
+     * Update the certificate number for a certificate of roadworthiness application
+     *
+     * @param string $corCertificateNumber
+     */
+    public function updateCorCertificateNumber($corCertificateNumber)
+    {
+        $this->corCertificateNumber = $corCertificateNumber;
     }
 }
