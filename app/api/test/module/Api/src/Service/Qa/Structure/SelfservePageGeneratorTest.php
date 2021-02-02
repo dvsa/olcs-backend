@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
 use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
+use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
@@ -36,6 +37,8 @@ class SelfservePageGeneratorTest extends MockeryTestCase
             'property2' => 'value2',
         ];
 
+        $submitOptionsName = 'submit_options_name';
+
         $nextStepSlug = 'removals-cabotage';
 
         $applicationStep = m::mock(ApplicationStep::class);
@@ -47,10 +50,18 @@ class SelfservePageGeneratorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($questionKey);
 
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-        $applicationStepEntity->shouldReceive('getQuestion->getActiveQuestionText')
+        $questionEntity = m::mock(QuestionEntity::class);
+        $questionEntity->shouldReceive('getActiveQuestionText')
             ->withNoArgs()
             ->andReturn($questionTextEntity);
+        $questionEntity->shouldReceive('getSubmitOptions->getId')
+            ->withNoArgs()
+            ->andReturn($submitOptionsName);
+
+        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
+        $applicationStepEntity->shouldReceive('getQuestion')
+            ->withNoArgs()
+            ->andReturn($questionEntity);
         $applicationStepEntity->shouldReceive('getNextStepSlug')
             ->withNoArgs()
             ->andReturn($nextStepSlug);
@@ -70,7 +81,14 @@ class SelfservePageGeneratorTest extends MockeryTestCase
 
         $selfservePageFactory = m::mock(SelfservePageFactory::class);
         $selfservePageFactory->shouldReceive('create')
-            ->with($questionKey, $additionalQaViewData, $applicationStep, $questionText, $nextStepSlug)
+            ->with(
+                $questionKey,
+                $additionalQaViewData,
+                $applicationStep,
+                $questionText,
+                $submitOptionsName,
+                $nextStepSlug
+            )
             ->andReturn($selfservePage);
        
         $applicationStepGenerator = m::mock(ApplicationStepGenerator::class);

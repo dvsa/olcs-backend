@@ -26,7 +26,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_question_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_question_form_control_type_ref_data_id", columns={"form_control_type"}),
  *        @ORM\Index(name="fk_question_last_modified_by_user_id", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_question_question_type_ref_data_id", columns={"question_type"})
+ *        @ORM\Index(name="fk_question_question_type_ref_data_id", columns={"question_type"}),
+ *        @ORM\Index(name="fk_question_submit_options_ref_data_id", columns={"submit_options"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="question_slug_uindex", columns={"slug"})
@@ -120,6 +121,16 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      * @ORM\Column(type="string", name="slug", length=255, nullable=true)
      */
     protected $slug;
+
+    /**
+     * Submit options
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="submit_options", referencedColumnName="id", nullable=true)
+     */
+    protected $submitOptions;
 
     /**
      * Title
@@ -373,6 +384,30 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * Set the submit options
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $submitOptions entity being set as the value
+     *
+     * @return Question
+     */
+    public function setSubmitOptions($submitOptions)
+    {
+        $this->submitOptions = $submitOptions;
+
+        return $this;
+    }
+
+    /**
+     * Get the submit options
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getSubmitOptions()
+    {
+        return $this->submitOptions;
     }
 
     /**
