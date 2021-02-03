@@ -2,12 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context;
 
-use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\Exception\RuntimeException;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class PluginManager
@@ -21,17 +19,10 @@ class PluginManager extends AbstractPluginManager
     {
         parent::__construct($configuration);
         $this->addAbstractFactory(new AbstractFactory());
-        $this->addInitializer(array($this, 'injectAddressFormatter'), false);
-    }
-
-    public function injectAddressFormatter($service, ServiceLocatorInterface $serviceLocator)
-    {
-        if ($service instanceof AddressFormatterAwareInterface) {
-            $parentLocator = $serviceLocator->getServiceLocator();
-            $service->setAddressFormatter($parentLocator->get('AddressFormatter'));
-        }
-
-        return $service;
+        $this->addInitializer(
+            new AddressFormatterInitializer(),
+            false
+        );
     }
 
     /**
