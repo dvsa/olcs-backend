@@ -42,29 +42,4 @@ class PluginManagerTest extends MockeryTestCase
         // make sure no exception is thrown
         $this->assertNull($this->sut->validatePlugin($plugin));
     }
-
-    public function testInjectAddressFormatter()
-    {
-        $mockAddressFormatter = m::mock(\Dvsa\Olcs\Api\Service\Helper\FormatAddress::class);
-
-        /** @var ServiceLocatorInterface $mockSl */
-        $mockSl = m::mock(ServiceLocatorInterface::class)
-            ->shouldReceive('get')->with('AddressFormatter')->andReturn($mockAddressFormatter)
-            ->getMock();
-
-        /** @var ServiceLocatorInterface $mockSm */
-        $mockSm = m::mock(ServiceLocatorInterface::class)
-            ->shouldReceive('getServiceLocator')->andReturn($mockSl)
-            ->getMock();
-
-        /** @var AddressFormatterAwareInterface|m\MockInterface $mockSrv */
-        $mockSrv = m::mock(AddressFormatterAwareInterface::class)
-            ->shouldReceive('setAddressFormatter')->once()->with($mockAddressFormatter)
-            ->getMock();
-
-        //  call
-        $actual = $this->sut->injectAddressFormatter($mockSrv, $mockSm);
-
-        static::assertSame($mockSrv, $actual);
-    }
 }
