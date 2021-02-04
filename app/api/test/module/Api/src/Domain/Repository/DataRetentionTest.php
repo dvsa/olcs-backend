@@ -3,9 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetention;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\DataRetention\Records as RecordsQry;
 use Mockery as m;
 
@@ -217,6 +219,31 @@ class DataRetentionTest extends RepositoryTestCase
 
         $this->sut->applyListFilters($qb, $query);
     }
+
+    public function testApplyListFiltersRecordsQryWithGoodsLicence()
+    {
+        $query = RecordsQry::create(
+            [
+                'dataRetentionRuleId' => 13,
+                'goodsOrPsv' => 'lcat_gv'
+            ]
+        );
+
+        /** @var QueryBuilder|m::mock $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('leftJoin')->with(Licence::class, 'l', Join::WITH, 'm.licNo = l.licNo')->once()->andReturnSelf();
+        $qb->shouldReceive('expr->eq')->with('l.goodsOrPsv', ':goodsOrPsv')->once()->andReturn('expr1');
+        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
+        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+        $qb->shouldReceive('setParameter')->with('goodsOrPsv', 'lcat_gv')->once();
+
+        $this->sut->applyListFilters($qb, $query);
+    }
+    
 
     public function testRunCleanupProc()
     {
