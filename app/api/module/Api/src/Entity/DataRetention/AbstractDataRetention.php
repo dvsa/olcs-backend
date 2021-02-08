@@ -25,12 +25,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ix_assigned_to", columns={"assigned_to"}),
  *        @ORM\Index(name="ix_data_retention_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_data_retention_goods_or_psv", columns={"goods_or_psv"}),
  *        @ORM\Index(name="ix_data_retention_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_data_retention_rule_id", columns={"data_retention_rule_id"}),
  *        @ORM\Index(name="ix_delete_confirmation", columns={"action_confirmation"}),
  *        @ORM\Index(name="ix_deleted_date", columns={"deleted_date"}),
  *        @ORM\Index(name="ix_entity_name", columns={"entity_name"}),
  *        @ORM\Index(name="ix_entity_name_entity_pk", columns={"entity_name","entity_pk"}),
+ *        @ORM\Index(name="ix_lic_no", columns={"lic_no"}),
  *        @ORM\Index(name="ix_organisation_id", columns={"organisation_id"})
  *    }
  * )
@@ -110,6 +112,16 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
      * @ORM\Column(type="integer", name="entity_pk", nullable=false)
      */
     protected $entityPk;
+
+    /**
+     * Goods or psv
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=true)
+     */
+    protected $goodsOrPsv;
 
     /**
      * Identifier - Id
@@ -350,6 +362,30 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     public function getEntityPk()
     {
         return $this->entityPk;
+    }
+
+    /**
+     * Set the goods or psv
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv entity being set as the value
+     *
+     * @return DataRetention
+     */
+    public function setGoodsOrPsv($goodsOrPsv)
+    {
+        $this->goodsOrPsv = $goodsOrPsv;
+
+        return $this;
+    }
+
+    /**
+     * Get the goods or psv
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getGoodsOrPsv()
+    {
+        return $this->goodsOrPsv;
     }
 
     /**
