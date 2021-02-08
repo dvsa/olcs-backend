@@ -58,13 +58,7 @@ class DataRetention extends AbstractRepository
             }
 
             if (! empty($query->getGoodsOrPsv())) {
-                $qb->leftJoin(
-                    LicenceEntity::class,
-                    'l',
-                    Join::WITH,
-                    $this->alias . '.licNo = l.licNo'
-                );
-                $qb->andWhere($qb->expr()->eq('l.goodsOrPsv', ':goodsOrPsv'));
+                $qb->andWhere($qb->expr()->eq($this->alias . '.goodsOrPsv', ':goodsOrPsv'));
                 $qb->setParameter('goodsOrPsv', $query->getGoodsOrPsv());
             }
 
