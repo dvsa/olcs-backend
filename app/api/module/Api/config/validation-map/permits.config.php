@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalPermits;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 
 return [
@@ -47,9 +48,9 @@ return [
     QueryHandler\Permits\CheckAcceptScoringAndPostScoringReportPrerequisites::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockScoringPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockAcceptPermitted::class => NotIsAnonymousUser::class,
-    QueryHandler\Permits\StockOperationsPermitted::class => NotIsAnonymousUser::class,
-    QueryHandler\Permits\StockAlignmentReport::class => IsSystemAdmin::class,
-    QueryHandler\Permits\PostScoringReport::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\StockOperationsPermitted::class => IsInternalPermits::class,
+    QueryHandler\Permits\StockAlignmentReport::class => IsInternalPermits::class,
+    QueryHandler\Permits\PostScoringReport::class => IsInternalPermits::class,
     QueryHandler\Permits\GetScoredPermitList::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintType::class => IsInternalUser::class,
     QueryHandler\Permits\ReadyToPrintCountry::class => IsInternalUser::class,
@@ -83,6 +84,6 @@ return [
     CommandHandler\Permits\PrintPermits::class => IsInternalUser::class,
     CommandHandler\Permits\ProceedToStatus::class => IsSideEffect::class,
 
-    CommandHandler\Permits\QueueRunScoring::class => IsSystemAdmin::class,
-    CommandHandler\Permits\QueueAcceptScoring::class => IsSystemAdmin::class,
+    CommandHandler\Permits\QueueRunScoring::class => IsInternalPermits::class,
+    CommandHandler\Permits\QueueAcceptScoring::class => IsInternalPermits::class,
 ];

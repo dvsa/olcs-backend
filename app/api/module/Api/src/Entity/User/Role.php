@@ -23,6 +23,7 @@ class Role extends AbstractRole implements RoleInterface
     const ROLE_INTERNAL_READ_ONLY = 'internal-read-only';
     const ROLE_INTERNAL_CASE_WORKER = 'internal-case-worker';
     const ROLE_INTERNAL_ADMIN = 'internal-admin';
+    const ROLE_INTERNAL_IRHP_ADMIN = 'internal-irhp-admin';
     const ROLE_OPERATOR_ADMIN = 'operator-admin';
     const ROLE_OPERATOR_USER = 'operator-user';
     const ROLE_OPERATOR_TM = 'operator-tm';
@@ -41,6 +42,7 @@ class Role extends AbstractRole implements RoleInterface
         self::ROLE_SYSTEM_ADMIN => [
             self::ROLE_SYSTEM_ADMIN,
             self::ROLE_INTERNAL_ADMIN,
+            self::ROLE_INTERNAL_IRHP_ADMIN,
             self::ROLE_INTERNAL_CASE_WORKER,
             self::ROLE_INTERNAL_READ_ONLY,
             self::ROLE_INTERNAL_LIMITED_READ_ONLY,
@@ -54,6 +56,21 @@ class Role extends AbstractRole implements RoleInterface
         ],
         self::ROLE_INTERNAL_ADMIN => [
             self::ROLE_INTERNAL_ADMIN,
+            self::ROLE_INTERNAL_IRHP_ADMIN,
+            self::ROLE_INTERNAL_CASE_WORKER,
+            self::ROLE_INTERNAL_READ_ONLY,
+            self::ROLE_INTERNAL_LIMITED_READ_ONLY,
+            self::ROLE_OPERATOR_ADMIN,
+            self::ROLE_OPERATOR_USER,
+            self::ROLE_OPERATOR_TM,
+            self::ROLE_PARTNER_ADMIN,
+            self::ROLE_PARTNER_USER,
+            self::ROLE_LOCAL_AUTHORITY_ADMIN,
+            self::ROLE_LOCAL_AUTHORITY_USER,
+        ],
+        self::ROLE_INTERNAL_IRHP_ADMIN => [
+            self::ROLE_INTERNAL_ADMIN,
+            self::ROLE_INTERNAL_IRHP_ADMIN,
             self::ROLE_INTERNAL_CASE_WORKER,
             self::ROLE_INTERNAL_READ_ONLY,
             self::ROLE_INTERNAL_LIMITED_READ_ONLY,
