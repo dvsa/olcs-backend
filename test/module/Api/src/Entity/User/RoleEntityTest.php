@@ -107,6 +107,7 @@ class RoleEntityTest extends EntityTester
         return [
             [Entity::ROLE_SYSTEM_ADMIN, false],
             [Entity::ROLE_INTERNAL_ADMIN, false],
+            [Entity::ROLE_INTERNAL_IRHP_ADMIN, false],
             [Entity::ROLE_INTERNAL_CASE_WORKER, false],
             [Entity::ROLE_INTERNAL_READ_ONLY, true],
             [Entity::ROLE_INTERNAL_LIMITED_READ_ONLY, true],

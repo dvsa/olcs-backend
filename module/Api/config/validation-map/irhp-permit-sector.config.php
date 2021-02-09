@@ -2,10 +2,9 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalPermits;
 
 return [
-    QueryHandler\IrhpPermitSector\GetList::class => IsInternalAdmin::class,
-    CommandHandler\IrhpPermitSector\Update::class => IsSystemAdmin::class,
+    QueryHandler\IrhpPermitSector\GetList::class => IsInternalPermits::class,
+    CommandHandler\IrhpPermitSector\Update::class => IsInternalPermits::class,
 ];

@@ -75,6 +75,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
         self::USER_TYPE_INTERNAL => [
             RoleEntity::ROLE_SYSTEM_ADMIN,
             RoleEntity::ROLE_INTERNAL_ADMIN,
+            RoleEntity::ROLE_INTERNAL_IRHP_ADMIN,
             RoleEntity::ROLE_INTERNAL_CASE_WORKER,
             RoleEntity::ROLE_INTERNAL_READ_ONLY,
             RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY,
