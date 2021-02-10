@@ -28,6 +28,8 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
      */
     public function testHandleCommand($licenceTranslateToWelsh, $expectedLocale)
     {
+        $paymentDeadlineNumDays = '10';
+
         $templateVars = [
             'appUrl' => 'http://selfserve/',
             'permitsUrl' => 'http://selfserve/permits',
@@ -35,7 +37,13 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
             'ecmtGuidanceUrl' => 'https://www.gov.uk/guidance/ecmt-international-road-haulage-permits',
             'applicationRef' => $this->applicationRef,
             'applicationFee' => '10',
+            'paymentDeadlineNumDays' => $paymentDeadlineNumDays,
         ];
+
+        $this->mockedSmServices['PermitsFeesDaysToPayIssueFeeProvider']->shouldReceive('getDays')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($paymentDeadlineNumDays);
 
         $this->applicationEntity->shouldReceive('isAwaitingFee')->once()->withNoArgs()->andReturn(false);
         $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);
@@ -92,6 +100,8 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
      */
     public function testHandleCommandForCreatedByInternalUser($licenceTranslateToWelsh, $expectedLocale)
     {
+        $paymentDeadlineNumDays = '10';
+
         $templateVars = [
             'appUrl' => 'http://selfserve/',
             'permitsUrl' => 'http://selfserve/permits',
@@ -99,7 +109,13 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
             'ecmtGuidanceUrl' => 'https://www.gov.uk/guidance/ecmt-international-road-haulage-permits',
             'applicationRef' => $this->applicationRef,
             'applicationFee' => '10',
+            'paymentDeadlineNumDays' => $paymentDeadlineNumDays,
         ];
+
+        $this->mockedSmServices['PermitsFeesDaysToPayIssueFeeProvider']->shouldReceive('getDays')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($paymentDeadlineNumDays);
 
         $this->applicationEntity->shouldReceive('isAwaitingFee')->once()->withNoArgs()->andReturn(false);
         $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);

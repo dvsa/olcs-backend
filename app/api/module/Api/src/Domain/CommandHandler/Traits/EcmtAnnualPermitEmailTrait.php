@@ -44,6 +44,8 @@ trait EcmtAnnualPermitEmailTrait
      */
     protected function getTemplateVariables($recordObject): array
     {
+        $daysToPayIssueFee = $this->daysToPayIssueFeeProvider->getDays();
+
         $vars = [
             // http://selfserve is replaced based on the environment
             'appUrl' => 'http://selfserve/',
@@ -54,11 +56,10 @@ trait EcmtAnnualPermitEmailTrait
             'applicationFee' => $this->formatCurrency(
                 $this->getRepo('FeeType')->getLatestByProductReference(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF)->getAmount()
             ),
+            'paymentDeadlineNumDays' => $daysToPayIssueFee,
         ];
 
         if ($recordObject->isAwaitingFee()) {
-            $daysToPayIssueFee = $this->daysToPayIssueFeeProvider->getDays();
-
             /** @var IrhpPermitApplication $irhpPermitApplication */
             $irhpPermitApplication = $recordObject->getFirstIrhpPermitApplication();
 
@@ -76,7 +77,6 @@ trait EcmtAnnualPermitEmailTrait
             );
             $vars['permitsRequired'] = $recordObject->calculateTotalPermitsRequired();
             $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
-            $vars['paymentDeadlineNumDays'] = $daysToPayIssueFee;
             $vars['validityYear'] = $irhpPermitApplication->getIrhpPermitWindow()
                 ->getIrhpPermitStock()
                 ->getValidityYear();
