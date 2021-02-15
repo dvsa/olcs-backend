@@ -95,7 +95,6 @@ class MyAccountTest extends QueryHandlerTestCase
             ->andReturnFalse();
 
         $mockSystemParameter = $this->repoMap['SystemParameter'];
-        $mockSystemParameter->shouldReceive('getDisableDataRetentionRecords')->andReturn(true);
         $mockSystemParameter->shouldReceive('isSelfservePromptEnabled')
             ->times($isEligibleForPermits ? 1 : 0)
             ->withNoArgs()
@@ -107,7 +106,6 @@ class MyAccountTest extends QueryHandlerTestCase
             'foo',
             'hasActivePsvLicence' => false,
             'numberOfVehicles' => 2,
-            'disableDataRetentionRecords' => true,
             'eligibleForPermits' => $isEligibleForPermits,
             'eligibleForPrompt' => $expectedEligibleForPrompt,
         ];
