@@ -55,6 +55,7 @@ class RefuseTest extends CommandHandlerTestCase
             }
         );
 
+        $this->expectedLicenceCacheClearSideEffect(532);
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence 532 refused"], $result->getMessages());

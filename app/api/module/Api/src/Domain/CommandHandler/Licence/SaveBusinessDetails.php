@@ -61,10 +61,15 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
         // Optimistic locking on the org
         $orgRepo->lock($this->org, $version);
 
+        $licenceId = $licence->getId();
         $this->setDetails();
         $this->setRegAddress();
         $this->setNatureOfBusiness();
-        $this->setTradingNames($licence->getId());
+        $this->setTradingNames($licenceId);
+
+        $this->result->merge(
+            $this->clearLicenceCacheSideEffect($licenceId)
+        );
 
         $orgRepo->save($this->org);
 

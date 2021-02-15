@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForLicence;
+use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForOrganisation;
 use Dvsa\Olcs\Api\Domain\Command\Cache\Generate;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
@@ -360,6 +362,38 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         $cmd = Generate::create($params);
 
         return $this->handleSideEffect($cmd);
+    }
+
+    /**
+     * Clear the caches for this licence id
+     *
+     * @param int $licenceId
+     *
+     * @return Result
+     */
+    protected function clearLicenceCacheSideEffect($licenceId)
+    {
+        return $this->handleSideEffect(
+            ClearForLicence::create(
+                ['id' => $licenceId]
+            )
+        );
+    }
+
+    /**
+     * Clear the caches for this organisation id
+     *
+     * @param int $orgId
+     *
+     * @return Result
+     */
+    protected function clearOrganisationCacheSideEffect($orgId)
+    {
+        return $this->handleSideEffect(
+            ClearForOrganisation::create(
+                ['id' => $orgId]
+            )
+        );
     }
 
     /**

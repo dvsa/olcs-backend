@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\MyAccount;
 
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\User\User;
 use ZfcRbac\Service\AuthorizationService;
@@ -24,12 +25,51 @@ class MyAccountTest extends QueryHandlerTestCase
         $this->sut = new MyAccount();
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            CacheEncryption::class => m::mock(CacheEncryption::class),
         ];
 
         $this->mockRepo('SystemParameter', SystemParameter::class);
 
         parent::setUp();
+    }
+
+    /**
+     * @dataProvider dpUserIdProvider
+     */
+    public function testHandleQueryFromCache($userId, $searchUserId)
+    {
+        $cacheResult = ['result'];
+
+        /** @var User $mockUser */
+        $mockUser = m::mock(User::class);
+        $mockUser->expects('getId')->andReturn($userId);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
+        $this->mockedSmServices[CacheEncryption::class]->expects('hasCustomItem')
+            ->with(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $searchUserId)
+            ->andReturnTrue();
+
+        $this->mockedSmServices[CacheEncryption::class]->expects('getCustomItem')
+            ->with(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $searchUserId)
+            ->andReturn($cacheResult);
+
+        $query = Qry::create([]);
+
+        $this->assertEquals(
+            $cacheResult,
+            $this->sut->handleQuery($query)
+        );
+    }
+
+    public function dpUserIdProvider()
+    {
+        return [
+            [999, 999],
+            [null, 'anon'],
+        ];
     }
 
     /**
@@ -50,6 +90,10 @@ class MyAccountTest extends QueryHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
+        $this->mockedSmServices[CacheEncryption::class]->expects('hasCustomItem')
+            ->with(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $userId)
+            ->andReturnFalse();
+
         $mockSystemParameter = $this->repoMap['SystemParameter'];
         $mockSystemParameter->shouldReceive('getDisableDataRetentionRecords')->andReturn(true);
         $mockSystemParameter->shouldReceive('isSelfservePromptEnabled')
@@ -59,16 +103,21 @@ class MyAccountTest extends QueryHandlerTestCase
 
         $query = Qry::create([]);
 
+        $expectedResult = [
+            'foo',
+            'hasActivePsvLicence' => false,
+            'numberOfVehicles' => 2,
+            'disableDataRetentionRecords' => true,
+            'eligibleForPermits' => $isEligibleForPermits,
+            'eligibleForPrompt' => $expectedEligibleForPrompt,
+        ];
+
+        $this->mockedSmServices[CacheEncryption::class]->expects('setCustomItem')
+            ->with(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $expectedResult, $userId);
+
         $result = $this->sut->handleQuery($query);
         $this->assertEquals(
-            [
-                'foo',
-                'hasActivePsvLicence' => false,
-                'numberOfVehicles' => 2,
-                'disableDataRetentionRecords' => true,
-                'eligibleForPermits' => $isEligibleForPermits,
-                'eligibleForPrompt' => $expectedEligibleForPrompt,
-            ],
+            $expectedResult,
             $result->serialize()
         );
     }

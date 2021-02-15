@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
 
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Merge as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Tm\Merge as Cmd;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use \Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
@@ -25,6 +25,10 @@ class MergeTest extends CommandHandlerTestCase
         $this->mockRepo('Task', \Dvsa\Olcs\Api\Domain\Repository\Task::class);
         $this->mockRepo('Note', \Dvsa\Olcs\Api\Domain\Repository\Note::class);
         $this->mockRepo('EventHistory', \Dvsa\Olcs\Api\Domain\Repository\EventHistory::class);
+
+        $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
+        ];
 
         parent::setUp();
     }
@@ -464,6 +468,7 @@ class MergeTest extends CommandHandlerTestCase
         $user = new UserEntity('', UserEntity::USER_TYPE_INTERNAL);
         $user->setId(115);
         $mockDonorTm->addUsers($user);
+        $this->expectedUserCacheClear([115]);
 
         $command = Cmd::create($data);
 

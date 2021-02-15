@@ -2,6 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForLicence;
+use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForOrganisation;
 use Dvsa\Olcs\Api\Domain\Command\Cache\Generate as GenerateCacheCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -14,11 +17,14 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\Repository\ValidateMockRepoTypeTrait;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -336,6 +342,88 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                     throw $exception;
                 }
             );
+    }
+
+    public function expectedLicenceCacheClearSideEffect($licenceId)
+    {
+        $this->expectedSideEffect(
+            ClearForLicence::class,
+            [
+                'id' => $licenceId,
+            ],
+            new Result()
+        );
+    }
+
+    public function expectedLicenceCacheClear($licenceMock)
+    {
+        $organisationMock = m::mock(Organisation::class);
+
+        $licenceMock->expects('getOrganisation')->andReturn(
+            $this->expectedOrganisationCacheClear($organisationMock)
+        );
+
+        return $licenceMock;
+    }
+
+    public function expectedOrganisationCacheClearSideEffect($orgId)
+    {
+        $this->expectedSideEffect(
+            ClearForOrganisation::class,
+            [
+                'id' => $orgId,
+            ],
+            new Result()
+        );
+    }
+
+    public function expectedOrganisationCacheClear($organisationMock)
+    {
+        $this->expectedUserCacheClear([111, 222]);
+
+        $orgUser1 = m::mock(OrganisationUser::class);
+        $orgUser1->expects('getUser->getId')->withNoArgs()->andReturn(111);
+
+        $orgUser2 = m::mock(OrganisationUser::class);
+        $orgUser2->expects('getUser->getId')->withNoArgs()->andReturn(222);
+
+        $orgUsers = new ArrayCollection([$orgUser1, $orgUser2]);
+
+        $organisationMock->expects('getOrganisationUsers')->withNoArgs()->andReturn($orgUsers);
+
+        return $organisationMock;
+    }
+
+    public function expectedUserCacheClear($userIds)
+    {
+        foreach (CacheEncryption::USER_CACHES as $cacheType) {
+            $this->expectedCacheClear($cacheType, $userIds);
+        }
+    }
+
+    public function expectedCacheClear($cacheType, $uniqueIds)
+    {
+        $this->mockedSmServices[CacheEncryption::class]
+            ->expects('removeCustomItems')
+            ->with($cacheType, $uniqueIds)
+            ->andReturn([]);
+    }
+
+    public function expectedCacheClearFromUserCollection($entityMock)
+    {
+        $this->expectedUserCacheClear([111, 222]);
+
+        $user1 = m::mock(User::class);
+        $user1->expects('getId')->andReturn(111);
+
+        $user2 = m::mock(User::class);
+        $user2->expects('getId')->andReturn(222);
+
+        $users = new ArrayCollection([$user1, $user2]);
+
+        $entityMock->expects('getUsers')->andReturn($users);
+
+        return $entityMock;
     }
 
     public function mapRefData($key)

@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -24,8 +26,10 @@ use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateOperatingCentres extends AbstractCommandHandler implements TransactionedInterface
+final class UpdateOperatingCentres extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
+
     protected $repoServiceName = 'Licence';
 
     protected $extraRepos = ['LicenceOperatingCentre'];
@@ -67,6 +71,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         }
 
         $this->getRepo()->save($licence);
+        $this->clearLicenceCaches($licence);
         $this->result->addMessage('Licence record updated');
 
         return $this->result;

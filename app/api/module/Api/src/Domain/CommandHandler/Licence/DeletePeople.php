@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 
 /**
  * DeletePeople
@@ -38,9 +37,9 @@ final class DeletePeople extends AbstractCommandHandler implements Transactioned
         /* @var $licence LicenceEntity */
         $licence = $this->getRepo()->fetchUsingId($command);
 
-        $result = new Result();
-        foreach ($command->getPersonIds() as $personId) {
+        $result = $this->clearLicenceCacheSideEffect($licence->getId());
 
+        foreach ($command->getPersonIds() as $personId) {
             $organisationPersons = $this->getRepo('OrganisationPerson')->fetchListForOrganisationAndPerson(
                 $licence->getOrganisation()->getId(),
                 $personId

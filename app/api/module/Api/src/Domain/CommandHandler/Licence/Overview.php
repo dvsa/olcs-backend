@@ -44,6 +44,9 @@ final class Overview extends AbstractCommandHandler implements TransactionedInte
         }
 
         $this->getRepo()->save($licence);
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
 
         $result
             ->addId('licence', $licence->getId())

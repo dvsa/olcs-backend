@@ -8,6 +8,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserve as Sut;
@@ -32,6 +33,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('ContactDetails', ContactDetails::class);
 
         $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class),
             'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
@@ -123,6 +125,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -224,6 +227,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

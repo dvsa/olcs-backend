@@ -38,6 +38,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
@@ -58,6 +59,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockRepo('EventHistoryType', EventHistoryType::class);
 
         $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class)
         ];
@@ -174,6 +176,7 @@ class UpdateUserTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -313,6 +316,7 @@ class UpdateUserTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -451,6 +455,7 @@ class UpdateUserTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -625,6 +630,7 @@ class UpdateUserTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -760,6 +766,7 @@ class UpdateUserTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

@@ -5,11 +5,12 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\UpdateBusinessType;
@@ -34,6 +35,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
         $this->mockRepo('Organisation', Organisation::class);
 
         $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class)
         ];
 
@@ -384,7 +386,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
 
         $completionData = ['id' => 111, 'section' => 'businessType'];
         $this->expectedSideEffect(UpdateApplicationCompletion::class, $completionData, $result1);
-
+        $this->expectedOrganisationCacheClear($organisation);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -437,7 +439,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
             'confirm' => false
         ];
         $this->expectedSideEffect(ChangeBusinessType::class, $data, $result1);
-
+        $this->expectedOrganisationCacheClear($organisation);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

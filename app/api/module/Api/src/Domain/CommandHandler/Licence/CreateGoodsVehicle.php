@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -16,8 +18,10 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface
+final class CreateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
+
     protected $repoServiceName = 'Licence';
 
     /**
@@ -72,6 +76,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
             )
         );
 
+        $this->clearLicenceCaches($licence);
         return $this->result;
     }
 }

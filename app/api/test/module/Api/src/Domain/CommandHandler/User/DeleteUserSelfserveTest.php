@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUserSelfserve as Cmd;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
@@ -37,6 +38,7 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
         $this->sut->setAuthService($this->mockAuth);
 
         $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
             UserInterface::class => m::mock(UserInterface::class),
             AuthorizationService::class => $this->mockAuth,
         ];
@@ -73,6 +75,7 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
         $this->repoMap['OrganisationUser']
             ->shouldReceive('deleteByUserId')->with(self::USER_ID)->once();
 
+        $this->expectedUserCacheClear([self::USER_ID]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

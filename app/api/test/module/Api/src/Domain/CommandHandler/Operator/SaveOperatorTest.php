@@ -211,6 +211,8 @@ class SaveOperatorTest extends CommandHandlerTestCase
             )
             ->once();
 
+        $this->expectedOrganisationCacheClearSideEffect(1);
+
         $result = $this->sut->handleCommand($command);
         static::assertEquals(1, $result->getIds()['organisation']);
         static::assertEquals('Organisation created successfully', $result->getMessages()[0]);
@@ -245,6 +247,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->with($mockOrganisation)
             ->once();
 
+        $this->expectedOrganisationCacheClearSideEffect(1);
         $result = $this->sut->handleCommand($command);
         static::assertEquals(1, $result->getIds()['organisation']);
         static::assertEquals('Organisation updated successfully', $result->getMessages()[0]);
@@ -290,6 +293,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->with($mockPerson)
             ->once();
 
+        $this->expectedOrganisationCacheClearSideEffect(1);
         $result = $this->sut->handleCommand($command);
         static::assertEquals(1, $result->getIds()['organisation']);
         static::assertEquals('Organisation updated successfully', $result->getMessages()[0]);
@@ -335,6 +339,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
+        $this->expectedOrganisationCacheClearSideEffect(1);
         $result = $this->sut->handleCommand($command);
         static::assertEquals(1, $result->getIds()['organisation']);
         static::assertEquals('Organisation updated successfully', $result->getMessages()[0]);
@@ -365,6 +370,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
             ->with($mockOrganisation)
             ->once();
 
+        $this->expectedOrganisationCacheClearSideEffect(1);
         $result = $this->sut->handleCommand($command);
         static::assertEquals(1, $result->getIds()['organisation']);
         static::assertEquals('Organisation updated successfully', $result->getMessages()[0]);
@@ -418,6 +424,7 @@ class SaveOperatorTest extends CommandHandlerTestCase
             'confirm' => false
         ];
         $this->expectedSideEffect(ChangeBusinessType::class, $data, $result);
+        $this->expectedOrganisationCacheClearSideEffect(1);
 
         $result = $this->sut->handleCommand($command);
         static::assertEquals(1, $result->getIds()['organisation']);

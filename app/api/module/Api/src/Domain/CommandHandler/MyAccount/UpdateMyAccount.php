@@ -2,9 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -14,7 +15,6 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Olcs\Logging\Log\Logger;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as PhoneContactEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
@@ -26,9 +26,11 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 final class UpdateMyAccount extends AbstractUserCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
+    CacheAwareInterface,
     OpenAmUserAwareInterface
 {
     use AuthAwareTrait,
+        CacheAwareTrait,
         OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
@@ -101,8 +103,11 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
             $cmdContactDetails['emailAddress']
         );
 
+        $userId = $user->getId();
+        $this->clearUserCaches([$userId]);
+
         $result = new Result();
-        $result->addId('user', $user->getId());
+        $result->addId('user', $userId);
         $result->addMessage('User updated successfully');
 
         return $result;

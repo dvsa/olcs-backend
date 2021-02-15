@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\MyAccount\UpdateMyAccount as Cmd;
@@ -39,6 +40,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         $this->mockRepo('Person', Person::class);
 
         $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class)
         ];
@@ -148,6 +150,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -303,6 +306,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -517,6 +521,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -625,6 +630,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

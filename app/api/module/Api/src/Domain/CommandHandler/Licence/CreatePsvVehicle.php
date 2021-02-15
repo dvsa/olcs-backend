@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -20,9 +22,10 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreatePsvVehicle extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class CreatePsvVehicle extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface, CacheAwareInterface
 {
     use AuthAwareTrait;
+    use CacheAwareTrait;
 
     protected $repoServiceName = 'Licence';
 
@@ -66,6 +69,7 @@ final class CreatePsvVehicle extends AbstractCommandHandler implements Transacti
 
         $this->result->addMessage('Licence Vehicle created');
         $this->result->addId('licenceVehicle', $licenceVehicle->getId());
+        $this->clearLicenceCaches($licence);
 
         return $this->result;
     }

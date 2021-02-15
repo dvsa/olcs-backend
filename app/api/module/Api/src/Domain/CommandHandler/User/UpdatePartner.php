@@ -9,6 +9,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -22,6 +23,7 @@ final class UpdatePartner extends AbstractCommandHandler implements Transactione
 
     public function handleCommand(CommandInterface $command)
     {
+        /** @var ContactDetails $partner */
         $partner = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $partner->update(

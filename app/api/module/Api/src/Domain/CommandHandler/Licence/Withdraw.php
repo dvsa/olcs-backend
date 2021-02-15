@@ -37,6 +37,9 @@ final class Withdraw extends AbstractCommandHandler implements TransactionedInte
 
         $result = new Result();
         $result->addMessage('Licence ' . $licence->getId() . ' withdrawn');
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
 
         return $result;
     }

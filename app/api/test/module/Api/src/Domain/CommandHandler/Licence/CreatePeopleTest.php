@@ -60,6 +60,8 @@ class CreatePeopleTest extends CommandHandlerTestCase
         $organisation->setType($this->refData['org_t_p']);
 
         $licence = new LicenceEntity($organisation, new Entity\System\RefData());
+        $licence->setId(self::LIC_ID);
+        $this->expectedLicenceCacheClearSideEffect(self::LIC_ID);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($licence);
 

@@ -7,9 +7,13 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
-use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
@@ -18,15 +22,19 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-final class DeleteTransportManagerLicence extends AbstractCommandHandler implements TransactionedInterface
+final class DeleteTransportManagerLicence extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
+
     protected $repoServiceName = 'TransportManagerLicence';
 
     public function handleCommand(CommandInterface $command)
     {
         $transportManagers = $this->getRepo()->fetchForLicence($command->getLicence());
 
+        /** @var TransportManagerLicence $transportManager */
         foreach ($transportManagers as $transportManager) {
+            $this->clearEntityUserCaches($transportManager->getTransportManager());
             $this->getRepo()->delete($transportManager);
         }
 

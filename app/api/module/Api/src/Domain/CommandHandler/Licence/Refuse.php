@@ -36,6 +36,9 @@ final class Refuse extends AbstractCommandHandler implements TransactionedInterf
         $this->getRepo()->save($licence);
 
         $result = new Result();
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
         $result->addMessage('Licence ' . $licence->getId() . ' refused');
 
         return $result;

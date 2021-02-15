@@ -7,6 +7,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
@@ -35,9 +37,11 @@ use Doctrine\ORM\Query;
 final class UpdateUser extends AbstractUserCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
+    CacheAwareInterface,
     OpenAmUserAwareInterface
 {
     use AuthAwareTrait,
+        CacheAwareTrait,
         OpenAmUserAwareTrait;
 
     const RESET_PASSWORD_BY_POST = 'post';
@@ -116,8 +120,10 @@ final class UpdateUser extends AbstractUserCommandHandler implements
             ($command->getAccountDisabled() === 'Y') ? true : false
         );
 
+        $userId = $user->getId();
+
         $result = new Result();
-        $result->addId('user', $user->getId());
+        $result->addId('user', $userId);
         $result->addMessage('User updated successfully');
 
         if ($command->getResetPassword() !== null) {
@@ -125,6 +131,8 @@ final class UpdateUser extends AbstractUserCommandHandler implements
                 $this->resetPassword($user, $command->getResetPassword())
             );
         }
+
+        $this->clearUserCaches([$userId]);
 
         return $result;
     }

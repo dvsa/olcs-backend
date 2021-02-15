@@ -97,24 +97,18 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
      */
     public function testHandleCmdTaskNotCreated($hasChanged, $isGranted)
     {
-        /** @var m\MockInterface|UpdateBusinessDetails $sut */
-        $sut = m::mock(UpdateBusinessDetails::class . '[handleSideEffect]')
-            ->shouldAllowMockingProtectedMethods();
-        $sut->createService($this->commandHandler);
-
         $saveCmdResult = new Result();
         $saveCmdResult->addMessage('Business Details updated');
         $saveCmdResult->setFlag('tradingNamesChanged', $hasChanged);
 
-        $sut->shouldReceive('handleSideEffect')
-            ->andReturn($saveCmdResult);
+        $this->expectedSideEffect(DomainCmd\Licence\SaveBusinessDetails::class, [], $saveCmdResult);
 
         //  mock permissions
         $this->mockIsGranted(Permission::SELFSERVE_USER, $isGranted);
 
         //  call
-        $actual = $sut->handleCommand(
-            TransferCmd\Licence\UpdateBusinessDetails::create([])
+        $actual = $this->sut->handleCommand(
+            TransferCmd\Licence\UpdateBusinessDetails::create(['id' => self::ID])
         );
 
         $expected = [
