@@ -116,6 +116,8 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
         //  mock permission check
         $this->mockIsGranted(Permission::INTERNAL_USER, true);
 
+        $this->expectedLicenceCacheClearSideEffect(self::ID);
+
         $data = [
             'id' => self::ID,
             'name' => 'unit_OrgName',
@@ -204,6 +206,8 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
     {
         //  mock permission check
         $this->mockIsGranted(Permission::INTERNAL_USER, true);
+
+        $this->expectedLicenceCacheClearSideEffect(self::ID);
 
         $data = [
             'id' => self::ID,

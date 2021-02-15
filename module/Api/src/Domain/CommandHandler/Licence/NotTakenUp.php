@@ -37,6 +37,9 @@ final class NotTakenUp extends AbstractCommandHandler implements TransactionedIn
 
         $result = new Result();
         $result->addMessage('Licence ' . $licence->getId() . ' not taken up');
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
 
         return $result;
     }

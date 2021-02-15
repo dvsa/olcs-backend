@@ -49,6 +49,7 @@ class ResetToValidTest extends CommandHandlerTestCase
         ];
 
         $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(532);
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
@@ -79,6 +80,8 @@ class ResetToValidTest extends CommandHandlerTestCase
             $removeRulesResult
         );
 
+        $this->expectedLicenceCacheClearSideEffect(532);
+
         $command = Cmd::create($data);
 
         $result = $this->sut->handleCommand($command);
@@ -88,7 +91,7 @@ class ResetToValidTest extends CommandHandlerTestCase
             [
                 'id' => [],
                 'messages' => [
-                    'Licence ID  reset to valid'
+                    'Licence ID 532 reset to valid'
                 ]
             ]
         );

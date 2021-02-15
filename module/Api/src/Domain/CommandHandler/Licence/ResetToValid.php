@@ -46,6 +46,10 @@ final class ResetToValid extends AbstractCommandHandler implements Transactioned
             )
         );
 
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
+
         $this->getRepo()->save($licence);
         $result->addMessage("Licence ID {$licence->getId()} reset to valid");
 

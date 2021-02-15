@@ -7,7 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Curtail as CommandHandler;
@@ -71,6 +70,8 @@ class CurtailTest extends CommandHandlerTestCase
             ],
             $removeRulesResult
         );
+
+        $this->expectedLicenceCacheClearSideEffect(532);
 
         $result = $this->sut->handleCommand($command);
 

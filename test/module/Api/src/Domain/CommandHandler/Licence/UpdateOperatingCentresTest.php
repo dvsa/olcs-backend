@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
@@ -35,6 +36,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->mockRepo('LicenceOperatingCentre', Repository\LicenceOperatingCentre::class);
 
         $this->mockedSmServices['UpdateOperatingCentreHelper'] = m::mock(UpdateOperatingCentreHelper::class);
+        $this->mockedSmServices[CacheEncryption::class] = m::mock(CacheEncryption::class);
 
         parent::setUp();
     }
@@ -213,6 +215,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->once()
             ->with($licence);
 
+        $this->expectedLicenceCacheClear($licence);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -280,6 +283,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->once()
             ->with($licence);
 
+        $this->expectedLicenceCacheClear($licence);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

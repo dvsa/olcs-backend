@@ -146,6 +146,8 @@ class RevokeTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedLicenceCacheClearSideEffect(532);
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 revoked"], $result->getMessages());
@@ -233,6 +235,8 @@ class RevokeTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedLicenceCacheClearSideEffect(532);
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(["Licence ID 532 revoked"], $result->getMessages());
@@ -308,6 +312,8 @@ class RevokeTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $this->expectedLicenceCacheClearSideEffect(532);
 
         $result = $this->sut->handleCommand($command);
 
@@ -386,6 +392,8 @@ class RevokeTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $this->expectedLicenceCacheClearSideEffect(532);
 
         $result = $this->sut->handleCommand($command);
 

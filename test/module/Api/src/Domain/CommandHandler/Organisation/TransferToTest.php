@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Organisation;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\TransferTo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -75,16 +76,20 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -135,13 +140,17 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
             'licenceIds' => [1, 2]
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $licence1= new Licence($fromOrganisation, new RefData());
         $fromOrganisation->addLicences($licence1);
@@ -150,7 +159,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -207,12 +216,16 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $note1= new \Dvsa\Olcs\Api\Entity\Note\Note();
         $note1->setOrganisation($fromOrganisation);
@@ -221,7 +234,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([$note1, $note2]);
@@ -278,12 +291,16 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $irfoGvPermit1= new \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit(
             $fromOrganisation,
@@ -298,7 +315,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -355,12 +372,16 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $irfoPsvAuth1= new \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth(
             $fromOrganisation,
@@ -375,7 +396,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -432,12 +453,16 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $task1 = new \Dvsa\Olcs\Api\Entity\Task\Task(
             new \Dvsa\Olcs\Api\Entity\System\Category(),
@@ -452,7 +477,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -509,19 +534,23 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $disqualification = new \Dvsa\Olcs\Api\Entity\Organisation\Disqualification($fromOrganisation);
         $fromOrganisation->addDisqualifications($disqualification);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -576,12 +605,16 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $ebsrSubmission1 = m::mock('\Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission')->makePartial();
         $ebsrSubmission1->setOrganisation($fromOrganisation);
@@ -590,7 +623,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -647,12 +680,16 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $txcInbox1 = m::mock(\Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox::class)->makePartial();
         $txcInbox1->setOrganisation($fromOrganisation);
@@ -661,7 +698,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -718,12 +755,16 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $eventHistory1 = m::mock(\Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class)->makePartial();
         $eventHistory1->setOrganisation($fromOrganisation);
@@ -732,7 +773,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -789,12 +830,16 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $organisationUser1 = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser();
         $organisationUser1->setOrganisation($fromOrganisation);
@@ -805,7 +850,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -862,12 +907,16 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $organisationPerson1 = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();
         $organisationPerson1->setOrganisation($fromOrganisation);
@@ -878,7 +927,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Note']->shouldReceive('fetchByOrganisation')->with($fromOrganisation)->once()
             ->andReturn([]);
@@ -935,13 +984,17 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
             'licenceIds' => [1]
         ];
         $command = Cmd::create($data);
 
         $fromOrganisation = new Organisation();
+        $fromOrganisation->setId(12);
+        $this->expectedOrganisationCacheClearSideEffect(12);
         $toOrganisation = new Organisation();
+        $toOrganisation->setId(13);
+        $this->expectedOrganisationCacheClearSideEffect(13);
 
         $licence1= new Licence($fromOrganisation, new RefData());
         $licence1->setId(1);
@@ -953,7 +1006,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->repoMap['Organisation']
             ->shouldReceive('save')
@@ -984,7 +1037,7 @@ class TransferToTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 12,
-            'receivingOrganisation' => 12,
+            'receivingOrganisation' => 13,
             'licenceIds' => []
         ];
         $command = Cmd::create($data);
@@ -997,7 +1050,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);
-        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
+        $this->repoMap['Organisation']->shouldReceive('fetchById')->with(13)->once()->andReturn($toOrganisation);
 
         $this->expectException(ValidationException::class);
 

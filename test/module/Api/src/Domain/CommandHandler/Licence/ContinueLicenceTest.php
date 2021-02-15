@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as Command;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
@@ -36,6 +37,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->mockRepo('GoodsDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
 
         $this->mockedSmServices['FinancialStandingHelperService'] = m::mock();
+        $this->mockedSmServices[CacheEncryption::class] = m::mock(CacheEncryption::class);
 
         parent::setUp();
     }
@@ -57,7 +59,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
     private function getGoodsLicence($licenceId, $type = LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL)
     {
-        $organisation = new Organisation();
+        $organisation = m::mock(Organisation::class);
+        $organisation->shouldReceive('getId')->withNoArgs()->andReturn(9999);
         $licence = new LicenceEntity($organisation, new RefData());
         $licence->setId($licenceId);
         $licence->setLicenceType($this->refData[$type]);
@@ -68,7 +71,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
     private function getPsvLicence($licenceId, $type = LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL)
     {
-        $organisation = new Organisation();
+        $organisation = m::mock(Organisation::class);
+        $organisation->shouldReceive('getId')->withNoArgs()->andReturn(9999);
         $licence = new LicenceEntity($organisation, new RefData());
         $licence->setId($licenceId);
         $licence->setLicenceType($this->refData[$type]);
@@ -127,6 +131,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             }
         );
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());
@@ -180,6 +185,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             }
         );
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());
@@ -261,6 +267,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             }
         );
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());
@@ -313,6 +320,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             }
         );
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['1502 goods discs created', 'Licence 717 continued'], $result->getMessages());
@@ -390,6 +398,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             }
         );
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['1502 goods discs created', 'Licence 717 continued'], $result->getMessages());
@@ -475,6 +484,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->mockedSmServices['FinancialStandingHelperService']->shouldReceive('getFinanceCalculationForOrganisation')
             ->andReturn(0);
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());
@@ -563,6 +573,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());
@@ -613,6 +624,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());
@@ -676,6 +688,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());
@@ -727,6 +740,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedOrganisationCacheClear($licence->getOrganisation());
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());

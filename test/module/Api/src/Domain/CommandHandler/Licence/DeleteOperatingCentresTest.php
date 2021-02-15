@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Licence\DeleteOperatingCentres as Cmd;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -25,6 +26,10 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler\Licence\DeleteOperatingCentres();
         $this->mockRepo('Licence', Repository\Licence::class);
         $this->mockRepo('LicenceOperatingCentre', Repository\LicenceOperatingCentre::class);
+
+        $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
+        ];
 
         parent::setUp();
     }
@@ -67,6 +72,7 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
         /** @var Licence $application */
         $application = m::mock(Licence::class)->makePartial();
         $application->setOperatingCentres($locs);
+        $this->expectedLicenceCacheClear($application);
 
         $this->repoMap['Licence']->shouldReceive('fetchById')
             ->with(111)

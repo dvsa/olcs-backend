@@ -45,11 +45,16 @@ final class UpdateUnlicensed extends AbstractCommandHandler
         // save the licence, children will cascade persist
         $this->getRepo('Licence')->save($licence);
 
+        $licenceId = $licence->getId();
+
         $result
             ->addId('organisation', $organisation->getId())
-            ->addId('licence', $licence->getId())
+            ->addId('licence', $licenceId)
             ->addId('contactDetails', $contactDetails->getId())
             ->addMessage('Updated');
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licenceId)
+        );
 
         return $result;
     }

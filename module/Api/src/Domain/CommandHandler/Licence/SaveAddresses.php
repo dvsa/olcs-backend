@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -18,9 +20,10 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-final class SaveAddresses extends AbstractCommandHandler implements TransactionedInterface
+final class SaveAddresses extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
     use DeleteContactDetailsAndAddressTrait;
+    use CacheAwareTrait;
 
     protected $repoServiceName = 'Licence';
 
@@ -55,6 +58,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
         $this->maybeAddOrRemoveTransportConsultant($command, $licence);
 
         $this->getRepo()->save($licence);
+        $this->clearLicenceCaches($licence);
 
         return $this->result;
     }

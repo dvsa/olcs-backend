@@ -37,6 +37,9 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
         $result = new Result();
         $result->addMessage('Licence ' . $licence->getId() . ' has been granted');
+        $result->merge(
+            $this->clearLicenceCacheSideEffect($licence->getId())
+        );
 
         return $result;
     }

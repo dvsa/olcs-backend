@@ -54,6 +54,15 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
 
         $this->validateTransfer($organisationFrom, $organisationTo, $existingLicenceCount, $licenceIds);
 
+        //clear the user caches for both organisations
+        $result->merge(
+            $this->clearOrganisationCacheSideEffect($organisationFrom->getId())
+        );
+
+        $result->merge(
+            $this->clearOrganisationCacheSideEffect($organisationTo->getId())
+        );
+
         if (count($licenceIds) === $existingLicenceCount) {
             $result->merge($this->transferLicences($organisationFrom, $organisationTo));
             $result->merge($this->transferIrfo($organisationFrom, $organisationTo));
@@ -67,7 +76,6 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
             $this->getRepo()->delete($organisationFrom);
             $successMessage = 'form.operator-merge.success';
             $result->merge($this->setUnlicencedFlag($organisationTo));
-
         } else {
             $result->merge($this->transferLicencesByIds($organisationFrom, $organisationTo, $licenceIds));
             $successMessage = 'form.operator-merge.success-alternative';

@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Update;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
@@ -33,6 +34,10 @@ class UpdateTest extends CommandHandlerTestCase
         $this->sut = new Update();
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
         $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
+
+        $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
+        ];
 
         parent::setUp();
     }
@@ -176,6 +181,8 @@ class UpdateTest extends CommandHandlerTestCase
             ->shouldReceive('getId')
             ->andReturn($id)
             ->getMock();
+
+        $mockTransportManager = $this->expectedCacheClearFromUserCollection($mockTransportManager);
 
         $this->repoMap['TransportManager']
             ->shouldReceive('fetchById')
