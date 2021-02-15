@@ -72,7 +72,6 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
             [
                 'hasActivePsvLicence' => $user->hasActivePsvLicence(),
                 'numberOfVehicles' => $user->getNumberOfVehicles(),
-                'disableDataRetentionRecords' => $systemParameterRepo->getDisableDataRetentionRecords(),
                 'eligibleForPermits' => $isEligibleForPermits,
                 'eligibleForPrompt' => $isEligibleForPermits && $systemParameterRepo->isSelfservePromptEnabled(),
             ]
