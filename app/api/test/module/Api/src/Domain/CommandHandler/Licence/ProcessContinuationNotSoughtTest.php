@@ -119,7 +119,8 @@ class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
             EndIrhpApplicationsAndPermits::class,
             [
                 'id' => $licenceId,
-                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                'context' => EndIrhpApplicationsAndPermits::CONTEXT_CNS,
             ],
             new Result()
         );

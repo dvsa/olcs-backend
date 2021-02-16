@@ -47,6 +47,8 @@ return [
     CommandHandler\Licence\NotTakenUp::class                                          => IsSideEffect::class,
     CommandHandler\Licence\UnderConsideration::class                                  => IsSideEffect::class,
     CommandHandler\Licence\EndIrhpApplicationsAndPermits::class                       => IsSideEffect::class,
+    CommandHandler\Licence\EndIrhpApplications::class                                 => IsSideEffect::class,
+    CommandHandler\Licence\EndIrhpPermits::class                                      => IsSideEffect::class,
     CommandHandler\Organisation\ChangeBusinessType::class                             => IsSideEffect::class,
     CommandHandler\Document\CreateDocumentSpecific::class                             => IsSideEffect::class,
     CommandHandler\Application\CreateApplicationFee::class                            => IsSideEffect::class,

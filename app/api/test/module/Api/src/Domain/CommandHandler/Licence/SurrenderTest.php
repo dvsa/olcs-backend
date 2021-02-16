@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\SurrenderLicence as Command;
+use Dvsa\Olcs\Transfer\FieldType\Traits\EndIrhpApplicationsAndPermitsContext;
 use Mockery as m;
 
 /**
@@ -133,7 +134,8 @@ class SurrenderTest extends CommandHandlerTestCase
             EndIrhpApplicationsAndPermits::class,
             [
                 'id' => 532,
-                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                'context' => EndIrhpApplicationsAndPermits::CONTEXT_SURRENDER,
             ],
             new Result()
         );
