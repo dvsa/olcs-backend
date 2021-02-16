@@ -118,7 +118,8 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
                 EndIrhpApplicationsAndPermits::create(
                     [
                         'id' => $licence->getId(),
-                        'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+                        'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                        'context' => EndIrhpApplicationsAndPermits::CONTEXT_SURRENDER,
                     ]
                 )
             )
