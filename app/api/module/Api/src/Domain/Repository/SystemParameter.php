@@ -62,16 +62,6 @@ class SystemParameter extends AbstractRepository
     }
 
     /**
-     * Get Disable Data Retention Records
-     *
-     * @return bool Return true if disabled
-     */
-    public function getDisableDataRetentionRecords()
-    {
-        return (bool) $this->fetchValue(Entity::DISABLE_DATA_RETENTION_RECORDS);
-    }
-
-    /**
      * Get the Digital continuation reminder period (days), if value if not numeric will return a default
      *
      * @return int Period, number of days
