@@ -434,8 +434,8 @@ return [
             'mode' => 'gcm',
         ],
         'secrets' => [
-            'node' => 'nonprod/redis-api',
-            'shared' => 'nonprod/redis-shared',
+            'node' => 'api-cache-encryption-key',
+            'shared' => 'shared-cache-encryption-key',
         ],
     ],
     'caches' => [
