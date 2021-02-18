@@ -441,8 +441,8 @@ return [
             'mode' => 'gcm',
         ],
         'secrets' => [
-            'node' => 'string',
-            'shared' => 'string',
+            'node' => 'api-cache-encryption-key',
+            'shared' => 'shared-cache-encryption-key',
         ],
     ],
 
