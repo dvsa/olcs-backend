@@ -68,7 +68,8 @@ final class ProcessContinuationNotSought extends AbstractCommandHandler implemen
                     EndIrhpApplicationsAndPermits::create(
                         [
                             'id' => $licence->getId(),
-                            'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+                            'reason' => WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                            'context' => EndIrhpApplicationsAndPermits::CONTEXT_CNS,
                         ]
                     ),
                 ]

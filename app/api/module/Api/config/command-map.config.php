@@ -223,6 +223,8 @@ return [
     Command\Licence\ReturnAllCommunityLicences::class => CommandHandler\Licence\ReturnAllCommunityLicences::class,
     Command\Licence\ExpireAllCommunityLicences::class => CommandHandler\Licence\ExpireAllCommunityLicences::class,
     Command\Licence\EndIrhpApplicationsAndPermits::class => CommandHandler\Licence\EndIrhpApplicationsAndPermits::class,
+    Command\Licence\EndIrhpApplications::class => CommandHandler\Licence\EndIrhpApplications::class,
+    Command\Licence\EndIrhpPermits::class => CommandHandler\Licence\EndIrhpPermits::class,
     TransferCommand\Licence\UpdateTrailers::class => CommandHandler\Licence\UpdateTrailers::class,
     TransferCommand\Licence\UpdateVehicles::class => CommandHandler\Licence\UpdateVehicles::class,
     Command\Licence\TmNominatedTask::class => CommandHandler\Licence\TmNominatedTask::class,

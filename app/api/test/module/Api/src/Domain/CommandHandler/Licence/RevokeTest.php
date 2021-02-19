@@ -141,7 +141,8 @@ class RevokeTest extends CommandHandlerTestCase
             EndIrhpApplicationsAndPermits::class,
             [
                 'id' => 532,
-                'reason' => WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_PERMITS_REVOKED,
+                'context' => EndIrhpApplicationsAndPermits::CONTEXT_REVOKE,
             ],
             new Result()
         );
