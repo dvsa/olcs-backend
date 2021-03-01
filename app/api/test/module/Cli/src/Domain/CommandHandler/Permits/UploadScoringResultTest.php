@@ -39,7 +39,6 @@ class UploadScoringResultTest extends CommandHandlerTestCase
         $fileDesc = 'TEST';
         $csvContent = 'MAp0ZXN0Cg=='; //this is the output of base64_encode($csvData)
         $result1 = new Result();
-        $result1->addMessage('Document created');
 
         $this->expectedSideEffect(
             Upload::class,
@@ -54,8 +53,50 @@ class UploadScoringResultTest extends CommandHandlerTestCase
             $result1
         );
 
-        $this->sut->handleCommand(
+        $result = $this->sut->handleCommand(
             UploadScoringResultCommand::create(['csvContent' => $csvData, 'fileDescription' => $fileDesc])
+        );
+
+        $expectedMessages = ['Scoring results file successfully uploaded'];
+
+        $this->assertEquals(
+            $expectedMessages,
+            $result->getMessages()
+        );
+    }
+
+    public function testHandleCommandNoContent()
+    {
+        $csvData = [];
+        $fileDesc = 'TEST';
+        $csvContent = 'Ik5vIFJlc3VsdHMiCg=='; //this is the output of base64_encode($csvData)
+        $result1 = new Result();
+
+        $this->expectedSideEffect(
+            Upload::class,
+            [
+              'content' => $csvContent,
+              'category' => Category::CATEGORY_PERMITS,
+              'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
+              'filename' => 'Permit-Scoring-Report.csv',
+              'description' => $fileDesc . ' ' . date('Y-m-d H:i'),
+              'user' => PidIdentityProvider::SYSTEM_USER,
+            ],
+            $result1
+        );
+
+        $result = $this->sut->handleCommand(
+            UploadScoringResultCommand::create(['csvContent' => $csvData, 'fileDescription' => $fileDesc])
+        );
+
+        $expectedMessages = [
+            'No scoring results passed. Creating empty report file',
+            'Scoring results file successfully uploaded'
+        ];
+
+        $this->assertEquals(
+            $expectedMessages,
+            $result->getMessages()
         );
     }
 }
