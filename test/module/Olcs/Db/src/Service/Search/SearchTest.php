@@ -121,6 +121,9 @@ class SearchTest extends MockeryTestCase
 
         $bulkResponse = m::mock(\Elastica\Response::class);
         $bulkResponse->shouldReceive('getData');
+        $bulkResponse->shouldReceive('getStatus');
+        $bulkResponse->shouldReceive('getQueryTime');
+        $bulkResponse->shouldReceive('getTransferInfo')->andReturn([]);
 
         $this->mockClient->shouldReceive('request')
             ->with(
