@@ -10,6 +10,7 @@
         <?php } ?>
     </ul>
     <?php } else { ?>
+    <dl>
         <dt><?php echo $this->translate($item['label']); ?></dt>
         <dd>
             <?php if (isset($item['url']) && $item['url'] != ''): ?>
@@ -19,5 +20,6 @@
             <?php endif; ?>
             <?php echo !empty($item['suffix']) ? $item['suffix'] : '';?>
         </dd>
+    </dl>
     <?php } ?>
 </li>
