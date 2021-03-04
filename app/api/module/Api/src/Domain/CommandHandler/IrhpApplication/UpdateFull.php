@@ -95,7 +95,7 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
             $irhpApplication->resetSectionCompletion();
         }
 
-        if ($command->getDeclaration()) {
+        if ($command->getDeclaration() && $irhpApplication->isNotYetSubmitted()) {
             $irhpApplication->updateCheckAnswers();
             $irhpApplicationRepo->save($irhpApplication);
             $irhpApplicationRepo->refresh($irhpApplication);

@@ -57,6 +57,7 @@ return [
             'QaValidatorListFactory' => ApiSrv\Qa\Structure\ValidatorListFactory::class,
             'QaElementGeneratorContextFactory' => ApiSrv\Qa\Structure\Element\ElementGeneratorContextFactory::class,
             'QaNamedAnswerFetcher' => ApiSrv\Qa\Structure\Element\NamedAnswerFetcher::class,
+
             'QaEcmtNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsFactory::class,
             'QaEcmtEmissionsCategoryFactory' =>

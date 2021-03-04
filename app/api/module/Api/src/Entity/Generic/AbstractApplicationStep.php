@@ -74,6 +74,18 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     protected $createdBy;
 
     /**
+     * Enabled after submission
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="enabled_after_submission",
+     *     nullable=true,
+     *     options={"default": 0})
+     */
+    protected $enabledAfterSubmission = 0;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -244,6 +256,30 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set the enabled after submission
+     *
+     * @param boolean $enabledAfterSubmission new value being set
+     *
+     * @return ApplicationStep
+     */
+    public function setEnabledAfterSubmission($enabledAfterSubmission)
+    {
+        $this->enabledAfterSubmission = $enabledAfterSubmission;
+
+        return $this;
+    }
+
+    /**
+     * Get the enabled after submission
+     *
+     * @return boolean
+     */
+    public function getEnabledAfterSubmission()
+    {
+        return $this->enabledAfterSubmission;
     }
 
     /**

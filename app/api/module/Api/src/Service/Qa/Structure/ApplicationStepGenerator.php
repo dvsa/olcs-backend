@@ -58,6 +58,7 @@ class ApplicationStepGenerator
             $applicationStepEntity->getFieldsetName(),
             $question->getActiveQuestionText()->getQuestionShortKey(),
             $question->getSlug(),
+            $qaContext->isApplicationStepEnabled(),
             $element,
             $elementGeneratorContext->getValidatorList()
         );

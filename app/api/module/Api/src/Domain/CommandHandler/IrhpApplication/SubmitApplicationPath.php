@@ -67,10 +67,12 @@ class SubmitApplicationPath extends AbstractCommandHandler
                 $irhpApplication
             );
 
-            $supplementedApplicationStep->getFormControlStrategy()->saveFormData(
-                $qaContext,
-                $command->getPostData()
-            );
+            if ($qaContext->isApplicationStepEnabled()) {
+                $supplementedApplicationStep->getFormControlStrategy()->saveFormData(
+                    $qaContext,
+                    $command->getPostData()
+                );
+            }
         }
 
         return $this->result;
