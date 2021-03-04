@@ -6,9 +6,15 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
+use Dvsa\Olcs\Api\Domain\Repository\AbstractRepository;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
+use Dvsa\OlcsTest\Builder\ServiceManagerBuilder;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 
 /**
  * Repository Test Case
@@ -67,22 +73,6 @@ class RepositoryTestCase extends MockeryTestCase
     {
         $this->em->shouldReceive('getRepository->createQueryBuilder')
             ->andReturn($mock);
-    }
-
-    /**
-     * Sets up a mock query builder for a given entity manager.
-     *
-     * @param m\MockInterface|EntityManager $entityManager
-     * @return m\LegacyMockInterface|m\MockInterface
-     */
-    protected function setUpQueryBuilderMock(EntityManager $entityManager)
-    {
-        $queryBuilder = m::mock(QueryBuilder::class, QueryBuilderInterface::class);
-        $queryBuilder->shouldIgnoreMissing($queryBuilder);
-        $query = m::mock()->shouldIgnoreMissing();
-        $queryBuilder->shouldReceive('getQuery')->andReturn($query)->byDefault();
-        $entityManager->shouldReceive('getRepository->createQueryBuilder')->andReturn($queryBuilder)->byDefault();
-        return $queryBuilder;
     }
 
     /**
@@ -420,5 +410,90 @@ class RepositoryTestCase extends MockeryTestCase
         $this->dbQueryService->shouldReceive('get')
             ->with($queryName)
             ->andReturn($query);
+    }
+
+    /**
+     * @return ServiceManager
+     */
+    protected function setUpServiceManager(): ServiceManager
+    {
+        return (new ServiceManagerBuilder([$this, 'setUpDefaultServices']))->build();
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return array
+     */
+    public function setUpDefaultServices(ServiceLocatorInterface $serviceLocator): array
+    {
+        return [
+            DbQueryServiceManager::class => $this->setUpDbQueryServiceManager(),
+            EntityManager::class => $this->setUpEntityManager($serviceLocator),
+            QueryBuilder::class => $this->setUpQueryBuilder(),
+        ];
+    }
+
+    /**
+     * @return MockInterface|DbQueryServiceManager
+     */
+    protected function setUpDbQueryServiceManager(): MockInterface
+    {
+        $dbQueryManager = m::mock(DbQueryServiceManager::class);
+        $dbQueryManager->shouldIgnoreMissing($dbQueryManager);
+        return $dbQueryManager;
+    }
+
+    /**
+     * @return MockInterface|QueryBuilder|QueryBuilderInterface
+     */
+    protected function setUpQueryBuilder(): MockInterface
+    {
+        $instance = m::mock(QueryBuilder::class, QueryBuilderInterface::class);
+        $instance->shouldIgnoreMissing($instance);
+        $query = m::mock()->shouldIgnoreMissing();
+        $instance->shouldReceive('getQuery')->andReturn($query)->byDefault();
+        return $instance;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return MockInterface|EntityManager
+     */
+    protected function setUpEntityManager(ServiceLocatorInterface $serviceLocator): MockInterface
+    {
+        $instance = m::mock(EntityManager::class);
+        $instance->shouldIgnoreMissing();
+        $instance->shouldReceive('getRepository->createQueryBuilder')->andReturnUsing(function () use ($serviceLocator) {
+            return $serviceLocator->get(QueryBuilder::class);
+        })->byDefault();
+        return $instance;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param string $key
+     * @return MockInterface
+     */
+    protected function resolveMockService(ServiceLocatorInterface $serviceLocator, string $key): MockInterface
+    {
+        return $serviceLocator->get($key);
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param string $class
+     * @return AbstractRepository
+     */
+    protected function setUpRepository(ServiceLocatorInterface $serviceLocator, string $class): AbstractRepository
+    {
+        $entityManager = $this->resolveMockService($serviceLocator, EntityManager::class);
+        $dbQueryManager = $this->resolveMockService($serviceLocator, DbQueryServiceManager::class);
+
+        // We will create a separate query builder instance here. Its best to avoid using this query builder instance
+        // because its only a single instance which could be re-used across queries; its a better practice to instead
+        // create new query builder instances through the entity manager.
+        $queryBuilder = $this->setUpQueryBuilder();
+
+        return new $class($entityManager, $queryBuilder, $dbQueryManager);
     }
 }
