@@ -11,8 +11,10 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as Entity;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as GoodsDiscEntity;
+use Dvsa\Olcs\Transfer\Query\Licence\FiltersByIncludeActiveInterface;
 use Dvsa\Olcs\Transfer\Query\Licence\FiltersByVehicleIdsInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query\Expr\Func;
 
 /**
  * Licence Vehicle
@@ -342,7 +344,7 @@ class LicenceVehicle extends AbstractRepository
             $vehicleIds = array_values(array_map(function ($vehicleId) {
                 return (int) $vehicleId;
             }, $vehicleIds));
-            $qb->andWhere(new Expr\Func(sprintf('%s.id IN', $vehicleTable), [':vehicleIds']));
+            $qb->andWhere(new Func(sprintf('%s.id IN', $vehicleTable), [':vehicleIds']));
             $qb->setParameter('vehicleIds', $vehicleIds);
         }
     }
@@ -398,9 +400,12 @@ class LicenceVehicle extends AbstractRepository
     private function filterByRemovalDate(QueryBuilder $qb, QueryInterface $query)
     {
         $includeRemoved = $query->getIncludeRemoved();
-
         if (!$includeRemoved) {
             $qb->andWhere($qb->expr()->isNull('m.removalDate'));
+        }
+
+        if ($query instanceof FiltersByIncludeActiveInterface && !$query->getIncludeActive()) {
+            $qb->andWhere('m.removalDate IS NOT NULL');
         }
     }
 
