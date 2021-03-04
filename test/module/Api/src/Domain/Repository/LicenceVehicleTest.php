@@ -5,7 +5,6 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -15,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as GoodsDiscEntity;
 use Dvsa\Olcs\Transfer\Query\Application\GoodsVehicles as AppGoodsVehicles;
+use Dvsa\Olcs\Transfer\Query\Licence\FiltersByIncludeActiveInterface;
 use Dvsa\Olcs\Transfer\Query\Licence\FiltersByVehicleIdsInterface;
 use Dvsa\Olcs\Transfer\Query\Licence\GoodsVehicles as LicGoodsVehicles;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -722,15 +722,29 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertSame('result', $this->sut->fetchForRemoval());
     }
 
-    public function testCreatePaginatedVehiclesDataForLicenceQueryIfAccessorIsNotDefinedOnAQueryDoesNotSetAnExpressionToFilterByVehicleId()
+    /**
+     * @test
+     */
+    public function createPaginatedVehiclesDataForLicenceQuery_IsCallable()
     {
         // Setup
-        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
+        $serviceManager = $this->setUpServiceManager();
+        $sut = $this->setUpRepository($serviceManager, LicenceVehicle::class);
 
-        $dbQueryManager = m::mock(DbQueryServiceManager::class);
-        $dbQueryManager->shouldIgnoreMissing($dbQueryManager);
-        $sut = new LicenceVehicle($this->em, $queryBuilder, $dbQueryManager);
+        // Execute
+        $this->assertIsCallable([$sut, 'createPaginatedVehiclesDataForLicenceQuery']);
+    }
 
+    /**
+     * @test
+     * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
+     */
+    public function createPaginatedVehiclesDataForLicenceQuery_WhenQueryImplementsNotCorrectInterface_DoesNotFilterByVehicleId()
+    {
+        // Setup
+        $serviceManager = $this->setUpServiceManager();
+        $sut = $this->setUpRepository($serviceManager, LicenceVehicle::class);
+        $queryBuilder = $this->resolveMockService($serviceManager, QueryBuilder::class);
         $query = m::mock(QueryInterface::class);
         $query->shouldIgnoreMissing($query);
 
@@ -743,15 +757,16 @@ class LicenceVehicleTest extends RepositoryTestCase
         $sut->createPaginatedVehiclesDataForLicenceQuery($query, 1);
     }
 
-    public function testCreatePaginatedVehiclesDataForLicenceQueryIfAccessorIsDefinedOnAQuerySetsAnExpressionToFilterByVehicleId()
+    /**
+     * @test
+     * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
+     */
+    public function createPaginatedVehiclesDataForLicenceQuery_FiltersByVehicleId_AddsQueryCondition()
     {
         // Setup
-        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
-
-        $dbQueryManager = m::mock(DbQueryServiceManager::class);
-        $dbQueryManager->shouldIgnoreMissing($dbQueryManager);
-        $sut = new LicenceVehicle($this->em, $queryBuilder, $dbQueryManager);
-
+        $serviceManager = $this->setUpServiceManager();
+        $sut = $this->setUpRepository($serviceManager, LicenceVehicle::class);
+        $queryBuilder = $this->resolveMockService($serviceManager, QueryBuilder::class);
         $query = m::mock(QueryInterface::class, FiltersByVehicleIdsInterface::class);
         $query->shouldReceive('getVehicleIds')->andReturn([1, 2, 3, 4]);
         $query->shouldIgnoreMissing($query);
@@ -764,6 +779,9 @@ class LicenceVehicleTest extends RepositoryTestCase
         $sut->createPaginatedVehiclesDataForLicenceQuery($query, 1);
     }
 
+    /**
+     * @return array
+     */
     public function vehiclesIdsDataProvider(): array
     {
         return [
@@ -774,17 +792,16 @@ class LicenceVehicleTest extends RepositoryTestCase
     }
 
     /**
+     * @test
+     * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
      * @dataProvider vehiclesIdsDataProvider
      */
-    public function testCreatePaginatedVehiclesDataForLicenceQueryIfAccessorIsDefinedOnAQuerySetsAParameterForVehicleIds(array $vehicleIds)
+    public function createPaginatedVehiclesDataForLicenceQuery_FiltersByVehicleId_SetsAParameterForVehicleIds(array $vehicleIds)
     {
         // Setup
-        $queryBuilder = $this->setUpQueryBuilderMock($this->em);
-
-        $dbQueryManager = m::mock(DbQueryServiceManager::class);
-        $dbQueryManager->shouldIgnoreMissing($dbQueryManager);
-        $sut = new LicenceVehicle($this->em, $queryBuilder, $dbQueryManager);
-
+        $serviceManager = $this->setUpServiceManager();
+        $sut = $this->setUpRepository($serviceManager, LicenceVehicle::class);
+        $queryBuilder = $this->resolveMockService($serviceManager, QueryBuilder::class);
         $query = m::mock(QueryInterface::class, FiltersByVehicleIdsInterface::class);
         $query->shouldReceive('getVehicleIds')->andReturn($vehicleIds);
         $query->shouldIgnoreMissing($query);
@@ -794,6 +811,27 @@ class LicenceVehicleTest extends RepositoryTestCase
         // Define Expectations
         $argumentsExpectation = [IsEqual::equalTo("vehicleIds"), IsIdentical::identicalTo($expectedVehicleIds)];
         $queryBuilder->shouldReceive('setParameter')->once()->withArgs($argumentsExpectation);
+
+        // Execute
+        $sut->createPaginatedVehiclesDataForLicenceQuery($query, 1);
+    }
+
+    /**
+     * @test
+     * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
+     */
+    public function createPaginatedVehiclesDataForLicenceQuery_FiltersByRemovedVehicles_AddsQueryCondition()
+    {
+        // Setup
+        $serviceManager = $this->setUpServiceManager();
+        $sut = $this->setUpRepository($serviceManager, LicenceVehicle::class);
+        $queryBuilder = $this->resolveMockService($serviceManager, QueryBuilder::class);
+        $query = m::mock(QueryInterface::class, FiltersByIncludeActiveInterface::class);
+        $query->shouldReceive('getIncludeActive')->andReturn(false);
+        $query->shouldIgnoreMissing($query);
+
+        // Define Expectations
+        $queryBuilder->shouldReceive('andWhere')->with('m.removalDate IS NOT NULL')->once();
 
         // Execute
         $sut->createPaginatedVehiclesDataForLicenceQuery($query, 1);
