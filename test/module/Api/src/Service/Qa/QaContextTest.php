@@ -59,4 +59,32 @@ class QaContextTest extends MockeryTestCase
             $this->qaContext->getAnswerValue()
         );
     }
+
+    /**
+     * @dataProvider dpIsApplicationStepEnabled
+     */
+    public function testIsApplicationStepEnabled($isNotYetSubmitted, $enabledAfterSubmission, $expected)
+    {
+        $this->qaEntity->shouldReceive('isNotYetSubmitted')
+            ->withNoArgs()
+            ->andReturn($isNotYetSubmitted);
+
+        $this->applicationStep->shouldReceive('getEnabledAfterSubmission')
+            ->withNoArgs()
+            ->andReturn($enabledAfterSubmission);
+
+        $this->assertEquals(
+            $expected,
+            $this->qaContext->isApplicationStepEnabled()
+        );
+    }
+
+    public function dpIsApplicationStepEnabled()
+    {
+        return [
+            [true, null, true],
+            [false, true, true],
+            [false, false, false],
+        ];
+    }
 }

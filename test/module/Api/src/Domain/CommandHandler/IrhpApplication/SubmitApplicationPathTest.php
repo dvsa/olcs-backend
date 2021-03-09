@@ -31,7 +31,7 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             'QaContextFactory' => m::mock(QaContextFactory::class),
-            'QaSupplementedApplicationStepsProvider' => m::mock(SupplementedApplicationStepsProvider::class)
+            'QaSupplementedApplicationStepsProvider' => m::mock(SupplementedApplicationStepsProvider::class),
         ];
 
         parent::setUp();
@@ -59,6 +59,9 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
         $applicationStep1 = m::mock(ApplicationStep::class);
 
         $qaContext1 = m::mock(QaContext::class);
+        $qaContext1->shouldReceive('isApplicationStepEnabled')
+            ->withNoArgs()
+            ->andReturnTrue();
 
         $this->mockedSmServices['QaContextFactory']->shouldReceive('create')
             ->with($applicationStep1, $irhpApplication)
@@ -80,6 +83,9 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
         $applicationStep2 = m::mock(ApplicationStep::class);
 
         $qaContext2 = m::mock(QaContext::class);
+        $qaContext2->shouldReceive('isApplicationStepEnabled')
+            ->withNoArgs()
+            ->andReturnTrue();
 
         $this->mockedSmServices['QaContextFactory']->shouldReceive('create')
             ->with($applicationStep2, $irhpApplication)
@@ -98,9 +104,25 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
         $supplementedApplicationStep2->shouldReceive('getApplicationStep')
             ->andReturn($applicationStep2);
 
+        $applicationStep3 = m::mock(ApplicationStep::class);
+
+        $qaContext3 = m::mock(QaContext::class);
+        $qaContext3->shouldReceive('isApplicationStepEnabled')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->mockedSmServices['QaContextFactory']->shouldReceive('create')
+            ->with($applicationStep3, $irhpApplication)
+            ->andReturn($qaContext3);
+
+        $supplementedApplicationStep3 = m::mock(SupplementedApplicationStep::class);
+        $supplementedApplicationStep3->shouldReceive('getApplicationStep')
+            ->andReturn($applicationStep3);
+
         $supplementedApplicationSteps = [
             $supplementedApplicationStep1,
-            $supplementedApplicationStep2
+            $supplementedApplicationStep2,
+            $supplementedApplicationStep3,
         ];
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchUsingId')
