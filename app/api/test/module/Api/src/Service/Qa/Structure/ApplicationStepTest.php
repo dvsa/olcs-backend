@@ -27,55 +27,78 @@ class ApplicationStepTest extends MockeryTestCase
 
     private $validatorListRepresentation;
 
-    private $validatorList;
+    private $element;
 
-    private $applicationStep;
+    private $validatorList;
 
     public function setUp(): void
     {
         $this->elementRepresentation = ['elementRepresentation'];
         $this->validatorListRepresentation = ['validatorListRepresentation'];
 
-        $element = m::mock(ElementInterface::class);
-        $element->shouldReceive('getRepresentation')
+        $this->element = m::mock(ElementInterface::class);
+        $this->element->shouldReceive('getRepresentation')
             ->andReturn($this->elementRepresentation);
 
         $this->validatorList = m::mock(ValidatorList::class);
         $this->validatorList->shouldReceive('getRepresentation')
             ->andReturn($this->validatorListRepresentation);
-
-        $this->applicationStep = new ApplicationStep(
-            self::TYPE,
-            self::FIELDSET_NAME,
-            self::SHORT_NAME,
-            self::SLUG,
-            $element,
-            $this->validatorList
-        );
     }
 
-    public function testGetRepresentation()
+    /**
+     * @dataProvider dpGetRepresentation
+     */
+    public function testGetRepresentation($enabled)
     {
         $expectedRepresentation = [
             'type' => self::TYPE,
             'fieldsetName' => self::FIELDSET_NAME,
             'shortName' => self::SHORT_NAME,
             'slug' => self::SLUG,
+            'enabled' => $enabled,
             'element' => $this->elementRepresentation,
             'validators' => $this->validatorListRepresentation
         ];
 
+        $applicationStep = new ApplicationStep(
+            self::TYPE,
+            self::FIELDSET_NAME,
+            self::SHORT_NAME,
+            self::SLUG,
+            $enabled,
+            $this->element,
+            $this->validatorList
+        );
+
         $this->assertEquals(
             $expectedRepresentation,
-            $this->applicationStep->getRepresentation()
+            $applicationStep->getRepresentation()
         );
+    }
+
+    public function dpGetRepresentation()
+    {
+        return [
+            [true],
+            [false],
+        ];
     }
 
     public function testGetValidatorList()
     {
+        $applicationStep = new ApplicationStep(
+            self::TYPE,
+            self::FIELDSET_NAME,
+            self::SHORT_NAME,
+            self::SLUG,
+            true,
+            $this->element,
+            $this->validatorList
+        );
+
         $this->assertSame(
             $this->validatorList,
-            $this->applicationStep->getValidatorList()
+            $applicationStep->getValidatorList()
         );
     }
 }

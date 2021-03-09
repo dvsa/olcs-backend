@@ -13,6 +13,7 @@ class ApplicationStepFactory
      * @param string $fieldsetName
      * @param string $shortName
      * @param string $slug
+     * @param bool $enabled
      * @param ElementInterface $element
      * @param ValidatorList $validatorList
      *
@@ -23,9 +24,10 @@ class ApplicationStepFactory
         $fieldsetName,
         $shortName,
         $slug,
+        $enabled,
         ElementInterface $element,
         ValidatorList $validatorList
     ) {
-        return new ApplicationStep($type, $fieldsetName, $shortName, $slug, $element, $validatorList);
+        return new ApplicationStep($type, $fieldsetName, $shortName, $slug, $enabled, $element, $validatorList);
     }
 }

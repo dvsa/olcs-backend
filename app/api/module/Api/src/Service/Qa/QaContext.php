@@ -55,4 +55,18 @@ class QaContext
     {
         return $this->qaEntity->getAnswer($this->applicationStepEntity);
     }
+
+    /**
+     * Whether the application step within this qa context should show as enabled
+     *
+     * @return bool
+     */
+    public function isApplicationStepEnabled()
+    {
+        if ($this->qaEntity->isNotYetSubmitted()) {
+            return true;
+        }
+
+        return $this->applicationStepEntity->getEnabledAfterSubmission();
+    }
 }
