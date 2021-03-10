@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProvider;
+use Dvsa\Olcs\Api\Service\Qa\PostSubmit\IrhpApplicationPostSubmitHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath as SubmitApplicationPathCmd;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -23,6 +24,9 @@ class SubmitApplicationPath extends AbstractCommandHandler
 
     /** @var SupplementedApplicationStepsProvider */
     private $supplementedApplicationStepsProvider;
+
+    /** @var IrhpApplicationPostSubmitHandler */
+    private $irhpApplicationPostSubmitHandler;
 
     protected $repoServiceName = 'IrhpApplication';
 
@@ -42,6 +46,8 @@ class SubmitApplicationPath extends AbstractCommandHandler
         $this->supplementedApplicationStepsProvider = $mainServiceLocator->get(
             'QaSupplementedApplicationStepsProvider'
         );
+
+        $this->irhpApplicationPostSubmitHandler = $mainServiceLocator->get('QaIrhpApplicationPostSubmitHandler');
 
         return parent::createService($serviceLocator);
     }
@@ -74,6 +80,8 @@ class SubmitApplicationPath extends AbstractCommandHandler
                 );
             }
         }
+
+        $this->irhpApplicationPostSubmitHandler->handle($irhpApplication);
 
         return $this->result;
     }

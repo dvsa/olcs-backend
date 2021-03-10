@@ -383,6 +383,9 @@ return [
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
 
+            'QaIrhpApplicationPostSubmitHandler' =>
+                ApiSrv\Qa\PostSubmit\IrhpApplicationPostSubmitHandlerFactory::class,
+
             'PermitsAnswersSummaryGenerator' =>
                 ApiSrv\Permits\AnswersSummary\AnswersSummaryGeneratorFactory::class,
             'PermitsIpaAnswersSummaryGenerator' =>

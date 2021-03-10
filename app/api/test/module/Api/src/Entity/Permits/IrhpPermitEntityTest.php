@@ -724,4 +724,31 @@ class IrhpPermitEntityTest extends EntityTester
             ]
         ];
     }
+
+    public function testRegenerateIssueDateAndExpiryDate()
+    {
+        $issueDate = m::mock(DateTime::class);
+        $expiryDate = m::mock(DateTime::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('generateExpiryDate')
+            ->withNoArgs()
+            ->andReturn($expiryDate);
+        $irhpPermitApplication->shouldReceive('generateIssueDate')
+            ->withNoArgs()
+            ->andReturn($issueDate);
+
+        $this->sut->setIrhpPermitApplication($irhpPermitApplication);
+        $this->sut->regenerateIssueDateAndExpiryDate();
+
+        $this->assertSame(
+            $issueDate,
+            $this->sut->getIssueDate()
+        );
+
+        $this->assertSame(
+            $expiryDate,
+            $this->sut->getExpiryDate()
+        );
+    }
 }
