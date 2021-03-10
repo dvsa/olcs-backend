@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
-use Dvsa\Olcs\Api\Service\Qa\Common\DateTimeFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\DateAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
 use Mockery as m;
@@ -36,14 +35,6 @@ class DateAnswerSaverTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($applicationStep);
 
-        $answerValue = m::mock(DateTime::class);
-
-        $dateTimeFactory = m::mock(DateTimeFactory::class);
-        $dateTimeFactory->shouldReceive('create')
-            ->with($dateString)
-            ->once()
-            ->andReturn($answerValue);
-
         $genericAnswerFetcher = m::mock(GenericAnswerFetcher::class);
         $genericAnswerFetcher->shouldReceive('fetch')
             ->with($applicationStep, $postData)
@@ -51,10 +42,10 @@ class DateAnswerSaverTest extends MockeryTestCase
 
         $genericAnswerWriter = m::mock(GenericAnswerWriter::class);
         $genericAnswerWriter->shouldReceive('write')
-            ->with($qaContext, $answerValue, QuestionEntity::QUESTION_TYPE_DATE)
+            ->with($qaContext, $dateString, QuestionEntity::QUESTION_TYPE_DATE)
             ->once();
 
-        $dateAnswerSaver = new DateAnswerSaver($genericAnswerWriter, $genericAnswerFetcher, $dateTimeFactory);
+        $dateAnswerSaver = new DateAnswerSaver($genericAnswerWriter, $genericAnswerFetcher);
         $dateAnswerSaver->save($qaContext, $postData);
     }
 }

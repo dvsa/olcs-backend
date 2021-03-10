@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProvider;
+use Dvsa\Olcs\Api\Service\Qa\PostSubmit\IrhpApplicationPostSubmitHandler;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
@@ -32,6 +33,7 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             'QaContextFactory' => m::mock(QaContextFactory::class),
             'QaSupplementedApplicationStepsProvider' => m::mock(SupplementedApplicationStepsProvider::class),
+            'QaIrhpApplicationPostSubmitHandler' => m::mock(IrhpApplicationPostSubmitHandler::class),
         ];
 
         parent::setUp();
@@ -132,6 +134,12 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
         $this->mockedSmServices['QaSupplementedApplicationStepsProvider']->shouldReceive('get')
             ->with($irhpApplication)
             ->andReturn($supplementedApplicationSteps);
+
+        $this->mockedSmServices['QaIrhpApplicationPostSubmitHandler']->shouldReceive('handle')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
 
         $this->sut->handleCommand($command);
     }
