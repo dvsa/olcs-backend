@@ -454,4 +454,15 @@ class IrhpPermit extends AbstractIrhpPermit
     {
         return $this->getExpiryDate() ?? $this->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo(true);
     }
+
+    /**
+     * Regenerate the issue date and expiry date as appropriate for the associated permit type
+     */
+    public function regenerateIssueDateAndExpiryDate()
+    {
+        $irhpPermitApplication = $this->irhpPermitApplication;
+
+        $this->expiryDate = $irhpPermitApplication->generateExpiryDate();
+        $this->issueDate = $irhpPermitApplication->generateIssueDate();
+    }
 }

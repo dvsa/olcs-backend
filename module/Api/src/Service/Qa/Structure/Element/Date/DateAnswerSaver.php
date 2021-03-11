@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
-use Dvsa\Olcs\Api\Service\Qa\Common\DateTimeFactory;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
@@ -21,26 +20,18 @@ class DateAnswerSaver implements AnswerSaverInterface
     /** @var GenericAnswerFetcher */
     private $genericAnswerFetcher;
 
-    /** @var DateTimeFactory */
-    private $dateTimeFactory;
-
     /**
      * Create service instance
      *
      * @param GenericAnswerWriter $genericAnswerWriter
      * @param GenericAnswerFetcher $genericAnswerFetcher
-     * @param DateTimeFactory $dateTimeFactory
      *
      * @return DateAnswerSaver
      */
-    public function __construct(
-        GenericAnswerWriter $genericAnswerWriter,
-        GenericAnswerFetcher $genericAnswerFetcher,
-        DateTimeFactory $dateTimeFactory
-    ) {
+    public function __construct(GenericAnswerWriter $genericAnswerWriter, GenericAnswerFetcher $genericAnswerFetcher)
+    {
         $this->genericAnswerWriter = $genericAnswerWriter;
         $this->genericAnswerFetcher = $genericAnswerFetcher;
-        $this->dateTimeFactory = $dateTimeFactory;
     }
 
     /**
@@ -50,9 +41,7 @@ class DateAnswerSaver implements AnswerSaverInterface
     {
         $applicationStepEntity = $qaContext->getApplicationStepEntity();
 
-        $answerValue = $this->dateTimeFactory->create(
-            $this->genericAnswerFetcher->fetch($applicationStepEntity, $postData)
-        );
+        $answerValue = $this->genericAnswerFetcher->fetch($applicationStepEntity, $postData);
 
         $this->genericAnswerWriter->write(
             $qaContext,
