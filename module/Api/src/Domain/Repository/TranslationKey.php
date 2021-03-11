@@ -31,25 +31,7 @@ class TranslationKey extends AbstractRepository
                     ->orWhere($this->alias . '.translationKey LIKE :translationSearch')
                     ->leftJoin($this->alias . '.translationKeyTexts', 'tkt')
                     ->orWhere('tkt.translatedText LIKE :translationSearch')
-                    ->leftJoin($this->alias . '.translationKeyTagLinks', 'tktl')
-                    ->leftJoin('tktl.tag', 'tag')
-                    ->orWhere('tag.tag LIKE :translationSearch')
-                    ->leftJoin($this->alias . '.translationKeyCategoryLinks', 'tkcat')
-                    ->orWhere('tkcat.repository LIKE :translationSearch')
-                    ->orWhere('tkcat.path LIKE :translationSearch')
                     ->setParameter('translationSearch', '%' . $query->getTranslationSearch() . '%');
-            }
-
-            if (!is_null($query->getCategory()) || !is_null($query->getSubCategory())) {
-                $qb->leftJoin($this->alias . '.translationKeyCategoryLinks', 'tkcl');
-                if ($query->getCategory() != null) {
-                    $qb->andWhere('tkcl.category = :category')
-                        ->setParameter('category', $query->getCategory());
-                }
-                if ($query->getSubCategory() != null) {
-                    $qb->andWhere('tkcl.subCategory = :subCategory')
-                        ->setParameter('subCategory', $query->getSubCategory());
-                }
             }
         }
     }
