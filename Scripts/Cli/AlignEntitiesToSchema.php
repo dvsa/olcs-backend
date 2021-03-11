@@ -46,20 +46,36 @@ class AlignEntitiesToSchema
         'u' => '',
         'p' => '',
         'd' => '',
+        'host' => '',
         'mapping-files' => '',
         'entity-files' => '',
         'test-files' => '',
         'entity-config' => ''
     );
 
-    private $defaultOptions = [
+    /**
+     * @todo these vagrant options can be removed once all devs migrated to k8s
+     */
+    private $vagrantDefaultOptions = [
         'u' => 'root',
         'p' => 'password',
         'd' => 'olcs_be',
+        'host' => 'localhost',
         'mapping-files' => '/var/www/olcs/olcs-backend/data/mapping/',
         'entity-files' => '/var/www/olcs/olcs-backend/module/Api/src/Entity/',
         'test-files' => '/var/www/olcs/olcs-backend/test/module/Api/src/Entity/',
         'entity-config' => '/var/www/olcs/olcs-backend/data/db/EntityConfig.php'
+    ];
+
+    private $defaultOptions = [
+        'u' => 'mysql',
+        'p' => 'olcs',
+        'd' => 'olcs_be',
+        'host' => 'database.localdev',
+        'mapping-files' => '/opt/dvsa/olcs-backend/data/mapping/',
+        'entity-files' => '/opt/dvsa/olcs-backend/module/Api/src/Entity/',
+        'test-files' => '/opt/dvsa/olcs-backend/test/module/Api/src/Entity/',
+        'entity-config' => '/opt/dvsa/olcs-backend/data/db/EntityConfig.php'
     ];
 
     /**
@@ -173,39 +189,52 @@ class AlignEntitiesToSchema
     {
         $this->options = getopt(
             'u:p:d:',
-            array('help', 'default', 'import-schema:', 'mapping-files:', 'entity-files:', 'test-files:', 'entity-config:')
+            array('help', 'default', 'host:', 'mapping-files:', 'entity-files:', 'test-files:', 'entity-config:')
         );
 
         if (isset($this->options['help'])) {
             $this->exitResponse(
-                "\n\n=========================================\n"
+                "\n\n===================================================\n"
                 . "Default options: \n"
-                . "=========================================\n\n"
-                . "     import-schema    /var/www/olcs/olcs-etl/olcs_schema.sql \n"
+                . "===================================================\n\n"
                 . "     mapping-files    " . $this->defaultOptions['mapping-files'] . " \n"
                 . "     entity-files     " . $this->defaultOptions['entity-files'] . " \n"
                 . "     test-files       " . $this->defaultOptions['test-files'] . " \n"
                 . "     entity-config    " . $this->defaultOptions['entity-config'] . " \n"
+                . "     host             " . $this->defaultOptions['host'] . " \n"
                 . "     -u               " . $this->defaultOptions['u'] . " \n"
                 . "     -p               " . $this->defaultOptions['p'] . " \n"
                 . "     -d               " . $this->defaultOptions['d'] . " \n"
                 . " \n\n"
-                . "=========================================\n"
+                . "===================================================\n"
                 . "Sample usage with default options \n"
-                . "=========================================\n\n"
+                . "===================================================\n\n"
                 . "'php AlignEntitiesToSchema.php --default'\n"
                 . " \n\n"
-                . "=========================================\n"
-                . "Sample Usage with custom options \n"
-                . "=========================================\n\n"
-                . "'php AlignEntitiesToSchema.php --import-schema /var/www/olcs/olcs-etl/olcs_schema.sql "
+                . "===================================================\n"
+                . "Sample Usage with custom options (K8s env) \n"
+                . "===================================================\n\n"
+                . "'php AlignEntitiesToSchema.php "
                 . "--mapping-files " . $this->defaultOptions['mapping-files'] . " "
                 . "--entity-files " . $this->defaultOptions['entity-files'] . " "
                 . "--test-files " . $this->defaultOptions['test-files'] . " "
                 . "--entity-config " . $this->defaultOptions['entity-config'] . " "
+                . "--host " . $this->defaultOptions['host'] . " "
                 . "-u" . $this->defaultOptions['u'] . " "
                 . "-p" . $this->defaultOptions['p'] . " "
                 . "-d" . $this->defaultOptions['d'] . "'\n\n"
+                . "===================================================\n"
+                . "Sample Usage with custom options (vagrant env) \n"
+                . "===================================================\n\n"
+                . "'php AlignEntitiesToSchema.php "
+                . "--mapping-files " . $this->vagrantDefaultOptions['mapping-files'] . " "
+                . "--entity-files " . $this->vagrantDefaultOptions['entity-files'] . " "
+                . "--test-files " . $this->vagrantDefaultOptions['test-files'] . " "
+                . "--entity-config " . $this->vagrantDefaultOptions['entity-config'] . " "
+                . "--host " . $this->vagrantDefaultOptions['host'] . " "
+                . "-u" . $this->vagrantDefaultOptions['u'] . " "
+                . "-p" . $this->vagrantDefaultOptions['p'] . " "
+                . "-d" . $this->vagrantDefaultOptions['d'] . "'\n\n"
             );
         }
 
@@ -236,8 +265,6 @@ class AlignEntitiesToSchema
             $this->removeHistTables();
             $this->removeLiquibaseTables();
             $this->removeDataRetentionCheckTables();
-
-//            $this->maybeImportSchema();
 
             $this->maybeCreateDir($this->options['mapping-files']);
 
@@ -288,7 +315,7 @@ class AlignEntitiesToSchema
 
         try {
             $this->pdo = new Pdo(
-                'mysql:dbname=' . $this->options['d'] . ';host=localhost',
+                'mysql:dbname=' . $this->options['d'] . ';host=' . $this->options['host'],
                 $this->options['u'],
                 $this->options['p'],
                 array(Pdo::ATTR_ERRMODE => Pdo::ERRMODE_EXCEPTION)
@@ -352,32 +379,6 @@ class AlignEntitiesToSchema
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_EXPECTED_DELETES"');
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_EXPECTED_NULLS"');
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_TABLE_COUNTS"');
-    }
-
-    /**
-     * Import the schema if we want to import it
-     */
-    private function maybeImportSchema()
-    {
-        if (isset($this->options['import-schema'])) {
-            $schema = $this->options['import-schema'];
-
-            $this->respond('Importing schema: ' . $schema, 'info');
-
-            $importSchemaCommand = 'mysql -u%s -p%s %s < %s';
-
-            $this->recreateDatabase();
-
-            shell_exec(
-                sprintf(
-                    $importSchemaCommand,
-                    $this->options['u'],
-                    $this->options['p'],
-                    $this->options['d'],
-                    $schema
-                )
-            );
-        }
     }
 
     /**
