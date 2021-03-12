@@ -1,46 +1,44 @@
 <?php
 
-/**
- * Transport Manager / Update
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull as UpdatePersonCmd;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\Tm\Update as UpdateTmCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepository;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
-/**
- * Transport Manager / Update
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 final class Update extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
-    protected $repoServiceName = 'TransportManager';
-
-    protected $extraRepos = ['ContactDetails'];
-
     use QueueAwareTrait;
     use CacheAwareTrait;
 
     /**
-     * Handle command
-     *
+     * @inheritDoc
+     */
+    protected $repoServiceName = 'TransportManager';
+
+    /**
+     * @inheritDoc
+     */
+    protected $extraRepos = ['ContactDetails'];
+
+    /**
      * @param CommandInterface|UpdateTmCmd $command command to update a TM
-     *
      * @return Result
+     * @throws RuntimeException
+     * @throws NotFoundException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -76,23 +74,8 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $workAddressResult = $this->handleSideEffect($saveWorkAddress);
         $workCdId = $workAddressResult->getId('contactDetails');
 
-        $saveHomeAddress = SaveAddressCmd::create(
-            [
-                'id'           => $command->getHomeAddressId(),
-                'version'      => $command->getHomeAddressVersion(),
-                'addressLine1' => $command->getHomeAddressLine1(),
-                'addressLine2' => $command->getHomeAddressLine2(),
-                'addressLine3' => $command->getHomeAddressLine3(),
-                'addressLine4' => $command->getHomeAddressLine4(),
-                'town'         => $command->getHomeTown(),
-                'postcode'     => $command->getHomePostcode(),
-                'countryCode'  => $command->getHomeCountryCode(),
-                'contactType'  => ContactDetails::CONTACT_TYPE_TRANSPORT_MANAGER,
-            ]
-        );
-        $homeAddressResult = $this->handleSideEffect($saveHomeAddress);
+        $result->merge($this->updateTransportManagerHomeContactDetails($command));
 
-        $contactDetails = $this->updateHomeContactDetails($command);
         $transportManager = $this->updateTransportManager($command, $workCdId);
         $this->clearEntityUserCaches($transportManager);
 
@@ -100,17 +83,62 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $result->addMessage('Transport Manager updated successfully');
         $result->merge($personResult);
 
-        // need to add ids and messages manually, otherewise it will be overwritten
-        if ($homeAddressResult->getFlag('hasChanged')) {
-            $result->addId('homeAddress', $command->getHomeAddressId());
-            $result->addMessage('Home address updated');
-        }
+
         if ($workAddressResult->getFlag('hasChanged')) {
             $result->addId('workAddress', $workAddressResult->getId('address'));
             $result->addMessage('Work address updated');
         }
-        if ($command->getHomeCdVersion() !== $contactDetails->getVersion()) {
-            $result->addId('homeContactDetails', $contactDetails->getId());
+
+        return $result;
+    }
+
+    /**
+     * Updates the home contact details for a transport manager.
+     *
+     * @param UpdateTmCmd $command
+     * @return Result
+     * @throws NotFoundException
+     * @throws RuntimeException
+     */
+    protected function updateTransportManagerHomeContactDetails(UpdateTmCmd $command): Result
+    {
+        $result = new Result();
+
+        $homeAddressResult = $this->handleSideEffect(SaveAddressCmd::create([
+            'id'           => $homeAddressId = $command->getHomeAddressId(),
+            'version'      => $command->getHomeAddressVersion(),
+            'addressLine1' => $command->getHomeAddressLine1(),
+            'addressLine2' => $command->getHomeAddressLine2(),
+            'addressLine3' => $command->getHomeAddressLine3(),
+            'addressLine4' => $command->getHomeAddressLine4(),
+            'town'         => $command->getHomeTown(),
+            'postcode'     => $command->getHomePostcode(),
+            'countryCode'  => $command->getHomeCountryCode(),
+        ]));
+
+        $contactDetailsRepository = $this->resolveContactDetailsRepository();
+        $homeContactDetails = $contactDetailsRepository->fetchById($command->getHomeCdId());
+        assert($homeContactDetails instanceof ContactDetails, 'Expected ContactDetails entity');
+
+        $homeContactDetails->setEmailAddress($command->getEmailAddress());
+
+        $newHomeAddressId = $homeAddressResult->getId('address');
+        if (null !== $newHomeAddressId) {
+            $homeAddress = $contactDetailsRepository->getReference(Address::class, $newHomeAddressId);
+            assert($homeAddress instanceof Address, 'Expected instance of Address');
+            $homeContactDetails->setAddress($homeAddress);
+            $homeAddressId = $homeAddress->getId();
+        }
+
+        $contactDetailsRepository->save($homeContactDetails);
+
+        if ($homeAddressResult->getFlag('hasChanged')) {
+            $result->addId('homeAddress', $homeAddressId);
+            $result->addMessage('Home address updated');
+        }
+
+        if (((int) $command->getHomeCdVersion()) !== $homeContactDetails->getVersion()) {
+            $result->addId('homeContactDetails', $homeContactDetails->getId());
             $result->addMessage('Home contact details updated');
         }
 
@@ -118,32 +146,21 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * update home contact details
-     *
-     * @param UpdateTmCmd $command command to update tm
-     *
-     * @return ContactDetailsEntity
+     * @return ContactDetailsRepository
+     * @throws RuntimeException
      */
-    protected function updateHomeContactDetails($command)
+    protected function resolveContactDetailsRepository(): ContactDetailsRepository
     {
-        /** @var ContactDetailsEntity $contactDetails */
-        $contactDetails = $this->getRepo('ContactDetails')->fetchById($command->getHomeCdId());
-        $contactDetails->updateContactDetailsWithPersonAndEmailAddress(
-            null,
-            $command->getEmailAddress()
-        );
-        $this->getRepo('ContactDetails')->save($contactDetails);
-        return $contactDetails;
+        return $this->getRepo('ContactDetails');
     }
 
     /**
-     * Update a transport manager
+     * Update a transport manager.
      *
      * @param UpdateTmCmd $command  command to update tm
      * @param int|null    $workCdId work contact details id
-     *
      * @return TransportManagerEntity
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      */
     protected function updateTransportManager($command, $workCdId = null)
     {

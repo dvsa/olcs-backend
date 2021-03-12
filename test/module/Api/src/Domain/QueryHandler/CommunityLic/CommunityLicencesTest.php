@@ -16,18 +16,13 @@ use Dvsa\OlcsTest\Api\Domain\Repository\CommunityLicenceRepositoryMockBuilder;
 use Dvsa\OlcsTest\Api\Domain\Repository\LicenceRepositoryMockBuilder;
 use Dvsa\OlcsTest\Api\Domain\Repository\RepositoryServiceManagerBuilder;
 use Dvsa\OlcsTest\Api\Domain\Repository\ResolvesMockRepositoriesFromServiceLocatorsTrait;
-use Dvsa\OlcsTest\Builder\AuthorizationServiceMockBuilder;
 use Dvsa\OlcsTest\Builder\ServiceManagerBuilder;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use ZfcRbac\Service\AuthorizationService;
+use Mockery\MockInterface;
 
-/**
- * CommunityLic Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class CommunityLicencesTest extends QueryHandlerTestCase
 {
     use ResolvesMockRepositoriesFromServiceLocatorsTrait;
@@ -56,10 +51,20 @@ class CommunityLicencesTest extends QueryHandlerTestCase
     {
         return [
             RepositoryServiceManagerBuilder::ALIAS => (new RepositoryServiceManagerBuilder(static::setUpDefaultRepositories()))->build(),
-            AuthorizationService::class => (new AuthorizationServiceMockBuilder())->build(),
+            AuthorizationService::class => $this->setUpAuthorizationService(),
             CommandHandlerManagerMockBuilder::ALIAS => (new CommandHandlerManagerMockBuilder($serviceLocator))->build(),
             QueryHandlerManager::class => (new QueryHandlerManagerMockBuilder($serviceLocator))->build(),
         ];
+    }
+
+    /**
+     * @return MockInterface|AuthorizationService
+     */
+    protected function setUpAuthorizationService(): MockInterface
+    {
+        $service = m::mock(AuthorizationService::class);
+        $service->shouldReceive('isGranted')->andReturn(false)->byDefault();
+        return $service;
     }
 
     public function testHandleQueryIsDefined()

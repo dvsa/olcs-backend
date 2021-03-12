@@ -1,13 +1,21 @@
 <?php
 
-/**
- * Transport Manager / Update
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 
+use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManager;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Dvsa\OlcsTest\Api\Domain\CommandHandlerManagerMockBuilder;
+use Dvsa\OlcsTest\Api\Domain\Repository\RepositoryMockBuilder;
+use Dvsa\OlcsTest\MocksRepositoriesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Update;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
@@ -21,14 +29,13 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Mockery\MockInterface;
 
-/**
- * Transport Manager / Update
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class UpdateTest extends CommandHandlerTestCase
 {
+    use MocksServicesTrait;
+    use MocksRepositoriesTrait;
+
     public function setUp(): void
     {
         $this->sut = new Update();
@@ -52,7 +59,19 @@ class UpdateTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @test
+     */
+    public function handleCommand_IsCallable()
+    {
+        $this->assertIsCallable([$this->sut, 'handleCommand']);
+    }
+
+    /**
+     * @depends handleCommand_IsCallable
+     * @test
+     */
+    public function handleCommand()
     {
         $id = 1;
         $data = [
@@ -143,14 +162,13 @@ class UpdateTest extends CommandHandlerTestCase
                 'town'         => $data['homeTown'],
                 'postcode'     => $data['homePostcode'],
                 'countryCode'  => $data['homeCountryCode'],
-                'contactType'  => 'ct_tm',
             ],
             $homeAddressResult
         );
 
         $mockContactDetails = m::mock(ContactDetailsEntity::class)
-            ->shouldReceive('updateContactDetailsWithPersonAndEmailAddress')
-            ->with(null, $data['emailAddress'])
+            ->shouldReceive('setEmailAddress')
+            ->with($data['emailAddress'])
             ->once()
             ->shouldReceive('getVersion')
             ->andReturn(5)
@@ -204,5 +222,238 @@ class UpdateTest extends CommandHandlerTestCase
         $this->assertEquals($res['id']['workAddress'], 10);
         $this->assertEquals($res['id']['homeContactDetails'], $data['homeCdId']);
         $this->assertEquals($res['id']['person'], $data['personId']);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_UpdatesHomeAddress()
+    {
+        // Setup
+        $serviceLocator = $this->setUpServiceLocator();
+        $sut = $this->setUpSut($serviceLocator);
+        $command = Cmd::create(['homeAddressId' => $expectedAddressId = 1234]);
+
+        // Define Expectations
+        $commandHandler = $this->resolveMockService($serviceLocator, CommandHandlerManager::class);
+        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) use ($expectedAddressId) {
+            return $command instanceof SaveAddress && $command->getId() === $expectedAddressId;
+        })->atLeast()->once()->andReturn(new Result());
+
+        // Execute
+        $sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_CreatesHomeAddress()
+    {
+        // Setup
+        $serviceLocator = $this->setUpServiceLocator();
+        $sut = $this->setUpSut($serviceLocator);
+        $command = Cmd::create([]);
+
+        // Define Expectations
+        $commandHandler = $this->resolveMockService($serviceLocator, CommandHandlerManager::class);
+        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) {
+            return $command instanceof SaveAddress && null === $command->getId();
+        })->atLeast()->once()->andReturn(new Result());
+
+        // Execute
+        $sut->handleCommand($command);
+    }
+
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_UpdatesHomeAddress_WhenHomeAddressIdProvided()
+    {
+        // Setup
+        $serviceLocator = $this->setUpServiceLocator();
+        $sut = $this->setUpSut($serviceLocator);
+        $command = Cmd::create(['id' => $transportManagerId = 1234, 'homeAddressId' => $homeAddressId = 4321]);
+        $mockTransportManager = new TransportManagerEntity();
+        $transportManagerRepository = $this->resolveMockRepository($serviceLocator, 'TransportManager');
+        $transportManagerRepository->shouldReceive('fetchById')->with($transportManagerId)->andReturn($mockTransportManager);
+
+        // Define Expectations
+        $commandHandler = $this->resolveMockService($serviceLocator, CommandHandlerManager::class);
+        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
+            return $command instanceof SaveAddress && $command->getId() === $homeAddressId;
+        })->once()->andReturn(new Result());
+
+        // Execute
+        $sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_DoesNotCreateHomeContactDetails()
+    {
+        // Setup
+        $serviceLocator = $this->setUpServiceLocator();
+        $sut = $this->setUpSut($serviceLocator);
+        $command = Cmd::create(['homeAddressId' => $homeAddressId = 4321]);
+
+        // Define Expectations
+        $commandHandler = $this->resolveMockService($serviceLocator, CommandHandlerManager::class);
+        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
+            return $command instanceof SaveAddress && $command->getId() === $homeAddressId && null === $command->getContactType();
+        })->once()->andReturn(new Result());
+
+        // Execute
+        $sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * depends handleCommand_CreatesHomeAddress
+     */
+    public function handleCommand_CreatesHomeAddress_WhenNoHomeAddressIdProvided()
+    {
+        // Setup
+        $serviceLocator = $this->setUpServiceLocator();
+        $sut = $this->setUpSut($serviceLocator);
+        $command = Cmd::create(['homeAddressId' => null, 'workAddressId' => $workAddressId = 1234]);
+        $homeAddressSaveResult = new Result();
+        $homeAddressSaveResult->addId('address', $newHomeAddressId = 4321);
+        $homeAddressSaveResult->setFlag('hasChanged', true);
+        $commandHandler = $this->resolveMockService($serviceLocator, CommandHandlerManager::class);
+        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) {
+            return $command instanceof SaveAddress && null === $command->getId();
+        })->once()->andReturn($homeAddressSaveResult);
+
+        // Define Expectation
+        $contactDetailsRepository = $this->resolveMockRepository($serviceLocator, 'ContactDetails');
+        $contactDetailsRepository->shouldReceive('save')->withArgs(function ($entity) use ($newHomeAddressId) {
+            return $entity instanceof ContactDetailsEntity
+                && ($address = $entity->getAddress()) instanceof Address
+                && $address->getId() === $newHomeAddressId;
+        })->once();
+
+        // Execute
+        $sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_UpdatesHomeAddress
+     */
+    public function handleCommand_ReportsNoUpdatesToHomeAddress_WhenNoChangeRequired()
+    {
+        // Setup
+        $serviceLocator = $this->setUpServiceLocator();
+        $sut = $this->setUpSut($serviceLocator);
+        $command = Cmd::create(['homeAddressId' => $homeAddressId = 1234]);
+        $homeAddressSaveResult = new Result();
+        $homeAddressSaveResult->setFlag('hasChanged', false);
+        $commandHandler = $this->resolveMockService($serviceLocator, CommandHandlerManager::class);
+        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
+            return $command instanceof SaveAddress && $command->getId() === $homeAddressId;
+        })->once()->andReturn($homeAddressSaveResult);
+
+        // Execute
+        $result = $sut->handleCommand($command);
+
+        // Assert
+        $this->assertNotContains('Home address updated', $result->getMessages());
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_CreatesHomeAddress
+     */
+    public function handleCommand_ReportsNoUpdatesToHomeContactDetails_WhenVersionIsUnchanged()
+    {
+        // Setup
+        $serviceLocator = $this->setUpServiceLocator();
+        $sut = $this->setUpSut($serviceLocator);
+        $contactDetailsVersion = 3;
+        $command = Cmd::create(['homeCdId' => $homeContactDetailsId = 4321, 'homeCdVersion' => (string) $contactDetailsVersion]);
+        $contactDetailsRepository = $this->resolveMockRepository($serviceLocator, 'ContactDetails');
+        $contactDetailsRepository->shouldReceive('fetchById')->with($homeContactDetailsId)->andReturnUsing(function () use ($homeContactDetailsId, $contactDetailsVersion) {
+            $entity = new ContactDetailsEntity(new RefData(ContactDetailsEntity::CONTACT_TYPE_TRANSPORT_MANAGER));
+            $entity->setId($homeContactDetailsId);
+            $entity->setVersion($contactDetailsVersion);
+            return $entity;
+        });
+
+        // Execute
+        $result = $sut->handleCommand($command);
+
+        // Assert
+        $this->assertNotContains('Home contact details updated', $result->getMessages());
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return array
+     */
+    protected function setUpDefaultServices(ServiceLocatorInterface $serviceLocator): array
+    {
+        return [
+            CommandHandlerManager::class => (new CommandHandlerManagerMockBuilder($serviceLocator))->build(),
+            CacheEncryption::class => $this->setUpMockService(CacheEncryption::class),
+            'RepositoryServiceManager' => $this->setUpRepositoryServiceManager(),
+            'QueryHandlerManager' => $this->setUpMockService(QueryHandlerManager::class),
+            PidIdentityProvider::class => $this->setUpMockService(PidIdentityProvider::class),
+            'TransactionManager' => $this->setUpMockService(TransactionManagerInterface::class),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function setUpDefaultRepositories(): array
+    {
+        return [
+            'ContactDetails' => $this->setUpContactDetailsRepository(),
+            'TransportManager' => $this->setUpTransportManagerRepository(),
+        ];
+    }
+
+    /**
+    * @return ContactDetails|MockInterface
+    */
+    protected function setUpContactDetailsRepository(): MockInterface
+    {
+        $builder = new RepositoryMockBuilder(ContactDetails::class);
+        $builder->setEntityBuilder(function ($id) {
+            $entity = new ContactDetailsEntity(new RefData(ContactDetailsEntity::CONTACT_TYPE_TRANSPORT_MANAGER));
+            $entity->setId($id);
+            return $entity;
+        });
+        return $builder->build();
+    }
+
+    /**
+     * @return MockInterface
+     */
+    protected function setUpTransportManagerRepository(): MockInterface
+    {
+        $builder = new RepositoryMockBuilder(TransportManager::class);
+        $builder->setEntityBuilder(function ($id) {
+            $entity = new TransportManagerEntity();
+            $entity->setId($id);
+            return $entity;
+        });
+        return $builder->build();
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return Update
+     */
+    protected function setUpSut(ServiceLocatorInterface $serviceLocator)
+    {
+        $commandHandler = $serviceLocator->get(CommandHandlerManager::class);
+        return $this->sut->createService($commandHandler);
     }
 }
