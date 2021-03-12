@@ -5,9 +5,8 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\OlcsTest\Api\Domain\Repository\m;
 use Dvsa\OlcsTest\Builder\BuilderInterface;
-use Mockery;
+use Mockery as m;
 use Mockery\MockInterface;
 
 class RepositoryMockBuilder implements BuilderInterface
@@ -23,11 +22,18 @@ class RepositoryMockBuilder implements BuilderInterface
     protected $entityBuilder;
 
     /**
-     * @param string $repositoryClass
+     * @var string|null
      */
-    public function __construct(string $repositoryClass)
+    protected $entityClass = null;
+
+    /**
+     * @param string $repositoryClass
+     * @param string $entityClass
+     */
+    public function __construct(string $repositoryClass, string $entityClass = null)
     {
         $this->repositoryClass = $repositoryClass;
+        $this->entityClass = $entityClass;
     }
 
     /**
@@ -62,7 +68,12 @@ class RepositoryMockBuilder implements BuilderInterface
      */
     protected function buildDefaultEntity($id)
     {
-        $entity = m::mock();
+        $args = [];
+        if (null !== $this->entityClass) {
+            $args[] = $this->entityClass;
+        }
+        $entity = m::mock(...$args);
+        $entity->shouldIgnoreMissing();
         $entity->shouldReceive('getId')->andReturn($id)->byDefault();
         return $entity;
     }
@@ -74,12 +85,15 @@ class RepositoryMockBuilder implements BuilderInterface
      */
     public function build()
     {
-        $mock = Mockery::mock($this->repositoryClass);
+        $mock = m::mock($this->repositoryClass);
+        $mock->shouldIgnoreMissing();
         $mock->shouldReceive('fetchById')->andReturnUsing(function ($entityId) {
             return $this->buildEntity($entityId);
         })->byDefault();
-        $mock->shouldReceive('getReference')->andReturnUsing(function ($key) {
-            return new RefData($key);
+        $mock->shouldReceive('getReference')->andReturnUsing(function ($entityClass, $entityId) {
+            $entity = new $entityClass();
+            $entity->setId($entityId);
+            return $entity;
         })->byDefault();
         $mock->shouldReceive('getRefdataReference')->andReturnUsing(function ($key) {
             return new RefData($key);

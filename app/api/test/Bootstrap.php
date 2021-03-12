@@ -27,7 +27,7 @@ class Bootstrap
         $loader->addPsr4('Dvsa\\OlcsTest\\Snapshot\\', __DIR__ . '/module/Snapshot/src/');
         $loader->addPsr4('Dvsa\\OlcsTest\\AwsSdk\\', __DIR__ . '/module/AwsSdk/src/');
         $loader->addPsr4('Dvsa\\OlcsTest\\Queue\\', __DIR__ . '/module/Queue/src/');
-        $loader->addPsr4('Dvsa\\OlcsTest\\Builder\\', __DIR__ . '/src/Builder');
+        $loader->addPsr4('Dvsa\\OlcsTest\\', __DIR__ . '/src');
 
         // Grab the application config
         $config = include dirname(__DIR__) . '/config/application.config.php';
