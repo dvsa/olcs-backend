@@ -10,6 +10,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 
 /**
  * IrhpPermitStock
@@ -95,6 +96,13 @@ class IrhpPermitStock extends AbstractRepository
             ->setParameter('country', $country)
             ->setParameter('type', IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL)
             ->setParameter('now', $now);
+
+        if ($country == Country::ID_MOROCCO) {
+            $qb
+                ->innerJoin('ips.permitCategory', 'r')
+                ->addOrderBy('r.displayOrder', 'ASC')
+                ->addOrderBy('ips.validTo', 'ASC');
+        }
 
         return $qb->getQuery()
             ->setHint(Query::HINT_INCLUDE_META_COLUMNS, true)
