@@ -80,18 +80,21 @@ class BilateralIpaAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInte
             $templateVariables
         );
 
+        $availableStocks = $this->irhpPermitStockRepo->fetchOpenBilateralStocksByCountry(
+            $stock->getCountry()->getId(),
+            new DateTime()
+        );
+
+        $isMultiStock = count($availableStocks) > 1;
+
         $slug = null;
 
-        if (!$isSnapshot) {
-            $availableStocks = $this->irhpPermitStockRepo->fetchOpenBilateralStocksByCountry(
-                $stock->getCountry()->getId(),
-                new DateTime()
-            );
-            $slug = (count($availableStocks) > 1) ? 'period' : null;
+        if (!$isSnapshot && $isMultiStock) {
+            $slug = 'period';
         }
 
         return $this->answersSummaryRowFactory->create(
-            $stock->getBilateralAnswerSummaryLabelKey(),
+            $stock->getBilateralAnswerSummaryLabelKey($isMultiStock),
             $formattedAnswer,
             $slug
         );
