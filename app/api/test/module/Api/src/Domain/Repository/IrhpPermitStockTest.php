@@ -108,7 +108,10 @@ class IrhpPermitStockTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchOpenBilateralStocksByCountry()
+    /**
+     * @dataProvider dpFetchOpenBilateralStocksByCountryNotMorocco
+     */
+    public function testFetchOpenBilateralStocksByCountryNotMorocco($countryId)
     {
         $qb = $this->createMockQb('BLAH');
 
@@ -134,7 +137,7 @@ class IrhpPermitStockTest extends RepositoryTestCase
 
         $this->assertEquals(
             ['RESULTS'],
-            $this->sut->fetchOpenBilateralStocksByCountry(Country::ID_NORWAY, $now)
+            $this->sut->fetchOpenBilateralStocksByCountry($countryId, $now)
         );
 
         $iso8601String = $now->format(DateTime::W3C);
@@ -144,9 +147,62 @@ class IrhpPermitStockTest extends RepositoryTestCase
         'INNER JOIN ips.irhpPermitType ipt '.
         'INNER JOIN ips.irhpPermitWindows ipw '.
         'INNER JOIN ips.country c '.
-        'AND ips.country = [[NO]] '.
+        "AND ips.country = [[$countryId]] ".
         "AND ipw.startDate <= [[$iso8601String]] ".
         "AND ipw.endDate > [[$iso8601String]] AND ipt.id = [[4]]";
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function dpFetchOpenBilateralStocksByCountryNotMorocco()
+    {
+        return [
+            [Country::ID_NORWAY],
+            [Country::ID_BELARUS],
+            [Country::ID_GEORGIA],
+        ];
+    }
+
+    public function testFetchOpenBilateralStocksByCountryMorocco()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $query = m::mock(AbstractQuery::class);
+        $query->shouldReceive('setHint')
+            ->with(Query::HINT_INCLUDE_META_COLUMNS, true)
+            ->once()
+            ->ordered()
+            ->andReturnSelf()
+            ->shouldReceive('getResult')
+            ->with(Query::HYDRATE_ARRAY)
+            ->once()
+            ->ordered()
+            ->andReturn(['RESULTS']);
+
+        $qb->shouldReceive('getQuery')
+            ->withNoArgs()
+            ->andReturn($query);
+
+        $now = new DateTime();
+
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchOpenBilateralStocksByCountry(Country::ID_MOROCCO, $now)
+        );
+
+        $iso8601String = $now->format(DateTime::W3C);
+
+        $expectedQuery = 'BLAH '.
+        'SELECT ips '.
+        'INNER JOIN ips.irhpPermitType ipt '.
+        'INNER JOIN ips.irhpPermitWindows ipw '.
+        'INNER JOIN ips.country c '.
+        'AND ips.country = [[MA]] '.
+        "AND ipw.startDate <= [[$iso8601String]] ".
+        "AND ipw.endDate > [[$iso8601String]] AND ipt.id = [[4]]".
+        " INNER JOIN ips.permitCategory r ORDER BY r.displayOrder ASC ORDER BY ips.validTo ASC";
 
         $this->assertEquals($expectedQuery, $this->query);
     }
