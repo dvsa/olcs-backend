@@ -2110,7 +2110,7 @@ class IrhpPermitStockEntityTest extends EntityTester
     /**
      * @dataProvider dpGetBilateralAnswerSummaryLabelKey
      */
-    public function testGetBilateralAnswerSummaryLabelKey($isMorocco, $expectedKey)
+    public function testGetBilateralAnswerSummaryLabelKey($isMorocco, $isMultiStock, $expectedKey)
     {
         $entity = m::mock(Entity::class)->makePartial();
         $entity->shouldReceive('isMorocco')
@@ -2119,15 +2119,16 @@ class IrhpPermitStockEntityTest extends EntityTester
 
         $this->assertEquals(
             $expectedKey,
-            $entity->getBilateralAnswerSummaryLabelKey()
+            $entity->getBilateralAnswerSummaryLabelKey($isMultiStock)
         );
     }
 
     public function dpGetBilateralAnswerSummaryLabelKey()
     {
         return [
-            [true, 'permits.page.bilateral.permit-needed'],
-            [false, 'permits.page.bilateral.which-period-required'],
+            [true, false, 'permits.page.bilateral.permit-needed'],
+            [false, false, 'permits.page.bilateral.which-period-required'],
+            [false, true, 'permits.page.bilateral.which-period-required.multi-stock'],
         ];
     }
 
