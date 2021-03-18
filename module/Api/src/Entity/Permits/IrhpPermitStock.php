@@ -854,15 +854,17 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Return the translation key to be used to represent the period selection page on bilateral
      *
+     * @param bool $isMultiStock
+     *
      * @return string
      */
-    public function getBilateralAnswerSummaryLabelKey()
+    public function getBilateralAnswerSummaryLabelKey($isMultiStock = false)
     {
         if ($this->isMorocco()) {
             return 'permits.page.bilateral.permit-needed';
         }
 
-        return 'permits.page.bilateral.which-period-required';
+        return $isMultiStock ? 'permits.page.bilateral.which-period-required.multi-stock' : 'permits.page.bilateral.which-period-required';
     }
 
     /**

@@ -23,7 +23,7 @@ class BilateralIpaAnswersSummaryRowsAdderTest extends MockeryTestCase
     /**
      * @dataProvider dpAddRows
      */
-    public function testAddRows($isSnapshot, $availableStocks, $expectedSlug)
+    public function testAddRows($isSnapshot, $availableStocks, $isMultiStock, $expectedSlug)
     {
         $countryId = 'NO';
         $periodNameKey = 'period-key';
@@ -44,7 +44,7 @@ class BilateralIpaAnswersSummaryRowsAdderTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($countryId);
         $irhpPermitStock->shouldReceive('getBilateralAnswerSummaryLabelKey')
-            ->withNoArgs()
+            ->with($isMultiStock)
             ->andReturn($answerSummaryLabelKey);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
@@ -76,7 +76,7 @@ class BilateralIpaAnswersSummaryRowsAdderTest extends MockeryTestCase
         $irhpPermitStockRepository = m::mock(IrhpPermitStockRepository::class);
         $irhpPermitStockRepository->shouldReceive('fetchOpenBilateralStocksByCountry')
             ->with($countryId, m::type(DateTime::class))
-            ->times($isSnapshot ? 0 : 1)
+            ->once()
             ->andReturn($availableStocks);
 
         $sut = new BilateralIpaAnswersSummaryRowsAdder(
@@ -96,12 +96,12 @@ class BilateralIpaAnswersSummaryRowsAdderTest extends MockeryTestCase
         $multipleStocks = [['id' => 1], ['id' => 2]];
 
         return [
-            [true, $noStocks, null],
-            [true, $oneStock, null],
-            [true, $multipleStocks, null],
-            [false, $noStocks, null],
-            [false, $oneStock, null],
-            [false, $multipleStocks, 'period'],
+            [true, $noStocks, false, null],
+            [true, $oneStock, false,  null],
+            [true, $multipleStocks, true, null],
+            [false, $noStocks, false, null],
+            [false, $oneStock, false, null],
+            [false, $multipleStocks, true, 'period'],
         ];
     }
 }
