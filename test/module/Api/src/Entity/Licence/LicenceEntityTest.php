@@ -2803,4 +2803,53 @@ class LicenceEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider dpHasValidCertificateOfRoadworthinessApplications
+     */
+    public function testHasValidCertificateOfRoadworthinessApplications($irhpApplications, $expected)
+    {
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->setIrhpApplications(
+            new ArrayCollection($irhpApplications)
+        );
+
+        $this->assertEquals(
+            $expected,
+            $licence->hasValidCertificateOfRoadworthinessApplications()
+        );
+    }
+
+    public function dpHasValidCertificateOfRoadworthinessApplications()
+    {
+        $irhpApplicationValidCor = m::mock(IrhpApplication::class);
+        $irhpApplicationValidCor->shouldReceive('isValidCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $irhpApplicationNotValidCor = m::mock(IrhpApplication::class);
+        $irhpApplicationNotValidCor->shouldReceive('isValidCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        return [
+            'no applications' => [
+                [],
+                false,
+            ],
+            'all valid cor' => [
+                [$irhpApplicationValidCor, $irhpApplicationValidCor, $irhpApplicationValidCor],
+                true,
+            ],
+            'some valid cor' => [
+                [$irhpApplicationValidCor, $irhpApplicationNotValidCor, $irhpApplicationValidCor],
+                true,
+            ],
+            'no valid cor' => [
+                [$irhpApplicationNotValidCor, $irhpApplicationNotValidCor],
+                false,
+            ]
+        ];
+    }
 }
