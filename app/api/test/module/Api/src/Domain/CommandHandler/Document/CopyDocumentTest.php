@@ -10,9 +10,11 @@ use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as BusRegSearchViewRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as BusRegSearchViewEntity;
@@ -45,6 +47,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
         $this->mockRepo('Organisation', OrganisationRepo::class);
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
         $this->mockRepo('Publication', PublicationRepo::class);
+        $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
         $this->mockUploader = m::mock(ContentStoreFileUploader::class);
         $this->mockedSmServices['FileUploader'] = $this->mockUploader;
@@ -102,6 +105,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'busReg' => null,
             'case' => null,
             'irfoOrganisation' => null,
+            'irhpApplication' => null,
             'submission' => null,
             'trafficArea' => null,
             'transportManager' => null,
@@ -169,6 +173,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'busReg' => null,
             'case' => null,
             'irfoOrganisation' => null,
+            'irhpApplication' => null,
             'submission' => null,
             'trafficArea' => null,
             'transportManager' => null,
@@ -228,6 +233,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'busReg' => null,
             'case' => null,
             'irfoOrganisation' => null,
+            'irhpApplication' => null,
             'submission' => null,
             'trafficArea' => null,
             'transportManager' => null,
@@ -290,6 +296,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'busReg' => 1,
             'case' => null,
             'irfoOrganisation' => null,
+            'irhpApplication' => null,
             'submission' => null,
             'trafficArea' => null,
             'transportManager' => null,
@@ -372,6 +379,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'busReg' => null,
             'case' => 1,
             'irfoOrganisation' => null,
+            'irhpApplication' => null,
             'submission' => null,
             'trafficArea' => null,
             'transportManager' => 55,
@@ -427,6 +435,65 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'busReg' => null,
             'case' => null,
             'irfoOrganisation' => 1,
+            'irhpApplication' => null,
+            'submission' => null,
+            'trafficArea' => null,
+            'transportManager' => null,
+            'operatingCentre' => null,
+            'opposition' => null
+        ];
+
+        $this->mockCopyDocumentsCommands($params);
+
+        $result = $this->sut->handleCommand($command);
+        $res = $result->toArray();
+        $this->assertEquals(111, $res['id']['document111']);
+        $this->assertEquals('Document(s) copied', $res['messages'][0]);
+    }
+
+    public function testHandleCommandWithIrhpApplication()
+    {
+        $data = [
+            'targetId' => 1,
+            'type'     => CommandHandler::IRHP_APP,
+            'ids'      => [2]
+        ];
+        $command = Cmd::create($data);
+
+        $mockEntity = m::mock(IrhpApplicationEntity::class);
+        $mockEntity->shouldReceive('getLicence->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(3);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('fetchById')
+            ->with(1)
+            ->once()
+            ->andReturn($mockEntity);
+
+        $mockDocument = $this->getMockDocument();
+
+        $this->repoMap['Document']
+            ->shouldReceive('fetchById')
+            ->with(2)
+            ->once()
+            ->andReturn($mockDocument);
+
+        $params = [
+            'description' => 'description',
+            'category' => 4,
+            'subCategory' => 5,
+            'issuedDate' => '2015-01-01',
+            'isScan' => true,
+            'isExternal' => true,
+            'application' => null,
+            'licence' => 3,
+            'size' => null,
+            'busReg' => null,
+            'case' => null,
+            'irfoOrganisation' => null,
+            'irhpApplication' => 1,
             'submission' => null,
             'trafficArea' => null,
             'transportManager' => null,
@@ -482,6 +549,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'busReg' => null,
             'case' => null,
             'irfoOrganisation' => null,
+            'irhpApplication' => null,
             'submission' => null,
             'trafficArea' => null,
             'transportManager' => 1,
@@ -543,6 +611,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
             'busReg' => null,
             'case' => null,
             'irfoOrganisation' => null,
+            'irhpApplication' => null,
             'submission' => null,
             'trafficArea' => 6,
             'transportManager' => null,
