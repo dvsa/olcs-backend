@@ -1626,4 +1626,20 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
 
         return false;
     }
+
+    /**
+     * Whether this licence has one or more certificate of roadworthiness applications in valid status
+     *
+     * @return bool
+     */
+    public function hasValidCertificateOfRoadworthinessApplications()
+    {
+        foreach ($this->irhpApplications as $irhpApplication) {
+            if ($irhpApplication->isValidCertificateOfRoadworthiness()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
