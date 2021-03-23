@@ -2,7 +2,7 @@
 
 /**
  * Copy document
- * 
+ *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 
 /**
  * Copy document
- * 
+ *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 final class CopyDocument extends AbstractCommandHandler implements TransactionedInterface, UploaderAwareInterface
@@ -35,6 +35,7 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
     const BUSREG = 'busReg';
     const CASES = 'case';
     const IRFO = 'irfoOrganisation';
+    const IRHP_APP = 'irhpApplication';
     const TM = 'transportManager';
     const PUBLICATION = 'publication';
 
@@ -47,7 +48,8 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
         'Cases',
         'Organisation',
         'TransportManager',
-        'Publication'
+        'Publication',
+        'IrhpApplication',
     ];
 
     public function handleCommand(CommandInterface $command)
@@ -103,6 +105,10 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                 case self::IRFO:
                     $params['irfoOrganisation'] = $command->getTargetId();
                     break;
+                case self::IRHP_APP:
+                    $params['irhpApplication'] = $command->getTargetId();
+                    $params['licence'] = $entity->getLicence()->getId();
+                    break;
                 case self::TM:
                     $params['transportManager'] = $command->getTargetId();
                     break;
@@ -150,6 +156,7 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
             self::BUSREG => 'Bus registration No',
             self::CASES => 'Case ID',
             self::IRFO => 'IRFO ID',
+            self::IRHP_APP => 'IRHP application id',
             self::TM => 'Transport manager ID',
             self::PUBLICATION => 'Publication ID'
         ];
@@ -169,6 +176,9 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                     break;
                 case self::IRFO:
                     $entity = $this->getRepo('Organisation')->fetchById($entityId);
+                    break;
+                case self::IRHP_APP:
+                    $entity = $this->getRepo('IrhpApplication')->fetchById($entityId);
                     break;
                 case self::TM:
                     $entity = $this->getRepo('TransportManager')->fetchById($entityId);
