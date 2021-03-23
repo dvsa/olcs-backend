@@ -286,7 +286,7 @@ return [
                 ],
                 'permits' => [
                     'options' => [
-                        'route' => 'permits (close-expired-windows|mark-expired-permits|withdraw-unpaid) [--since=<date>] [--verbose|-v]',
+                        'route' => 'permits (close-expired-windows|mark-expired-permits|withdraw-unpaid|cancel-unsubmitted-bilateral) [--since=<date>] [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'permits',
@@ -437,6 +437,7 @@ return [
             Command\ImportUsersFromCsv::class => CommandHandler\ImportUsersFromCsv::class,
             Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,
             Command\Permits\CloseExpiredWindows::class => CommandHandler\Permits\CloseExpiredWindows::class,
+            Command\Permits\CancelUnsubmittedBilateral::class => CommandHandler\Permits\CancelUnsubmittedBilateral::class,
             Command\Permits\MarkExpiredPermits::class => CommandHandler\Permits\MarkExpiredPermits::class,
             Command\PopulateLastLoginFromOpenAm::class => CommandHandler\PopulateLastLoginFromOpenAm::class,
         ],

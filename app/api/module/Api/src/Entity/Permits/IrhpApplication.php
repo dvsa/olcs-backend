@@ -680,6 +680,30 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Return the associated irhp permit application associated with a stock having the specified country id, or null
+     * if no such irhp permit application exists
+     *
+     * @param string $countryId
+     *
+     * @return IrhpPermitApplication|null
+     */
+    public function getIrhpPermitApplicationByCountryId($countryId)
+    {
+        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
+            $irhpPermitApplicationCountryId = $irhpPermitApplication->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getCountry()
+                ->getId();
+
+            if ($countryId == $irhpPermitApplicationCountryId) {
+                return $irhpPermitApplication;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return bool
      */
     public function isIssueInProgress()
@@ -1793,6 +1817,22 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return false;
+    }
+
+    /**
+     * Get the ids of the countries associated with this application
+     *
+     * @return array
+     */
+    public function getCountryIds()
+    {
+        $countryIds = [];
+
+        foreach ($this->countrys as $country) {
+            $countryIds[] = $country->getId();
+        }
+    
+        return $countryIds;
     }
 
     /**

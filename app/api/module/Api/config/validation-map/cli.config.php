@@ -27,6 +27,7 @@ return [
     CliCommandHandler\Permits\InitialiseScope::class => IsSystemUser::class,
     CliCommandHandler\Permits\UploadScoringResult::class => IsSystemUser::class,
     CliCommandHandler\Permits\UploadScoringLog::class => IsSystemUser::class,
+    CliCommandHandler\Permits\CancelUnsubmittedBilateral::class => IsSystemUser::class,
     CliCommandHandler\Permits\CloseExpiredWindows::class => IsSystemUser::class,
     CliCommandHandler\Permits\MarkExpiredPermits::class => IsSystemUser::class,
     CliCommandHandler\Permits\GeneratePermits::class => IsSystemUser::class,

@@ -555,6 +555,23 @@ class IrhpApplication extends AbstractRepository
     }
 
     /**
+     * Fetch all not yet submitted bilateral applications
+     *
+     * @return array
+     */
+    public function fetchNotYetSubmittedBilateralApplications()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->where($qb->expr()->eq($this->alias . '.status', ':status'))
+            ->andWhere($qb->expr()->eq($this->alias . '.irhpPermitType', ':irhpPermitType'))
+            ->setParameter('status', IrhpInterface::STATUS_NOT_YET_SUBMITTED)
+            ->setParameter('irhpPermitType', IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Fetch a summary of issued permits, customised in accordance with the supplied parameters
      *
      * @param array $applicationStatuses
