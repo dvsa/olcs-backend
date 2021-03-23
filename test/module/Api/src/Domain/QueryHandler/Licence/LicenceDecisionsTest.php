@@ -45,6 +45,7 @@ class LicenceDecisionsTest extends QueryHandlerTestCase
         $licence->shouldReceive('getActiveCommunityLicences')->andReturn(new ArrayCollection(['one']));
         $licence->shouldReceive('getActiveVariations')->andReturn(new ArrayCollection(['one']));
         $licence->shouldReceive('getOngoingIrhpApplications')->withNoArgs()->andReturn(new ArrayCollection(['one']));
+        $licence->shouldReceive('hasValidCertificateOfRoadworthinessApplications')->withNoArgs()->andReturnTrue();
         $licence->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
@@ -75,6 +76,7 @@ class LicenceDecisionsTest extends QueryHandlerTestCase
                     'activeVariations' => true,
                     'activePermits' => true,
                     'ongoingPermitApplications' => true,
+                    'validCorPermitApplications' => true,
                 ]
             ],
             $result->serialize()
@@ -91,6 +93,7 @@ class LicenceDecisionsTest extends QueryHandlerTestCase
         $licence->shouldReceive('getActiveCommunityLicences')->andReturn(new ArrayCollection([]));
         $licence->shouldReceive('getActiveVariations')->andReturn(new ArrayCollection([]));
         $licence->shouldReceive('getOngoingIrhpApplications')->withNoArgs()->andReturn(new ArrayCollection([]));
+        $licence->shouldReceive('hasValidCertificateOfRoadworthinessApplications')->withNoArgs()->andReturnFalse();
         $licence->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')

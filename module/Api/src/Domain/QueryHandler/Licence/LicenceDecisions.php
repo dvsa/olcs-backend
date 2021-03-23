@@ -42,6 +42,7 @@ class LicenceDecisions extends AbstractQueryHandler
         $decisionCriteria['activeVariations'] = !$licence->getActiveVariations()->isEmpty();
         $decisionCriteria['activePermits'] = $irhpPermitCount > 0;
         $decisionCriteria['ongoingPermitApplications'] = !$licence->getOngoingIrhpApplications()->isEmpty();
+        $decisionCriteria['validCorPermitApplications'] = $licence->hasValidCertificateOfRoadworthinessApplications();
 
         $suitableForDecisions = true;
         if (in_array(true, $decisionCriteria)) {
