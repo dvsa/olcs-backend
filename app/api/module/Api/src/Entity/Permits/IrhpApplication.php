@@ -782,6 +782,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function canBeTerminated()
     {
+        return $this->isValidCertificateOfRoadworthiness();
+    }
+
+    /**
+     * Whether this is a certificate of roadworthiness application in valid status
+     *
+     * @return bool
+     */
+    public function isValidCertificateOfRoadworthiness()
+    {
         return $this->isValid() && $this->isCertificateOfRoadworthiness();
     }
 

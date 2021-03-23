@@ -531,7 +531,30 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpCanBeTerminated
      */
-    public function testCanBeTerminated($isValid, $isCertificateOfRoadworthiness, $expected)
+    public function testCanBeTerminated($isValidCertificateOfRoadworthiness, $expected)
+    {
+        $this->sut->shouldReceive('isValidCertificateOfRoadworthiness')
+            ->withNoArgs()
+            ->andReturn($isValidCertificateOfRoadworthiness);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->canBeTerminated()
+        );
+    }
+
+    public function dpCanBeTerminated()
+    {
+        return [
+            [false, false],
+            [true, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsValidCertificateOfRoadworthiness
+     */
+    public function testIsValidCertificateOfRoadworthiness($isValid, $isCertificateOfRoadworthiness, $expected)
     {
         $this->sut->shouldReceive('isValid')
             ->withNoArgs()
@@ -546,7 +569,7 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
-    public function dpCanBeTerminated()
+    public function dpIsValidCertificateOfRoadworthiness()
     {
         return [
             [false, false, false],
