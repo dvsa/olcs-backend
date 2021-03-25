@@ -64,7 +64,9 @@ class AlignEntitiesToSchema
         'mapping-files' => '/var/www/olcs/olcs-backend/data/mapping/',
         'entity-files' => '/var/www/olcs/olcs-backend/module/Api/src/Entity/',
         'test-files' => '/var/www/olcs/olcs-backend/test/module/Api/src/Entity/',
-        'entity-config' => '/var/www/olcs/olcs-backend/data/db/EntityConfig.php'
+        'etl-files' => '/var/www/olcs/olcs-etl/',
+        'entity-config' => '/var/www/olcs/olcs-backend/data/db/EntityConfig.php',
+        'restart-apache' => true
     ];
 
     private $defaultOptions = [
@@ -75,7 +77,9 @@ class AlignEntitiesToSchema
         'mapping-files' => '/opt/dvsa/olcs-backend/data/mapping/',
         'entity-files' => '/opt/dvsa/olcs-backend/module/Api/src/Entity/',
         'test-files' => '/opt/dvsa/olcs-backend/test/module/Api/src/Entity/',
-        'entity-config' => '/opt/dvsa/olcs-backend/data/db/EntityConfig.php'
+        'etl-files' => '/opt/dvsa/olcs-etl/',
+        'entity-config' => '/opt/dvsa/olcs-backend/data/db/EntityConfig.php',
+        'restart-apache' => false
     ];
 
     /**
@@ -189,7 +193,7 @@ class AlignEntitiesToSchema
     {
         $this->options = getopt(
             'u:p:d:',
-            array('help', 'default', 'host:', 'mapping-files:', 'entity-files:', 'test-files:', 'entity-config:')
+            array('help', 'default', 'host:', 'mapping-files:', 'entity-files:', 'test-files:', 'etl-files:', 'entity-config:')
         );
 
         if (isset($this->options['help'])) {
@@ -200,7 +204,9 @@ class AlignEntitiesToSchema
                 . "     mapping-files    " . $this->defaultOptions['mapping-files'] . " \n"
                 . "     entity-files     " . $this->defaultOptions['entity-files'] . " \n"
                 . "     test-files       " . $this->defaultOptions['test-files'] . " \n"
+                . "     etl-files        " . $this->defaultOptions['etl-files'] . " \n"
                 . "     entity-config    " . $this->defaultOptions['entity-config'] . " \n"
+                . "     restart-apache   " . $this->defaultOptions['restart-apache'] . " \n"
                 . "     host             " . $this->defaultOptions['host'] . " \n"
                 . "     -u               " . $this->defaultOptions['u'] . " \n"
                 . "     -p               " . $this->defaultOptions['p'] . " \n"
@@ -218,7 +224,9 @@ class AlignEntitiesToSchema
                 . "--mapping-files " . $this->defaultOptions['mapping-files'] . " "
                 . "--entity-files " . $this->defaultOptions['entity-files'] . " "
                 . "--test-files " . $this->defaultOptions['test-files'] . " "
+                . "--etl-files " . $this->defaultOptions['etl-files'] . " "
                 . "--entity-config " . $this->defaultOptions['entity-config'] . " "
+                . "--restart-apache " . $this->defaultOptions['restart-apache'] . " "
                 . "--host " . $this->defaultOptions['host'] . " "
                 . "-u" . $this->defaultOptions['u'] . " "
                 . "-p" . $this->defaultOptions['p'] . " "
@@ -230,7 +238,9 @@ class AlignEntitiesToSchema
                 . "--mapping-files " . $this->vagrantDefaultOptions['mapping-files'] . " "
                 . "--entity-files " . $this->vagrantDefaultOptions['entity-files'] . " "
                 . "--test-files " . $this->vagrantDefaultOptions['test-files'] . " "
+                . "--etl-files " . $this->vagrantDefaultOptions['etl-files'] . " "
                 . "--entity-config " . $this->vagrantDefaultOptions['entity-config'] . " "
+                . "--restart-apache " . $this->defaultOptions['restart-apache'] . " "
                 . "--host " . $this->vagrantDefaultOptions['host'] . " "
                 . "-u" . $this->vagrantDefaultOptions['u'] . " "
                 . "-p" . $this->vagrantDefaultOptions['p'] . " "
@@ -288,7 +298,9 @@ class AlignEntitiesToSchema
 
             $this->rebuildDbUsingLiquidbase();
 
-            $this->restartApache();
+            if ($this->options['restart-apache']) {
+                $this->restartApache();
+            }
         } catch (\Exception $ex) {
             echo $ex->getTraceAsString() . "\n\n";
             echo $ex->getMessage();
@@ -331,7 +343,8 @@ class AlignEntitiesToSchema
         $this->respond('Removing _hist tables', 'info');
 
         $mysqlCommand = sprintf(
-            'mysql -u%s -p%s %s',
+            'mysql -h%s -u%s -p%s %s',
+            $this->options['host'],
             $this->options['u'],
             $this->options['p'],
             $this->options['d']
@@ -354,7 +367,8 @@ class AlignEntitiesToSchema
         $this->respond('Removing Liquibase tables', 'info');
 
         $mysqlCommand = sprintf(
-            'mysql -u%s -p%s %s',
+            'mysql -h%s -u%s -p%s %s',
+            $this->options['host'],
             $this->options['u'],
             $this->options['p'],
             $this->options['d']
@@ -370,7 +384,8 @@ class AlignEntitiesToSchema
         $this->respond('Removing Data Retention Check tables', 'info');
 
         $mysqlCommand = sprintf(
-            'mysql -u%s -p%s %s',
+            'mysql -h%s -u%s -p%s %s',
+            $this->options['host'],
             $this->options['u'],
             $this->options['p'],
             $this->options['d']
@@ -386,13 +401,14 @@ class AlignEntitiesToSchema
      */
     private function recreateDatabase()
     {
-        $dropDatabase = 'mysql -u%s -p%s -e \'DROP DATABASE IF EXISTS %s\'';
+        $dropDatabase = 'mysql -h%s -u%s -p%s -e \'DROP DATABASE IF EXISTS %s\'';
 
-        $createDatabase = 'mysql -u%s -p%s -e \'CREATE DATABASE IF NOT EXISTS %s\'';
+        $createDatabase = 'mysql -h%s -u%s -p%s -e \'CREATE DATABASE IF NOT EXISTS %s\'';
 
         shell_exec(
             sprintf(
                 $dropDatabase,
+                $this->options['host'],
                 $this->options['u'],
                 $this->options['p'],
                 $this->options['d']
@@ -402,6 +418,7 @@ class AlignEntitiesToSchema
         shell_exec(
             sprintf(
                 $createDatabase,
+                $this->options['host'],
                 $this->options['u'],
                 $this->options['p'],
                 $this->options['d']
@@ -925,7 +942,9 @@ class AlignEntitiesToSchema
     {
         $this->respond('Rebuilding db using Liquidbase (olcs-etl)...', 'info');
 
-        passthru('cd /var/www/olcs/olcs-etl/ && make create-db && make update', $result);
+        $directory = $this->options['etl-files'];
+
+        passthru("cd $directory && make create-db && make update", $result);
 
         if ($result !== 0) {
             $this->exitResponse('Unable to rebuild database', 'error');
