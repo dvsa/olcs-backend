@@ -4737,16 +4737,19 @@ class IrhpApplicationEntityTest extends EntityTester
         $country1Id = 'FR';
         $country1 = m::mock(Country::class);
         $country1->shouldReceive('getId')
+            ->withNoArgs()
             ->andReturn($country1Id);
 
         $country2Id = 'RU';
         $country2 = m::mock(Country::class);
         $country2->shouldReceive('getId')
+            ->withNoArgs()
             ->andReturn($country2Id);
 
         $country3Id = 'DE';
         $country3 = m::mock(Country::class);
         $country3->shouldReceive('getId')
+            ->withNoArgs()
             ->andReturn($country3Id);
 
         $countries = new ArrayCollection([$country1, $country2, $country3]);
@@ -4764,6 +4767,35 @@ class IrhpApplicationEntityTest extends EntityTester
             ['DE', true],
             ['ES', false],
         ];
+    }
+
+    public function testGetCountryIds()
+    {
+        $country1 = m::mock(Country::class);
+        $country1->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_FRANCE);
+
+        $country2 = m::mock(Country::class);
+        $country2->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_RUSSIA);
+
+        $country3 = m::mock(Country::class);
+        $country3->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_GERMANY);
+
+        $countries = new ArrayCollection([$country1, $country2, $country3]);
+        $entity = $this->createNewEntity();
+        $entity->updateCountries($countries);
+
+        $expected = [Country::ID_FRANCE, Country::ID_RUSSIA, Country::ID_GERMANY];
+
+        $this->assertEquals(
+            $expected,
+            $entity->getCountryIds()
+        );
     }
 
     public function testUpdateCountries()
@@ -6689,6 +6721,51 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT);
 
         $entity->getIrhpPermitApplicationsByCountryName();
+    }
+
+    public function testGetIrhpPermitApplicationByCountryId()
+    {
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_FRANCE);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_GERMANY);
+
+        $irhpPermitApplications = [$irhpPermitApplication1, $irhpPermitApplication2];
+
+        $entity = $this->createNewEntity();
+        $entity->setIrhpPermitApplications($irhpPermitApplications);
+
+        $this->assertSame(
+            $entity->getIrhpPermitApplicationByCountryId(Country::ID_GERMANY),
+            $irhpPermitApplication2
+        );
+    }
+
+    public function testGetIrhpPermitApplicationByCountryIdNull()
+    {
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_FRANCE);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
+            ->withNoArgs()
+            ->andReturn(Country::ID_GERMANY);
+
+        $irhpPermitApplications = [$irhpPermitApplication1, $irhpPermitApplication2];
+
+        $entity = $this->createNewEntity();
+        $entity->setIrhpPermitApplications($irhpPermitApplications);
+
+        $this->assertNull(
+            $entity->getIrhpPermitApplicationByCountryId(Country::ID_BELARUS)
+        );
     }
 
     /**
