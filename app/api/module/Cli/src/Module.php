@@ -116,6 +116,8 @@ class Module implements ConsoleUsageProviderInterface
                 'Run permit action',
             'permits withdraw-unpaid [--verbose|-v]' =>
                 'Withdraw applications and handle unpaid fees once payment deadline has passed',
+            'permits cancel-unsubmitted-bilateral [--verbose|-v]' =>
+                'Remove inapplicable countries for not yet submitted bilateral applications, or cancel these applications if no applicable countries remaining',
             [
                 '<close-expired-windows> [--since=<date>]',
                 'action to perform, ie \'close-expired-windows\' to close all recently expired windows',

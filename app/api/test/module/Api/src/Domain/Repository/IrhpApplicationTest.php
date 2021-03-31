@@ -1233,4 +1233,29 @@ class IrhpApplicationTest extends RepositoryTestCase
             $this->sut->fetchInternalApplicationsSummary($licenceId, $status)
         );
     }
+
+    public function testFetchNotYetSubmittedBilateralApplications()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchNotYetSubmittedBilateralApplications()
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'AND ia.status = [[permit_app_nys]] AND '
+            . 'ia.irhpPermitType = [[4]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

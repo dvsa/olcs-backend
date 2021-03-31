@@ -544,6 +544,10 @@ class BatchController extends AbstractCliController
             return $this->handleExitStatus(
                 $this->handleCommand([CliCommand\Permits\WithdrawUnpaidIrhp::create([])])
             );
+        } elseif ($this->params('cancel-unsubmitted-bilateral')) {
+            return $this->handleExitStatus(
+                $this->handleCommand([CliCommand\Permits\CancelUnsubmittedBilateral::create([])])
+            );
         }
     }
 
