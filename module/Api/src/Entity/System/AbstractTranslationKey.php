@@ -101,30 +101,6 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     protected $version = 1;
 
     /**
-     * Translation key category link
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKeyCategoryLink",
-     *     mappedBy="translationKey"
-     * )
-     */
-    protected $translationKeyCategoryLinks;
-
-    /**
-     * Translation key tag link
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\System\TranslationKeyTagLink",
-     *     mappedBy="translationKey"
-     * )
-     */
-    protected $translationKeyTagLinks;
-
-    /**
      * Translation key text
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -153,8 +129,6 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
      */
     public function initCollections()
     {
-        $this->translationKeyCategoryLinks = new ArrayCollection();
-        $this->translationKeyTagLinks = new ArrayCollection();
         $this->translationKeyTexts = new ArrayCollection();
     }
 
@@ -300,132 +274,6 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     public function getVersion()
     {
         return $this->version;
-    }
-
-    /**
-     * Set the translation key category link
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyCategoryLinks collection being set as the value
-     *
-     * @return TranslationKey
-     */
-    public function setTranslationKeyCategoryLinks($translationKeyCategoryLinks)
-    {
-        $this->translationKeyCategoryLinks = $translationKeyCategoryLinks;
-
-        return $this;
-    }
-
-    /**
-     * Get the translation key category links
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getTranslationKeyCategoryLinks()
-    {
-        return $this->translationKeyCategoryLinks;
-    }
-
-    /**
-     * Add a translation key category links
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyCategoryLinks collection being added
-     *
-     * @return TranslationKey
-     */
-    public function addTranslationKeyCategoryLinks($translationKeyCategoryLinks)
-    {
-        if ($translationKeyCategoryLinks instanceof ArrayCollection) {
-            $this->translationKeyCategoryLinks = new ArrayCollection(
-                array_merge(
-                    $this->translationKeyCategoryLinks->toArray(),
-                    $translationKeyCategoryLinks->toArray()
-                )
-            );
-        } elseif (!$this->translationKeyCategoryLinks->contains($translationKeyCategoryLinks)) {
-            $this->translationKeyCategoryLinks->add($translationKeyCategoryLinks);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a translation key category links
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyCategoryLinks collection being removed
-     *
-     * @return TranslationKey
-     */
-    public function removeTranslationKeyCategoryLinks($translationKeyCategoryLinks)
-    {
-        if ($this->translationKeyCategoryLinks->contains($translationKeyCategoryLinks)) {
-            $this->translationKeyCategoryLinks->removeElement($translationKeyCategoryLinks);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the translation key tag link
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyTagLinks collection being set as the value
-     *
-     * @return TranslationKey
-     */
-    public function setTranslationKeyTagLinks($translationKeyTagLinks)
-    {
-        $this->translationKeyTagLinks = $translationKeyTagLinks;
-
-        return $this;
-    }
-
-    /**
-     * Get the translation key tag links
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getTranslationKeyTagLinks()
-    {
-        return $this->translationKeyTagLinks;
-    }
-
-    /**
-     * Add a translation key tag links
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyTagLinks collection being added
-     *
-     * @return TranslationKey
-     */
-    public function addTranslationKeyTagLinks($translationKeyTagLinks)
-    {
-        if ($translationKeyTagLinks instanceof ArrayCollection) {
-            $this->translationKeyTagLinks = new ArrayCollection(
-                array_merge(
-                    $this->translationKeyTagLinks->toArray(),
-                    $translationKeyTagLinks->toArray()
-                )
-            );
-        } elseif (!$this->translationKeyTagLinks->contains($translationKeyTagLinks)) {
-            $this->translationKeyTagLinks->add($translationKeyTagLinks);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a translation key tag links
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyTagLinks collection being removed
-     *
-     * @return TranslationKey
-     */
-    public function removeTranslationKeyTagLinks($translationKeyTagLinks)
-    {
-        if ($this->translationKeyTagLinks->contains($translationKeyTagLinks)) {
-            $this->translationKeyTagLinks->removeElement($translationKeyTagLinks);
-        }
-
-        return $this;
     }
 
     /**
