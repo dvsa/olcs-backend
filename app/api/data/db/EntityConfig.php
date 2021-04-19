@@ -2326,22 +2326,6 @@ return array(
             ]
         ],
     ],
-    'translation_key_category_link' => [
-        'translation_key_id' => [
-            'inversedBy' => [
-                'entity' => 'TranslationKey',
-                'property' => 'translationKeyCategoryLink',
-            ]
-        ],
-    ],
-    'translation_key_tag_link' => [
-        'translation_key_id' => [
-            'inversedBy' => [
-                'entity' => 'TranslationKey',
-                'property' => 'translationKeyTagLink',
-            ]
-        ],
-    ],
     'irhp_permit_request' => array(
         'irhp_application_id' => array(
             'inversedBy' => array(
