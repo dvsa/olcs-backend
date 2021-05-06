@@ -2,9 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AllocateCandidatePermits;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
@@ -32,7 +34,10 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpHandleCommand
+     */
+    public function testHandleCommand($isShortTerm, $expectedExpiryDate)
     {
         $irhpPermitApplicationId = 472;
 
@@ -41,7 +46,17 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->andReturn($irhpPermitApplicationId);
 
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->expects('isEcmtShortTerm')->withNoArgs()->andReturn($isShortTerm);
+
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->expects('getIrhpApplication->getIrhpPermitType')
+            ->withNoArgs()
+            ->andReturn($irhpPermitType);
+        $irhpPermitApplication->expects('generateExpiryDate')
+            ->withNoArgs()
+            ->times($isShortTerm ? 1 : 0)
+            ->andReturn($expectedExpiryDate);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('fetchById')
             ->with($irhpPermitApplicationId)
@@ -84,12 +99,13 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
         $expectedStatus = $this->refData[IrhpPermit::STATUS_PENDING];
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
-            ->with(m::on(function ($irhpPermit) use (&$permitSaveExpectations, &$permitSaveCount, $expectedStatus) {
+            ->with(m::on(function ($irhpPermit) use (&$permitSaveExpectations, &$permitSaveCount, $expectedExpiryDate, $expectedStatus) {
                 foreach ($permitSaveExpectations as &$expectation) {
                     if (($irhpPermit->getIrhpCandidatePermit() === $expectation[0]) &&
                         ($irhpPermit->getIrhpPermitRange() === $expectation[1]) &&
                         ($irhpPermit->getIrhpPermitApplication() === $expectation[2]) &&
                         ($irhpPermit->getPermitNumber() == $expectation[3]) &&
+                        ($irhpPermit->getExpiryDate() == $expectedExpiryDate) &&
                         ($irhpPermit->getStatus() == $expectedStatus)) {
                         $expectation[4] = true;
                     }
@@ -114,6 +130,14 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
             $irhpPermitApplicationId,
             $result->getId('irhpPermitApplication')
         );
+    }
+
+    public function dpHandleCommand()
+    {
+        return [
+            [true, new \DateTime()], //short term permit type, generates expiry date
+            [false, null], //not short term so no expiry date generated
+        ];
     }
 
     private function createIrhpCandidatePermitMock($irhpPermitRange, $irhpPermitApplication)

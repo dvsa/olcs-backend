@@ -223,12 +223,14 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $issueDate = new \DateTime();
         $permitNumber = '00001';
         $status = new RefData($statusId);
+        $expiryDate = new \DateTime();
 
         $irhpPermit = IrhpPermit::createNew(
             $irhpCandidate,
             $issueDate,
             $status,
-            $permitNumber
+            $permitNumber,
+            $expiryDate
         );
 
         $collection = new ArrayCollection([$irhpPermit]);
