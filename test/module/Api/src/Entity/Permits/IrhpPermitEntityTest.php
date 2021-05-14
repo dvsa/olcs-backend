@@ -67,6 +67,7 @@ class IrhpPermitEntityTest extends EntityTester
         $this->issueDate = m::mock(DateTime::class);
         $this->status = new RefData();
         $this->permitNumber = 431;
+        $this->expiryDate = m::mock(DateTime::class);
 
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $this->irhpPermitRange = m::mock(IrhpPermitRange::class);
@@ -81,7 +82,8 @@ class IrhpPermitEntityTest extends EntityTester
             $this->irhpCandidatePermit,
             $this->issueDate,
             $this->status,
-            $this->permitNumber
+            $this->permitNumber,
+            $this->expiryDate
         );
     }
 

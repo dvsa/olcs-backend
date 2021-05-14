@@ -161,6 +161,11 @@ class IrhpPermitType extends AbstractIrhpPermitType
             $expiryDateTime->add(new DateInterval('P3M'));
 
             return $expiryDateTime;
+        } elseif ($this->isEcmtShortTerm()) {
+            // short term ECMTs last for 30 days
+            $expiryDateTime->add(new DateInterval('P30D'));
+
+            return $expiryDateTime;
         }
 
         throw new RuntimeException('Unable to generate an expiry date for permit type ' . $this->id);

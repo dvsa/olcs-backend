@@ -245,6 +245,7 @@ class IrhpPermitTypeEntityTest extends EntityTester
     public function testGenerateExpiryDate(
         $isEcmtRemoval,
         $isBilateral,
+        $isEcmtShortTerm,
         $issueDateString,
         $expectedExpiryDateString
     ) {
@@ -254,6 +255,9 @@ class IrhpPermitTypeEntityTest extends EntityTester
         $this->sut->shouldReceive('isBilateral')
             ->withNoArgs()
             ->andReturn($isBilateral);
+        $this->sut->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn($isEcmtShortTerm);
 
         $issueDate = new DateTime($issueDateString);
         $expiryDate = $this->sut->generateExpiryDate($issueDate);
@@ -269,12 +273,15 @@ class IrhpPermitTypeEntityTest extends EntityTester
     public function dpGenerateExpiryDate()
     {
         return [
-            [true, false, '2019-04-15', '2020-04-14'],
-            [true, false, '2019-05-01', '2020-04-30'],
-            [true, false, '2019-01-01', '2019-12-31'],
-            [false, true, '2019-04-15', '2019-07-15'],
-            [false, true, '2019-12-01', '2020-03-01'],
-            [false, true, '2019-12-31', '2020-03-31'],
+            [true, false, false, '2019-04-15', '2020-04-14'],
+            [true, false, false, '2019-05-01', '2020-04-30'],
+            [true, false, false, '2019-01-01', '2019-12-31'],
+            [false, true, false, '2019-04-15', '2019-07-15'],
+            [false, true, false, '2019-12-01', '2020-03-01'],
+            [false, true, false, '2019-12-31', '2020-03-31'],
+            [false, false, true, '2019-04-15', '2019-05-15'],
+            [false, false, true, '2019-12-01', '2019-12-31'],
+            [false, false, true, '2019-12-31', '2020-01-30'],
         ];
     }
 
