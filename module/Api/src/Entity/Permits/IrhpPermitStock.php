@@ -541,7 +541,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      *
      * @param RangeMatchingCriteriaInterface $criteria (optional)
      *
-     * @return array
+     * @return ArrayCollection
      */
     public function getNonReservedNonReplacementRangesOrderedByFromNo(?RangeMatchingCriteriaInterface $rangeMatchingCriteria = null)
     {
@@ -689,17 +689,22 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      *
      * @throws RuntimeException
      */
-    public function getFirstAvailableRangeWithNoCountries(EmissionsStandardCriteria $criteria)
+    public function getFirstAvailableRangePreferWithNoCountries(EmissionsStandardCriteria $criteria)
     {
         $ranges = $this->getNonReservedNonReplacementRangesOrderedByFromNo($criteria);
 
+        if ($ranges->isEmpty()) {
+            throw new RuntimeException('Unable to find available range');
+        }
+
+        /** @var IrhpPermitRange $range */
         foreach ($ranges as $range) {
             if (!$range->hasCountries()) {
                 return $range;
             }
         }
 
-        throw new RuntimeException('Unable to find range with no countries');
+        return $ranges->first();
     }
 
     /**

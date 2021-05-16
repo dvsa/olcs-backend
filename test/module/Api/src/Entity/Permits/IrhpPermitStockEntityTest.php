@@ -1713,7 +1713,41 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertNull($entity->getValidityYear());
     }
 
-    public function testGetFirstAvailableRangeWithNoCountries()
+    /**
+     * Where all ranges have restricted countries, bring back the first range (VOL-1839)
+     */
+    public function testGetFirstAvailableRangeWhereAllHaveRestrictedCountries()
+    {
+        $emissionsStandardCriteria = m::mock(EmissionsStandardCriteria::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $range1 = m::mock(IrhpPermitRange::class);
+        $range1->shouldReceive('hasCountries')
+            ->andReturn(true);
+
+        $range2 = m::mock(IrhpPermitRange::class);
+        $range2->shouldReceive('hasCountries')
+            ->andReturn(true);
+
+        $ranges = new ArrayCollection([$range1, $range2]);
+
+        $entity->shouldReceive('getNonReservedNonReplacementRangesOrderedByFromNo')
+            ->with($emissionsStandardCriteria)
+            ->once()
+            ->andReturn($ranges);
+
+        $this->assertSame(
+            $range1,
+            $entity->getFirstAvailableRangePreferWithNoCountries($emissionsStandardCriteria)
+        );
+    }
+
+    /**
+     * We prefer to return a range with no restricted countries, here we return range 2
+     * (hasCountries() evaluates to false on that range)
+     */
+    public function testGetFirstAvailableRangeWhereRangeWithNoCountriesAvailable()
     {
         $emissionsStandardCriteria = m::mock(EmissionsStandardCriteria::class);
 
@@ -1731,7 +1765,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $range3->shouldReceive('hasCountries')
             ->andReturn(true);
 
-        $ranges = [$range1, $range2, $range3];
+        $ranges = new ArrayCollection([$range1, $range2, $range3]);
 
         $entity->shouldReceive('getNonReservedNonReplacementRangesOrderedByFromNo')
             ->with($emissionsStandardCriteria)
@@ -1740,35 +1774,28 @@ class IrhpPermitStockEntityTest extends EntityTester
 
         $this->assertSame(
             $range2,
-            $entity->getFirstAvailableRangeWithNoCountries($emissionsStandardCriteria)
+            $entity->getFirstAvailableRangePreferWithNoCountries($emissionsStandardCriteria)
         );
     }
 
-    public function testGetFirstAvailableRangeWithNoCountriesException()
+    /**
+     * Test we throw exception if there are no available ranges
+     */
+    public function testGetFirstAvailableRangePreferWithNoCountriesException()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Unable to find range with no countries');
+        $this->expectExceptionMessage('Unable to find available range');
 
         $emissionsStandardCriteria = m::mock(EmissionsStandardCriteria::class);
 
         $entity = m::mock(Entity::class)->makePartial();
 
-        $range1 = m::mock(IrhpPermitRange::class);
-        $range1->shouldReceive('hasCountries')
-            ->andReturn(true);
-
-        $range2 = m::mock(IrhpPermitRange::class);
-        $range2->shouldReceive('hasCountries')
-            ->andReturn(true);
-
-        $ranges = [$range1, $range2];
-
         $entity->shouldReceive('getNonReservedNonReplacementRangesOrderedByFromNo')
             ->with($emissionsStandardCriteria)
             ->once()
-            ->andReturn($ranges);
+            ->andReturn(new ArrayCollection([]));
 
-        $entity->getFirstAvailableRangeWithNoCountries($emissionsStandardCriteria);
+        $entity->getFirstAvailableRangePreferWithNoCountries($emissionsStandardCriteria);
     }
 
     /**
