@@ -673,6 +673,7 @@ return [
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
     TransferQuery\Permits\StockAlignmentReport::class => QueryHandler\Permits\StockAlignmentReport::class,
     TransferQuery\Permits\PostScoringReport::class => QueryHandler\Permits\PostScoringReport::class,
+    TransferQuery\Permits\ReportList::class => QueryHandler\Permits\Report\ReportList::class,
 
     // Permits - internal
     Query\Permits\QueueRunScoringPermitted::class => QueryHandler\Permits\QueueRunScoringPermitted::class,
