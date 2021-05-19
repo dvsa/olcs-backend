@@ -74,7 +74,7 @@ class ApggEmissionsCatCandidatePermitsCreatorTest extends MockeryTestCase
             ->with($emissionsCategoryId)
             ->andReturn($emissionsStandardCriteria);
 
-        $this->irhpApplication->shouldReceive('getAssociatedStock->getFirstAvailableRangeWithNoCountries')
+        $this->irhpApplication->shouldReceive('getAssociatedStock->getFirstAvailableRangePreferWithNoCountries')
             ->with($emissionsStandardCriteria)
             ->andReturn($irhpPermitRange);
 

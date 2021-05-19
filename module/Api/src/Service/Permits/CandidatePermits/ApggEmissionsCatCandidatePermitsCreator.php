@@ -51,7 +51,7 @@ class ApggEmissionsCatCandidatePermitsCreator
             $emissionsStandardCriteria = $this->emissionsStandardCriteriaFactory->create($emissionsCategoryId);
 
             $irhpPermitRange = $irhpApplication->getAssociatedStock()
-                ->getFirstAvailableRangeWithNoCountries($emissionsStandardCriteria);
+                ->getFirstAvailableRangePreferWithNoCountries($emissionsStandardCriteria);
 
             for ($index = 0; $index < $permitsRequired; $index++) {
                 $irhpCandidatePermit = $this->apggCandidatePermitFactory->create($irhpPermitApplication, $irhpPermitRange);
