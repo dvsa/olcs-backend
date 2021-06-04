@@ -107,7 +107,7 @@ return [
     'document_share' => [
         'client' => [
             // Document service URI *Environment specific*
-            'baseuri' => "http://docman.shd.qa.nonprod.dvsa.aws:8080/hfs/",
+            'baseuri' => "http://docman.reg.olcs.dev-dvsacloud.uk:8080/hfs/",
             // Document service user ID *Environment specific*
             'uuid' => 'uD12345',
             // Document service workspace "olcs"
