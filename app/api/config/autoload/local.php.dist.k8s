@@ -106,11 +106,14 @@ return [
     'document_share' => [
         'client' => [
             // Document service URI *Environment specific*
-            'baseuri' => "http://docman.localdev:8080/hfs/",
+            'baseuri' => "http://docman.reg.olcs.dev-dvsacloud.uk:8080/hfs/",
             // Document service user ID *Environment specific*
-            'uuid' => '',
+            'uuid' => 'uD12345',
             // Document service workspace "olcs"
-            'workspace' => 'olcs'
+            'workspace' => 'olcs',
+            'webdav_baseuri' => '',
+            'username' => '',
+            'password' => ''
         ],
         'invalid_defined_mime_types' => [
             'docm' => 'application/vnd.ms-word.document.macroEnabled.12',
@@ -125,7 +128,6 @@ return [
             'ppsm' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
         ],
     ],
-
     // Asset path, URI to olcs-static (CSS, JS, etc) *Environment specific*
     'asset_path' => '/static',
 
