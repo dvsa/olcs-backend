@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
+use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
@@ -21,17 +22,10 @@ use Dvsa\Olcs\Api\Domain\TranslationLoaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
-use Dvsa\Olcs\Transfer\Command\Audit as AuditCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Entity;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
 
-/**
- * Abstract Query Handler
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInterface, AuthAwareInterface
 {
     use AuthAwareTrait;
@@ -65,6 +59,11 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      * @var \Dvsa\Olcs\Api\Domain\CommandHandlerManager
      */
     private $commandHandler;
+
+    /**
+     * @var EntityAccessLogger|null
+     */
+    private $auditLogger;
 
     /**
      * Create service
@@ -159,50 +158,26 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     }
 
     /**
+     * @return EntityAccessLogger
+     */
+    protected function getAuditLogger(): EntityAccessLogger
+    {
+        if (null === $this->auditLogger) {
+            $this->auditLogger = $this->queryHandler->getServiceLocator()->get(EntityAccessLogger::class);
+        }
+        return $this->auditLogger;
+    }
+
+    /**
      * Create a read audit for an entity
      *
      * @param object $entity The entity which has been read
-     *
-     * @return void
-     * @throws RuntimeException
+     * @deprecated Use getAuditLogger which injects EntityAccessLogger into your class as a dependency.
+     *             Call the "logAccessToEntity" method on that directly.
      */
     protected function auditRead($entity)
     {
-        if ($this->isAnonymousUser() || !$this->isInternalUser()) {
-            // if not an internal user then do nothing
-            return;
-        }
-
-        $data = ['id' => $entity->getId()];
-
-        // instanceof allows unit tests to mock
-        switch (true) {
-            case $entity instanceof Entity\Organisation\Organisation:
-                $dto = AuditCommand\ReadOrganisation::create($data);
-                break;
-            case $entity instanceof Entity\Licence\Licence:
-                $dto = AuditCommand\ReadLicence::create($data);
-                break;
-            case $entity instanceof Entity\Cases\Cases:
-                $dto = AuditCommand\ReadCase::create($data);
-                break;
-            case $entity instanceof Entity\Application\Application:
-                $dto = AuditCommand\ReadApplication::create($data);
-                break;
-            case $entity instanceof Entity\Bus\BusReg:
-                $dto = AuditCommand\ReadBusReg::create($data);
-                break;
-            case $entity instanceof Entity\Tm\TransportManager:
-                $dto = AuditCommand\ReadTransportManager::create($data);
-                break;
-            case $entity instanceof Entity\Permits\IrhpApplication:
-                $dto = AuditCommand\ReadIrhpApplication::create($data);
-                break;
-            default:
-                throw new \RuntimeException('Cannot create audit read for entity, no DTO is defined');
-        }
-
-        $this->commandHandler->handleCommand($dto);
+        $this->getAuditLogger()->logAccessToEntity($entity);
     }
 
     /**

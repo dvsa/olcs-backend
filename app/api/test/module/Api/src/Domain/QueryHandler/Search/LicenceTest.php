@@ -1,13 +1,9 @@
 <?php
 
-/**
- * Licence Test
- *
- * @author Shaun Lizzio <shaun@lizzio.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Search;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Search\Licence;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Search\Licence as LicenceQueryHandler;
+use Dvsa\Olcs\Transfer\Query\Search\Licence as LicenceQuery;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
@@ -25,23 +21,57 @@ use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary as CompanySubsidiaryEnti
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Transfer\Query\Search\Licence as Qry;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
+use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Mockery\MockInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
- * Licence Test
- *
- * @author Shaun Lizzio <shaun@lizzio.co.uk>
+ * @see LicenceQueryHandler
  */
 class LicenceTest extends QueryHandlerTestCase
 {
-    public function setUp(): void
-    {
-        $this->sut = new Licence();
-        $this->mockRepo('Licence', LicenceRepo::class);
+    use MocksServicesTrait;
 
-        parent::setUp();
+    /**
+     * @var LicenceQueryHandler
+     */
+    protected $sut;
+
+    /**
+     * @test
+     */
+    public function handleQuery_IsCallable()
+    {
+        // Assert
+        $this->assertIsCallable([$this->sut, 'handleQuery']);
     }
 
-    public function testHandleQuery()
+    /**
+     * @test
+     * @depends handleQuery_IsCallable
+     */
+    public function handleQuery_LogsAccessToAuditLog()
+    {
+        // Setup
+        $this->registerLicence($licence = $this->licence());
+        $licenceQuery = LicenceQuery::create(['id' => $licence->getId()]);
+
+        // Execute
+        $this->sut->handleQuery($licenceQuery);
+
+        // Assert
+        $this->auditLogger()->shouldHaveReceived('logAccessToEntity', [$licence]);
+    }
+
+    /**
+     * @test
+     * @depends handleQuery_IsCallable
+     */
+    public function handleQuery_LegacyTest()
     {
         $query = Qry::create(['id' => 1]);
         $licenceId = 7;
@@ -215,5 +245,63 @@ class LicenceTest extends QueryHandlerTestCase
         $result = $this->sut->handleQuery($query);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
+    }
+
+    public function setUp(): void
+    {
+        $this->sut = new LicenceQueryHandler();
+        $this->mockRepo('Licence', LicenceRepo::class);
+
+        $this->authorizationService = m::mock(AuthorizationService::class);
+        $this->authorizationService->shouldReceive('getIdentity->getUser->isAnonymous')->withNoArgs()->andReturn(true);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => $this->authorizationService,
+        ];
+
+        $this->auditLogger();
+
+        parent::setUp();
+    }
+
+    /**
+     * @return MockInterface|EntityAccessLogger
+     */
+    protected function auditLogger(): MockInterface
+    {
+        if (! isset($this->mockedSmServices[EntityAccessLogger::class])) {
+            $instance = $this->setUpMockService(EntityAccessLogger::class);
+            $this->mockedSmServices[EntityAccessLogger::class] = $instance;
+        }
+        return $this->mockedSmServices[EntityAccessLogger::class];
+    }
+
+    /**
+     * @return Licence
+     */
+    protected function licence(): Licence
+    {
+        return new Licence(new Organisation(), new RefData(Licence::LICENCE_STATUS_NOT_SUBMITTED));
+    }
+
+    /**
+     * @return MockInterface|LicenceRepo
+     */
+    protected function licenceRepository(): MockInterface
+    {
+        return $this->repoMap['Licence'];
+    }
+
+    /**
+     * @param Licence $licence
+     */
+    protected function registerLicence(Licence $licence)
+    {
+        $this->licenceRepository()
+            ->allows('fetchUsingId')
+            ->withArgs(function ($query) use ($licence) {
+                return $query instanceof LicenceQuery && $query->getId() === $licence->getId();
+            })
+            ->andReturn($licence);
     }
 }

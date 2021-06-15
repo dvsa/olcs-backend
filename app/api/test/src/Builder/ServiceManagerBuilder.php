@@ -4,6 +4,9 @@ namespace Dvsa\OlcsTest\Builder;
 
 use Laminas\ServiceManager\ServiceManager;
 
+/**
+ * @deprecated Use \Olcs\TestHelpers\Service\MocksServicesTrait instead
+ */
 class ServiceManagerBuilder implements BuilderInterface
 {
     /**
@@ -26,9 +29,11 @@ class ServiceManagerBuilder implements BuilderInterface
     {
         $serviceManager = new ServiceManager();
         $serviceManager->setAllowOverride(true);
-        $services = call_user_func($this->servicesProvider, $serviceManager);
-        foreach ($services as $serviceName => $service) {
-            $serviceManager->setService($serviceName, $service);
+        $result = call_user_func($this->servicesProvider, $serviceManager);
+        if (is_array($result)) {
+            foreach ($result as $serviceName => $service) {
+                $serviceManager->setService($serviceName, $service);
+            }
         }
         return $serviceManager;
     }
