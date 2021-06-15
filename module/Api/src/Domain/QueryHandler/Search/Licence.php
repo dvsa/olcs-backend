@@ -1,23 +1,14 @@
 <?php
 
-/**
- * Search by LicenceId Details
- *
- * @author Shaun Lizzio <shaun@lizzio.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Search;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
- * Search by LicenceId Details
- *
- * @author Shaun Lizzio <shaun@lizzio.co.uk>
+ * @see \Dvsa\OlcsTest\Api\Domain\QueryHandler\Search\LicenceTest
  */
 class Licence extends AbstractQueryHandler
 {
@@ -29,6 +20,8 @@ class Licence extends AbstractQueryHandler
     {
         /** @var LicenceEntity $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
+
+        $this->getAuditLogger()->logAccessToEntity($licence);
 
         $applications = $licence->getApplications();
 
