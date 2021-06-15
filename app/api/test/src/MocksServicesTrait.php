@@ -7,6 +7,9 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery\MockInterface;
 use Mockery as m;
 
+/**
+ * @deprecated Please use \Olcs\TestHelpers\Service\MocksServicesTrait - this is shared between all of our projects
+ */
 trait MocksServicesTrait
 {
     /**

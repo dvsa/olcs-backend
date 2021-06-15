@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\CommunityLic;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\CommunityLic\CommunityLicences as CommunityLicencesQueryHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -17,7 +16,7 @@ use Dvsa\OlcsTest\Api\Domain\Repository\LicenceRepositoryMockBuilder;
 use Dvsa\OlcsTest\Api\Domain\Repository\RepositoryServiceManagerBuilder;
 use Dvsa\OlcsTest\Api\Domain\Repository\ResolvesMockRepositoriesFromServiceLocatorsTrait;
 use Dvsa\OlcsTest\Builder\ServiceManagerBuilder;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use ZfcRbac\Service\AuthorizationService;
@@ -44,17 +43,24 @@ class CommunityLicencesTest extends QueryHandlerTestCase
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return array
+     * @param ServiceManager $serviceManager
      */
-    public function setUpDefaultServices(ServiceLocatorInterface $serviceLocator): array
+    public function setUpDefaultServices(ServiceManager $serviceManager)
     {
-        return [
-            RepositoryServiceManagerBuilder::ALIAS => (new RepositoryServiceManagerBuilder(static::setUpDefaultRepositories()))->build(),
-            AuthorizationService::class => $this->setUpAuthorizationService(),
-            CommandHandlerManagerMockBuilder::ALIAS => (new CommandHandlerManagerMockBuilder($serviceLocator))->build(),
-            QueryHandlerManager::class => (new QueryHandlerManagerMockBuilder($serviceLocator))->build(),
-        ];
+        $this->setUpQueryHandler($serviceManager);
+        $serviceManager->setService(RepositoryServiceManagerBuilder::ALIAS, (new RepositoryServiceManagerBuilder(static::setUpDefaultRepositories()))->build());
+        $serviceManager->setService(AuthorizationService::class, $this->setUpAuthorizationService());
+        $serviceManager->setService(CommandHandlerManagerMockBuilder::ALIAS, (new CommandHandlerManagerMockBuilder($serviceManager))->build());
+    }
+
+    /**
+     * @param ServiceManager $serviceManager
+     */
+    protected function setUpQueryHandler(ServiceManager $serviceManager)
+    {
+        $queryHandlerBuilder = new QueryHandlerManagerMockBuilder();
+        $queryHandler = $queryHandlerBuilder->build($serviceManager);
+        $queryHandlerBuilder->register($queryHandler);
     }
 
     /**

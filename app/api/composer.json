@@ -75,7 +75,8 @@
         "laminas/laminas-dependency-plugin": "^2.0"
     },
     "require-dev": {
-        "olcs/olcs-devtools": "~4.206.0"
+        "olcs/olcs-devtools": "~4.206.0",
+        "olcs/olcs-testhelpers": "~4.206.0"
     },
     "autoload": {
         "classmap": [
