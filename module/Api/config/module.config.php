@@ -151,6 +151,7 @@ return [
             \Laminas\Cache\Service\StorageCacheAbstractServiceFactory::class,
         ],
         'factories' => [
+            \Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger::class => \Dvsa\Olcs\Api\Domain\Logger\EntityAccessLoggerFactory::class,
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
             'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
@@ -160,8 +161,7 @@ return [
             'VariationOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper::class,
             'SectionAccessService' => \Dvsa\Olcs\Api\Service\Lva\SectionAccessService::class,
             'ApplicationGrantValidationService' => \Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService::class,
-            'ApplicationPublishValidationService' =>
-                \Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService::class,
+            'ApplicationPublishValidationService' => \Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService::class,
             'ContentStore' => \Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
             'PayloadValidationListener' => \Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory::class,
             'CommandHandlerManager' => \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::class,

@@ -24,6 +24,7 @@ use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Repository\ValidateMockRepoTypeTrait;
 use Qandidate\Toggle\ToggleManager;
+use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
 
 /**
  * Query Handler Test Case
@@ -92,6 +93,10 @@ class QueryHandlerTestCase extends MockeryTestCase
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
+
+        if (! isset($this->mockedSmServices[EntityAccessLogger::class])) {
+            $this->mockedSmServices[EntityAccessLogger::class] = m::mock(EntityAccessLogger::class)->shouldIgnoreMissing();
+        }
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
