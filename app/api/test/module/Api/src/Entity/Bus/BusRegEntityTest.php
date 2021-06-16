@@ -115,7 +115,6 @@ class BusRegEntityTest extends EntityTester
         $this->entity->setRegNo($regNo);
         $this->entity->setId($id);
         $this->entity->setLicence($licenceEntityMock);
-        $this->entity->setIsTxcApp('N');
     }
 
     private function getAssertionsForCanEditIsFalseDueToVariation()
@@ -134,7 +133,6 @@ class BusRegEntityTest extends EntityTester
         $this->entity->setRegNo($regNo);
         $this->entity->setId($id);
         $this->entity->setLicence($licenceEntityMock);
-        $this->entity->setIsTxcApp('N');
     }
 
     /**
@@ -470,38 +468,12 @@ class BusRegEntityTest extends EntityTester
     /**
      * Tests updateStops throws exception correctly
      */
-    public function testUpdateStopsThrowsCanEditExceptionForEbsr()
-    {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
-
-        $this->entity->setIsTxcApp('Y');
-        $this->entity->updateStops(null, null, null, null, null, null, null, null, null);
-
-        return true;
-    }
-
-    /**
-     * Tests updateStops throws exception correctly
-     */
     public function testUpdateStopsThrowsCanEditExceptionForLatestVariation()
     {
         $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
 
         $this->getAssertionsForCanEditIsFalseDueToVariation();
         $this->entity->updateStops(null, null, null, null, null, null, null, null, null);
-
-        return true;
-    }
-
-    /**
-     * Tests updateQualitySchemes throws exception correctly
-     */
-    public function testUpdateQualitySchemesThrowsCanEditExceptionForEbsr()
-    {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
-
-        $this->entity->setIsTxcApp('Y');
-        $this->entity->updateQualitySchemes(null, null, null, null, null);
 
         return true;
     }
@@ -522,38 +494,12 @@ class BusRegEntityTest extends EntityTester
     /**
      * Tests updateServiceDetails throws exception correctly
      */
-    public function testUpdateServiceDetailsThrowsCanEditExceptionForEbsr()
-    {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
-
-        $this->entity->setIsTxcApp('Y');
-        $this->entity->updateServiceDetails(null, null, null, null, null, null, null, null, null, null);
-
-        return true;
-    }
-
-    /**
-     * Tests updateServiceDetails throws exception correctly
-     */
     public function testUpdateServiceDetailsThrowsCanEditExceptionForLatestVariation()
     {
         $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
 
         $this->getAssertionsForCanEditIsFalseDueToVariation();
         $this->entity->updateServiceDetails(null, null, null, null, null, null, null, null, null, null);
-
-        return true;
-    }
-
-    /**
-     * Tests updateTaAuthority throws exception correctly
-     */
-    public function testUpdateTaAuthorityThrowsCanEditExceptionForEbsr()
-    {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
-
-        $this->entity->setIsTxcApp('Y');
-        $this->entity->updateTaAuthority(null);
 
         return true;
     }
