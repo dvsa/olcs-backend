@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\Bus;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as Entity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Mockery as m;
@@ -51,10 +52,10 @@ class BusShortNoticeEntityTest extends EntityTester
      */
     public function testUpdateThrowsException()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
-        $busReg = new BusRegEntity();
-        $busReg->setIsTxcApp('Y');
+        $busReg = m::mock(BusRegEntity::class);
+        $busReg->expects('canEdit')->andThrow(ForbiddenException::class);
 
         $this->entity->setBusReg($busReg);
 

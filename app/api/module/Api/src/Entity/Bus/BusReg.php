@@ -325,14 +325,14 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     }
 
     /**
-     * A bus reg may only be edited if it's the latest variation, and the record didn't come from EBSR
+     * A bus reg may only be edited if it's the latest variation
      *
      * @return bool
      * @throws ForbiddenException
      */
     public function canEdit()
     {
-        if (!$this->isFromEbsr() && $this->isLatestVariation()) {
+        if ($this->isLatestVariation()) {
             return true;
         }
 
