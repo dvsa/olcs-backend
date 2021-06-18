@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32272ffe85f5db85fff261281a2fe946",
+    "content-hash": "2cf58f0bafb0edeed4e376861efaa582",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4583,12 +4583,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.128",
+            "version": "4.206.129",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.128/olcs-olcs-transfer-4.206.128.zip",
-                "reference": "75ab4f999a30a106b1693fffefb897e75cb94892",
-                "shasum": "75ab4f999a30a106b1693fffefb897e75cb94892"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.129/olcs-olcs-transfer-4.206.129.zip",
+                "reference": "0c85667b0ca70067fa61a25153c57e41d4765eda",
+                "shasum": "0c85667b0ca70067fa61a25153c57e41d4765eda"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4651,7 +4651,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2021-05-18T12:47:37+00:00"
+            "time": "2021-06-18T12:48:02+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -7676,6 +7676,50 @@
             },
             "description": "Dev tools",
             "time": "2020-12-09T10:29:17+00:00"
+        },
+        {
+            "name": "olcs/olcs-testhelpers",
+            "version": "4.206.11",
+            "dist": {
+                "type": "zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-testhelpers/4.206.11/olcs-olcs-testhelpers-4.206.11.zip",
+                "reference": "8125ab7ea425f9836ea4bb1d5d358fb62e6b2406",
+                "shasum": "8125ab7ea425f9836ea4bb1d5d358fb62e6b2406"
+            },
+            "require": {
+                "elendev/nexus-composer-push": "^0.1",
+                "laminas/laminas-dependency-plugin": "^2.0",
+                "laminas/laminas-form": "^2.5",
+                "laminas/laminas-http": "^2.5",
+                "laminas/laminas-i18n": "^2.5",
+                "laminas/laminas-mvc": "^2.5",
+                "laminas/laminas-servicemanager": "^2.5",
+                "laminas/laminas-stdlib": "^2.5",
+                "laminas/laminas-validator": "^2.5",
+                "laminas/laminas-view": "^2.5",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "olcs/olcs-devtools": "~4.206.0"
+            },
+            "type": "library",
+            "extra": {
+                "nexus-push": {
+                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-testhelpers"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Olcs\\TestHelpers\\": "src/TestHelpers/"
+                }
+            },
+            "scripts": {
+                "release": [
+                    "release"
+                ]
+            },
+            "description": "OLCS Test helpers",
+            "time": "2021-06-10T13:23:54+00:00"
         },
         {
             "name": "pdepend/pdepend",
