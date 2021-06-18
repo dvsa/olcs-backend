@@ -5,7 +5,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpApplications as ExpireIrhpApplicationsQuery;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -13,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use RuntimeException;
 
 class IrhpApplication extends AbstractRepository
@@ -67,6 +65,38 @@ class IrhpApplication extends AbstractRepository
             ->where('ia.status = :status')
             ->setParameter('status', IrhpInterface::STATUS_AWAITING_FEE)
             ->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch applications for the roadworthiness report
+     * - excludes not yet submitted, cancelled and withdrawn
+     * - only permit type id 6 & 7
+     *
+     * @param string $startDate
+     * @param string $endDate
+     *
+     * @return array
+     */
+    public function fetchForRoadworthinessReport(string $startDate, string $endDate): array
+    {
+        $excludeStatuses = [
+            IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+            IrhpInterface::STATUS_CANCELLED,
+            IrhpInterface::STATUS_WITHDRAWN,
+        ];
+
+        $qb = $this->createQueryBuilder();
+
+        $qb->where($qb->expr()->in($this->alias . '.irhpPermitType', ':irhpPermitTypes'));
+        $qb->andWhere($qb->expr()->notIn($this->alias . '.status', ':excludeStatuses'));
+        $qb->andWhere($qb->expr()->between($this->alias . '.dateReceived', ':startDate', ':endDate'));
+
+        $qb->setParameter('irhpPermitTypes', IrhpPermitType::CERTIFICATE_TYPES);
+        $qb->setParameter('excludeStatuses', $excludeStatuses);
+        $qb->setParameter('startDate', $startDate);
+        $qb->setParameter('endDate', $endDate);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

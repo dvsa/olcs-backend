@@ -718,6 +718,7 @@ return [
     Command\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
     Command\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
     Command\Document\GenerateAndStoreWithMultipleAddresses::class => CommandHandler\Document\GenerateAndStoreWithMultipleAddresses::class,
+    Command\Document\UploadCsv::class => CommandHandler\Document\UploadCsv::class,
     TransferCommand\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
     TransferCommand\Document\Upload::class => CommandHandler\Document\Upload::class,
 
@@ -1178,6 +1179,9 @@ return [
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
     Command\Permits\PostSubmitTasks::class => CommandHandler\Permits\PostSubmitTasks::class,
+    Command\Permits\GenerateReport::class => CommandHandler\Permits\GenerateReport::class,
+    TransferCommand\Permits\QueueReport::class => CommandHandler\Permits\QueueReport::class,
+    Command\Permits\RoadworthinessReport::class => CommandHandler\Permits\RoadworthinessReport::class,
 
     // Create HTML Snapshot
     Command\IrhpApplication\StoreSnapshot::class =>
