@@ -8,11 +8,10 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Permits;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOrganisationWithOrganisation;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalPermits;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
 
 return [
     QueryHandler\IrhpApplication\ById::class => Permits\CanAccessIrhpApplicationWithId::class,
@@ -59,7 +58,7 @@ return [
     QueryHandler\Permits\ReadyToPrint::class => IsInternalUser::class,
     QueryHandler\Permits\ReadyToPrintConfirm::class => IsInternalUser::class,
     QueryHandler\Permits\DeviationData::class => IsInternalOrSystemUser::class,
-    QueryHandler\Permits\Report\ReportList::class => IsInternalOrSystemUser::class,
+    QueryHandler\Permits\Report\ReportList::class => IsInternalUser::class,
     QueryHandler\IrhpPermitWindow\OpenByCountry::class => NotIsAnonymousUser::class,
     CommandHandler\IrhpApplication\UpdateCheckAnswers::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Cancel::class => Permits\CanEditIrhpApplicationWithId::class,
@@ -82,8 +81,11 @@ return [
     CommandHandler\IrhpApplication\UpdateCandidatePermitSelection::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\Permits\AcceptIrhpPermits::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\Permits\GeneratePermitDocuments::class => IsSideEffect::class,
+    CommandHandler\Permits\GenerateReport::class => IsSystemUser::class,
     CommandHandler\Permits\PrintPermits::class => IsInternalUser::class,
     CommandHandler\Permits\ProceedToStatus::class => IsSideEffect::class,
+    CommandHandler\Permits\QueueReport::class => IsInternalUser::class,
+    CommandHandler\Permits\RoadworthinessReport::class => IsSystemUser::class,
 
     CommandHandler\Permits\QueueRunScoring::class => IsInternalPermits::class,
     CommandHandler\Permits\QueueAcceptScoring::class => IsInternalPermits::class,
