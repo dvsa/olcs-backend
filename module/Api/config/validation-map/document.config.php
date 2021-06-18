@@ -15,6 +15,7 @@ return [
     CommandHandler\Document\DeleteDocuments::class => IsInternalUser::class,
     CommandHandler\Document\CreateDocument::class => CanCreateDocument::class,
     CommandHandler\Document\Upload::class => CanCreateDocument::class,
+    CommandHandler\Document\UploadCsv::class => CanCreateDocument::class,
     CommandHandler\Document\CopyDocument::class => IsInternalUser::class,
     CommandHandler\Document\CreateLetter::class => IsInternalUser::class,
     CommandHandler\Document\GenerateAndStore::class => IsInternalUser::class,

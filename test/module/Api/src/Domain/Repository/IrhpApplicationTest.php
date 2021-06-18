@@ -87,6 +87,32 @@ class IrhpApplicationTest extends RepositoryTestCase
         );
     }
 
+    public function testFetchForRoadworthinessReport()
+    {
+        $startDate = '2020-12-25';
+        $endDate = '2020-12-31';
+
+        $queryBuilder = $this->createMockQb('query');
+
+        $this->mockCreateQueryBuilder($queryBuilder);
+
+        $queryBuilder->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        self::assertEquals(['RESULTS'], $this->sut->fetchForRoadworthinessReport($startDate, $endDate));
+
+        $expectedQuery = 'query'
+            . ' AND ia.irhpPermitType IN [[[' . implode(',', IrhpPermitType::CERTIFICATE_TYPES) . ']]]'
+            . ' AND ia.status NOT IN [[["' . IrhpInterface::STATUS_NOT_YET_SUBMITTED . '","' . IrhpInterface::STATUS_CANCELLED . '","' . IrhpInterface::STATUS_WITHDRAWN . '"]]]'
+            . ' AND ia.dateReceived BETWEEN [[' . $startDate . ']] AND [[' . $endDate . ']]';
+
+        self::assertEquals($expectedQuery, $this->query);
+    }
+
     public function testFetchAllValidRoadworthiness()
     {
         $queryBuilder = $this->createMockQb('BLAH');

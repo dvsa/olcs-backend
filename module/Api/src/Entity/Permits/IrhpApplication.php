@@ -2448,6 +2448,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
             }
 
             $newStatus = SectionableInterface::SECTION_COMPLETION_INCOMPLETE;
+
+            assert($irhpPermitApplication instanceof IrhpPermitApplication);
             if ($irhpPermitApplication->getCheckedAnswers()) {
                 $newStatus = SectionableInterface::SECTION_COMPLETION_COMPLETED;
             }
