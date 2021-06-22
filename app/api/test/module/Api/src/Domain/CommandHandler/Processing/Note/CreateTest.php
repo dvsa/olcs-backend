@@ -63,6 +63,9 @@ class CreateTest extends CommandHandlerTestCase
             Entity\Tm\TransportManager::class => [
                 55 => m::mock(Entity\Tm\TransportManager::class)
             ],
+            Entity\Permits\IrhpApplication::class => [
+                56 => m::mock(Entity\Permits\IrhpApplication::class)
+            ],
         ];
 
         parent::initReferences();
@@ -136,6 +139,11 @@ class CreateTest extends CommandHandlerTestCase
             $this->assertEquals($expected['transportManager'], $note->getTransportManager()->getId());
         } else {
             $this->assertNull($note->getTransportManager());
+        }
+        if (isset($expected['irhpApplication'])) {
+            $this->assertEquals($expected['irhpApplication'], $note->getIrhpApplication()->getId());
+        } else {
+            $this->assertNull($note->getIrhpApplication());
         }
     }
 
@@ -230,6 +238,7 @@ class CreateTest extends CommandHandlerTestCase
                     'comment' => 'my comment',
                     'priority' => 'Y',
                     'type' => NoteEntity::NOTE_TYPE_PERMIT,
+                    'irhpApplication' => 56,
                 ],
             ],
             [
