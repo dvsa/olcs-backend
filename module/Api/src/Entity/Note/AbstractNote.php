@@ -23,6 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="note",
  *    indexes={
+ *        @ORM\Index(name="fk_note_irhp_application_id_irhp_application_id",
+     *     columns={"irhp_application_id"}),
  *        @ORM\Index(name="ix_note_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_note_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_note_case_id", columns={"case_id"}),
@@ -107,6 +109,20 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Irhp application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication",
+     *     fetch="LAZY",
+     *     inversedBy="notes"
+     * )
+     * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irhpApplication;
 
     /**
      * Last modified by
@@ -338,6 +354,30 @@ abstract class AbstractNote implements BundleSerializableInterface, JsonSerializ
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the irhp application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication $irhpApplication entity being set as the value
+     *
+     * @return Note
+     */
+    public function setIrhpApplication($irhpApplication)
+    {
+        $this->irhpApplication = $irhpApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     */
+    public function getIrhpApplication()
+    {
+        return $this->irhpApplication;
     }
 
     /**

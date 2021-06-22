@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
 use Dvsa\Olcs\Api\Domain\TranslatorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Note\Note;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
@@ -78,6 +79,21 @@ class RoadworthinessReport extends AbstractCommandHandler implements TranslatorA
 
             $isTrailer = $irhpApplication->isCertificateOfRoadworthinessTrailer();
 
+
+            $appNotes = '';
+            $notes = $irhpApplication->getNotes();
+
+            if (!$notes->isEmpty()) {
+                $noteArray = [];
+
+                foreach ($notes as $note) {
+                    assert($note instanceof Note);
+                    $noteArray[] = trim($note->getComment());
+                }
+
+                $appNotes = implode(' | ', $noteArray);
+            }
+
             //get the Q&A data and unset the check answer and declaration parts
             $questionAnswerData = $irhpApplication->getQuestionAnswerData();
             unset($questionAnswerData['custom-check-answers'], $questionAnswerData['custom-declaration']);
@@ -98,6 +114,9 @@ class RoadworthinessReport extends AbstractCommandHandler implements TranslatorA
                 $questionHeading = $this->translate($answerData['questionShort']);
                 $newRow[$questionHeading] = $answerData['answer'];
             }
+
+            //notes can be a bit longer than the other fields, so we purposefully put them at the end
+            $newRow['Notes'] = $appNotes;
 
             //work out which application path the app is from, and put it into the correct CSV
             $appPath = $irhpApplication->getActiveApplicationPath();
