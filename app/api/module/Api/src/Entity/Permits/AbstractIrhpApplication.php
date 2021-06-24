@@ -321,6 +321,19 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $irhpPermitRequests;
 
     /**
+     * Note
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Note\Note",
+     *     mappedBy="irhpApplication",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $notes;
+
+    /**
      * Task
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -352,6 +365,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
         $this->fees = new ArrayCollection();
         $this->irhpPermitApplications = new ArrayCollection();
         $this->irhpPermitRequests = new ArrayCollection();
+        $this->notes = new ArrayCollection();
         $this->tasks = new ArrayCollection();
     }
 
@@ -1232,6 +1246,69 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     {
         if ($this->irhpPermitRequests->contains($irhpPermitRequests)) {
             $this->irhpPermitRequests->removeElement($irhpPermitRequests);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the note
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $notes collection being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Get the notes
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * Add a notes
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $notes collection being added
+     *
+     * @return IrhpApplication
+     */
+    public function addNotes($notes)
+    {
+        if ($notes instanceof ArrayCollection) {
+            $this->notes = new ArrayCollection(
+                array_merge(
+                    $this->notes->toArray(),
+                    $notes->toArray()
+                )
+            );
+        } elseif (!$this->notes->contains($notes)) {
+            $this->notes->add($notes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a notes
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $notes collection being removed
+     *
+     * @return IrhpApplication
+     */
+    public function removeNotes($notes)
+    {
+        if ($this->notes->contains($notes)) {
+            $this->notes->removeElement($notes);
         }
 
         return $this;

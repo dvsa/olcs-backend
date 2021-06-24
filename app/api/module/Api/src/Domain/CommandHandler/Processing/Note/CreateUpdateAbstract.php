@@ -114,6 +114,12 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
         }
 
         if (method_exists($command, 'getIrhpApplication') && $command->getIrhpApplication() !== null) {
+            $irhpApplication = $this->getRepo()->getReference(
+                Entity\Permits\IrhpApplication::class,
+                $command->getIrhpApplication()
+            );
+
+            $entity->setIrhpApplication($irhpApplication);
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_PERMIT));
         }
 
