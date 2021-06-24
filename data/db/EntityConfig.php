@@ -945,7 +945,16 @@ return array(
     'note' => array(
         'priority' => array(
             'type' => 'yesno'
-        )
+        ),
+        'irhp_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpApplication',
+                'property' => 'note',
+                'cascade' => array(
+                    'persist'
+                ),
+            )
+        ),
     ),
     'submission' => array(
         'urgent' => array(

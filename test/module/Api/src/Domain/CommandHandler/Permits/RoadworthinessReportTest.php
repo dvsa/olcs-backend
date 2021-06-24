@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\RoadworthinessReport as Roadwort
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
+use Dvsa\Olcs\Api\Entity\Note\Note;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
@@ -46,6 +47,12 @@ class RoadworthinessReportTest extends CommandHandlerTestCase
         $uploadMsg2 = 'upload msg 2';
         $uploadMsg3 = 'upload msg 3';
 
+        $note1 = m::mock(Note::class);
+        $note1->expects('getComment')->withNoArgs()->andReturn(' Note 1 ');
+
+        $note2 = m::mock(Note::class);
+        $note2->expects('getComment')->withNoArgs()->andReturn('Note 2');
+
         $document1IssuedBy = 'issued by name 1';
         $document1IssueDate = '2020-12-25';
         $document1 = $this->getDocument($document1IssuedBy, $document1IssueDate);
@@ -74,27 +81,75 @@ class RoadworthinessReportTest extends CommandHandlerTestCase
          * application 4 has no docs so is excluded
          */
         $irhpApplications = [
-            0 => $this->getIrhpApplication(0, 1, true, new ArrayCollection([$document1])),
-            1 => $this->getIrhpApplication(1, 1, true, new ArrayCollection([$document2])),
-            2 => $this->getIrhpApplication(2, 2, false, new ArrayCollection([$document3])),
-            3 => $this->getIrhpApplication(3, 3, false, new ArrayCollection([$document4])),
+            0 => $this->getIrhpApplication(
+                0,
+                1,
+                true,
+                new ArrayCollection([$document1]),
+                new ArrayCollection([$note1, $note2])
+            ),
+            1 => $this->getIrhpApplication(
+                1,
+                1,
+                true,
+                new ArrayCollection([$document2]),
+                new ArrayCollection()
+            ),
+            2 => $this->getIrhpApplication(
+                2,
+                2,
+                false,
+                new ArrayCollection([$document3]),
+                new ArrayCollection()
+            ),
+            3 => $this->getIrhpApplication(
+                3,
+                3,
+                false,
+                new ArrayCollection([$document4]),
+                new ArrayCollection()
+            ),
             4 => $this->getIrhpApplicationNoDocs(),
         ];
 
         //apps 0 and 1 have gone to the same trailer spreadsheet (they're from the same app path)
         $appPath1Rows = [
-            0 => $this->getExpectedDataRow(0, true, $document1IssuedBy, $document1IssueDate),
-            1 => $this->getExpectedDataRow(1, true, RoadworthinessReportHandler::MSG_USER_MISSING, $document2IssueDate),
+            0 => $this->getExpectedDataRow(
+                0,
+                true,
+                $document1IssuedBy,
+                $document1IssueDate,
+                'Note 1 | Note 2'
+            ),
+            1 => $this->getExpectedDataRow(
+                1,
+                true,
+                RoadworthinessReportHandler::MSG_USER_MISSING,
+                $document2IssueDate,
+                ''
+            ),
         ];
 
         //app 2 goes to a vehicle spreadsheet for that app path
         $appPath2Rows = [
-            0 => $this->getExpectedDataRow(2, false, $document3IssuedBy, $document3IssueDate),
+            0 => $this->getExpectedDataRow(
+                2,
+                false,
+                $document3IssuedBy,
+                $document3IssueDate,
+                ''
+            ),
         ];
 
         //app 3 goes to a vehicle spreadsheet for that app path
         $appPath3Rows = [
-            0 => $this->getExpectedDataRow(3, false, RoadworthinessReportHandler::MSG_USER_MISSING, $document4IssueDate),
+            0 => $this->getExpectedDataRow(
+                3,
+                false,
+                RoadworthinessReportHandler::MSG_USER_MISSING,
+                $document4IssueDate,
+                ''
+            ),
         ];
 
         $command = RoadworthinessReportCmd::create($cmdData);
@@ -166,7 +221,13 @@ class RoadworthinessReportTest extends CommandHandlerTestCase
     /**
      * Common set of assertions to bring back an IRHP application
      */
-    private function getIrhpApplication(int $appNumber, int $appPathId, bool $isTrailer, ArrayCollection $documents): m\MockInterface
+    private function getIrhpApplication(
+        int $appNumber,
+        int $appPathId,
+        bool $isTrailer,
+        ArrayCollection $documents,
+        ArrayCollection $notes
+    ): m\MockInterface
     {
         $qaData = [
             'custom-check-answers' => 'aaa',
@@ -208,6 +269,7 @@ class RoadworthinessReportTest extends CommandHandlerTestCase
         $irhpApplication->expects('getActiveApplicationPath')
             ->withNoArgs()
             ->andReturn($appPath);
+        $irhpApplication->expects('getNotes')->withNoArgs()->andReturn($notes);
         $irhpApplication->expects('getQuestionAnswerData')->withNoArgs()->andReturn($qaData);
         $irhpApplication->expects('getCorCertificateNumber')->withNoArgs()->andReturn($corCertNumber);
         $irhpApplication->expects('getApplicationRef')->withNoArgs()->andReturn($applicationRef);
@@ -233,7 +295,7 @@ class RoadworthinessReportTest extends CommandHandlerTestCase
     /**
      * common set of assertions to bring back a data row that corresponds to the app number
      */
-    private function getExpectedDataRow(int $appNumber, bool $isTrailer, string $issuedBy, ?string $issueDate): array
+    private function getExpectedDataRow(int $appNumber, bool $isTrailer, string $issuedBy, ?string $issueDate, string $notes): array
     {
         return [
             'Certificate no.' => $this->answerForAppNumber('cor cert number', $appNumber),
@@ -249,6 +311,7 @@ class RoadworthinessReportTest extends CommandHandlerTestCase
                 $this->answerForAppNumber('answer 1, app number', $appNumber),
             $this->answerForAppNumber('question 2 translated, app number', $appNumber) =>
                 $this->answerForAppNumber('answer 2, app number', $appNumber),
+            'Notes' => $notes,
         ];
     }
 
