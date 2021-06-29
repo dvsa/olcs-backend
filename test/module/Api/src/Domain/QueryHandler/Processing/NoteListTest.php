@@ -33,6 +33,7 @@ class NoteListTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $data = [
+            'irhpApplication' => null,
             'case' => null,
             'busReg' => null,
             'application' => null
