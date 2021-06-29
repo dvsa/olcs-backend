@@ -112,6 +112,7 @@ class NoteList extends AbstractQueryHandler
                     'case',
                     'application',
                     'busReg',
+                    'irhpApplication',
                     'createdBy' => [
                         'contactDetails' => [
                             'person'
