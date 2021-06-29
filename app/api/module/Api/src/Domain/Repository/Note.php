@@ -1,20 +1,13 @@
 <?php
-/**
- * Note
- */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteHistoryEntity;
-use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Dvsa\Olcs\Transfer\Query\Processing\NoteList as NoteDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\Cases as CaseRepository;
 use Doctrine\ORM\Query;
 
-/**
- * Note
- */
 class Note extends AbstractRepository
 {
     protected $entity = NoteHistoryEntity::class;
@@ -71,7 +64,12 @@ class Note extends AbstractRepository
         $qb->orderBy($this->alias . '.priority', 'DESC');
         $qb->addOrderBy($this->alias . '.createdOn', 'DESC');
 
-        $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy()->withBusReg()->withCase()->withApplication();
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withCreatedBy()
+            ->withBusReg()
+            ->withCase()
+            ->withApplication()
+            ->withIrhpApplication();
     }
 
     /**
