@@ -184,17 +184,14 @@ return [
 
     // CPMS service authentication - used by CpmsIdentityProvider service
     'cpms_credentials' => [
-        // CPMS user ID *Environment specific*
-        // (this can be left as is, will be deprecated in the future once authentication is implemented)
-        'user_id' => '1234',
         // CPMS client ID *Environment specific*
-        'client_id' => "",
+        'client_id' => 'OLCS',
         // CPMS Client secret *Environment specific*
-        'client_secret' => "",
-        // CPMS client ID for NI *Environment specific*
-        'client_id_ni' => "",
-        // CPMS Client secret for NI *Environment specific*
-        'client_secret_ni' => "",
+        'client_secret' => 'CMPS CLIENTID',
+        // CPMS NI client ID *Environment specific*
+        'client_id_ni' => 'CMPS CLIENTID',
+        // CPMS NI Client secret *Environment specific*
+        'client_secret_ni' => 'CPMS SECRET',
     ],
 
     'cpms' => [
