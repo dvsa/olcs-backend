@@ -36,7 +36,7 @@ class QaContext
         return $this->applicationStepEntity;
     }
 
-    /*
+    /**
      * Get the embedded QaEntityInterface instance
      *
      * @return QaEntityInterface
@@ -46,7 +46,7 @@ class QaContext
         return $this->qaEntity;
     }
 
-    /*
+    /**
      * Get the answer value associated with this context
      *
      * @return mixed|null
@@ -63,7 +63,7 @@ class QaContext
      */
     public function isApplicationStepEnabled()
     {
-        if ($this->qaEntity->isNotYetSubmitted()) {
+        if ($this->qaEntity->isNotYetSubmitted() || $this->qaEntity->isUnderConsideration()) {
             return true;
         }
 

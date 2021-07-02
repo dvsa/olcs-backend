@@ -9,9 +9,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * QaContextTest
- *
- * @author Jonathan Thomas <jonathan@opalise.co.uk>
+ * @see QaContext
  */
 class QaContextTest extends MockeryTestCase
 {
@@ -30,7 +28,7 @@ class QaContextTest extends MockeryTestCase
         $this->qaContext = new QaContext($this->applicationStep, $this->qaEntity);
     }
 
-    public function testGetApplicationStepEntity()
+    public function testGetApplicationStepEntity(): void
     {
         $this->assertSame(
             $this->applicationStep,
@@ -38,7 +36,7 @@ class QaContextTest extends MockeryTestCase
         );
     }
 
-    public function testGetQaEntity()
+    public function testGetQaEntity(): void
     {
         $this->assertSame(
             $this->qaEntity,
@@ -46,7 +44,7 @@ class QaContextTest extends MockeryTestCase
         );
     }
 
-    public function testGetAnswerValue()
+    public function testGetAnswerValue(): void
     {
         $answerValue = 'foo';
 
@@ -63,11 +61,19 @@ class QaContextTest extends MockeryTestCase
     /**
      * @dataProvider dpIsApplicationStepEnabled
      */
-    public function testIsApplicationStepEnabled($isNotYetSubmitted, $enabledAfterSubmission, $expected)
-    {
+    public function testIsApplicationStepEnabled(
+        $isNotYetSubmitted,
+        $isUnderConsideration,
+        $enabledAfterSubmission,
+        $expected
+    ): void {
         $this->qaEntity->shouldReceive('isNotYetSubmitted')
             ->withNoArgs()
             ->andReturn($isNotYetSubmitted);
+
+        $this->qaEntity->shouldReceive('isUnderConsideration')
+            ->withNoArgs()
+            ->andReturn($isUnderConsideration);
 
         $this->applicationStep->shouldReceive('getEnabledAfterSubmission')
             ->withNoArgs()
@@ -79,12 +85,17 @@ class QaContextTest extends MockeryTestCase
         );
     }
 
-    public function dpIsApplicationStepEnabled()
+    public function dpIsApplicationStepEnabled(): array
     {
         return [
-            [true, null, true],
-            [false, true, true],
-            [false, false, false],
+            [true, true, true, true],
+            [true, true, false, true],
+            [true, false, true, true],
+            [true, false, false, true],
+            [false, true, true, true],
+            [false, true, false, true],
+            [false, false, true, true],
+            [false, false, false, false],
         ];
     }
 }
