@@ -165,6 +165,7 @@ return [
 
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
+    TransferCommand\Bus\CreateNoticePeriod::class => CommandHandler\Bus\CreateNoticePeriod::class,
     TransferCommand\Bus\CreateVariation::class => CommandHandler\Bus\CreateVariation::class,
     TransferCommand\Bus\CreateCancellation::class => CommandHandler\Bus\CreateCancellation::class,
     TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
