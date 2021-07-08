@@ -84,6 +84,7 @@ return [
     CommandHandler\Application\UpdateInterim::class => IsInternalUser::class,
     CommandHandler\Bus\AdminCancelBusReg::class => IsInternalEdit::class,
     CommandHandler\Bus\CreateBus::class => IsInternalUser::class,
+    CommandHandler\Bus\CreateNoticePeriod::class => IsInternalEdit::class,
     CommandHandler\Bus\CreateCancellation::class => IsInternalEdit::class,
     CommandHandler\Bus\CreateVariation::class => IsInternalEdit::class,
     CommandHandler\Bus\DeleteBus::class => IsInternalUser::class,

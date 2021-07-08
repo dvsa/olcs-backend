@@ -22,16 +22,35 @@ class BusNoticePeriod extends AbstractBusNoticePeriod
     const NOTICE_PERIOD_WALES = 3;
 
     /**
+     * Create a new bus notice period
+     *
+     * @param string $noticeArea
+     * @param int    $standardPeriod
+     * @param int    $cancellationPeriod
+     *
+     * @return self
+     */
+    public static function createNew(string $noticeArea, int $standardPeriod, int $cancellationPeriod = 0): self
+    {
+        $entity = new self();
+        $entity->setNoticeArea($noticeArea);
+        $entity->setStandardPeriod($standardPeriod);
+        $entity->setCancellationPeriod($cancellationPeriod);
+
+        return $entity;
+    }
+
+    /**
      * Returns whether the notice period is scottish rules, usually called from the parent busReg
      *
      * @return bool
      */
-    public function isScottishRules()
+    public function isScottishRules(): bool
     {
         return $this->id === self::NOTICE_PERIOD_SCOTLAND;
     }
 
-    public function isWalesRules()
+    public function isWalesRules(): bool
     {
         return $this->id === self::NOTICE_PERIOD_WALES;
     }
