@@ -224,7 +224,6 @@ return [
         ],
     ),
 
-    'mail' => [],
     'mailboxes' => [
         // IMAP connection to a the mailbox for reading inspection request emails
         'inspection_request' => [
