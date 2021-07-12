@@ -31,16 +31,12 @@ return [
 
     // Elastic search
     'elastic_search' => [
-        // Hostname e.g. elasticsearch-dev.olcs.mgt.mtpdvsa *Environment specific*
-        'host' => 'localstack.localdev',
-        // Port, e.g. 9200
-        'port' => '4571',
-        // // Transport protocol
-        // 'transport' => 'Https',
-        // // Additional CURL options
-        // 'curl' => [
-        //     CURLOPT_SSL_VERIFYHOST => false,
-        // ],
+        'host' => 'searchv6.reg.olcs.dev-dvsacloud.uk',
+        'port' => '443',
+        'transport' => 'Https',
+        'curl' => [
+             CURLOPT_SSL_VERIFYHOST => false,
+         ],
     ],
 
     // Doctrine
