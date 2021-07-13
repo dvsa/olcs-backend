@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Entity\Bus;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
@@ -19,7 +21,21 @@ class BusNoticePeriodEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function testIsScottishRules()
+    public function testCreateNew(): void
+    {
+        $noticeArea = 'noticeArea';
+        $standardPeriod = 111;
+        $cancellationPeriod = 222;
+
+        $entity = Entity::createNew($noticeArea, $standardPeriod, $cancellationPeriod);
+
+        $this->assertInstanceOf(Entity::class, $entity);
+        $this->assertEquals($noticeArea, $entity->getNoticeArea());
+        $this->assertEquals($standardPeriod, $entity->getStandardPeriod());
+        $this->assertEquals($cancellationPeriod, $entity->getCancellationPeriod());
+    }
+
+    public function testIsScottishRules(): void
     {
         $busNotice = new Entity();
         $busNotice->setId(Entity::NOTICE_PERIOD_SCOTLAND);

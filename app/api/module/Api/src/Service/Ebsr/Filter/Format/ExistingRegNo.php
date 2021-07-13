@@ -11,7 +11,7 @@ use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
 class ExistingRegNo extends LaminasAbstractFilter
 {
     /**
-     * Returns the result of filtering $value, a regNo we can use to retreive the previous bus reg
+     * Returns the result of filtering $value, a regNo we can use to retrieve the previous bus reg
      *
      * @param mixed $value
      * @return mixed
