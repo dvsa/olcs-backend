@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
 use Laminas\Validator\AbstractValidator;
-use Laminas\Validator\Exception;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
