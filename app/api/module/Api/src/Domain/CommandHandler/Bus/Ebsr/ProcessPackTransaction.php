@@ -84,9 +84,14 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         $repo = $this->getRepo('Licence');
         $licence = $repo->fetchByLicNoWithoutAdditionalData($ebsrData['licNo']);
         $previousBusReg = $licence->getLatestBusVariation($ebsrData['existingRegNo']);
+        $previousBusRegNoExclusions = $licence->getLatestBusVariation($ebsrData['existingRegNo'], []);
 
         //we now have the data from doctrine, so validate this additional data
-        $processedContext = ['busReg' => $previousBusReg];
+        $processedContext = [
+            'busReg' => $previousBusReg,
+            'busRegNoExclusions' => $previousBusRegNoExclusions,
+        ];
+
         $ebsrData = $this->validateInput('processedData', $ebsrSub, $doc, $xmlName, $ebsrData, $processedContext);
 
         if ($ebsrData === false) {
