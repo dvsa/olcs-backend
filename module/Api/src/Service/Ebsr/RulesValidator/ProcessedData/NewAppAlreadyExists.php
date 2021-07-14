@@ -5,10 +5,6 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData;
 use Laminas\Validator\AbstractValidator;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
-/**
- * Class NewAppAlreadyExists
- * @package Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData
- */
 class NewAppAlreadyExists extends AbstractValidator
 {
     const NEW_APP_ALREADY_EXISTS_ERROR = 'new-app-already-exists-error';
@@ -35,7 +31,7 @@ class NewAppAlreadyExists extends AbstractValidator
     public function isValid($value, $context = [])
     {
         //this check is only done for new applications
-        if ($value['txcAppType'] === BusRegEntity::TXC_APP_NEW && $context['busReg'] instanceof BusRegEntity) {
+        if ($value['txcAppType'] === BusRegEntity::TXC_APP_NEW && $context['busRegNoExclusions'] instanceof BusRegEntity) {
             $this->error(self::NEW_APP_ALREADY_EXISTS_ERROR, $value['existingRegNo']);
             return false;
         }
