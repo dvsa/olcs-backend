@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2cf58f0bafb0edeed4e376861efaa582",
+    "content-hash": "7691df63f592940cc421ebc313a04605",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -4583,12 +4583,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.129",
+            "version": "4.206.130",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.129/olcs-olcs-transfer-4.206.129.zip",
-                "reference": "0c85667b0ca70067fa61a25153c57e41d4765eda",
-                "shasum": "0c85667b0ca70067fa61a25153c57e41d4765eda"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.130/olcs-olcs-transfer-4.206.130.zip",
+                "reference": "6df6d09704ca16b35f001ede7ca998a653d54fc2",
+                "shasum": "6df6d09704ca16b35f001ede7ca998a653d54fc2"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4651,7 +4651,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2021-06-18T12:48:02+00:00"
+            "time": "2021-07-13T10:57:07+00:00"
         },
         {
             "name": "olcs/olcs-utils",
