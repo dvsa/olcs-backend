@@ -32,7 +32,7 @@ return [
     // Elastic search
     'elastic_search' => [
         // Hostname e.g. searchv6.olcs.dev.nonprod.dvsa.aws *Environment specific*
-        'host' => 'searchv6.olcs.dev.nonprod.dvsa.aws',
+        'host' => 'searchv6.reg.olcs.dev-dvsacloud.uk',
         // Port, e.g. 443
         'port' => '443',
         // Transport protocol
