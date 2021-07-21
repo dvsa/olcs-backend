@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists;
@@ -8,8 +10,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
- * Class NewAppAlreadyExistsTest
- * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator\ProcessedData
+ * @see NewAppAlreadyExists
  */
 class NewAppAlreadyExistsTest extends MockeryTestCase
 {
@@ -22,7 +23,7 @@ class NewAppAlreadyExistsTest extends MockeryTestCase
      * @param BusRegEntity|null $busReg
      * @param bool $valid
      */
-    public function testIsValid($txcAppType, $busReg, $valid)
+    public function testIsValid($txcAppType, $busReg, $valid): void
     {
         $sut = new NewAppAlreadyExists();
 
@@ -31,7 +32,7 @@ class NewAppAlreadyExistsTest extends MockeryTestCase
             'existingRegNo' => '1234/567'
         ];
 
-        $context = ['busReg' => $busReg];
+        $context = ['busRegNoExclusions' => $busReg];
 
         $this->assertEquals($valid, $sut->isValid($value, $context));
     }
@@ -41,7 +42,7 @@ class NewAppAlreadyExistsTest extends MockeryTestCase
      *
      * @return array
      */
-    public function isValidProvider()
+    public function isValidProvider(): array
     {
         $busMock = m::mock(BusRegEntity::class);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -11,7 +13,6 @@ use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessPack;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
