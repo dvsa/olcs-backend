@@ -17,9 +17,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 
 /**
- * Update Operating Centres
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\UpdateOperatingCentresTest
  */
 final class UpdateOperatingCentres extends AbstractCommandHandler implements TransactionedInterface
 {
@@ -61,12 +59,14 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
      */
     public function handleCommand(CommandInterface $command)
     {
+        assert($command instanceof Cmd);
+
         /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $this->validate($application, $command);
 
-        if (!$application->isPsv()) {
+        if (! $application->isPsv()) {
             $application->setTotAuthTrailers($command->getTotAuthTrailers());
         }
 

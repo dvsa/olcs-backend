@@ -52,6 +52,8 @@ use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
  *        @ORM\UniqueConstraint(name="uk_licence_olbs_key", columns={"olbs_key"})
  *    }
  * )
+ *
+ * @see \Dvsa\OlcsTest\Api\Entity\Licence\LicenceEntityTest
  */
 class Licence extends AbstractLicence implements ContextProviderInterface, OrganisationProviderInterface
 {
