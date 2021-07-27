@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Update Operating Centres
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
@@ -22,9 +17,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 
 /**
- * Update Operating Centres
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence\UpdateOperatingCentresTest
  */
 final class UpdateOperatingCentres extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
@@ -53,12 +46,14 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
      */
     public function handleCommand(CommandInterface $command)
     {
+        assert($command instanceof Cmd);
+
         /** @var Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $this->validate($licence, $command);
 
-        if (!$licence->isPsv()) {
+        if (! $licence->isPsv()) {
             $licence->setTotAuthTrailers($command->getTotAuthTrailers());
         }
 

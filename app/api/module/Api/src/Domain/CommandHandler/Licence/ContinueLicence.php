@@ -23,9 +23,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
- * ContinueLicence
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence\ContinueLicenceTest
  */
 final class ContinueLicence extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
@@ -63,6 +61,8 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
      */
     public function handleCommand(CommandInterface $command)
     {
+        assert($command instanceof \Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence);
+
         /* @var $licence Licence */
         // check Licence ID and version
         $licence = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
