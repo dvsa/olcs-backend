@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,43 +21,43 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateOperatingCentres as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 
 /**
- * Update Operating Centres Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @see \Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateOperatingCentres
  */
 class UpdateOperatingCentresTest extends CommandHandlerTestCase
 {
-    public function setUp(): void
+    use MocksServicesTrait;
+    use MocksAbstractCommandHandlerServicesTrait;
+
+    protected const TOT_AUTH_VEHICLES_COMMAND_PROPERTY = 'totAuthVehicles';
+    protected const ID_COMMAND_PROPERTY = 'id';
+    protected const A_NUMBER_OF_AUTHORIZED_VEHICLES = 2;
+    protected const DEFAULT_NUMBER_OF_AUTHORIZED_LGV_VEHICLES = null;
+    protected const APPLICATION_ID = 1;
+
+    /**
+     * @test
+     */
+    public function handleCommand_IsCallable()
     {
-        $this->sut = new CommandHandler();
-        $this->mockRepo('Application', Repository\Application::class);
-        $this->mockRepo('ApplicationOperatingCentre', Repository\ApplicationOperatingCentre::class);
+        // Setup
+        $this->setUpSut();
 
-        $this->mockedSmServices['VariationOperatingCentreHelper'] = m::mock(VariationOperatingCentreHelper::class);
-        $this->mockedSmServices['UpdateOperatingCentreHelper'] = m::mock(UpdateOperatingCentreHelper::class);
-        $this->mockedSmServices['TrafficAreaValidator'] =
-            m::mock(\Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class);
-
-        parent::setUp();
+        // Assert
+        $this->assertIsCallable([$this->sut, 'handleCommand']);
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [];
-
-        $this->references = [
-            EnforcementArea::class => [
-                'A111' => m::mock(EnforcementArea::class)
-            ]
-        ];
-
-        parent::initReferences();
-    }
-
+    /**
+     * @depends handleCommand_IsCallable
+     */
     public function testHandleCommandPartialMissingTa()
     {
+        $this->setUpLegacy();
         $data = [
             'id' => 111,
             'version' => 1,
@@ -98,8 +100,12 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    /**
+     * @depends handleCommand_IsCallable
+     */
     public function testHandleCommandPsvTooManyCommLic()
     {
+        $this->setUpLegacy();
         $data = [
             'id' => 111,
             'version' => 1,
@@ -176,8 +182,12 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    /**
+     * @depends handleCommand_IsCallable
+     */
     public function testHandleCommandGvInvalid()
     {
+        $this->setUpLegacy();
         $data = [
             'id' => 111,
             'version' => 1,
@@ -250,8 +260,12 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    /**
+     * @depends handleCommand_IsCallable
+     */
     public function testHandleCommandGvValid()
     {
+        $this->setUpLegacy();
         $data = [
             'id' => 111,
             'version' => 1,
@@ -355,8 +369,12 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    /**
+     * @depends handleCommand_IsCallable
+     */
     public function testHandleCommandTrafficAreaValidation()
     {
+        $this->setUpLegacy();
         $data = [
             'id' => 111,
             'version' => 1,
@@ -465,8 +483,12 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    /**
+     * @depends handleCommand_IsCallable
+     */
     public function testHandleCommandPsvValid()
     {
+        $this->setUpLegacy();
         $data = [
             'id' => 111,
             'version' => 1,
@@ -562,8 +584,12 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    /**
+     * @depends handleCommand_IsCallable
+     */
     public function testHandleCommandPsvValidVariationWithTa()
     {
+        $this->setUpLegacy();
         $data = [
             'id' => 111,
             'version' => 1,
@@ -660,5 +686,213 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertSame($this->references[EnforcementArea::class]['A111'], $licence->getEnforcementArea());
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_SavesAnApplication()
+    {
+        // Setup
+        $this->setUpSut();
+        $command = Cmd::create([static::ID_COMMAND_PROPERTY => static::APPLICATION_ID]);
+
+        // Expect
+        $this->applicationRepository()->expects('save')->withArgs(function ($application) {
+            $this->assertInstanceOf(Application::class, $application);
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_SavesAnApplication
+     */
+    public function handleCommand_SetsTotAuthVehicles_ForGoodsVehicleOperatingCentre()
+    {
+        // Setup
+        $this->setUpSut();
+        $this->injectEntity($this->variationForGoodsLicence($id = static::APPLICATION_ID));
+        $command = Cmd::create([
+            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => static::A_NUMBER_OF_AUTHORIZED_VEHICLES,
+            static::ID_COMMAND_PROPERTY => $id,
+        ]);
+
+        // Expect
+        $this->applicationRepository()->expects('save')->withArgs(function (Application $application) {
+            $this->assertSame(static::A_NUMBER_OF_AUTHORIZED_VEHICLES, $application->getTotAuthVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_SavesAnApplication
+     */
+    public function handleCommand_SetsTotAuthVehicles_ForPsvOperatingCentre()
+    {
+        // Setup
+        $this->setUpSut();
+        $this->injectEntity($this->variationForPsvLicence($id = static::APPLICATION_ID));
+        $command = Cmd::create([
+            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => static::A_NUMBER_OF_AUTHORIZED_VEHICLES,
+            static::ID_COMMAND_PROPERTY => $id,
+        ]);
+
+        // Expect
+        $this->applicationRepository()->expects('save')->withArgs(function (Application $application) {
+            $this->assertSame(static::A_NUMBER_OF_AUTHORIZED_VEHICLES, $application->getTotAuthVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    public function setUp(): void
+    {
+        $this->setUpServiceManager();
+    }
+
+    protected function setUpSut()
+    {
+        $this->sut = new CommandHandler();
+
+        if (null !== $this->serviceManager()) {
+            $this->sut->createService($this->commandHandlerManager());
+        }
+    }
+
+    protected function setUpDefaultServices()
+    {
+        $this->variationHelper();
+        $this->serviceManager()->setService('UpdateOperatingCentreHelper', $this->setUpMockService(UpdateOperatingCentreHelper::class));
+        $this->serviceManager()->setService('TrafficAreaValidator', $this->setUpMockService(\Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class));
+        $this->setUpAbstractCommandHandlerServices();
+        $this->applicationRepository();
+    }
+
+    /**
+     * @return m\MockInterface|VariationOperatingCentreHelper
+     */
+    protected function variationHelper(): m\MockInterface
+    {
+        if (! $this->serviceManager()->has('VariationOperatingCentreHelper')) {
+            $instance = $this->setUpMockService(VariationOperatingCentreHelper::class);
+            $instance->allows('getListDataForApplication')->andReturn([])->byDefault();
+            $this->serviceManager()->setService('VariationOperatingCentreHelper', $instance);
+        }
+        return $this->serviceManager()->get('VariationOperatingCentreHelper');
+    }
+
+    /**
+     * @return m\MockInterface|Repository\Application
+     */
+    protected function applicationRepository(): m\MockInterface
+    {
+        $repositoryServiceManager = $this->repositoryServiceManager();
+        if (! $repositoryServiceManager->has('Application')) {
+            $instance = $this->setUpMockService(Repository\Application::class);
+
+            // Inject default application instance
+            $instance->allows('fetchUsingId')->andReturnUsing(function (Cmd $command) {
+                return $this->variationForGoodsLicence($command->getId());
+            })->byDefault();
+
+            $repositoryServiceManager->setService('Application', $instance);
+        }
+        return $repositoryServiceManager->get('Application');
+    }
+
+    /**
+     * @param object $entity
+     */
+    protected function injectEntity(object $entity)
+    {
+        assert(is_callable([$entity, 'getId']));
+        $this->applicationRepository()
+            ->allows('fetchUsingId')
+            ->withArgs(function (Cmd $command) use ($entity) {
+                return $command->getId() === $entity->getId();
+            })
+            ->andReturn($entity)
+            ->byDefault();
+    }
+
+    /**
+     * @param int $id
+     * @return Application
+     */
+    protected function variationForPsvLicence(int $id): Application
+    {
+        $instance = $this->variationForGoodsLicence($id);
+        $instance->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_PSV));
+        return $instance;
+    }
+
+    /**
+     * @param int $id
+     * @return Application
+     */
+    protected function variationForGoodsLicence(int $id): Application
+    {
+        $instance = new Application($this->licence(), new RefData(Application::APPLICATION_STATUS_NOT_SUBMITTED), true);
+        $instance->setId($id);
+        $instance->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        return $instance;
+    }
+
+    /**
+     * @return Licence
+     */
+    public function licence(): Licence
+    {
+        return new Licence($this->organisation(), new RefData(Licence::LICENCE_STATUS_VALID));
+    }
+
+    /**
+     * @return Organisation
+     */
+    protected function organisation(): Organisation
+    {
+        return new Organisation();
+    }
+
+    /**
+     * @deprecated Use new test format instead
+     */
+    protected function setUpLegacy()
+    {
+        $this->setUpSut();
+        $this->mockRepo('Application', Repository\Application::class);
+        $this->mockRepo('ApplicationOperatingCentre', Repository\ApplicationOperatingCentre::class);
+        $this->mockedSmServices['VariationOperatingCentreHelper'] = m::mock(VariationOperatingCentreHelper::class);
+        $this->mockedSmServices['UpdateOperatingCentreHelper'] = m::mock(UpdateOperatingCentreHelper::class);
+        $this->mockedSmServices['TrafficAreaValidator'] =
+            m::mock(\Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class);
+        parent::setUp();
+    }
+
+    /**
+     * @deprecated Use new test format instead
+     */
+    protected function initReferences()
+    {
+        $this->refData = [];
+
+        $this->references = [
+            EnforcementArea::class => [
+                'A111' => m::mock(EnforcementArea::class)
+            ]
+        ];
+
+        parent::initReferences();
     }
 }

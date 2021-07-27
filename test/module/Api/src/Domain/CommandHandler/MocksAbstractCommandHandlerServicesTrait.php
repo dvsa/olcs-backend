@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
@@ -72,14 +73,8 @@ trait MocksAbstractCommandHandlerServicesTrait
         if (! $this->serviceManager()->has('RepositoryServiceManager')) {
             $instance = new RepositoryServiceManager();
             $this->serviceManager()->setService('RepositoryServiceManager', $instance);
-            $this->setUpRepositories();
         }
         return $this->serviceManager()->get('RepositoryServiceManager');
-    }
-
-    protected function setUpRepositories(): void
-    {
-        // Register any repositories needed in the RepositoryServiceManager which is accessible through $this->serviceManager
     }
 
     /**
@@ -93,7 +88,6 @@ trait MocksAbstractCommandHandlerServicesTrait
                 $this->setUpMockService(UpdateOperatingCentreHelper::class)
             );
         }
-
         return $this->serviceManager()->get('UpdateOperatingCentreHelper');
     }
 
@@ -108,7 +102,6 @@ trait MocksAbstractCommandHandlerServicesTrait
                 $this->setUpMockService(QueryHandlerManager::class)
             );
         }
-
         return $this->serviceManager()->get('QueryHandlerManager');
     }
 
@@ -123,7 +116,6 @@ trait MocksAbstractCommandHandlerServicesTrait
                 $this->setUpMockService(PidIdentityProvider::class)
             );
         }
-
         return $this->serviceManager()->get(PidIdentityProvider::class);
     }
 
@@ -138,7 +130,6 @@ trait MocksAbstractCommandHandlerServicesTrait
                 $this->setUpMockService(TransactionManagerInterface::class)
             );
         }
-
         return $this->serviceManager()->get('TransactionManager');
     }
 
@@ -153,7 +144,6 @@ trait MocksAbstractCommandHandlerServicesTrait
                 $this->setUpMockService(CacheEncryption::class)
             );
         }
-
         return $this->serviceManager()->get(CacheEncryption::class);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Entity\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,7 +19,6 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
 use Mockery as m;
@@ -28,6 +29,13 @@ use Mockery as m;
  */
 class ApplicationEntityTest extends EntityTester
 {
+    protected const A_NUMBER_OF_VEHICLES = 2;
+
+    /**
+     * @var Entity|null
+     */
+    protected $sut;
+
     /**
      * Define the entity to test
      *
@@ -40,20 +48,10 @@ class ApplicationEntityTest extends EntityTester
      */
     protected $entity;
 
-    /** @var  Licence */
+    /**
+     * @var  Licence
+     */
     private $licence;
-
-    public function setUp(): void
-    {
-        $organisation = new Organisation();
-
-        $this->licence = new Licence($organisation, new RefData(Licence::LICENCE_STATUS_NOT_SUBMITTED));
-        $this->licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
-
-        $this->entity = $this->instantiate($this->entityClass);
-        $this->entity->setLicence($this->licence);
-        $this->entity->setLicenceType($this->licence->getLicenceType());
-    }
 
     public function testSetGet()
     {
@@ -448,7 +446,7 @@ class ApplicationEntityTest extends EntityTester
         ];
 
         foreach ($operatingCentreValues as $values) {
-            list($id, $noOfTrailersRequired, $noOfVehiclesRequired) = $values;
+            [$id, $noOfTrailersRequired, $noOfVehiclesRequired] = $values;
             $oc = new \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre();
             $oc->setId($id);
             $aoc = new ApplicationOperatingCentre(m::mock(Entity::class)->makePartial(), $oc);
@@ -1261,6 +1259,21 @@ class ApplicationEntityTest extends EntityTester
         $this->assertFalse($application->hasVariationChanges());
     }
 
+    /**
+     * @test
+     */
+    public function copyInformationFromLicence_IsCallable()
+    {
+        // Setup
+        $this->setUpSut();
+
+        // Assert
+        $this->assertIsCallable([$this->sut, 'copyInformationFromLicence']);
+    }
+
+    /**
+     * @depends copyInformationFromLicence_IsCallable
+     */
     public function testCopyInformationFromLicence()
     {
         /** @var Licence $licence */
@@ -3777,6 +3790,39 @@ class ApplicationEntityTest extends EntityTester
             $expected,
             $this->entity->getPostSubmissionApplicationDocuments('category', 'subCategory', 'operatingCentre')
         );
+    }
+
+    public function setUp(): void
+    {
+        $organisation = new Organisation();
+
+        $this->licence = new Licence($organisation, new RefData(Licence::LICENCE_STATUS_NOT_SUBMITTED));
+        $this->licence->setLicenceType(new RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+
+        $this->entity = $this->instantiate($this->entityClass);
+        $this->entity->setLicence($this->licence);
+        $this->entity->setLicenceType($this->licence->getLicenceType());
+    }
+
+    protected function setUpSut()
+    {
+        $this->sut = new Entity($this->licence(), new RefData(Entity::APPLICATION_STATUS_GRANTED), false);
+    }
+
+    /**
+     * @return Licence
+     */
+    protected function licence(): Licence
+    {
+        return new Licence($this->organisation(), new RefData(Licence::LICENCE_STATUS_VALID));
+    }
+
+    /**
+     * @return Organisation
+     */
+    protected function organisation(): Organisation
+    {
+        return new Organisation();
     }
 
     private function createMockApplicationOrganisationPersons($actions = array())

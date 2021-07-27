@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Entity\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection as CollectionInterface;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -34,14 +35,24 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * Licence Entity Unit Tests
  *
  * Initially auto-generated but won't be overridden
+ *
+ * @see Licence
  */
 class LicenceEntityTest extends EntityTester
 {
+    protected const A_NUMBER_OF_VEHICLES = 2;
+
+    /**
+     * @var Licence|null
+     */
+    protected $sut;
+
     /**
      * Define the entity to test
      *
@@ -825,6 +836,21 @@ class LicenceEntityTest extends EntityTester
         $this->assertFalse($licence->canHaveCommunityLicences());
     }
 
+    /**
+     * @test
+     */
+    public function copyInformationFromApplication_IsCallable()
+    {
+        // Setup
+        $this->setUpSut();
+
+        // Assert
+        $this->assertIsCallable([$this->sut, 'copyInformationFromApplication']);
+    }
+
+    /**
+     * @depends copyInformationFromApplication_IsCallable
+     */
     public function testCopyInformationFromNewApplication()
     {
         /** @var Application $application */
@@ -853,6 +879,9 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals(12, $licence->getTotAuthVehicles());
     }
 
+    /**
+     * @depends copyInformationFromApplication_IsCallable
+     */
     public function testCopyInformationFromVariationApplication()
     {
         $appCompletion = m::mock(ApplicationCompletion::class);
@@ -865,12 +894,13 @@ class LicenceEntityTest extends EntityTester
         $totAuthVehicles = 12;
 
         $application = m::mock(Application::class);
+        $application->shouldIgnoreMissing();
         $application->shouldReceive('isVariation')->once()->withNoArgs()->andReturn(true);
         $application->shouldReceive('getApplicationCompletion')->once()->withNoArgs()->andReturn($appCompletion);
         $application->shouldReceive('getLicenceType')->once()->withNoArgs()->andReturn($licenceType);
         $application->shouldReceive('getGoodsOrPsv')->once()->withNoArgs()->andReturn($goodsOrPsv);
         $application->shouldReceive('getTotAuthTrailers')->once()->withNoArgs()->andReturn($totAuthTrailers);
-        $application->shouldReceive('getTotAuthVehicles')->once()->withNoArgs()->andReturn($totAuthVehicles);
+        $application->allows('getTotAuthVehicles')->andReturn($totAuthVehicles);
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
@@ -883,6 +913,9 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals($totAuthVehicles, $licence->getTotAuthVehicles());
     }
 
+    /**
+     * @depends copyInformationFromApplication_IsCallable
+     */
     public function testCopyInformationFromUnchangedVariationApplication()
     {
         $appCompletion = m::mock(ApplicationCompletion::class);
@@ -2851,5 +2884,46 @@ class LicenceEntityTest extends EntityTester
                 false,
             ]
         ];
+    }
+
+    protected function setUpSut()
+    {
+        $this->sut = new Licence($this->organisation(), new RefData(Licence::LICENCE_STATUS_VALID));
+    }
+
+    /**
+     * @return Organisation
+     */
+    protected function organisation(): Organisation
+    {
+        return new Organisation();
+    }
+
+    /**
+     * @return Application
+     */
+    protected function applicationForNewLicence(): Application
+    {
+        return new Application($this->sut, new RefData(Application::APPLICATION_STATUS_GRANTED), false);
+    }
+
+    /**
+     * @return Application
+     */
+    protected function variation(): Application
+    {
+        return new Application($this->sut, new RefData(Application::APPLICATION_STATUS_GRANTED), true);
+    }
+
+    /**
+     * @return Application
+     */
+    protected function variationWithUpdatedOperatingCentres(): Application
+    {
+        $instance = $this->variation();
+        $applicationCompletion = new ApplicationCompletion($instance);
+        $applicationCompletion->setOperatingCentresStatus(ApplicationCompletion::STATUS_VARIATION_UPDATED);
+        $instance->setApplicationCompletion($applicationCompletion);
+        return $instance;
     }
 }
