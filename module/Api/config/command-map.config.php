@@ -11,6 +11,9 @@ use Dvsa\Olcs\Cli\Domain\Command as CommandCli;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CommandHandlerCli;
 
 return [
+    // Transfer - Auth
+    TransferCommand\Auth\Login::class => CommandHandler\Auth\LoginFactory::class,
+
     // Transfer - Audit
     TransferCommand\Audit\ReadApplication::class => CommandHandler\Audit\ReadApplication::class,
     TransferCommand\Audit\ReadLicence::class => CommandHandler\Audit\ReadLicence::class,

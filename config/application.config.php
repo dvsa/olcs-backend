@@ -4,6 +4,7 @@ return array(
     'modules' => [
         'Dvsa\Olcs\Utils',
         'Dvsa\Olcs\Address',
+        'Dvsa\Olcs\Auth',
         'Dvsa\Olcs\Snapshot',
         'Dvsa\Olcs\Email',
         'Dvsa\Olcs\CompaniesHouse',
