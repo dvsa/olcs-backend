@@ -463,5 +463,19 @@ return [
             ],
         ],
     ],
-
+    'auth' => [
+        'default_adapter' => 'cognito',
+        'adapters' => [
+            'cognito' => [
+                'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
+                'timeout' => 3000,
+                'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks'
+            ],
+            'azure' => [
+                'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
+                'timeout' => 3000,
+                'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks'
+            ],
+        ],
+    ],
 ];
