@@ -2,6 +2,9 @@
 
 <phpunit bootstrap="test_bootstrap.php" colors="true">
     <testsuites>
+        <testsuite name="Module Unit Test">
+            <directory suffix="Test.php">../module/**/test</directory>
+        </testsuite>
         <testsuite name="Address">
             <directory>./module/Address</directory>
         </testsuite>
@@ -67,6 +70,7 @@
                 <file>../module/Scanning/src/Module.php</file>
                 <file>../module/GdsVerify/src/Module.php</file>
                 <file>../module/Queue/src/Module.php</file>
+                <file>../module/**/src/Module.php</file>
                 <directory>../module/GdsVerify/config</directory>
                 <directory>../module/Email/config</directory>
                 <directory>../module/Cli/config</directory>
@@ -79,7 +83,7 @@
                 <directory>../module/Api/config</directory>
                 <directory>../module/Olcs/Db/src/Service/CHXmlGateway</directory>
                 <directory>../module/Queue/config</directory>
-
+                <directory>../module/**/config</directory>
             </exclude>
         </whitelist>
     </filter>
