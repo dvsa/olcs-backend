@@ -231,7 +231,7 @@ return [
         ],
     ],
 
-    'awsOptions' =>[
+    'awsOptions' => [
         'useEnvCredentials' => true,
         'region' => 'eu-west-1',
         'version'=> 'latest',
@@ -462,17 +462,23 @@ return [
         ],
     ],
     'auth' => [
-        'default_adapter' => 'cognito',
+        'default_adapter' => 'mock',
         'adapters' => [
             'cognito' => [
-                'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
-                'timeout' => 3000,
-                'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks'
+                'adapter' => \Dvsa\Olcs\Auth\Adapter\CognitoAdapter::class,
+                'clientId' => '',
+                'clientSecret' => '',
+                'poolId' => '',
+                'region' => '',
+                'nbfLeeway' => 0,
             ],
             'azure' => [
                 'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
                 'timeout' => 3000,
                 'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks'
+            ],
+            'mock' => [
+                'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
             ],
         ],
     ],
