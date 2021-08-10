@@ -1,6 +1,8 @@
 <?php
 
+use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Dvsa\Olcs\AwsSdk\Factories\AwsCredentialsProviderFactory;
+use Dvsa\Olcs\AwsSdk\Factories\CognitoIdentityProviderClientFactory;
 use Dvsa\Olcs\AwsSdk\Factories\S3ClientFactory;
 use Dvsa\Olcs\AwsSdk\Factories\SqsClientFactory;
 
@@ -9,7 +11,8 @@ return [
         'factories' => [
             'S3Client' => S3ClientFactory::class,
             'AwsCredentialsProvider' => AwsCredentialsProviderFactory::class,
-            'SqsClient' => SqsClientFactory::class
+            'SqsClient' => SqsClientFactory::class,
+            CognitoIdentityProviderClient::class => CognitoIdentityProviderClientFactory::class,
         ],
     ]
 ];
