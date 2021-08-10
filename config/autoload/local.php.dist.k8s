@@ -208,7 +208,7 @@ return [
         'internal_uri' => 'https://olcs-internal.olcs.gov.uk',
     ],
 
-    'awsOptions'=>[
+    'awsOptions' => [
       'region' =>'eu-west-1',
       'version'=>'latest',
       'useEnvCredentials' => true,
@@ -290,9 +290,9 @@ return [
 
     // CUPS print server
     'print' => [
-    
+
         'server' => 'print.localdev:631'
-    
+
     ],
 
     // If this value is populated then printing will use this service,
@@ -464,17 +464,23 @@ return [
         ],
     ],
     'auth' => [
-        'default_adapter' => 'cognito',
+        'default_adapter' => 'mock',
         'adapters' => [
             'cognito' => [
-                'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
-                'timeout' => 3000,
-                'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks'
+                'adapter' => \Dvsa\Olcs\Auth\Adapter\CognitoAdapter::class,
+                'clientId' => '',
+                'clientSecret' => '',
+                'poolId' => '',
+                'region' => '',
+                'nbfLeeway' => 0,
             ],
             'azure' => [
                 'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
                 'timeout' => 3000,
                 'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks'
+            ],
+            'mock' => [
+                'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
             ],
         ],
     ],

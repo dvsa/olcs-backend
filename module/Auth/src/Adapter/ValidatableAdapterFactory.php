@@ -20,6 +20,8 @@ class ValidatableAdapterFactory implements FactoryInterface
      * @param $requestedName
      * @param array|null $options
      * @return ValidatableAdapterInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ValidatableAdapterInterface
     {
@@ -43,8 +45,9 @@ class ValidatableAdapterFactory implements FactoryInterface
     }
 
     /**
-     * @inheritDoc
-     * @deprecated
+     * @param ServiceLocatorInterface $serviceLocator
+     * @deprecated Can be removed following Laminas v3 upgrade
+     * @return ValidatableAdapterInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator): ValidatableAdapterInterface
     {
