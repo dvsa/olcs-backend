@@ -242,7 +242,19 @@ return [
         'username' => 'olcs_app',
         'password' => 'password',
         'uri' => 'http://olcs-openam.olcs.gov.uk:18080',
-        'pid_header' => 'X-Pid'
+        'pid_header' => 'X-Pid',
+        'url' => null, // @NOTE This must be implemented
+        'realm' => null,
+        'cookie' => [
+            'name' => 'secureToken',
+            'domain' => null, // @NOTE This must be implemented
+        ],
+        'client' => [
+            'options' => [
+                'adapter' => \Laminas\Http\Client\Adapter\Curl::class,
+                'timeout' => 60,
+            ]
+        ]
     ],
 
     'ebsr' => [
@@ -476,6 +488,23 @@ return [
                 'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
                 'timeout' => 3000,
                 'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks'
+            ],
+            'openam' => [
+                'adapter' => \Dvsa\Olcs\Auth\Adapter\OpenAm::class,
+                'timeout' => 3000,
+                'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks',
+                'url' => 'http://olcs-auth.olcs.gov.uk:8080/secure/',
+                'realm' => 'internal', // @todo this needs to move
+                'cookie' => [
+                    'name' => 'secureToken',
+                    'domain' => null, // @NOTE This must be implemented
+                ],
+                'client' => [
+                    'options' => [
+                        'adapter' => \Laminas\Http\Client\Adapter\Curl::class,
+                        'timeout' => 60,
+                    ],
+                ],
             ],
             'mock' => [
                 'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
