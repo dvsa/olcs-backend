@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\Repository\RepositoryMockBuilder;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Update;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
@@ -22,31 +22,13 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Mockery\MockInterface;
+use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 
 class UpdateTest extends CommandHandlerTestCase
 {
-    public function setUp(): void
-    {
-        $this->sut = new Update();
-        $this->mockRepo('TransportManager', TransportManagerRepo::class);
-        $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
-
-        $this->mockedSmServices = [
-            CacheEncryption::class => m::mock(CacheEncryption::class),
-        ];
-
-        parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        $this->refData = [
-            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT,
-            TransportManagerEntity::TRANSPORT_MANAGER_TYPE_BOTH
-        ];
-
-        parent::initReferences();
-    }
+    use MocksServicesTrait;
+    use MocksAbstractCommandHandlerServicesTrait;
 
     /**
      * @test
@@ -222,11 +204,10 @@ class UpdateTest extends CommandHandlerTestCase
         // Setup
         $serviceLocator = $this->setUpServiceLocator();
         $sut = $this->setUpSut($serviceLocator);
-        $command = Cmd::create(['homeAddressId' => $expectedAddressId = 1234]);
+        $command = Cmd::create(['homeAddressId' => $expectedAddressId = 1234,]);
 
         // Define Expectations
-        $commandHandler = $this->resolveMockService($serviceLocator, 'CommandHandlerManager');
-        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) use ($expectedAddressId) {
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) use ($expectedAddressId) {
             return $command instanceof SaveAddress && $command->getId() === $expectedAddressId;
         })->atLeast()->once()->andReturn(new Result());
 
@@ -246,8 +227,7 @@ class UpdateTest extends CommandHandlerTestCase
         $command = Cmd::create([]);
 
         // Define Expectations
-        $commandHandler = $this->resolveMockService($serviceLocator, 'CommandHandlerManager');
-        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) {
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) {
             return $command instanceof SaveAddress && null === $command->getId();
         })->atLeast()->once()->andReturn(new Result());
 
@@ -270,8 +250,7 @@ class UpdateTest extends CommandHandlerTestCase
         $this->transportManagerRepository()->shouldReceive('fetchById')->with($transportManagerId)->andReturn($mockTransportManager);
 
         // Define Expectations
-        $commandHandler = $this->resolveMockService($serviceLocator, 'CommandHandlerManager');
-        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
             return $command instanceof SaveAddress && $command->getId() === $homeAddressId;
         })->once()->andReturn(new Result());
 
@@ -291,8 +270,7 @@ class UpdateTest extends CommandHandlerTestCase
         $command = Cmd::create(['homeAddressId' => $homeAddressId = 4321]);
 
         // Define Expectations
-        $commandHandler = $this->resolveMockService($serviceLocator, 'CommandHandlerManager');
-        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
             return $command instanceof SaveAddress && $command->getId() === $homeAddressId && null === $command->getContactType();
         })->once()->andReturn(new Result());
 
@@ -313,8 +291,7 @@ class UpdateTest extends CommandHandlerTestCase
         $homeAddressSaveResult = new Result();
         $homeAddressSaveResult->addId('address', $newHomeAddressId = 4321);
         $homeAddressSaveResult->setFlag('hasChanged', true);
-        $commandHandler = $this->resolveMockService($serviceLocator, 'CommandHandlerManager');
-        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) {
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) {
             return $command instanceof SaveAddress && null === $command->getId();
         })->once()->andReturn($homeAddressSaveResult);
 
@@ -341,8 +318,7 @@ class UpdateTest extends CommandHandlerTestCase
         $command = Cmd::create(['homeAddressId' => $homeAddressId = 1234]);
         $homeAddressSaveResult = new Result();
         $homeAddressSaveResult->setFlag('hasChanged', false);
-        $commandHandler = $this->resolveMockService($serviceLocator, 'CommandHandlerManager');
-        $commandHandler->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
             return $command instanceof SaveAddress && $command->getId() === $homeAddressId;
         })->once()->andReturn($homeAddressSaveResult);
 
@@ -378,10 +354,34 @@ class UpdateTest extends CommandHandlerTestCase
         $this->assertNotContains('Home contact details updated', $result->getMessages());
     }
 
-    protected function setUpRepositories(): void
+    public function setUp(): void
     {
+        $this->sut = new Update();
+        $this->mockRepo('TransportManager', TransportManagerRepo::class);
+        $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
+
+        $this->mockedSmServices = [
+            CacheEncryption::class => m::mock(CacheEncryption::class),
+        ];
+
+        parent::setUp();
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return Update
+     */
+    protected function setUpSut(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this->sut->createService($this->commandHandlerManager());
+    }
+
+    protected function setUpDefaultServices()
+    {
+        $this->repositoryServiceManager();
         $this->contactDetailsRepository();
         $this->transportManagerRepository();
+        $this->setUpAbstractCommandHandlerServices();
     }
 
     /**
@@ -391,47 +391,47 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $repositoryServiceManager = $this->repositoryServiceManager();
         if (! $repositoryServiceManager->has('ContactDetails')) {
-            $builder = new RepositoryMockBuilder(ContactDetails::class);
-            $builder->setEntityBuilder(function ($id) {
+            $instance = $this->setUpMockService(ContactDetails::class);
+            $instance->allows('fetchById')->andReturnUsing(function ($id) {
                 $entity = new ContactDetailsEntity(new RefData(ContactDetailsEntity::CONTACT_TYPE_TRANSPORT_MANAGER));
                 $entity->setId($id);
                 return $entity;
-            });
-            $repositoryServiceManager->setService('ContactDetails', $builder->build());
+            })->byDefault();
+            $instance->allows('getReference')->andReturnUsing(function ($class, $id) {
+                $entity = new $class();
+                $entity->setId($id);
+                return $entity;
+            })->byDefault();
+            $repositoryServiceManager->setService('ContactDetails', $instance);
         }
         return $repositoryServiceManager->get('ContactDetails');
     }
 
     /**
-     * @return MockInterface|TransportManager
+     * @return MockInterface
      */
     protected function transportManagerRepository(): MockInterface
     {
         $repositoryServiceManager = $this->repositoryServiceManager();
         if (! $repositoryServiceManager->has('TransportManager')) {
-            $builder = new RepositoryMockBuilder(TransportManager::class);
-            $builder->setEntityBuilder(function ($id) {
+            $instance = $this->setUpMockService(TransportManager::class);
+            $instance->allows('fetchById')->andReturnUsing(function ($id) {
                 $entity = new TransportManagerEntity();
                 $entity->setId($id);
                 return $entity;
-            });
-            $repositoryServiceManager->setService('TransportManager', $builder->build());
+            })->byDefault();
+            $repositoryServiceManager->setService('TransportManager', $instance);
         }
         return $repositoryServiceManager->get('TransportManager');
     }
 
-    protected function setUpSut()
+    protected function initReferences()
     {
-        return $this->sut->createService($this->commandHandlerManager());
-    }
+        $this->refData = [
+            TransportManagerEntity::TRANSPORT_MANAGER_STATUS_CURRENT,
+            TransportManagerEntity::TRANSPORT_MANAGER_TYPE_BOTH
+        ];
 
-    /**
-     * @param string $repositoryClass
-     * @param string $entityClass
-     * @return MockInterface
-     */
-    protected function setUpMockRepository(string $repositoryClass, string $entityClass): MockInterface
-    {
-        return (new RepositoryMockBuilder($repositoryClass, $entityClass))->build();
+        parent::initReferences();
     }
 }

@@ -31,8 +31,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\Json\Json as LaminasJson;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
-use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 
 /**
  * Command Handler Test Case
@@ -42,7 +40,6 @@ use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 abstract class CommandHandlerTestCase extends MockeryTestCase
 {
     use ValidateMockRepoTypeTrait;
-    use MocksServicesTrait;
 
     /** @var \Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler */
     protected $sut;
@@ -548,59 +545,5 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $licence->setTrafficArea($ta);
 
         return $licence;
-    }
-
-    protected function setUpDefaultServices()
-    {
-        $this->repositoryServiceManager();
-        $this->commandHandlerManager();
-        $this->serviceManager->setService('UpdateOperatingCentreHelper', $this->setUpMockService(UpdateOperatingCentreHelper::class));
-        $this->serviceManager->setService('QueryHandlerManager', $this->setUpMockService(QueryHandlerManager::class));
-        $this->serviceManager->setService(PidIdentityProvider::class, $this->setUpMockService(PidIdentityProvider::class));
-        $this->serviceManager->setService('TransactionManager', $this->setUpMockService(TransactionManagerInterface::class));
-        $this->serviceManager->setService(CacheEncryption::class, $this->setUpMockService(CacheEncryption::class));
-    }
-
-    /**
-     * @return CommandHandlerManager
-     */
-    protected function commandHandlerManager(): CommandHandlerManager
-    {
-        if (! $this->serviceManager->has('CommandHandlerManager')) {
-            $instance = $this->setUpCommandHandlerManager();
-            $this->serviceManager->setService('CommandHandlerManager', $instance);
-        }
-        return $this->serviceManager->get('CommandHandlerManager');
-    }
-
-    /**
-     * @return m\MockInterface|CommandHandlerManager
-     */
-    protected function setUpCommandHandlerManager(): m\MockInterface
-    {
-        $instance = m::mock(CommandHandlerManager::class)->makePartial();
-        $instance->setServiceLocator($this->serviceManager);
-        $instance->allows('handleCommand')->andReturnUsing(function () {
-            return new Result();
-        })->byDefault();
-        return $instance;
-    }
-
-    /**
-     * @return RepositoryServiceManager
-     */
-    protected function repositoryServiceManager(): RepositoryServiceManager
-    {
-        if (! $this->serviceManager->has('RepositoryServiceManager')) {
-            $instance = new RepositoryServiceManager();
-            $this->serviceManager->setService('RepositoryServiceManager', $instance);
-            $this->setUpRepositories();
-        }
-        return $this->serviceManager->get('RepositoryServiceManager');
-    }
-
-    protected function setUpRepositories(): void
-    {
-        // Register any repositories needed in the RepositoryServiceManager which is accessible through $this->serviceManager
     }
 }

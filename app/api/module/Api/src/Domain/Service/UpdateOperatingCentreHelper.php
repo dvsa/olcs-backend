@@ -1,21 +1,18 @@
 <?php
 
-/**
- * Update Operating Centre Helper
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Service;
 
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as UpdateLicenceOperatingCentres;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateApplicationOperatingCentres;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
- * Update Operating Centre Helper
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @see \Dvsa\OlcsTest\Api\Domain\Service\UpdateOperatingCentreHelperTest
  */
 class UpdateOperatingCentreHelper implements FactoryInterface
 {
@@ -61,8 +58,16 @@ class UpdateOperatingCentreHelper implements FactoryInterface
         }
     }
 
-    public function validateTotalAuthVehicles($entity, $command, $totals)
+    /**
+     * @param Licence|Application $entity
+     * @param UpdateLicenceOperatingCentres|UpdateApplicationOperatingCentres $command
+     * @param array $totals
+     */
+    public function validateTotalAuthVehicles($entity, $command, array $totals)
     {
+        assert($command instanceof UpdateLicenceOperatingCentres || $command instanceof UpdateApplicationOperatingCentres);
+        assert($entity instanceof Licence || $entity instanceof Application);
+
         if ($totals['noOfOperatingCentres'] === 0) {
             $this->addMessage('totAuthVehicles', self::ERR_OC_V_4);
         }
@@ -103,8 +108,14 @@ class UpdateOperatingCentreHelper implements FactoryInterface
         }
     }
 
+    /**
+     * @param Licence|Application $entity
+     * @param UpdateLicenceOperatingCentres|UpdateApplicationOperatingCentres $command
+     */
     public function validatePsv($entity, $command)
     {
+        assert($command instanceof UpdateLicenceOperatingCentres || $command instanceof UpdateApplicationOperatingCentres);
+        assert($entity instanceof Licence || $entity instanceof Application);
         if ($entity->isRestricted() && $command->getTotAuthVehicles() > 2) {
             $this->addMessage('totAuthVehicles', self::ERR_OC_R_1);
         }
