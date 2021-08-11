@@ -11,67 +11,23 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandlerManagerMockBuilder;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicences as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandlerManagerMockBuilder;
-use Dvsa\OlcsTest\Api\Domain\Repository\CommunityLicenceRepositoryMockBuilder;
-use Dvsa\OlcsTest\Api\Domain\Repository\LicenceRepositoryMockBuilder;
-use Dvsa\OlcsTest\Api\Domain\Repository\RepositoryServiceManagerBuilder;
-use Dvsa\OlcsTest\Api\Domain\Repository\ResolvesMockRepositoriesFromServiceLocatorsTrait;
-use Dvsa\OlcsTest\Builder\ServiceManagerBuilder;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use ZfcRbac\Service\AuthorizationService;
 use Mockery\MockInterface;
+use Dvsa\OlcsTest\MocksRepositoriesTrait;
+use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\Api\Domain\Repository\MocksLicenceRepositoryTrait;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicenceEntity;
+use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class CommunityLicencesTest extends QueryHandlerTestCase
 {
-    use ResolvesMockRepositoriesFromServiceLocatorsTrait;
-
-    public function setUp(): void
-    {
-        $this->sut = new CommunityLicencesQueryHandler();
-    }
-
-    /**
-     * @return array
-     */
-    protected function setUpDefaultRepositories(): array
-    {
-        return [
-            CommunityLicenceRepositoryMockBuilder::ALIAS => (new CommunityLicenceRepositoryMockBuilder())->build(),
-            LicenceRepositoryMockBuilder::ALIAS => (new LicenceRepositoryMockBuilder())->build(),
-        ];
-    }
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-    public function setUpDefaultServices(ServiceManager $serviceManager)
-    {
-        $this->setUpQueryHandler($serviceManager);
-        $serviceManager->setService(RepositoryServiceManagerBuilder::ALIAS, (new RepositoryServiceManagerBuilder(static::setUpDefaultRepositories()))->build());
-        $serviceManager->setService(AuthorizationService::class, $this->setUpAuthorizationService());
-        $serviceManager->setService(CommandHandlerManagerMockBuilder::ALIAS, (new CommandHandlerManagerMockBuilder($serviceManager))->build());
-    }
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-    protected function setUpQueryHandler(ServiceManager $serviceManager)
-    {
-        $queryHandlerBuilder = new QueryHandlerManagerMockBuilder();
-        $queryHandler = $queryHandlerBuilder->build($serviceManager);
-        $queryHandlerBuilder->register($queryHandler);
-    }
-
-    /**
-     * @return MockInterface|AuthorizationService
-     */
-    protected function setUpAuthorizationService(): MockInterface
-    {
-        $service = m::mock(AuthorizationService::class);
-        $service->shouldReceive('isGranted')->andReturn(false)->byDefault();
-        return $service;
-    }
+    use MocksRepositoriesTrait;
+    use MocksServicesTrait;
+    use MocksLicenceRepositoryTrait;
 
     public function testHandleQueryIsDefined()
     {
@@ -85,9 +41,10 @@ class CommunityLicencesTest extends QueryHandlerTestCase
     public function testHandleQueryReturnsAnArray()
     {
         // SetUp
-        $serviceManager = (new ServiceManagerBuilder([$this, 'setUpDefaultServices']))->build();
-        $query = Qry::create(['licence' => 1]);
-        $queryHandler = $this->initializeQueryHandler($this->sut, $serviceManager);
+        $licence = LicenceBuilder::aLicence()->build();
+        $this->injectEntities($licence);
+        $query = Qry::create(['licence' => $licence->getId()]);
+        $queryHandler = $this->initializeQueryHandler($this->sut, $this->serviceManager());
 
         // Execute
         $result = $queryHandler->handleQuery($query);
@@ -113,12 +70,12 @@ class CommunityLicencesTest extends QueryHandlerTestCase
     public function testHandleQueryReturnsAnArrayWithTheTotActiveCommunityLicencesValue()
     {
         // SetUp
-        $serviceManager = (new ServiceManagerBuilder([$this, 'setUpDefaultServices']))->build();
-        $query = Qry::create(['licence' => 1]);
-        $queryHandler = $this->initializeQueryHandler($this->sut, $serviceManager);
-        $communityLicenceRepository = $this->resolveMockRepository($serviceManager, CommunityLicenceRepositoryMockBuilder::ALIAS);
+        $licence = LicenceBuilder::aLicence()->build();
+        $this->injectEntities($licence);
+        $query = Qry::create(['licence' => $licence->getId()]);
+        $queryHandler = $this->initializeQueryHandler($this->sut, $this->serviceManager());
         $expectedCount = 1234;
-        $communityLicenceRepository->shouldReceive('countActiveByLicenceId')->andReturn($expectedCount);
+        $this->communityLicenceRepository()->shouldReceive('countActiveByLicenceId')->andReturn($expectedCount);
 
         // Execute
         $result = $queryHandler->handleQuery($query);
@@ -193,5 +150,67 @@ class CommunityLicencesTest extends QueryHandlerTestCase
         ];
 
         $this->assertEquals($result, $expected);
+    }
+
+    public function setUp(): void
+    {
+        $this->setUpServiceManager();
+        $this->sut = new CommunityLicencesQueryHandler();
+    }
+
+    /**
+     * @param ServiceManager $serviceManager
+     */
+    public function setUpDefaultServices(ServiceManager $serviceManager)
+    {
+        $this->setUpQueryHandler($serviceManager);
+        $this->repositoryServiceManager();
+        $this->licenceRepository();
+        $this->communityLicenceRepository();
+        $serviceManager->setService(AuthorizationService::class, $this->setUpAuthorizationService());
+        $serviceManager->setService(CommandHandlerManagerMockBuilder::ALIAS, (new CommandHandlerManagerMockBuilder($serviceManager))->build());
+    }
+
+    /**
+     * @return MockInterface|CommunityLicRepo
+     */
+    protected function communityLicenceRepository(): MockInterface
+    {
+        $repositoryServiceManager = $this->repositoryServiceManager();
+        if (! $repositoryServiceManager->has('CommunityLic')) {
+            $instance = $this->setUpMockService(CommunityLicRepo::class);
+            $instance->allows('fetchOfficeCopy')->andReturnUsing(function (int $id) {
+                $entity = new CommunityLicenceEntity();
+                $entity->setStatus(new RefData(CommunityLicenceEntity::STATUS_ACTIVE));
+                $entity->setId($id);
+                return $entity;
+            })->byDefault();
+            $instance->allows('fetchList')->andReturn([])->byDefault();
+            $instance->allows('fetchCount')->andReturn(0)->byDefault();
+            $instance->allows('hasRows')->andReturn(true)->byDefault();
+            $instance->allows('countActiveByLicenceId')->andReturn(0)->byDefault();
+            $repositoryServiceManager->setService('CommunityLic', $instance);
+        }
+        return $repositoryServiceManager->get('CommunityLic');
+    }
+
+    /**
+     * @param ServiceManager $serviceManager
+     */
+    protected function setUpQueryHandler(ServiceManager $serviceManager)
+    {
+        $queryHandlerBuilder = new QueryHandlerManagerMockBuilder();
+        $queryHandler = $queryHandlerBuilder->build($serviceManager);
+        $queryHandlerBuilder->register($queryHandler);
+    }
+
+    /**
+     * @return MockInterface|AuthorizationService
+     */
+    protected function setUpAuthorizationService(): MockInterface
+    {
+        $service = m::mock(AuthorizationService::class);
+        $service->shouldReceive('isGranted')->andReturn(false)->byDefault();
+        return $service;
     }
 }

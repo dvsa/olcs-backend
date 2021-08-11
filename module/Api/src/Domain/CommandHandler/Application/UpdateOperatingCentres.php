@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 
 /**
  * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\UpdateOperatingCentresTest
+ * @see \Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres
  */
 final class UpdateOperatingCentres extends AbstractCommandHandler implements TransactionedInterface
 {
@@ -148,10 +149,12 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
                 $this->updateHelper->validateEnforcementArea($application, $command);
             }
 
+            $totals = $this->getTotals($application);
+
             if ($application->isPsv()) {
                 $this->updateHelper->validatePsv($application, $command);
             } else {
-                $this->updateHelper->validateTotalAuthTrailers($command, $this->getTotals($application));
+                $this->updateHelper->validateTotalAuthTrailers($command, $totals);
             }
 
             if ($application->canHaveCommunityLicences()
@@ -160,7 +163,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
                 $this->updateHelper->addMessage('totCommunityLicences', self::ERR_OC_CL_1);
             }
 
-            $this->updateHelper->validateTotalAuthVehicles($application, $command, $this->getTotals($application));
+            $this->updateHelper->validateTotalAuthVehicles($application, $command, $totals);
         }
 
         $messages = $this->updateHelper->getMessages();

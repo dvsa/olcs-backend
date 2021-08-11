@@ -14,6 +14,9 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\OlcsTest\Api\Entity\Application\ApplicationBuilder;
+use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
 
 /**
  * Update Operating Centre Helper Test
@@ -61,10 +64,13 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     /**
      * @dataProvider validateTotalAuthVehiclesProvider
      */
-    public function testValdiateTotalAuthVehicles($isRestricted, $data, $totals, $expected)
+    public function testValidateTotalAuthVehicles($isRestricted, $data, $totals, $expected)
     {
-        $entity = m::mock();
-        $entity->shouldReceive('isRestricted')->andReturn($isRestricted);
+        $licenceBuilder = LicenceBuilder::aLicence();
+        if ($isRestricted) {
+            $licenceBuilder->ofTypeRestricted();
+        }
+        $entity = ApplicationBuilder::applicationForLicence($licenceBuilder)->build();
 
         $this->sut->validateTotalAuthVehicles($entity, UpdateOperatingCentres::create($data), $totals);
 
@@ -74,7 +80,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     /**
      * @dataProvider validateTotalAuthTrailersProvider
      */
-    public function testValdiateTotalAuthTrailers($data, $totals, $expected)
+    public function testValidateTotalAuthTrailers($data, $totals, $expected)
     {
         $this->sut->validateTotalAuthTrailers(UpdateOperatingCentres::create($data), $totals);
 
@@ -86,8 +92,11 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
      */
     public function testValidatePsv($canHaveLargeVehicles, $isRestricted, $data, $expected)
     {
-        $entity = m::mock();
-        $entity->shouldReceive('isRestricted')->andReturn($isRestricted);
+        $licenceBuilder = LicenceBuilder::aPsvLicence();
+        if ($isRestricted) {
+            $licenceBuilder->ofTypeRestricted();
+        }
+        $entity = ApplicationBuilder::applicationForLicence($licenceBuilder)->build();
 
         $this->sut->validatePsv($entity, UpdateOperatingCentres::create($data));
 
