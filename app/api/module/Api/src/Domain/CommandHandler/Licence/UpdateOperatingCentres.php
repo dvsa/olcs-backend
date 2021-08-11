@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 
 /**
  * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence\UpdateOperatingCentresTest
+ * @see \Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres
  */
 final class UpdateOperatingCentres extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
@@ -48,8 +49,8 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
     {
         assert($command instanceof Cmd);
 
-        /** @var Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        assert($licence instanceof Licence);
 
         $this->validate($licence, $command);
 
@@ -78,14 +79,15 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
             if (!$licence->getOperatingCentres()->isEmpty()) {
                 $this->updateHelper->validateEnforcementArea($licence, $command);
             }
+            $totals = $this->getTotals($licence);
 
             if ($licence->isPsv()) {
                 $this->updateHelper->validatePsv($licence, $command);
             } else {
-                $this->updateHelper->validateTotalAuthTrailers($command, $this->getTotals($licence));
+                $this->updateHelper->validateTotalAuthTrailers($command, $totals);
             }
 
-            $this->updateHelper->validateTotalAuthVehicles($licence, $command, $this->getTotals($licence));
+            $this->updateHelper->validateTotalAuthVehicles($licence, $command, $totals);
         }
 
         $messages = $this->updateHelper->getMessages();
@@ -109,8 +111,8 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         $this->totals['minTrailerAuth'] = 0;
         $this->totals['maxTrailerAuth'] = 0;
 
-        /** @var LicenceOperatingCentre $loc */
         foreach ($locs as $loc) {
+            assert($loc instanceof LicenceOperatingCentre);
             $this->totals['noOfOperatingCentres']++;
 
             $this->totals['minVehicleAuth'] = max([$this->totals['minVehicleAuth'], $loc->getNoOfVehiclesRequired()]);

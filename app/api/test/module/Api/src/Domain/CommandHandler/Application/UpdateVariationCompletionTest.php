@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Transfer\Query\Licence\Licence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateVariationCompletion;
@@ -119,7 +118,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 $this->vocHelper
                     ->shouldReceive('getListDataForApplication')
                     ->with($application)
-                    ->twice()
+                    ->once()
                     ->andReturn([]);
             }
             $this->updateHelper
