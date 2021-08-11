@@ -8,16 +8,17 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
-use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery\MockInterface;
 use Mockery as m;
+use Dvsa\OlcsTest\MocksRepositoriesTrait;
 
 trait MocksAbstractCommandHandlerServicesTrait
 {
+    use MocksRepositoriesTrait;
+
     /**
      * @return ServiceManager
      */
@@ -33,7 +34,6 @@ trait MocksAbstractCommandHandlerServicesTrait
     {
         $this->commandHandlerManager();
         $this->repositoryServiceManager();
-        $this->updateOperatingCentreHelper();
         $this->queryHandlerManager();
         $this->pidIdentityProvider();
         $this->transactionManager();
@@ -63,32 +63,6 @@ trait MocksAbstractCommandHandlerServicesTrait
             return new Result();
         })->byDefault();
         return $instance;
-    }
-
-    /**
-     * @return RepositoryServiceManager
-     */
-    protected function repositoryServiceManager(): RepositoryServiceManager
-    {
-        if (! $this->serviceManager()->has('RepositoryServiceManager')) {
-            $instance = new RepositoryServiceManager();
-            $this->serviceManager()->setService('RepositoryServiceManager', $instance);
-        }
-        return $this->serviceManager()->get('RepositoryServiceManager');
-    }
-
-    /**
-     * @return UpdateOperatingCentreHelper|MockInterface
-     */
-    protected function updateOperatingCentreHelper(): MockInterface
-    {
-        if (! $this->serviceManager()->has('UpdateOperatingCentreHelper')) {
-            $this->serviceManager()->setService(
-                'UpdateOperatingCentreHelper',
-                $this->setUpMockService(UpdateOperatingCentreHelper::class)
-            );
-        }
-        return $this->serviceManager()->get('UpdateOperatingCentreHelper');
     }
 
     /**

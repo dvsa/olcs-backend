@@ -20,12 +20,8 @@ use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateOperatingCentresCmd;
 
 /**
- * Update Variation Completion
- *
- * @NOTE If there are future changes to these rules, it might be worth slightly changing how this works, as it is
- * getting messy
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @see \Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres
+ * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\UpdateVariationCompletionTest
  */
 class UpdateVariationCompletion extends AbstractCommandHandler implements
     TransactionedInterface,
@@ -705,17 +701,14 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
             'totAuthTrailers' => $this->application->getTotAuthTrailers(),
         ];
         $command = UpdateOperatingCentresCmd::create($data);
+        $totals = $this->getAuthorityTotals();
         if ($this->application->isPsv()) {
             $this->updateHelper->validatePsv($this->application, $command);
         } else {
-            $this->updateHelper->validateTotalAuthTrailers($command, $this->getAuthorityTotals());
+            $this->updateHelper->validateTotalAuthTrailers($command, $totals);
         }
 
-        $this->updateHelper->validateTotalAuthVehicles(
-            $this->application,
-            $command,
-            $this->getAuthorityTotals()
-        );
+        $this->updateHelper->validateTotalAuthVehicles($this->application, $command, $totals);
 
         return $this->updateHelper->getMessages();
     }
