@@ -18,10 +18,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres as Comman
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
+use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
+use ZfcRbac\Service\AuthorizationService;
+use Hamcrest\Core\AllOf;
+use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
+use Dvsa\OlcsTest\Api\Domain\Repository\MocksLicenceRepositoryTrait;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\ProvidesOperatingCentreVehicleAuthorizationConstraintsTrait;
 
 /**
  * @see \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres
@@ -30,12 +34,16 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 {
     use MocksServicesTrait;
     use MocksAbstractCommandHandlerServicesTrait;
+    use ProvidesOperatingCentreVehicleAuthorizationConstraintsTrait;
+    use MocksLicenceRepositoryTrait;
 
     protected const TOT_AUTH_VEHICLES_COMMAND_PROPERTY = 'totAuthVehicles';
     protected const ID_COMMAND_PROPERTY = 'id';
-    protected const A_NUMBER_OF_AUTHORIZED_VEHICLES = 2;
-    protected const DEFAULT_NUMBER_OF_AUTHORIZED_LGV_VEHICLES = null;
-    protected const LICENCE_ID = 1;
+    protected const A_NUMBER_OF_VEHICLES = 2;
+    protected const AN_ID = 1;
+    protected const VALIDATION_MESSAGES = ['A VALIDATION MESSAGE KEY' => 'A VALIDATION MESSAGE VALUE'];
+    protected const ONE_VEHICLE = 1;
+    protected const NO_VEHICLES = 0;
 
     /**
      * @test
@@ -79,13 +87,11 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($licence);
 
-        $expectedTotals = [
-            'noOfOperatingCentres' => 1,
-            'minVehicleAuth' => 10,
-            'maxVehicleAuth' => 10,
-            'minTrailerAuth' => 10,
-            'maxTrailerAuth' => 10
-        ];
+        $expectedTotals = AllOf::allOf(
+            IsArrayContainingKeyValuePair::hasKeyValuePair('noOfOperatingCentres', 1),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('minTrailerAuth', 10),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('maxTrailerAuth', 10)
+        );
 
         $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validatePsv')
             ->once()
@@ -135,15 +141,15 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($licence);
 
-        $expectedTotals = [
-            'noOfOperatingCentres' => 1,
-            'minVehicleAuth' => 10,
-            'maxVehicleAuth' => 10,
-            'minTrailerAuth' => 10,
-            'maxTrailerAuth' => 10
-        ];
+        $expectedTotals = AllOf::allOf(
+            IsArrayContainingKeyValuePair::hasKeyValuePair('noOfOperatingCentres', 1),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('minTrailerAuth', 10),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('maxTrailerAuth', 10)
+        );
 
-        $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validateTotalAuthTrailers')
+        $this->mockedSmServices['UpdateOperatingCentreHelper']
+            ->shouldIgnoreMissing()
+            ->shouldReceive('validateTotalAuthTrailers')
             ->once()
             ->with($command, $expectedTotals)
             ->shouldReceive('validateTotalAuthVehicles')
@@ -197,13 +203,11 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($licence);
 
-        $expectedTotals = [
-            'noOfOperatingCentres' => 1,
-            'minVehicleAuth' => 10,
-            'maxVehicleAuth' => 10,
-            'minTrailerAuth' => 10,
-            'maxTrailerAuth' => 10
-        ];
+        $expectedTotals = AllOf::allOf(
+            IsArrayContainingKeyValuePair::hasKeyValuePair('noOfOperatingCentres', 1),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('minTrailerAuth', 10),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('maxTrailerAuth', 10)
+        );
 
         $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validatePsv')
             ->once()
@@ -269,15 +273,15 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($licence);
 
-        $expectedTotals = [
-            'noOfOperatingCentres' => 1,
-            'minVehicleAuth' => 10,
-            'maxVehicleAuth' => 10,
-            'minTrailerAuth' => 10,
-            'maxTrailerAuth' => 10
-        ];
+        $expectedTotals = AllOf::allOf(
+            IsArrayContainingKeyValuePair::hasKeyValuePair('noOfOperatingCentres', 1),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('minTrailerAuth', 10),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('maxTrailerAuth', 10)
+        );
 
-        $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validateTotalAuthTrailers')
+        $this->mockedSmServices['UpdateOperatingCentreHelper']
+            ->shouldIgnoreMissing()
+            ->shouldReceive('validateTotalAuthTrailers')
             ->once()
             ->with($command, $expectedTotals)
             ->shouldReceive('validateTotalAuthVehicles')
@@ -310,11 +314,16 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_SavesALicence()
+    public function handleCommand_SavesALicence_WithValidVehicleAuthorizations()
     {
         // Setup
         $this->setUpSut();
-        $command = Cmd::create([static::ID_COMMAND_PROPERTY => static::LICENCE_ID]);
+        $licence = LicenceBuilder::aLicence()->withValidVehicleAuthorizations()->build();
+        $this->injectEntities($licence);
+        $command = Cmd::create([
+            static::ID_COMMAND_PROPERTY => $licence->getId(),
+            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => $licence->getTotAuthVehicles(),
+        ]);
 
         // Expect
         $this->licenceRepository()->expects('save')->withArgs(function ($licence) {
@@ -328,21 +337,22 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesALicence
+     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
      */
     public function handleCommand_SetsTotAuthVehicles_ForGoodsVehicleOperatingCentre()
     {
         // Setup
         $this->setUpSut();
-        $this->injectEntity($this->licenceForGoodsLicence($id = static::LICENCE_ID));
+        $licence = LicenceBuilder::aLicence()->withExtraOperatingCentreCapacityFor(static::ONE_VEHICLE)->build();
+        $this->injectEntities($licence);
         $command = Cmd::create([
-            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => static::A_NUMBER_OF_AUTHORIZED_VEHICLES,
-            static::ID_COMMAND_PROPERTY => $id,
+            static::ID_COMMAND_PROPERTY => $licence->getId(),
+            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => $expectedVehicleCount = $licence->getTotAuthVehicles() + static::ONE_VEHICLE,
         ]);
 
         // Expect
-        $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) {
-            $this->assertSame(static::A_NUMBER_OF_AUTHORIZED_VEHICLES, $licence->getTotAuthVehicles());
+        $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) use ($expectedVehicleCount) {
+            $this->assertSame($expectedVehicleCount, $licence->getTotAuthVehicles());
             return true;
         });
 
@@ -352,21 +362,123 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesALicence
+     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
      */
     public function handleCommand_SetsTotAuthVehicles_ForPsvOperatingCentre()
     {
         // Setup
         $this->setUpSut();
-        $this->injectEntity($this->licenceForPsv($id = static::LICENCE_ID));
+        $licence = LicenceBuilder::aPsvLicence()->withExtraOperatingCentreCapacityFor(static::ONE_VEHICLE)->build();
+        $this->injectEntities($licence);
         $command = Cmd::create([
-            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => static::A_NUMBER_OF_AUTHORIZED_VEHICLES,
-            static::ID_COMMAND_PROPERTY => $id,
+            static::ID_COMMAND_PROPERTY => $licence->getId(),
+            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => $expectedVehicleCount = $licence->getTotAuthVehicles() + static::ONE_VEHICLE,
         ]);
 
         // Expect
-        $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) {
-            $this->assertSame(static::A_NUMBER_OF_AUTHORIZED_VEHICLES, $licence->getTotAuthVehicles());
+        $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) use ($expectedVehicleCount) {
+            $this->assertSame($expectedVehicleCount, $licence->getTotAuthVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_ThrowsValidationException_WithAnyValidationMessages_FromTheUpdateHelper()
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $this->injectEntities(LicenceBuilder::aPsvLicence($id = static::AN_ID));
+        $command = Cmd::create([static::ID_COMMAND_PROPERTY => $id]);
+
+        // Expect
+        $this->updateHelper()->expects('getMessages')->andReturn($expectedMessages = static::VALIDATION_MESSAGES);
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionObject(new ValidationException($expectedMessages));
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_ValidatesPsvs_WhenCommandIsNotPartial()
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $this->injectEntities($licence = LicenceBuilder::aPsvLicence()->build());
+        $command = Cmd::create([static::ID_COMMAND_PROPERTY => $licence->getId()]);
+
+        // Expect
+        $this->updateHelper()->expects('validatePsv')->withArgs(function ($arg1, $arg2) use ($licence, $command) {
+            $this->assertSame($arg1, $licence);
+            $this->assertSame($arg2, $command);
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_ValidatesTotAuthVehiclesVehicles_WhenCommandIsNotPartial()
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $this->injectEntities($licence = LicenceBuilder::aLicence()->build());
+        $command = Cmd::create([static::ID_COMMAND_PROPERTY => $licence->getId()]);
+
+        // Expect
+        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($licence, $command) {
+            $this->assertSame($arg1, $licence);
+            $this->assertSame($arg2, $command);
+            $this->assertIsArray($arg3);
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @param array $operatingCentresVehicleCapacities
+     * @param array $expectedVehicleConstraints
+     * @test
+     * @depends handleCommand_ValidatesTotAuthVehiclesVehicles_WhenCommandIsNotPartial
+     * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
+     */
+    public function handleCommand_ValidatesTotAuthVehiclesVehicles_WhenCommandIsNotPartial_AgainstCorrectOperatingCentreVehicleConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $licence = LicenceBuilder::aLicence(static::AN_ID)->withOperatingCentresWithCapacitiesFor($operatingCentresVehicleCapacities)->build();
+        $this->injectEntities($licence);
+        $command = Cmd::create([static::ID_COMMAND_PROPERTY => $licence->getId()]);
+
+        // Expect
+        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicleConstraints, $operatingCentresVehicleCapacities) {
+            $this->assertIsArray($arg3);
+            foreach ($expectedVehicleConstraints as $key => $expectedTotal) {
+                $this->assertSame(
+                    $expectedTotal,
+                    $actualTotal = $arg3[$key] ?? null,
+                    sprintf('Failed to assert the value for "%s" total (%s) matched the expected value (%s)', $key, $actualTotal, $expectedTotal)
+                );
+            }
             return true;
         });
 
@@ -390,75 +502,45 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     protected function setUpDefaultServices()
     {
-        $this->serviceManager()->setService('UpdateOperatingCentreHelper', $this->setUpMockService(UpdateOperatingCentreHelper::class));
+        $this->authService();
+        $this->updateHelper();
         $this->setUpAbstractCommandHandlerServices();
         $this->licenceRepository();
     }
 
     /**
-     * @return m\MockInterface|Repository\Licence
+     * @return m\MockInterface|AuthorizationService
      */
-    protected function licenceRepository(): m\MockInterface
+    protected function authService(): m\MockInterface
     {
-        $repositoryServiceManager = $this->repositoryServiceManager();
-        if (! $repositoryServiceManager->has('Licence')) {
-            $instance = $this->setUpMockService(Repository\Licence::class);
-
-            // Inject default licence instance
-            $instance->allows('fetchUsingId')->andReturnUsing(function ($id) {
-                return $this->licenceForGoodsLicence($id);
-            })->byDefault();
-
-            $repositoryServiceManager->setService('Licence', $instance);
+        if (! $this->serviceManager()->has(AuthorizationService::class)) {
+            $instance = $this->setUpMockService(AuthorizationService::class);
+            $this->serviceManager()->setService(AuthorizationService::class, $instance);
         }
-        return $repositoryServiceManager->get('Licence');
+        return $this->serviceManager()->get(AuthorizationService::class);
     }
 
     /**
-     * @param object $entity
+     * @return UpdateOperatingCentreHelper|m\MockInterface
      */
-    protected function injectEntity(object $entity)
+    protected function updateHelper()
     {
-        assert(is_callable([$entity, 'getId']));
-        $this->licenceRepository()
-            ->allows('fetchUsingId')
-            ->withArgs(function (Cmd $command) use ($entity) {
-                return $command->getId() === $entity->getId();
-            })
-            ->andReturn($entity)
-            ->byDefault();
+        if (! $this->serviceManager()->has('UpdateOperatingCentreHelper')) {
+            $instance = new UpdateOperatingCentreHelper();
+            $instance->createService($this->serviceManager());
+            $this->serviceManager()->setService('UpdateOperatingCentreHelper', $instance);
+        }
+        return $this->serviceManager()->get('UpdateOperatingCentreHelper');
     }
 
     /**
-     * @param mixed $id
-     * @return Licence
+     * @return m\MockInterface|UpdateOperatingCentreHelper
      */
-    protected function licenceForPsv($id): Licence
+    protected function overrideUpdateHelperWithMock(): m\MockInterface
     {
-        $instance = new Licence($this->organisation(), new RefData(Licence::LICENCE_STATUS_VALID));
-        $instance->setId($id);
-        $instance->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_PSV));
-        return $instance;
-    }
-
-    /**
-     * @param mixed $id
-     * @return Licence
-     */
-    protected function licenceForGoodsLicence($id): Licence
-    {
-        $instance = new Licence($this->organisation(), new RefData(Licence::LICENCE_STATUS_VALID));
-        $instance->setId($id);
-        $instance->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
-        return $instance;
-    }
-
-    /**
-     * @return Organisation
-     */
-    protected function organisation(): Organisation
-    {
-        return new Organisation();
+        $instance = $this->setUpMockService(UpdateOperatingCentreHelper::class);
+        $this->serviceManager()->setService('UpdateOperatingCentreHelper', $instance);
+        return $this->serviceManager()->get('UpdateOperatingCentreHelper');
     }
 
     /**

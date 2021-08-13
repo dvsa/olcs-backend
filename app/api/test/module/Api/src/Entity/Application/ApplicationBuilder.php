@@ -15,8 +15,6 @@ class ApplicationBuilder implements BuilderInterface
 {
     protected const AN_ID = 1;
     protected const ANOTHER_ID = 2;
-    protected const NO_EXTRA_HGVS = 0;
-    protected const NO_EXTRA_LGVS = 0;
 
     /**
      * @var Application
@@ -54,14 +52,12 @@ class ApplicationBuilder implements BuilderInterface
     }
 
     /**
-     * @param int $hgvCount
-     * @param int $lgvCount
+     * @param int $vehicleCount
      * @return $this
      */
-    public function authorizedFor(int $hgvCount = 0, int $lgvCount = 0): self
+    public function authorizedFor(int $vehicleCount = 0): self
     {
-        $this->instance->updateTotAuthHgvVehicles($hgvCount);
-        $this->instance->updateTotAuthLgvVehicles($lgvCount);
+        $this->instance->setTotAuthVehicles($vehicleCount);
         return $this;
     }
 
@@ -71,33 +67,29 @@ class ApplicationBuilder implements BuilderInterface
     public function withNoExtraOperatingCentreCapacity(): self
     {
         $operatingCentre = ApplicationOperatingCentreBuilder::forApplication($this->instance, static::AN_ID)->build();
-        $operatingCentre->updateNoOfHgvVehiclesRequired($this->instance->getTotAuthHgvVehicles());
-        $operatingCentre->updateNoOfLgvVehiclesRequired($this->instance->getTotAuthLgvVehicles());
+        $operatingCentre->setNoOfVehiclesRequired($this->instance->getTotAuthVehicles());
         $this->instance->setOperatingCentres(new ArrayCollection([$operatingCentre]));
         return $this;
     }
 
     /**
-     * @param int $extraHgvs
-     * @param int $extraLgvs
+     * @param int $extraVehicles
      * @return $this
      */
-    public function withExtraOperatingCentreCapacityFor(int $extraHgvs, int $extraLgvs = 0): self
+    public function withExtraOperatingCentreCapacityFor(int $extraVehicles): self
     {
         $operatingCentre1 = ApplicationOperatingCentreBuilder::forApplication($this->instance, static::AN_ID)->build();
-        $operatingCentre1->updateNoOfHgvVehiclesRequired($this->instance->getTotAuthHgvVehicles());
-        $operatingCentre1->updateNoOfLgvVehiclesRequired($this->instance->getTotAuthLgvVehicles());
+        $operatingCentre1->setNoOfVehiclesRequired($this->instance->getTotAuthVehicles());
 
         $operatingCentre2 = ApplicationOperatingCentreBuilder::forApplication($this->instance, static::ANOTHER_ID)->build();
-        $operatingCentre2->updateNoOfHgvVehiclesRequired($extraHgvs);
-        $operatingCentre2->updateNoOfLgvVehiclesRequired($extraLgvs);
+        $operatingCentre2->setNoOfVehiclesRequired($extraVehicles);
 
         $this->instance->setOperatingCentres(new ArrayCollection([$operatingCentre1, $operatingCentre2]));
         return $this;
     }
 
     /**
-     * @param array[] $operatingCentresCapacities Arrays of operating centre capacities in the format [hgvs, lgvs]
+     * @param array[] $operatingCentresCapacities Arrays of operating centre capacities in the format [vehicles]
      * @return $this
      */
     public function withOperatingCentresWithCapacitiesFor(array $operatingCentresCapacities): self
@@ -105,7 +97,7 @@ class ApplicationBuilder implements BuilderInterface
         $operatingCentres = [];
         foreach (array_values($operatingCentresCapacities) as $i => $operatingCentreCapacities) {
             $operatingCentres[] = ApplicationOperatingCentreBuilder::forApplication($this->instance, $i)
-                ->withVehicleCapacities($operatingCentreCapacities[0], $operatingCentreCapacities[1])
+                ->withVehicleCapacity(...$operatingCentreCapacities)
                 ->build();
         }
         $this->instance->setOperatingCentres(new ArrayCollection($operatingCentres));

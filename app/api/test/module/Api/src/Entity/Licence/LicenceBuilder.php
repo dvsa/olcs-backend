@@ -14,10 +14,8 @@ class LicenceBuilder implements BuilderInterface
 {
     protected const AN_ID = 1;
     protected const ANOTHER_ID = 2;
-    protected const ONE_HGV = 1;
-    protected const ONE_LGV = 1;
-    protected const NO_EXTRA_HGVS = 0;
-    protected const NO_EXTRA_LGVS = 0;
+    protected const ONE_VEHICLE = 1;
+    protected const NO_EXTRA_VEHICLES = 0;
 
     /**
      * @var Licence
@@ -70,14 +68,12 @@ class LicenceBuilder implements BuilderInterface
     }
 
     /**
-     * @param int $hgvCount
-     * @param int $lgvCount
+     * @param int $vehicleCount
      * @return $this
      */
-    public function authorizedFor(int $hgvCount = 0, int $lgvCount = 0): self
+    public function authorizedFor(int $vehicleCount = 0): self
     {
-        $this->instance->updateTotAuthHgvVehicles($hgvCount);
-        $this->instance->updateTotAuthLgvVehicles($lgvCount);
+        $this->instance->setTotAuthVehicles($vehicleCount);
         return $this;
     }
 
@@ -86,30 +82,27 @@ class LicenceBuilder implements BuilderInterface
      */
     public function withNoExtraOperatingCentreCapacity(): self
     {
-        return $this->withExtraOperatingCentreCapacityFor(static::NO_EXTRA_HGVS, static::NO_EXTRA_LGVS);
+        return $this->withExtraOperatingCentreCapacityFor(static::NO_EXTRA_VEHICLES);
     }
 
     /**
-     * @param int $extraHgvs
-     * @param int $extraLgvs
+     * @param int $extraVehicles
      * @return $this
      */
-    public function withExtraOperatingCentreCapacityFor(int $extraHgvs, int $extraLgvs = 0): self
+    public function withExtraOperatingCentreCapacityFor(int $extraVehicles): self
     {
         $operatingCentre1 = LicenceOperatingCentreBuilder::forLicence($this->instance, static::AN_ID)->build();
-        $operatingCentre1->updateNoOfHgvVehiclesRequired($this->instance->getTotAuthHgvVehicles());
-        $operatingCentre1->updateNoOfLgvVehiclesRequired($this->instance->getTotAuthLgvVehicles());
+        $operatingCentre1->setNoOfVehiclesRequired($this->instance->getTotAuthVehicles());
 
         $operatingCentre2 = LicenceOperatingCentreBuilder::forLicence($this->instance, static::ANOTHER_ID)->build();
-        $operatingCentre2->updateNoOfHgvVehiclesRequired($extraHgvs);
-        $operatingCentre2->updateNoOfLgvVehiclesRequired($extraLgvs);
+        $operatingCentre2->setNoOfVehiclesRequired($extraVehicles);
 
         $this->instance->setOperatingCentres(new ArrayCollection([$operatingCentre1, $operatingCentre2]));
         return $this;
     }
 
     /**
-     * @param array[] $operatingCentresCapacities Arrays of operating centre capacities in the format [hgvs, lgvs]
+     * @param array[] $operatingCentresCapacities Arrays of operating centre capacities in the format [vehicles]
      * @return $this
      */
     public function withOperatingCentresWithCapacitiesFor(array $operatingCentresCapacities): self
@@ -117,7 +110,7 @@ class LicenceBuilder implements BuilderInterface
         $operatingCentres = [];
         foreach (array_values($operatingCentresCapacities) as $i => $operatingCentreCapacities) {
             $operatingCentres[] = LicenceOperatingCentreBuilder::forLicence($this->instance, $i)
-                ->withVehicleCapacities($operatingCentreCapacities[0], $operatingCentreCapacities[1])
+                ->withVehicleCapacity(...$operatingCentreCapacities)
                 ->build();
         }
         $this->instance->setOperatingCentres(new ArrayCollection($operatingCentres));
@@ -129,9 +122,8 @@ class LicenceBuilder implements BuilderInterface
      */
     public function withValidVehicleAuthorizations(): self
     {
-        $this->withOperatingCentresWithCapacitiesFor([[static::ONE_HGV, static::ONE_LGV]]);
-        $this->instance->updateTotAuthHgvVehicles(static::ONE_HGV);
-        $this->instance->updateTotAuthLgvVehicles(static::ONE_LGV);
+        $this->withOperatingCentresWithCapacitiesFor([[static::ONE_VEHICLE]]);
+        $this->instance->setTotAuthVehicles(static::ONE_VEHICLE);
         return $this;
     }
 
