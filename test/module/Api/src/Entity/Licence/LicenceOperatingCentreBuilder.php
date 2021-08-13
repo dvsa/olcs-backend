@@ -31,25 +31,12 @@ class LicenceOperatingCentreBuilder implements BuilderInterface
     }
 
     /**
-     * @param int $hgvCapacity
-     * @param int $lgvCapacity
+     * @param int $noOfVehicles
      * @return self
      */
-    public function withVehicleCapacities(int $hgvCapacity, int $lgvCapacity): self
+    public function withVehicleCapacity(int $noOfVehicles): self
     {
-        $this->instance->updateNoOfHgvVehiclesRequired($hgvCapacity);
-        $this->instance->updateNoOfLgvVehiclesRequired($lgvCapacity);
-        return $this;
-    }
-
-    /**
-     * @param int $hgvCount
-     * @return self
-     */
-    public function requiringOnlyHgvs(int $hgvCount): self
-    {
-        $this->instance->updateNoOfHgvVehiclesRequired($hgvCount);
-        $this->instance->updateNoOfLgvVehiclesRequired(0);
+        $this->instance->setNoOfVehiclesRequired($noOfVehicles);
         return $this;
     }
 
