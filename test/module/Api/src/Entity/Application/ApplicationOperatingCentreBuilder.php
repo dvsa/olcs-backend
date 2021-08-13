@@ -31,14 +31,12 @@ class ApplicationOperatingCentreBuilder implements BuilderInterface
     }
 
     /**
-     * @param int $hgvCapacity
-     * @param int $lgvCapacity
+     * @param int $noOfVehicles
      * @return self
      */
-    public function withVehicleCapacities(int $hgvCapacity, int $lgvCapacity): self
+    public function withVehicleCapacity(int $noOfVehicles): self
     {
-        $this->instance->updateNoOfHgvVehiclesRequired($hgvCapacity);
-        $this->instance->updateNoOfLgvVehiclesRequired($lgvCapacity);
+        $this->instance->setNoOfVehiclesRequired($noOfVehicles);
         return $this;
     }
 

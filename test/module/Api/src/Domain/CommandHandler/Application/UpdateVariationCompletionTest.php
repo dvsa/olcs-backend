@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepository;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateVariationCompletion;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion as Cmd;
@@ -16,385 +16,64 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateOperatingCentresCmd;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
+use Hamcrest\Core\AllOf;
+use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
+use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres;
+use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
+use Dvsa\OlcsTest\Api\Entity\Application\ApplicationBuilder;
+use Dvsa\OlcsTest\Api\Domain\Repository\MocksApplicationRepositoryTrait;
+use Dvsa\OlcsTest\Api\Domain\Repository\MocksApplicationOperatingCentreRepositoryTrait;
+use Dvsa\OlcsTest\Api\Domain\Repository\MocksLicenceOperatingCentreRepositoryTrait;
+use Dvsa\OlcsTest\Api\Domain\Repository\MocksUserRepositoryTrait;
 
 /**
- * Update Variation Completion Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @see UpdateVariationCompletion
  */
 class UpdateVariationCompletionTest extends CommandHandlerTestCase
 {
-    /** @var  UpdateOperatingCentreHelper */
+    use MocksServicesTrait;
+    use MocksAbstractCommandHandlerServicesTrait;
+    use ProvidesOperatingCentreVehicleAuthorizationConstraintsTrait;
+    use MocksApplicationRepositoryTrait;
+    use MocksApplicationOperatingCentreRepositoryTrait;
+    use MocksLicenceOperatingCentreRepositoryTrait;
+    use MocksUserRepositoryTrait;
+
+    protected const VALIDATION_MESSAGES = ['A VALIDATION MESSAGE KEY' => 'A VALIDATION MESSAGE VALUE'];
+    protected const NO_VALIDATION_MESSAGES = [];
+    protected const AN_ID = 1;
+    protected const ID_PROPERTY = 'id';
+    protected const SECTION_PROPERTY = 'section';
+    protected const A_NUMBER_OF_VEHICLES = 7;
+    protected const DEFAULT_TOT_AUTH_VEHICLES = null;
+
+    /**
+     * @var  UpdateOperatingCentreHelper
+     * @deprecated Use new test structure where possible
+     */
     protected $updateHelper;
 
-    /** @var  VariationOperatingCentreHelper */
+    /**
+     * @var  VariationOperatingCentreHelper
+     * @deprecated Use new test structure where possible
+     */
     protected $vocHelper;
 
-    public function setUp(): void
-    {
-        $this->updateHelper = m::mock();
-        $this->vocHelper = m::mock();
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class),
-            'UpdateOperatingCentreHelper' => $this->updateHelper,
-            'VariationOperatingCentreHelper' => $this->vocHelper,
-        ];
-
-        $this->sut = new UpdateVariationCompletion();
-        $this->mockRepo('Application', Application::class);
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('isGranted')
-            ->with(Permission::INTERNAL_USER, null)
-            ->andReturn(false);
-
-        parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        $this->refData = [
-            LicenceEntity::LICENCE_CATEGORY_PSV,
-            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
-            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            LicenceEntity::LICENCE_TYPE_RESTRICTED
-        ];
-
-        parent::initReferences();
-    }
-
     /**
-     * @dataProvider handleCommandProvider
+     * @test
      */
-    public function testHandleCommand(
-        $section,
-        ApplicationEntity $application,
-        LicenceEntity $licence,
-        array $previousStatuses = [],
-        array $expectedStatuses = [],
-        $expectedDeclarationConfirmation = '',
-        array $commandData = []
-    ) {
-        $data = [
-            'id' => 111,
-            'section' => $section,
-            'data' => $commandData
-        ];
-        $command = Cmd::create($data);
-
-        /** @var ApplicationCompletionEntity $ac */
-        $ac = $this->getConfiguredCompletion($previousStatuses);
-
-        $application->setLicence($licence);
-        $application->setApplicationCompletion($ac);
-
-        $totals = [
-            'noOfOperatingCentres' => 0,
-            'minVehicleAuth' => 0,
-            'maxVehicleAuth' => 0,
-            'minTrailerAuth' => 0,
-            'maxTrailerAuth' => 0,
-        ];
-
-        if ($section === 'operatingCentres') {
-            if ($application->isPsv()) {
-                $this->updateHelper
-                    ->shouldReceive('validatePsv')
-                    ->with($application, m::type(UpdateOperatingCentresCmd::class))
-                    ->getMock();
-
-                $this->vocHelper
-                    ->shouldReceive('getListDataForApplication')
-                    ->with($application)
-                    ->once()
-                    ->andReturn([]);
-            } else {
-                $this->updateHelper
-                    ->shouldReceive('validateTotalAuthTrailers')
-                    ->with(m::type(UpdateOperatingCentresCmd::class), $totals)
-                    ->getMock();
-
-                $this->vocHelper
-                    ->shouldReceive('getListDataForApplication')
-                    ->with($application)
-                    ->once()
-                    ->andReturn([]);
-            }
-            $this->updateHelper
-                ->shouldReceive('validateTotalAuthVehicles')
-                ->with($application, m::type(UpdateOperatingCentresCmd::class), $totals)
-                ->once()
-                ->shouldReceive('getMessages')
-                ->andReturn(['foo'])
-                ->once();
-        }
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($application)
-            ->shouldReceive('save')
-            ->once()
-            ->with($application);
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [],
-            'messages' => [
-                'Updated variation completion status'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-        $this->assertExpectedStatuses($expectedStatuses, $ac);
-        if ($section !== 'declarationsInternal') {
-            $this->assertEquals($expectedDeclarationConfirmation, $application->getDeclarationConfirmation());
-        } else {
-            $this->assertEquals($expectedDeclarationConfirmation, $application->getAuthSignature());
-        }
-    }
-
-    private function assertExpectedStatuses(array $expectedStatuses, ApplicationCompletionEntity $ac)
+    public function handleCommand_IsCallable()
     {
-        foreach ($expectedStatuses as $property => $status) {
-            $this->assertEquals($status, $ac->{'get' . $property . 'Status'}());
-        }
-    }
-
-    private function getConfiguredCompletion(array $statuses = [])
-    {
-        /** @var ApplicationCompletionEntity $ac */
-        $ac = m::mock(ApplicationCompletionEntity::class)->makePartial();
-
-        foreach ($statuses as $property => $status) {
-            $ac->{'set' . $property . 'Status'}($status);
-        }
-
-        return $ac;
-    }
-
-    /**
-     * @return LicenceEntity
-     */
-    private function newLicence()
-    {
-        return m::mock(LicenceEntity::class)->makePartial();
-    }
-
-    /**
-     * @return ApplicationEntity
-     */
-    private function newApplication()
-    {
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setIsVariation(true);
-
-        return $application;
-    }
-
-    private function getApplicationState1()
-    {
-        $application = $this->newApplication();
-
-        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
-        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $application->setDeclarationConfirmation('Y');
-
-        $tmCollection = new ArrayCollection();
-        $tmCollection->add(['foo' => 'bar']);
-        $application->setTransportManagers($tmCollection);
-
-        $vehicleCollection = new ArrayCollection();
-        $vehicleCollection->add(['foo' => 'bar']);
-        $application->setLicenceVehicles($vehicleCollection);
-
-        $conditionsCollection = new ArrayCollection();
-        $conditionsCollection->add(['foo' => 'bar']);
-        $application->setConditionUndertakings($conditionsCollection);
-
-        $ocCollection = new ArrayCollection();
-        $ocCollection->add(['foo' => 'bar']);
-        $application->setOperatingCentres($ocCollection);
-
-        $application->setPsvOperateSmallVhl('Y');
-
-        $application->setBankrupt('Y');
-
-        $application->setConvictionsConfirmation('Y');
-
-        $aop = new ArrayCollection();
-        $aop->add('foo');
-        $application->setApplicationOrganisationPersons($aop);
-
-        $application->shouldReceive('getActiveVehicles->count')->andReturn(3);
-        $application->setTotAuthVehicles(10);
-
-        return $application;
-    }
-
-    private function getApplicationState2()
-    {
-        $application = $this->newApplication();
-
-        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
-        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $application->setDeclarationConfirmation('Y');
-
-        $tmCollection = new ArrayCollection();
-        $application->setTransportManagers($tmCollection);
-
-        $vehicleCollection = new ArrayCollection();
-        $application->setLicenceVehicles($vehicleCollection);
-
-        $conditionsCollection = new ArrayCollection();
-        $application->setConditionUndertakings($conditionsCollection);
-
-        $ocCollection = new ArrayCollection();
-        $application->setOperatingCentres($ocCollection);
-
-        $application->setTotAuthVehicles(10);
-
-        $application->setConvictionsConfirmation(0);
-        $application->setPrevConviction('Y');
-
-        return $application;
-    }
-
-    private function getApplicationState3()
-    {
-        $application = $this->newApplication();
-
-        $application->setDeclarationConfirmation('N');
-
-        $application->setConvictionsConfirmation(0);
-
-        return $application;
-    }
-
-    private function getApplicationState4()
-    {
-        $application = $this->newApplication();
-
-        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_PSV]);
-        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $application->setDeclarationConfirmation('Y');
-
-        $vehicleCollection = new ArrayCollection();
-        $application->setLicenceVehicles($vehicleCollection);
-
-        $ocCollection = new ArrayCollection();
-        $application->setOperatingCentres($ocCollection);
-
-        $application->setTotAuthVehicles(2);
-
-        return $application;
-    }
-    private function getApplicationState5()
-    {
-        $application = $this->newApplication();
-
-        $application->setAuthSignature(true);
-
-        return $application;
-    }
-
-    private function getApplicationState6($action)
-    {
-        $application = $this->newApplication();
-
-        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
-        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
-
-        $aop1 = m::mock()
-            ->shouldReceive('getAction')
-            ->andReturn($action)
-            ->getMock();
-
-        $aop = new ArrayCollection();
-        $aop->add($aop1);
-
-        $application->setApplicationOrganisationPersons($aop);
-
-        return $application;
-    }
-
-    private function getLicenceState1()
-    {
-        $licence = $this->newLicence();
-
-        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
-
-        $vehicleCollection = new ArrayCollection();
-        $vehicleCollection->add(['removalDate' => null]);
-        $licence->setLicenceVehicles($vehicleCollection);
-
-        $licence->setTotAuthVehicles(5);
-
-        $licence->shouldReceive('getPsvDiscsNotCeasedCount')->andReturn(6);
-        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
-
-        $licence->shouldReceive('getOrganisation->getType->getId')->andReturn('bar');
-
-        return $licence;
-    }
-
-    private function getLicenceState2()
-    {
-        $licence = $this->newLicence();
-
-        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-
-        $vehicleCollection = new ArrayCollection();
-        $licence->setLicenceVehicles($vehicleCollection);
-
-        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
-
-        $licence->setTotAuthVehicles(10);
-
-        return $licence;
-    }
-
-    private function getLicenceState3()
-    {
-        $licence = $this->newLicence();
-
-        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_RESTRICTED]);
-
-        $vehicleCollection = new ArrayCollection();
-        $licence->setLicenceVehicles($vehicleCollection);
-
-        $psvDiscsCollection = new ArrayCollection();
-        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
-        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
-        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
-        $licence->setPsvDiscs($psvDiscsCollection);
-
-        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
-
-        return $licence;
-    }
-
-    private function getLicenceState4()
-    {
-        $licence = $this->newLicence();
-
-        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_RESTRICTED]);
-
-        $vehicleCollection = new ArrayCollection();
-        $licence->setLicenceVehicles($vehicleCollection);
-
-        $psvDiscsCollection = new ArrayCollection();
-        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
-        $licence->setPsvDiscs($psvDiscsCollection);
-
-        $licence->setTotAuthVehicles(3);
-
-        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
-
-        return $licence;
+        // Setup
+        $this->setUpSut();
+
+        // Assert
+        $this->assertIsCallable([$this->sut, 'handleCommand']);
     }
 
     public function handleCommandProvider()
@@ -935,5 +614,622 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 []
             ],
         ];
+    }
+
+    /**
+     * @dataProvider handleCommandProvider
+     * @depends handleCommand_IsCallable
+     */
+    public function testHandleCommand(
+        $section,
+        ApplicationEntity $application,
+        LicenceEntity $licence,
+        array $previousStatuses = [],
+        array $expectedStatuses = [],
+        $expectedDeclarationConfirmation = '',
+        array $commandData = []
+    ) {
+        $this->setUpLegacy();
+        $data = [
+            'id' => 111,
+            'section' => $section,
+            'data' => $commandData
+        ];
+        $command = Cmd::create($data);
+
+        /** @var ApplicationCompletionEntity $ac */
+        $ac = $this->getConfiguredCompletion($previousStatuses);
+
+        $application->setLicence($licence);
+        $application->setApplicationCompletion($ac);
+
+        $totals = AllOf::allOf(
+            IsArrayContainingKeyValuePair::hasKeyValuePair('noOfOperatingCentres', 0),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('minTrailerAuth', 0),
+            IsArrayContainingKeyValuePair::hasKeyValuePair('maxTrailerAuth', 0)
+        );
+
+        if ($section === 'operatingCentres') {
+            if ($application->isPsv()) {
+                $this->updateHelper
+                    ->shouldReceive('validatePsv')
+                    ->with($application, m::type(UpdateOperatingCentresCmd::class))
+                    ->getMock();
+
+                $this->vocHelper
+                    ->shouldReceive('getListDataForApplication')
+                    ->with($application)
+                    ->once()
+                    ->andReturn([]);
+            } else {
+                $this->updateHelper
+                    ->shouldReceive('validateTotalAuthTrailers')
+                    ->with(m::type(UpdateOperatingCentresCmd::class), $totals)
+                    ->getMock();
+
+                $this->vocHelper
+                    ->shouldReceive('getListDataForApplication')
+                    ->with($application)
+                    ->once()
+                    ->andReturn([]);
+            }
+            $this->updateHelper
+                ->shouldReceive('validateTotalAuthVehicles')
+                ->with($application, m::type(UpdateOperatingCentresCmd::class), $totals)
+                ->once()
+                ->shouldReceive('getMessages')
+                ->andReturn(['foo'])
+                ->once();
+        }
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with($application);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Updated variation completion status'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+        $this->assertExpectedStatuses($expectedStatuses, $ac);
+        if ($section !== 'declarationsInternal') {
+            $this->assertEquals($expectedDeclarationConfirmation, $application->getDeclarationConfirmation());
+        } else {
+            $this->assertEquals($expectedDeclarationConfirmation, $application->getAuthSignature());
+        }
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_MarksOperatingCentresSectionAsRequiringAttention_IfVehicleAuthorizationsAreNotValid()
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aLicence())
+            ->withCompletionShowingUpdatedOperatingCentres()
+            ->build();
+        $this->injectEntities($application);
+        $this->updateHelper()->allows('getMessages')->andReturn(static::VALIDATION_MESSAGES);
+        $command = Cmd::create([
+            static::ID_PROPERTY => $application->getId(),
+            static::SECTION_PROPERTY => 'operating_centres',
+        ]);
+
+        // Execute
+        $this->sut->handleCommand($command);
+
+        // Assert
+        $this->assertSame(ApplicationCompletion::STATUS_VARIATION_REQUIRES_ATTENTION, $application->getApplicationCompletion()->getOperatingCentresStatus());
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_MarksOperatingCentresSectionAsRequiringAttention_IfVehicleAuthorizationsAreNotValid
+     */
+    public function handleCommand_DoesNotMarkOperatingCentresSectionAsRequiringAttention_IfVehicleAuthorizationsAreValid()
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aLicence())->withCompletionShowingUpdatedOperatingCentres()->build();
+        $this->injectEntities($application);
+        $this->updateHelper()->allows('getMessages')->andReturn(static::NO_VALIDATION_MESSAGES);
+
+        // Execute
+        $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
+
+        // Assert
+        $this->assertNotSame(Application::VARIATION_STATUS_REQUIRES_ATTENTION, $application->getApplicationCompletion()->getOperatingCentresStatus());
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_ValidatesTotAuthVehicles_ForPsvLicences()
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aPsvLicence())->withCompletionShowingUpdatedOperatingCentres()->build();
+        $application->setTotAuthVehicles($expectedVehicles = static::A_NUMBER_OF_VEHICLES);
+        $this->injectEntities($application);
+
+        // Expect
+        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2) use ($expectedVehicles) {
+            $this->assertInstanceOf(UpdateOperatingCentres::class, $arg2);
+            $this->assertSame($expectedVehicles, $arg2->getTotAuthVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
+    }
+
+    /**
+     * @param array $operatingCentresVehicleCapacities
+     * @param array $expectedVehicleConstraints
+     * @test
+     * @depends handleCommand_ValidatesTotAuthVehicles_ForPsvLicences
+     * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
+     */
+    public function handleCommand_ValidatesTotAuthVehicles_ForPsvLicences_AgainstCorrectOperatingCentreConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aPsvLicence(), static::AN_ID)
+            ->withCompletionShowingUpdatedOperatingCentres()
+            ->withOperatingCentresWithCapacitiesFor($operatingCentresVehicleCapacities)
+            ->build();
+        $this->injectEntities($application, ...$application->getOperatingCentres());
+
+        // Expect
+        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicleConstraints) {
+            $this->assertIsArray($arg3);
+            foreach ($expectedVehicleConstraints as $key => $expectedTotal) {
+                $this->assertSame(
+                    $expectedTotal,
+                    $actualTotal = $arg3[$key] ?? null,
+                    sprintf('Failed to assert the value for "%s" total (%s) matched the expected value (%s)', $key, $actualTotal, $expectedTotal)
+                );
+            }
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_ValidatesTotAuthVehicles_ForGoodsVehicleLicences()
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aGoodsLicence())->withCompletionShowingUpdatedOperatingCentres()->build();
+        $application->setTotAuthVehicles($expectedVehicles = static::A_NUMBER_OF_VEHICLES);
+        $this->injectEntities($application);
+
+        // Expect
+        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2) use ($expectedVehicles) {
+            $this->assertInstanceOf(UpdateOperatingCentres::class, $arg2);
+            $this->assertSame($expectedVehicles, $arg2->getTotAuthVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
+    }
+
+    /**
+     * @param array $operatingCentresVehicleCapacities
+     * @param array $expectedVehicleConstraints
+     * @test
+     * @depends      handleCommand_ValidatesTotAuthVehicles_ForGoodsVehicleLicences
+     * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
+     */
+    public function handleCommand_ValidatesTotAuthVehicles_ForGoodsVehicleLicences_AgainstCorrectOperatingCentreConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aPsvLicence(), static::AN_ID)
+            ->withCompletionShowingUpdatedOperatingCentres()
+            ->withOperatingCentresWithCapacitiesFor($operatingCentresVehicleCapacities)
+            ->build();
+        $this->injectEntities($application, ...$application->getOperatingCentres());
+
+        // Expect
+        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicleConstraints) {
+            $this->assertIsArray($arg3);
+            foreach ($expectedVehicleConstraints as $key => $expectedTotal) {
+                $this->assertSame(
+                    $expectedTotal,
+                    $actualTotal = $arg3[$key] ?? null,
+                    sprintf('Failed to assert the value for "%s" total (%s) matched the expected value (%s)', $key, $actualTotal, $expectedTotal)
+                );
+            }
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
+    }
+
+    public function setUp(): void
+    {
+        $this->setUpServiceManager();
+    }
+
+    protected function setUpDefaultServices(): void
+    {
+        $this->setUpAbstractCommandHandlerServices();
+        $this->authService();
+        $this->applicationOperatingCentreRepository();
+        $this->licenceOperatingCentreRepository();
+        $this->userRepository();
+        $this->updateHelper();
+        $this->applicationRepository();
+        $this->variationOperatingCentreHelper();
+    }
+
+    protected function setUpSut()
+    {
+        $this->sut = new UpdateVariationCompletion();
+
+        if ($this->serviceManager()) {
+            $this->sut->createService($this->commandHandlerManager());
+        }
+    }
+
+    /**
+     * @return m\MockInterface|UpdateOperatingCentreHelper
+     */
+    protected function updateHelper()
+    {
+        $sm = $this->serviceManager();
+        if (! $sm->has('UpdateOperatingCentreHelper')) {
+            $instance = new UpdateOperatingCentreHelper();
+            $instance->createService($sm);
+            $sm->setService('UpdateOperatingCentreHelper', $instance);
+        }
+        return $sm->get('UpdateOperatingCentreHelper');
+    }
+
+    protected function overrideUpdateHelperWithMock(): void
+    {
+        $instance = $this->setUpMockService(UpdateOperatingCentreHelper::class);
+        $instance->allows('getMessages')->andReturn([])->byDefault();
+        $this->serviceManager()->setService('UpdateOperatingCentreHelper', $instance);
+    }
+
+    /**
+     * @return VariationOperatingCentreHelper
+     */
+    protected function variationOperatingCentreHelper(): VariationOperatingCentreHelper
+    {
+        $sm = $this->serviceManager();
+        if (! $sm->has('VariationOperatingCentreHelper')) {
+            $instance = new VariationOperatingCentreHelper();
+            $instance->createService($sm);
+            $sm->setService('VariationOperatingCentreHelper', $instance);
+        }
+        return $sm->get('VariationOperatingCentreHelper');
+    }
+
+    /**
+     * @return m\MockInterface|AuthorizationService
+     */
+    protected function authService(): m\MockInterface
+    {
+        $sm = $this->serviceManager();
+        if (! $sm->has(AuthorizationService::class)) {
+            $instance = $this->setUpMockService(AuthorizationService::class);
+            $sm->setService(AuthorizationService::class, $instance);
+        }
+        return $sm->get(AuthorizationService::class);
+    }
+
+    /**
+     * @param Application $application
+     * @return Cmd
+     */
+    protected function commandToUpdateOperatingCentresSectionForApplication(Application $application): Cmd
+    {
+        return Cmd::create([
+            static::ID_PROPERTY => $application->getId(),
+            static::SECTION_PROPERTY => 'operating_centres',
+        ]);
+    }
+
+    public function setUpLegacy(): void
+    {
+        $this->updateHelper = $this->setUpMockService(UpdateOperatingCentreHelper::class);
+        $this->vocHelper = m::mock();
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            'UpdateOperatingCentreHelper' => $this->updateHelper,
+            'VariationOperatingCentreHelper' => $this->vocHelper,
+        ];
+
+        $this->setUpSut();
+        $this->mockRepo('Application', ApplicationRepository::class);
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+
+        parent::setUp();
+    }
+
+    protected function initReferences()
+    {
+        $this->refData = [
+            LicenceEntity::LICENCE_CATEGORY_PSV,
+            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            LicenceEntity::LICENCE_TYPE_RESTRICTED
+        ];
+
+        parent::initReferences();
+    }
+
+    private function assertExpectedStatuses(array $expectedStatuses, ApplicationCompletionEntity $ac)
+    {
+        foreach ($expectedStatuses as $property => $status) {
+            $this->assertEquals($status, $ac->{'get' . $property . 'Status'}());
+        }
+    }
+
+    private function getConfiguredCompletion(array $statuses = [])
+    {
+        /** @var ApplicationCompletionEntity $ac */
+        $ac = m::mock(ApplicationCompletionEntity::class)->makePartial();
+
+        foreach ($statuses as $property => $status) {
+            $ac->{'set' . $property . 'Status'}($status);
+        }
+
+        return $ac;
+    }
+
+    /**
+     * @return LicenceEntity
+     */
+    private function newLicence()
+    {
+        return m::mock(LicenceEntity::class)->makePartial();
+    }
+
+    /**
+     * @return ApplicationEntity
+     */
+    private function newApplication()
+    {
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setIsVariation(true);
+
+        return $application;
+    }
+
+    private function getApplicationState1()
+    {
+        $application = $this->newApplication();
+
+        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
+        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $application->setDeclarationConfirmation('Y');
+
+        $tmCollection = new ArrayCollection();
+        $tmCollection->add(['foo' => 'bar']);
+        $application->setTransportManagers($tmCollection);
+
+        $vehicleCollection = new ArrayCollection();
+        $vehicleCollection->add(['foo' => 'bar']);
+        $application->setLicenceVehicles($vehicleCollection);
+
+        $conditionsCollection = new ArrayCollection();
+        $conditionsCollection->add(['foo' => 'bar']);
+        $application->setConditionUndertakings($conditionsCollection);
+
+        $ocCollection = new ArrayCollection();
+        $ocCollection->add(['foo' => 'bar']);
+        $application->setOperatingCentres($ocCollection);
+
+        $application->setPsvOperateSmallVhl('Y');
+
+        $application->setBankrupt('Y');
+
+        $application->setConvictionsConfirmation('Y');
+
+        $aop = new ArrayCollection();
+        $aop->add('foo');
+        $application->setApplicationOrganisationPersons($aop);
+
+        $application->shouldReceive('getActiveVehicles->count')->andReturn(3);
+        $application->setTotAuthVehicles(10);
+
+        return $application;
+    }
+
+    private function getApplicationState2()
+    {
+        $application = $this->newApplication();
+
+        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
+        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+        $application->setDeclarationConfirmation('Y');
+
+        $tmCollection = new ArrayCollection();
+        $application->setTransportManagers($tmCollection);
+
+        $vehicleCollection = new ArrayCollection();
+        $application->setLicenceVehicles($vehicleCollection);
+
+        $conditionsCollection = new ArrayCollection();
+        $application->setConditionUndertakings($conditionsCollection);
+
+        $ocCollection = new ArrayCollection();
+        $application->setOperatingCentres($ocCollection);
+
+        $application->setTotAuthVehicles(10);
+
+        $application->setConvictionsConfirmation(0);
+        $application->setPrevConviction('Y');
+
+        return $application;
+    }
+
+    private function getApplicationState3()
+    {
+        $application = $this->newApplication();
+
+        $application->setDeclarationConfirmation('N');
+
+        $application->setConvictionsConfirmation(0);
+
+        return $application;
+    }
+
+    private function getApplicationState4()
+    {
+        $application = $this->newApplication();
+
+        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_PSV]);
+        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+        $application->setDeclarationConfirmation('Y');
+
+        $vehicleCollection = new ArrayCollection();
+        $application->setLicenceVehicles($vehicleCollection);
+
+        $ocCollection = new ArrayCollection();
+        $application->setOperatingCentres($ocCollection);
+
+        $application->setTotAuthVehicles(2);
+
+        return $application;
+    }
+    private function getApplicationState5()
+    {
+        $application = $this->newApplication();
+
+        $application->setAuthSignature(true);
+
+        return $application;
+    }
+
+    private function getApplicationState6($action)
+    {
+        $application = $this->newApplication();
+
+        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
+        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+
+        $aop1 = m::mock()
+            ->shouldReceive('getAction')
+            ->andReturn($action)
+            ->getMock();
+
+        $aop = new ArrayCollection();
+        $aop->add($aop1);
+
+        $application->setApplicationOrganisationPersons($aop);
+
+        return $application;
+    }
+
+    private function getLicenceState1()
+    {
+        $licence = $this->newLicence();
+
+        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+
+        $vehicleCollection = new ArrayCollection();
+        $vehicleCollection->add(['removalDate' => null]);
+        $licence->setLicenceVehicles($vehicleCollection);
+
+        $licence->setTotAuthVehicles(5);
+
+        $licence->shouldReceive('getPsvDiscsNotCeasedCount')->andReturn(6);
+        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
+
+        $licence->shouldReceive('getOrganisation->getType->getId')->andReturn('bar');
+
+        return $licence;
+    }
+
+    private function getLicenceState2()
+    {
+        $licence = $this->newLicence();
+
+        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+
+        $vehicleCollection = new ArrayCollection();
+        $licence->setLicenceVehicles($vehicleCollection);
+
+        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
+
+        $licence->setTotAuthVehicles(10);
+
+        return $licence;
+    }
+
+    private function getLicenceState3()
+    {
+        $licence = $this->newLicence();
+
+        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_RESTRICTED]);
+
+        $vehicleCollection = new ArrayCollection();
+        $licence->setLicenceVehicles($vehicleCollection);
+
+        $psvDiscsCollection = new ArrayCollection();
+        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
+        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
+        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
+        $licence->setPsvDiscs($psvDiscsCollection);
+
+        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
+
+        return $licence;
+    }
+
+    private function getLicenceState4()
+    {
+        $licence = $this->newLicence();
+
+        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_RESTRICTED]);
+
+        $vehicleCollection = new ArrayCollection();
+        $licence->setLicenceVehicles($vehicleCollection);
+
+        $psvDiscsCollection = new ArrayCollection();
+        $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
+        $licence->setPsvDiscs($psvDiscsCollection);
+
+        $licence->setTotAuthVehicles(3);
+
+        $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
+
+        return $licence;
     }
 }
