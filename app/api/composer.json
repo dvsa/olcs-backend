@@ -120,8 +120,7 @@
         "cs": "phpcs --severity=1 --standard=vendor/olcs/coding-standards/Profiles/DVSA/CS/ruleset.xml",
         "coverage": "phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html",
         "sonar": "phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit",
-        "update-syms": "composer-update-syms",
-        "release": "release"
+        "update-syms": "composer-update-syms"
     },
     "extra": {
         "nexus-push": {
