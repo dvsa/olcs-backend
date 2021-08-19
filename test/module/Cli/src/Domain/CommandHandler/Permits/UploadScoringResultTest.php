@@ -3,14 +3,13 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult as UploadScoringResultCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\UploadScoringResult as UploadScoringResultHandler;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
-use Mockery as m;
 
 /**
  * Upload scoring result test
@@ -48,7 +47,7 @@ class UploadScoringResultTest extends CommandHandlerTestCase
               'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
               'filename' => 'Permit-Scoring-Report.csv',
               'description' => $fileDesc . ' ' . date('Y-m-d H:i'),
-              'user' => PidIdentityProvider::SYSTEM_USER,
+              'user' => IdentityProviderInterface::SYSTEM_USER,
             ],
             $result1
         );
@@ -80,7 +79,7 @@ class UploadScoringResultTest extends CommandHandlerTestCase
               'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
               'filename' => 'Permit-Scoring-Report.csv',
               'description' => $fileDesc . ' ' . date('Y-m-d H:i'),
-              'user' => PidIdentityProvider::SYSTEM_USER,
+              'user' => IdentityProviderInterface::SYSTEM_USER,
             ],
             $result1
         );

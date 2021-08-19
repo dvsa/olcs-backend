@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\TransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Command\TransportManagerLicence\Delete as DeleteDto;
 
 /**
@@ -28,7 +28,7 @@ class Delete extends AbstractHandler implements AuthAwareInterface
     {
         $userId = $this->getUser() ? $this->getUser()->getId() : null;
 
-        if ($userId === PidIdentityProviderEntity::SYSTEM_USER) {
+        if ($userId === IdentityProviderInterface::SYSTEM_USER) {
             return true;
         }
 

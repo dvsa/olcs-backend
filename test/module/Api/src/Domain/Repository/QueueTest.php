@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Mockery as m;
 
 /**
@@ -250,7 +250,7 @@ SQL;
         $this->em->shouldReceive('getConnection')->with()->once()->andReturn($mockConnection);
         $mockConnection->shouldReceive('prepare')->with($expectedSql)->once()->andReturn($mockStatement);
         $mockStatement->shouldReceive('execute')
-            ->with(['TYPE', PidIdentityProvider::SYSTEM_USER, PidIdentityProvider::SYSTEM_USER])
+            ->with(['TYPE', IdentityProviderInterface::SYSTEM_USER, IdentityProviderInterface::SYSTEM_USER])
             ->once()->andReturnNull();
         $mockStatement->shouldReceive('rowCount')->with()->once()->andReturn(99);
 

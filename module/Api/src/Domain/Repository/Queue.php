@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as Entity;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * Queue
@@ -54,7 +54,7 @@ WHERE l.status IN ('lsts_consideration',
 ORDER BY o.company_or_llp_no;
 SQL;
         $stmt = $db->prepare($query);
-        $params = array($type, PidIdentityProvider::SYSTEM_USER, PidIdentityProvider::SYSTEM_USER);
+        $params = array($type, IdentityProviderInterface::SYSTEM_USER, IdentityProviderInterface::SYSTEM_USER);
 
         $stmt->execute($params);
         return $stmt->rowCount();

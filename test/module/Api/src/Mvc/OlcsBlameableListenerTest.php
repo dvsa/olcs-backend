@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Mvc;
 
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Mvc\OlcsBlameableListener;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Gedmo\Mapping\Event\AdapterInterface;
 use Mockery as m;
@@ -45,9 +45,9 @@ class OlcsBlameableListenerTest extends MockeryTestCase
             )
             ->once()
             ->shouldReceive('get')
-            ->with(PidIdentityProvider::class)
+            ->with(IdentityProviderInterface::class)
             ->andReturn(
-                m::mock(PidIdentityProvider::class)
+                m::mock(IdentityProviderInterface::class)
                 ->shouldReceive('getMasqueradedAsSystemUser')
                 ->andReturn(false)
                 ->once()
@@ -93,7 +93,7 @@ class OlcsBlameableListenerTest extends MockeryTestCase
 
         $mockUserRepo = m::mock(UserRepository::class)
             ->shouldReceive('fetchById')
-            ->with(PidIdentityProvider::SYSTEM_USER)
+            ->with(IdentityProviderInterface::SYSTEM_USER)
             ->andReturn($mockUser)
             ->once()
             ->getMock();
@@ -115,9 +115,9 @@ class OlcsBlameableListenerTest extends MockeryTestCase
             )
             ->once()
             ->shouldReceive('get')
-            ->with(PidIdentityProvider::class)
+            ->with(IdentityProviderInterface::class)
             ->andReturn(
-                m::mock(PidIdentityProvider::class)
+                m::mock(IdentityProviderInterface::class)
                     ->shouldReceive('getMasqueradedAsSystemUser')
                     ->andReturn(true)
                     ->once()

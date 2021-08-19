@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
@@ -851,7 +852,7 @@ class UserEntityTest extends EntityTester
     public function testIsSystemUserYes()
     {
         $user = new Entity('PID', 'type');
-        $user->setId(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER);
+        $user->setId(IdentityProviderInterface::SYSTEM_USER);
 
         $this->assertTrue($user->isSystemUser());
     }

@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendIntlGoodsEmailCmd;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\AbstractDataExport;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -167,7 +168,7 @@ final class DataGovUkExport extends AbstractDataExport
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_GV,
             'filename' => 'international-goods-list.csv',
             'description' => 'International goods list ' . date('d/m/Y'),
-            'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
+            'user' => IdentityProviderInterface::SYSTEM_USER,
         ];
 
         return UploadCmd::create($data);
@@ -188,7 +189,7 @@ final class DataGovUkExport extends AbstractDataExport
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PSV,
             'filename' => 'psv-operator-list.csv',
             'description' => 'PSV Operator list',
-            'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
+            'user' => IdentityProviderInterface::SYSTEM_USER,
         ];
 
         return UploadCmd::create($data);

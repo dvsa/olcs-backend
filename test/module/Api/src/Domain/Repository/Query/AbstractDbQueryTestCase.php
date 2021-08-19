@@ -2,15 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository\Query;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceManager;
-use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Abstract Db Query Test Case
@@ -73,15 +68,15 @@ abstract class AbstractDbQueryTestCase extends BaseAbstractDbQueryTestCase
             ->andReturn(true);
 
         $user = m::mock(UserEntity::class)->makePartial();
-        $user->setId(PidIdentityProvider::SYSTEM_USER);
+        $user->setId(IdentityProviderInterface::SYSTEM_USER);
 
         $this->mockUserRepo
             ->shouldReceive('fetchById')
-            ->with(PidIdentityProvider::SYSTEM_USER)
+            ->with(IdentityProviderInterface::SYSTEM_USER)
             ->andReturn($user);
 
         // add generic params
-        $expectedParams['currentUserId'] = PidIdentityProvider::SYSTEM_USER;
+        $expectedParams['currentUserId'] = IdentityProviderInterface::SYSTEM_USER;
 
         $this->connection->shouldReceive('executeQuery')
             ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
