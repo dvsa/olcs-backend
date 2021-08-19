@@ -11,7 +11,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
@@ -37,7 +37,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
     private $mockUserRepo;
     /** @var  m\MockInterface */
     private $mockRepoManager;
-    /** @var  PidIdentityProvider */
+    /** @var  IdentityProviderInterface */
     private $mockPidIdentityProvider;
 
     public function setUp(): void
@@ -57,7 +57,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
             ->with('User')
             ->andReturn($this->mockUserRepo);
 
-        $this->mockPidIdentityProvider = m::mock(PidIdentityProvider::class);
+        $this->mockPidIdentityProvider = m::mock(IdentityProviderInterface::class);
 
         $this->mockSl = m::mock(ServiceLocatorInterface::class);
         $this->mockSl
@@ -67,7 +67,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
                     $map = [
                         AuthorizationService::class => $this->mockAuth,
                         'RepositoryServiceManager' => $this->mockRepoManager,
-                        PidIdentityProvider::class => $this->mockPidIdentityProvider
+                        IdentityProviderInterface::class => $this->mockPidIdentityProvider
                     ];
 
                     return $map[$key];

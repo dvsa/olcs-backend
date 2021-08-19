@@ -14,10 +14,10 @@ use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmission as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
+use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 
@@ -53,7 +53,7 @@ class CreateSubmissionTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
-            PidIdentityProvider::class => m::mock(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class)
+            IdentityProviderInterface::class => m::mock(IdentityProviderInterface::class)
         ];
 
         /** @var UserEntity $mockUser */

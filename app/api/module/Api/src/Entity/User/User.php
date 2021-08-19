@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * User Entity
@@ -182,8 +183,8 @@ class User extends AbstractUser implements OrganisationProviderInterface
     public function isSystemUser()
     {
         // If we add more System user accounts we probably want to change this to
-        // return $this->getId() === \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_TEAM
-        return $this->getId() === \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER;
+        // return $this->getId() === \Dvsa\Olcs\Api\Rbac\IdentityProviderInterface::SYSTEM_TEAM
+        return $this->getId() === IdentityProviderInterface::SYSTEM_USER;
     }
 
     /**

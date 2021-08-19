@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Gedmo\Blameable\BlameableListener as GedmoBlameableListener;
 use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * Class OlcsBlameableListener
@@ -48,7 +48,7 @@ class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareI
             $this->setUserRepository($serviceLocator->get('RepositoryServiceManager')->get('User'));
         }
 
-        $masquaradedAsSystemUser = $serviceLocator->get(PidIdentityProvider::class)->getMasqueradedAsSystemUser();
+        $masquaradedAsSystemUser = $serviceLocator->get(IdentityProviderInterface::class)->getMasqueradedAsSystemUser();
         if ($masquaradedAsSystemUser) {
             $currentUser = $this->getSystemUser();
         } else {

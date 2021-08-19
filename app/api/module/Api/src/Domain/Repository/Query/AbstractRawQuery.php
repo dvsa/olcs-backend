@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * Abstract Raw Query
@@ -75,7 +75,7 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     protected $paramTypes = [];
 
     /**
-     * @var PidIdentityProvider
+     * @var IdentityProviderInterface
      */
     protected $pidIdentityProvider;
 
@@ -92,7 +92,7 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
 
         $this->em = $sm->get('doctrine.entitymanager.orm_default');
         $this->connection = $this->em->getConnection();
-        $this->pidIdentityProvider = $sm->get(PidIdentityProvider::class);
+        $this->pidIdentityProvider = $sm->get(IdentityProviderInterface::class);
 
         $this->setAuthService($sm->get(AuthorizationService::class));
         $this->setUserRepository($sm->get('RepositoryServiceManager')->get('User'));
