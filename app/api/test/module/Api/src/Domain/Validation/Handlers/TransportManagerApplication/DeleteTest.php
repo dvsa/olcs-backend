@@ -6,7 +6,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\TransportManagerApplication\Delete;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * DeleteTest
@@ -57,7 +57,7 @@ class DeleteTest extends AbstractHandlerTestCase
         return [
             [true, true, 10],
             [false, false, 10],
-            [false, true, PidIdentityProviderEntity::SYSTEM_USER]
+            [false, true, IdentityProviderInterface::SYSTEM_USER]
         ];
     }
 }

@@ -4,9 +4,9 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepoService;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
@@ -220,7 +220,7 @@ trait AuthAwareTrait
      */
     public function getSystemUser()
     {
-        return $this->getUserRepository()->fetchById(PidIdentityProvider::SYSTEM_USER);
+        return $this->getUserRepository()->fetchById(IdentityProviderInterface::SYSTEM_USER);
     }
 
     /**

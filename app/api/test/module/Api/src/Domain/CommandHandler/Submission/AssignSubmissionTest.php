@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * Assign Submission Test
@@ -66,7 +66,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            PidIdentityProvider::class => m::mock(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class)
+            IdentityProviderInterface::class => m::mock(IdentityProviderInterface::class)
         ];
 
         // copied from parent,

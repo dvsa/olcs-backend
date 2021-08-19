@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>
@@ -118,7 +118,7 @@ class OlcsEntityListener implements EventSubscriber, AuthAwareInterface, Factory
             $this->setUserRepository($this->sl->get('RepositoryServiceManager')->get('User'));
         }
 
-        $masqueradedAsSystemUser = $this->sl->get(PidIdentityProvider::class)->getMasqueradedAsSystemUser();
+        $masqueradedAsSystemUser = $this->sl->get(IdentityProviderInterface::class)->getMasqueradedAsSystemUser();
 
         if ($masqueradedAsSystemUser) {
             $currentUser = $this->getSystemUser();

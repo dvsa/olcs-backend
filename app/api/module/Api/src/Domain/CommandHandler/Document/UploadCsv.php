@@ -7,9 +7,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Document\UploadCsv as UploadCsvCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 final class UploadCsv extends AbstractCommandHandler
 {
@@ -29,7 +29,7 @@ final class UploadCsv extends AbstractCommandHandler
         $numRows = count($csvContent);
         $fileDescription = $command->getFileDescription();
         $fileName = $fileDescription . '.csv';
-        $userId = PidIdentityProvider::SYSTEM_USER;
+        $userId = IdentityProviderInterface::SYSTEM_USER;
         $userFromCommand = $command->getUser();
 
         //default to the system user

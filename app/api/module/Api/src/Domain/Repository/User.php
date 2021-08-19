@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -148,7 +148,7 @@ class User extends AbstractRepository
 
         // exclude system user from all lists
         $qb->andWhere($qb->expr()->neq($this->alias . '.id', ':systemUser'))
-            ->setParameter('systemUser', PidIdentityProviderEntity::SYSTEM_USER);
+            ->setParameter('systemUser', IdentityProviderInterface::SYSTEM_USER);
     }
 
     /**

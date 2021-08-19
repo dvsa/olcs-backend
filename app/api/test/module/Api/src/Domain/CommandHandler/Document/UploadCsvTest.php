@@ -7,7 +7,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 use Dvsa\Olcs\Api\Domain\Command\Document\UploadCsv as UploadCsvCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\UploadCsv as UploadCsvHandler;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
@@ -48,7 +48,7 @@ class UploadCsvTest extends CommandHandlerTestCase
             'subCategory' => $subCategory,
             'filename' => $description . '.csv',
             'description' => $description,
-            'user' => PidIdentityProvider::SYSTEM_USER,
+            'user' => IdentityProviderInterface::SYSTEM_USER,
         ];
 
         $uploadResultMsg = 'upload result';
@@ -129,7 +129,7 @@ class UploadCsvTest extends CommandHandlerTestCase
     public function dpHandleCommand(): array
     {
         return [
-            [null, PidIdentityProvider::SYSTEM_USER],
+            [null, IdentityProviderInterface::SYSTEM_USER],
             [291, 291],
         ];
     }

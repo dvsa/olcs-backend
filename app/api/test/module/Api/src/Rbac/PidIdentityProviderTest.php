@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Rbac;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Rbac\Identity;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
@@ -54,12 +55,12 @@ class PidIdentityProviderTest extends MockeryTestCase
     {
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)
             ->shouldReceive('getId')
-            ->andReturn(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER)
+            ->andReturn(IdentityProviderInterface::SYSTEM_USER)
             ->getMock();
 
         $mockRepo = m::mock(RepositoryInterface::class);
         $mockRepo->shouldReceive('fetchById')
-            ->with(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER)
+            ->with(IdentityProviderInterface::SYSTEM_USER)
             ->andReturn($mockUser)
             ->once()
             ->getMock();
@@ -72,7 +73,7 @@ class PidIdentityProviderTest extends MockeryTestCase
 
         $this->assertInstanceOf(Identity::class, $identity);
         $this->assertInstanceOf(User::class, $identity->getUser());
-        $this->assertEquals(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER, $identity->getUser()->getId());
+        $this->assertEquals(IdentityProviderInterface::SYSTEM_USER, $identity->getUser()->getId());
     }
 
     public function testGetMasqueradedAsSystemUser()

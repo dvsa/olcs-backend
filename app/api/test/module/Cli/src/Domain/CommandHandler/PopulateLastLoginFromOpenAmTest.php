@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use ArrayIterator;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Service\OpenAm\User;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Cli\Domain\Command\PopulateLastLoginFromOpenAm as PopulateLastLoginFromOpenAmCmd;
@@ -43,7 +43,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
         $mockSystemUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
         $this->repoMap['User']
             ->shouldReceive('fetchById')
-            ->with(PidIdentityProvider::SYSTEM_TEAM)
+            ->with(IdentityProviderInterface::SYSTEM_TEAM)
             ->andReturn($mockSystemUser);
 
         parent::setUp();

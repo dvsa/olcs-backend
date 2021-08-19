@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 
@@ -60,7 +60,7 @@ class UpdateSubmissionTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             SubmissionGenerator::class => $mockSubmissionGenerator,
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
-            PidIdentityProvider::class => m::mock(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class)
+            IdentityProviderInterface::class => m::mock(IdentityProviderInterface::class)
         ];
 
         /** @var UserEntity $mockUser */

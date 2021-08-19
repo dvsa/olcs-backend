@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendInternationalGoodsCmd;
@@ -161,7 +162,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         // Create document in database
         $documentData['description'] = 'International goods list ' . date('d/m/Y');
         $documentData['filename'] = 'international-goods-list.csv';
-        $documentData['user'] = \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER;
+        $documentData['user'] = IdentityProviderInterface::SYSTEM_USER;
         $documentData['category'] = Category::CATEGORY_REPORT;
         $documentData['subCategory'] = SubCategory::REPORT_SUB_CATEGORY_GV;
 
@@ -291,7 +292,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         // Create document in database
         $documentData['description'] = 'PSV Operator list';
         $documentData['filename'] = $fileName;
-        $documentData['user'] = \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER;
+        $documentData['user'] = IdentityProviderInterface::SYSTEM_USER;
         $documentData['category'] = Category::CATEGORY_REPORT;
         $documentData['subCategory'] = SubCategory::REPORT_SUB_CATEGORY_PSV;
 

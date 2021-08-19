@@ -204,6 +204,7 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory::class,
             \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class => \Dvsa\Olcs\Api\Rbac\PidIdentityProviderFactory::class,
+            \Dvsa\Olcs\Api\Rbac\IdentityProviderInterface::class => \Dvsa\Olcs\Api\Rbac\IdentityProviderFactory::class,
             \Dvsa\Olcs\CompaniesHouse\Service\Client::class => \Dvsa\Olcs\CompaniesHouse\Service\ClientFactory::class,
             'TransExchangeXmlMapping' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory::class,
