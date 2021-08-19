@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Mockery as m;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\Repository\User
@@ -91,7 +91,7 @@ class UserTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('expr->neq')->with('u.id', ':systemUser')->once()->andReturn('systemUser');
         $mockQb->shouldReceive('andWhere')->with('systemUser')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('systemUser', PidIdentityProviderEntity::SYSTEM_USER)->once();
+        $mockQb->shouldReceive('setParameter')->with('systemUser', IdentityProviderInterface::SYSTEM_USER)->once();
 
         $sut->applyListFilters($mockQb, $query);
     }
@@ -127,7 +127,7 @@ class UserTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('expr->neq')->with('u.id', ':systemUser')->once()->andReturn('systemUser');
         $mockQb->shouldReceive('andWhere')->with('systemUser')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('systemUser', PidIdentityProviderEntity::SYSTEM_USER)->once();
+        $mockQb->shouldReceive('setParameter')->with('systemUser', IdentityProviderInterface::SYSTEM_USER)->once();
 
         $mockQb->shouldReceive('leftJoin')->with('u.roles', 'r')->once();
         $mockQb->shouldReceive('andWhere')->with('r.role IN (:roles)')->once()->andReturnSelf();
@@ -158,7 +158,7 @@ class UserTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('expr->neq')->with('u.id', ':systemUser')->once()->andReturn('systemUser');
         $mockQb->shouldReceive('andWhere')->with('systemUser')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('systemUser', PidIdentityProviderEntity::SYSTEM_USER)->once();
+        $mockQb->shouldReceive('setParameter')->with('systemUser', IdentityProviderInterface::SYSTEM_USER)->once();
 
         $em = m::mock(EntityManager::class);
         $mockQb->shouldReceive('getEntityManager')->andReturn($em);

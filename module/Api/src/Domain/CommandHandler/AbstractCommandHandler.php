@@ -45,7 +45,7 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
@@ -87,7 +87,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     private $repoManager;
 
     /**
-     * @var PidIdentityProvider
+     * @var IdentityProviderInterface
      */
     private $pidIdentityProvider;
 
@@ -131,7 +131,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
 
-        $this->pidIdentityProvider = $mainServiceLocator->get(PidIdentityProvider::class);
+        $this->pidIdentityProvider = $mainServiceLocator->get(IdentityProviderInterface::class);
 
         if ($this instanceof TransactionedInterface) {
             return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
@@ -315,9 +315,9 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
-     * Get PidIdentityProvider
+     * Get IdentityProvider
      *
-     * @return PidIdentityProvider
+     * @return IdentityProviderInterface
      */
     protected function getPidIdentityProvider()
     {

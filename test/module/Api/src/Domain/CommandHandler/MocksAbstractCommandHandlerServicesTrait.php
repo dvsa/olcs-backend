@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery\MockInterface;
@@ -80,17 +80,17 @@ trait MocksAbstractCommandHandlerServicesTrait
     }
 
     /**
-     * @return PidIdentityProvider|MockInterface
+     * @return IdentityProviderInterface|MockInterface
      */
     protected function pidIdentityProvider(): MockInterface
     {
-        if (! $this->serviceManager()->has(PidIdentityProvider::class)) {
+        if (! $this->serviceManager()->has(IdentityProviderInterface::class)) {
             $this->serviceManager()->setService(
-                PidIdentityProvider::class,
-                $this->setUpMockService(PidIdentityProvider::class)
+                IdentityProviderInterface::class,
+                $this->setUpMockService(IdentityProviderInterface::class)
             );
         }
-        return $this->serviceManager()->get(PidIdentityProvider::class);
+        return $this->serviceManager()->get(IdentityProviderInterface::class);
     }
 
     /**

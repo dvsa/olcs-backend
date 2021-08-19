@@ -3,11 +3,11 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Upload the log output for the permit scoring
@@ -38,7 +38,7 @@ final class UploadScoringLog extends ScoringCommandHandler
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
             'filename' => 'Permit-Scoring-Log.log',
             'description' => 'Scoring Log File ' . date('Y-m-d H:i'),
-            'user' => PidIdentityProvider::SYSTEM_USER,
+            'user' => IdentityProviderInterface::SYSTEM_USER,
         ];
 
         $this->handleSideEffect(

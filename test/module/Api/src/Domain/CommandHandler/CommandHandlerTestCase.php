@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
@@ -78,7 +78,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     /** @var  m\MockInterface | QueryHandlerManager */
     protected $queryHandler;
-    /** @var  m\MockInterface | PidIdentityProvider */
+    /** @var  m\MockInterface | IdentityProviderInterface */
     protected $pidIdentityProvider;
     /** @var  m\MockInterface | TransactionManagerInterface */
     protected $mockTransationMngr;
@@ -95,14 +95,14 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                 ->andReturn($service);
         }
 
-        $this->pidIdentityProvider = m::mock(PidIdentityProvider::class);
+        $this->pidIdentityProvider = m::mock(IdentityProviderInterface::class);
         $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
 
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
-        $sm->shouldReceive('get')->with(PidIdentityProvider::class)->andReturn($this->pidIdentityProvider);
+        $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->pidIdentityProvider);
         if (property_exists($this, 'submissionConfig')) {
             $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
         }
@@ -116,7 +116,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                 ->andReturn(
                     m::mock(\Dvsa\Olcs\Api\Domain\Repository\User::class)
                     ->shouldReceive('fetchById')
-                    ->with(PidIdentityProvider::SYSTEM_USER)
+                    ->with(IdentityProviderInterface::SYSTEM_USER)
                     ->getMock()
                 )
                 ->getMock();

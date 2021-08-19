@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * Delete TMA
@@ -22,7 +22,7 @@ class Delete extends AbstractHandler implements AuthAwareInterface
     public function isValid($dto)
     {
         $userId = $this->getUser() ? $this->getUser()->getId() : null;
-        if ($userId === PidIdentityProviderEntity::SYSTEM_USER) {
+        if ($userId === IdentityProviderInterface::SYSTEM_USER) {
             return true;
         }
         foreach ($dto->getIds() as $id) {
