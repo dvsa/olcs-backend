@@ -13,11 +13,18 @@ use Olcs\Logging\Log\Logger;
 class OpenAm extends AbstractAdapter
 {
     const OPEN_AM_EXCEPTION = 'OpenAm returned exception';
+    const SUCCESS_WITH_CHALLENGE = 2;
+    const CHALLENGE_NEW_PASSWORD_REQUIRED = 'NEW_PASSWORD_REQUIRED';
 
     /**
      * @var OpenAmClient
      */
     private $client;
+
+    /**
+     * @var string
+     */
+    private $realm;
 
     /**
      * @param OpenAmClient $client
@@ -29,35 +36,24 @@ class OpenAm extends AbstractAdapter
         $this->client = $client;
     }
 
+    public function setRealm(string $realm)
+    {
+        $this->realm = $realm;
+    }
+
     /**
      * @return AuthResult
      */
     public function authenticate(): AuthResult
     {
         try {
-            $result = $this->client->authenticate($this->getIdentity(), $this->getCredential());
+            $result = $this->client->authenticate($this->getIdentity(), $this->getCredential(), $this->realm);
 
-            switch ($result['status']) {
-                case 200: {
-                    $authResult = AuthResult::SUCCESS;
-                    break;
-                }
-                case 401: {
-                    $authResult = AuthResult::FAILURE;
-                    break;
-                }
-                default: {
-                    $authResult = AuthResult::FAILURE_UNCATEGORIZED;
-                    break;
-                }
-            }
+            return $this->handleAuthenticateResult($result);
         } catch (\Exception $e) {
-            $result = ['message' => $e->getMessage()];
-            Logger::err(self::OPEN_AM_EXCEPTION, $result);
-            $authResult = AuthResult::FAILURE_UNCATEGORIZED;
+            Logger::err(self::OPEN_AM_EXCEPTION, [$e->getMessage()]);
+            return new AuthResult(AuthResult::FAILURE_UNCATEGORIZED, [], [$e->getMessage()]);
         }
-
-        return new AuthResult($authResult, $result);
     }
 
     /**
@@ -125,5 +121,52 @@ class OpenAm extends AbstractAdapter
         $headers->addHeaderLine('secureToken', $token);
 
         return $this->client->makeRequest($uri, $data, $headers);
+    }
+
+    /**
+     * @param $status
+     * @return int
+     */
+    private function getAuthenticationCode(array $result): int
+    {
+        switch ($result['status']) {
+            case 200:
+                $authResult = isset($result['tokenId']) ? AuthResult::SUCCESS : static::SUCCESS_WITH_CHALLENGE;
+                break;
+            case 401:
+                $authResult = AuthResult::FAILURE;
+                break;
+            default:
+                $authResult = AuthResult::FAILURE_UNCATEGORIZED;
+                break;
+        }
+        return $authResult;
+    }
+
+    /**
+     * @param array $result
+     * @return AuthResult
+     */
+    private function handleAuthenticateResult(array $result): AuthResult
+    {
+        switch ($authCode = $this->getAuthenticationCode($result)) {
+            case AuthResult::SUCCESS:
+                return new AuthResult($authCode, $result);
+            case AuthResult::FAILURE:
+                return new AuthResult($authCode, [], [$result['message']]);
+            case static::SUCCESS_WITH_CHALLENGE:
+                return new AuthResult(
+                    $authCode,
+                    [],
+                    [
+                        'challengeName' => static::CHALLENGE_NEW_PASSWORD_REQUIRED,
+                        'challengeParameters' => [
+                            'authId' => $result['authId']
+                        ]
+                    ]
+                );
+            default:
+                return new AuthResult($authCode, []);
+        }
     }
 }

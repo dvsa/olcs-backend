@@ -16,14 +16,16 @@ class OpenAmTest extends MockeryTestCase
     {
         $identity = 'identity';
         $password = 'password';
+        $realm = 'selfserve';
 
         $client = m::mock(OpenAmClient::class);
-        $client->expects('authenticate')->with($identity, $password)
-            ->andThrow(\Exception::class);
+        $client->expects('authenticate')->with($identity, $password, $realm)
+            ->andThrow(\Exception::class, 'message');
 
         $sut = new OpenAmAdapter($client);
         $sut->setIdentity($identity);
         $sut->setCredential($password);
+        $sut->setRealm($realm);
 
         $authResult = $sut->authenticate();
 
@@ -35,21 +37,19 @@ class OpenAmTest extends MockeryTestCase
     /**
      * @dataProvider dpAuthenticate
      */
-    public function testAuthenticate($authStatus, $resultCode): void
+    public function testAuthenticate($authResponse, $resultCode): void
     {
         $identity = 'identity';
         $password = 'password';
-
-        $authResponse = [
-            'status' => $authStatus
-        ];
+        $realm = 'realm';
 
         $client = m::mock(OpenAmClient::class);
-        $client->expects('authenticate')->with($identity, $password)->andReturn($authResponse);
+        $client->expects('authenticate')->with($identity, $password, $realm)->andReturn($authResponse);
 
         $sut = new OpenAmAdapter($client);
         $sut->setIdentity($identity);
         $sut->setCredential($password);
+        $sut->setRealm($realm);
 
         $authResult = $sut->authenticate();
 
@@ -60,9 +60,22 @@ class OpenAmTest extends MockeryTestCase
     public function dpAuthenticate(): array
     {
         return [
-            [200, AuthResult::SUCCESS],
-            [401, AuthResult::FAILURE],
-            [null, AuthResult::FAILURE_UNCATEGORIZED],
+            'success ' => [
+                ['status' => 200, 'tokenId' => 'tokenId'],
+                AuthResult::SUCCESS
+            ],
+            'success with challenge' => [
+                ['status' => 200, 'authId' => 'authId'],
+                OpenAmAdapter::SUCCESS_WITH_CHALLENGE
+            ],
+            'failure'=> [
+                ['status' => 401, 'message' => 'Unauthorised'],
+                AuthResult::FAILURE
+            ],
+            'uncategorized' => [
+                ['status' => null],
+                AuthResult::FAILURE_UNCATEGORIZED
+            ],
         ];
     }
 }
