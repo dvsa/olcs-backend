@@ -16,9 +16,14 @@ class UriBuilder
      */
     private $realm;
 
-    public function __construct(string $baseUrl, ?string $realm)
+    public function __construct(string $baseUrl, ?string $realm = null)
     {
         $this->baseUrl = $baseUrl;
+        $this->realm = $realm;
+    }
+
+    public function setRealm(string $realm)
+    {
         $this->realm = $realm;
     }
 
