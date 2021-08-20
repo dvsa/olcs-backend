@@ -21,12 +21,14 @@ class OpenAmTest extends MockeryTestCase
     {
         $identity = 'identity';
         $password = 'password';
+        $realm = 'realm';
         $uri = 'http://hostname:123';
         $builtUri = 'http://hostname:123/foo/bar';
         $authId = '12345';
 
         $uriBuilder = m::mock(UriBuilder::class);
         $uriBuilder->expects('build')->twice()->with(OpenAmClient::AUTHENTICATE_URI)->andReturn($builtUri);
+        $uriBuilder->expects('setRealm')->once()->with($realm);
 
         $authSessionStartContent = json_encode([
             'authId' => $authId
@@ -46,7 +48,7 @@ class OpenAmTest extends MockeryTestCase
         $httpClient->expects('send')->twice()->andReturn($httpResponse);
 
         $sut = new OpenAmClient($uriBuilder, $httpClient);
-        $sut->authenticate($identity, $password);
+        $sut->authenticate($identity, $password, $realm);
     }
 
     public function testAuthenticateFailedToBeginSession(): void
@@ -56,10 +58,12 @@ class OpenAmTest extends MockeryTestCase
 
         $identity = 'identity';
         $password = 'password';
+        $realm = 'realm';
         $builtUri = 'http://hostname:123/foo/bar';
 
         $uriBuilder = m::mock(UriBuilder::class);
         $uriBuilder->expects('build')->with(OpenAmClient::AUTHENTICATE_URI)->andReturn($builtUri);
+        $uriBuilder->expects('setRealm')->once()->with($realm);
 
         $httpResponse = m::mock(HttpResponse::class);
         $httpResponse->expects('isOk')->andReturnFalse();
@@ -72,7 +76,7 @@ class OpenAmTest extends MockeryTestCase
         $httpClient->expects('send')->withNoArgs()->andReturn($httpResponse);
 
         $sut = new OpenAmClient($uriBuilder, $httpClient);
-        $sut->authenticate($identity, $password);
+        $sut->authenticate($identity, $password, $realm);
     }
 
     public function testFailedToEncodeRequest(): void

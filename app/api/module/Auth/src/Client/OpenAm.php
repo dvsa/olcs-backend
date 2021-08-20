@@ -50,8 +50,10 @@ class OpenAm
      * @throws ClientException
      * @throws InvalidTokenException
      */
-    public function authenticate(string $username, string $password): array
+    public function authenticate(string $username, string $password, string $realm): array
     {
+        $this->uriBuilder->setRealm($realm);
+
         $data = $this->beginAuthenticationSession();
         $request = $this->buildRequest($data['authId'], $username, $password);
 
