@@ -19,7 +19,7 @@ class GetDbValueTest extends RepositoryTestCase
     public function testFetchOneEntityByX()
     {
         $fetchBy = 'id';
-        $args = 1;
+        $args = [0 => 'arg'];
         $this->sut->setEntity(Application::class);
         $qb = $this->createMockQb('Query');
         $qb->shouldReceive('getQuery->getSingleResult')->andReturn(['RESULTS']);

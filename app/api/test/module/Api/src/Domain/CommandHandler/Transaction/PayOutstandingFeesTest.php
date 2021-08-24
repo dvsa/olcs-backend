@@ -53,9 +53,17 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
     protected $mockFeesHelperService;
 
+    private $cardResponse;
+
     public function setUp(): void
     {
+        $this->cardResponse = [
+            'schema_id' => 'id',
+            'receipt_reference' => 'reference',
+            'gateway_url' => 'url',
+        ];
         $this->mockCpmsService = m::mock(CpmsHelper::class);
+
         $this->mockFeesHelperService = m::mock(FeesHelper::class);
         $this->mockedSmServices = [
             'CpmsHelperService' => $this->mockCpmsService,
@@ -181,7 +189,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees, $extraParams);
+            ->with($cpmsRedirectUrl, $fees, $extraParams)
+            ->andReturn($this->cardResponse);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -421,7 +430,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCnpRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees, $extraParams);
+            ->with($cpmsRedirectUrl, $fees, $extraParams)
+            ->andReturn($this->cardResponse);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -507,7 +517,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateStoredCardRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees, 'STORED_CARD', $extraParams);
+            ->with($cpmsRedirectUrl, $fees, 'STORED_CARD', $extraParams)
+            ->andReturn($this->cardResponse);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -608,7 +619,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees, $extraParams);
+            ->with($cpmsRedirectUrl, $fees, $extraParams)
+            ->andReturn($this->cardResponse);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
@@ -1560,7 +1572,8 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('initiateCardRequest')
             ->once()
-            ->with($cpmsRedirectUrl, $fees, $extraParams);
+            ->with($cpmsRedirectUrl, $fees, $extraParams)
+            ->andReturn($this->cardResponse);
 
         /** @var PaymentEntity $savedPayment */
         $savedPayment = null;
