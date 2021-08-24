@@ -127,7 +127,7 @@ final class ProcessInboxDocuments extends AbstractCommandHandler implements Emai
             }
 
             if (count($sentTo) > 0) {
-                $result->addMessage(sprintf(self::MSG_SEND_REMINDER_EMAIL, $licId, implode($sentTo, ',')));
+                $result->addMessage(sprintf(self::MSG_SEND_REMINDER_EMAIL, $licId, implode(',', $sentTo)));
 
                 $row->setEmailReminderSent('Y');
                 $repo->save($row);
