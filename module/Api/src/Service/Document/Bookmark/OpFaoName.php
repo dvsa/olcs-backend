@@ -21,6 +21,6 @@ class OpFaoName extends DynamicBookmark
 
     public function render()
     {
-        return $this->data['correspondenceCd']['fao'];
+        return $this->data['correspondenceCd']['fao'] ?? '';
     }
 }
