@@ -14,6 +14,7 @@ use Laminas\Http\Response;
 use Dvsa\Olcs\Auth\Service\OpenAm\Callback\NameCallback;
 use Dvsa\Olcs\Auth\Service\OpenAm\Callback\PasswordCallback;
 use Dvsa\Olcs\Auth\Service\OpenAm\Callback\Request as AuthRequest;
+use Olcs\Logging\Log\Logger;
 
 /**
  * @todo this has been copied and adapted from the old olcs-auth package for backward compatibility with OpenAm
@@ -25,6 +26,7 @@ class OpenAm
     const MSG_SESSION_START_FAIL = 'Unable to begin an authentication session';
     const MSG_JSON_ENCODE_FAIL = 'POST data could not be json encoded: %s';
     const MSG_JSON_DECODE_FAIL = 'Unable to JSON decode response body: %s';
+    const OPEN_AM_EXCEPTION = 'OpenAm returned exception';
 
     /**
      * @var UriBuilder
@@ -183,6 +185,7 @@ class OpenAm
             return $this->decodeResponse($response);
         }
 
+        Logger::err(static::OPEN_AM_EXCEPTION, [$response->getBody()]);
         throw new ClientException(self::MSG_SESSION_START_FAIL);
     }
 }

@@ -11,7 +11,8 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class UriBuilderFactory implements FactoryInterface
 {
-    const MSG_MISSING_URL = 'openam/url is required but missing from config';
+    const MSG_MISSING_INTERNAL_URL = 'openam/urls/internal is required but missing from config';
+    const MSG_MISSING_SELFSERVE_URL = 'openam/urls/selfserve is required but missing from config';
 
     /**
      * @param ContainerInterface $container
@@ -25,18 +26,18 @@ class UriBuilderFactory implements FactoryInterface
     {
         $config = $container->get('Config');
 
-        if (empty($config['auth']['adapters']['openam']['url'])) {
-            throw new ClientException(self::MSG_MISSING_URL);
+        if (empty($config['auth']['adapters']['openam']['urls']['internal']?? null)) {
+            throw new ClientException(self::MSG_MISSING_INTERNAL_URL);
         }
 
-        $baseUrl = $config['auth']['adapters']['openam']['url'];
-        $realm = null;
-
-        if (isset($config['auth']['adapters']['openam']['realm'])) {
-            $realm = $config['auth']['adapters']['openam']['realm'];
+        if (empty($config['auth']['adapters']['openam']['urls']['selfserve'] ?? null)) {
+            throw new ClientException(self::MSG_MISSING_SELFSERVE_URL);
         }
 
-        return new UriBuilder($baseUrl, $realm);
+        $internalUrl = $config['auth']['adapters']['openam']['urls']['internal'];
+        $selfserveUrl = $config['auth']['adapters']['openam']['urls']['selfserve'];
+
+        return new UriBuilder($internalUrl, $selfserveUrl);
     }
 
     /**

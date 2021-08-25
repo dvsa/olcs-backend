@@ -19,8 +19,10 @@ class UriBuilderFactoryTest extends MockeryTestCase
             'auth' => [
                 'adapters' => [
                     'openam' => [
-                        'url' => 'url',
-                        'realm' => 'realm',
+                        'urls' => [
+                            'internal' => 'internal',
+                            'selfserve' => 'selfserve',
+                        ]
                     ],
                 ],
             ],
@@ -35,16 +37,38 @@ class UriBuilderFactoryTest extends MockeryTestCase
         self::assertInstanceOf(UriBuilder::class, $service);
     }
 
-    public function testCreateServiceMissingConfig(): void
+    public function testCreateServiceMissingInternalUrlConfig(): void
     {
         $this->expectException(ClientException::class);
-        $this->expectExceptionMessage(UriBuilderFactory::MSG_MISSING_URL);
+        $this->expectExceptionMessage(UriBuilderFactory::MSG_MISSING_INTERNAL_URL);
+
+        $config = [
+            'auth' => [
+                'adapters' => [
+                    'openam' => [],
+                ],
+            ],
+        ];
+
+        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl->expects('get')->with('Config')->andReturn($config);
+
+        $sut = new UriBuilderFactory();
+        $sut($mockSl, UriBuilder::class);
+    }
+
+    public function testCreateServiceMissingSelfserviceUrlConfig(): void
+    {
+        $this->expectException(ClientException::class);
+        $this->expectExceptionMessage(UriBuilderFactory::MSG_MISSING_SELFSERVE_URL);
 
         $config = [
             'auth' => [
                 'adapters' => [
                     'openam' => [
-                        'realm' => 'realm',
+                        'urls' => [
+                            'internal' => 'internal url'
+                        ]
                     ],
                 ],
             ],
