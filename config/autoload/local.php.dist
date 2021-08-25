@@ -493,8 +493,10 @@ return [
                 'adapter' => \Dvsa\Olcs\Auth\Adapter\OpenAm::class,
                 'timeout' => 3000,
                 'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks',
-                'url' => 'http://olcs-auth.olcs.gov.uk:8080/secure/',
-                'realm' => 'internal', // @todo this needs to move
+                'urls' => [
+                    'internal' => 'http://olcs-auth.olcs.gov.uk:8080/secure/',
+                    'selfserve' => 'http://olcs-auth.olcs.gov.uk:8080/secure/',
+                ],
                 'cookie' => [
                     'name' => 'secureToken',
                     'domain' => null, // @NOTE This must be implemented
