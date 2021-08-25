@@ -4,21 +4,31 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Client;
 
+use Dvsa\Contracts\Auth\Exceptions\ClientException;
+
 class UriBuilder
 {
+    const MSG_REALM_NOT_SET = "'setRealm()' must be called before calling 'build()'";
+    const MSG_REALM_INCORRECT = "Invalid realm. Must be 'selfserve' or 'internal'";
     /**
      * @var string
      */
-    private $baseUrl;
+    private $internalUrl;
+
+    /**
+     * @var string
+     */
+    private $selfserveUrl;
 
     /**
      * @var null|string
      */
     private $realm;
 
-    public function __construct(string $baseUrl, ?string $realm = null)
+    public function __construct(string $internalUrl, string $selfserveUrl, ?string $realm = null)
     {
-        $this->baseUrl = $baseUrl;
+        $this->internalUrl = $internalUrl;
+        $this->selfserveUrl = $selfserveUrl;
         $this->realm = $realm;
     }
 
@@ -36,13 +46,27 @@ class UriBuilder
      */
     public function build(string $uri): string
     {
-        $fullUri = sprintf('%s/%s', rtrim($this->baseUrl, '/'), ltrim($uri, '/'));
+        $fullUri = sprintf('%s/%s', rtrim($this->getBaseUrl(), '/'), ltrim($uri, '/'));
 
-        if (!empty($this->realm)) {
-            $joinChar = strstr($fullUri, '?') ? '&' : '?';
-            $fullUri .= $joinChar . 'realm=' . $this->realm;
-        }
+        $joinChar = strstr($fullUri, '?') ? '&' : '?';
+        $fullUri .= $joinChar . 'realm=' . $this->realm;
 
         return $fullUri;
+    }
+
+    protected function getBaseUrl()
+    {
+        if (is_null($this->realm)) {
+            throw new ClientException(static::MSG_REALM_NOT_SET);
+        }
+
+        switch ($this->realm) {
+            case 'internal':
+                return $this->internalUrl;
+            case 'selfserve':
+                return $this->selfserveUrl;
+            default:
+                throw new ClientException(static::MSG_REALM_INCORRECT);
+        }
     }
 }

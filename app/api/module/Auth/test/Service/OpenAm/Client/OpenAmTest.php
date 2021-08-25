@@ -60,6 +60,7 @@ class OpenAmTest extends MockeryTestCase
         $password = 'password';
         $realm = 'realm';
         $builtUri = 'http://hostname:123/foo/bar';
+        $body = 'failed to begin session';
 
         $uriBuilder = m::mock(UriBuilder::class);
         $uriBuilder->expects('build')->with(OpenAmClient::AUTHENTICATE_URI)->andReturn($builtUri);
@@ -67,6 +68,7 @@ class OpenAmTest extends MockeryTestCase
 
         $httpResponse = m::mock(HttpResponse::class);
         $httpResponse->expects('isOk')->andReturnFalse();
+        $httpResponse->expects('getBody')->andReturn($body);
 
         $httpClient = m::mock(HttpClient::class);
         $httpClient->expects('reset')->withNoArgs();
