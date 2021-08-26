@@ -4512,12 +4512,12 @@
         },
         {
             "name": "olcs/olcs-companies-house",
-            "version": "4.206.5",
+            "version": "4.206.6",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.5/olcs-olcs-companies-house-4.206.5.zip",
-                "reference": "3034d0a0b723b97d1d0d2a9622774515f3f6ae3f",
-                "shasum": "3034d0a0b723b97d1d0d2a9622774515f3f6ae3f"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.6/olcs-olcs-companies-house-4.206.6.zip",
+                "reference": "5355fad7c8cfe1e9a401daf77fe453ef796a212d",
+                "shasum": "5355fad7c8cfe1e9a401daf77fe453ef796a212d"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4568,9 +4568,6 @@
                 "update-syms": [
                     "composer-update-syms"
                 ],
-                "release": [
-                    "release"
-                ],
                 "sa": [
                     "phpstan analyse --level 7 src --ansi"
                 ]
@@ -4579,16 +4576,16 @@
                 "proprietary"
             ],
             "description": "companies house api client",
-            "time": "2020-12-09T10:22:19+00:00"
+            "time": "2021-08-20T09:53:35+00:00"
         },
         {
             "name": "olcs/olcs-cpms",
-            "version": "4.206.4",
+            "version": "4.206.5",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.4/olcs-olcs-cpms-4.206.4.zip",
-                "reference": "e8e5731be50ea497a552419bce56e59cb83d7ce4",
-                "shasum": "e8e5731be50ea497a552419bce56e59cb83d7ce4"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.5/olcs-olcs-cpms-4.206.5.zip",
+                "reference": "2808a8e9f98c8e66b05bd2a161844b7ab6f175dd",
+                "shasum": "2808a8e9f98c8e66b05bd2a161844b7ab6f175dd"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4636,9 +4633,6 @@
                 "update-syms": [
                     "composer-update-syms"
                 ],
-                "release": [
-                    "release"
-                ],
                 "sa": [
                     "phpstan analyse --level 7 src --ansi"
                 ]
@@ -4647,7 +4641,7 @@
                 "proprietary"
             ],
             "description": "CPMS Module",
-            "time": "2021-02-25T09:25:51+00:00"
+            "time": "2021-08-20T09:52:37+00:00"
         },
         {
             "name": "olcs/olcs-dvla-search",
@@ -4716,12 +4710,12 @@
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "4.206.8",
+            "version": "4.206.9",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.8/olcs-olcs-logging-4.206.8.zip",
-                "reference": "8b64a031c2c41f8890f11b7f6726ed2a9d694156",
-                "shasum": "8b64a031c2c41f8890f11b7f6726ed2a9d694156"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.9/olcs-olcs-logging-4.206.9.zip",
+                "reference": "910e4212335357d4deb2d5fad5fb4bf488db0eb6",
+                "shasum": "910e4212335357d4deb2d5fad5fb4bf488db0eb6"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4772,22 +4766,19 @@
                 ],
                 "update-syms": [
                     "vendor/bin/composer-update-syms"
-                ],
-                "release": [
-                    "release"
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2021-02-19T14:39:11+00:00"
+            "time": "2021-08-20T09:51:39+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.130",
+            "version": "4.206.134",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.130/olcs-olcs-transfer-4.206.130.zip",
-                "reference": "6df6d09704ca16b35f001ede7ca998a653d54fc2",
-                "shasum": "6df6d09704ca16b35f001ede7ca998a653d54fc2"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.134/olcs-olcs-transfer-4.206.134.zip",
+                "reference": "13477e235ba0b0830c38300a922909c9c17e7250",
+                "shasum": "13477e235ba0b0830c38300a922909c9c17e7250"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4844,22 +4835,19 @@
                 ],
                 "update-syms": [
                     "vendor/bin/composer-update-syms"
-                ],
-                "release": [
-                    "release"
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2021-07-13T10:57:07+00:00"
+            "time": "2021-08-20T13:31:44+00:00"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "4.206.11",
+            "version": "4.206.12",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.11/olcs-olcs-utils-4.206.11.zip",
-                "reference": "1fe2af32cb8c074b0dac88bcf7122f780ce8532f",
-                "shasum": "1fe2af32cb8c074b0dac88bcf7122f780ce8532f"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.12/olcs-olcs-utils-4.206.12.zip",
+                "reference": "dd3e980a6fa83ff3ed836a883ad0de65e0adb07e",
+                "shasum": "dd3e980a6fa83ff3ed836a883ad0de65e0adb07e"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4910,22 +4898,19 @@
                 ],
                 "update-syms": [
                     "vendor/bin/composer-update-syms"
-                ],
-                "release": [
-                    "release"
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2021-02-19T14:39:52+00:00"
+            "time": "2021-08-20T09:47:50+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "4.206.7",
+            "version": "4.206.8",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-xmltools/4.206.7/olcs-olcs-xmltools-4.206.7.zip",
-                "reference": "0e938dbfee3d3857dd3199804f9da78b695a49f9",
-                "shasum": "0e938dbfee3d3857dd3199804f9da78b695a49f9"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-xmltools/4.206.8/olcs-olcs-xmltools-4.206.8.zip",
+                "reference": "8c438853d32126a69bb4fc9d4d6404f732c21df9",
+                "shasum": "8c438853d32126a69bb4fc9d4d6404f732c21df9"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4943,7 +4928,7 @@
             "type": "library",
             "extra": {
                 "nexus-push": {
-                    "url": "http://nexus.olcs.dev-dvsacloud.uk/repository/olcs-xmltools",
+                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-xmltools",
                     "ignore": [
                         "test/",
                         "sonar-project.properties"
@@ -4973,13 +4958,10 @@
                 ],
                 "update-syms": [
                     "vendor/bin/composer-update-syms"
-                ],
-                "release": [
-                    "release"
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2020-12-07T09:59:49+00:00"
+            "time": "2021-08-20T09:46:23+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -7792,12 +7774,12 @@
         },
         {
             "name": "olcs/olcs-devtools",
-            "version": "4.206.6",
+            "version": "4.206.7",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-devtools/4.206.6/olcs-olcs-devtools-4.206.6.zip",
-                "reference": "83c4ea1da99c300f25dde3b4aa3b9fb7aef717b9",
-                "shasum": "83c4ea1da99c300f25dde3b4aa3b9fb7aef717b9"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-devtools/4.206.7/olcs-olcs-devtools-4.206.7.zip",
+                "reference": "9297fb28ee91d80e56e80f2e8dd5aebd540886a6",
+                "shasum": "9297fb28ee91d80e56e80f2e8dd5aebd540886a6"
             },
             "require": {
                 "brianium/paratest": "^3.0",
@@ -7821,8 +7803,7 @@
             "bin": [
                 "bin/review",
                 "bin/composer-install-syms",
-                "bin/composer-update-syms",
-                "bin/release"
+                "bin/composer-update-syms"
             ],
             "type": "library",
             "extra": {
@@ -7836,16 +7817,16 @@
                 }
             },
             "description": "Dev tools",
-            "time": "2020-12-09T10:29:17+00:00"
+            "time": "2021-08-20T09:59:24+00:00"
         },
         {
             "name": "olcs/olcs-testhelpers",
-            "version": "4.206.11",
+            "version": "4.206.13",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-testhelpers/4.206.11/olcs-olcs-testhelpers-4.206.11.zip",
-                "reference": "8125ab7ea425f9836ea4bb1d5d358fb62e6b2406",
-                "shasum": "8125ab7ea425f9836ea4bb1d5d358fb62e6b2406"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-testhelpers/4.206.13/olcs-olcs-testhelpers-4.206.13.zip",
+                "reference": "7d98b5be900dffb42a21f285f921e9da325ebef3",
+                "shasum": "7d98b5be900dffb42a21f285f921e9da325ebef3"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -7874,13 +7855,8 @@
                     "Olcs\\TestHelpers\\": "src/TestHelpers/"
                 }
             },
-            "scripts": {
-                "release": [
-                    "release"
-                ]
-            },
             "description": "OLCS Test helpers",
-            "time": "2021-06-10T13:23:54+00:00"
+            "time": "2021-08-20T09:50:22+00:00"
         },
         {
             "name": "pdepend/pdepend",
@@ -8821,12 +8797,12 @@
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
                 "myclabs/deep-copy": "^1.10.0",
-                "phar-io/manifest": "^2.0.3",
+                "phar-io/manifest": "^2.0.1",
                 "phar-io/version": "^3.0.2",
                 "php": ">=7.2",
                 "phpspec/prophecy": "^1.10.3",
                 "phpunit/php-code-coverage": "^7.0.12",
-                "phpunit/php-file-iterator": "^2.0.4",
+                "phpunit/php-file-iterator": "^2.0.2",
                 "phpunit/php-text-template": "^1.2.1",
                 "phpunit/php-timer": "^2.1.2",
                 "sebastian/comparator": "^3.0.2",
@@ -9452,7 +9428,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
