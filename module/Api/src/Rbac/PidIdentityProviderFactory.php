@@ -1,15 +1,12 @@
 <?php
 
-/**
- * Pid Identity Provider Factory
- */
 namespace Dvsa\Olcs\Api\Rbac;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Pid Identity Provider Factory
+ * @see PidIdentityProvider
  */
 class PidIdentityProviderFactory implements FactoryInterface
 {

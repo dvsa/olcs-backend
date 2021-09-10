@@ -26,4 +26,9 @@ interface IdentityProviderInterface extends ZfcRbacIdentityProviderInterface
      * @return void
      */
     public function setMasqueradedAsSystemUser(bool $masqueradedAsSystemUser);
+
+    /**
+     * @return string
+     */
+    public function getHeaderName(): string;
 }

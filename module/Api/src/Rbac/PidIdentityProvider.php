@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Rbac;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Laminas\Http\Header\GenericHeader;
-use ZfcRbac\Identity\IdentityInterface;
 use Laminas\Http\Request;
 
 /**
@@ -42,22 +41,6 @@ class PidIdentityProvider implements IdentityProviderInterface
         $this->headerName = $headerName;
     }
 
-    private function authenticate()
-    {
-        if ($this->request instanceof \Laminas\Console\Request) {
-            $auth = IdentityProviderInterface::SYSTEM_USER;
-            return $this->repository->fetchById($auth);
-        } else {
-            $pid = $this->request->getHeader($this->headerName, new GenericHeader())->getFieldValue();
-
-            if (!empty($pid)) {
-                return $this->repository->fetchByPid($pid);
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Get the identity
      *
@@ -75,5 +58,32 @@ class PidIdentityProvider implements IdentityProviderInterface
         }
 
         return $this->identity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHeaderName(): string
+    {
+        return $this->headerName;
+    }
+
+    /**
+     * @return null
+     */
+    private function authenticate()
+    {
+        if ($this->request instanceof \Laminas\Console\Request) {
+            $auth = IdentityProviderInterface::SYSTEM_USER;
+            return $this->repository->fetchById($auth);
+        } else {
+            $pid = $this->request->getHeader($this->headerName, new GenericHeader())->getFieldValue();
+
+            if (!empty($pid)) {
+                return $this->repository->fetchByPid($pid);
+            }
+        }
+
+        return null;
     }
 }
