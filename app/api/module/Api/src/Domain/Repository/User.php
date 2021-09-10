@@ -347,6 +347,25 @@ class User extends AbstractRepository
         return $this->fetchByX('loginId', [$login]);
     }
 
+    public function fetchEnabledIdentityByLoginId(string $loginId)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->withPersonContactDetails()
+            ->with('team')
+            ->with('organisationUsers')
+            ->with('roles')
+            ->with('transportManager')
+            ->with('localAuthority');
+
+        $qb->where($this->alias . '.loginId = :loginId')->setParameter('loginId', $loginId);
+        $qb->andWhere($this->alias . '.accountDisabled = 0');
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
     /**
      * Get count of users in role
      *
