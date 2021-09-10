@@ -77,7 +77,7 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     /**
      * @var IdentityProviderInterface
      */
-    protected $pidIdentityProvider;
+    protected $identityProvider;
 
     /**
      * Inject the DB connection object
@@ -92,7 +92,7 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
 
         $this->em = $sm->get('doctrine.entitymanager.orm_default');
         $this->connection = $this->em->getConnection();
-        $this->pidIdentityProvider = $sm->get(IdentityProviderInterface::class);
+        $this->identityProvider = $sm->get(IdentityProviderInterface::class);
 
         $this->setAuthService($sm->get(AuthorizationService::class));
         $this->setUserRepository($sm->get('RepositoryServiceManager')->get('User'));
@@ -111,7 +111,7 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
      */
     public function execute(array $params = [], array $paramTypes = [])
     {
-        $masqueradedAsSystemUser = $this->pidIdentityProvider->getMasqueradedAsSystemUser();
+        $masqueradedAsSystemUser = $this->identityProvider->getMasqueradedAsSystemUser();
         if ($masqueradedAsSystemUser) {
             $currentUserId = $this->getSystemUser()->getId();
         } else {
