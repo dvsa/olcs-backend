@@ -481,7 +481,7 @@ return [
                 'clientId' => '',
                 'clientSecret' => '',
                 'poolId' => '',
-                'region' => '',
+                'region' => 'eu-west-1',
                 'nbfLeeway' => 0,
             ],
             'azure' => [
