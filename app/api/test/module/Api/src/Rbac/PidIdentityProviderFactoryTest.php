@@ -27,7 +27,22 @@ class PidIdentityProviderFactoryTest extends MockeryTestCase
         $mockSl->shouldReceive('get')->with('RepositoryServiceManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('Request')->andReturn($mockRequest);
         $mockSl->shouldReceive('get')->with('User')->andReturn($mockUserRepo);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn(['openam' => ['pid_header' => 'X-Pid']]);
+        $mockSl->shouldReceive('get')->with('Config')->andReturn(
+            [
+                'openam' => [
+                    'pid_header' => 'X-Pid',
+                ],
+                'auth' => [
+                    'adapters' => [
+                        'openam' => [
+                            'cookie' => [
+                                'name' => 'cookie name',
+                            ],
+                        ]
+                    ]
+                ]
+            ]
+        );
 
         $sut = new PidIdentityProviderFactory();
 

@@ -7,8 +7,11 @@ use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
+use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
 use Laminas\Authentication\Adapter\AbstractAdapter;
 use Laminas\Authentication\Result;
+use Laminas\Http\Response;
+use Olcs\Logging\Log\Logger;
 
 class CognitoAdapter extends AbstractAdapter
 {
@@ -23,12 +26,25 @@ class CognitoAdapter extends AbstractAdapter
     protected $client;
 
     /**
+     * @var String
+     */
+    protected $realm;
+
+    /**
      * CognitoAdapter constructor.
      * @param Client $client
      */
     public function __construct(Client $client)
     {
         $this->client = $client;
+    }
+
+    /**
+     * @param string $realm
+     */
+    public function setRealm(string $realm)
+    {
+        $this->realm = $realm;
     }
 
     /**
@@ -68,6 +84,38 @@ class CognitoAdapter extends AbstractAdapter
             );
         } catch (InvalidTokenException | ClientException $e) {
             return new Result(Result::FAILURE, [], [$e->getMessage()]);
+        }
+    }
+
+    /**
+     * @todo the client doesn't currently check the old password - needs addressing in upstream DVSA client
+     * @todo are there other possible exceptions we're expecting here? Upstream DVSA client only throws ClientExcpetion
+     * have put in a catch-all for \Exception for now
+     *
+     * @param string $identifier
+     * @param string $oldPassword
+     * @param string $newPassword
+     *
+     * @return array
+     * @throws ChangePasswordException
+     */
+    public function changePassword(string $identifier, string $oldPassword, string $newPassword): array
+    {
+        try {
+            $success = $this->client->changePassword($identifier, $newPassword);
+            $code = Response::STATUS_CODE_200;
+
+            if (!$success) {
+                $code = Response::STATUS_CODE_500;
+            }
+
+            return ['status' => $code];
+        } catch (ClientException $e) {
+            Logger::debug('Cognito client: change password ClientException: ' . $e->getMessage());
+            throw new ChangePasswordException($e->getMessage());
+        } catch (\Exception $e) {
+            Logger::err('Unknown change password error from Cognito client: ' . $e->getMessage());
+            throw new ChangePasswordException($e->getMessage());
         }
     }
 }
