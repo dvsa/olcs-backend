@@ -13,6 +13,7 @@ use Dvsa\Olcs\Cli\Domain\CommandHandler as CommandHandlerCli;
 return [
     // Transfer - Auth
     TransferCommand\Auth\Login::class => CommandHandler\Auth\LoginFactory::class,
+    TransferCommand\Auth\ChangePassword::class => CommandHandler\Auth\ChangePasswordFactory::class,
 
     // Transfer - Audit
     TransferCommand\Audit\ReadApplication::class => CommandHandler\Audit\ReadApplication::class,

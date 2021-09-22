@@ -14,6 +14,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class OpenAmFactory implements FactoryInterface
 {
     const MSG_MISSING_OPTIONS = 'OpenAm client options missing from config';
+    const MSG_MISSING_COOKIE_NAME = 'OpenAm cookie name missing from config';
 
     /**
      * @param ContainerInterface $container
@@ -31,9 +32,14 @@ class OpenAmFactory implements FactoryInterface
             throw new ClientException(self::MSG_MISSING_OPTIONS);
         }
 
+        if (!isset($config['auth']['adapters']['openam']['cookie']['name'])) {
+            throw new ClientException(self::MSG_MISSING_COOKIE_NAME);
+        }
+
         return new OpenAmClient(
             $container->get(UriBuilder::class),
-            new HttpClient(null, $config['auth']['adapters']['openam']['client']['options'])
+            new HttpClient(null, $config['auth']['adapters']['openam']['client']['options']),
+            $config['auth']['adapters']['openam']['cookie']['name']
         );
     }
 

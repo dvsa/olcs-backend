@@ -12,7 +12,6 @@ use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 
