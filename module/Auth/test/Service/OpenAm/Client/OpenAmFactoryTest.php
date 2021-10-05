@@ -23,6 +23,9 @@ class OpenAmFactoryTest extends MockeryTestCase
                         'client' => [
                             'options' => ['options'],
                         ],
+                        'cookie' => [
+                            'name' => 'cookie name',
+                        ],
                     ],
                 ],
             ],
@@ -40,7 +43,7 @@ class OpenAmFactoryTest extends MockeryTestCase
         self::assertInstanceOf(OpenAm::class, $service);
     }
 
-    public function testCreateServiceMissingConfig(): void
+    public function testCreateServiceMissingOptionConfig(): void
     {
         $this->expectException(ClientException::class);
         $this->expectExceptionMessage(OpenAmFactory::MSG_MISSING_OPTIONS);
@@ -50,6 +53,31 @@ class OpenAmFactoryTest extends MockeryTestCase
                 'adapters' => [
                     'openam' => [
                         'client' => [],
+                    ],
+                ],
+            ],
+        ];
+
+        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl->expects('get')->with('Config')->andReturn($config);
+
+        $sut = new OpenAmFactory();
+        $sut($mockSl, OpenAm::class);
+    }
+
+    public function testCreateServiceMissingCookieConfig(): void
+    {
+        $this->expectException(ClientException::class);
+        $this->expectExceptionMessage(OpenAmFactory::MSG_MISSING_COOKIE_NAME);
+
+        $config = [
+            'auth' => [
+                'adapters' => [
+                    'openam' => [
+                        'client' => [
+                            'options' => ['options'],
+                        ],
+                        'cookie' => [],
                     ],
                 ],
             ],

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Adapter;
 
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Auth\Client\OpenAm as OpenAmClient;
+use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
 use Laminas\Authentication\Adapter\AbstractAdapter;
 use Laminas\Authentication\Result as AuthResult;
-use Laminas\Http\Headers;
 use Olcs\Logging\Log\Logger;
 
 class OpenAm extends AbstractAdapter
@@ -26,16 +27,22 @@ class OpenAm extends AbstractAdapter
      */
     private $realm;
 
+    private PidIdentityProvider $identityProvider;
+
     /**
      * @param OpenAmClient $client
      *
      * @return void
      */
-    public function __construct(OpenAmClient $client)
+    public function __construct(OpenAmClient $client, PidIdentityProvider $identityProvider)
     {
         $this->client = $client;
+        $this->identityProvider = $identityProvider;
     }
 
+    /**
+     * @param string $realm
+     */
     public function setRealm(string $realm)
     {
         $this->realm = $realm;
@@ -104,23 +111,19 @@ class OpenAm extends AbstractAdapter
      * @param string $username    Username
      * @param string $oldPassword Old password
      * @param string $newPassword New password
-     * @param string $token       token
      *
      * @return array
+     * @throws ChangePasswordException
      */
-    public function updatePassword(string $username, string $oldPassword, string $newPassword, string $token): array
+    public function changePassword(string $username, string $oldPassword, string $newPassword): array
     {
-        $data = [
-            'currentpassword' => $oldPassword,
-            'userpassword' => $newPassword
-        ];
+        $token = $this->identityProvider->getToken();
 
-        $uri = sprintf('json/users/%s?_action=changePassword', $username);
-
-        $headers = new Headers();
-        $headers->addHeaderLine('secureToken', $token);
-
-        return $this->client->makeRequest($uri, $data, $headers);
+        try {
+            return $this->client->changePassword($username, $oldPassword, $newPassword, $this->realm, $token);
+        } catch (\Exception $e) {
+            throw new ChangePasswordException($e->getMessage());
+        }
     }
 
     /**

@@ -22,7 +22,6 @@ class OpenAmTest extends MockeryTestCase
         $identity = 'identity';
         $password = 'password';
         $realm = 'realm';
-        $uri = 'http://hostname:123';
         $builtUri = 'http://hostname:123/foo/bar';
         $authId = '12345';
 
@@ -37,7 +36,7 @@ class OpenAmTest extends MockeryTestCase
         $httpResponse = m::mock(HttpResponse::class);
         $httpResponse->expects('isOk')->andReturnTrue();
         $httpResponse->expects('getContent')->twice()->withNoArgs()->andReturn($authSessionStartContent);
-        $httpResponse->expects('getStatusCode')->twice()->andReturn(200);
+        $httpResponse->expects('getStatusCode')->twice()->withNoArgs()->andReturn(200);
 
         $httpClient = m::mock(HttpClient::class);
         $httpClient->expects('reset')->twice()->withNoArgs();
@@ -47,7 +46,7 @@ class OpenAmTest extends MockeryTestCase
         $httpClient->expects('setRawBody');
         $httpClient->expects('send')->twice()->andReturn($httpResponse);
 
-        $sut = new OpenAmClient($uriBuilder, $httpClient);
+        $sut = new OpenAmClient($uriBuilder, $httpClient, 'cookie-name');
         $sut->authenticate($identity, $password, $realm);
     }
 
@@ -77,7 +76,7 @@ class OpenAmTest extends MockeryTestCase
         $httpClient->expects('setHeaders')->with(m::type(HttpHeaders::class));
         $httpClient->expects('send')->withNoArgs()->andReturn($httpResponse);
 
-        $sut = new OpenAmClient($uriBuilder, $httpClient);
+        $sut = new OpenAmClient($uriBuilder, $httpClient, 'cookie-name');
         $sut->authenticate($identity, $password, $realm);
     }
 
@@ -101,7 +100,7 @@ class OpenAmTest extends MockeryTestCase
         $httpClient->expects('setUri')->with($builtUri);
         $httpClient->expects('setHeaders')->with(m::type(HttpHeaders::class));
 
-        $sut = new OpenAmClient($uriBuilder, $httpClient);
+        $sut = new OpenAmClient($uriBuilder, $httpClient, 'cookie-name');
         $sut->makeRequest(OpenAmClient::AUTHENTICATE_URI, $brokenJson);
     }
 
@@ -130,9 +129,71 @@ class OpenAmTest extends MockeryTestCase
         $httpClient->expects('setUri')->with($builtUri);
         $httpClient->expects('setHeaders')->with(m::type(HttpHeaders::class));
         $httpClient->expects('setRawBody')->with($encodedData);
-        $httpClient->expects('send')->withNoArgs()->andREturn($httpResponse);
+        $httpClient->expects('send')->withNoArgs()->andReturn($httpResponse);
 
-        $sut = new OpenAmClient($uriBuilder, $httpClient);
+        $sut = new OpenAmClient($uriBuilder, $httpClient, 'cookie-name');
         $sut->makeRequest(OpenAmClient::AUTHENTICATE_URI, $data);
+    }
+
+    public function testChangePassword()
+    {
+        $username = 'username';
+        $oldPassword = 'old password';
+        $newPassword = 'new password';
+        $realm = 'realm';
+        $token = 'token';
+        $cookieName = 'cookie-name';
+
+        $data = [
+            'currentpassword' => $oldPassword,
+            'userpassword' => $newPassword,
+        ];
+
+        $encodedData = json_encode($data);
+
+        $builtUri = 'http://hostname:123/foo/bar';
+        $uriBuilderUri = sprintf(OpenAmClient::CHANGE_PW_URI, $username);
+        $uriBuilder = m::mock(UriBuilder::class);
+        $uriBuilder->expects('setRealm')->with($realm);
+        $uriBuilder->expects('build')->with($uriBuilderUri)->andReturn($builtUri);
+
+        $responseContent = ['response' => 'response'];
+        $responseCode = 200;
+
+        $response = json_encode($responseContent);
+
+        $httpResponse = m::mock(HttpResponse::class);
+        $httpResponse->expects('getContent')->withNoArgs()->andReturn($response);
+        $httpResponse->expects('getStatusCode')->withNoArgs()->andReturn($responseCode);
+
+        $httpClient = m::mock(HttpClient::class);
+        $httpClient->expects('reset')->withNoArgs();
+        $httpClient->expects('setMethod')->with(HttpRequest::METHOD_POST);
+        $httpClient->expects('setUri')->with($builtUri);
+        $httpClient->expects('setHeaders')->with(m::type(HttpHeaders::class))->andReturnUsing(
+            function (HttpHeaders $headers) use ($token, $cookieName) {
+                $expectedHeaders = [
+                    $cookieName => $token,
+                    'Content-Type' => 'application/json',
+                ];
+                $this->assertEquals($expectedHeaders, $headers->toArray());
+
+                return $headers;
+            }
+        );
+        $httpClient->expects('setRawBody')->with($encodedData);
+        $httpClient->expects('send')->withNoArgs()->andReturn($httpResponse);
+
+        $clientResponse = [
+            'response' => 'response',
+            'status' => $responseCode,
+            'provider' => OpenAmClient::class,
+        ];
+
+        $sut = new OpenAmClient($uriBuilder, $httpClient, $cookieName);
+        $this->assertEquals(
+            $clientResponse,
+            $sut->changePassword($username, $oldPassword, $newPassword, $realm, $token)
+        );
     }
 }
