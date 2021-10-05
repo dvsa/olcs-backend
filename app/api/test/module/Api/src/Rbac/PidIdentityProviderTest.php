@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Laminas\Http\Header\Cookie;
+use Laminas\Http\Headers as HttpHeaders;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Laminas\Http\PhpEnvironment\Request;
@@ -26,7 +28,7 @@ class PidIdentityProviderTest extends MockeryTestCase
         $mockRequest->shouldReceive('getHeader')->with('X-Pid', m::any())->andReturnSelf();
         $mockRequest->shouldReceive('getFieldValue')->andReturn('pid');
 
-        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid');
+        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid', 'cookie name');
 
         $identity = $sut->getIdentity();
 
@@ -42,7 +44,7 @@ class PidIdentityProviderTest extends MockeryTestCase
         $mockRequest->shouldReceive('getHeader')->with('X-Pid', m::any())->andReturnSelf();
         $mockRequest->shouldReceive('getFieldValue')->andReturn('');
 
-        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid');
+        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid', 'cookie name');
 
         $identity = $sut->getIdentity();
 
@@ -67,7 +69,7 @@ class PidIdentityProviderTest extends MockeryTestCase
 
         $mockRequest = m::mock(\Laminas\Console\Request::class);
 
-        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid');
+        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid', 'cookie name');
 
         $identity = $sut->getIdentity();
 
@@ -80,9 +82,42 @@ class PidIdentityProviderTest extends MockeryTestCase
     {
         $mockRepo = m::mock(RepositoryInterface::class);
         $mockRequest = m::mock(Request::class);
-        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid');
+        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid', 'cookie name');
 
         $sut->setMasqueradedAsSystemUser(true);
         $this->assertTrue($sut->getMasqueradedAsSystemUser());
+    }
+
+    public function testGetToken(): void
+    {
+        $mockRepo = m::mock(RepositoryInterface::class);
+
+        $cookieName = 'cookie name';
+        $token = 'test';
+        $cookie = new Cookie();
+        $cookie->{$cookieName} = $token;
+
+        $httpHeaders = m::mock(HttpHeaders::class);
+        $httpHeaders->expects('get')->with('Cookie')->andReturn($cookie);
+
+        $mockRequest = m::mock(Request::class);
+        $mockRequest->expects('getHeaders')->withNoArgs()->andReturn($httpHeaders);
+
+        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid', $cookieName);
+        $this->assertEquals($token, $sut->getToken());
+    }
+
+    public function testGetTokenEmptyCookie(): void
+    {
+        $mockRepo = m::mock(RepositoryInterface::class);
+
+        $httpHeaders = m::mock(HttpHeaders::class);
+        $httpHeaders->expects('get')->with('Cookie')->andReturn(new Cookie());
+
+        $mockRequest = m::mock(Request::class);
+        $mockRequest->expects('getHeaders')->withNoArgs()->andReturn($httpHeaders);
+
+        $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid', 'cookie name');
+        $this->assertNull($sut->getToken());
     }
 }

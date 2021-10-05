@@ -23,7 +23,8 @@ class PidIdentityProviderFactory implements FactoryInterface
         return new PidIdentityProvider(
             $serviceLocator->get('RepositoryServiceManager')->get('User'),
             $serviceLocator->get('Request'),
-            isset($config['openam']['pid_header']) ? $config['openam']['pid_header'] : 'X-Pid'
+            isset($config['openam']['pid_header']) ? $config['openam']['pid_header'] : 'X-Pid',
+            $config['auth']['adapters']['openam']['cookie']['name']
         );
     }
 }

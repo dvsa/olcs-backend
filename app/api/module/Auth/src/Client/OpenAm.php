@@ -23,25 +23,21 @@ use Olcs\Logging\Log\Logger;
 class OpenAm
 {
     const AUTHENTICATE_URI = '/json/authenticate';
+    const CHANGE_PW_URI = 'json/users/%s?_action=changePassword';
     const MSG_SESSION_START_FAIL = 'Unable to begin an authentication session';
     const MSG_JSON_ENCODE_FAIL = 'POST data could not be json encoded: %s';
     const MSG_JSON_DECODE_FAIL = 'Unable to JSON decode response body: %s';
     const OPEN_AM_EXCEPTION = 'OpenAm returned exception';
 
-    /**
-     * @var UriBuilder
-     */
-    private $uriBuilder;
+    private UriBuilder $uriBuilder;
+    private HttpClient $httpClient;
+    private string $cookieName;
 
-    /**
-     * @var HttpClient
-     */
-    private $httpClient;
-
-    public function __construct(UriBuilder $uriBuilder, HttpClient $httpClient)
+    public function __construct(UriBuilder $uriBuilder, HttpClient $httpClient, string $cookieName)
     {
         $this->uriBuilder = $uriBuilder;
         $this->httpClient = $httpClient;
+        $this->cookieName = $cookieName;
     }
 
     /**
@@ -60,6 +56,39 @@ class OpenAm
         $request = $this->buildRequest($data['authId'], $username, $password);
 
         return $this->makeRequest(self::AUTHENTICATE_URI, $request->toArray());
+    }
+
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $newPassword
+     * @param string $realm
+     * @param string $token
+     *
+     * @return array
+     * @throws ClientException
+     * @throws InvalidTokenException
+     */
+    public function changePassword(
+        string $username,
+        string $password,
+        string $newPassword,
+        string $realm,
+        string $token
+    ): array {
+        $this->uriBuilder->setRealm($realm);
+
+        $headers = new Headers();
+        $headers->addHeaderLine($this->cookieName, $token);
+
+        $uri = sprintf(self::CHANGE_PW_URI, $username);
+
+        $data = [
+            'currentpassword' => $password,
+            'userpassword' => $newPassword,
+        ];
+
+        return $this->makeRequest($uri, $data, $headers);
     }
 
     /**

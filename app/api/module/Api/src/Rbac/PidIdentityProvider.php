@@ -29,16 +29,19 @@ class PidIdentityProvider implements IdentityProviderInterface
      */
     private $headerName;
 
+    private string $cookieName;
+
     /**
      * @var Identity;
      */
     private $identity;
 
-    public function __construct(RepositoryInterface $repository, $request, $headerName)
+    public function __construct(RepositoryInterface $repository, $request, $headerName, $cookieName)
     {
         $this->repository = $repository;
         $this->request = $request;
         $this->headerName = $headerName;
+        $this->cookieName = $cookieName;
     }
 
     /**
@@ -85,5 +88,24 @@ class PidIdentityProvider implements IdentityProviderInterface
         }
 
         return null;
+    }
+
+    /**
+     * get the token
+     */
+    public function getToken(): ?string
+    {
+        $cookie = $this->getCookie();
+
+        if (empty($cookie->{$this->cookieName})) {
+            return null;
+        }
+
+        return $cookie->{$this->cookieName};
+    }
+
+    private function getCookie()
+    {
+        return $this->request->getHeaders()->get('Cookie');
     }
 }
