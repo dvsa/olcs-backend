@@ -7,15 +7,56 @@
     "content-hash": "ae124dfcdd1c2dffa15b9b36ab138aeb",
     "packages": [
         {
-            "name": "aws/aws-sdk-php",
-            "version": "3.183.15",
+            "name": "aws/aws-crt-php",
+            "version": "v1.0.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.183.15/aws-aws-sdk-php-3.183.15.zip",
-                "reference": "ca0865f4aed816dd54c2101acc32cd4daa176b09",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-crt-php/v1.0.2/aws-aws-crt-php-v1.0.2.zip",
+                "reference": "3942776a8c99209908ee0b287746263725685732",
                 "shasum": ""
             },
             "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|^5.4.3"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "AWS SDK Common Runtime Team",
+                    "email": "aws-sdk-common-runtime@amazon.com"
+                }
+            ],
+            "description": "AWS Common Runtime for PHP",
+            "homepage": "http://aws.amazon.com/sdkforphp",
+            "keywords": [
+                "amazon",
+                "aws",
+                "crt",
+                "sdk"
+            ],
+            "time": "2021-09-03T22:57:30+00:00"
+        },
+        {
+            "name": "aws/aws-sdk-php",
+            "version": "3.195.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.195.2/aws-aws-sdk-php-3.195.2.zip",
+                "reference": "7e0cdfe30ee3cfa2a1494f8e3b4fa5277f118102",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-crt-php": "^1.0.2",
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-simplexml": "*",
@@ -83,7 +124,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2021-06-08T18:14:14+00:00"
+            "time": "2021-09-29T18:17:19+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -1393,18 +1434,19 @@
         },
         {
             "name": "dvsa/authentication-cognito",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dvsa/authentication-cognito/v1.2.0/dvsa-authentication-cognito-v1.2.0.zip",
-                "reference": "838f9cbe6a8f4cba8b1379e8ca16d922ef7c30e3",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dvsa/authentication-cognito/v1.3.0/dvsa-authentication-cognito-v1.3.0.zip",
+                "reference": "2956fe41536ff3f7dbf5f0eea2975559d16bc6df",
                 "shasum": ""
             },
             "require": {
-                "aws/aws-sdk-php": "~3.183.7",
+                "aws/aws-sdk-php": "^3.183.7",
                 "dvsa/contracts": "^1.1",
                 "ext-json": "*",
                 "firebase/php-jwt": "^5.2",
+                "guzzlehttp/guzzle": "^6.0 || ^7.0",
                 "league/oauth2-client": "^2.6",
                 "php": "^7.2.5 || ^8.0"
             },
@@ -1433,7 +1475,7 @@
                 "Cognito",
                 "dvsa"
             ],
-            "time": "2021-08-05T12:14:05+00:00"
+            "time": "2021-09-30T09:38:31+00:00"
         },
         {
             "name": "dvsa/contracts",
@@ -4203,11 +4245,11 @@
         },
         {
             "name": "league/mime-type-detection",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/league/mime-type-detection/1.7.0/league-mime-type-detection-1.7.0.zip",
-                "reference": "3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/league/mime-type-detection/1.8.0/league-mime-type-detection-1.8.0.zip",
+                "reference": "b38b25d7b372e9fddb00335400467b223349fd7e",
                 "shasum": ""
             },
             "require": {
@@ -4245,7 +4287,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-18T20:58:21+00:00"
+            "time": "2021-09-25T08:23:19+00:00"
         },
         {
             "name": "league/oauth2-client",
@@ -5433,17 +5475,17 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.9.4",
+            "version": "3.9.6",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/ramsey/uuid/3.9.4/ramsey-uuid-3.9.4.zip",
-                "reference": "be2451bef8147b7352a28fb4cddb08adc497ada3",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/ramsey/uuid/3.9.6/ramsey-uuid-3.9.6.zip",
+                "reference": "ffa80ab953edd85d5b6c004f96181a538aad35a3",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "paragonie/random_compat": "^1 | ^2 | ^9.99.99",
-                "php": "^5.4 | ^7 | ^8",
+                "php": "^5.4 | ^7.0 | ^8.0",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "replace": {
@@ -5452,14 +5494,16 @@
             "require-dev": {
                 "codeception/aspect-mock": "^1 | ^2",
                 "doctrine/annotations": "^1.2",
-                "goaop/framework": "1.0.0-alpha.2 | ^1 | ^2.1",
-                "jakub-onderka/php-parallel-lint": "^1",
+                "goaop/framework": "1.0.0-alpha.2 | ^1 | >=2.1.0 <=2.3.2",
                 "mockery/mockery": "^0.9.11 | ^1",
                 "moontoast/math": "^1.1",
+                "nikic/php-parser": "<=4.5.0",
                 "paragonie/random-lib": "^2",
-                "php-mock/php-mock-phpunit": "^0.3 | ^1.1",
-                "phpunit/phpunit": "^4.8 | ^5.4 | ^6.5",
-                "squizlabs/php_codesniffer": "^3.5"
+                "php-mock/php-mock-phpunit": "^0.3 | ^1.1 | ^2.6",
+                "php-parallel-lint/php-parallel-lint": "^1.3",
+                "phpunit/phpunit": ">=4.8.36 <9.0.0 | >=9.3.0",
+                "squizlabs/php_codesniffer": "^3.5",
+                "yoast/phpunit-polyfills": "^1.0"
             },
             "suggest": {
                 "ext-ctype": "Provides support for PHP Ctype functions",
@@ -5520,7 +5564,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-06T20:32:15+00:00"
+            "time": "2021-09-25T23:07:42+00:00"
         },
         {
             "name": "react/promise",
@@ -6232,11 +6276,11 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v4.4.27",
+            "version": "v4.4.31",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/debug/v4.4.27/symfony-debug-v4.4.27.zip",
-                "reference": "2f9160e92eb64c95da7368c867b663a8e34e980c",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/debug/v4.4.31/symfony-debug-v4.4.31.zip",
+                "reference": "43ede438d4cb52cd589ae5dc070e9323866ba8e0",
                 "shasum": ""
             },
             "require": {
@@ -6287,7 +6331,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-22T07:21:39+00:00"
+            "time": "2021-09-24T13:30:14+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -7617,11 +7661,11 @@
         },
         {
             "name": "mikey179/vfsstream",
-            "version": "v1.6.9",
+            "version": "v1.6.10",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/mikey179/vfsstream/v1.6.9/mikey179-vfsstream-v1.6.9.zip",
-                "reference": "2257e326dc3d0f50e55d0a90f71e37899f029718",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/mikey179/vfsstream/v1.6.10/mikey179-vfsstream-v1.6.10.zip",
+                "reference": "250c0825537d501e327df879fb3d4cd751933b85",
                 "shasum": ""
             },
             "require": {
@@ -7653,7 +7697,7 @@
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
             "homepage": "http://vfs.bovigo.org/",
-            "time": "2021-07-16T08:08:02+00:00"
+            "time": "2021-09-25T08:05:01+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -8798,11 +8842,11 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.20",
+            "version": "8.5.21",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/phpunit/8.5.20/phpunit-phpunit-8.5.20.zip",
-                "reference": "9deefba183198398a09b927a6ac6bc1feb0b7b70",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/phpunit/8.5.21/phpunit-phpunit-8.5.21.zip",
+                "reference": "50a58a60b85947b0bee4c8ecfe0f4bbdcf20e984",
                 "shasum": ""
             },
             "require": {
@@ -8881,7 +8925,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-08-31T06:44:38+00:00"
+            "time": "2021-09-25T07:37:20+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -9647,11 +9691,11 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v5.3.7",
+            "version": "v5.3.8",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/dependency-injection/v5.3.7/symfony-dependency-injection-v5.3.7.zip",
-                "reference": "a665946279f566d94ed5eb98999cfa65c6fa5a78",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/dependency-injection/v5.3.8/symfony-dependency-injection-v5.3.8.zip",
+                "reference": "e39c344e06a3ceab531ebeb6c077e6652c4a0829",
                 "shasum": ""
             },
             "require": {
@@ -9722,7 +9766,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-02T16:16:27+00:00"
+            "time": "2021-09-21T20:52:44+00:00"
         },
         {
             "name": "symfony/polyfill-php81",

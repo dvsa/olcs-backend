@@ -203,10 +203,9 @@ return [
 
             \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory::class,
-            \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class => \Dvsa\Olcs\Api\Rbac\PidIdentityProviderFactory::class,
             \Dvsa\Olcs\Api\Rbac\IdentityProviderInterface::class => \Dvsa\Olcs\Api\Rbac\IdentityProviderFactory::class,
+            \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class => \Dvsa\Olcs\Api\Rbac\PidIdentityProviderFactory::class,
             \Dvsa\Olcs\Api\Rbac\JWTIdentityProvider::class => \Dvsa\Olcs\Api\Rbac\JWTIdentityProviderFactory::class,
-            \Dvsa\Olcs\Api\Rbac\BlendedIdentityProvider::class => \Dvsa\Olcs\Api\Rbac\BlendedIdentityProviderFactory::class,
             \Dvsa\Olcs\CompaniesHouse\Service\Client::class => \Dvsa\Olcs\CompaniesHouse\Service\ClientFactory::class,
             'TransExchangeXmlMapping' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory::class,
@@ -873,7 +872,7 @@ return [
         ]
     ],
     'zfc_rbac' => [
-        'identity_provider' => \Dvsa\Olcs\Api\Rbac\BlendedIdentityProvider::class,
+        'identity_provider' => \Dvsa\Olcs\Api\Rbac\IdentityProviderInterface::class,
         'role_provider' => [
             'ZfcRbac\Role\ObjectRepositoryRoleProvider' => [
                 'object_manager'     => 'doctrine.entitymanager.orm_default',
