@@ -21,6 +21,7 @@ use Olcs\TestHelpers\Service\MocksServicesTrait;
 
 /**
  * Class JWTIdentityProviderTest
+ *
  * @see JWTIdentityProvider
  */
 class JWTIdentityProviderTest extends MockeryTestCase
@@ -31,25 +32,6 @@ class JWTIdentityProviderTest extends MockeryTestCase
      * @var JWTIdentityProvider
      */
     protected $sut;
-
-    /**
-     * @test
-     */
-    public function getIdentity_HeaderNotFoundException_WhenHeaderMissing()
-    {
-        // Setup
-        $this->setUpSut();
-
-        $request = $this->request();
-        $request->setHeaders(new Headers());
-
-        // Expectations
-        $this->expectException(HeaderNotFoundException::class);
-        $this->expectErrorMessage(JWTIdentityProvider::MESSAGE_HEADER_MISSING);
-
-        // Execute
-        $this->sut->getIdentity();
-    }
 
     /**
      * @test
@@ -102,6 +84,21 @@ class JWTIdentityProviderTest extends MockeryTestCase
     /**
      * @test
      */
+    public function getIdentity_ReturnsAnonUser_WhenHeaderMissing()
+    {
+        // Setup
+        $this->setUpSut();
+
+        // Execute
+        $identity = $this->sut->getIdentity();
+
+        // Assert
+        $this->assertSame('anon', $identity->getUser()->getLoginId());
+    }
+
+    /**
+     * @test
+     */
     public function getIdentity_ReturnsAnonUser_WhenNoUserFound()
     {
         // Setup
@@ -121,7 +118,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
         $identity = $this->sut->getIdentity();
 
         // Assert
-        $this->assertSame('anon',  $identity->getUser()->getLoginId());
+        $this->assertSame('anon', $identity->getUser()->getLoginId());
     }
 
     /**
@@ -149,7 +146,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
         $identity = $this->sut->getIdentity();
 
         // Assert
-        $this->assertSame('username',  $identity->getUser()->getLoginId());
+        $this->assertSame('username', $identity->getUser()->getLoginId());
         $this->assertSame(UserEntity::USER_TYPE_OPERATOR, $identity->getUser()->getUserType());
     }
 
@@ -220,7 +217,6 @@ class JWTIdentityProviderTest extends MockeryTestCase
         }
         $instance = $this->serviceManager->get(Request::class);
         return $instance;
-
     }
 
     /**
@@ -234,6 +230,5 @@ class JWTIdentityProviderTest extends MockeryTestCase
         }
         $instance = $this->serviceManager->get(Client::class);
         return $instance;
-
     }
 }

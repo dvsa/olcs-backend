@@ -25,6 +25,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
         CognitoClientFactory::CONFIG_POOL_ID => 'pool_id',
         CognitoClientFactory::CONFIG_REGION => 'region',
         CognitoClientFactory::CONFIG_NBF_LEEWAY => 2,
+        CognitoClientFactory::CONFIG_HTTP => [],
     ];
 
     /**
@@ -171,6 +172,14 @@ class CognitoClientFactoryTest extends MockeryTestCase
                     CognitoClientFactory::CONFIG_CLIENT_SECRET => 'client_secret',
                     CognitoClientFactory::CONFIG_POOL_ID => 'pool_id',
                 ]
+            ],
+            'Missing http' => [
+                CognitoClientFactory::CONFIG_ADAPTER => [
+                    CognitoClientFactory::CONFIG_CLIENT_ID => 'client_id',
+                    CognitoClientFactory::CONFIG_CLIENT_SECRET => 'client_secret',
+                    CognitoClientFactory::CONFIG_POOL_ID => 'pool_id',
+                    CognitoClientFactory::CONFIG_REGION => 'region'
+                ]
             ]
         ];
     }
@@ -185,7 +194,6 @@ class CognitoClientFactoryTest extends MockeryTestCase
 
     /**
      * @param array|null $config
-     * @return array
      */
     protected function configService(array $config = null)
     {

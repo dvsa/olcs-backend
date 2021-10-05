@@ -483,6 +483,7 @@ return [
                 'poolId' => '',
                 'region' => 'eu-west-1',
                 'nbfLeeway' => 0,
+                'http' => [],
             ],
             'azure' => [
                 'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
