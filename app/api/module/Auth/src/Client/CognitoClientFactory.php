@@ -6,6 +6,7 @@ namespace Dvsa\Olcs\Auth\Client;
 use Aws\AwsClient;
 use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Dvsa\Authentication\Cognito\Client;
+use GuzzleHttp\Client as HttpClient;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -21,9 +22,10 @@ class CognitoClientFactory implements FactoryInterface
     const CONFIG_CLIENT_SECRET = 'clientSecret';
     const CONFIG_POOL_ID = 'poolId';
     const CONFIG_NBF_LEEWAY = 'nbfLeeway';
+    const CONFIG_HTTP = 'http';
 
     const EXCEPTION_MESSAGE_NAMESPACE_MISSING = 'Cognito config missing from awsOptions';
-    const EXCEPTION_MESSAGE_OPTION_MISSING = 'Cognito config requires: clientId, clientSecret, poolId & region';
+    const EXCEPTION_MESSAGE_OPTION_MISSING = 'Cognito config requires: clientId, clientSecret, poolId, region and http';
 
     /**
      * @param ContainerInterface $container
@@ -43,17 +45,23 @@ class CognitoClientFactory implements FactoryInterface
             'credentials' => $container->get('AwsCredentialsProvider'),
             'version' => '2016-04-18',
             'region' => $config[static::CONFIG_REGION],
+            'http' => $config[static::CONFIG_HTTP]
         ]);
 
         // Account for clock skew - https://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#nbfDe
         Client::$leeway = $config[static::CONFIG_NBF_LEEWAY];
 
-        return new Client(
+        $instance = new Client(
             $awsClient,
             $config[static::CONFIG_CLIENT_ID],
             $config[static::CONFIG_CLIENT_SECRET],
             $config[static::CONFIG_POOL_ID]
         );
+
+        $httpClient = new HttpClient($config[static::CONFIG_HTTP]);
+        $instance->setHttpClient($httpClient);
+
+        return $instance;
     }
 
     /**
@@ -80,7 +88,8 @@ class CognitoClientFactory implements FactoryInterface
             || !array_key_exists(static::CONFIG_CLIENT_SECRET, $config)
             || !array_key_exists(static::CONFIG_POOL_ID, $config)
             || !array_key_exists(static::CONFIG_NBF_LEEWAY, $config)
-            || !array_key_exists(static::CONFIG_REGION, $config)) {
+            || !array_key_exists(static::CONFIG_REGION, $config)
+            || !array_key_exists(static::CONFIG_HTTP, $config)) {
             throw new RuntimeException(static::EXCEPTION_MESSAGE_OPTION_MISSING);
         }
 

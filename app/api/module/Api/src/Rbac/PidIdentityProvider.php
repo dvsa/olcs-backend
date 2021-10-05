@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Laminas\Http\Header\GenericHeader;
 use Laminas\Http\Request;
+use ZfcRbac\Identity\IdentityInterface;
 
 /**
  * Identity Provider
@@ -61,14 +62,6 @@ class PidIdentityProvider implements IdentityProviderInterface
         }
 
         return $this->identity;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHeaderName(): string
-    {
-        return $this->headerName;
     }
 
     /**

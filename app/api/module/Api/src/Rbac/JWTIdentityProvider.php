@@ -22,9 +22,7 @@ class JWTIdentityProvider implements IdentityProviderInterface
     use IdentityProviderTrait;
 
     const HEADER_NAME = 'Authorization';
-
     const MESSAGE_MALFORMED_BEARER = 'Malformed Bearer token';
-    const MESSAGE_HEADER_MISSING = 'Authorization header is missing';
 
     /**
      * @var UserRepository
@@ -73,7 +71,7 @@ class JWTIdentityProvider implements IdentityProviderInterface
         }
 
         if (empty($header = $this->request->getHeader(static::HEADER_NAME))) {
-            throw new HeaderNotFoundException(static::MESSAGE_HEADER_MISSING);
+            return $this->identity = new Identity(User::anon());
         }
 
         $decodedToken = $this->getJWT($header);
@@ -84,14 +82,6 @@ class JWTIdentityProvider implements IdentityProviderInterface
         }
 
         return $this->identity = new Identity($user);
-    }
-
-    /**
-     * @return string
-     */
-    public function getHeaderName(): string
-    {
-        return static::HEADER_NAME;
     }
 
     /**
