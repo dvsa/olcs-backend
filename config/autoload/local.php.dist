@@ -475,6 +475,7 @@ return [
     ],
     'auth' => [
         'default_adapter' => 'mock',
+        'identity_provider' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class,
         'adapters' => [
             'cognito' => [
                 'adapter' => \Dvsa\Olcs\Auth\Adapter\CognitoAdapter::class,
