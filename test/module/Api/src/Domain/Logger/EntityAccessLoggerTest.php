@@ -472,6 +472,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
     {
         $entity = new User(static::ANONYMOUS_USER_PID, User::USER_TYPE_ANON);
         $entity->setPid(static::ANONYMOUS_USER_PID);
+        $entity->setLoginId(User::ANON_USERNAME);
         return $entity;
     }
 
@@ -480,7 +481,9 @@ class EntityAccessLoggerTest extends MockeryTestCase
      */
     protected function internalUser(): User
     {
-        return new User(static::USER_PID, User::USER_TYPE_INTERNAL);
+        $entity = new User(static::USER_PID, User::USER_TYPE_INTERNAL);
+        $entity->setLoginId('loginId');
+        return $entity;
     }
 
     /**
@@ -488,7 +491,9 @@ class EntityAccessLoggerTest extends MockeryTestCase
      */
     protected function partnerUser(): User
     {
-        return new User(static::USER_PID, User::USER_TYPE_PARTNER);
+        $entity = new User(static::USER_PID, User::USER_TYPE_PARTNER);
+        $entity->setLoginId('loginId');
+        return $entity;
     }
 
     /**
