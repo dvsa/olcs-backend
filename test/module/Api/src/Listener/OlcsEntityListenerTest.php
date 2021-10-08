@@ -38,7 +38,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
     /** @var  m\MockInterface */
     private $mockRepoManager;
     /** @var  IdentityProviderInterface */
-    private $mockPidIdentityProvider;
+    private $mockIdentityProvider;
 
     public function setUp(): void
     {
@@ -57,7 +57,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
             ->with('User')
             ->andReturn($this->mockUserRepo);
 
-        $this->mockPidIdentityProvider = m::mock(IdentityProviderInterface::class);
+        $this->mockIdentityProvider = m::mock(IdentityProviderInterface::class);
 
         $this->mockSl = m::mock(ServiceLocatorInterface::class);
         $this->mockSl
@@ -67,7 +67,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
                     $map = [
                         AuthorizationService::class => $this->mockAuth,
                         'RepositoryServiceManager' => $this->mockRepoManager,
-                        IdentityProviderInterface::class => $this->mockPidIdentityProvider
+                        IdentityProviderInterface::class => $this->mockIdentityProvider
                     ];
 
                     return $map[$key];
@@ -98,7 +98,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
         $this->mockUow
             ->shouldReceive('scheduleExtraUpdate')->never();
 
-        $this->mockPidIdentityProvider
+        $this->mockIdentityProvider
             ->shouldReceive('getMasqueradedAsSystemUser')
             ->andReturn(false)
             ->once()
@@ -132,7 +132,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
             ->shouldReceive('propertyChanged')->never()
             ->shouldReceive('scheduleExtraUpdate')->once();
 
-        $this->mockPidIdentityProvider
+        $this->mockIdentityProvider
             ->shouldReceive('getMasqueradedAsSystemUser')
             ->andReturn(false)
             ->once()
@@ -177,7 +177,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
                 ]
             );
 
-        $this->mockPidIdentityProvider
+        $this->mockIdentityProvider
             ->shouldReceive('getMasqueradedAsSystemUser')
             ->andReturn(false)
             ->once()
@@ -190,10 +190,11 @@ class OlcsEntityListenerTest extends MockeryTestCase
 
     public function dpTestModifiedBy()
     {
-        /** @var Entity\User\User $mockUser */
-        $mockUser = m::mock(Entity\User\User::class)->makePartial();
-        $mockUser->setId(1);
-        $mockUser->setPid('abc');
+        $mockUser = Entity\User\User::create(
+            'abc',
+            Entity\User\User::USER_TYPE_OPERATOR,
+            ['loginId' => 'loginId']
+        );
 
         return [
             [
@@ -216,6 +217,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
         $mockEntity = new EntityStub();
 
         $user = new UserEntity('pid', 'system');
+        $user->setLoginId('loginId');
         $user->setId(1);
 
         $this->mockUserRepo
@@ -248,7 +250,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
                 ]
             );
 
-        $this->mockPidIdentityProvider
+        $this->mockIdentityProvider
             ->shouldReceive('getMasqueradedAsSystemUser')
             ->andReturn(true)
             ->once()

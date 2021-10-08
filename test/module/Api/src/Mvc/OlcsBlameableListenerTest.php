@@ -84,9 +84,11 @@ class OlcsBlameableListenerTest extends MockeryTestCase
 
     public function testGetFieldValueMasqueraded()
     {
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-        $mockUser->setPid('abc');
+        $mockUser = User::create(
+            'abc',
+            User::USER_TYPE_OPERATOR,
+            ['loginId' => 'loginId']
+        );
 
         /** @var AuthorizationService $mockAuth */
         $mockAuth = m::mock(AuthorizationService::class);
@@ -154,10 +156,11 @@ class OlcsBlameableListenerTest extends MockeryTestCase
 
     public function getFieldValueDataProvider()
     {
-        /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId(1);
-        $mockUser->setPid('abc');
+        $mockUser = User::create(
+            'abc',
+            User::USER_TYPE_OPERATOR,
+            ['loginId' => 'loginId']
+        );
 
         return [
             [$mockUser, $mockUser],

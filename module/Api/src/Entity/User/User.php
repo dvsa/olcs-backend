@@ -49,6 +49,9 @@ class User extends AbstractUser implements OrganisationProviderInterface
     const USER_OS_TYPE_WINDOWS_7 = 'windows_7';
     const USER_OS_TYPE_WINDOWS_10 = 'windows_10';
     const USER_OS_TYPE_NORTHERN_I = 'northern_i';
+
+    const ANON_USERNAME = 'anon';
+
     /**
      * List of all roles available by user type
      *
@@ -160,7 +163,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     {
         $user =  new static('', self::USER_TYPE_ANON);
         $user->update(['loginId' => null, 'roles' => [RoleEntity::anon()]]);
-        $user->loginId = 'anon';
+        $user->loginId = static::ANON_USERNAME;
 
         return $user;
     }
@@ -172,7 +175,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     public function isAnonymous()
     {
-        return empty($this->pid);
+        return (is_null($this->getLoginId()) || $this->getLoginId() === static::ANON_USERNAME);
     }
 
     /**
@@ -196,7 +199,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     public function update(array $data)
     {
-        if ($data['loginId'] === 'anon') {
+        if ($data['loginId'] === static::ANON_USERNAME) {
             throw new ValidationException(['username' => [self::ERR_ANON_USERNAME]]);
         }
 
