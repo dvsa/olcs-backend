@@ -169,6 +169,7 @@ return [
     CommandHandler\Tm\Unmerge::class => IsInternalEdit::class,
     CommandHandler\Tm\Update::class => IsInternalUser::class,
     CommandHandler\User\CreateUser::class => IsInternalUser::class,
+    CommandHandler\User\CreateUserFactory::class => IsInternalUser::class,
     CommandHandler\User\DeleteUser::class => IsInternalUser::class,
     CommandHandler\User\UpdateUser::class => IsInternalUser::class,
     CommandHandler\Variation\RestoreListConditionUndertaking::class => IsInternalUser::class,
