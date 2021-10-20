@@ -151,10 +151,26 @@ class CognitoAdapterTest extends MockeryTestCase
         static::assertEquals($expectedResult, $sut->changePassword($identifier, $oldPassword, $newPassword));
     }
 
-    public function dpChangePasswordNoException(): array{
+    public function dpChangePasswordNoException(): array
+    {
         return [
             [true, 200],
             [false, 500],
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function register_WithException()
+    {
+        $this->expectException(ClientException::class);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('register')
+            ->andThrow(ClientException::class);
+
+        $sut = new CognitoAdapter($mockClient);
+        $sut->register('identifier', 'password', 'email');
     }
 }
