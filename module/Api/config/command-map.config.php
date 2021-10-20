@@ -353,12 +353,12 @@ return [
         => CommandHandler\MyAccount\UpdateMyAccountSelfserve::class,
 
     // Transfer - User
-    TransferCommand\User\CreateUser::class => CommandHandler\User\CreateUser::class,
+    TransferCommand\User\CreateUser::class => CommandHandler\User\CreateUserFactory::class,
     TransferCommand\User\UpdateUser::class => CommandHandler\User\UpdateUser::class,
     TransferCommand\User\DeleteUser::class => CommandHandler\User\DeleteUser::class,
-    TransferCommand\User\RegisterUserSelfserve::class => CommandHandler\User\RegisterUserSelfserve::class,
+    TransferCommand\User\RegisterUserSelfserve::class => CommandHandler\User\RegisterUserSelfserveFactory::class,
     TransferCommand\User\RemindUsernameSelfserve::class => CommandHandler\User\RemindUsernameSelfserve::class,
-    TransferCommand\User\CreateUserSelfserve::class => CommandHandler\User\CreateUserSelfserve::class,
+    TransferCommand\User\CreateUserSelfserve::class => CommandHandler\User\CreateUserSelfServeFactory::class,
     TransferCommand\User\UpdateUserSelfserve::class => CommandHandler\User\UpdateUserSelfserve::class,
     TransferCommand\User\DeleteUserSelfserve::class => CommandHandler\User\DeleteUserSelfserve::class,
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,

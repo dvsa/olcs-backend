@@ -5,10 +5,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Service\PasswordService;
-use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserCreated as SendUserCreatedDto;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
@@ -29,21 +27,14 @@ use ZfcRbac\Service\AuthorizationService;
 /**
  * Create User Selfserve Test
  */
-class CreateUserSelfserveTest extends CommandHandlerTestCase
+class CreateUserSelfserveOpenAMTest extends CommandHandlerTestCase
 {
-    /**
-     * @var ValidatableAdapterInterface|m\LegacyMockInterface|m\MockInterface
-     */
-    private $mockedAdapter;
-
     public function setUp(): void
     {
         $mockedPasswordService = m::mock(PasswordService::class);
         $mockedPasswordService->shouldReceive('generatePassword')->andReturn('abcdef123456');
 
-        $this->mockedAdapter = m::mock(ValidatableAdapterInterface::class);
-
-        $this->sut = new Sut($mockedPasswordService, $this->mockedAdapter);
+        $this->sut = new Sut($mockedPasswordService, null);
         $this->mockRepo('User', User::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
 
@@ -80,8 +71,18 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
             'permission' => UserEntity::PERMISSION_ADMIN,
         ];
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
 
-        $this->mockedAdapter->shouldReceive('register')->once()->byDefault();
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
 
         $command = Cmd::create($data);
 
@@ -128,12 +129,12 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
                         SendUserTemporaryPasswordDto::class,
                         [
                             'user' => $userId,
-                            'password' => 'abcdef123456',
+                            'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()
                     );
                 }
-            )->byDefault();
+            );
 
         $result = $this->sut->handleCommand($command);
 
@@ -312,82 +313,6 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn([m::mock(UserEntity::class)])
             ->shouldReceive('enableSoftDeleteable')
             ->once();
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandThrowsExceptionWhenUnableToStoreUser()
-    {
-        $this->expectException(\Exception::class);
-
-        /** @var OrganisationEntity $organisation */
-        $organisation = m::mock(OrganisationEntity::class)->makePartial();
-        $organisation->setId(1000);
-
-        /** @var OrganisationUserEntity $organisation */
-        $organisationUser = m::mock(OrganisationUserEntity::class)->makePartial();
-        $organisationUser->setOrganisation($organisation);
-
-        /** @var UserEntity $currentUser */
-        $currentUser = new UserEntity('pid', UserEntity::USER_TYPE_OPERATOR);
-        $currentUser->setId(222);
-        $currentUser->getOrganisationUsers()->add($organisationUser);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
-
-        $userId = 111;
-
-        $data = [
-            'loginId' => 'login_id',
-            'contactDetails' => [
-                'emailAddress' => 'test1@test.me',
-                'person' => [
-                    'forename' => 'updated forename',
-                    'familyName' => 'updated familyName',
-                ],
-            ],
-            'permission' => UserEntity::PERMISSION_ADMIN,
-        ];
-
-
-        $this->mockedAdapter->shouldReceive('register')
-            ->once()
-            ->andThrow(ClientException::class);
-
-        $command = Cmd::create($data);
-
-        $this->repoMap['User']
-            ->shouldReceive('disableSoftDeleteable')
-            ->once()
-            ->shouldReceive('fetchByLoginId')
-            ->once()
-            ->with($data['loginId'])
-            ->andReturn([])
-            ->shouldReceive('enableSoftDeleteable')
-            ->once();
-
-        $this->repoMap['User']
-            ->shouldReceive('populateRefDataReference')
-            ->once()
-            ->andReturn($data);
-
-        $this->repoMap['User']
-            ->shouldReceive('delete')
-            ->once();
-
-
-        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
-            ->once()
-            ->with($data['contactDetails'])
-            ->andReturn($data['contactDetails']);
-
-        /** @var UserEntity $savedUser */
-        $savedUser = null;
-
-        $this->repoMap['User']->shouldReceive('save')
-            ->once()
-            ->with(m::type(UserEntity::class));
 
         $this->sut->handleCommand($command);
     }
