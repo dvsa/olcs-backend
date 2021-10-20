@@ -5,6 +5,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
+use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserCreated as SendUserCreatedDto;
@@ -18,7 +19,11 @@ use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Service\OpenAm\Client;
+use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
+use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\User\CreateUserSelfserve as CreateUserSelfserveCommand;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 
 /**
  * Create User Selfserve
@@ -34,6 +39,26 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['ContactDetails'];
+    /**
+     * @var \Dvsa\Olcs\Api\Service\OpenAm\UserInterface|ValidatableAdapterInterface|null
+     */
+    private $adapter;
+
+    /**
+     * @var PasswordService
+     */
+    private $passwordService;
+
+    /**
+     *
+     * @param ValidatableAdapterInterface|null $adapter
+     * @param PasswordService $passwordService
+     */
+    public function __construct(PasswordService $passwordService, ?ValidatableAdapterInterface $adapter)
+    {
+        $this->adapter = $adapter;
+        $this->passwordService = $passwordService;
+    }
 
     /**
      * Handle command
@@ -44,6 +69,13 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
+        assert($command instanceof CreateUserSelfserveCommand);
+
+        //TODO: Remove once OpenAM is removed.
+        if (is_null($this->adapter)) {
+            $this->adapter = $this->getOpenAmUser();
+        }
+
         $data = $command->getArrayCopy();
 
         // validate username
@@ -78,7 +110,7 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
         $data['roles'] = User::getRolesByUserType($data['userType'], $data['permission']);
 
         $user = User::create(
-            $this->getOpenAmUser()->generatePid($command->getLoginId()),
+            $this->generatePid($command->getLoginId()),
             $data['userType'],
             $this->getRepo()->populateRefDataReference($data)
         );
@@ -95,16 +127,13 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
 
         $this->getRepo()->save($user);
 
-        $password = null;
-
-        $this->getOpenAmUser()->registerUser(
-            $command->getLoginId(),
-            $command->getContactDetails()['emailAddress'],
-            Client::REALM_SELFSERVE,
-            function ($params) use (&$password) {
-                $password = $params['password'];
-            }
-        );
+        $password = $this->passwordService->generatePassword();
+        try {
+            $this->storeUserInAuthService($command, $password);
+        } catch (ClientException | FailedRequestException $e) {
+            $this->getRepo()->delete($user);
+            throw new \Exception("Unable to store user in Auth Service", $e->getCode(), $e);
+        }
 
         try {
             // send welcome email
@@ -134,5 +163,43 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
         $result->addMessage('User created successfully');
 
         return $result;
+    }
+
+    /**
+     * @param string $loginId
+     * @return string
+     * @TODO: Remove once OpenAM removed
+     */
+    private function generatePid(string $loginId)
+    {
+        if ($this->adapter instanceof ValidatableAdapterInterface) {
+            return null;
+        }
+        return $this->adapter->generatePid($loginId);
+    }
+
+    /**
+     * @throws FailedRequestException
+     * @throws ClientException
+     * @todo: Call directly from handle() once OpenAM removed
+     */
+    private function storeUserInAuthService(CreateUserSelfserveCommand $command, string &$password)
+    {
+        if ($this->adapter instanceof ValidatableAdapterInterface) {
+            $this->adapter->register(
+                $command->getLoginId(),
+                $password,
+                $command->getContactDetails()['emailAddress']
+            );
+        } else {
+            $this->adapter->registerUser(
+                $command->getLoginId(),
+                $command->getContactDetails()['emailAddress'],
+                Client::REALM_SELFSERVE,
+                function ($params) use (&$password) {
+                    $password = $params['password'];
+                }
+            );
+        }
     }
 }

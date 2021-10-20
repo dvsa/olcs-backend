@@ -118,4 +118,17 @@ class CognitoAdapter extends AbstractAdapter
             throw new ChangePasswordException($e->getMessage());
         }
     }
+
+    /**
+     * @param string $identifier
+     * @param string $password
+     * @param string $email
+     * @param array|null $attributes
+     * @throws ClientException
+     */
+    public function register(string $identifier, string $password, string $email, array $attributes = []): void
+    {
+        $attributes = array_merge(['email' => $email], $attributes);
+        $this->client->register($identifier, $password, $attributes);
+    }
 }

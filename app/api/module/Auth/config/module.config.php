@@ -9,7 +9,8 @@ return [
             \Dvsa\Olcs\Auth\Client\OpenAm::class => \Dvsa\Olcs\Auth\Client\OpenAmFactory::class,
             \Dvsa\Olcs\Auth\Client\UriBuilder::class => \Dvsa\Olcs\Auth\Client\UriBuilderFactory::class,
             \Dvsa\Authentication\Cognito\Client::class => \Dvsa\Olcs\Auth\Client\CognitoClientFactory::class,
-            \Dvsa\Olcs\Auth\Adapter\CognitoAdapter::class => \Dvsa\Olcs\Auth\Adapter\CognitoAdapterFactory::class
+            \Dvsa\Olcs\Auth\Adapter\CognitoAdapter::class => \Dvsa\Olcs\Auth\Adapter\CognitoAdapterFactory::class,
+            \Dvsa\Olcs\Auth\Service\PasswordService::class => \Dvsa\Olcs\Auth\Service\PasswordServiceFactory::class,
         ],
     ],
 ];

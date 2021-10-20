@@ -5,10 +5,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Service\PasswordService;
-use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserRegistered as SendUserRegisteredDto;
@@ -33,21 +31,14 @@ use ZfcRbac\Service\AuthorizationService;
 /**
  * Register User Selfserve Test
  */
-class RegisterUserSelfserveTest extends CommandHandlerTestCase
+class RegisterUserSelfserveOpenAMTest extends CommandHandlerTestCase
 {
-    /**
-     * @var ValidatableAdapterInterface|m\LegacyMockInterface|m\MockInterface
-     */
-    private $mockedAdapter;
-
     public function setUp(): void
     {
         $mockedPasswordService = m::mock(PasswordService::class);
         $mockedPasswordService->shouldReceive('generatePassword')->andReturn('abcdef123456');
 
-        $this->mockedAdapter = m::mock(ValidatableAdapterInterface::class);
-
-        $this->sut = new Sut($mockedPasswordService, $this->mockedAdapter);
+        $this->sut = new Sut($mockedPasswordService, null);
         $this->mockRepo('User', User::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('Licence', Licence::class);
@@ -103,6 +94,19 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
             ->shouldReceive('enableSoftDeleteable')
             ->once();
 
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
+
         /** @var OrganisationEntity $savedOrg */
         $savedOrg = null;
 
@@ -148,15 +152,12 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                         SendUserTemporaryPasswordDto::class,
                         [
                             'user' => $userId,
-                            'password' => 'abcdef123456',
+                            'password' => 'GENERATED_PASSWORD',
                         ],
                         new Result()
                     );
                 }
             );
-
-        $this->mockedAdapter->shouldReceive('register')
-            ->once();
 
         $result = $this->sut->handleCommand($command);
 
@@ -220,8 +221,18 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
             ->shouldReceive('enableSoftDeleteable')
             ->once();
 
-        $this->mockedAdapter->shouldReceive('register')
-            ->once();
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
+
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('registerUser')
+            ->with('login_id', 'test1@test.me', 'selfserve', m::type('callable'))
+            ->andReturnUsing(
+                function ($loginId, $emailAddress, $realm, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
 
         $org = m::mock(OrganisationEntity::class);
 
@@ -269,7 +280,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
                     'licence' => $licId
                 ],
                 'knownValues' => [
-                    'SELF_SERVICE_PASSWORD' => 'abcdef123456'
+                    'SELF_SERVICE_PASSWORD' => 'GENERATED_PASSWORD'
                 ],
                 'description' => 'Self service new password letter',
                 'category' => CategoryEntity::CATEGORY_APPLICATION,
@@ -366,67 +377,5 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
             ->once();
 
         $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandThrowsExceptionWhenUnableToStoreUser()
-    {
-        $data = [
-            'loginId' => 'login_id',
-            'contactDetails' => [
-                'emailAddress' => 'test1@test.me',
-                'person' => [
-                    'forename' => 'updated forename',
-                    'familyName' => 'updated familyName',
-                ],
-            ],
-            'organisationName' => 'Org Name',
-            'businessType' => OrganisationEntity::ORG_TYPE_SOLE_TRADER,
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->repoMap['User']
-            ->shouldReceive('disableSoftDeleteable')
-            ->once()
-            ->shouldReceive('fetchByLoginId')
-            ->once()
-            ->with($data['loginId'])
-            ->andReturn([])
-            ->shouldReceive('enableSoftDeleteable')
-            ->once();
-
-        $this->repoMap['Organisation']->shouldReceive('save')
-            ->once()
-            ->with(m::type(OrganisationEntity::class))
-            ->andReturnUsing(
-                function (OrganisationEntity $org) use (&$savedOrg) {
-                    $savedOrg = $org;
-                }
-            );
-
-        $this->repoMap['User']
-            ->shouldReceive('populateRefDataReference')
-            ->once()
-            ->andReturn($data);
-
-        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
-            ->once()
-            ->with($data['contactDetails'])
-            ->andReturn($data['contactDetails']);
-
-        $this->repoMap['User']->shouldReceive('save')
-            ->once()
-            ->with(m::type(UserEntity::class));
-
-        $this->repoMap['User']->shouldReceive('delete')->once();
-
-        $this->mockedAdapter->shouldReceive('register')
-            ->once()
-            ->andThrow(ClientException::class);
-
-        $this->expectException(\Exception::class);
-
-        $this->sut->handleCommand($command);
-
     }
 }
