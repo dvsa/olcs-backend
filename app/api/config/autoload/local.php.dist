@@ -24,8 +24,8 @@ return [
     // Postcode/Address service
     'address' => [
         'client' => [
-            // URI e.g. http://address.olcs.da.nonprod.dvsa.aws/ *Environment specific*
-            'baseuri' => 'http://address.olcs.da.nonprod.dvsa.aws/'
+            // *Environment specific*
+            'baseuri' => 'http://address.reg.olcs.dev-dvsacloud.uk/'
         ]
     ],
 
