@@ -150,6 +150,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         if ($command->getIsOwner()) {
             $tma->setIsOwner($command->getIsOwner());
         }
+        $tma->setHasUndertakenTraining($command->getHasUndertakenTraining());
         $tma->setHasOtherLicences($this->yesNoToBoolOrNull($command->getHasOtherLicences()));
         $tma->setHasOtherEmployment($this->yesNoToBoolOrNull($command->getHasOtherEmployment()));
         $tma->setHasConvictions($this->yesNoToBoolOrNull($command->getHasConvictions()));

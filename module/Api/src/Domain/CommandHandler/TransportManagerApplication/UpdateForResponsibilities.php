@@ -50,6 +50,7 @@ final class UpdateForResponsibilities extends AbstractCommandHandler implements 
         $transportManagerApplication->updateTransportManagerApplicationFull(
             $this->getRepo()->getRefdataReference($command->getTmType()),
             $command->getIsOwner(),
+            $command->getHasUndertakenTraining(),
             $command->getHoursMon(),
             $command->getHoursTue(),
             $command->getHoursWed(),
