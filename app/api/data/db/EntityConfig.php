@@ -1841,6 +1841,9 @@ return array(
         'declaration_confirmation' => array(
             'type' => 'yesno'
         ),
+        'has_undertaken_training' => array(
+            'type' => 'yesnonull'
+        ),
     ),
     'statement' => array(
         'case_id' => array(
