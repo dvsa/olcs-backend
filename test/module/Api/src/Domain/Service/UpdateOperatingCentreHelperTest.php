@@ -9,7 +9,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use ZfcRbac\Service\AuthorizationService;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use Laminas\ServiceManager\ServiceManager;
 use Dvsa\OlcsTest\Api\Entity\Application\ApplicationBuilder;
 use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
 
@@ -20,7 +19,11 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
 {
     use MocksServicesTrait;
 
-    protected const TOTAL_AUTH_VEHICLES_COMMAND_PROPERTY = 'totAuthVehicles';
+    protected const TOTAL_AUTH_HGV_VEHICLES_COMMAND_PROPERTY = 'totAuthHgvVehicles';
+    protected const TOTAL_AUTH_LGV_VEHICLES_COMMAND_PROPERTY = 'totAuthLgvVehicles';
+    protected const A_LGV = 1;
+    protected const LGVS_NOT_SUPPORTED_FOR_PSVS_ERROR_CODE = 'ERR_OC_P_1';
+    protected const LGVS_NOT_SUPPORTED_FOR_NON_STANDARD_INTERNATIONAL_LICENCE_TYPES_ERROR_CODE = 'ERR_OC_LGV_1';
 
     /**
      * @var UpdateOperatingCentreHelper|null
@@ -157,7 +160,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
                 false,
                 false,
                 [
-                    'totAuthVehicles' => 9,
+                    'totAuthHgvVehicles' => 9,
                 ],
                 []
             ],
@@ -165,10 +168,10 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
                 true,
                 true,
                 [
-                    'totAuthVehicles' => 9,
+                    'totAuthHgvVehicles' => 9,
                 ],
                 [
-                    'totAuthVehicles' => [
+                    'totAuthHgvVehicles' => [
                         ['ERR_OC_R_1' => 'ERR_OC_R_1']
                     ]
                 ]
@@ -247,7 +250,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
         $this->setUpSut();
 
         // Assert
-        $this->assertIsCallable([$this->sut, 'validateTotalAuthVehicles']);
+        $this->assertIsCallable([$this->sut, 'validateTotalAuthHgvVehicles']);
     }
 
     /**
@@ -290,7 +293,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     }
 
     /**
-     * @param ?int $totAuthVehicles
+     * @param ?int $totAuthHgvs
      * @param int $operatingCentreCount,
      * @param array $operatingCentreConstraints
      * @param string $validationErrorCode
@@ -298,24 +301,24 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
      * @dataProvider invalidTotalAuthVehicleConfigurations
      * @depends validateTotalAuthVehicles_IsCallable
      */
-    public function validateTotalAuthVehicles_AddsValidationMessages_WhereTotalAuthVehiclesValueIsInvalid(
-        ?int $totAuthVehicles,
+    public function validateTotalAuthVehicles_AddsValidationMessages_WhereTotalAuthHgvVehiclesValueIsInvalid(
+        ?int $totAuthHgvs,
         int $operatingCentreCount,
         array $operatingCentreConstraints,
         string $validationErrorCode
     ) {
         // Setup
         $this->setUpSut();
-        $command = UpdateOperatingCentres::create(['totAuthVehicles' => $totAuthVehicles]);
-        $operatingCentreConstraints = array_combine(['minVehicleAuth', 'maxVehicleAuth'], $operatingCentreConstraints);
+        $command = UpdateOperatingCentres::create(['totAuthHgvVehicles' => $totAuthHgvs]);
+        $operatingCentreConstraints = array_combine(['minHgvVehicleAuth', 'maxHgvVehicleAuth'], $operatingCentreConstraints);
         $operatingCentreConstraints['noOfOperatingCentres'] = $operatingCentreCount;
         $entity = ApplicationBuilder::application()->build();
 
         // Execute
-        $this->sut->validateTotalAuthVehicles($entity, $command, $operatingCentreConstraints);
+        $this->sut->validateTotalAuthHgvVehicles($entity, $command, $operatingCentreConstraints);
 
         // Assert
-        $this->assertSame($validationErrorCode, $this->sut->getMessages()[static::TOTAL_AUTH_VEHICLES_COMMAND_PROPERTY][0][$validationErrorCode] ?? null);
+        $this->assertSame($validationErrorCode, $this->sut->getMessages()[static::TOTAL_AUTH_HGV_VEHICLES_COMMAND_PROPERTY][0][$validationErrorCode] ?? null);
     }
 
     /**
@@ -350,20 +353,20 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
      * @dataProvider validTotalAuthVehicleConfigurations
      * @depends validateTotalAuthVehicles_IsCallable
      */
-    public function validateTotalAuthVehicles_DoesNotAddValidationMessages_WhereTotalAuthVehiclesValueIsValid(
+    public function validateTotalAuthVehicles_DoesNotAddValidationMessages_WhereTotalAuthHgvVehiclesValueIsValid(
         int $totAuthVehicles,
         int $operatingCentreCount,
         array $operatingCentreConstraints
     ) {
         // Setup
         $this->setUpSut();
-        $command = UpdateOperatingCentres::create([static::TOTAL_AUTH_VEHICLES_COMMAND_PROPERTY => $totAuthVehicles]);
+        $command = UpdateOperatingCentres::create([static::TOTAL_AUTH_HGV_VEHICLES_COMMAND_PROPERTY => $totAuthVehicles]);
         $entity = ApplicationBuilder::application()->build();
-        $operatingCentreConstraints = array_combine(['minVehicleAuth', 'maxVehicleAuth'], $operatingCentreConstraints);
+        $operatingCentreConstraints = array_combine(['minHgvVehicleAuth', 'maxHgvVehicleAuth'], $operatingCentreConstraints);
         $operatingCentreConstraints['noOfOperatingCentres'] = $operatingCentreCount;
 
         // Execute
-        $this->sut->validateTotalAuthVehicles($entity, $command, $operatingCentreConstraints);
+        $this->sut->validateTotalAuthHgvVehicles($entity, $command, $operatingCentreConstraints);
 
         // Assert
         $this->assertSame([], $this->sut->getMessages());
@@ -371,20 +374,20 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends validateTotalAuthVehicles_DoesNotAddValidationMessages_WhereTotalAuthVehiclesValueIsValid
+     * @depends validateTotalAuthVehicles_DoesNotAddValidationMessages_WhereTotalAuthHgvVehiclesValueIsValid
      */
-    public function validateTotalAuthVehicles_AcceptsLicence()
+    public function validateTotalAuthHgvVehicles_AcceptsLicence()
     {
         // Setup
         $this->setUpSut();
         [$totAuthVehicles, $operatingCentreCount, $operatingCentreConstraints] = array_values($this->validTotalAuthVehicleConfigurations())[0];
-        $command = UpdateOperatingCentres::create(['totAuthVehicles' => $totAuthVehicles]);
+        $command = UpdateOperatingCentres::create(['totAuthHgvVehicles' => $totAuthVehicles]);
         $entity = LicenceBuilder::aLicence()->build();
-        $operatingCentreConstraints = array_combine(['minVehicleAuth', 'maxVehicleAuth'], $operatingCentreConstraints);
+        $operatingCentreConstraints = array_combine(['minHgvVehicleAuth', 'maxHgvVehicleAuth'], $operatingCentreConstraints);
         $operatingCentreConstraints['noOfOperatingCentres'] = $operatingCentreCount;
 
         // Execute
-        $this->sut->validateTotalAuthVehicles($entity, $command, $operatingCentreConstraints);
+        $this->sut->validateTotalAuthHgvVehicles($entity, $command, $operatingCentreConstraints);
 
         // Assert
         $this->assertTrue(true, 'Expected no exception to be thrown');
@@ -400,6 +403,55 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
 
         // Assert
         $this->assertIsCallable([$this->sut, 'validatePsv']);
+    }
+
+    /**
+     * @test
+     * @depends validatePsv_IsCallable
+     */
+    public function validatePsv_AddsValidationMessages_WhenLgvsAreProvided()
+    {
+        // Setup
+        $this->setUpSut();
+        $command = UpdateOperatingCentres::create([static::TOTAL_AUTH_LGV_VEHICLES_COMMAND_PROPERTY => static::A_LGV]);
+        $entity = ApplicationBuilder::applicationForLicence(LicenceBuilder::aPsvLicence())->build();
+
+        // Execute
+        $this->sut->validatePsv($entity, $command);
+
+        // Assert
+        $this->assertNotNull($this->sut->getMessages()[static::TOTAL_AUTH_LGV_VEHICLES_COMMAND_PROPERTY][0][static::LGVS_NOT_SUPPORTED_FOR_PSVS_ERROR_CODE] ?? null);
+    }
+
+    /**
+     * @test
+     */
+    public function validateTotalAuthLgvVehicles_IsCallable()
+    {
+        // Setup
+        $this->setUpSut();
+
+        // Assert
+        $this->assertIsCallable([$this->sut, 'validateTotalAuthLgvVehicles']);
+    }
+
+    /**
+     * @test
+     * @depends validateTotalAuthLgvVehicles_IsCallable
+     */
+    public function validateTotalAuthLgvVehicles_AddsValidationMessages_WhenLgvsAreProvided_WithEntity_ThatIsGoods_AndHasALicenceTypeThatIsNotStandardInternational()
+    {
+        // Setup
+        $this->setUpSut();
+        $command = UpdateOperatingCentres::create([static::TOTAL_AUTH_LGV_VEHICLES_COMMAND_PROPERTY => static::A_LGV]);
+        $entity = LicenceBuilder::aGoodsLicence()->ofTypeRestricted()->build();
+        $errorCode = static::LGVS_NOT_SUPPORTED_FOR_NON_STANDARD_INTERNATIONAL_LICENCE_TYPES_ERROR_CODE;
+
+        // Execute
+        $this->sut->validateTotalAuthLgvVehicles($entity, $command);
+
+        // Assert
+        $this->assertSame($errorCode, $this->sut->getMessages()[static::TOTAL_AUTH_LGV_VEHICLES_COMMAND_PROPERTY][0][$errorCode] ?? null);
     }
 
     public function setUp(): void

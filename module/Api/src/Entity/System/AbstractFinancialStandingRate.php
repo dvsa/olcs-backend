@@ -23,6 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="financial_standing_rate",
  *    indexes={
+ *        @ORM\Index(name="fk_financial_standing_rate_vehicle_type_ref_data_id",
+     *     columns={"vehicle_type"}),
  *        @ORM\Index(name="ix_financial_standing_rate_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_financial_standing_rate_goods_or_psv", columns={"goods_or_psv"}),
  *        @ORM\Index(name="ix_financial_standing_rate_last_modified_by", columns={"last_modified_by"}),
@@ -118,6 +120,16 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
      * @ORM\JoinColumn(name="licence_type", referencedColumnName="id", nullable=false)
      */
     protected $licenceType;
+
+    /**
+     * Vehicle type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="vehicle_type", referencedColumnName="id", nullable=true)
+     */
+    protected $vehicleType;
 
     /**
      * Version
@@ -325,6 +337,30 @@ abstract class AbstractFinancialStandingRate implements BundleSerializableInterf
     public function getLicenceType()
     {
         return $this->licenceType;
+    }
+
+    /**
+     * Set the vehicle type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $vehicleType entity being set as the value
+     *
+     * @return FinancialStandingRate
+     */
+    public function setVehicleType($vehicleType)
+    {
+        $this->vehicleType = $vehicleType;
+
+        return $this;
+    }
+
+    /**
+     * Get the vehicle type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getVehicleType()
+    {
+        return $this->vehicleType;
     }
 
     /**

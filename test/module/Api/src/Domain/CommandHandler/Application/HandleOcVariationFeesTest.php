@@ -204,6 +204,53 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    public function testHandleCommandWithIncreasedLgvAuthWithoutFees()
+    {
+        $data = [];
+        $command = Cmd::create($data);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setId(111);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $application
+            ->shouldReceive('hasLgvAuthorisationIncreased')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true)
+            ->shouldReceive('hasApplicationFee')
+            ->andReturn(false);
+
+        $this->expectedSideEffect(
+            CreateApplicationFee::class,
+            [
+                'id' => 111,
+                'feeTypeFeeType' => FeeType::FEE_TYPE_VAR,
+                'description' => null
+            ],
+            (new Result())->addMessage('CreateApplicationFee')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'CreateApplicationFee'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
     public function testHandleCommandWithUpdatedOcWithIncreasedVehiclesWithoutFees()
     {
         $data = [];

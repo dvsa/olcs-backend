@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\System;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\FinancialStandingRateRulesTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate as Entity;
@@ -22,17 +23,21 @@ use Dvsa\Olcs\Transfer\Command\System\UpdateFinancialStandingRate as Cmd;
  */
 final class UpdateFinancialStandingRate extends AbstractCommandHandler
 {
+    use FinancialStandingRateRulesTrait;
+
     protected $repoServiceName = 'FinancialStandingRate';
 
     public function handleCommand(CommandInterface $command)
     {
         $rate = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
+        $this->checkInputRules($command);
         $this->checkForDuplicate($command, $rate->getId());
 
         $rate
             ->setGoodsOrPsv($this->getRepo()->getRefdataReference($command->getGoodsOrPsv()))
             ->setLicenceType($this->getRepo()->getRefdataReference($command->getLicenceType()))
+            ->setVehicleType($this->getRepo()->getRefdataReference($command->getVehicleType()))
             ->setFirstVehicleRate($command->getFirstVehicleRate())
             ->setAdditionalVehicleRate($command->getAdditionalVehicleRate())
             ->setEffectiveFrom(new \DateTime($command->getEffectiveFrom()));
@@ -51,6 +56,7 @@ final class UpdateFinancialStandingRate extends AbstractCommandHandler
         $existing = $this->getRepo()->fetchByCategoryTypeAndDate(
             $command->getGoodsOrPsv(),
             $command->getLicenceType(),
+            $command->getVehicleType(),
             $command->getEffectiveFrom()
         );
 
@@ -64,7 +70,7 @@ final class UpdateFinancialStandingRate extends AbstractCommandHandler
 
         if (!empty($existing)) {
             // duplicate detected
-            $msg = 'A rate for this operator type, licence type and effective date already exists';
+            $msg = 'A rate for this operator type, licence type, vehicle type and effective date already exists';
             throw new ValidationException([$msg]);
         }
     }

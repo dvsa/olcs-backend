@@ -49,7 +49,9 @@ class InterimOperatingCentres extends AbstractQueryHandler
         return $this->result(
             $application,
             ['licence'],
-            ['operatingCentres' => $this->resultList($ocs, $ocBundle)]
+            [
+                'operatingCentres' => $this->resultList($ocs, $ocBundle),
+            ]
         )->serialize();
     }
 }

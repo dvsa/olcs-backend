@@ -80,7 +80,7 @@ class UpdateOperatingCentresStatusTest extends AbstractUpdateStatusTestCase
         $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
 
         $this->application->setOperatingCentres(['foo']);
-        $this->application->setTotAuthVehicles(10);
+        $this->application->updateTotAuthHgvVehicles(10);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
@@ -92,7 +92,7 @@ class UpdateOperatingCentresStatusTest extends AbstractUpdateStatusTestCase
         $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
 
         $this->application->setOperatingCentres(['foo']);
-        $this->application->setTotAuthVehicles(10);
+        $this->application->updateTotAuthHgvVehicles(10);
         $this->application->setTotAuthTrailers(10);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);

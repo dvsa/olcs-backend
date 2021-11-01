@@ -214,18 +214,18 @@ class TransportManagerEntityTest extends EntityTester
         $org4->setId(104);
 
         $lic1 = new Licence($org1, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic1->setTotAuthVehicles(1);
+        $lic1->updateTotAuthHgvVehicles(1);
         $lic2 = new Licence($org2, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic2->setTotAuthVehicles(2);
+        $lic2->updateTotAuthHgvVehicles(2);
         $lic3 = new Licence($org3, $this->getRefData(Licence::LICENCE_STATUS_VALID));
-        $lic3->setTotAuthVehicles(3);
+        $lic3->updateTotAuthHgvVehicles(3);
 
         $app1 = new Application($lic1, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
-        $app1->setTotAuthVehicles(1);
+        $app1->updateTotAuthHgvVehicles(1);
         $app2 = new Application($lic2, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
-        $app2->setTotAuthVehicles(2);
+        $app2->updateTotAuthHgvVehicles(2);
         $app3 = new Application($lic3, $this->getRefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION), 0);
-        $app3->setTotAuthVehicles(3);
+        $app3->updateTotAuthHgvVehicles(3);
 
         $tma1 = new TransportManagerApplication();
         $tma1->setApplication($app1);

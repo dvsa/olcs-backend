@@ -36,14 +36,13 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
         /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
-        $applicationOcs = $application->getOperatingCentres();
-
-        $licenceOcs = $application->getLicence()->getOperatingCentres();
-
         // OLCS-10953: don't invoke fee logic if application was created internally
         if ($application->createdInternally()) {
             return $this->result;
         }
+
+        $applicationOcs = $application->getOperatingCentres();
+        $licenceOcs = $application->getLicence()->getOperatingCentres();
 
         if ($this->feeApplies($applicationOcs, $licenceOcs, $application)) {
             $this->maybeCreateVariationFee($application);
@@ -105,8 +104,12 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
      */
     private function feeApplies($applicationOcs, $licenceOcs, $application)
     {
-        foreach ($applicationOcs as $aoc) {
+        if ($application->hasLgvAuthorisationIncreased()) {
+            // if there's an increase in LGV authorisation, fee applies
+            return true;
+        }
 
+        foreach ($applicationOcs as $aoc) {
             switch ($aoc->getAction()) {
                 case 'A':
                     // operating centre added, fee applies if this is a goods application

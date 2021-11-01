@@ -22,6 +22,8 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
 use Mockery as m;
+use Dvsa\OlcsTest\Api\Entity\Traits\TotAuthVehiclesTraitTest;
+use Dvsa\Olcs\Api\Entity\Organisation\AbstractOrganisation;
 
 /**
  * @covers \Dvsa\Olcs\Api\Entity\Application\Application
@@ -29,6 +31,8 @@ use Mockery as m;
  */
 class ApplicationEntityTest extends EntityTester
 {
+    use TotAuthVehiclesTraitTest;
+
     protected const A_NUMBER_OF_VEHICLES = 2;
 
     /**
@@ -183,7 +187,7 @@ class ApplicationEntityTest extends EntityTester
         $this->assertFalse($sut->hasUpgrade());
     }
 
-    public function dataProviderVehiclesIncreased()
+    public function dpHasAuthTrailersIncrease()
     {
         return [
             [false, null, null],
@@ -196,23 +200,7 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dataProviderVehiclesIncreased
-     */
-    public function testHasAuthVehiclesIncrease($expected, $applicationCount, $licenceCount)
-    {
-        $sut = m::mock(Entity::class)->makePartial();
-
-        $sut->shouldReceive('getTotAuthVehicles')->with()->andReturn($applicationCount);
-
-        $mockLicence = m::mock();
-        $sut->shouldReceive('getLicence')->with()->andReturn($mockLicence);
-        $mockLicence->shouldReceive('getTotAuthVehicles')->with()->andReturn($licenceCount);
-
-        $this->assertSame($expected, $sut->hasAuthVehiclesIncrease());
-    }
-
-    /**
-     * @dataProvider dataProviderVehiclesIncreased
+     * @dataProvider dpHasAuthTrailersIncrease
      */
     public function testHasAuthTrailersIncrease($expected, $applicationCount, $licenceCount)
     {
@@ -542,53 +530,69 @@ class ApplicationEntityTest extends EntityTester
         $this->assertTrue($sut->canHaveInterimLicence());
     }
 
-    public function testCanHaveInterimLicence1()
+    public function testCanHaveInterimLicenceWithHgvAuthorisationIncreased()
     {
         $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $sut->shouldReceive('getGoodsOrPsv->getId')->with()->once()->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
         $sut->shouldReceive('getIsVariation')->with()->once()->andReturn(true);
 
-        $sut->shouldReceive('hasAuthVehiclesIncrease')->with()->once()->andReturn(true);
+        $sut->shouldReceive('hasHgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(true);
 
         $this->assertSame(true, $sut->canHaveInterimLicence());
     }
 
-    public function testCanHaveInterimLicence2()
+    public function testCanHaveInterimLicenceWithLgvAuthorisationIncreased()
     {
         $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $sut->shouldReceive('getGoodsOrPsv->getId')->with()->once()->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
         $sut->shouldReceive('getIsVariation')->with()->once()->andReturn(true);
 
-        $sut->shouldReceive('hasAuthVehiclesIncrease')->with()->once()->andReturn(false);
+        $sut->shouldReceive('hasHgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
+        $sut->shouldReceive('hasLgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(true);
+
+        $this->assertSame(true, $sut->canHaveInterimLicence());
+    }
+
+    public function testCanHaveInterimLicenceWithAuthTrailersIncreased()
+    {
+        $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $sut->shouldReceive('getGoodsOrPsv->getId')->with()->once()->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $sut->shouldReceive('getIsVariation')->with()->once()->andReturn(true);
+
+        $sut->shouldReceive('hasHgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
+        $sut->shouldReceive('hasLgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
         $sut->shouldReceive('hasAuthTrailersIncrease')->with()->once()->andReturn(true);
 
         $this->assertSame(true, $sut->canHaveInterimLicence());
     }
 
-    public function testCanHaveInterimLicence3()
+    public function testCanHaveInterimLicenceWithUpgrade()
     {
         $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $sut->shouldReceive('getGoodsOrPsv->getId')->with()->once()->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
         $sut->shouldReceive('getIsVariation')->with()->once()->andReturn(true);
 
-        $sut->shouldReceive('hasAuthVehiclesIncrease')->with()->once()->andReturn(false);
+        $sut->shouldReceive('hasHgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
+        $sut->shouldReceive('hasLgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
         $sut->shouldReceive('hasAuthTrailersIncrease')->with()->once()->andReturn(false);
         $sut->shouldReceive('hasUpgrade')->with()->once()->andReturn(true);
 
         $this->assertSame(true, $sut->canHaveInterimLicence());
     }
 
-    public function testCanHaveInterimLicence4()
+    public function testCanHaveInterimLicenceWithNewOperatingCentre()
     {
         $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $sut->shouldReceive('getGoodsOrPsv->getId')->with()->once()->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
         $sut->shouldReceive('getIsVariation')->with()->once()->andReturn(true);
 
-        $sut->shouldReceive('hasAuthVehiclesIncrease')->with()->once()->andReturn(false);
+        $sut->shouldReceive('hasHgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
+        $sut->shouldReceive('hasLgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
         $sut->shouldReceive('hasAuthTrailersIncrease')->with()->once()->andReturn(false);
         $sut->shouldReceive('hasUpgrade')->with()->once()->andReturn(false);
         $sut->shouldReceive('hasNewOperatingCentre')->with()->once()->andReturn(true);
@@ -596,14 +600,15 @@ class ApplicationEntityTest extends EntityTester
         $this->assertSame(true, $sut->canHaveInterimLicence());
     }
 
-    public function testCanHaveInterimLicence5()
+    public function testCanHaveInterimLicenceWithIncreaseInOperatingCentre()
     {
         $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $sut->shouldReceive('getGoodsOrPsv->getId')->with()->once()->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
         $sut->shouldReceive('getIsVariation')->with()->once()->andReturn(true);
 
-        $sut->shouldReceive('hasAuthVehiclesIncrease')->with()->once()->andReturn(false);
+        $sut->shouldReceive('hasHgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
+        $sut->shouldReceive('hasLgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
         $sut->shouldReceive('hasAuthTrailersIncrease')->with()->once()->andReturn(false);
         $sut->shouldReceive('hasUpgrade')->with()->once()->andReturn(false);
         $sut->shouldReceive('hasNewOperatingCentre')->with()->once()->andReturn(false);
@@ -612,14 +617,15 @@ class ApplicationEntityTest extends EntityTester
         $this->assertSame(true, $sut->canHaveInterimLicence());
     }
 
-    public function testCanHaveInterimLicence6()
+    public function testCanHaveInterimLicenceWhenItCannot()
     {
         $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $sut->shouldReceive('getGoodsOrPsv->getId')->with()->once()->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
         $sut->shouldReceive('getIsVariation')->with()->once()->andReturn(true);
 
-        $sut->shouldReceive('hasAuthVehiclesIncrease')->with()->once()->andReturn(false);
+        $sut->shouldReceive('hasHgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
+        $sut->shouldReceive('hasLgvAuthorisationIncreased')->withNoArgs()->once()->andReturn(false);
         $sut->shouldReceive('hasAuthTrailersIncrease')->with()->once()->andReturn(false);
         $sut->shouldReceive('hasUpgrade')->with()->once()->andReturn(false);
         $sut->shouldReceive('hasNewOperatingCentre')->with()->once()->andReturn(false);
@@ -1292,7 +1298,7 @@ class ApplicationEntityTest extends EntityTester
         $licence->setLicenceType($licenceType);
         $licence->setGoodsOrPsv($goodsOrPsv);
         $licence->setTotAuthTrailers(5);
-        $licence->setTotAuthVehicles(6);
+        $licence->updateTotAuthHgvVehicles(6);
         $licence->setTrafficArea($trafficArea);
 
         $this->entity->copyInformationFromLicence($licence);
@@ -1303,6 +1309,43 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals(6, $this->entity->getTotAuthVehicles());
         $this->assertEquals('Y', $this->entity->getNiFlag());
     }
+
+    /**
+     * @test
+     * @depends copyInformationFromLicence_IsCallable
+     */
+    public function copyInformationFromLicence_SetsTotAuthHgvVehicles()
+    {
+        // Setup
+        $this->setUpSut();
+        $licence = $this->licence();
+        $licence->setTotAuthHgvVehicles($expectedNumber = static::A_NUMBER_OF_VEHICLES);
+
+        // Execute
+        $this->sut->copyInformationFromLicence($licence);
+
+        // Assert
+        $this->assertSame($expectedNumber, $this->sut->getTotAuthHgvVehicles());
+    }
+
+    /**
+     * @test
+     * @depends copyInformationFromLicence_IsCallable
+     */
+    public function copyInformationFromLicence_SetsTotAuthLgvVehicles()
+    {
+        // Setup
+        $this->setUpSut();
+        $licence = $this->licence();
+        $licence->setTotAuthLgvVehicles($expectedNumber = static::A_NUMBER_OF_VEHICLES);
+
+        // Execute
+        $this->sut->copyInformationFromLicence($licence);
+
+        // Assert
+        $this->assertSame($expectedNumber, $this->sut->getTotAuthLgvVehicles());
+    }
+
     public function testUseDeltasInPeopleSectionSole()
     {
         $type = new RefData();
@@ -2169,6 +2212,7 @@ class ApplicationEntityTest extends EntityTester
             ->shouldReceive('hasApprovedTrueS4')->once()->andReturn(false)
             ->shouldReceive('hasIncreaseInOperatingCentre')->once()->andReturn(false)
             ->shouldReceive('isRealUpgrade')->once()->andReturn(false)
+            ->shouldReceive('hasLgvAuthorisationIncreased')->once()->andReturn(false)
             ->getMock();
         $sut->shouldReceive('getOperatingCentresAdded->count')->andReturn(0);
 
@@ -2381,6 +2425,142 @@ class ApplicationEntityTest extends EntityTester
 
         $application->setLicenceType($si);
         $this->assertTrue($application->isStandardInternational());
+    }
+
+    /**
+     * @dataProvider dpZeroCoalesced
+     */
+    public function testGetTotAuthHgvVehiclesZeroCoalesced($totAuthHgvVehicles, $expected)
+    {
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('getTotAuthHgvVehicles')
+            ->withNoArgs()
+            ->andReturn($totAuthHgvVehicles);
+
+        $this->assertEquals(
+            $expected,
+            $application->getTotAuthHgvVehiclesZeroCoalesced()
+        );
+    }
+
+    /**
+     * @dataProvider dpZeroCoalesced
+     */
+    public function testGetTotAuthLgvVehiclesZeroCoalesced($totAuthLgvVehicles, $expected)
+    {
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('getTotAuthLgvVehicles')
+            ->withNoArgs()
+            ->andReturn($totAuthLgvVehicles);
+
+        $this->assertEquals(
+            $expected,
+            $application->getTotAuthLgvVehiclesZeroCoalesced()
+        );
+    }
+
+    public function dpZeroCoalesced()
+    {
+        return [
+            [9, 9],
+            [null, 0],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsEligibleForLgv
+     */
+    public function testIsEligibleForLgv($isVariation, $goodsOrPsv, $type, $expected)
+    {
+        $this->markTestIncomplete('Test temporarily disabled while return value hardcoded to false');
+
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->setIsVariation($isVariation);
+        $application->setGoodsOrPsv(new RefData($goodsOrPsv));
+        $application->setLicenceType(new RefData($type));
+
+        $this->assertEquals($expected, $application->isEligibleForLgv());
+    }
+
+    public function dpIsEligibleForLgv()
+    {
+        return [
+            [true, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
+            [true, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_RESTRICTED, false],
+            [true, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_STANDARD_NATIONAL, false],
+            [true, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
+            [true, Licence::LICENCE_CATEGORY_PSV, Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, false],
+            [false, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpHasHgvLgvAuthorisationIncreased
+     */
+    public function testHasHgvAuthorisationIncreased(
+        $isVariation,
+        $variationAuthorisation,
+        $licenceAuthorisation,
+        $expected
+    ) {
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isVariation')
+            ->withNoArgs()
+            ->andReturn($isVariation);
+        $application->shouldReceive('getTotAuthHgvVehiclesZeroCoalesced')
+            ->withNoArgs()
+            ->andReturn($variationAuthorisation);
+        $application->shouldReceive('getLicence->getTotAuthHgvVehiclesZeroCoalesced')
+            ->withNoArgs()
+            ->andReturn($licenceAuthorisation);
+
+        $this->assertEquals(
+            $expected,
+            $application->hasHgvAuthorisationIncreased()
+        );
+    }
+
+    /**
+     * @dataProvider dpHasHgvLgvAuthorisationIncreased
+     */
+    public function testHasLgvAuthorisationIncreased(
+        $isVariation,
+        $variationAuthorisation,
+        $licenceAuthorisation,
+        $expected
+    ) {
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('isVariation')
+            ->withNoArgs()
+            ->andReturn($isVariation);
+        $application->shouldReceive('getTotAuthLgvVehiclesZeroCoalesced')
+            ->withNoArgs()
+            ->andReturn($variationAuthorisation);
+        $application->shouldReceive('getLicence->getTotAuthLgvVehiclesZeroCoalesced')
+            ->withNoArgs()
+            ->andReturn($licenceAuthorisation);
+
+        $this->assertEquals(
+            $expected,
+            $application->hasLgvAuthorisationIncreased()
+        );
+    }
+
+    public function dpHasHgvLgvAuthorisationIncreased()
+    {
+        return [
+            [true, 4, 6, false],
+            [true, 5, 6, false],
+            [true, 8, 8, false],
+            [true, 9, 8, true],
+            [true, 11, 9, true],
+            [false, 4, 6, false],
+            [false, 5, 6, false],
+            [false, 8, 8, false],
+            [false, 9, 8, false],
+            [false, 11, 9, false],
+        ];
     }
 
     public function testGetLatestPublication()
@@ -2602,6 +2782,21 @@ class ApplicationEntityTest extends EntityTester
         static::assertNull($sut->getOtherActiveLicencesForOrganisation());
     }
 
+    public function testGetActiveLicencesForOrganisation()
+    {
+        $activeLicences = m::mock(ArrayCollection::class);
+
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('getLicence->getOrganisation->getActiveLicences')
+            ->withNoArgs()
+            ->andReturn($activeLicences);
+
+        $this->assertSame(
+            $activeLicences,
+            $sut->getActiveLicencesForOrganisation()
+        );
+    }
+
     public function testGetTrafficArea()
     {
         /** @var Entities\Licence\Licence $mockLic */
@@ -2730,12 +2925,14 @@ class ApplicationEntityTest extends EntityTester
     {
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
-        $licence->setTotAuthVehicles(9);
+        $licence->updateTotAuthHgvVehicles(10);
+        $licence->updateTotAuthLgvVehicles(10);
 
         /** @var Entity $application */
         $application = m::mock(Entity::class)->makePartial();
         $application->shouldReceive('isNew')->andReturn(false);
-        $application->setTotAuthVehicles(10);
+        $application->updateTotAuthHgvVehicles(9);
+        $application->updateTotAuthLgvVehicles(11);
         $application->setLicence($licence);
 
         $this->assertTrue($application->hasAuthChanged());
@@ -2745,12 +2942,12 @@ class ApplicationEntityTest extends EntityTester
     {
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
 
         /** @var Entity $application */
         $application = m::mock(Entity::class)->makePartial();
         $application->shouldReceive('isNew')->andReturn(false);
-        $application->setTotAuthVehicles(10);
+        $application->updateTotAuthHgvVehicles(10);
         $application->setLicence($licence);
 
         $this->assertFalse($application->hasAuthChanged());
@@ -3006,6 +3203,7 @@ class ApplicationEntityTest extends EntityTester
         /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods()
             ->shouldReceive('isNew')->with()->once()->andReturn(false)
+            ->shouldReceive('hasLgvAuthorisationIncreased')->with()->once()->andReturn(false)
             ->shouldReceive('hasNewOperatingCentre')->with()->once()->andReturn(false)
             ->shouldReceive('hasIncreaseInOperatingCentre')->once()->andReturn(false)
             ->shouldReceive('isRealUpgrade')->once()->andReturn(false)
@@ -3020,10 +3218,22 @@ class ApplicationEntityTest extends EntityTester
         /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods()
             ->shouldReceive('isNew')->with()->once()->andReturn(false)
+            ->shouldReceive('hasLgvAuthorisationIncreased')->with()->once()->andReturn(false)
             ->shouldReceive('hasNewOperatingCentre')->with()->once()->andReturn(false)
             ->shouldReceive('hasIncreaseInOperatingCentre')->once()->andReturn(false)
             ->shouldReceive('isRealUpgrade')->once()->andReturn(false)
             ->shouldReceive('getConditionUndertakings')->once()->andReturn(new ArrayCollection(['FOO']))
+            ->getMock();
+
+        static::assertTrue($sut->isPublishable());
+    }
+
+    public function testIsPublishableLgvAuthorisationIncreased()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('isNew')->with()->once()->andReturn(false)
+            ->shouldReceive('hasLgvAuthorisationIncreased')->with()->once()->andReturn(true)
             ->getMock();
 
         static::assertTrue($sut->isPublishable());
@@ -3428,11 +3638,13 @@ class ApplicationEntityTest extends EntityTester
         /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial()
             ->shouldReceive('getApplicationReference')->once()->andReturn('EXPECTED')
+            ->shouldReceive('isEligibleForLgv')->withNoArgs()->once()->andReturn(true)
             ->getMock();
 
         static::assertEquals(
             [
                 'applicationReference' => 'EXPECTED',
+                'isEligibleForLgv' => true,
             ],
             $sut->getCalculatedBundleValues()
         );
@@ -3837,5 +4049,31 @@ class ApplicationEntityTest extends EntityTester
         }
 
         return new ArrayCollection($applicationOrganisationPersons);
+    }
+
+    /**
+     * @dataProvider dpUpdateInterimAuthVehicles
+     */
+    public function testUpdateInterimAuthVehicles($interimAuthHgvVehicles, $interimAuthLgvVehicles, $expected)
+    {
+        /** @var Entity $application */
+        $application = $this->instantiate(Entity::class);
+        $application->updateInterimAuthHgvVehicles($interimAuthHgvVehicles);
+        $application->updateInterimAuthLgvVehicles($interimAuthLgvVehicles);
+
+        $this->assertEquals($interimAuthHgvVehicles, $application->getInterimAuthHgvVehicles());
+        $this->assertEquals($interimAuthLgvVehicles, $application->getInterimAuthLgvVehicles());
+        $this->assertEquals($expected, $application->getInterimAuthVehicles());
+    }
+
+    public function dpUpdateInterimAuthVehicles()
+    {
+        return [
+            [null, null, 0],
+            [0, 0, 0],
+            [1, 0, 1],
+            [0, 1, 1],
+            [1, 1, 2],
+        ];
     }
 }

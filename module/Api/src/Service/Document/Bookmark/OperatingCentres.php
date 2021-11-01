@@ -45,6 +45,7 @@ class OperatingCentres extends DynamicBookmark
         }
 
         $isGoods = $this->data['goodsOrPsv']['id'] === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+        $isEligibleForLgv = $this->data['isEligibleForLgv'] ?? false;
         $rows = [];
 
         foreach ($this->data['operatingCentres'] as $licenceOc) {
@@ -56,6 +57,7 @@ class OperatingCentres extends DynamicBookmark
 
             $rows[] = [
                 'TAB_OC_ADD' => Formatter\Address::format($oc['address']),
+                'TAB_VEH' => $isEligibleForLgv ? 'Heavy Goods Vehicles' : 'Vehicles',
                 'TAB_OC_VEH' => $licenceOc['noOfVehiclesRequired'],
                 'TAB_TRAILER' => $isGoods ? 'Trailers' : '',
                 'TAB_OC_TRAILER' => $isGoods ? $licenceOc['noOfTrailersRequired'] : '',

@@ -46,39 +46,18 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $applicationId = 111;
-        $organisationId = 69;
         $applicationLicenceId = 7;
-        $licenceType = Licence::LICENCE_TYPE_STANDARD_NATIONAL;
         $goodsOrPsv = Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
         $totAuthVehicles = 3;
         $organisationLicences = $this->getMockOrganisationLicences();
-        $organisationApplications = $this->getMockOrganisationApplications();
+        $otherNewApplications = $this->getOtherNewApplications();
         $totalRequired = 30400;
 
         $query = Qry::create(['id' => $applicationId]);
 
-        $mockLicenceType = m::mock()
-            ->shouldReceive('getId')
-            ->andReturn($licenceType)
-            ->getMock();
-
         $mockGoodsOrPsv = m::mock()
             ->shouldReceive('getId')
             ->andReturn($goodsOrPsv)
-            ->getMock();
-
-        $mockOrganisation = m::mock()
-            ->shouldReceive('getActiveLicences')
-            ->andReturn($organisationLicences)
-            ->shouldReceive('getId')
-            ->andReturn($organisationId)
-            ->getMock();
-
-        $mockLicence = m::mock()
-            ->shouldReceive('getOrganisation')
-            ->andReturn($mockOrganisation)
-            ->shouldReceive('getId')
-            ->andReturn($applicationLicenceId)
             ->getMock();
 
         $mockDocument = m::mock()
@@ -88,7 +67,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->andReturn(['doc' => 'bar'])
             ->getMock();
 
-        $mockApplication = m::mock(BundleSerializableInterface::class)
+        $mockApplication = m::mock(Application::class)
             ->shouldReceive('getApplicationDocuments')
             ->with('category', 'subCategory')
             ->andReturn([$mockDocument])
@@ -96,16 +75,10 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->shouldReceive('serialize')
             ->andReturn(['id' => $applicationId])
             ->once()
-            ->shouldReceive('getLicenceType')
-            ->andReturn($mockLicenceType)
             ->shouldReceive('getTotAuthVehicles')
             ->andReturn($totAuthVehicles)
             ->shouldReceive('getGoodsOrPsv')
             ->andReturn($mockGoodsOrPsv)
-            ->shouldReceive('getLicence')
-            ->andReturn($mockLicence)
-            ->shouldReceive('getId')
-            ->andReturn($applicationId)
             ->shouldReceive('getOtherActiveLicencesForOrganisation')
             ->andReturn(
                 array_filter(
@@ -129,15 +102,9 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->shouldReceive('getSubCategoryReference')
             ->with(SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL)
             ->andReturn('subCategory')
-            ->once()
-            ->shouldReceive('fetchActiveForOrganisation')
-            ->with($organisationId)
-            ->atLeast(1)
-            ->andReturn($organisationApplications);
+            ->once();
 
         $this->mockedSmServices['FinancialStandingHelperService']
-            ->shouldReceive('getFinanceCalculation')
-            ->andReturn($totalRequired)
             ->shouldReceive('getRatesForView')
             ->with($goodsOrPsv)
             ->andReturn(
@@ -148,12 +115,19 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
                     'restrictedAdditional' => 1700,
                 ]
             );
+        $this->mockedSmServices['FinancialStandingHelperService']
+            ->shouldReceive('getOtherNewApplications')
+            ->with($mockApplication)
+            ->andReturn($otherNewApplications);
+        $this->mockedSmServices['FinancialStandingHelperService']
+            ->shouldReceive('getRequiredFinance')
+            ->with($mockApplication)
+            ->andReturn($totalRequired);
         $mockedId = m::mock(IdentityInterface::class)->shouldReceive('getUser')->andReturn(
             m::mock(User::class)->shouldReceive('getRoles')->andReturn(new ArrayCollection([]))->getMock()
         )->getMock();
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity')->andReturn($mockedId);
-
 
         $expectedResult = [
             'id' => $applicationId,
@@ -176,10 +150,10 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
     protected function getMockOrganisationLicences()
     {
         $values = [
-            // id, category, type, vehicle auth, status
-            [7, 'lcat_gv', 'ltyp_sn', 3, Licence::LICENCE_STATUS_VALID], // current app licence, should be ignored
-            [8, 'lcat_gv', 'ltyp_r', 3, Licence::LICENCE_STATUS_VALID],
-            [9, 'lcat_psv', 'ltyp_r', 1, Licence::LICENCE_STATUS_VALID],
+            // id, category, vehicle auth
+            [7, 'lcat_gv', 3], // current app licence, should be ignored
+            [8, 'lcat_gv', 3],
+            [9, 'lcat_psv', 1],
         ];
 
         return array_map(
@@ -189,18 +163,12 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
                     ->shouldReceive('getId')
                     ->andReturn($value[0])
                     ->shouldReceive('getTotAuthVehicles')
-                    ->andReturn($value[3]);
+                    ->andReturn($value[2]);
 
                 // can't chain demeter expectations :-/
                 $mockLicence
                     ->shouldReceive('getGoodsOrPsv->getId')
                     ->andReturn($value[1]);
-                $mockLicence
-                    ->shouldReceive('getLicenceType->getId')
-                    ->andReturn($value[2]);
-                $mockLicence
-                    ->shouldReceive('getStatus->getId')
-                    ->andReturn($value[4]);
 
                 return $mockLicence;
             },
@@ -208,37 +176,19 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
         );
     }
 
-    protected function getMockOrganisationApplications()
+    protected function getOtherNewApplications()
     {
         $values = [
-            // id, category, type, vehicle auth, status
-            [111, 'lcat_gv', 'ltyp_sn', 3, Application::APPLICATION_STATUS_NOT_SUBMITTED, 0], // shouldn't double-count
-            [112, 'lcat_gv', 'ltyp_sn', 2, Application::APPLICATION_STATUS_UNDER_CONSIDERATION, 0],
-            [113, 'lcat_gv', 'ltyp_sn', 9, Application::APPLICATION_STATUS_UNDER_CONSIDERATION, 1], // variation
+            // vehicle auth
+            [2],
         ];
 
         return array_map(
             function ($value) {
                 $mockApplication = m::mock();
                 $mockApplication
-                    ->shouldReceive('getId')
-                    ->andReturn($value[0])
                     ->shouldReceive('getTotAuthVehicles')
-                    ->andReturn($value[3]);
-
-                $mockApplication
-                    ->shouldReceive('getGoodsOrPsv->getId')
-                    ->andReturn($value[1]);
-                $mockApplication
-                    ->shouldReceive('getLicenceType->getId')
-                    ->andReturn($value[2]);
-                $mockApplication
-                    ->shouldReceive('getStatus->getId')
-                    ->andReturn($value[4]);
-
-                $mockApplication
-                    ->shouldReceive('isVariation')
-                    ->andReturn($value[5]);
+                    ->andReturn($value[0]);
 
                 return $mockApplication;
             },

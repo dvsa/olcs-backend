@@ -22,10 +22,10 @@ use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\ProvidesOperatingCentreVehicleAuthorizationConstraintsTrait;
 use Hamcrest\Core\AllOf;
 use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
 use Dvsa\OlcsTest\Api\Domain\Repository\MocksLicenceRepositoryTrait;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\ProvidesOperatingCentreVehicleAuthorizationConstraintsTrait;
 
 /**
  * @see \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres
@@ -37,13 +37,13 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     use ProvidesOperatingCentreVehicleAuthorizationConstraintsTrait;
     use MocksLicenceRepositoryTrait;
 
-    protected const TOT_AUTH_VEHICLES_COMMAND_PROPERTY = 'totAuthVehicles';
+    protected const TOT_AUTH_HGV_VEHICLES_COMMAND_PROPERTY = 'totAuthHgvVehicles';
+    protected const TOT_AUTH_LGV_VEHICLES_COMMAND_PROPERTY = 'totAuthLgvVehicles';
     protected const ID_COMMAND_PROPERTY = 'id';
-    protected const A_NUMBER_OF_VEHICLES = 2;
     protected const AN_ID = 1;
     protected const VALIDATION_MESSAGES = ['A VALIDATION MESSAGE KEY' => 'A VALIDATION MESSAGE VALUE'];
-    protected const ONE_VEHICLE = 1;
-    protected const NO_VEHICLES = 0;
+    protected const ONE_HGV = 1;
+    protected const ONE_LGV = 1;
 
     /**
      * @test
@@ -96,7 +96,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validatePsv')
             ->once()
             ->with($licence, $command)
-            ->shouldReceive('validateTotalAuthVehicles')
+            ->shouldReceive('validateTotalAuthHgvVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
             ->shouldReceive('validateEnforcementArea')
@@ -152,7 +152,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthTrailers')
             ->once()
             ->with($command, $expectedTotals)
-            ->shouldReceive('validateTotalAuthVehicles')
+            ->shouldReceive('validateTotalAuthHgvVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
             ->shouldReceive('validateEnforcementArea')
@@ -212,7 +212,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validatePsv')
             ->once()
             ->with($licence, $command)
-            ->shouldReceive('validateTotalAuthVehicles')
+            ->shouldReceive('validateTotalAuthHgvVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
             ->shouldReceive('validateEnforcementArea')
@@ -284,7 +284,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldReceive('validateTotalAuthTrailers')
             ->once()
             ->with($command, $expectedTotals)
-            ->shouldReceive('validateTotalAuthVehicles')
+            ->shouldReceive('validateTotalAuthHgvVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
             ->shouldReceive('validateEnforcementArea')
@@ -322,7 +322,8 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->injectEntities($licence);
         $command = Cmd::create([
             static::ID_COMMAND_PROPERTY => $licence->getId(),
-            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => $licence->getTotAuthVehicles(),
+            static::TOT_AUTH_HGV_VEHICLES_COMMAND_PROPERTY => $licence->getTotAuthHgvVehicles(),
+            static::TOT_AUTH_LGV_VEHICLES_COMMAND_PROPERTY => $licence->getTotAuthLgvVehicles(),
         ]);
 
         // Expect
@@ -339,15 +340,41 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
      */
+    public function handleCommand_SetsTotAuthHgvVehicles_ForGoodsVehicleOperatingCentre()
+    {
+        // Setup
+        $this->setUpSut();
+        $licence = LicenceBuilder::aLicence()->withExtraOperatingCentreCapacityFor(static::ONE_HGV)->build();
+        $this->injectEntities($licence);
+        $command = Cmd::create([
+            static::ID_COMMAND_PROPERTY => $licence->getId(),
+            static::TOT_AUTH_HGV_VEHICLES_COMMAND_PROPERTY => $expectedVehicleCount = $licence->getTotAuthHgvVehicles() + static::ONE_HGV,
+        ]);
+
+        // Expect
+        $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) use ($expectedVehicleCount) {
+            $this->assertSame($expectedVehicleCount, $licence->getTotAuthHgvVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
+     * @depends handleCommand_SetsTotAuthHgvVehicles_ForGoodsVehicleOperatingCentre
+     */
     public function handleCommand_SetsTotAuthVehicles_ForGoodsVehicleOperatingCentre()
     {
         // Setup
         $this->setUpSut();
-        $licence = LicenceBuilder::aLicence()->withExtraOperatingCentreCapacityFor(static::ONE_VEHICLE)->build();
+        $licence = LicenceBuilder::aLicence()->withExtraOperatingCentreCapacityFor(static::ONE_HGV)->build();
         $this->injectEntities($licence);
         $command = Cmd::create([
             static::ID_COMMAND_PROPERTY => $licence->getId(),
-            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => $expectedVehicleCount = $licence->getTotAuthVehicles() + static::ONE_VEHICLE,
+            static::TOT_AUTH_HGV_VEHICLES_COMMAND_PROPERTY => $expectedVehicleCount = $licence->getTotAuthHgvVehicles() + static::ONE_HGV,
         ]);
 
         // Expect
@@ -364,20 +391,102 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
      */
+    public function handleCommand_SetsTotAuthHgvVehicles_ForPsvOperatingCentre()
+    {
+        // Setup
+        $this->setUpSut();
+        $licence = LicenceBuilder::aPsvLicence()->withExtraOperatingCentreCapacityFor(static::ONE_HGV)->build();
+        $this->injectEntities($licence);
+        $command = Cmd::create([
+            static::ID_COMMAND_PROPERTY => $licence->getId(),
+            static::TOT_AUTH_HGV_VEHICLES_COMMAND_PROPERTY => $expectedVehicleCount = $licence->getTotAuthHgvVehicles() + static::ONE_HGV,
+        ]);
+
+        // Expect
+        $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) use ($expectedVehicleCount) {
+            $this->assertSame($expectedVehicleCount, $licence->getTotAuthHgvVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
+     * @depends handleCommand_SetsTotAuthHgvVehicles_ForPsvOperatingCentre
+     */
     public function handleCommand_SetsTotAuthVehicles_ForPsvOperatingCentre()
     {
         // Setup
         $this->setUpSut();
-        $licence = LicenceBuilder::aPsvLicence()->withExtraOperatingCentreCapacityFor(static::ONE_VEHICLE)->build();
+        $licence = LicenceBuilder::aPsvLicence()->withExtraOperatingCentreCapacityFor(static::ONE_HGV)->build();
         $this->injectEntities($licence);
         $command = Cmd::create([
             static::ID_COMMAND_PROPERTY => $licence->getId(),
-            static::TOT_AUTH_VEHICLES_COMMAND_PROPERTY => $expectedVehicleCount = $licence->getTotAuthVehicles() + static::ONE_VEHICLE,
+            static::TOT_AUTH_HGV_VEHICLES_COMMAND_PROPERTY => $expectedVehicleCount = $licence->getTotAuthHgvVehicles() + static::ONE_HGV,
         ]);
 
         // Expect
         $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) use ($expectedVehicleCount) {
             $this->assertSame($expectedVehicleCount, $licence->getTotAuthVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
+     */
+    public function handleCommand_SetsTotalAuthLgvVehicles_ForGoodsVehicleOperatingCentre()
+    {
+        $this->markTestIncomplete('Test temporarily disabled while isEligibleForLgv return value hardcoded to false');
+
+        // Setup
+        $this->setUpSut();
+        $licence = LicenceBuilder::aGoodsLicence()->ofTypeStandardInternational()->withValidVehicleAuthorizations()->build();
+        $this->injectEntities($licence);
+        $command = Cmd::create([
+            static::ID_COMMAND_PROPERTY => $licence->getId(),
+            static::TOT_AUTH_HGV_VEHICLES_COMMAND_PROPERTY => $licence->getTotAuthHgvVehicles(),
+            static::TOT_AUTH_LGV_VEHICLES_COMMAND_PROPERTY => $expectedVehicleCount = $licence->getTotAuthLgvVehicles() + static::ONE_LGV,
+        ]);
+
+        // Expect
+        $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) use ($expectedVehicleCount) {
+            $this->assertSame($expectedVehicleCount, $licence->getTotAuthLgvVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
+     * @depends handleCommand_SetsTotAuthHgvVehicles_ForGoodsVehicleOperatingCentre
+     * @depends handleCommand_SetsTotalAuthLgvVehicles_ForGoodsVehicleOperatingCentre
+     */
+    public function handleCommand_SetsTotAuthVehicles_ForGoodsVehicleOperatingCentre_WithHgvsAndLgvs()
+    {
+        // Setup
+        $this->setUpSut();
+        $licence = LicenceBuilder::aGoodsLicence()->ofTypeStandardInternational()->withExtraOperatingCentreCapacityFor(static::ONE_HGV)->build();
+        $this->injectEntities($licence);
+        $command = Cmd::create([
+            static::ID_COMMAND_PROPERTY => $licence->getId(),
+            static::TOT_AUTH_HGV_VEHICLES_COMMAND_PROPERTY => $expectedHgvCount = $licence->getTotAuthHgvVehicles() + static::ONE_HGV,
+            static::TOT_AUTH_LGV_VEHICLES_COMMAND_PROPERTY => $expectedLgvCount = $licence->getTotAuthLgvVehicles() + static::ONE_LGV,
+        ]);
+
+        // Expect
+        $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) use ($expectedHgvCount, $expectedLgvCount) {
+            $this->assertSame($expectedHgvCount + $expectedLgvCount, $licence->getTotAuthVehicles());
             return true;
         });
 
@@ -433,7 +542,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_ValidatesTotAuthVehiclesVehicles_WhenCommandIsNotPartial()
+    public function handleCommand_ValidatesHgvs_WhenCommandIsNotPartial()
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
@@ -442,7 +551,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $command = Cmd::create([static::ID_COMMAND_PROPERTY => $licence->getId()]);
 
         // Expect
-        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($licence, $command) {
+        $this->updateHelper()->expects('validateTotalAuthHgvVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($licence, $command) {
             $this->assertSame($arg1, $licence);
             $this->assertSame($arg2, $command);
             $this->assertIsArray($arg3);
@@ -457,10 +566,10 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @param array $operatingCentresVehicleCapacities
      * @param array $expectedVehicleConstraints
      * @test
-     * @depends handleCommand_ValidatesTotAuthVehiclesVehicles_WhenCommandIsNotPartial
+     * @depends handleCommand_ValidatesHgvs_WhenCommandIsNotPartial
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
      */
-    public function handleCommand_ValidatesTotAuthVehiclesVehicles_WhenCommandIsNotPartial_AgainstCorrectOperatingCentreVehicleConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
+    public function handleCommand_ValidatesHgvs_WhenCommandIsNotPartial_AgainstCorrectOperatingCentreVehicleConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
@@ -470,7 +579,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $command = Cmd::create([static::ID_COMMAND_PROPERTY => $licence->getId()]);
 
         // Expect
-        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicleConstraints, $operatingCentresVehicleCapacities) {
+        $this->updateHelper()->expects('validateTotalAuthHgvVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicleConstraints, $operatingCentresVehicleCapacities) {
             $this->assertIsArray($arg3);
             foreach ($expectedVehicleConstraints as $key => $expectedTotal) {
                 $this->assertSame(
@@ -479,6 +588,29 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
                     sprintf('Failed to assert the value for "%s" total (%s) matched the expected value (%s)', $key, $actualTotal, $expectedTotal)
                 );
             }
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_ValidatesLgvs_WhenCommandIsNotPartial_AndLicenceIsForGoods()
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $this->injectEntities($licence = LicenceBuilder::aGoodsLicence()->build());
+        $command = Cmd::create([static::ID_COMMAND_PROPERTY => $licence->getId()]);
+
+        // Expect
+        $this->updateHelper()->expects('validateTotalAuthLgvVehicles')->withArgs(function ($arg1, $arg2) use ($licence, $command) {
+            $this->assertSame($arg1, $licence);
+            $this->assertSame($arg2, $command);
             return true;
         });
 

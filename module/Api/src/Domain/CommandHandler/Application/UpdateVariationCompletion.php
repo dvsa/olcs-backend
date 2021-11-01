@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
+use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateOperatingCentresCmd;
 
 /**
@@ -121,11 +122,17 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
      */
     private $variationHelper;
 
+    /**
+     * @var FinancialStandingHelperService
+     */
+    private $financialStandingHelper;
+
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->updateHelper = $mainServiceLocator->get('UpdateOperatingCentreHelper');
         $this->variationHelper = $mainServiceLocator->get('VariationOperatingCentreHelper');
+        $this->financialStandingHelper = $mainServiceLocator->get('FinancialStandingHelperService');
 
         return parent::createService($serviceLocator);
     }
@@ -650,7 +657,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     {
         // If the financial evidence section is unchanged (Not requires attention or updated)
         // ...and we have increased the total auth vehicles
-        if ($this->isUnchanged('financial_evidence') && $this->hasTotAuthVehiclesIncreased()) {
+        if ($this->isUnchanged('financial_evidence') && $this->hasRequiredFinanceAmountIncreased()) {
             $this->markSectionRequired('financial_evidence');
         }
 
@@ -697,7 +704,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     protected function validateAuthority()
     {
         $data = [
-            'totAuthVehicles' => $this->application->getTotAuthVehicles(),
+            'totAuthHgvVehicles' => $this->application->getTotAuthHgvVehicles(),
             'totAuthTrailers' => $this->application->getTotAuthTrailers(),
         ];
         $command = UpdateOperatingCentresCmd::create($data);
@@ -708,7 +715,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
             $this->updateHelper->validateTotalAuthTrailers($command, $totals);
         }
 
-        $this->updateHelper->validateTotalAuthVehicles($this->application, $command, $totals);
+        $this->updateHelper->validateTotalAuthHgvVehicles($this->application, $command, $totals);
 
         return $this->updateHelper->getMessages();
     }
@@ -724,8 +731,8 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
 
         $totals = [
             'noOfOperatingCentres' => 0,
-            'minVehicleAuth' => 0,
-            'maxVehicleAuth' => 0,
+            'minHgvVehicleAuth' => 0,
+            'maxHgvVehicleAuth' => 0,
             'minTrailerAuth' => 0,
             'maxTrailerAuth' => 0,
         ];
@@ -737,10 +744,10 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
 
             $totals['noOfOperatingCentres']++;
 
-            $totals['minVehicleAuth'] = max([$totals['minVehicleAuth'], $aoc['noOfVehiclesRequired']]);
+            $totals['minHgvVehicleAuth'] = max([$totals['minHgvVehicleAuth'], $aoc['noOfVehiclesRequired']]);
             $totals['minTrailerAuth'] = max([$totals['minTrailerAuth'], $aoc['noOfTrailersRequired']]);
 
-            $totals['maxVehicleAuth'] += (int)$aoc['noOfVehiclesRequired'];
+            $totals['maxHgvVehicleAuth'] += (int)$aoc['noOfVehiclesRequired'];
             $totals['maxTrailerAuth'] += (int)$aoc['noOfTrailersRequired'];
         }
 
@@ -870,16 +877,20 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     }
 
     /**
-     * Check whether the total auth vehicles has been increased
+     * Check whether the required finance amount has increased
      *
      * @return boolean
      */
-    protected function hasTotAuthVehiclesIncreased()
+    protected function hasRequiredFinanceAmountIncreased()
     {
-        $totAuthVehicles = $this->getTotAuthVehicles($this->application);
-        $totAuthLicenceVehicles = $this->getTotAuthVehicles($this->licence);
+        $requiredFinanceWithVariation = $this->financialStandingHelper->getRequiredFinance($this->application);
 
-        return $totAuthVehicles > $totAuthLicenceVehicles;
+        $requiredFinanceWithoutVariation = $this->financialStandingHelper->getRequiredFinance(
+            $this->application,
+            false
+        );
+
+        return $requiredFinanceWithVariation > $requiredFinanceWithoutVariation;
     }
 
     /**
