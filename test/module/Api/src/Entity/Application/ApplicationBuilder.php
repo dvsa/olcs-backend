@@ -52,22 +52,24 @@ class ApplicationBuilder implements BuilderInterface
     }
 
     /**
-     * @param int $vehicleCount
+     * @param int $hgvCount
+     * @param int $lgvCount
      * @return $this
      */
-    public function authorizedFor(int $vehicleCount = 0): self
+    public function authorizedFor(int $hgvCount = 0, int $lgvCount = 0): self
     {
-        $this->instance->setTotAuthVehicles($vehicleCount);
+        $this->instance->updateTotAuthHgvVehicles($hgvCount);
+        $this->instance->updateTotAuthLgvVehicles($lgvCount);
         return $this;
     }
 
     /**
      * @return $this
      */
-    public function withNoExtraOperatingCentreCapacity(): self
+    public function withValidAuthorizations(): self
     {
         $operatingCentre = ApplicationOperatingCentreBuilder::forApplication($this->instance, static::AN_ID)->build();
-        $operatingCentre->setNoOfVehiclesRequired($this->instance->getTotAuthVehicles());
+        $operatingCentre->setNoOfVehiclesRequired($this->instance->getTotAuthHgvVehicles());
         $this->instance->setOperatingCentres(new ArrayCollection([$operatingCentre]));
         return $this;
     }
@@ -79,7 +81,7 @@ class ApplicationBuilder implements BuilderInterface
     public function withExtraOperatingCentreCapacityFor(int $extraVehicles): self
     {
         $operatingCentre1 = ApplicationOperatingCentreBuilder::forApplication($this->instance, static::AN_ID)->build();
-        $operatingCentre1->setNoOfVehiclesRequired($this->instance->getTotAuthVehicles());
+        $operatingCentre1->setNoOfVehiclesRequired($this->instance->getTotAuthHgvVehicles());
 
         $operatingCentre2 = ApplicationOperatingCentreBuilder::forApplication($this->instance, static::ANOTHER_ID)->build();
         $operatingCentre2->setNoOfVehiclesRequired($extraVehicles);
@@ -89,7 +91,7 @@ class ApplicationBuilder implements BuilderInterface
     }
 
     /**
-     * @param array[] $operatingCentresCapacities Arrays of operating centre capacities in the format [vehicles]
+     * @param array[] $operatingCentresCapacities Arrays of operating centre capacities in the format [hgvs]
      * @return $this
      */
     public function withOperatingCentresWithCapacitiesFor(array $operatingCentresCapacities): self

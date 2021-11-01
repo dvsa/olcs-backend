@@ -40,6 +40,7 @@ class OperatingCentresTest extends \PHPUnit\Framework\TestCase
             'goodsOrPsv' => [
                 'id' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
             ],
+            'isEligibleForLgv' => true,
             'operatingCentres' => [
                 [
                     'noOfVehiclesRequired' => 10,
@@ -103,6 +104,7 @@ class OperatingCentresTest extends \PHPUnit\Framework\TestCase
 
         $expectedRow = [
             'TAB_OC_ADD' => "Address 1\nAddress 2",
+            'TAB_VEH' => 'Heavy Goods Vehicles',
             'TAB_OC_VEH' => 10,
             'TAB_TRAILER' => 'Trailers',
             'TAB_OC_TRAILER' => 5,
@@ -134,6 +136,7 @@ class OperatingCentresTest extends \PHPUnit\Framework\TestCase
             'goodsOrPsv' => [
                 'id' => Licence::LICENCE_CATEGORY_PSV,
             ],
+            'isEligibleForLgv' => false,
             'operatingCentres' => [
                 [
                     'noOfVehiclesRequired' => 10,
@@ -152,6 +155,7 @@ class OperatingCentresTest extends \PHPUnit\Framework\TestCase
 
         $expectedRow = [
             'TAB_OC_ADD' => "Address 1\nAddress 2",
+            'TAB_VEH' => 'Vehicles',
             'TAB_OC_VEH' => 10,
             'TAB_TRAILER' => '',
             'TAB_OC_TRAILER' => '',

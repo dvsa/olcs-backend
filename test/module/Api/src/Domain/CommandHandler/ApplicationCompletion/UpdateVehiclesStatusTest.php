@@ -66,7 +66,7 @@ class UpdateVehiclesStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setHasEnteredReg('Y');
-        $this->application->setTotAuthVehicles(0);
+        $this->application->updateTotAuthHgvVehicles(0);
 
         $this->application->shouldReceive('getActiveVehicles')->with()->once()->andReturn(
             new \Doctrine\Common\Collections\ArrayCollection(['foo'])
@@ -80,7 +80,7 @@ class UpdateVehiclesStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setVehiclesStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setHasEnteredReg('Y');
-        $this->application->setTotAuthVehicles(10);
+        $this->application->updateTotAuthHgvVehicles(10);
 
         $this->application->shouldReceive('getActiveVehicles')->with()->once()->andReturn(
             new \Doctrine\Common\Collections\ArrayCollection(['foo'])

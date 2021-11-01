@@ -223,6 +223,24 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $insolvencyDetails;
 
     /**
+     * Interim auth hgv vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="interim_auth_hgv_vehicles", nullable=true)
+     */
+    protected $interimAuthHgvVehicles;
+
+    /**
+     * Interim auth lgv vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="interim_auth_lgv_vehicles", nullable=true)
+     */
+    protected $interimAuthLgvVehicles;
+
+    /**
      * Interim auth trailers
      *
      * @var int
@@ -612,6 +630,24 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="datetime", name="target_completion_date", nullable=true)
      */
     protected $targetCompletionDate;
+
+    /**
+     * Tot auth hgv vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="tot_auth_hgv_vehicles", nullable=true)
+     */
+    protected $totAuthHgvVehicles;
+
+    /**
+     * Tot auth lgv vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="tot_auth_lgv_vehicles", nullable=true)
+     */
+    protected $totAuthLgvVehicles;
 
     /**
      * Tot auth trailers
@@ -1321,6 +1357,54 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getInsolvencyDetails()
     {
         return $this->insolvencyDetails;
+    }
+
+    /**
+     * Set the interim auth hgv vehicles
+     *
+     * @param int $interimAuthHgvVehicles new value being set
+     *
+     * @return Application
+     */
+    public function setInterimAuthHgvVehicles($interimAuthHgvVehicles)
+    {
+        $this->interimAuthHgvVehicles = $interimAuthHgvVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim auth hgv vehicles
+     *
+     * @return int
+     */
+    public function getInterimAuthHgvVehicles()
+    {
+        return $this->interimAuthHgvVehicles;
+    }
+
+    /**
+     * Set the interim auth lgv vehicles
+     *
+     * @param int $interimAuthLgvVehicles new value being set
+     *
+     * @return Application
+     */
+    public function setInterimAuthLgvVehicles($interimAuthLgvVehicles)
+    {
+        $this->interimAuthLgvVehicles = $interimAuthLgvVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim auth lgv vehicles
+     *
+     * @return int
+     */
+    public function getInterimAuthLgvVehicles()
+    {
+        return $this->interimAuthLgvVehicles;
     }
 
     /**
@@ -2359,6 +2443,54 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
         }
 
         return $this->targetCompletionDate;
+    }
+
+    /**
+     * Set the tot auth hgv vehicles
+     *
+     * @param int $totAuthHgvVehicles new value being set
+     *
+     * @return Application
+     */
+    public function setTotAuthHgvVehicles($totAuthHgvVehicles)
+    {
+        $this->totAuthHgvVehicles = $totAuthHgvVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth hgv vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthHgvVehicles()
+    {
+        return $this->totAuthHgvVehicles;
+    }
+
+    /**
+     * Set the tot auth lgv vehicles
+     *
+     * @param int $totAuthLgvVehicles new value being set
+     *
+     * @return Application
+     */
+    public function setTotAuthLgvVehicles($totAuthLgvVehicles)
+    {
+        $this->totAuthLgvVehicles = $totAuthLgvVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth lgv vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthLgvVehicles()
+    {
+        return $this->totAuthLgvVehicles;
     }
 
     /**

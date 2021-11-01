@@ -27,6 +27,7 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Dvsa\Olcs\Api\Entity\Traits\TotAuthVehiclesTrait;
 
 /**
  * Licence Entity
@@ -58,6 +59,7 @@ use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 class Licence extends AbstractLicence implements ContextProviderInterface, OrganisationProviderInterface
 {
     use LicenceStatusAwareTrait;
+    use TotAuthVehiclesTrait;
 
     const ERROR_CANT_BE_SR = 'LIC-TOL-1';
     const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
@@ -96,6 +98,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     const TACH_EXT = 'tach_external';
     const TACH_INT = 'tach_internal';
     const TACH_NA = 'tach_na';
+
+    const AUTHORISATION_VEHICLE_COUNT = 'vehicle';
+    const AUTHORISATION_HGV_COUNT = 'hgv';
+    const AUTHORISATION_LGV_COUNT = 'lgv';
+    const AUTHORISATION_TRAILER_COUNT = 'trailer';
 
     /**
      * Licence constructor
@@ -353,7 +360,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getCalculatedBundleValues()
     {
         return [
-            'niFlag' => $this->getNiFlag()
+            'niFlag' => $this->getNiFlag(),
+            'isEligibleForLgv' => $this->isEligibleForLgv(),
         ];
     }
 
@@ -736,6 +744,19 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Is this licence eligible for LGV
+     *
+     * @return bool
+     */
+    public function isEligibleForLgv(): bool
+    {
+        // temporarily hardcoded to false to avoid functional changes when merged to master 
+        return false;
+
+        return $this->isGoods() && $this->isStandardInternational();
+    }
+
+    /**
      * Helper method to get the first trading name from a licence
      * (Sorts trading names by createdOn date then alphabetically)
      *
@@ -868,6 +889,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             if ($appCompletion->variationSectionUpdated('operatingCentres')) {
                 $this->setTotAuthTrailers($application->getTotAuthTrailers());
                 $this->setTotAuthVehicles($application->getTotAuthVehicles());
+                $this->setTotAuthHgvVehicles($application->getTotAuthHgvVehicles());
+                $this->setTotAuthLgvVehicles($application->getTotAuthLgvVehicles());
             }
 
             return;
@@ -877,6 +900,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         $this->setLicenceType($application->getLicenceType());
         $this->setTotAuthTrailers($application->getTotAuthTrailers());
         $this->setTotAuthVehicles($application->getTotAuthVehicles());
+        $this->setTotAuthHgvVehicles($application->getTotAuthHgvVehicles());
+        $this->setTotAuthLgvVehicles($application->getTotAuthLgvVehicles());
     }
 
     /**
@@ -1054,6 +1079,30 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
                     );
             }
         );
+    }
+
+    /**
+     * Get an array of vehicle authorisations in key/value pairs, only including authorisation types relevant to this
+     * licence
+     *
+     * @return array
+     */
+    public function getAuthorisations()
+    {
+        $rows = [];
+
+        if ($this->isEligibleForLgv()) {
+            $rows[self::AUTHORISATION_HGV_COUNT] = $this->getTotAuthHgvVehiclesZeroCoalesced();
+            $rows[self::AUTHORISATION_LGV_COUNT] = $this->getTotAuthLgvVehiclesZeroCoalesced();
+        } else {
+            $rows[self::AUTHORISATION_VEHICLE_COUNT] = $this->getTotAuthVehicles() ?? 0;
+        }
+
+        if ($this->isGoods()) {
+            $rows[self::AUTHORISATION_TRAILER_COUNT] = $this->getTotAuthTrailers() ?? 0;
+        }
+
+        return $rows;
     }
 
     /**

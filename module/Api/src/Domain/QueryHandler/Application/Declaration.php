@@ -145,7 +145,8 @@ class Declaration extends AbstractQueryHandler
             true
         );
 
-        if ($feeType !== null && ($application->hasAuthVehiclesIncrease() ||
+        if ($feeType !== null && ($application->hasHgvAuthorisationIncreased() ||
+            $application->hasLgvAuthorisationIncreased() ||
             $application->hasAuthTrailersIncrease() ||
             $application->hasNewOperatingCentre() ||
             $application->hasIncreaseInOperatingCentre()

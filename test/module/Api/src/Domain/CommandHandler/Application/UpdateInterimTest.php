@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateInterim as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -57,75 +58,144 @@ class UpdateInterimTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommandValidationError()
-    {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
-
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'requested' => 'Y',
-        ];
-        $command = Cmd::create($data);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setId(111);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($application);
-
-        $this->sut->handleCommand($command);
-    }
-
     /**
-     * @throws ValidationException
+     * @dataProvider dpValidate
      */
-    public function testTotalAuthTrailersVehiclesValidation()
+    public function testValidate($isEligibleForLgv, $totAuthHgvVehicles, $totAuthLgvVehicles, $totAuthTrailers, $data, $expected)
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'requested' => 'Y',
-            'reason' => 'Foo',
-            'startDate' => '2015-01-01',
-            'endDate' => '2015-01-01',
-            'authVehicles' => 10,
-            'authTrailers' => 12,
-            'operatingCentres' => [11],
-            'vehicles' => [22],
-        ];
         $command = Cmd::create($data);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setId(111);
-        $application->setTotAuthVehicles(3);
-        $application->setTotAuthTrailers(4);
-
+        $application->shouldReceive('isEligibleForLgv')
+            ->withNoArgs()
+            ->andReturn($isEligibleForLgv)
+            ->shouldReceive('getTotAuthHgvVehicles')
+            ->withNoArgs()
+            ->andReturn($totAuthHgvVehicles)
+            ->shouldReceive('getTotAuthLgvVehicles')
+            ->withNoArgs()
+            ->andReturn($totAuthLgvVehicles)
+            ->shouldReceive('getTotAuthTrailers')
+            ->withNoArgs()
+            ->andReturn($totAuthTrailers);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application);
-
-        $messageArray = [
-            'authVehicles' => [
-                UpdateInterim::ERR_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_VEHICLE_AUTHORITY_EXCEEDED
-            ],
-            'authTrailers' => [
-                UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED => UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED
-            ],
-        ];
 
         try {
             $this->sut->handleCommand($command);
         } catch (ValidationException $exception) {
-            $this->assertSame($messageArray, $exception->getMessages());
+            $this->assertSame($expected, $exception->getMessages());
             throw $exception;
         }
+    }
+
+    public function dpValidate()
+    {
+        return [
+            'without required data' => [
+                'isEligibleForLgv' => false,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => null,
+                'totAuthTrailers' => 0,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                ],
+                'expected' => [
+                    'reason' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authHgvVehicles' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authTrailers' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                ],
+            ],
+            'authorities exceeded' => [
+                'isEligibleForLgv' => false,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => null,
+                'totAuthTrailers' => 0,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                    'reason' => 'Foo',
+                    'authHgvVehicles' => 10,
+                    'authLgvVehicles' => 11,
+                    'authTrailers' => 12,
+                ],
+                'expected' => [
+                    'authHgvVehicles' => [
+                        UpdateInterim::ERR_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_VEHICLE_AUTHORITY_EXCEEDED,
+                    ],
+                    'authLgvVehicles' => [
+                        UpdateInterim::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED,
+                    ],
+                    'authTrailers' => [
+                        UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED => UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED,
+                    ],
+                ],
+            ],
+            'authorities exceeded - eligible for lgv' => [
+                'isEligibleForLgv' => true,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => 4,
+                'totAuthTrailers' => 5,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                    'reason' => 'Foo',
+                    'authHgvVehicles' => 10,
+                    'authLgvVehicles' => 11,
+                    'authTrailers' => 12,
+                ],
+                'expected' => [
+                    'authHgvVehicles' => [
+                        UpdateInterim::ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED,
+                    ],
+                    'authLgvVehicles' => [
+                        UpdateInterim::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED,
+                    ],
+                    'authTrailers' => [
+                        UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED => UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED,
+                    ],
+                ],
+            ],
+            'granted' => [
+                'isEligibleForLgv' => false,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => 4,
+                'totAuthTrailers' => 5,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                    'reason' => 'Foo',
+                    'authHgvVehicles' => 3,
+                    'authLgvVehicles' => 4,
+                    'authTrailers' => 5,
+                    'status' => ApplicationEntity::INTERIM_STATUS_GRANTED,
+                ],
+                'expected' => [
+                    'interimStart' => [
+                        UpdateInterim::ERR_INTERIMSTARTDATE_EMPTY => UpdateInterim::ERR_INTERIMSTARTDATE_EMPTY,
+                    ],
+                    'interimEnd' => [
+                        UpdateInterim::ERR_INTERIMENDDATE_EMPTY => UpdateInterim::ERR_INTERIMENDDATE_EMPTY,
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function testHandleCommand()
@@ -139,7 +209,8 @@ class UpdateInterimTest extends CommandHandlerTestCase
             'reason' => 'Foo',
             'startDate' => '2015-01-01',
             'endDate' => '2015-01-01',
-            'authVehicles' => 10,
+            'authHgvVehicles' => 10,
+            'authLgvVehicles' => 11,
             'authTrailers' => 12,
             'operatingCentres' => [11],
             'vehicles' => [22]
@@ -182,7 +253,8 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setOperatingCentres($ocs);
         $application->setLicenceVehicles($lvs);
         $application->setIsVariation(false);
-        $application->setTotAuthVehicles(15);
+        $application->updateTotAuthHgvVehicles(15);
+        $application->updateTotAuthLgvVehicles(15);
         $application->setTotAuthTrailers(15);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -226,6 +298,9 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->assertEquals('Foo', $application->getInterimReason());
         $this->assertEquals('2015-01-01', $application->getInterimStart()->format('Y-m-d'));
         $this->assertEquals('2015-01-01', $application->getInterimEnd()->format('Y-m-d'));
+        $this->assertEquals(10, $application->getInterimAuthHgvVehicles());
+        $this->assertEquals(11, $application->getInterimAuthLgvVehicles());
+        $this->assertEquals(12, $application->getInterimAuthTrailers());
     }
 
     public function testHandleCommandRequestedNo()
@@ -239,7 +314,8 @@ class UpdateInterimTest extends CommandHandlerTestCase
             'reason' => 'Foo',
             'startDate' => '2015-01-01',
             'endDate' => '2015-01-01',
-            'authVehicles' => 10,
+            'authHgvVehicles' => 10,
+            'authLgvVehicles' => 11,
             'authTrailers' => 12,
             'operatingCentres' => [11],
             'vehicles' => [22]
@@ -249,6 +325,14 @@ class UpdateInterimTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $application */
         $application->setId(111);
         $application->setIsVariation(false);
+        $application->setInterimReason('Foo');
+        $application->setInterimStart(new DateTime('2015-01-01'));
+        $application->setInterimEnd(new DateTime('2015-01-01'));
+        $application->setInterimAuthVehicles(21);
+        $application->setInterimAuthHgvVehicles(10);
+        $application->setInterimAuthLgvVehicles(11);
+        $application->setInterimAuthTrailers(12);
+        $application->setInterimStatus(new RefData(ApplicationEntity::INTERIM_STATUS_REQUESTED));
 
         /** @var ApplicationOperatingCentre $oc1 */
         $oc1 = m::mock(ApplicationOperatingCentre::class)->makePartial();
@@ -331,7 +415,10 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->assertNull($application->getInterimStart());
         $this->assertNull($application->getInterimEnd());
         $this->assertNull($application->getInterimAuthVehicles());
+        $this->assertNull($application->getInterimAuthHgvVehicles());
+        $this->assertNull($application->getInterimAuthLgvVehicles());
         $this->assertNull($application->getInterimAuthTrailers());
+        $this->assertNull($application->getInterimStatus());
     }
 
     public function testHandleCommandRefusedRevoked()
@@ -382,7 +469,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
             'reason' => 'Foo',
             'startDate' => '2015-01-01',
             'endDate' => '2015-01-01',
-            'authVehicles' => 10,
+            'authHgvVehicles' => 10,
             'authTrailers' => 12,
             'operatingCentres' => [11],
             'vehicles' => [22],
@@ -451,7 +538,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setLicenceVehicles($lvs);
         $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE]);
         $application->setInterimLicenceVehicles($interimLicenceVehicles);
-        $application->setTotAuthVehicles(15);
+        $application->updateTotAuthHgvVehicles(15);
         $application->setTotAuthTrailers(15);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -505,7 +592,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
             'reason' => 'Foo',
             'startDate' => '2015-01-01',
             'endDate' => '2015-01-01',
-            'authVehicles' => 10,
+            'authHgvVehicles' => 10,
             'authTrailers' => 12,
             'operatingCentres' => [11],
             'vehicles' => [22]
@@ -611,7 +698,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
             'reason' => 'Foo',
             'startDate' => null,
             'endDate' => '2015-01-01',
-            'authVehicles' => 10,
+            'authHgvVehicles' => 10,
             'authTrailers' => 12,
             'operatingCentres' => [11],
             'vehicles' => [22]
@@ -720,7 +807,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
             'reason' => 'Foo',
             'startDate' => '2015-01-01',
             'endDate' => '2015-01-01',
-            'authVehicles' => 10,
+            'authHgvVehicles' => 10,
             'authTrailers' => 12,
             'operatingCentres' => [11],
             'vehicles' => [22],
@@ -771,7 +858,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setLicenceVehicles($lvs);
         $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE]);
         $application->setInterimLicenceVehicles([]);
-        $application->setTotAuthVehicles(15);
+        $application->updateTotAuthHgvVehicles(15);
         $application->setTotAuthTrailers(15);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -984,7 +1071,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
             'reason' => 'Foo',
             'startDate' => '2015-01-01',
             'endDate' => '2016-01-01',
-            'authVehicles' => 20,
+            'authHgvVehicles' => 20,
             'authTrailers' => 30,
             'operatingCentres' => $ocs,
             'vehicles' => $lvs,
@@ -998,7 +1085,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
             'reason' => 'Foo Bla',
             'startDate' => '2016-01-01',
             'endDate' => '2017-01-01',
-            'authVehicles' => 20,
+            'authHgvVehicles' => 20,
             'authTrailers' => 30,
             'operatingCentres' => [$oc1Id,$oc2Id],
             'vehicles' => [$lv1Id,$lv2Id,$lv3Id],
@@ -1014,7 +1101,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setInterimReason($currentData['reason']);
         $application->setInterimStart($currentData['startDate']);
         $application->setInterimEnd($currentData['endDate']);
-        $application->setTotAuthVehicles(40);
+        $application->updateTotAuthHgvVehicles(40);
         $application->setTotAuthTrailers(40);
 
         $licenceVehicles = new ArrayCollection();

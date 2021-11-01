@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Variation;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
@@ -33,9 +34,12 @@ class OperatingCentresTest extends MockeryTestCase
         parent::setUp();
     }
 
-    public function testProvideAdded()
+    /**
+     * @dataProvider dpTestProvideAdded
+     */
+    public function testProvideAdded($isEligibleForLgv, $expectedContext)
     {
-        $publicationLink = $this->getPublicationLink();
+        $publicationLink = $this->getPublicationLink($isEligibleForLgv);
         $context = new \ArrayObject();
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
@@ -59,23 +63,49 @@ class OperatingCentresTest extends MockeryTestCase
         $this->sut->provide($publicationLink, $context);
 
         $this->assertSame(
-            [
-                'operatingCentres' => [
-                    "New operating centre: ADDRESS43_FORMATTED\n".
-                        "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
-                    "New operating centre: ADDRESS82_FORMATTED\n".
-                        "New authorisation at this operating centre will be: 2 trailer(s)",
-                    "New operating centre: ADDRESS653_FORMATTED\n".
-                        "New authorisation at this operating centre will be: 4234 vehicle(s)",
-                ]
-            ],
+            $expectedContext,
             $context->getArrayCopy()
         );
     }
 
-    public function testProvideS4Ignored()
+    public function dpTestProvideAdded()
     {
-        $publicationLink = $this->getPublicationLink();
+        return [
+            [
+                false,
+                [
+                    'operatingCentres' => [
+                        "New operating centre: ADDRESS43_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
+                        "New operating centre: ADDRESS82_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 2 trailer(s)",
+                        "New operating centre: ADDRESS653_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 4234 vehicle(s)",
+                    ]
+                ],
+            ],
+            [
+                true,
+                [
+                    'operatingCentres' => [
+                        "New operating centre: ADDRESS43_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 12 Heavy Goods Vehicle(s), 3 trailer(s)",
+                        "New operating centre: ADDRESS82_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 2 trailer(s)",
+                        "New operating centre: ADDRESS653_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 4234 Heavy Goods Vehicle(s)",
+                    ]
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestProvideS4Ignored
+     */
+    public function testProvideS4Ignored($isEligibleForLgv, $expectedContext)
+    {
+        $publicationLink = $this->getPublicationLink($isEligibleForLgv);
         $context = new \ArrayObject();
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
@@ -100,21 +130,45 @@ class OperatingCentresTest extends MockeryTestCase
         $this->sut->provide($publicationLink, $context);
 
         $this->assertSame(
-            [
-                'operatingCentres' => [
-                    "New operating centre: ADDRESS43_FORMATTED\n".
-                        "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
-                    "New operating centre: ADDRESS653_FORMATTED\n".
-                        "New authorisation at this operating centre will be: 4234 vehicle(s)",
-                ]
-            ],
+            $expectedContext,
             $context->getArrayCopy()
         );
     }
 
-    public function testProvideUpdated()
+    public function dpTestProvideS4Ignored()
     {
-        $publicationLink = $this->getPublicationLink();
+        return [
+            [
+                false,
+                [
+                    'operatingCentres' => [
+                        "New operating centre: ADDRESS43_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
+                        "New operating centre: ADDRESS653_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 4234 vehicle(s)",
+                    ]
+                ],
+            ],
+            [
+                true,
+                [
+                    'operatingCentres' => [
+                        "New operating centre: ADDRESS43_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 12 Heavy Goods Vehicle(s), 3 trailer(s)",
+                        "New operating centre: ADDRESS653_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 4234 Heavy Goods Vehicle(s)",
+                    ]
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestProvideUpdated
+     */
+    public function testProvideUpdated($isEligibleForLgv, $expectedContext)
+    {
+        $publicationLink = $this->getPublicationLink($isEligibleForLgv);
         $context = new \ArrayObject();
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
@@ -143,23 +197,46 @@ class OperatingCentresTest extends MockeryTestCase
         $this->sut->provide($publicationLink, $context);
 
         $this->assertSame(
-            [
-                'operatingCentres' => [
-                    "Increase at existing operating centre: ADDRESS43_FORMATTED\n".
-                        "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
-                    "Decrease at existing operating centre: ADDRESS82_FORMATTED\n".
-                        "New authorisation at this operating centre will be: 10 vehicle(s), 2 trailer(s)",
-                    "Increase at existing operating centre: ADDRESS653_FORMATTED\n".
-                        "New authorisation at this operating centre will be: 4234 vehicle(s)",
-                ]
-            ],
+            $expectedContext,
             $context->getArrayCopy()
         );
     }
 
+    public function dpTestProvideUpdated()
+    {
+        return [
+            [
+                false,
+                [
+                    'operatingCentres' => [
+                        "Increase at existing operating centre: ADDRESS43_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
+                        "Decrease at existing operating centre: ADDRESS82_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 10 vehicle(s), 2 trailer(s)",
+                        "Increase at existing operating centre: ADDRESS653_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 4234 vehicle(s)",
+                    ]
+                ],
+            ],
+            [
+                true,
+                [
+                    'operatingCentres' => [
+                        "Increase at existing operating centre: ADDRESS43_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 12 Heavy Goods Vehicle(s), 3 trailer(s)",
+                        "Decrease at existing operating centre: ADDRESS82_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 10 Heavy Goods Vehicle(s), 2 trailer(s)",
+                        "Increase at existing operating centre: ADDRESS653_FORMATTED\n".
+                            "New authorisation at this operating centre will be: 4234 Heavy Goods Vehicle(s)",
+                    ]
+                ],
+            ],
+        ];
+    }
+
     public function testProvideUpdatedMissingLoc()
     {
-        $publicationLink = $this->getPublicationLink();
+        $publicationLink = $this->getPublicationLink(false);
         $context = new \ArrayObject();
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
@@ -189,7 +266,7 @@ class OperatingCentresTest extends MockeryTestCase
      */
     public function testProvideUpdatedIncreaseDecrease($aocVehicles, $aocTrailers, $locVehicles, $locTrailers, $inc)
     {
-        $publicationLink = $this->getPublicationLink();
+        $publicationLink = $this->getPublicationLink(false);
         $context = new \ArrayObject();
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
@@ -229,7 +306,7 @@ class OperatingCentresTest extends MockeryTestCase
 
     public function testProvideDeleted()
     {
-        $publicationLink = $this->getPublicationLink();
+        $publicationLink = $this->getPublicationLink(false);
         $context = new \ArrayObject();
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
@@ -265,9 +342,11 @@ class OperatingCentresTest extends MockeryTestCase
     }
 
     /**
+     * @param bool $isEligibleForLgv
+     *
      * @return PublicationLink
      */
-    private function getPublicationLink()
+    private function getPublicationLink($isEligibleForLgv)
     {
         $publicationLink = new PublicationLink();
 
@@ -278,7 +357,13 @@ class OperatingCentresTest extends MockeryTestCase
         $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
         $organisation->setName('ORG_NAME');
 
-        $licence = new \Dvsa\Olcs\Api\Entity\Licence\Licence($organisation, new RefData());
+        $licence = m::mock(\Dvsa\Olcs\Api\Entity\Licence\Licence::class)->makePartial();
+        $licence->setOperatingCentres(new ArrayCollection());
+        $licence->setOrganisation($organisation);
+        $licence->shouldReceive('isEligibleForLgv')
+            ->withNoArgs()
+            ->andReturn($isEligibleForLgv);
+
         $publicationLink->setLicence($licence);
 
         $application = new \Dvsa\Olcs\Api\Entity\Application\Application($licence, new RefData(), true);
@@ -288,7 +373,6 @@ class OperatingCentresTest extends MockeryTestCase
     }
 
     /**
-     *
      * @param PublicationLink $publicationLink
      * @param string $action
      * @param int $vehiclesRequired
@@ -302,12 +386,17 @@ class OperatingCentresTest extends MockeryTestCase
         $trailersRequired,
         \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre
     ) {
-        $aoc = new ApplicationOperatingCentre($publicationLink->getApplication(), $operatingCentre);
+        $licence = $publicationLink->getLicence();
+        $application = $publicationLink->getApplication();
+        $application->setLicence($licence);
+
+        $aoc = new ApplicationOperatingCentre($application, $operatingCentre);
         $aoc->setAction($action);
         $aoc->setNoOfVehiclesRequired($vehiclesRequired);
         $aoc->setNoOfTrailersRequired($trailersRequired);
+        $aoc->setApplication($application);
 
-        $publicationLink->getApplication()->addOperatingCentres($aoc);
+        $application->addOperatingCentres($aoc);
     }
 
     /**

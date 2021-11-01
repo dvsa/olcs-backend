@@ -105,6 +105,85 @@ class Text3Test extends MockeryTestCase
         $this->assertSame($expectedText3, $publicationLink->getText3());
     }
 
+    /**
+     * @dataProvider dpAuthorisationsWhereNoOperatingCentres
+     */
+    public function testAuthorisationsWhereNoOperatingCentres($contextArray)
+    {
+        $authorisationText = 'AUTHORISATION_TEXT';
+
+        $publicationLink = $this->getPublicationLink(Organisation::ORG_TYPE_LLP);
+        $context = new ImmutableArrayObject($contextArray);
+
+        $this->sut->process($publicationLink, $context);
+
+        $this->assertSame(
+            $authorisationText,
+            $publicationLink->getText3()
+        );
+    }
+
+    public function dpAuthorisationsWhereNoOperatingCentres()
+    {
+        return [
+            [
+                [
+                    'authorisation' => 'AUTHORISATION_TEXT',
+                ],
+            ],
+            [
+                [
+                    'authorisation' => 'AUTHORISATION_TEXT',
+                    'operatingCentres' => null,
+                ],
+            ],
+            [
+                [
+                    'authorisation' => 'AUTHORISATION_TEXT',
+                    'operatingCentres' => [],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpAuthorisationsAndOperatingCentresWhereOneOrMoreOperatingCentres
+     */
+    public function testAuthorisationsAndOperatingCentresWhereOneOrMoreOperatingCentres(
+        $operatingCentres,
+        $expectedText
+    ) {
+        $publicationLink = $this->getPublicationLink(Organisation::ORG_TYPE_LLP);
+        $context = new ImmutableArrayObject(
+            [
+                'authorisation' => 'AUTHORISATION_TEXT',
+                'operatingCentres' => $operatingCentres,
+                'licenceAddress' => 'LICENCE_ADDRESS',
+            ]
+        );
+
+        $this->sut->process($publicationLink, $context);
+
+        $this->assertEquals(
+            $expectedText,
+            $publicationLink->getText3()
+        );
+    }
+
+    public function dpAuthorisationsAndOperatingCentresWhereOneOrMoreOperatingCentres()
+    {
+        return [
+            [
+                ['OC_LINE1'],
+                "LICENCE_ADDRESS\nOC_LINE1\nLICENCE_ADDRESS\nAUTHORISATION_TEXT",
+            ],
+            [
+                ['OC_LINE1', 'OC_LINE2'],
+                "LICENCE_ADDRESS\nOC_LINE1\nOC_LINE2\nLICENCE_ADDRESS\nAUTHORISATION_TEXT",
+            ],
+        ];
+    }
+
     public function testTransportManagers()
     {
         $person1 = new \Dvsa\Olcs\Api\Entity\Person\Person();

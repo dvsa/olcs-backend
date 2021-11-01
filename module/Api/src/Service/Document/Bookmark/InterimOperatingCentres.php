@@ -32,6 +32,7 @@ class InterimOperatingCentres extends DynamicBookmark
         }
 
         $isGoods = $this->data['goodsOrPsv']['id'] === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+        $isEligibleForLgv = $this->data['isEligibleForLgv'] ?? false;
         $rows = [];
 
         foreach ($this->data['operatingCentres'] as $childOc) {
@@ -47,6 +48,7 @@ class InterimOperatingCentres extends DynamicBookmark
 
             $rows[] = [
                 'TAB_OC_ADD' => Formatter\Address::format($oc['address']),
+                'TAB_VEH' => $isEligibleForLgv ? 'Heavy Goods Vehicles' : 'Vehicles',
                 'TAB_OC_VEH' => $childOc['noOfVehiclesRequired'],
                 'TAB_TRAILER' => $isGoods ? 'Trailers' : '',
                 'TAB_OC_TRAILER' => $isGoods ? $childOc['noOfTrailersRequired'] : '',
@@ -77,8 +79,7 @@ class InterimOperatingCentres extends DynamicBookmark
              * We can't do this filtering at the DB level; if we did we'd miss delta updates
              * which could be relevant, i.e. a record which was fulfilled but isn't in the delta
              */
-            if (
-                $condition['isFulfilled'] === 'N'
+            if ($condition['isFulfilled'] === 'N'
                 && $condition['attachedTo']['id'] === ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE
                 && $condition['action'] !== 'D'
                 && (

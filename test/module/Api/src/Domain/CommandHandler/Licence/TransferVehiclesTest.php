@@ -69,7 +69,7 @@ class TransferVehiclesTest extends CommandHandlerTestCase
 
         /** @var Licence $targetLicence */
         $targetLicence = m::mock(Licence::class)->makePartial();
-        $targetLicence->setTotAuthVehicles(10);
+        $targetLicence->updateTotAuthHgvVehicles(10);
         $targetLicence->shouldReceive('getActiveVehiclesCount')
             ->andReturn(10);
 
@@ -115,7 +115,7 @@ class TransferVehiclesTest extends CommandHandlerTestCase
 
         /** @var Licence $targetLicence */
         $targetLicence = m::mock(Licence::class)->makePartial();
-        $targetLicence->setTotAuthVehicles(10);
+        $targetLicence->updateTotAuthHgvVehicles(10);
         $targetLicence->shouldReceive('getActiveVehiclesCount')
             ->andReturn(5)
             ->shouldReceive('getActiveVehicles')
@@ -172,7 +172,7 @@ class TransferVehiclesTest extends CommandHandlerTestCase
 
         /** @var Licence $targetLicence */
         $targetLicence = m::mock(Licence::class)->makePartial();
-        $targetLicence->setTotAuthVehicles(10);
+        $targetLicence->updateTotAuthHgvVehicles(10);
         $targetLicence->shouldReceive('getActiveVehiclesCount')
             ->andReturn(5)
             ->shouldReceive('getActiveVehicles')
@@ -227,7 +227,7 @@ class TransferVehiclesTest extends CommandHandlerTestCase
 
         /** @var Licence $targetLicence */
         $targetLicence = m::mock(Licence::class)->makePartial();
-        $targetLicence->setTotAuthVehicles(10);
+        $targetLicence->updateTotAuthHgvVehicles(10);
         $targetLicence->shouldReceive('getActiveVehiclesCount')
             ->andReturn(5)
             ->shouldReceive('getActiveVehicles')

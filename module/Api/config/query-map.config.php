@@ -53,7 +53,6 @@ return [
     BookmarkQuery\PsvDiscBundle::class => BookmarkQueryHandler\PsvDiscBundle::class,
     BookmarkQuery\InterimConditionsUndertakings::class
         => BookmarkQueryHandler\InterimConditionsUndertakings::class,
-    BookmarkQuery\FStandingAdditionalVeh::class => BookmarkQueryHandler\FStandingAdditionalVeh::class,
     BookmarkQuery\FStandingCapitalReserves::class => BookmarkQueryHandler\FStandingCapitalReserves::class,
     BookmarkQuery\PiHearingBundle::class => BookmarkQueryHandler\PiHearingBundle::class,
     BookmarkQuery\PreviousHearingBundle::class => BookmarkQueryHandler\PreviousHearing::class,

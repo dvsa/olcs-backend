@@ -64,7 +64,7 @@ class CreateDiscRecordsTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
 
-        $application->setTotAuthVehicles(10);
+        $application->updateTotAuthHgvVehicles(10);
 
         $application->shouldReceive('isPsv')
             ->andReturn(true)
@@ -118,7 +118,7 @@ class CreateDiscRecordsTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
 
-        $application->setTotAuthVehicles(10);
+        $application->updateTotAuthHgvVehicles(10);
 
         $application->shouldReceive('isPsv')
             ->andReturn(true)
@@ -184,7 +184,7 @@ class CreateDiscRecordsTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
 
-        $application->setTotAuthVehicles(10);
+        $application->updateTotAuthHgvVehicles(10);
 
         $application->shouldReceive('isPsv')
             ->andReturn(false)
