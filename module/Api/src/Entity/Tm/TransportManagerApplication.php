@@ -70,6 +70,7 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
     public function updateTransportManagerApplicationFull(
         $tmType = null,
         $isOwner = null,
+        $hasUndertakenTraining = null,
         $hoursMon = null,
         $hoursTue = null,
         $hoursWed = null,
@@ -91,6 +92,7 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
         );
         $this->setTmType($tmType);
         $this->setIsOwner($isOwner);
+        $this->setHasUndertakenTraining($hasUndertakenTraining);
         $this->setHoursMon($hoursMon);
         $this->setHoursTue($hoursTue);
         $this->setHoursWed($hoursWed);

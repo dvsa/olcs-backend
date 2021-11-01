@@ -54,6 +54,7 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
             'version' => 2,
             'tmType' => 'tmType',
             'isOwner' => 1,
+            'hasUndertakenTraining' => 'Y',
             'hoursMon' => 1,
             'hoursTue' => 2,
             'hoursWed' => 3,
@@ -73,6 +74,7 @@ class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
             ->with(
                 $this->refData['tmType'],
                 1,
+                'Y',
                 1,
                 2,
                 3,

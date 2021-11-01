@@ -148,6 +148,15 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     protected $hasPreviousLicences;
 
     /**
+     * Has undertaken training
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="has_undertaken_training", nullable=true)
+     */
+    protected $hasUndertakenTraining;
+
+    /**
      * Hours fri
      *
      * @var float
@@ -580,6 +589,30 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     public function getHasPreviousLicences()
     {
         return $this->hasPreviousLicences;
+    }
+
+    /**
+     * Set the has undertaken training
+     *
+     * @param string $hasUndertakenTraining new value being set
+     *
+     * @return TransportManagerApplication
+     */
+    public function setHasUndertakenTraining($hasUndertakenTraining)
+    {
+        $this->hasUndertakenTraining = $hasUndertakenTraining;
+
+        return $this;
+    }
+
+    /**
+     * Get the has undertaken training
+     *
+     * @return string
+     */
+    public function getHasUndertakenTraining()
+    {
+        return $this->hasUndertakenTraining;
     }
 
     /**

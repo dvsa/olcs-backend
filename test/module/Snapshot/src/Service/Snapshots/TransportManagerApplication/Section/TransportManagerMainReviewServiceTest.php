@@ -121,6 +121,7 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
         /** @var TransportManagerApplication $tma1 */
         $tma1 = m::mock(TransportManagerApplication::class)->makePartial();
         $tma1->setTransportManager($tm1);
+        $tma1->setHasUndertakenTraining('Y');
 
         /** @var TransportManager $tm2 */
         $tm2 = m::mock(TransportManager::class)->makePartial();
@@ -131,6 +132,7 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
         /** @var TransportManagerApplication $tma2 */
         $tma2 = m::mock(TransportManagerApplication::class)->makePartial();
         $tma2->setTransportManager($tm2);
+        $tma2->setHasUndertakenTraining('N');
 
         return [
             [
@@ -158,6 +160,10 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
                                 'label' => 'tm-review-main-certificate',
                                 'noEscape' => true,
                                 'value' => 'unit_File1Desc<br>unit_File2Desc',
+                            ],
+                            [
+                                'title' => 'tm-review-responsibility-training-undertaken',
+                                'value' => 'Yes',
                             ],
                             [
                                 'label' => 'tm-review-main-home-address',
@@ -196,6 +202,10 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
                                 'label' => 'tm-review-main-certificate',
                                 'noEscape' => true,
                                 'value' => 'tm-review-main-no-files-translated'
+                            ],
+                            [
+                                'title' => 'tm-review-responsibility-training-undertaken',
+                                'value' => 'No',
                             ],
                             [
                                 'label' => 'tm-review-main-home-address',

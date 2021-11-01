@@ -53,6 +53,10 @@ class TransportManagerMainReviewService extends AbstractReviewService
                         'value' => $this->formatCertificateFiles($tma)
                     ],
                     [
+                        'title' => 'tm-review-responsibility-training-undertaken',
+                        'value' => $this->formatYesNo($tma->getHasUndertakenTraining()),
+                    ],
+                    [
                         'label' => 'tm-review-main-home-address',
                         'value' => $contactDetails->getAddress() ?
                             $this->formatFullAddress($contactDetails->getAddress()) : ''

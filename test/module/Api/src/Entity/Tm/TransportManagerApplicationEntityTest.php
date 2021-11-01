@@ -5,8 +5,6 @@ namespace Dvsa\OlcsTest\Api\Entity\Tm;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as Entity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity as Entities;
 
 /**
  * @covers Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication
@@ -45,6 +43,7 @@ class TransportManagerApplicationEntityTest extends EntityTester
         $this->sut->updateTransportManagerApplicationFull(
             'tmt',
             1,
+            'Y',
             1,
             2,
             3,
@@ -57,6 +56,7 @@ class TransportManagerApplicationEntityTest extends EntityTester
         );
         $this->assertEquals($this->sut->getTmType(), 'tmt');
         $this->assertEquals($this->sut->getIsOwner(), 1);
+        $this->assertEquals('Y', $this->sut->getHasUndertakenTraining());
         $this->assertEquals($this->sut->getHoursMon(), 1);
         $this->assertEquals($this->sut->getHoursTue(), 2);
         $this->assertEquals($this->sut->getHoursWed(), 3);
@@ -74,6 +74,7 @@ class TransportManagerApplicationEntityTest extends EntityTester
             $this->sut->updateTransportManagerApplicationFull(
                 'tmt',
                 1,
+                'N',
                 25,
                 25,
                 25,
@@ -119,6 +120,7 @@ class TransportManagerApplicationEntityTest extends EntityTester
         $this->sut->updateTransportManagerApplicationFull(
             'tmt',
             1,
+            'Y',
             1,
             2,
             3,
