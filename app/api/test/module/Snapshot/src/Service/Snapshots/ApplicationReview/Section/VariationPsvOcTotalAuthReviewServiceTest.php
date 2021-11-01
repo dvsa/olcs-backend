@@ -21,7 +21,6 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationPsvO
  */
 class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
 {
-
     protected $sut;
     protected $sm;
 
@@ -29,111 +28,159 @@ class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
+        $mockTranslator = m::mock();
+        $mockTranslator->shouldReceive('translate')
+            ->with('review-value-decreased')
+            ->andReturn('decreased from %s to %s')
+            ->shouldReceive('translate')
+            ->with('review-value-increased')
+            ->andReturn('increased from %s to %s');
+
+        $this->sm->setService('translator', $mockTranslator);
+
         $this->sut = new VariationPsvOcTotalAuthReviewService();
         $this->sut->setServiceLocator($this->sm);
     }
 
-    public function testGetConfigFromDataWithoutChanges()
+    /**
+     * @dataProvider dpGetConfigFromData
+     */
+    public function testGetConfigFromData($data, $expected)
     {
-        $data = [
-            'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-            'totAuthVehicles' => 10,
-            'licence' => [
-                'totAuthVehicles' => 10
-            ]
-        ];
-
-        $this->assertNull($this->sut->getConfigFromData($data));
-    }
-
-    public function testGetConfigFromDataWithChanges()
-    {
-        $data = [
-            'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-            'totAuthVehicles' => 9,
-            'licence' => [
-                'totAuthVehicles' => 3
-            ]
-        ];
-
-        $expected = [
-            'header' => 'review-operating-centres-authorisation-title',
-            'multiItems' => [
-                [
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles',
-                        'value' => 'increased from 3 to 9'
-                    ]
-                ]
-            ]
-        ];
-
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
-            ->with('review-value-increased')
-            ->andReturn('increased from %s to %s')
-            ->shouldReceive('translate')
-            ->with('review-value-increased')
-            ->andReturn('increased from %s to %s')
-            ->shouldReceive('translate')
-            ->with('review-value-increased')
-            ->andReturn('increased from %s to %s')
-            ->shouldReceive('translate')
-            ->with('review-value-increased')
-            ->andReturn('increased from %s to %s');
-
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));
     }
 
-    public function testGetConfigFromDataWithChangesWithStandardInternational()
+    public function dpGetConfigFromData()
     {
-        $data = [
-            'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL],
-            'totAuthVehicles' => 9,
-            'totCommunityLicences' => 5,
-            'licence' => [
-                'totAuthVehicles' => 3,
-                'totCommunityLicences' => 1,
-            ]
-        ];
-
-        $expected = [
-            'header' => 'review-operating-centres-authorisation-title',
-            'multiItems' => [
-                [
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles',
-                        'value' => 'increased from 3 to 9'
-                    ],
-                    [
-                        'label' => 'review-operating-centres-authorisation-community-licences',
-                        'value' => 'increased from 1 to 5'
+        return [
+            'without changes' => [
+                'data' => [
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
+                    'totAuthVehicles' => 10,
+                    'licence' => [
+                        'totAuthVehicles' => 10,
                     ]
-                ]
-            ]
+                ],
+                'expected' => null,
+            ],
+            'with changes' => [
+                'data' => [
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
+                    'totAuthVehicles' => 10,
+                    'licence' => [
+                        'totAuthVehicles' => 20,
+                    ]
+                ],
+                'expected' => [
+                    'header' => 'review-operating-centres-authorisation-title',
+                    'multiItems' => [
+                        [
+                            [
+                                'label' => 'review-operating-centres-authorisation-vehicles',
+                                'value' => 'decreased from 20 to 10'
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            'with changes - standard international' => [
+                'data' => [
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL],
+                    'totAuthVehicles' => 10,
+                    'totCommunityLicences' => 5,
+                    'licence' => [
+                        'totAuthVehicles' => 20,
+                        'totCommunityLicences' => 1,
+                        ]
+                ],
+                'expected' => [
+                    'header' => 'review-operating-centres-authorisation-title',
+                    'multiItems' => [
+                        [
+                            [
+                                'label' => 'review-operating-centres-authorisation-vehicles',
+                                'value' => 'decreased from 20 to 10'
+                            ],
+                            [
+                                'label' => 'review-operating-centres-authorisation-community-licences',
+                                'value' => 'increased from 1 to 5'
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            'with changes - restricted' => [
+                'data' => [
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_RESTRICTED],
+                    'totAuthVehicles' => 10,
+                    'totCommunityLicences' => 5,
+                    'licence' => [
+                        'totAuthVehicles' => 20,
+                        'totCommunityLicences' => 1,
+                        ]
+                ],
+                'expected' => [
+                    'header' => 'review-operating-centres-authorisation-title',
+                    'multiItems' => [
+                        [
+                            [
+                                'label' => 'review-operating-centres-authorisation-vehicles',
+                                'value' => 'decreased from 20 to 10'
+                            ],
+                            [
+                                'label' => 'review-operating-centres-authorisation-community-licences',
+                                'value' => 'increased from 1 to 5'
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            'with changes to zero' => [
+                'data' => [
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
+                    'totAuthVehicles' => 0,
+                    'licence' => [
+                        'totAuthVehicles' => 20,
+                    ]
+                ],
+                'expected' => [
+                    'header' => 'review-operating-centres-authorisation-title',
+                    'multiItems' => [
+                        [
+                            [
+                                'label' => 'review-operating-centres-authorisation-vehicles',
+                                'value' => 'decreased from 20 to 0'
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            'with changes to zero - standard international' => [
+                'data' => [
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL],
+                    'totAuthVehicles' => 0,
+                    'totCommunityLicences' => 0,
+                    'licence' => [
+                        'totAuthVehicles' => 20,
+                        'totCommunityLicences' => 1,
+                        ]
+                ],
+                'expected' => [
+                    'header' => 'review-operating-centres-authorisation-title',
+                    'multiItems' => [
+                        [
+                            [
+                                'label' => 'review-operating-centres-authorisation-vehicles',
+                                'value' => 'decreased from 20 to 0'
+                            ],
+                            [
+                                'label' => 'review-operating-centres-authorisation-community-licences',
+                                'value' => 'decreased from 1 to 0'
+                            ]
+                        ]
+                    ]
+                ],
+            ],
         ];
-
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
-            ->with('review-value-increased')
-            ->andReturn('increased from %s to %s')
-            ->shouldReceive('translate')
-            ->with('review-value-increased')
-            ->andReturn('increased from %s to %s')
-            ->shouldReceive('translate')
-            ->with('review-value-increased')
-            ->andReturn('increased from %s to %s')
-            ->shouldReceive('translate')
-            ->with('review-value-increased')
-            ->andReturn('increased from %s to %s')
-            ->shouldReceive('translate')
-            ->with('review-value-increased')
-            ->andReturn('increased from %s to %s');
-
-        $this->assertEquals($expected, $this->sut->getConfigFromData($data));
     }
 }

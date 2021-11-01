@@ -26,17 +26,10 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-        ];
-
-        parent::initReferences();
-    }
-
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpHandleCommand
+     */
+    public function testHandleCommand($goodsOrPsv, $licenceType, $vehicleType)
     {
         $id = 69;
         $version = 2;
@@ -44,8 +37,9 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
         $params = [
             'id' => $id,
             'version' => $version,
-            'goodsOrPsv' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-            'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            'goodsOrPsv' => $goodsOrPsv,
+            'licenceType' => $licenceType,
+            'vehicleType' => $vehicleType,
             'firstVehicleRate' => '1000.01',
             'additionalVehicleRate' => '100.01',
             'effectiveFrom' => '2015-09-10',
@@ -70,11 +64,15 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
         $mockRate
             ->shouldReceive('setGoodsOrPsv')
             ->once()
-            ->with($this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE))
+            ->with($this->mapRefData($goodsOrPsv))
             ->andReturnSelf()
             ->shouldReceive('setLicenceType')
             ->once()
-            ->with($this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL))
+            ->with($this->mapRefData($licenceType))
+            ->andReturnSelf()
+            ->shouldReceive('setVehicleType')
+            ->once()
+            ->with($this->mapRefData($vehicleType))
             ->andReturnSelf()
             ->shouldReceive('setFirstVehicleRate')
             ->once()
@@ -105,6 +103,47 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
         $this->assertEquals(['Financial Standing Rate updated'], $response->getMessages());
     }
 
+    public function dpHandleCommand()
+    {
+        return [
+            [
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Entity::VEHICLE_TYPE_HGV,
+            ],
+            [
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Entity::VEHICLE_TYPE_LGV,
+            ],
+            [
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Entity::VEHICLE_TYPE_NOT_APPLICABLE,
+            ],
+            [
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                Entity::VEHICLE_TYPE_NOT_APPLICABLE,
+            ],
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Entity::VEHICLE_TYPE_NOT_APPLICABLE,
+            ],
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Entity::VEHICLE_TYPE_NOT_APPLICABLE,
+            ],
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                Entity::VEHICLE_TYPE_NOT_APPLICABLE,
+            ],
+        ];
+    }
+
     public function testHandleCommandDuplicateDetected()
     {
         $id = 69;
@@ -115,6 +154,7 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
             'version' => $version,
             'goodsOrPsv' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
             'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            'vehicleType' => Entity::VEHICLE_TYPE_NOT_APPLICABLE,
             'firstVehicleRate' => '1000.01',
             'additionalVehicleRate' => '100.01',
             'effectiveFrom' => '2015-09-10',
@@ -139,7 +179,12 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
             ->andReturn($mockRate)
             ->shouldReceive('fetchByCategoryTypeAndDate')
             ->once()
-            ->with(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, Licence::LICENCE_TYPE_STANDARD_NATIONAL, '2015-09-10')
+            ->with(
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Entity::VEHICLE_TYPE_NOT_APPLICABLE,
+                '2015-09-10'
+            )
             ->andReturn([$mockRate, $mockExisting])
             ->shouldReceive('save')
             ->never();
@@ -147,5 +192,118 @@ class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
         $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @dataProvider dpHandleCommandInputRulesViolation
+     */
+    public function testHandleCommandInputRulesViolation(
+        $goodsOrPsv,
+        $licenceType,
+        $vehicleType,
+        $expectedMessage
+    ) {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $id = 69;
+        $version = 2;
+
+        $params = [
+            'id' => $id,
+            'version' => $version,
+            'goodsOrPsv' => $goodsOrPsv,
+            'licenceType' => $licenceType,
+            'vehicleType' => $vehicleType,
+            'firstVehicleRate' => '1000.01',
+            'additionalVehicleRate' => '100.01',
+            'effectiveFrom' => '2015-09-10',
+        ];
+
+        $command = Command::create($params);
+
+        $mockRate = m::mock(Entity::class);
+
+        $this->repoMap['FinancialStandingRate']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, 1, $version)
+            ->andReturn($mockRate)
+            ->shouldReceive('save')
+            ->never();
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function dpHandleCommandInputRulesViolation()
+    {
+        return [
+            [
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Entity::VEHICLE_TYPE_NOT_APPLICABLE,
+                'Vehicle type must be HGV or LGV for standard international goods licence',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Entity::VEHICLE_TYPE_HGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Entity::VEHICLE_TYPE_LGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                Entity::VEHICLE_TYPE_HGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                Entity::VEHICLE_TYPE_LGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Entity::VEHICLE_TYPE_HGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Entity::VEHICLE_TYPE_LGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Entity::VEHICLE_TYPE_HGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Entity::VEHICLE_TYPE_LGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                Entity::VEHICLE_TYPE_HGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+            [
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_RESTRICTED,
+                Entity::VEHICLE_TYPE_LGV,
+                'Vehicle type must be Not Applicable for licences other than standard international/goods',
+            ],
+        ];
     }
 }

@@ -13,24 +13,24 @@ trait ProvidesOperatingCentreVehicleAuthorizationConstraintsTrait
     {
         return [
             'no operating centres' => [
-                /* Operating Centres ...[vehicles]: */ [],
+                /* Operating Centres ...[HGVs]: */ [],
                 /* Constraints: */ [
-                    'minVehicleAuth' => 0,
-                    'maxVehicleAuth' => 0,
+                    'minHgvVehicleAuth' => 0,
+                    'maxHgvVehicleAuth' => 0,
                 ]
             ],
-            'one operating centre with vehicles' => [
-                /* Operating Centres ...[vehicles]: */ [[1]],
+            'one operating centre with HGVs' => [
+                /* Operating Centres ...[HGVs]: */ [[1]],
                 /* Constraints: */ [
-                    'minVehicleAuth' => 1,
-                    'maxVehicleAuth' => 1,
+                    'minHgvVehicleAuth' => 1,
+                    'maxHgvVehicleAuth' => 1,
                 ]
             ],
-            'more then one operating centre with vehicles' => [
-                /* Operating Centres ...[vehicles]: */ [[1], [2]],
+            'more then one operating centre with HGVs' => [
+                /* Operating Centres ...[HGVs]: */ [[1], [2]],
                 /* Constraints: */ [
-                    'minVehicleAuth' => 2,
-                    'maxVehicleAuth' => 3,
+                    'minHgvVehicleAuth' => 2,
+                    'maxHgvVehicleAuth' => 3,
                 ]
             ],
         ];

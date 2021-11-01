@@ -23,6 +23,7 @@ final class Text3 implements ProcessInterface
     {
         $this->addCorrespondanceAddress($context);
         $this->addOperatingCentreText($context);
+        $this->addAuthorisationText($context);
         $this->addTransportManagerText($context);
         $this->addConditionUndertakingText($context);
         $this->addUpgradeText($publicationLink);
@@ -56,13 +57,39 @@ final class Text3 implements ProcessInterface
 
     /**
      * @param ImmutableArrayObject $context
+     *
+     * @return bool
+     */
+    private function hasOneOrMoreOperatingCentreLines(ImmutableArrayObject $context)
+    {
+        return $context->offsetExists('operatingCentres') &&
+            is_array($context->offsetGet('operatingCentres')) &&
+            !empty($context->offsetGet('operatingCentres'));
+    }
+
+    /**
+     * @param ImmutableArrayObject $context
      */
     private function addOperatingCentreText(ImmutableArrayObject $context)
     {
-        if ($context->offsetExists('operatingCentres') && is_array($context->offsetGet('operatingCentres'))) {
+        if ($this->hasOneOrMoreOperatingCentreLines($context)) {
             foreach ($context->offsetGet('operatingCentres') as $textLine) {
                 $this->addText($textLine);
             }
+        }
+    }
+
+    /**
+     * @param ImmutableArrayObject $context
+     */
+    private function addAuthorisationText(ImmutableArrayObject $context)
+    {
+        if ($context->offsetExists('authorisation')) {
+            if ($this->hasOneOrMoreOperatingCentreLines($context)) {
+                $this->addCorrespondanceAddress($context);
+            }
+
+            $this->addText($context->offsetGet('authorisation'));
         }
     }
 

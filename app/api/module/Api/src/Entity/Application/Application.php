@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Transfer\Validators;
 use Laminas\Filter\Word\CamelCaseToUnderscore;
+use Dvsa\Olcs\Api\Entity\Traits\TotAuthVehiclesTrait;
 
 /**
  * Application Entity
@@ -47,6 +48,8 @@ use Laminas\Filter\Word\CamelCaseToUnderscore;
  */
 class Application extends AbstractApplication implements ContextProviderInterface, OrganisationProviderInterface
 {
+    use TotAuthVehiclesTrait;
+
     const ERROR_NI_NON_GOODS = 'AP-TOL-1';
     const ERROR_GV_NON_SR = 'AP-TOL-2';
     const ERROR_VAR_UNCHANGE_NI = 'AP-TOL-3';
@@ -432,16 +435,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * Has the overall number of vehicles authority increased.
-     *
-     * @return bool
-     */
-    public function hasAuthVehiclesIncrease()
-    {
-        return ((int)$this->getTotAuthVehicles() > (int)$this->getLicence()->getTotAuthVehicles());
-    }
-
-    /**
      * Has the overall number of trailers authority increased.
      *
      * @return bool
@@ -528,7 +521,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             return true;
         }
 
-        if ($this->hasAuthVehiclesIncrease() ||
+        if ($this->hasHgvAuthorisationIncreased() ||
+            $this->hasLgvAuthorisationIncreased() ||
             $this->hasAuthTrailersIncrease() ||
             $this->hasUpgrade() ||
             $this->hasNewOperatingCentre() ||
@@ -782,6 +776,56 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         return false;
+    }
+
+    /**
+     * Is this application eligible for LGV
+     *
+     * @return bool
+     */
+    public function isEligibleForLgv(): bool
+    {
+        // temporarily hardcoded to false to avoid functional changes when merged to master
+        return false;
+
+        // for now only variations are eligible
+        return $this->isVariation() && $this->isGoods() && $this->isStandardInternational();
+    }
+
+    /**
+     * Has the HGV authorisation of this variation increased relative to the associated licence? Always returns false
+     * for non-variation applications as the concept does not apply to these
+     *
+     * @return bool
+     */
+    public function hasHgvAuthorisationIncreased(): bool
+    {
+        if (!$this->isVariation()) {
+            return false;
+        }
+
+        $variationAuthorisation = $this->getTotAuthHgvVehiclesZeroCoalesced();
+        $licenceAuthorisation = $this->getLicence()->getTotAuthHgvVehiclesZeroCoalesced();
+
+        return $variationAuthorisation > $licenceAuthorisation;
+    }
+
+    /**
+     * Has the LGV authorisation of this variation increased relative to the associated licence? Always returns false
+     * for non-variation applications as the concept does not apply to these
+     *
+     * @return bool
+     */
+    public function hasLgvAuthorisationIncreased(): bool
+    {
+        if (!$this->isVariation()) {
+            return false;
+        }
+
+        $variationAuthorisation = $this->getTotAuthLgvVehiclesZeroCoalesced();
+        $licenceAuthorisation = $this->getLicence()->getTotAuthLgvVehiclesZeroCoalesced();
+
+        return $variationAuthorisation > $licenceAuthorisation;
     }
 
     /**
@@ -1054,6 +1098,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $this->setGoodsOrPsv($licence->getGoodsOrPsv());
         $this->setTotAuthTrailers($licence->getTotAuthTrailers());
         $this->setTotAuthVehicles($licence->getTotAuthVehicles());
+        $this->setTotAuthHgvVehicles($licence->getTotAuthHgvVehicles());
+        $this->setTotAuthLgvVehicles($licence->getTotAuthLgvVehicles());
         $this->setNiFlag($licence->getNiFlag());
     }
 
@@ -1237,7 +1283,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             // of vehicles or trailers
             if ($this->getOperatingCentresAdded()->count() === 0 &&
                 !$this->hasIncreaseInOperatingCentre() &&
-                !$this->isRealUpgrade()
+                !$this->isRealUpgrade() &&
+                !$this->hasLgvAuthorisationIncreased()
             ) {
                 return self::NOT_APPLICABLE;
             }
@@ -1605,7 +1652,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function getOtherActiveLicencesForOrganisation()
     {
         if ($this->getLicence() && $this->getLicence()->getOrganisation()) {
-            $licences = $this->getLicence()->getOrganisation()->getActiveLicences();
+            $licences = $this->getActiveLicencesForOrganisation();
 
             if (empty($licences)) {
                 return [];
@@ -1622,6 +1669,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         return null;
+    }
+
+    /**
+     * For an application, get the organisation's active licences
+     *
+     * @return ArrayCollection
+     */
+    public function getActiveLicencesForOrganisation()
+    {
+        return $this->getLicence()->getOrganisation()->getActiveLicences();
     }
 
     /**
@@ -1706,7 +1763,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         $comparisons = [
-            'TotAuthVehicles',
+            'TotAuthHgvVehicles',
+            'TotAuthLgvVehicles',
             'TotAuthTrailers',
         ];
 
@@ -1820,6 +1878,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             return true;
         } else {
             // It is a Goods or PSV variation
+            // The LGV authorisation has increased (only returns true for licence types concerned with LGV)
+            if ($this->hasLgvAuthorisationIncreased()) {
+                return true;
+            }
+
             // An operating centre has been added;
             if ($this->hasNewOperatingCentre()) {
                 return true;
@@ -2042,7 +2105,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function getCalculatedBundleValues()
     {
         return [
-            'applicationReference' => $this->getApplicationReference()
+            'applicationReference' => $this->getApplicationReference(),
+            'isEligibleForLgv' => $this->isEligibleForLgv(),
         ];
     }
 
@@ -2215,5 +2279,40 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $criteria->where($expr->eq('isPostSubmissionUpload', true));
 
         return $applicationDocuments->matching($criteria);
+    }
+
+    /**
+     * Update the total number of hgv vehicles authorized for interim and refresh the property containing the total of hgv and lgv
+     * vehicles authorized for interim.
+     *
+     * @param int|null $interimAuthHgvVehicles
+     * @return self
+     */
+    public function updateInterimAuthHgvVehicles(?int $interimAuthHgvVehicles): self
+    {
+        parent::setInterimAuthHgvVehicles($interimAuthHgvVehicles);
+        return $this->updateInterimAuthVehicles();
+    }
+
+    /**
+     * Update the total number of lgv vehicles authorized for interim and refresh the property containing the total of hgv and lgv
+     * vehicles authorized for interim.
+     *
+     * @param int|null $interimAuthLgvVehicles
+     * @return self
+     */
+    public function updateInterimAuthLgvVehicles(?int $interimAuthLgvVehicles): self
+    {
+        parent::setInterimAuthLgvVehicles($interimAuthLgvVehicles);
+        return $this->updateInterimAuthVehicles();
+    }
+
+    /**
+     * Refresh the property containing the total of hgv and lgv authorized vehicles for interim
+     */
+    private function updateInterimAuthVehicles(): self
+    {
+        $this->interimAuthVehicles = ($this->interimAuthHgvVehicles ?? 0) + ($this->interimAuthLgvVehicles ?? 0);
+        return $this;
     }
 }

@@ -70,6 +70,12 @@ class InterimOperatingCentresTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($entity);
 
-        $this->assertEquals(['id' => 111, 'operatingCentres' => ['foo', 'bar']], $this->sut->handleQuery($query));
+        $this->assertEquals(
+            [
+                'id' => 111,
+                'operatingCentres' => ['foo', 'bar'],
+            ],
+            $this->sut->handleQuery($query)
+        );
     }
 }

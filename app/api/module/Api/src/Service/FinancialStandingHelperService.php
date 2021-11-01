@@ -4,7 +4,9 @@ namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
@@ -73,6 +75,8 @@ class FinancialStandingHelperService implements FactoryInterface
                 $auths[] = [
                     'type' => $app->getLicenceType()->getId(),
                     'count' => $app->getTotAuthVehicles(),
+                    'hgvCount' => $app->getTotAuthHgvVehiclesZeroCoalesced(),
+                    'lgvCount' => $app->getTotAuthLgvVehiclesZeroCoalesced(),
                     'category' => $app->getGoodsOrPsv()->getId(),
                 ];
             }
@@ -84,6 +88,8 @@ class FinancialStandingHelperService implements FactoryInterface
                 $auths[] = [
                     'type' => $licence->getLicenceType()->getId(),
                     'count' => $licence->getTotAuthVehicles(),
+                    'hgvCount' => $licence->getTotAuthHgvVehiclesZeroCoalesced(),
+                    'lgvCount' => $licence->getTotAuthLgvVehiclesZeroCoalesced(),
                     'category' => $licence->getGoodsOrPsv()->getId(),
                 ];
             }
@@ -98,43 +104,42 @@ class FinancialStandingHelperService implements FactoryInterface
      *
      * array (
      *   0 => array (
-     *     'category' => 'lcat_gv',
-     *     'type' => 'ltyp_si',
-     *     'count' => 3,
+     *     'category' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+     *     'type' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+     *     'count' => 4,
+     *     'hgvCount' => 3,
+     *     'lgvCount' => 1,
      *   ),
      *   1 => array (
-     *     'category' => 'lcat_gv',
-     *     'type' => 'ltyp_r',
+     *     'category' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+     *     'type' => Licence::LICENCE_TYPE_RESTRICTED,
      *     'count' => 3,
+     *     'hgvCount' => 3,
+     *     'lgvCount' => 0,
      *   ),
      *   2 => array (
-     *     'category' => 'lcat_psv',
-     *     'type' => 'ltyp_r',
+     *     'category' => Licence::LICENCE_CATEGORY_PSV,
+     *     'type' => Licence::LICENCE_TYPE_RESTRICTED,
      *     'count' => 1,
+     *     'hgvCount' => 1,
+     *     'lgvCount' => 0,
      *   ),
      * )
      *
      * Calculation:
-     *    1 x 7000  first vehicle rate GV/SI
-     * +  2 x 3900  additional vehicle rate GV/SI
-     * +  3 x 1700  additional vehicle rate GV/R
-     * +  1 x 2700  additional vehicle rate PSV/R
+     *    1 x 7000  first vehicle rate GV/SI/HGV (7000)
+     * +  3 x 3900  additional vehicle rate GV/SI/HGV (11700)
+     * +  1 x 800   additional vehicle rate GV/SI/LGV (800)
+     * +  3 x 1700  additional vehicle rate GV/R (5100)
+     * +  1 x 2700  additional vehicle rate PSV/R (2700)
      * -----------
-     *       22600
+     *       27300
      *
      * @param array $auths
      * @return int
      */
     public function getFinanceCalculation(array $auths)
     {
-        $firstVehicleCharge      = 0;
-        $additionalVehicleCharge = 0;
-        $foundHigher             = false;
-        $higherChargeTypes       = [
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-        ];
-
         // 1. Sort the array so the correct (higher) 'first vehicle' charge is
         // applied (i.e. ensure any PSV apps/licences are handled first)
         usort(
@@ -145,27 +150,63 @@ class FinancialStandingHelperService implements FactoryInterface
             }
         );
 
-        // 2. Get first vehicle charge
+        // 2. Get first vehicle charge and whether to decrement hgvCount or lgvCount
         $firstVehicleKey = null;
-        foreach ($auths as $key => $auth) {
-            if (!$foundHigher && $auth['count']>0) {
-                $firstVehicleCharge = $this->getFirstVehicleRate($auth['type'], $auth['category']);
-                $firstVehicleKey = $key;
-                if (in_array($auth['type'], $higherChargeTypes, true)) {
-                    $foundHigher = true;
-                }
-            }
+        $firstVehicleCountType = null;
+        $firstVehicleMetadata = $this->getFirstVehicleMetadata($auths);
+
+        if (!is_null($firstVehicleMetadata)) {
+            $firstVehicleKey = $firstVehicleMetadata['key'];
+            $firstVehicleCountType = $firstVehicleMetadata['countType'];
         }
 
         // 3. Ensure we don't double-count the first vehicle
+        $firstVehicleCharge = 0;
         if ($firstVehicleKey !== null) {
             $auths[$firstVehicleKey]['count']--;
+            $auths[$firstVehicleKey][$firstVehicleCountType]--;
+
+            $auth = $auths[$firstVehicleKey];
+            $rateVehicleType = FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE;
+            if ($this->useSeparateHgvAndLgvRates($auth)) {
+                if ($firstVehicleCountType == 'hgvCount') {
+                    $rateVehicleType = FinancialStandingRate::VEHICLE_TYPE_HGV;
+                } else {
+                    $rateVehicleType = FinancialStandingRate::VEHICLE_TYPE_LGV;
+                }
+            }
+
+            $firstVehicleCharge = $this->getFirstVehicleRate(
+                $auth['type'],
+                $auth['category'],
+                $rateVehicleType
+            );
         }
 
         // 4. Get the additional vehicle charges
-        foreach ($auths as $key => $auth) {
-            $rate = $this->getAdditionalVehicleRate($auth['type'], $auth['category']);
-            $additionalVehicleCharge += ($auth['count'] * $rate);
+        $additionalVehicleCharge = 0;
+        foreach ($auths as $auth) {
+            if ($this->useSeparateHgvAndLgvRates($auth)) {
+                $rate = $this->getAdditionalVehicleRate(
+                    $auth['type'],
+                    $auth['category'],
+                    FinancialStandingRate::VEHICLE_TYPE_HGV
+                );
+                $additionalVehicleCharge += ($auth['hgvCount'] * $rate);
+                $rate = $this->getAdditionalVehicleRate(
+                    $auth['type'],
+                    $auth['category'],
+                    FinancialStandingRate::VEHICLE_TYPE_LGV
+                );
+                $additionalVehicleCharge += ($auth['lgvCount'] * $rate);
+            } else {
+                $rate = $this->getAdditionalVehicleRate(
+                    $auth['type'],
+                    $auth['category'],
+                    FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
+                );
+                $additionalVehicleCharge += ($auth['count'] * $rate);
+            }
         }
 
         // 5. Return the total required finance
@@ -173,14 +214,105 @@ class FinancialStandingHelperService implements FactoryInterface
     }
 
     /**
-     * @param string $licenceType
-     * @param string $goodsOrPsv
+     * Return metadata regarding the first vehicle given an array of auths
+     *
+     * @param array $auths
+     *
+     * @return array
+     */
+    private function getFirstVehicleMetadata(array $auths)
+    {
+        $higherChargeTypes = [
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+        ];
+
+        $goodsOrPsvCategories = [
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+            Licence::LICENCE_CATEGORY_PSV,
+        ];
+
+        $latestRestrictedKey = null;
+        $latestLgvKey = null;
+
+        $filteredAuths = [];
+        foreach ($auths as $key => $auth) {
+            if ($auth['count'] > 0) {
+                $filteredAuths[$key] = $auth;
+            }
+        }
+
+        foreach ($filteredAuths as $key => $auth) {
+            if (in_array($auth['type'], $higherChargeTypes) && in_array($auth['category'], $goodsOrPsvCategories)) {
+                if ($this->useSeparateHgvAndLgvRates($auth)) {
+                    if ($auth['hgvCount'] > 0) {
+                        return $this->generateFirstVehicleMetadataResponse($key, 'hgvCount');
+                    } else {
+                        $latestLgvKey = $key;
+                    }
+                } else {
+                    return $this->generateFirstVehicleMetadataResponse($key, 'hgvCount');
+                }
+            } elseif ($auth['type'] == Licence::LICENCE_TYPE_RESTRICTED) {
+                $latestRestrictedKey = $key;
+            }
+        }
+
+        if (!is_null($latestRestrictedKey)) {
+            return $this->generateFirstVehicleMetadataResponse($latestRestrictedKey, 'hgvCount');
+        }
+
+        if (!is_null($latestLgvKey)) {
+            return $this->generateFirstVehicleMetadataResponse($latestLgvKey, 'lgvCount');
+        }
+
+        return null;
+    }
+
+    /**
+     * Generate and return a response for the getFirstVehicleMetadata method
+     *
+     * @param string $key
+     * @param string $countType
+     *
+     * @return array
+     */
+    private function generateFirstVehicleMetadataResponse($key, $countType)
+    {
+        return [
+            'key' => $key,
+            'countType' => $countType,
+        ];
+    }
+
+    /**
+     * Should this auth be associated with rates with a vehicle type of HGV/LGV rather than a vehicle type of
+     * "not applicable"?
+     *
+     * @param array $auth
+     *
      * @return float
      */
-    public function getFirstVehicleRate($licenceType, $goodsOrPsv)
+    private function useSeparateHgvAndLgvRates(array $auth)
+    {
+        return $auth['category'] == Licence::LICENCE_CATEGORY_GOODS_VEHICLE &&
+            $auth['type'] == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL;
+    }
+
+    /**
+     * @param string $licenceType
+     * @param string $goodsOrPsv
+     * @param string $vehicleType
+     *
+     * @return float
+     */
+    public function getFirstVehicleRate($licenceType, $goodsOrPsv, $vehicleType)
     {
         foreach ($this->getRates() as $rate) {
-            if ($rate->getGoodsOrPsv()->getId() == $goodsOrPsv && $rate->getLicenceType()->getId() == $licenceType) {
+            if ($rate->getGoodsOrPsv()->getId() == $goodsOrPsv &&
+                $rate->getLicenceType()->getId() == $licenceType &&
+                $rate->getVehicleType()->getId() == $vehicleType
+            ) {
                 return (float) $rate->getFirstVehicleRate();
             }
         }
@@ -191,12 +323,17 @@ class FinancialStandingHelperService implements FactoryInterface
     /**
      * @param string $licenceType
      * @param string $goodsOrPsv
+     * @param string $vehicleType
+     *
      * @return float
      */
-    public function getAdditionalVehicleRate($licenceType, $goodsOrPsv)
+    public function getAdditionalVehicleRate($licenceType, $goodsOrPsv, $vehicleType)
     {
         foreach ($this->getRates() as $rate) {
-            if ($rate->getGoodsOrPsv()->getId() == $goodsOrPsv && $rate->getLicenceType()->getId() == $licenceType) {
+            if ($rate->getGoodsOrPsv()->getId() == $goodsOrPsv &&
+                $rate->getLicenceType()->getId() == $licenceType &&
+                $rate->getVehicleType()->getId() == $vehicleType
+            ) {
                 return (float) $rate->getAdditionalVehicleRate();
             }
         }
@@ -234,20 +371,115 @@ class FinancialStandingHelperService implements FactoryInterface
         return [
             'standardFirst' => $this->getFirstVehicleRate(
                 Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                $goodsOrPsv
+                $goodsOrPsv,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
             ),
             'standardAdditional' => $this->getAdditionalVehicleRate(
                 Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                $goodsOrPsv
+                $goodsOrPsv,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
             ),
             'restrictedFirst' => $this->getFirstVehicleRate(
                 Licence::LICENCE_TYPE_RESTRICTED,
-                $goodsOrPsv
+                $goodsOrPsv,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
             ),
             'restrictedAdditional' => $this->getAdditionalVehicleRate(
                 Licence::LICENCE_TYPE_RESTRICTED,
-                $goodsOrPsv
+                $goodsOrPsv,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
             ),
         ];
+    }
+
+    /**
+     * Get the amount of required finance across all applications and licences within the associated organisation. If
+     * $includeApplicationInCalculation is true, the provided application will be factored into the result returned,
+     * otherwise it will not
+     *
+     * @param ApplicationEntity $application
+     * @param bool $includeApplicationInCalculation Whether to include the provided application in the calculation
+     *
+     * @return int Amount in pounds
+     */
+    public function getRequiredFinance($application, $includeApplicationInCalculation = true)
+    {
+        $auths = [];
+
+        if ($includeApplicationInCalculation) {
+            $type = null;
+            if ($application->getLicenceType()) {
+                $type = $application->getLicenceType()->getId();
+            }
+            $auths[] = [
+                'type' => $type,
+                'count' => $application->getTotAuthVehicles(),
+                'hgvCount' => $application->getTotAuthHgvVehiclesZeroCoalesced(),
+                'lgvCount' => $application->getTotAuthLgvVehiclesZeroCoalesced(),
+                'category' => $application->getGoodsOrPsv()->getId(),
+            ];
+
+            $licences = $application->getOtherActiveLicencesForOrganisation();
+        } else {
+            $licences = $application->getActiveLicencesForOrganisation();
+        }
+
+        // add the counts for each licence
+        foreach ($licences as $licence) {
+            $auths[] = [
+                'type' => $licence->getLicenceType()->getId(),
+                'count' => $licence->getTotAuthVehicles(),
+                'hgvCount' => $licence->getTotAuthHgvVehiclesZeroCoalesced(),
+                'lgvCount' => $licence->getTotAuthLgvVehiclesZeroCoalesced(),
+                'category' => $licence->getGoodsOrPsv()->getId(),
+            ];
+        }
+
+        // add the counts for each other application
+        $applications = $this->getOtherNewApplications($application);
+        foreach ($applications as $app) {
+            if (!is_null($app->getGoodsOrPsv())) {
+                $type = null;
+                if ($app->getLicenceType()) {
+                    $type = $app->getLicenceType()->getId();
+                }
+                $auths[] = [
+                    'type' => $type,
+                    'count' => $app->getTotAuthVehicles(),
+                    'hgvCount' => $app->getTotAuthHgvVehiclesZeroCoalesced(),
+                    'lgvCount' => $app->getTotAuthLgvVehiclesZeroCoalesced(),
+                    'category' => $app->getGoodsOrPsv()->getId(),
+                ];
+            }
+        }
+
+        return $this->getFinanceCalculation($auths);
+    }
+
+    /**
+     * Get all active applications belonging to the organisation associated with the provided application, with the
+     * exception of the provided application and any applications that are variations
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return array
+     */
+    public function getOtherNewApplications(ApplicationEntity $application)
+    {
+        $organisation = $application->getLicence()->getOrganisation();
+
+        $applications = $this->applicationRepo->fetchActiveForOrganisation($organisation->getId());
+
+        return array_filter(
+            $applications,
+            function ($app) use ($application) {
+                if ($app->isVariation()) {
+                    // exclude variations
+                    return false;
+                }
+                // exclude the current application so we don't double-count
+                return $app->getId() !== $application->getId();
+            }
+        );
     }
 }

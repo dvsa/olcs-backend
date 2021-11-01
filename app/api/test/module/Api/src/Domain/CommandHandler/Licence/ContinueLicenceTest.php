@@ -785,6 +785,32 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    /**
+     * @test
+     * @depends handleCommand_IsCallable
+     */
+    public function handleCommand_SetsTotAuthHgvVehicles_ForPsvLicences_ThatHaveContinutationDetails_AndLicenceIsNotSpecialRestricted()
+    {
+        // Setup
+        $this->setUpSut();
+        $licence = $this->licenceForPsv(static::LICENCE_ID);
+        $continuation = $this->continuationDetailForLicence($licence);
+        $continuation->setTotAuthVehicles($expectedNumber = static::A_NUMBER_OF_VEHICLES);
+        $this->injectEntities($licence, $continuation);
+        $command = ContinueLicence::create([
+            static::LICENCE_ID_COMMAND_PROPERTY => $licence->getId(),
+        ]);
+
+        // Expect
+        $this->licenceRepository()->expects('save')->withArgs(function (Licence $licence) use ($expectedNumber) {
+            $this->assertSame($expectedNumber, $licence->getTotAuthHgvVehicles());
+            return true;
+        });
+
+        // Execute
+        $this->sut->handleCommand($command);
+    }
+
     public function setUp(): void
     {
         $this->setUpServiceManager();
@@ -836,7 +862,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             $instance = $this->setUpMockService(ContinuationDetailRepo::class);
 
             // Inject default entity
-            $instance->allows('fetchForLicence')->andReturnUsing(function ($licenceId) {
+            $instance->allows('fetchForLicence')->andReturnUsing(function () {
                 return [];
             })->byDefault();
 

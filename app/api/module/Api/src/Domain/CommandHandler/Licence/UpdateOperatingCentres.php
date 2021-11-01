@@ -56,9 +56,10 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         if (! $licence->isPsv()) {
             $licence->setTotAuthTrailers($command->getTotAuthTrailers());
+            $licence->updateTotAuthLgvVehicles($command->getTotAuthLgvVehicles());
         }
 
-        $licence->setTotAuthVehicles($command->getTotAuthVehicles());
+        $licence->updateTotAuthHgvVehicles($command->getTotAuthHgvVehicles());
 
         if ($licence->getTrafficArea() !== null) {
             $licence->setEnforcementArea(
@@ -85,9 +86,10 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
                 $this->updateHelper->validatePsv($licence, $command);
             } else {
                 $this->updateHelper->validateTotalAuthTrailers($command, $totals);
+                $this->updateHelper->validateTotalAuthLgvVehicles($licence, $command);
             }
 
-            $this->updateHelper->validateTotalAuthVehicles($licence, $command, $totals);
+            $this->updateHelper->validateTotalAuthHgvVehicles($licence, $command, $totals);
         }
 
         $messages = $this->updateHelper->getMessages();
@@ -106,8 +108,8 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         $locs = $licence->getOperatingCentres();
 
         $this->totals['noOfOperatingCentres'] = 0;
-        $this->totals['minVehicleAuth'] = 0;
-        $this->totals['maxVehicleAuth'] = 0;
+        $this->totals['minHgvVehicleAuth'] = 0;
+        $this->totals['maxHgvVehicleAuth'] = 0;
         $this->totals['minTrailerAuth'] = 0;
         $this->totals['maxTrailerAuth'] = 0;
 
@@ -115,11 +117,11 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
             assert($loc instanceof LicenceOperatingCentre);
             $this->totals['noOfOperatingCentres']++;
 
-            $this->totals['minVehicleAuth'] = max([$this->totals['minVehicleAuth'], $loc->getNoOfVehiclesRequired()]);
+            $this->totals['minHgvVehicleAuth'] = max([$this->totals['minHgvVehicleAuth'], $loc->getNoOfVehiclesRequired()]);
             $this->totals['minTrailerAuth'] = max([$this->totals['minTrailerAuth'], $loc->getNoOfTrailersRequired()]);
 
-            $this->totals['maxVehicleAuth'] += (int)$loc->getNoOfVehiclesRequired();
-            $this->totals['maxTrailerAuth'] += (int)$loc->getNoOfTrailersRequired();
+            $this->totals['maxHgvVehicleAuth'] += (int) $loc->getNoOfVehiclesRequired();
+            $this->totals['maxTrailerAuth'] += (int) $loc->getNoOfTrailersRequired();
         }
 
         return $this->totals;

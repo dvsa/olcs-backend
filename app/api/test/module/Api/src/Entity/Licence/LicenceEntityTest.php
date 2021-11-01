@@ -36,6 +36,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\OlcsTest\Api\Entity\Traits\TotAuthVehiclesTraitTest;
 
 /**
  * Licence Entity Unit Tests
@@ -47,6 +48,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 class LicenceEntityTest extends EntityTester
 {
     protected const A_NUMBER_OF_VEHICLES = 2;
+
+    use TotAuthVehiclesTraitTest;
 
     /**
      * @var Licence|null
@@ -505,6 +508,75 @@ class LicenceEntityTest extends EntityTester
         ];
     }
 
+    /**
+     * @dataProvider dpZeroCoalesced
+     */
+    public function testGetTotAuthHgvVehiclesZeroCoalesced($totAuthHgvVehicles, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getTotAuthHgvVehicles')
+            ->withNoArgs()
+            ->andReturn($totAuthHgvVehicles);
+        
+        $this->assertEquals(
+            $expected,
+            $licence->getTotAuthHgvVehiclesZeroCoalesced()
+        );
+    }
+
+    /**
+     * @dataProvider dpZeroCoalesced
+     */
+    public function testGetTotAuthLgvVehiclesZeroCoalesced($totAuthLgvVehicles, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getTotAuthLgvVehicles')
+            ->withNoArgs()
+            ->andReturn($totAuthLgvVehicles);
+
+        $this->assertEquals(
+            $expected,
+            $licence->getTotAuthLgvVehiclesZeroCoalesced()
+        );
+    }
+
+    public function dpZeroCoalesced()
+    {
+        return [
+            [8, 8],
+            [null, 0],
+        ];
+    }
+    
+    /**
+     * @dataProvider dpIsEligibleForLgv
+     */
+    public function testIsEligibleForLgv($goodsOrPsv, $licenceType, $expectedResult)
+    {
+        $this->markTestIncomplete('Test temporarily disabled while return value hardcoded to false');
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv(new RefData($goodsOrPsv));
+        $licence->setLicenceType(new RefData($licenceType));
+
+        $this->assertEquals($expectedResult, $licence->isEligibleForLgv());
+    }
+
+    public function dpIsEligibleForLgv()
+    {
+        return [
+            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
+            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_RESTRICTED, false],
+            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_STANDARD_NATIONAL, false],
+            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL, false],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_RESTRICTED, false],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_STANDARD_NATIONAL, false],
+            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
+        ];
+    }
+
     public function testIsGoods()
     {
         $goodsOrPsv = m::mock(RefData::class)->makePartial();
@@ -866,7 +938,7 @@ class LicenceEntityTest extends EntityTester
         $application->setGoodsOrPsv($goodsOrPsv);
 
         $application->setTotAuthTrailers(9);
-        $application->setTotAuthVehicles(12);
+        $application->updateTotAuthHgvVehicles(12);
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
@@ -877,6 +949,42 @@ class LicenceEntityTest extends EntityTester
         $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
         $this->assertEquals(9, $licence->getTotAuthTrailers());
         $this->assertEquals(12, $licence->getTotAuthVehicles());
+    }
+
+    /**
+     * @test
+     * @depends copyInformationFromApplication_IsCallable
+     */
+    public function copyInformationFromNewApplication_SetsHgvTotal_ForApplication()
+    {
+        // Setup
+        $this->setUpSut();
+        $application = $this->applicationForNewLicence();
+        $application->setTotAuthHgvVehicles($expectedNumber = static::A_NUMBER_OF_VEHICLES);
+
+        // Execute
+        $this->sut->copyInformationFromApplication($application);
+
+        // Assert
+        $this->assertSame($expectedNumber, $this->sut->getTotAuthHgvVehicles());
+    }
+
+    /**
+     * @test
+     * @depends copyInformationFromApplication_IsCallable
+     */
+    public function copyInformationFromNewApplication_SetsLgvTotal_ForApplication()
+    {
+        // Setup
+        $this->setUpSut();
+        $application = $this->applicationForNewLicence();
+        $application->setTotAuthLgvVehicles($expectedNumber = static::A_NUMBER_OF_VEHICLES);
+
+        // Execute
+        $this->sut->copyInformationFromApplication($application);
+
+        // Assert
+        $this->assertSame($expectedNumber, $this->sut->getTotAuthLgvVehicles());
     }
 
     /**
@@ -940,7 +1048,7 @@ class LicenceEntityTest extends EntityTester
         $licence = $this->instantiate(Entity::class);
         $licence->setLicenceType($originalLicenceType);
         $licence->setTotAuthTrailers($originalTotAuthTrailers);
-        $licence->setTotAuthVehicles($originalTotAuthVehicles);
+        $licence->updateTotAuthHgvVehicles($originalTotAuthVehicles);
 
         $licence->copyInformationFromApplication($application);
 
@@ -949,6 +1057,42 @@ class LicenceEntityTest extends EntityTester
         $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
         $this->assertEquals($originalTotAuthTrailers, $licence->getTotAuthTrailers());
         $this->assertEquals($originalTotAuthVehicles, $licence->getTotAuthVehicles());
+    }
+
+    /**
+     * @test
+     * @depends copyInformationFromApplication_IsCallable
+     */
+    public function copyInformationFromNewApplication_SetsHgvTotal_ForVariation_WithUpdatedOperatingCentres()
+    {
+        // Setup
+        $this->setUpSut();
+        $variation = $this->variationWithUpdatedOperatingCentres();
+        $variation->setTotAuthHgvVehicles($expectedNumber = static::A_NUMBER_OF_VEHICLES);
+
+        // Execute
+        $this->sut->copyInformationFromApplication($variation);
+
+        // Assert
+        $this->assertSame($expectedNumber, $this->sut->getTotAuthHgvVehicles());
+    }
+
+    /**
+     * @test
+     * @depends copyInformationFromApplication_IsCallable
+     */
+    public function copyInformationFromNewApplication_SetsLgvTotal_ForVariation_WithUpdatedOperatingCentres()
+    {
+        // Setup
+        $this->setUpSut();
+        $variation = $this->variationWithUpdatedOperatingCentres();
+        $variation->setTotAuthLgvVehicles($expectedNumber = static::A_NUMBER_OF_VEHICLES);
+
+        // Execute
+        $this->sut->copyInformationFromApplication($variation);
+
+        // Assert
+        $this->assertSame($expectedNumber, $this->sut->getTotAuthLgvVehicles());
     }
 
     public function testGetPsvDiscsNotCeased()
@@ -1046,6 +1190,62 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpTestGetAuthorisations
+     */
+    public function testGetAuthorisations($isEligibleForLgv, $isGoods, $expectedAuthorisations)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $licence->setTotAuthVehicles(7);
+        $licence->setTotAuthHgvVehicles(4);
+        $licence->setTotAuthLgvVehicles(3);
+        $licence->setTotAuthTrailers(1);
+
+        $licence->shouldReceive('isEligibleForLgv')
+            ->withNoArgs()
+            ->andReturn($isEligibleForLgv);
+
+        $licence->shouldReceive('isGoods')
+            ->withNoArgs()
+            ->andReturn($isGoods);
+
+        $this->assertEquals(
+            $expectedAuthorisations,
+            $licence->getAuthorisations()
+        );
+    }
+
+    public function dpTestGetAuthorisations()
+    {
+        return [
+            'goods/standard international' => [
+                true,
+                true,
+                [
+                    Entity::AUTHORISATION_HGV_COUNT => 4,
+                    Entity::AUTHORISATION_LGV_COUNT => 3,
+                    Entity::AUTHORISATION_TRAILER_COUNT => 1,
+                ],
+            ],
+            'goods/other' => [
+                false,
+                true,
+                [
+                    Entity::AUTHORISATION_VEHICLE_COUNT => 7,
+                    Entity::AUTHORISATION_TRAILER_COUNT => 1,
+                ],
+            ],
+            'psv' => [
+                false,
+                false,
+                [
+                    Entity::AUTHORISATION_VEHICLE_COUNT => 7,
+                ],
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider dpTestGetLicenceTypeShortCode
      * @param string $licenceType
      * @param string $shortCode
@@ -1120,12 +1320,14 @@ class LicenceEntityTest extends EntityTester
     public function testGetCalculatedBundleValues()
     {
         $licence = m::mock(Entity::class)->makePartial();
-        $licence->shouldReceive('getNiFlag')->andReturn('Y');
+        $licence->shouldReceive('getNiFlag')->withNoArgs()->once()->andReturn('Y');
+        $licence->shouldReceive('isEligibleForLgv')->withNoArgs()->once()->andReturn(true);
 
         $result = $licence->getCalculatedBundleValues();
 
         $expected = [
-            'niFlag' => 'Y'
+            'niFlag' => 'Y',
+            'isEligibleForLgv' => true,
         ];
 
         $this->assertSame($expected, $result);

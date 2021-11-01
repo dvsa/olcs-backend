@@ -390,6 +390,24 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $tachographInsName;
 
     /**
+     * Tot auth hgv vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="tot_auth_hgv_vehicles", nullable=true)
+     */
+    protected $totAuthHgvVehicles;
+
+    /**
+     * Tot auth lgv vehicles
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="tot_auth_lgv_vehicles", nullable=true)
+     */
+    protected $totAuthLgvVehicles;
+
+    /**
      * Tot auth trailers
      *
      * @var int
@@ -1638,6 +1656,54 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     public function getTachographInsName()
     {
         return $this->tachographInsName;
+    }
+
+    /**
+     * Set the tot auth hgv vehicles
+     *
+     * @param int $totAuthHgvVehicles new value being set
+     *
+     * @return Licence
+     */
+    public function setTotAuthHgvVehicles($totAuthHgvVehicles)
+    {
+        $this->totAuthHgvVehicles = $totAuthHgvVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth hgv vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthHgvVehicles()
+    {
+        return $this->totAuthHgvVehicles;
+    }
+
+    /**
+     * Set the tot auth lgv vehicles
+     *
+     * @param int $totAuthLgvVehicles new value being set
+     *
+     * @return Licence
+     */
+    public function setTotAuthLgvVehicles($totAuthLgvVehicles)
+    {
+        $this->totAuthLgvVehicles = $totAuthLgvVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the tot auth lgv vehicles
+     *
+     * @return int
+     */
+    public function getTotAuthLgvVehicles()
+    {
+        return $this->totAuthLgvVehicles;
     }
 
     /**

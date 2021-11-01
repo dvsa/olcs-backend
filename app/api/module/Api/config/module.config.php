@@ -937,6 +937,7 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Variation\ConditionUndertaking::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Variation\OperatingCentres::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Variation\Authorisations::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class,
             ],

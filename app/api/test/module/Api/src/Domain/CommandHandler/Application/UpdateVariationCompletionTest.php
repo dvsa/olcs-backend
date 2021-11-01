@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateOperatingCentresCmd;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
+use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Hamcrest\Core\AllOf;
 use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
@@ -63,6 +64,12 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
      * @deprecated Use new test structure where possible
      */
     protected $vocHelper;
+
+    /**
+     * @var  FinancialStandingHelperService
+     * @deprecated Use new test structure where possible
+     */
+    protected $financialStandingHelper;
 
     /**
      * @test
@@ -643,6 +650,13 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->setApplicationCompletion($ac);
 
+        $this->financialStandingHelper->shouldReceive('getRequiredFinance')
+            ->with($application)
+            ->andReturn(2000);
+        $this->financialStandingHelper->shouldReceive('getRequiredFinance')
+            ->with($application, false)
+            ->andReturn(1950);
+
         $totals = AllOf::allOf(
             IsArrayContainingKeyValuePair::hasKeyValuePair('noOfOperatingCentres', 0),
             IsArrayContainingKeyValuePair::hasKeyValuePair('minTrailerAuth', 0),
@@ -674,7 +688,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     ->andReturn([]);
             }
             $this->updateHelper
-                ->shouldReceive('validateTotalAuthVehicles')
+                ->shouldReceive('validateTotalAuthHgvVehicles')
                 ->with($application, m::type(UpdateOperatingCentresCmd::class), $totals)
                 ->once()
                 ->shouldReceive('getMessages')
@@ -722,6 +736,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
             ->build();
         $this->injectEntities($application);
         $this->updateHelper()->allows('getMessages')->andReturn(static::VALIDATION_MESSAGES);
+        $this->applyStandardFinancialStandingHelperExpectations($application);
+
         $command = Cmd::create([
             static::ID_PROPERTY => $application->getId(),
             static::SECTION_PROPERTY => 'operating_centres',
@@ -746,6 +762,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aLicence())->withCompletionShowingUpdatedOperatingCentres()->build();
         $this->injectEntities($application);
         $this->updateHelper()->allows('getMessages')->andReturn(static::NO_VALIDATION_MESSAGES);
+        $this->applyStandardFinancialStandingHelperExpectations($application);
 
         // Execute
         $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
@@ -758,21 +775,23 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_ValidatesTotAuthVehicles_ForPsvLicences()
+    public function handleCommand_ValidatesTotAuthHgvVehicles_ForPsvLicences()
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
         $this->setUpSut();
         $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aPsvLicence())->withCompletionShowingUpdatedOperatingCentres()->build();
-        $application->setTotAuthVehicles($expectedVehicles = static::A_NUMBER_OF_VEHICLES);
+        $application->updateTotAuthHgvVehicles($expectedVehicles = static::A_NUMBER_OF_VEHICLES);
         $this->injectEntities($application);
 
         // Expect
-        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2) use ($expectedVehicles) {
+        $this->updateHelper()->expects('validateTotalAuthHgvVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicles) {
             $this->assertInstanceOf(UpdateOperatingCentres::class, $arg2);
-            $this->assertSame($expectedVehicles, $arg2->getTotAuthVehicles());
+            $this->assertSame($expectedVehicles, $arg2->getTotAuthHgvVehicles());
             return true;
         });
+
+        $this->applyStandardFinancialStandingHelperExpectations($application);
 
         // Execute
         $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
@@ -782,10 +801,10 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
      * @param array $operatingCentresVehicleCapacities
      * @param array $expectedVehicleConstraints
      * @test
-     * @depends handleCommand_ValidatesTotAuthVehicles_ForPsvLicences
+     * @depends handleCommand_ValidatesTotAuthHgvVehicles_ForPsvLicences
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
      */
-    public function handleCommand_ValidatesTotAuthVehicles_ForPsvLicences_AgainstCorrectOperatingCentreConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
+    public function handleCommand_ValidatesTotAuthHgvVehicles_ForPsvLicences_AgainstCorrectOperatingCentreConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
@@ -797,7 +816,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $this->injectEntities($application, ...$application->getOperatingCentres());
 
         // Expect
-        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicleConstraints) {
+        $this->updateHelper()->expects('validateTotalAuthHgvVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicleConstraints) {
             $this->assertIsArray($arg3);
             foreach ($expectedVehicleConstraints as $key => $expectedTotal) {
                 $this->assertSame(
@@ -808,6 +827,8 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
             }
             return true;
         });
+
+        $this->applyStandardFinancialStandingHelperExpectations($application);
 
         // Execute
         $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
@@ -817,21 +838,23 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_ValidatesTotAuthVehicles_ForGoodsVehicleLicences()
+    public function handleCommand_ValidatesHgvs_ForGoodsVehicleLicences()
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
         $this->setUpSut();
         $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aGoodsLicence())->withCompletionShowingUpdatedOperatingCentres()->build();
-        $application->setTotAuthVehicles($expectedVehicles = static::A_NUMBER_OF_VEHICLES);
+        $application->updateTotAuthHgvVehicles($expectedVehicles = static::A_NUMBER_OF_VEHICLES);
         $this->injectEntities($application);
 
         // Expect
-        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2) use ($expectedVehicles) {
+        $this->updateHelper()->expects('validateTotalAuthHgvVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicles) {
             $this->assertInstanceOf(UpdateOperatingCentres::class, $arg2);
-            $this->assertSame($expectedVehicles, $arg2->getTotAuthVehicles());
+            $this->assertSame($expectedVehicles, $arg2->getTotAuthHgvVehicles());
             return true;
         });
+
+        $this->applyStandardFinancialStandingHelperExpectations($application);
 
         // Execute
         $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
@@ -841,10 +864,10 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
      * @param array $operatingCentresVehicleCapacities
      * @param array $expectedVehicleConstraints
      * @test
-     * @depends      handleCommand_ValidatesTotAuthVehicles_ForGoodsVehicleLicences
+     * @depends      handleCommand_ValidatesHgvs_ForGoodsVehicleLicences
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
      */
-    public function handleCommand_ValidatesTotAuthVehicles_ForGoodsVehicleLicences_AgainstCorrectOperatingCentreConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
+    public function handleCommand_ValidatesTotAuthHgvVehicles_ForGoodsVehicleLicences_AgainstCorrectOperatingCentreConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
@@ -856,7 +879,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $this->injectEntities($application, ...$application->getOperatingCentres());
 
         // Expect
-        $this->updateHelper()->expects('validateTotalAuthVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicleConstraints) {
+        $this->updateHelper()->expects('validateTotalAuthHgvVehicles')->withArgs(function ($arg1, $arg2, $arg3) use ($expectedVehicleConstraints) {
             $this->assertIsArray($arg3);
             foreach ($expectedVehicleConstraints as $key => $expectedTotal) {
                 $this->assertSame(
@@ -868,8 +891,98 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
             return true;
         });
 
+        $this->applyStandardFinancialStandingHelperExpectations($application);
+
         // Execute
         $this->sut->handleCommand($this->commandToUpdateOperatingCentresSectionForApplication($application));
+    }
+
+    private function applyStandardFinancialStandingHelperExpectations($application)
+    {
+        $this->financialStandingHelperService()->shouldReceive('getRequiredFinance')
+            ->with($application)
+            ->andReturn(2000);
+        $this->financialStandingHelperService()->shouldReceive('getRequiredFinance')
+            ->with($application, false)
+            ->andReturn(2000);
+    }
+
+    /**
+     * @depends handleCommand_IsCallable
+     */
+    public function testMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountExceedsLicenceAmount()
+    {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aLicence())
+            ->withCompletionShowingUpdatedOperatingCentres()
+            ->build();
+        $this->injectEntities($application);
+        $this->updateHelper()->allows('getMessages')->andReturn(static::VALIDATION_MESSAGES);
+        $this->financialStandingHelperService()->shouldReceive('getRequiredFinance')
+            ->with($application)
+            ->andReturn(2001);
+        $this->financialStandingHelperService()->shouldReceive('getRequiredFinance')
+            ->with($application, false)
+            ->andReturn(2000);
+        $command = Cmd::create([
+            static::ID_PROPERTY => $application->getId(),
+            static::SECTION_PROPERTY => 'operating_centres',
+        ]);
+
+        // Execute
+        $this->sut->handleCommand($command);
+
+        // Assert
+        $this->assertSame(
+            ApplicationCompletion::STATUS_VARIATION_REQUIRES_ATTENTION,
+            $application->getApplicationCompletion()->getFinancialEvidenceStatus()
+        );
+    }
+
+    /**
+     * @depends handleCommand_IsCallable
+     * @dataProvidert dpMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountDoesntExceedLicenceAmount
+     */
+    public function testMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountDoesntExceedLicenceAmount(
+        $applicationRequiredFinance
+    ) {
+        // Setup
+        $this->overrideUpdateHelperWithMock();
+        $this->setUpSut();
+        $application = ApplicationBuilder::variationForLicence(LicenceBuilder::aLicence())
+            ->withCompletionShowingUpdatedOperatingCentres()
+            ->build();
+        $this->injectEntities($application);
+        $this->updateHelper()->allows('getMessages')->andReturn(static::VALIDATION_MESSAGES);
+        $this->financialStandingHelperService()->shouldReceive('getRequiredFinance')
+            ->with($application)
+            ->andReturn($applicationRequiredFinance);
+        $this->financialStandingHelperService()->shouldReceive('getRequiredFinance')
+            ->with($application, false)
+            ->andReturn(2000);
+        $command = Cmd::create([
+            static::ID_PROPERTY => $application->getId(),
+            static::SECTION_PROPERTY => 'operating_centres',
+        ]);
+
+        // Execute
+        $this->sut->handleCommand($command);
+
+        // Assert
+        $this->assertSame(
+            ApplicationCompletion::STATUS_NOT_STARTED,
+            $application->getApplicationCompletion()->getFinancialEvidenceStatus()
+        );
+    }
+
+    public function dpMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountDoesntExceedLicenceAmount()
+    {
+        return [
+            [2000],
+            [1999],
+        ];
     }
 
     public function setUp(): void
@@ -887,6 +1000,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $this->updateHelper();
         $this->applicationRepository();
         $this->variationOperatingCentreHelper();
+        $this->financialStandingHelperService();
     }
 
     protected function setUpSut()
@@ -917,6 +1031,19 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $instance = $this->setUpMockService(UpdateOperatingCentreHelper::class);
         $instance->allows('getMessages')->andReturn([])->byDefault();
         $this->serviceManager()->setService('UpdateOperatingCentreHelper', $instance);
+    }
+
+    /**
+     * @return FinancialStandingHelperService
+     */
+    protected function financialStandingHelperService(): FinancialStandingHelperService
+    {
+        $sm = $this->serviceManager();
+        if (!$sm->has('FinancialStandingHelperService')) {
+            $instance = m::mock(FinancialStandingHelperService::class);
+            $sm->setService('FinancialStandingHelperService', $instance);
+        }
+        return $sm->get('FinancialStandingHelperService');
     }
 
     /**
@@ -962,11 +1089,13 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
     {
         $this->updateHelper = $this->setUpMockService(UpdateOperatingCentreHelper::class);
         $this->vocHelper = m::mock();
+        $this->financialStandingHelper = m::mock(FinancialStandingHelperService::class);
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
             'UpdateOperatingCentreHelper' => $this->updateHelper,
             'VariationOperatingCentreHelper' => $this->vocHelper,
+            'FinancialStandingHelperService' => $this->financialStandingHelper,
         ];
 
         $this->setUpSut();
@@ -1066,7 +1195,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $application->setApplicationOrganisationPersons($aop);
 
         $application->shouldReceive('getActiveVehicles->count')->andReturn(3);
-        $application->setTotAuthVehicles(10);
+        $application->updateTotAuthHgvVehicles(10);
 
         return $application;
     }
@@ -1091,7 +1220,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $ocCollection = new ArrayCollection();
         $application->setOperatingCentres($ocCollection);
 
-        $application->setTotAuthVehicles(10);
+        $application->updateTotAuthHgvVehicles(10);
 
         $application->setConvictionsConfirmation(0);
         $application->setPrevConviction('Y');
@@ -1124,7 +1253,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $ocCollection = new ArrayCollection();
         $application->setOperatingCentres($ocCollection);
 
-        $application->setTotAuthVehicles(2);
+        $application->updateTotAuthHgvVehicles(2);
 
         return $application;
     }
@@ -1167,7 +1296,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $vehicleCollection->add(['removalDate' => null]);
         $licence->setLicenceVehicles($vehicleCollection);
 
-        $licence->setTotAuthVehicles(5);
+        $licence->updateTotAuthHgvVehicles(5);
 
         $licence->shouldReceive('getPsvDiscsNotCeasedCount')->andReturn(6);
         $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
@@ -1188,7 +1317,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
         $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
 
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
 
         return $licence;
     }
@@ -1226,7 +1355,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $psvDiscsCollection->add(['foo' => 'bar', 'ceasedDate' => null]);
         $licence->setPsvDiscs($psvDiscsCollection);
 
-        $licence->setTotAuthVehicles(3);
+        $licence->updateTotAuthHgvVehicles(3);
 
         $licence->shouldReceive('getActiveCommunityLicences->count')->andReturn(6);
 

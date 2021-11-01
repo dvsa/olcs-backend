@@ -71,7 +71,7 @@ class GrantTest extends CommandHandlerTestCase
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
         $licence->setTrafficArea((new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea())->setId('TA'));
 
         $vehicle = m::mock();
@@ -210,7 +210,7 @@ class GrantTest extends CommandHandlerTestCase
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -318,7 +318,7 @@ class GrantTest extends CommandHandlerTestCase
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setId(222);
         $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -420,7 +420,7 @@ class GrantTest extends CommandHandlerTestCase
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setId(222);
         $licence->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
 
         $licence->shouldReceive('getPsvDiscsNotCeased->count')->with()->once()->andReturn(0);
 

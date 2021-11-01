@@ -95,7 +95,7 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
-        $this->application->setTotAuthVehicles(0);
+        $this->application->updateTotAuthHgvVehicles(0);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }
@@ -117,7 +117,7 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
-        $this->application->setTotAuthVehicles(3);
+        $this->application->updateTotAuthHgvVehicles(3);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }
@@ -139,7 +139,7 @@ class UpdateVehiclesPsvStatusTest extends AbstractUpdateStatusTestCase
 
         $this->application->setHasEnteredReg('Y');
         $this->licence->setLicenceVehicles($licenceVehicles);
-        $this->application->setTotAuthVehicles(3);
+        $this->application->updateTotAuthHgvVehicles(3);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }

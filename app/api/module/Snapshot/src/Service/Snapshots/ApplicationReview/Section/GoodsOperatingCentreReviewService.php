@@ -22,9 +22,17 @@ class GoodsOperatingCentreReviewService extends AbstractReviewService
     {
         $config = $this->getServiceLocator()->get('Review\PsvOperatingCentre')->getConfigFromData($data);
 
-        $config['multiItems']['vehicles+trailers'][] = [
-            'label' => 'review-operating-centre-total-trailers',
-            'value' => $data['noOfTrailersRequired']
+        $isEligibleForLgv = !empty($data['application']['isEligibleForLgv']);
+
+        $config['multiItems']['vehicles+trailers'] = [
+            [
+                'label' => $isEligibleForLgv ? 'review-operating-centre-total-vehicles-hgv' : 'review-operating-centre-total-vehicles',
+                'value' => $data['noOfVehiclesRequired']
+            ],
+            [
+                'label' => 'review-operating-centre-total-trailers',
+                'value' => $data['noOfTrailersRequired'],
+            ],
         ];
 
         $adPlacedValue = [
