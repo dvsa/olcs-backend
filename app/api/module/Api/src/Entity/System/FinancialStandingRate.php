@@ -19,5 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FinancialStandingRate extends AbstractFinancialStandingRate
 {
-
+    const VEHICLE_TYPE_NOT_APPLICABLE = 'fin_sta_veh_typ_na';
+    const VEHICLE_TYPE_HGV = 'fin_sta_veh_typ_hgv';
+    const VEHICLE_TYPE_LGV = 'fin_sta_veh_typ_lgv';
 }

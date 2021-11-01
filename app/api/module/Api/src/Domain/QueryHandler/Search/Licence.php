@@ -131,6 +131,7 @@ class Licence extends AbstractQueryHandler
                         ]
                     ]
                 ),
+                'authorisations' => $licence->getAuthorisations(),
                 'vehicles' => $this->resultList(
                     $licence->getActiveVehicles(),
                     [

@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -15,6 +16,8 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as Cmd;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\UpdateOperatingCentresTest
@@ -57,6 +60,9 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
     /**
      * @param Cmd $command
+     * @return Result
+     * @throws ValidationException
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -69,9 +75,10 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         if (! $application->isPsv()) {
             $application->setTotAuthTrailers($command->getTotAuthTrailers());
+            $application->updateTotAuthLgvVehicles($command->getTotAuthLgvVehicles());
         }
 
-        $application->setTotAuthVehicles($command->getTotAuthVehicles());
+        $application->updateTotAuthHgvVehicles($command->getTotAuthHgvVehicles());
 
         // For new apps we are also potentially updating the TA, EA and community licences
         if ($application->isNew()) {
@@ -108,6 +115,12 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
         $data = ['id' => $application->getId(), 'section' => 'operatingCentres'];
         $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($data)));
+
+        if ($application->isVariation()) {
+            $this->result->merge(
+                $this->handleSideEffect(HandleOcVariationFeesCmd::create(['id' => $application->getId()]))
+            );
+        }
 
         return $this->result;
     }
@@ -155,15 +168,16 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
                 $this->updateHelper->validatePsv($application, $command);
             } else {
                 $this->updateHelper->validateTotalAuthTrailers($command, $totals);
+                $this->updateHelper->validateTotalAuthLgvVehicles($application, $command);
             }
 
             if ($application->canHaveCommunityLicences()
-                && $command->getTotCommunityLicences() > $command->getTotAuthVehicles()
+                && $command->getTotCommunityLicences() > ($command->getTotAuthHgvVehicles() + $command->getTotAuthLgvVehicles())
             ) {
                 $this->updateHelper->addMessage('totCommunityLicences', self::ERR_OC_CL_1);
             }
 
-            $this->updateHelper->validateTotalAuthVehicles($application, $command, $totals);
+            $this->updateHelper->validateTotalAuthHgvVehicles($application, $command, $totals);
         }
 
         $messages = $this->updateHelper->getMessages();
@@ -197,8 +211,8 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         }
 
         $this->totals['noOfOperatingCentres'] = 0;
-        $this->totals['minVehicleAuth'] = 0;
-        $this->totals['maxVehicleAuth'] = 0;
+        $this->totals['minHgvVehicleAuth'] = 0;
+        $this->totals['maxHgvVehicleAuth'] = 0;
         $this->totals['minTrailerAuth'] = 0;
         $this->totals['maxTrailerAuth'] = 0;
 
@@ -210,11 +224,11 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
             $this->totals['noOfOperatingCentres']++;
 
-            $this->totals['minVehicleAuth'] = max([$this->totals['minVehicleAuth'], $aoc['noOfVehiclesRequired']]);
+            $this->totals['minHgvVehicleAuth'] = max([$this->totals['minHgvVehicleAuth'], $aoc['noOfVehiclesRequired']]);
             $this->totals['minTrailerAuth'] = max([$this->totals['minTrailerAuth'], $aoc['noOfTrailersRequired']]);
 
-            $this->totals['maxVehicleAuth'] += (int)$aoc['noOfVehiclesRequired'];
-            $this->totals['maxTrailerAuth'] += (int)$aoc['noOfTrailersRequired'];
+            $this->totals['maxHgvVehicleAuth'] += (int) $aoc['noOfVehiclesRequired'];
+            $this->totals['maxTrailerAuth'] += (int) $aoc['noOfTrailersRequired'];
         }
 
         return $this->totals;

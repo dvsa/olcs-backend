@@ -18,24 +18,6 @@ class FinancialStandingRate extends AbstractRepository
 
     protected $alias = 'fsr';
 
-    public function fetchLatestRateForBookmark($goodsOrPsv, $licenceType, $date)
-    {
-        $qb = $this->createQueryBuilder();
-
-        $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'));
-        $qb->andWhere($qb->expr()->eq($this->alias.'.licenceType', ':licenceType'));
-        $qb->andWhere($qb->expr()->lte($this->alias.'.effectiveFrom', ':date'));
-
-        $qb->setParameter('goodsOrPsv', $goodsOrPsv);
-        $qb->setParameter('licenceType', $licenceType);
-        $qb->setParameter('date', $date);
-
-        $qb->orderBy($this->alias.'.effectiveFrom', 'DESC');
-        $qb->setMaxResults(1);
-
-        return $qb->getQuery()->getResult();
-    }
-
     /**
      * @param \DateTime $date
      *
@@ -66,20 +48,23 @@ class FinancialStandingRate extends AbstractRepository
     /**
      * @param string $goodsOrPsv
      * @param string $licenceType
+     * @param string $vehicleType
      * @param string $date
      *
      * @return Entity
      */
-    public function fetchByCategoryTypeAndDate($goodsOrPsv, $licenceType, $date)
+    public function fetchByCategoryTypeAndDate($goodsOrPsv, $licenceType, $vehicleType, $date)
     {
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'));
         $qb->andWhere($qb->expr()->eq($this->alias.'.licenceType', ':licenceType'));
+        $qb->andWhere($qb->expr()->eq($this->alias.'.vehicleType', ':vehicleType'));
         $qb->andWhere($qb->expr()->eq($this->alias.'.effectiveFrom', ':date'));
 
         $qb->setParameter('goodsOrPsv', $goodsOrPsv);
         $qb->setParameter('licenceType', $licenceType);
+        $qb->setParameter('vehicleType', $vehicleType);
         $qb->setParameter('date', $date);
 
         return $qb->getQuery()->getResult();

@@ -24,10 +24,16 @@ class VariationGoodsOcTotalAuthReviewService extends AbstractVariationOcTotalAut
      */
     protected function getChangedKeys($data)
     {
-        $changedKeys = [
-            'totAuthVehicles' => 'vehicles',
-            'totAuthTrailers' => 'trailers'
-        ];
+        $changedKeys = [];
+
+        if ($data['isEligibleForLgv']) {
+            $changedKeys['totAuthHgvVehicles'] = 'vehicles-hgv';
+            $changedKeys['totAuthLgvVehicles'] = 'vehicles-lgv';
+        } else {
+            $changedKeys['totAuthVehicles'] = 'vehicles';
+        }
+
+        $changedKeys['totAuthTrailers'] = 'trailers';
 
         if ($data['licenceType']['id'] === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
             $changedKeys['totCommunityLicences'] = 'community-licences';

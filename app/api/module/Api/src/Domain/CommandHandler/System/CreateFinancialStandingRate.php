@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate as Entity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\System\CreateFinancialStandingRate as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\FinancialStandingRateRulesTrait;
 
 /**
  * Create Financial Standing Rate
@@ -22,10 +23,13 @@ use Dvsa\Olcs\Transfer\Command\System\CreateFinancialStandingRate as Cmd;
  */
 final class CreateFinancialStandingRate extends AbstractCommandHandler
 {
+    use FinancialStandingRateRulesTrait;
+
     protected $repoServiceName = 'FinancialStandingRate';
 
     public function handleCommand(CommandInterface $command)
     {
+        $this->checkInputRules($command);
         $this->checkForDuplicate($command);
 
         $rate = $this->createObject($command);
@@ -49,6 +53,7 @@ final class CreateFinancialStandingRate extends AbstractCommandHandler
         $rate
             ->setGoodsOrPsv($this->getRepo()->getRefdataReference($command->getGoodsOrPsv()))
             ->setLicenceType($this->getRepo()->getRefdataReference($command->getLicenceType()))
+            ->setVehicleType($this->getRepo()->getRefdataReference($command->getVehicleType()))
             ->setFirstVehicleRate($command->getFirstVehicleRate())
             ->setAdditionalVehicleRate($command->getAdditionalVehicleRate())
             ->setEffectiveFrom(new \DateTime($command->getEffectiveFrom()));
@@ -61,12 +66,13 @@ final class CreateFinancialStandingRate extends AbstractCommandHandler
         $existing = $this->getRepo()->fetchByCategoryTypeAndDate(
             $command->getGoodsOrPsv(),
             $command->getLicenceType(),
+            $command->getVehicleType(),
             $command->getEffectiveFrom()
         );
 
         if ($existing) {
             // duplicate detected
-            $msg = 'A rate for this operator type, licence type and effective date already exists';
+            $msg = 'A rate for this operator type, licence type, vehicle type and effective date already exists';
             throw new ValidationException([$msg]);
         }
     }

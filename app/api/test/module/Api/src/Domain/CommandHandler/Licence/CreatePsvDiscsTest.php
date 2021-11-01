@@ -58,7 +58,7 @@ class CreatePsvDiscsTest extends CommandHandlerTestCase
 
         /** @var LicenceEntity $licence */
         $licence = $this->references[LicenceEntity::class][111];
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
 
         $licence->shouldReceive('getPsvDiscs->matching->count')
             ->andReturn(5);
@@ -79,7 +79,7 @@ class CreatePsvDiscsTest extends CommandHandlerTestCase
 
         /** @var LicenceEntity $licence */
         $licence = $this->references[LicenceEntity::class][111];
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
 
         $licence->shouldReceive('getPsvDiscs->matching->count')
             ->andReturn(5);

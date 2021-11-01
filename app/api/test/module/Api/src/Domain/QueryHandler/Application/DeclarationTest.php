@@ -232,7 +232,7 @@ class DeclarationTest extends QueryHandlerTestCase
             ->shouldReceive('getNiFlag')
             ->andReturn('Y')
             ->once()
-            ->shouldReceive('hasAuthVehiclesIncrease')
+            ->shouldReceive('hasHgvAuthorisationIncreased')
             ->andReturn(true)
             ->once()
             ->getMock();
@@ -352,9 +352,12 @@ class DeclarationTest extends QueryHandlerTestCase
             ->shouldReceive('getNiFlag')
             ->andReturn('Y')
             ->once()
-            ->shouldReceive('hasAuthVehiclesIncrease')
+            ->shouldReceive('hasHgvAuthorisationIncreased')
             ->andReturn(false)
             ->once()
+            ->shouldReceive('hasLgvAuthorisationIncreased')
+            ->once()
+            ->andReturn(false)
             ->shouldReceive('hasAuthTrailersIncrease')
             ->andReturn(false)
             ->once()
@@ -388,12 +391,6 @@ class DeclarationTest extends QueryHandlerTestCase
             ->once()
             ->andReturn([])
             ->once();
-
-//        $mockFeeType = m::mock()
-//            ->shouldReceive('getFixedValue')
-//            ->twice()
-//            ->andReturn(123.45)
-//            ->getMock();
 
         $this->repoMap['FeeType']->shouldReceive('fetchLatest')
             ->with(

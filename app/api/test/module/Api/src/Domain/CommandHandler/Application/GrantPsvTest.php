@@ -58,7 +58,7 @@ class GrantPsvTest extends CommandHandlerTestCase
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -135,7 +135,7 @@ class GrantPsvTest extends CommandHandlerTestCase
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
-        $licence->setTotAuthVehicles(10);
+        $licence->updateTotAuthHgvVehicles(10);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();

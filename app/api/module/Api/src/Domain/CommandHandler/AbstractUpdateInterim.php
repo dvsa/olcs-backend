@@ -33,6 +33,8 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
 {
     const ERR_REQUIRED = 'Value is required and can\'t be empty';
     const ERR_VEHICLE_AUTHORITY_EXCEEDED = "The interim vehicle authority cannot exceed the total vehicle authority";
+    const ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Heavy Goods Vehicle Authority cannot exceed the total Heavy Goods Vehicle Authority';
+    const ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Light Goods Vehicle Authority cannot exceed the total Light Goods Vehicle Authority';
     const ERR_TRAILER_AUTHORITY_EXCEEDED = "The interim trailer authority cannot exceed the total trailer authority";
 
     const ERR_INTERIMSTARTDATE_EMPTY = "The interim start date is required";
@@ -42,7 +44,7 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
 
     protected $extraRepos = ['GoodsDisc', 'Fee', 'LicenceVehicle'];
 
-    protected $allowZeroAuthVehicles = false;
+    protected $allowZeroAuthHgvVehicles = false;
 
     /**
      * Handle command
@@ -161,13 +163,17 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
                 null !== $command->getStartDate() ? new DateTime($command->getStartDate()) : null
             );
             $application->setInterimEnd(null !== $command->getEndDate() ? new DateTime($command->getEndDate()) : null);
-            $application->setInterimAuthVehicles((int)$command->getAuthVehicles());
+            $application->updateInterimAuthHgvVehicles((int)$command->getAuthHgvVehicles());
+
+            if ($command->getAuthLgvVehicles() !== null) {
+                $application->updateInterimAuthLgvVehicles((int)$command->getAuthLgvVehicles());
+            }
+
             $application->setInterimAuthTrailers((int)$command->getAuthTrailers());
 
             if ($status !== null) {
                 $application->setInterimStatus($status);
             }
-
 
             $interimOcs = $command->getOperatingCentres() !== null ? $command->getOperatingCentres() : [];
             $interimVehicles = $command->getVehicles() !== null ? $command->getVehicles() : [];
@@ -177,6 +183,8 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
             $application->setInterimStart(null);
             $application->setInterimEnd(null);
             $application->setInterimAuthVehicles(null);
+            $application->setInterimAuthHgvVehicles(null);
+            $application->setInterimAuthLgvVehicles(null);
             $application->setInterimAuthTrailers(null);
             $application->setInterimStatus(null);
 
@@ -303,14 +311,20 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
             $messages['reason'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
         }
 
-        $authVehicles = $command->getAuthVehicles();
+        $authHgvVehicles = $command->getAuthHgvVehicles();
+        $authLgvVehicles = $command->getAuthLgvVehicles();
 
-        if (!$this->allowZeroAuthVehicles && empty($authVehicles)) {
-            $messages['authVehicles'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
+        if (!$this->allowZeroAuthHgvVehicles && empty($authHgvVehicles)) {
+            $messages['authHgvVehicles'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
         }
 
-        if ($application->getTotAuthVehicles() < $command->getAuthVehicles()) {
-            $messages['authVehicles'][self::ERR_VEHICLE_AUTHORITY_EXCEEDED] = self::ERR_VEHICLE_AUTHORITY_EXCEEDED;
+        if ((int)$application->getTotAuthHgvVehicles() < (int)$authHgvVehicles) {
+            $error = $application->isEligibleForLgv() ? self::ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED : self::ERR_VEHICLE_AUTHORITY_EXCEEDED;
+            $messages['authHgvVehicles'][$error] = $error;
+        }
+
+        if ((int)$application->getTotAuthLgvVehicles() < (int)$authLgvVehicles) {
+            $messages['authLgvVehicles'][self::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED] = self::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED;
         }
 
         if ($command->getAuthTrailers() === null) {

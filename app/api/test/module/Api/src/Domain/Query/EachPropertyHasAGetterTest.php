@@ -25,7 +25,6 @@ class EachPropertyHasAGetterTest extends \PHPUnit\Framework\TestCase
         return [
             Bookmark\ApplicationBundle::class => [Bookmark\ApplicationBundle::class],
             Bookmark\ConditionsUndertakings::class => [Bookmark\ConditionsUndertakings::class],
-            Bookmark\FStandingAdditionalVeh::class => [Bookmark\FStandingAdditionalVeh::class],
             Bookmark\FStandingCapitalReserves::class => [Bookmark\FStandingCapitalReserves::class],
             Bookmark\InterimConditionsUndertakings::class => [Bookmark\InterimConditionsUndertakings::class],
             Bookmark\PreviousHearingBundle::class => [Bookmark\PreviousHearingBundle::class],

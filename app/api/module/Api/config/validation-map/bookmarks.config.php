@@ -14,7 +14,6 @@ return [
     QueryHandler\Bookmark\CommunityLicBundle::class                 => NoValidationRequired::class,
     QueryHandler\Bookmark\ConditionsUndertakings::class             => NoValidationRequired::class,
     QueryHandler\Bookmark\DocParagraphBundle::class                 => NoValidationRequired::class,
-    QueryHandler\Bookmark\FStandingAdditionalVeh::class             => NoValidationRequired::class,
     QueryHandler\Bookmark\FStandingCapitalReserves::class           => NoValidationRequired::class,
     QueryHandler\Bookmark\FeeBundle::class                          => NoValidationRequired::class,
     QueryHandler\Bookmark\GoodsDiscBundle::class                    => NoValidationRequired::class,

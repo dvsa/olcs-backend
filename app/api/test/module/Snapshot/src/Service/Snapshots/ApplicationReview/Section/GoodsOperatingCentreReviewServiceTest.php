@@ -29,7 +29,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
     /**
      * @dataProvider providerGetConfigFromData
      */
-    public function testGetConfigFromData($withAd, $adDocuments, $expectedAdvertisements, $needToMockTranslator)
+    public function testGetConfigFromData($withAd, $adDocuments, $expectedAdvertisements, $needToMockTranslator, $isEligibleForLgv, $expectedTotalVehiclesLabel)
     {
         $data = [
             'id' => 321,
@@ -40,7 +40,8 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
             'noOfTrailersRequired' => 20,
             'permission' => 'N',
             'application' => [
-                'id' => 123
+                'id' => 123,
+                'isEligibleForLgv' => $isEligibleForLgv,
             ],
             'operatingCentre' => [
                 'adDocuments' => $adDocuments,
@@ -88,7 +89,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                 ],
                 'vehicles+trailers' => [
                     [
-                        'label' => 'review-operating-centre-total-vehicles',
+                        'label' => $expectedTotalVehiclesLabel,
                         'value' => 10
                     ],
                     [
@@ -142,7 +143,22 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                         'value' => 'review-operating-centre-advertisement-post'
                     ]
                 ],
-                true
+                true,
+                'isEligibleForLgv' => false,
+                'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles',
+            ],
+            [
+                ApplicationOperatingCentre::AD_POST,
+                [],
+                [
+                    [
+                        'label' => 'review-operating-centre-advertisement-ad-placed',
+                        'value' => 'review-operating-centre-advertisement-post'
+                    ]
+                ],
+                true,
+                'isEligibleForLgv' => true,
+                'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles-hgv',
             ],
             [
                 ApplicationOperatingCentre::AD_UPLOAD_LATER,
@@ -153,7 +169,9 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                         'value' => 'review-operating-centre-advertisement-upload-later'
                     ]
                 ],
-                true
+                true,
+                'isEligibleForLgv' => false,
+                'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles',
             ],
             [
                 ApplicationOperatingCentre::AD_UPLOAD_NOW,
@@ -198,7 +216,9 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                         'value' => 'file1.pdf<br>file2.pdf'
                     ]
                 ],
-                true
+                true,
+                'isEligibleForLgv' => false,
+                'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles',
             ],
             [
                 ApplicationOperatingCentre::AD_UPLOAD_NOW,
@@ -222,7 +242,9 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                         'value' => 'no-files-uploaded-translated'
                     ]
                 ],
-                true
+                true,
+                'isEligibleForLgv' => false,
+                'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles',
             ]
         ];
     }

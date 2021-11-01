@@ -67,7 +67,7 @@ abstract class AbstractVariationOcTotalAuthReviewService extends AbstractReviewS
      */
     private function getValueChangedMessage($data, $key)
     {
-        if ($data[$key] == $data['licence'][$key] || empty($data[$key])) {
+        if (!isset($data[$key]) || $data[$key] == $data['licence'][$key]) {
             return null;
         }
 
@@ -77,6 +77,6 @@ abstract class AbstractVariationOcTotalAuthReviewService extends AbstractReviewS
             $change = 'decreased';
         }
 
-        return $this->translateReplace('review-value-' . $change, [$data['licence'][$key], $data[$key]]);
+        return $this->translateReplace('review-value-' . $change, [$data['licence'][$key] ?? 0, $data[$key]]);
     }
 }
