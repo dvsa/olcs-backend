@@ -162,7 +162,7 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
                                 'value' => 'unit_File1Desc<br>unit_File2Desc',
                             ],
                             [
-                                'title' => 'tm-review-responsibility-training-undertaken',
+                                'label' => 'tm-review-responsibility-training-undertaken',
                                 'value' => 'Yes',
                             ],
                             [
@@ -204,7 +204,7 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
                                 'value' => 'tm-review-main-no-files-translated'
                             ],
                             [
-                                'title' => 'tm-review-responsibility-training-undertaken',
+                                'label' => 'tm-review-responsibility-training-undertaken',
                                 'value' => 'No',
                             ],
                             [
