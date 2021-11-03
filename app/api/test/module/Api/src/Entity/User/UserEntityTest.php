@@ -1291,4 +1291,26 @@ class UserEntityTest extends EntityTester
             ],
         ];
     }
+
+    public function testHasOrganisationSubmittedLicenceApplication_WithNoOrgAssumesNoExistingLicences()
+    {
+        $user = new Entity('pid', Entity::USER_TYPE_OPERATOR);
+
+        $this->assertFalse($user->hasOrganisationSubmittedLicenceApplication());
+    }
+
+    public function testHasOrganisationSubmittedLicenceApplication_WithOrgCallsHasNeverHadLicenceDecisionOnOrgEntity()
+    {
+        $user = new Entity('pid', Entity::USER_TYPE_OPERATOR);
+
+        $organisation = m::mock(OrganisationEntity::class)->makePartial()->setId(1);
+        $organisation->expects('hasSubmittedLicenceApplication')->withNoArgs()->andReturns(true);
+
+        $orgUser = new OrganisationUserEntity();
+        $orgUser->setUser($user);
+        $orgUser->setOrganisation($organisation);
+        $user->addOrganisationUsers($orgUser);
+
+        $this->assertTrue($user->hasOrganisationSubmittedLicenceApplication());
+    }
 }

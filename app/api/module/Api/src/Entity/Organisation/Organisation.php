@@ -668,4 +668,40 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         return $licencesArr;
     }
+
+    /**
+     * Determines if the organisation as ever submitted a licence application.
+     *
+     * @return bool
+     */
+    public function hasSubmittedLicenceApplication(): bool
+    {
+        if (count($this->getLicences()) === 0) {
+            return false;
+        }
+
+        $licences = $this->getLicences()->filter(
+            function ($element) {
+                return (
+                    !in_array(
+                        $element->getStatus(),
+                        [
+                            LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
+                            LicenceEntity::LICENCE_STATUS_CANCELLED,
+                        ]
+                    ) && in_array(
+                        $element->getLicenceType(),
+                        [
+                            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                            LicenceEntity::LICENCE_TYPE_RESTRICTED,
+                            LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                        ]
+                    )
+                );
+            }
+        );
+
+        return (count($licences) !== 0);
+    }
 }

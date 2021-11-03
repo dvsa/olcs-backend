@@ -85,6 +85,7 @@ class MyAccountTest extends QueryHandlerTestCase
         $mockUser->shouldReceive('serialize')->andReturn(['foo']);
         $mockUser->shouldReceive('hasActivePsvLicence')->andReturn(false);
         $mockUser->shouldReceive('getNumberOfVehicles')->andReturn(2);
+        $mockUser->shouldReceive('hasOrganisationSubmittedLicenceApplication')->andReturn(true);
         $mockUser->expects('isEligibleForPermits')->withNoArgs()->andReturn($isEligibleForPermits);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
@@ -106,6 +107,7 @@ class MyAccountTest extends QueryHandlerTestCase
             'foo',
             'hasActivePsvLicence' => false,
             'numberOfVehicles' => 2,
+            'hasOrganisationSubmittedLicenceApplication' => true,
             'eligibleForPermits' => $isEligibleForPermits,
             'eligibleForPrompt' => $expectedEligibleForPrompt,
         ];

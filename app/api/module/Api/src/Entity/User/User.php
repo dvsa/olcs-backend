@@ -755,4 +755,19 @@ class User extends AbstractUser implements OrganisationProviderInterface
 
         return $eligibleForPermits;
     }
+
+    /**
+     * User's attached organisation has never had a submitted a licence application.
+     *
+     * @return bool
+     */
+    public function hasOrganisationSubmittedLicenceApplication(): bool
+    {
+        $org = $this->getRelatedOrganisation();
+        if ($org instanceof Organisation) {
+            return $org->hasSubmittedLicenceApplication();
+        }
+
+        return false;
+    }
 }
