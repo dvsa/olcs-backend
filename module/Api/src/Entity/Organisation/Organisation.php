@@ -689,14 +689,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                             LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
                             LicenceEntity::LICENCE_STATUS_CANCELLED,
                         ]
-                    ) && in_array(
-                        $element->getLicenceType(),
-                        [
-                            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-                            LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                            LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
-                        ]
                     )
                 );
             }

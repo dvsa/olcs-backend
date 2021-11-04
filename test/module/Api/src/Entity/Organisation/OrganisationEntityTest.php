@@ -935,12 +935,11 @@ class OrganisationEntityTest extends EntityTester
     /**
      * @dataProvider dpHasSubmittedLicenceApplication
      */
-    public function testHasSubmittedLicenceApplication($status, $licenceType, $expected)
+    public function testHasSubmittedLicenceApplication($status, $expected)
     {
         if (!is_null($status)) {
             $licence = m::mock(LicenceEntity::class)->makePartial();
             $licence->setStatus(new RefData($status));
-            $licence->setLicenceType(new RefData($licenceType));
             $collection = new ArrayCollection([$licence]);
         } else {
             $collection = new ArrayCollection([]);
@@ -959,67 +958,22 @@ class OrganisationEntityTest extends EntityTester
     public function dpHasSubmittedLicenceApplication(): array
     {
         return [
-            [null, null, false],
-            [LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, false],
-            [LicenceEntity::LICENCE_STATUS_SUSPENDED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_CURTAILED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_SURRENDERED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_WITHDRAWN, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_REFUSED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_REVOKED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_NOT_TAKEN_UP, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_TERMINATED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_UNLICENSED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_CANCELLED, LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL, false],
-            [LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, false],
-            [LicenceEntity::LICENCE_STATUS_SUSPENDED, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_CURTAILED, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_SURRENDERED, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_WITHDRAWN, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_REFUSED, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_REVOKED, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_NOT_TAKEN_UP, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_TERMINATED, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_UNLICENSED, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, true],
-            [LicenceEntity::LICENCE_STATUS_CANCELLED, LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL, false],
-            [LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, LicenceEntity::LICENCE_TYPE_RESTRICTED, false],
-            [LicenceEntity::LICENCE_STATUS_SUSPENDED, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_CURTAILED, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_SURRENDERED, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_WITHDRAWN, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_REFUSED, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_REVOKED, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_NOT_TAKEN_UP, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_TERMINATED, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_UNLICENSED, LicenceEntity::LICENCE_TYPE_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_CANCELLED, LicenceEntity::LICENCE_TYPE_RESTRICTED, false],
-            [LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
-            [LicenceEntity::LICENCE_STATUS_SUSPENDED, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_CURTAILED, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_SURRENDERED, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_WITHDRAWN, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_REFUSED, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_REVOKED, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_NOT_TAKEN_UP, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_TERMINATED, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_UNLICENSED, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, true],
-            [LicenceEntity::LICENCE_STATUS_CANCELLED, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
+            [null, false],
+            [LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, true],
+            [LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, false],
+            [LicenceEntity::LICENCE_STATUS_SUSPENDED, true],
+            [LicenceEntity::LICENCE_STATUS_VALID, true],
+            [LicenceEntity::LICENCE_STATUS_CURTAILED, true],
+            [LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, true],
+            [LicenceEntity::LICENCE_STATUS_SURRENDERED, true],
+            [LicenceEntity::LICENCE_STATUS_WITHDRAWN, true],
+            [LicenceEntity::LICENCE_STATUS_REFUSED, true],
+            [LicenceEntity::LICENCE_STATUS_REVOKED, true],
+            [LicenceEntity::LICENCE_STATUS_NOT_TAKEN_UP, true],
+            [LicenceEntity::LICENCE_STATUS_TERMINATED, true],
+            [LicenceEntity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, true],
+            [LicenceEntity::LICENCE_STATUS_UNLICENSED, true],
+            [LicenceEntity::LICENCE_STATUS_CANCELLED, false],
         ];
     }
 }
