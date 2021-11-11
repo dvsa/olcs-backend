@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Test\Adapter;
 
+use Dvsa\Authentication\Cognito\AccessToken;
 use Dvsa\Authentication\Cognito\Client;
+use Dvsa\Contracts\Auth\AccessTokenInterface;
 use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
@@ -172,5 +174,92 @@ class CognitoAdapterTest extends MockeryTestCase
 
         $sut = new CognitoAdapter($mockClient);
         $sut->register('identifier', 'password', 'email');
+    }
+
+    /**
+     * @test
+     */
+    public function refreshToken_ReturnsSuccessResult_WhenRefreshSucceeds()
+    {
+        // Setup
+        $mockToken = m::mock(\Dvsa\Contracts\Auth\AccessTokenInterface::class);
+        $mockToken->shouldReceive('getIdToken')->andReturn('newIdToken');
+        $mockToken->shouldReceive('getToken')->andReturn('newAccessToken');
+        $mockToken->shouldReceive('getRefreshToken')->andReturn('newRefreshToken');
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('refreshTokens')
+            ->with('refreshToken', 'username')
+            ->andReturn($mockToken);
+        $mockClient->shouldReceive('decodeToken')->andReturn([]);
+        $mockClient->shouldReceive('getResourceOwner')
+            ->andReturn(m::mock(ResourceOwnerInterface::class));
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->refreshToken('refreshToken', 'username');
+        $identity = $result->getIdentity();
+
+        // Assert
+        static::assertEquals(Result::SUCCESS, $result->getCode());
+        static::assertArrayHasKey('Token', $identity);
+        static::assertInstanceOf(AccessTokenInterface::class, $identity['Token']);
+        static::assertArrayHasKey('AccessToken', $identity);
+        static::assertEquals('newAccessToken', $identity['AccessToken']);
+        static::assertArrayHasKey('IdToken', $identity);
+        static::assertEquals('newIdToken', $identity['IdToken']);
+        static::assertArrayHasKey('RefreshToken', $identity);
+        static::assertEquals('newRefreshToken', $identity['RefreshToken']);
+    }
+
+    /**
+     * @test
+     */
+    public function refreshToken_ReturnsChallengeResult_WhenChallengeExceptionIsThrown()
+    {
+        // Setup
+        $exception = new ChallengeException();
+        $exception->setChallengeName('challengeName');
+        $exception->setParameters([]);
+        $exception->setSession('session');
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('refreshTokens')->andThrow($exception);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->refreshToken('refreshToken', 'username');
+
+        // Assert
+        static::assertEquals(CognitoAdapter::SUCCESS_WITH_CHALLENGE, $result->getCode());
+    }
+
+    /**
+     * @test
+     * @dataProvider refreshTokenExceptionDataProvider
+     */
+    public function refreshToken_ReturnsFailureResult_WhenOtherExceptionsAreThrown(string $exception)
+    {
+        // Setup
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('refreshTokens')->andThrow($exception);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->refreshToken('refreshToken', 'username');
+
+        // Assert
+        static::assertEquals(Result::FAILURE, $result->getCode());
+    }
+
+    public function refreshTokenExceptionDataProvider()
+    {
+        return [
+            [InvalidTokenException::class],
+            [ClientException::class]
+        ];
     }
 }
