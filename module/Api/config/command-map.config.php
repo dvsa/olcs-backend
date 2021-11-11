@@ -14,6 +14,7 @@ return [
     // Transfer - Auth
     TransferCommand\Auth\Login::class => CommandHandler\Auth\LoginFactory::class,
     TransferCommand\Auth\ChangePassword::class => CommandHandler\Auth\ChangePasswordFactory::class,
+    TransferCommand\Auth\RefreshToken::class => CommandHandler\Auth\RefreshTokenFactory::class,
 
     // Transfer - Audit
     TransferCommand\Audit\ReadApplication::class => CommandHandler\Audit\ReadApplication::class,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Auth\Adapter;
 
 use Dvsa\Authentication\Cognito\Client;
+use Dvsa\Contracts\Auth\AccessTokenInterface;
 use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
@@ -54,22 +55,7 @@ class CognitoAdapter extends AbstractAdapter
     {
         try {
             $token = $this->client->authenticate($this->getIdentity(), $this->getCredential());
-
-            // Decode and then store the ID token in the session for efficient repeated access.
-            $idTokenClaims = $this->client->decodeToken($token->getIdToken());
-            $accessTokenClaims = $this->client->decodeToken($token->getToken());
-            $resourceOwner = $this->client->getResourceOwner($token);
-
-            $userObject = [
-                'Provider' => Client::class,
-                'Token' => $token,
-                'ResourceOwner' => $resourceOwner,
-                'AccessToken' => $token->getToken(),
-                'AccessTokenClaims' => $accessTokenClaims,
-                'IdToken' => $token->getIdToken(),
-                'IdTokenClaims' => $idTokenClaims,
-                'RefreshToken' => $token->getRefreshToken(),
-            ];
+            $userObject = $this->buildUserObject($token);
 
             return new Result(Result::SUCCESS, $userObject);
         } catch (ChallengeException $e) {
@@ -130,5 +116,53 @@ class CognitoAdapter extends AbstractAdapter
     {
         $attributes = array_merge(['email' => $email], $attributes);
         $this->client->register($identifier, $password, $attributes);
+    }
+
+    /**
+     * @param string $refreshToken
+     * @param string $identifier
+     * @return Result
+     */
+    public function refreshToken(string $refreshToken, string $identifier): Result
+    {
+        try {
+            $token = $this->client->refreshTokens($refreshToken, $identifier);
+            return new Result(Result::SUCCESS, $this->buildUserObject($token));
+        } catch (ChallengeException $e) {
+            return new Result(
+                static::SUCCESS_WITH_CHALLENGE,
+                [],
+                [
+                    'challengeName' => $e->getChallengeName(),
+                    'challengeParameters' => $e->getParameters(),
+                    'challengeSession' => $e->getSession()
+                ]
+            );
+        } catch (InvalidTokenException | ClientException $e) {
+            return new Result(Result::FAILURE, [], [$e->getMessage()]);
+        }
+    }
+
+    /**
+     * @param AccessTokenInterface $token
+     * @return array
+     * @throws InvalidTokenException
+     */
+    private function buildUserObject(AccessTokenInterface $token): array
+    {
+        $idTokenClaims = $this->client->decodeToken($token->getIdToken());
+        $accessTokenClaims = $this->client->decodeToken($token->getToken());
+        $resourceOwner = $this->client->getResourceOwner($token);
+
+        return [
+            'Provider' => Client::class,
+            'Token' => $token,
+            'ResourceOwner' => $resourceOwner,
+            'AccessToken' => $token->getToken(),
+            'AccessTokenClaims' => $accessTokenClaims,
+            'IdToken' => $token->getIdToken(),
+            'IdTokenClaims' => $idTokenClaims,
+            'RefreshToken' => $token->getRefreshToken(),
+        ];
     }
 }

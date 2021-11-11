@@ -9,4 +9,6 @@ return [
     CommandHandler\Auth\LoginFactory::class => NoValidationRequired::class,
     CommandHandler\Auth\ChangePassword::class => NotIsAnonymousUser::class,
     CommandHandler\Auth\ChangePasswordFactory::class => NotIsAnonymousUser::class,
+    CommandHandler\Auth\RefreshToken::class => NotIsAnonymousUser::class,
+    CommandHandler\Auth\RefreshTokenFactory::class => NotIsAnonymousUser::class,
 ];
