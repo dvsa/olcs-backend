@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Test\Adapter;
 
-use Dvsa\Authentication\Cognito\AccessToken;
+use Aws\Exception\AwsException;
 use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Contracts\Auth\AccessTokenInterface;
 use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
@@ -12,6 +12,7 @@ use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
 use Dvsa\Contracts\Auth\ResourceOwnerInterface;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
+use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
 use Laminas\Authentication\Result;
 use Mockery as m;
 use Olcs\TestHelpers\MockeryTestCase;
@@ -97,6 +98,112 @@ class CognitoAdapterTest extends MockeryTestCase
 
         // Assert
         static::assertEquals(CognitoAdapter::SUCCESS_WITH_CHALLENGE, $result->getCode());
+    }
+
+    /**
+     * @test
+     */
+    public function changedExpiredPassword_ReturnsSuccessResult_WhenDetailsAreCorrect()
+    {
+        // Setup
+        $mockToken = m::mock(\Dvsa\Contracts\Auth\AccessTokenInterface::class);
+        $mockToken->shouldReceive('getIdToken')->andReturn('idToken');
+        $mockToken->shouldReceive('getToken')->andReturn('accessToken');
+        $mockToken->shouldReceive('getRefreshToken')->andReturn('refreshToken');
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('responseToAuthChallenge')->andReturn($mockToken);
+        $mockClient->shouldReceive('decodeToken')->andReturn([]);
+        $mockClient->shouldReceive('getResourceOwner')
+            ->andReturn(m::mock(ResourceOwnerInterface::class));
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->changeExpiredPassword('newPassword', 'challengeSession', 'username');
+
+        // Assert
+        static::assertEquals(Result::SUCCESS, $result->getCode());
+        static::assertArrayHasKey('Token', $result->getIdentity());
+        static::assertArrayHasKey('AccessToken', $result->getIdentity());
+        static::assertArrayHasKey('IdToken', $result->getIdentity());
+        static::assertArrayHasKey('RefreshToken', $result->getIdentity());
+    }
+
+    /**
+     * @test
+     */
+    public function changedExpiredPassword_ReturnsExpectedFailureResult_WhenInvalidTokenExceptionIsThrown()
+    {
+        // Setup
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('responseToAuthChallenge')
+            ->andThrow(InvalidTokenException::class);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->changeExpiredPassword('newPassword', 'challengeSession', 'username');
+
+        // Assert
+        static::assertEquals(ChangeExpiredPasswordResult::FAILURE, $result->getCode());
+    }
+
+    /**
+     * @test
+     */
+    public function changedExpiredPassword_ReturnsChallengeResult_WhenChallengeExceptionIsThrown()
+    {
+        // Setup
+        $exception = new ChallengeException();
+        $exception->setChallengeName('challengeName');
+        $exception->setParameters([]);
+        $exception->setSession('session');
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('responseToAuthChallenge')->andThrow($exception);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->changeExpiredPassword('newPassword', 'challengeSession', 'username');
+
+        // Assert
+        static::assertEquals(CognitoAdapter::SUCCESS_WITH_CHALLENGE, $result->getCode());
+    }
+
+    /**
+     * @param string $awsErrorCode
+     * @param int $expectedResultCode
+     * @test
+     * @dataProvider clientExceptionDataProvider
+     */
+    public function changedExpiredPassword_ReturnsExpectedResult_WhenClientExceptionIsThrown(string $awsErrorCode, int $expectedResultCode)
+    {
+        // Setup
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn($awsErrorCode);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('responseToAuthChallenge')
+            ->andThrow(new ClientException('null', 0, $previousException));
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->changeExpiredPassword('newPassword', 'challengeSession', 'username');
+
+        // Assert
+        static::assertEquals($expectedResultCode, $result->getCode());
+    }
+
+    public function clientExceptionDataProvider(): array
+    {
+        return [
+            'Invalid Password' => [CognitoAdapter::AWS_ERROR_INVALID_PASSWORD, ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID],
+            'Unauthorised' => [CognitoAdapter::AWS_ERROR_NOT_AUTHORIZED, ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED],
+            'Generic' => ['generic', ChangeExpiredPasswordResult::FAILURE]
+        ];
     }
 
     /**

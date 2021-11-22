@@ -8,7 +8,7 @@ use Faker\Generator;
 class PasswordService
 {
     const MINIMUM_LENGTH = 12;
-    const SYMBOL_REGEX = '[-=~!@#$%^&*()_+,./<>?;:]{1}';
+    const SYMBOL_REGEX = '[-=~!@#$%^&*()_+,./?;:]{1}';
 
     const ERR_MESSAGE_TOO_SHORT = 'Password length cannot be less than 12';
 

@@ -4,31 +4,27 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\LoginFactory;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\RefreshToken;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\RefreshTokenFactory;
-use Dvsa\Olcs\Api\Domain\Repository\User;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ChangeExpiredPassword;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ChangeExpiredPasswordFactory;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\MocksRepositoriesTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery\MockInterface;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
- * @see RefreshTokenFactory
+ * @see ChangeExpiredPasswordFactory
  */
-class RefreshTokenFactoryTest extends MockeryTestCase
+class ChangeExpiredPasswordFactoryTest extends MockeryTestCase
 {
     use MocksServicesTrait;
     use MocksRepositoriesTrait;
     use MocksAbstractCommandHandlerServicesTrait;
 
     /**
-     * @var LoginFactory
+     * @var ChangeExpiredPasswordFactory
      */
     protected $sut;
 
@@ -64,12 +60,12 @@ class RefreshTokenFactoryTest extends MockeryTestCase
     public function createService_CallsInvoke(): void
     {
         // Setup
-        $this->sut = m::mock(RefreshTokenFactory::class)->makePartial();
+        $this->sut = m::mock(ChangeExpiredPasswordFactory::class)->makePartial();
 
         // Expectations
         $this->sut->expects('__invoke')->withArgs(function ($serviceManager, $requestedName) {
             $this->assertSame($this->serviceManager(), $serviceManager, 'Expected first argument to be the ServiceManager passed to createService');
-            $this->assertSame(RefreshToken::class, $requestedName, 'Expected requestedName to be NULL');
+            $this->assertSame(ChangeExpiredPassword::class, $requestedName, 'Expected requestedName to be ' . ChangeExpiredPassword::class);
             return true;
         });
 
@@ -81,7 +77,7 @@ class RefreshTokenFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfRefreshTokenCommandHandler(): void
+    public function __invoke_ReturnsAnInstanceOfChangeExpiredPasswordCommandHandler(): void
     {
         // Setup
         $this->setUpSut();
@@ -90,7 +86,7 @@ class RefreshTokenFactoryTest extends MockeryTestCase
         $result = $this->sut->__invoke($this->pluginManager(), null);
 
         // Assert
-        $this->assertInstanceOf(RefreshToken::class, $result);
+        $this->assertInstanceOf(ChangeExpiredPassword::class, $result);
     }
 
     public function setUp(): void
@@ -100,7 +96,7 @@ class RefreshTokenFactoryTest extends MockeryTestCase
 
     protected function setUpSut(): void
     {
-        $this->sut = new RefreshTokenFactory();
+        $this->sut = new ChangeExpiredPasswordFactory();
     }
 
     /**
@@ -108,9 +104,7 @@ class RefreshTokenFactoryTest extends MockeryTestCase
      */
     protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
-        $this->authorizationService();
         $this->adapter();
-        $this->userRepository();
         $this->setUpAbstractCommandHandlerServices();
     }
 
@@ -127,32 +121,5 @@ class RefreshTokenFactoryTest extends MockeryTestCase
         }
 
         return $this->serviceManager->get(ValidatableAdapterInterface::class);
-    }
-
-    protected function authorizationService(): m\MockInterface
-    {
-        if (! $this->serviceManager->has(AuthorizationService::class)) {
-            $this->serviceManager->setService(
-                AuthorizationService::class,
-                $this->setUpMockService(AuthorizationService::class)
-            );
-        }
-
-        return $this->serviceManager->get(AuthorizationService::class);
-    }
-
-    /**
-     * @return MockInterface|User
-     */
-    protected function userRepository()
-    {
-        $repositoryServiceManager = $this->repositoryServiceManager();
-        if (! $repositoryServiceManager->has('User')) {
-            $repositoryServiceManager->setService(
-                'User',
-                $this->setUpMockService(User::class)
-            );
-        }
-        return $repositoryServiceManager->get('User');
     }
 }
