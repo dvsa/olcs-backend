@@ -37,7 +37,7 @@ NOW=$(date)
 
 echo "{panel:title=$PROJECT|borderStyle=solid|borderColor=#000|titleBGColor=#75e069|bgColor=#efefef}"
 
-echo "||h6. GIT revision||h6. GIT branch||h6. Time||"./com
+echo "||h6. GIT revision||h6. GIT branch||h6. Time||"
 echo "|${REVISION}|${BRANCH}|${NOW}|"
 
 echo "h2.Check PHP syntax"
