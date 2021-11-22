@@ -9,6 +9,7 @@ use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
 use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
+use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
 use Laminas\Authentication\Adapter\AbstractAdapter;
 use Laminas\Authentication\Result;
 use Laminas\Http\Response;
@@ -20,6 +21,9 @@ class CognitoAdapter extends AbstractAdapter
      * Authentication success.
      */
     const SUCCESS_WITH_CHALLENGE = 2;
+
+    public const AWS_ERROR_INVALID_PASSWORD = 'InvalidPasswordException';
+    public const AWS_ERROR_NOT_AUTHORIZED = 'NotAuthorizedException';
 
     /**
      * @var Client
@@ -55,9 +59,7 @@ class CognitoAdapter extends AbstractAdapter
     {
         try {
             $token = $this->client->authenticate($this->getIdentity(), $this->getCredential());
-            $userObject = $this->buildUserObject($token);
-
-            return new Result(Result::SUCCESS, $userObject);
+            return new Result(Result::SUCCESS, $this->buildUserObject($token));
         } catch (ChallengeException $e) {
             return new Result(
                 static::SUCCESS_WITH_CHALLENGE,
@@ -116,6 +118,49 @@ class CognitoAdapter extends AbstractAdapter
     {
         $attributes = array_merge(['email' => $email], $attributes);
         $this->client->register($identifier, $password, $attributes);
+    }
+
+    /**
+     * @param string $newPassword
+     * @param string $challengeToken
+     * @return Result
+     */
+    public function changeExpiredPassword(string $newPassword, string $challengeToken, string $username): ChangeExpiredPasswordResult
+    {
+        try {
+            $token = $this->client->responseToAuthChallenge(
+                'NEW_PASSWORD_REQUIRED',
+                [
+                    'NEW_PASSWORD' => $newPassword,
+                    'USERNAME' => $username
+                ],
+                $challengeToken
+            );
+
+            return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::SUCCESS, $this->buildUserObject($token));
+        } catch (ChallengeException $e) {
+            return new ChangeExpiredPasswordResult(
+                ChangeExpiredPasswordResult::SUCCESS_WITH_CHALLENGE,
+                [],
+                [],
+                [
+                    'challengeName' => $e->getChallengeName(),
+                    'challengeParameters' => $e->getParameters(),
+                    'challengeSession' => $e->getSession()
+                ]
+            );
+        } catch (ClientException $e) {
+            switch ($e->getPrevious()->getAwsErrorCode()) {
+                case 'InvalidPasswordException':
+                    return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID, [], [$e->getMessage()]);
+                case 'NotAuthorizedException':
+                    return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED, [], [$e->getMessage()]);
+                default:
+                    return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE, [], [$e->getMessage()]);
+            }
+        } catch (InvalidTokenException $e) {
+            return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE, [], [$e->getMessage()]);
+        }
     }
 
     /**
