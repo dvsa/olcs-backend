@@ -11,4 +11,6 @@ return [
     CommandHandler\Auth\ChangePasswordFactory::class => NotIsAnonymousUser::class,
     CommandHandler\Auth\RefreshToken::class => NotIsAnonymousUser::class,
     CommandHandler\Auth\RefreshTokenFactory::class => NotIsAnonymousUser::class,
+    CommandHandler\Auth\ChangeExpiredPassword::class => NoValidationRequired::class,
+    CommandHandler\Auth\ChangeExpiredPasswordFactory::class => NoValidationRequired::class,
 ];
