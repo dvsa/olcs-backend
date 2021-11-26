@@ -9,8 +9,8 @@ return [
     CommandHandler\Auth\LoginFactory::class => NoValidationRequired::class,
     CommandHandler\Auth\ChangePassword::class => NotIsAnonymousUser::class,
     CommandHandler\Auth\ChangePasswordFactory::class => NotIsAnonymousUser::class,
-    CommandHandler\Auth\RefreshToken::class => NotIsAnonymousUser::class,
-    CommandHandler\Auth\RefreshTokenFactory::class => NotIsAnonymousUser::class,
+    CommandHandler\Auth\RefreshToken::class => NoValidationRequired::class,
+    CommandHandler\Auth\RefreshTokenFactory::class => NoValidationRequired::class,
     CommandHandler\Auth\ChangeExpiredPassword::class => NoValidationRequired::class,
     CommandHandler\Auth\ChangeExpiredPasswordFactory::class => NoValidationRequired::class,
 ];
