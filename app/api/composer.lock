@@ -1434,11 +1434,11 @@
         },
         {
             "name": "dvsa/authentication-cognito",
-            "version": "v1.3.1",
+            "version": "v1.3.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dvsa/authentication-cognito/v1.3.1/dvsa-authentication-cognito-v1.3.1.zip",
-                "reference": "43eccb6f62907b2999047847feb60124fcf1cdd3",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dvsa/authentication-cognito/v1.3.2/dvsa-authentication-cognito-v1.3.2.zip",
+                "reference": "b95fe4ec9e1687a6182d0e9265c24d92d8979697",
                 "shasum": ""
             },
             "require": {
@@ -1475,7 +1475,7 @@
                 "Cognito",
                 "dvsa"
             ],
-            "time": "2021-11-15T09:28:58+00:00"
+            "time": "2021-11-15T11:45:32+00:00"
         },
         {
             "name": "dvsa/contracts",
