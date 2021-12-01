@@ -34,6 +34,7 @@ class UpdateNysiisNameTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $this->markTestSkipped('Nysiis service is currently switched off');
         $id = 1;
         $data = [
             'id' => $id
