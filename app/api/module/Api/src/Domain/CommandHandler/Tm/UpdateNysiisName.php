@@ -55,6 +55,9 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
      */
     public function handleCommand(CommandInterface $command)
     {
+        $this->result->addMessage('TM NYSIIS currently disabled');
+        return $this->result;
+
         /**
          * @var TransportManager $transportManager
          */
