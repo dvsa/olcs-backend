@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\RefreshToken;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\RefreshTokens;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
-use Dvsa\Olcs\Transfer\Command\Auth\RefreshToken as RefreshTokenCommand;
+use Dvsa\Olcs\Transfer\Command\Auth\RefreshTokens as RefreshTokenCommand;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
@@ -18,14 +18,14 @@ use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
- * @see RefreshToken
+ * @see RefreshTokens
  */
 class RefreshTokenTest extends CommandHandlerTestCase
 {
     use MocksServicesTrait;
     use MocksAbstractCommandHandlerServicesTrait;
 
-    /** @var RefreshToken  */
+    /** @var RefreshTokens  */
     private $command;
 
     /**
@@ -73,6 +73,7 @@ class RefreshTokenTest extends CommandHandlerTestCase
         // Execute
         $result = $this->sut->handleCommand(RefreshTokenCommand::create([
             'refreshToken' => $this->token,
+            'username' => $this->username
         ]));
 
         // Expectations
@@ -97,7 +98,7 @@ class RefreshTokenTest extends CommandHandlerTestCase
 
     protected function setUpSut(): void
     {
-        $this->sut = new RefreshToken($this->adapter());
+        $this->sut = new RefreshTokens($this->adapter());
 
         if (null !== $this->serviceManager()) {
             $this->sut->createService($this->commandHandlerManager());
