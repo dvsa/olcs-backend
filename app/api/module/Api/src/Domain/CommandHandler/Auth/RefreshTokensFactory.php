@@ -10,34 +10,34 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
- * @see RefreshToken
+ * @see RefreshTokens
  */
-class RefreshTokenFactory implements FactoryInterface
+class RefreshTokensFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
      *
-     * @return RefreshToken
+     * @return RefreshTokens
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RefreshToken
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RefreshTokens
     {
         $sl = $container->getServiceLocator();
         $adapter = $sl->get(ValidatableAdapterInterface::class);
-        $instance = new RefreshToken($adapter);
+        $instance = new RefreshTokens($adapter);
         return $instance->createService($container);
     }
 
     /**
-     * @deprecated Remove once Laminas v3 upgrade is complete
-     *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return RefreshToken
+     * @return RefreshTokens
+     *@deprecated Remove once Laminas v3 upgrade is complete
+     *
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): RefreshToken
+    public function createService(ServiceLocatorInterface $serviceLocator): RefreshTokens
     {
-        return $this($serviceLocator, RefreshToken::class);
+        return $this($serviceLocator, RefreshTokens::class);
     }
 }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\LoginFactory;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\RefreshToken;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\RefreshTokenFactory;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\RefreshTokens;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\RefreshTokensFactory;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\MocksRepositoriesTrait;
@@ -19,7 +19,7 @@ use Olcs\TestHelpers\Service\MocksServicesTrait;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
- * @see RefreshTokenFactory
+ * @see RefreshTokensFactory
  */
 class RefreshTokenFactoryTest extends MockeryTestCase
 {
@@ -64,12 +64,12 @@ class RefreshTokenFactoryTest extends MockeryTestCase
     public function createService_CallsInvoke(): void
     {
         // Setup
-        $this->sut = m::mock(RefreshTokenFactory::class)->makePartial();
+        $this->sut = m::mock(RefreshTokensFactory::class)->makePartial();
 
         // Expectations
         $this->sut->expects('__invoke')->withArgs(function ($serviceManager, $requestedName) {
             $this->assertSame($this->serviceManager(), $serviceManager, 'Expected first argument to be the ServiceManager passed to createService');
-            $this->assertSame(RefreshToken::class, $requestedName, 'Expected requestedName to be NULL');
+            $this->assertSame(RefreshTokens::class, $requestedName, 'Expected requestedName to be NULL');
             return true;
         });
 
@@ -90,7 +90,7 @@ class RefreshTokenFactoryTest extends MockeryTestCase
         $result = $this->sut->__invoke($this->pluginManager(), null);
 
         // Assert
-        $this->assertInstanceOf(RefreshToken::class, $result);
+        $this->assertInstanceOf(RefreshTokens::class, $result);
     }
 
     public function setUp(): void
@@ -100,7 +100,7 @@ class RefreshTokenFactoryTest extends MockeryTestCase
 
     protected function setUpSut(): void
     {
-        $this->sut = new RefreshTokenFactory();
+        $this->sut = new RefreshTokensFactory();
     }
 
     /**

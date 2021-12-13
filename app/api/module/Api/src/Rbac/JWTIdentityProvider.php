@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Exception\HeaderNotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Firebase\JWT\ExpiredException;
 use Laminas\Http\Header\HeaderInterface;
 use Laminas\Http\Request;
 use Laminas\Stdlib\RequestInterface;
@@ -74,7 +75,15 @@ class JWTIdentityProvider implements IdentityProviderInterface
             return $this->identity = new Identity(User::anon());
         }
 
-        $decodedToken = $this->getJWT($header);
+        try {
+            $decodedToken = $this->getJWT($header);
+        } catch (InvalidTokenException $exception) {
+            if (!$exception->getPrevious() instanceof ExpiredException) {
+                throw $exception;
+            }
+            // We only want to allow an ExpiredException to return an anon user as this then allows the RefreshTokens command to be handled
+            return $this->identity = new Identity(User::anon());
+        }
         $user = $this->repository->fetchEnabledIdentityByLoginId($decodedToken['username']);
 
         if (is_null($user)) {
