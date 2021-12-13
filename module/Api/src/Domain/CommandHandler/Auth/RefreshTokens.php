@@ -10,14 +10,11 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Adapter\OpenAm;
-use Dvsa\Olcs\Transfer\Command\Auth\RefreshToken as RefreshTokenCommand;
+use Dvsa\Olcs\Transfer\Command\Auth\RefreshTokens as RefreshTokensCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
-use Laminas\Http\Response;
-use Olcs\Logging\Log\Logger;
 
-class RefreshToken extends AbstractCommandHandler implements AuthAwareInterface
+class RefreshTokens extends AbstractCommandHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
@@ -40,9 +37,9 @@ class RefreshToken extends AbstractCommandHandler implements AuthAwareInterface
      */
     public function handleCommand(CommandInterface $command): Result
     {
-        assert($command instanceof RefreshTokenCommand);
+        assert($command instanceof RefreshTokensCommand);
 
-        $result = $this->adapter->refreshToken($command->getRefreshToken(), $this->getCurrentUser()->getLoginId());
+        $result = $this->adapter->refreshToken($command->getRefreshToken(), $command->getUsername());
 
         $this->result->setFlag('isValid', $result->isValid());
         $this->result->setFlag('code', $result->getCode());

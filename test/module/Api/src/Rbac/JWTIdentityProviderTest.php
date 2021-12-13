@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
+use Firebase\JWT\ExpiredException;
 use Laminas\Console\Request as ConsoleRequest;
 use Laminas\Http\Headers;
 use Laminas\Http\Request;
@@ -79,6 +80,30 @@ class JWTIdentityProviderTest extends MockeryTestCase
 
         // Execute
         $this->sut->getIdentity();
+    }
+
+    /**
+     * @test
+     */
+    public function getIdentity_ReturnsAnonUser_WhenTokenExpired()
+    {
+        // Setup
+        $this->setUpSut();
+
+        $headers = new Headers();
+        $headers->addHeaders([JWTIdentityProvider::HEADER_NAME => 'Bearer dsafdsa.fdsafdas.fdafda']);
+
+        $request = $this->request();
+        $request->setHeaders($headers);
+
+        $client = $this->client();
+        $client->expects('decodeToken')->andThrow(new InvalidTokenException('', 1, new ExpiredException()));
+
+        // Execute
+        $identity = $this->sut->getIdentity();
+
+        // Assert
+        $this->assertSame('anon', $identity->getUser()->getLoginId());
     }
 
     /**
