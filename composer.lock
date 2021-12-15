@@ -48,11 +48,11 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.208.1",
+            "version": "3.208.5",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.208.1/aws-aws-sdk-php-3.208.1.zip",
-                "reference": "d497414c1c4ae55145493f720f7b4d12afe92c02",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.208.5/aws-aws-sdk-php-3.208.5.zip",
+                "reference": "58fa9d8b522b0afa260299179ff950c783ff0ee1",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2021-12-03T19:16:12+00:00"
+            "time": "2021-12-13T20:17:56+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -4183,11 +4183,11 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.1.8",
+            "version": "1.1.9",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/league/flysystem/1.1.8/league-flysystem-1.1.8.zip",
-                "reference": "c995bb0c23c58c9813d081f9523c9b7bb496698e",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/league/flysystem/1.1.9/league-flysystem-1.1.9.zip",
+                "reference": "094defdb4a7001845300334e7c1ee2335925ef99",
                 "shasum": ""
             },
             "require": {
@@ -4263,7 +4263,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2021-11-28T21:50:23+00:00"
+            "time": "2021-12-09T09:40:50+00:00"
         },
         {
             "name": "league/flysystem-webdav",
@@ -5762,11 +5762,11 @@
         },
         {
             "name": "sabre/dav",
-            "version": "4.2.1",
+            "version": "4.3.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/dav/4.2.1/sabre-dav-4.2.1.zip",
-                "reference": "5e651f9ddc2b05745f5b28cd697c8e8c6a0b6146",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/dav/4.3.0/sabre-dav-4.3.0.zip",
+                "reference": "1f9bfa733a22e3c1f7526d645dab2cee96eba51a",
                 "shasum": ""
             },
             "require": {
@@ -5781,7 +5781,7 @@
                 "ext-spl": "*",
                 "lib-libxml": ">=2.7.0",
                 "php": "^7.1.0 || ^8.0",
-                "psr/log": "^1.0",
+                "psr/log": "^1.0 || ^2.0 || ^3.0",
                 "sabre/event": "^5.0",
                 "sabre/http": "^5.0.5",
                 "sabre/uri": "^2.0",
@@ -5833,7 +5833,7 @@
                 "framework",
                 "iCalendar"
             ],
-            "time": "2021-11-30T13:53:16+00:00"
+            "time": "2021-12-14T08:56:03+00:00"
         },
         {
             "name": "sabre/event",
@@ -5990,11 +5990,11 @@
         },
         {
             "name": "sabre/vobject",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/vobject/4.4.0/sabre-vobject-4.4.0.zip",
-                "reference": "0a2e27c797ec0934f376764e1a16567bbbcece0b",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/vobject/4.4.1/sabre-vobject-4.4.1.zip",
+                "reference": "06feff370141fd3118609f808e86d9315864bf14",
                 "shasum": ""
             },
             "require": {
@@ -6079,7 +6079,7 @@
                 "xCal",
                 "xCard"
             ],
-            "time": "2021-11-16T09:25:03+00:00"
+            "time": "2021-12-07T09:45:33+00:00"
         },
         {
             "name": "sabre/xml",
@@ -6568,11 +6568,11 @@
         },
         {
             "name": "symfony/lock",
-            "version": "v5.4.0",
+            "version": "v5.4.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/lock/v5.4.0/symfony-lock-v5.4.0.zip",
-                "reference": "5a63cb69ec6cf17c78d7699eacd48cea54fd7baa",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/lock/v5.4.1/symfony-lock-v5.4.1.zip",
+                "reference": "380c2fa596098a1ae8ba026a237b64ef9cb5a5f5",
                 "shasum": ""
             },
             "require": {
@@ -6586,7 +6586,6 @@
             },
             "require-dev": {
                 "doctrine/dbal": "^2.13|^3.0",
-                "mongodb/mongodb": "~1.1",
                 "predis/predis": "~1.0"
             },
             "type": "library",
@@ -6635,7 +6634,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-23T10:19:22+00:00"
+            "time": "2021-12-01T15:47:38+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -7488,6 +7487,67 @@
             "time": "2019-12-27T20:54:56+00:00"
         },
         {
+            "name": "composer/pcre",
+            "version": "1.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/pcre/1.0.0/composer-pcre-1.0.0.zip",
+                "reference": "3d322d715c43a1ac36c7fe215fa59336265500f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.2 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1",
+                "phpstan/phpstan-strict-rules": "^1.1",
+                "symfony/phpunit-bridge": "^4.2 || ^5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Pcre\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "PCRE wrapping library that offers type-safe preg_* replacements.",
+            "keywords": [
+                "PCRE",
+                "preg",
+                "regex",
+                "regular expression"
+            ],
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-12-06T15:17:27+00:00"
+        },
+        {
             "name": "composer/semver",
             "version": "1.7.2",
             "dist": {
@@ -7558,20 +7618,22 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/xdebug-handler/2.0.2/composer-xdebug-handler-2.0.2.zip",
-                "reference": "84674dd3a7575ba617f5a76d7e9e29a7d3891339",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/xdebug-handler/2.0.3/composer-xdebug-handler-2.0.3.zip",
+                "reference": "6555461e76962fd0379c444c46fd558a0fcfb65e",
                 "shasum": ""
             },
             "require": {
+                "composer/pcre": "^1",
                 "php": "^5.3.2 || ^7.0 || ^8.0",
                 "psr/log": "^1 || ^2 || ^3"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.55",
-                "symfony/phpunit-bridge": "^4.2 || ^5"
+                "phpstan/phpstan": "^1.0",
+                "phpstan/phpstan-strict-rules": "^1.1",
+                "symfony/phpunit-bridge": "^4.2 || ^5.0 || ^6.0"
             },
             "type": "library",
             "autoload": {
@@ -7607,7 +7669,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-31T17:03:58+00:00"
+            "time": "2021-12-08T13:07:32+00:00"
         },
         {
             "name": "dms/phpunit-arraysubset-asserts",
@@ -8328,11 +8390,11 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.14.0",
+            "version": "v1.15.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpspec/prophecy/1.14.0/phpspec-prophecy-1.14.0.zip",
-                "reference": "d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpspec/prophecy/v1.15.0/phpspec-prophecy-v1.15.0.zip",
+                "reference": "bbcd7380b0ebf3961ee21409db7b38bc31d69a13",
                 "shasum": ""
             },
             "require": {
@@ -8381,7 +8443,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2021-09-10T09:02:12+00:00"
+            "time": "2021-12-08T12:19:24+00:00"
         },
         {
             "name": "phpstan/extension-installer",
@@ -9645,11 +9707,11 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.6.1",
+            "version": "3.6.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/squizlabs/php_codesniffer/3.6.1/squizlabs-php_codesniffer-3.6.1.zip",
-                "reference": "f268ca40d54617c6e06757f83f699775c9b3ff2e",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/squizlabs/php_codesniffer/3.6.2/squizlabs-php_codesniffer-3.6.2.zip",
+                "reference": "5e4e71592f69da17871dba6e80dd51bce74a351a",
                 "shasum": ""
             },
             "require": {
@@ -9686,7 +9748,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2021-10-11T04:00:11+00:00"
+            "time": "2021-12-12T21:44:58+00:00"
         },
         {
             "name": "symfony/config",
@@ -9760,11 +9822,11 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v5.4.0",
+            "version": "v5.4.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/dependency-injection/v5.4.0/symfony-dependency-injection-v5.4.0.zip",
-                "reference": "69c398723857bb19fdea78496cedea0f756decab",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/dependency-injection/v5.4.1/symfony-dependency-injection-v5.4.1.zip",
+                "reference": "9bd1ef389a2fe05fea7306b6155403e8a960d73d",
                 "shasum": ""
             },
             "require": {
@@ -9836,7 +9898,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-29T15:30:56+00:00"
+            "time": "2021-12-01T16:25:34+00:00"
         },
         {
             "name": "symfony/polyfill-php81",
