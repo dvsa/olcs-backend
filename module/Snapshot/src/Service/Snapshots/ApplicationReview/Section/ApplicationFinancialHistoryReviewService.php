@@ -91,7 +91,9 @@ class ApplicationFinancialHistoryReviewService extends AbstractReviewService
             ];
         }
 
-        if ($data['variationType']['id'] !== ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
+        $variationType = $data['variationType']['id'] ?? null;
+
+        if ($variationType !== ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
             $config['multiItems'][] = [
                 [
                     'label' => 'application-review-financial-history-insolvencyConfirmation',
