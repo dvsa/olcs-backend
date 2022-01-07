@@ -4880,12 +4880,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.142",
+            "version": "4.206.143",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.142/olcs-olcs-transfer-4.206.142.zip",
-                "reference": "71843650c933669f68b9347607acd1c73e3152fe",
-                "shasum": "71843650c933669f68b9347607acd1c73e3152fe"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.143/olcs-olcs-transfer-4.206.143.zip",
+                "reference": "775c3aa3c63b1b9b6076a462cad0c31e964f082c",
+                "shasum": "775c3aa3c63b1b9b6076a462cad0c31e964f082c"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4945,7 +4945,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2021-12-15T19:53:22+00:00"
+            "time": "2022-01-06T21:53:00+00:00"
         },
         {
             "name": "olcs/olcs-utils",
