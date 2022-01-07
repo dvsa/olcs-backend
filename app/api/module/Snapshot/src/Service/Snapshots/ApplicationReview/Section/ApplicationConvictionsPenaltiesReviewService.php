@@ -33,7 +33,10 @@ class ApplicationConvictionsPenaltiesReviewService extends AbstractReviewService
                     'value' => $this->formatYesNo($data['prevConviction'])
                 ]
             ];
-            if ($data['variationType']['id'] != ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
+
+            $variationType = $data['variationType']['id'] ?? null;
+
+            if ($variationType != ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
                 $multiItemsArray['multiItems'][] = [
                     [
                         'label' => 'application-review-convictions-penalties-confirmation',
