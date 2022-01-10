@@ -3,13 +3,14 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\DiscList;
 use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
+use Mockery as m;
 
 /**
  * Disc list test
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class DiscListTest extends \PHPUnit\Framework\TestCase
+class DiscListTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     public function testGetQuery()
     {
@@ -106,7 +107,7 @@ class DiscListTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $parser = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
+        $parser = m::mock(RtfParser::class)->makePartial();
 
         $expectedRowOne = [
             'DISC1_TITLE' => '',
@@ -186,20 +187,17 @@ class DiscListTest extends \PHPUnit\Framework\TestCase
             'ROW_HEIGHT' => 359
         ];
 
-        $parser->expects($this->at(0))
-            ->method('replace')
+        $parser->expects('replace')
             ->with('snippet', $expectedRowOne)
-            ->willReturn('foo');
+            ->andReturn('foo');
 
-        $parser->expects($this->at(1))
-            ->method('replace')
+        $parser->expects('replace')
             ->with('snippet', $expectedRowTwo)
-            ->willReturn('bar');
+            ->andReturn('bar');
 
-        $parser->expects($this->at(2))
-            ->method('replace')
+        $parser->expects('replace')
             ->with('snippet', $expectedRowThree)
-            ->willReturn('baz');
+            ->andReturn('baz');
 
         $bookmark = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Bookmark\DiscList', ['getSnippet']);
 

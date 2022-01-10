@@ -3,13 +3,14 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\PsvDiscPage;
 use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
+use Mockery as m;
 
 /**
  * Disc list test
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class PsvDiscPageTest extends \PHPUnit\Framework\TestCase
+class PsvDiscPageTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     public function testGetQuery()
     {
@@ -66,7 +67,7 @@ class PsvDiscPageTest extends \PHPUnit\Framework\TestCase
             ]
         ];
 
-        $parser = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
+        $parser = m::mock(RtfParser::class)->makePartial();
 
         $expectedRowOne = [
             'PSV1_TITLE' => '',
@@ -124,10 +125,9 @@ class PsvDiscPageTest extends \PHPUnit\Framework\TestCase
             'PSV6_EXPIRY_DATE' => 'XXXXXXXXXX'
         ];
 
-        $parser->expects($this->at(0))
-            ->method('replace')
+        $parser->expects('replace')
             ->with('snippet', $expectedRowOne)
-            ->willReturn('foo');
+            ->andReturn('foo');
 
         $bookmark = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Bookmark\PsvDiscPage', ['getSnippet']);
 

@@ -59,13 +59,13 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
         $result = $this->sut->handleQuery($query);
 
         $results = $result->serialize();
-        $this->assertContains('isGrantable', $results);
-        $this->assertContains('isApprovable', $results);
-        $this->assertContains('isRefusable', $results);
-        $this->assertContains('isWithdrawable', $results);
-        $this->assertContains('isCnsable', $results);
-        $this->assertContains('isResetable', $results);
-        $this->assertContains('isGeneratable', $results);
+        $this->assertArrayHasKey('isGrantable', $results);
+        $this->assertArrayHasKey('isApprovable', $results);
+        $this->assertArrayHasKey('isRefusable', $results);
+        $this->assertArrayHasKey('isWithdrawable', $results);
+        $this->assertArrayHasKey('isCnsable', $results);
+        $this->assertArrayHasKey('isResetable', $results);
+        $this->assertArrayHasKey('isGeneratable', $results);
     }
 
     public function testHandleQueryNotGrantable()
@@ -99,7 +99,7 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
         $result = $this->sut->handleQuery($query);
 
         $results = $result->serialize();
-        $this->assertContains('isGrantable', $results);
+        $this->assertArrayHasKey('isGrantable', $results);
         $this->assertFalse($results['isGrantable']);
     }
 }
