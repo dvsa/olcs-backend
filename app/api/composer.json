@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-intl": "*",
         "aws/aws-sdk-php": "^3.183",
         "beberlei/doctrineextensions": "^1.0",
@@ -110,7 +110,7 @@
         "preferred-install": "dist",
         "secure-http": false,
         "platform": {
-            "php": "7.2.31"
+            "php": "7.4.26"
         },
         "sort-packages": true
     },
