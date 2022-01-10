@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanConfirmSurrender;
@@ -8,7 +7,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\Permission;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use \Mockery as m;
 
 class CanConfirmSurrenderTest extends AbstractValidatorsTestCase
@@ -34,7 +32,7 @@ class CanConfirmSurrenderTest extends AbstractValidatorsTestCase
         $repo = $this->mockRepo('Surrender');
         $repo2 = $this->mockRepo('Licence');
 
-        if ($this->dataDescription() === 'signed surrender') {
+        if ($this->dataName() === 'signed surrender') {
             $this->setIsGranted(Permission::INTERNAL_USER, false);
             $this->auth->shouldReceive('getIdentity')->andReturn(null);
              $repo2->shouldReceive('get')->with('Licence');

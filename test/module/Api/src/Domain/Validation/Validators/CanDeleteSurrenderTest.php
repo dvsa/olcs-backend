@@ -45,7 +45,7 @@ class CanDeleteSurrenderTest extends AbstractValidatorsTestCase
 
         $LicenceRepo = $this->mockRepo('Licence');
 
-        if ($this->dataDescription() !== 'not_withdrawn_or_expired') {
+        if ($this->dataName() !== 'not_withdrawn_or_expired') {
             $this->setIsGranted(Permission::INTERNAL_USER, false);
             $this->auth->shouldReceive('getIdentity')->andReturn(null);
             $this->setIsValid('isOwner', [$LicenceEntity], true);
