@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae124dfcdd1c2dffa15b9b36ab138aeb",
+    "content-hash": "2818a99accd5b3e5546a32d1ed4cbae4",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -4616,12 +4616,12 @@
         },
         {
             "name": "olcs/olcs-companies-house",
-            "version": "4.206.6",
+            "version": "4.206.7",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.6/olcs-olcs-companies-house-4.206.6.zip",
-                "reference": "5355fad7c8cfe1e9a401daf77fe453ef796a212d",
-                "shasum": "5355fad7c8cfe1e9a401daf77fe453ef796a212d"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.7/olcs-olcs-companies-house-4.206.7.zip",
+                "reference": "b9ebb4a485168b1d3d7b801fae37a1ef93dcc215",
+                "shasum": "b9ebb4a485168b1d3d7b801fae37a1ef93dcc215"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4630,7 +4630,7 @@
                 "laminas/laminas-servicemanager": "^2.5",
                 "laminas/laminas-stdlib": "^2.5",
                 "olcs/olcs-utils": "~4.206.0",
-                "php": ">=7.2"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "olcs/olcs-devtools": "~4.206.0"
@@ -4680,7 +4680,7 @@
                 "proprietary"
             ],
             "description": "companies house api client",
-            "time": "2021-08-20T09:53:35+00:00"
+            "time": "2022-01-13T10:19:35+00:00"
         },
         {
             "name": "olcs/olcs-cpms",
@@ -4749,18 +4749,18 @@
         },
         {
             "name": "olcs/olcs-dvla-search",
-            "version": "1.0.6",
+            "version": "1.0.7",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-dvla-search/1.0.6/olcs-olcs-dvla-search-1.0.6.zip",
-                "reference": "98d1b0726a2b0a0e6f554ba6e1d35de2727d8712",
-                "shasum": "98d1b0726a2b0a0e6f554ba6e1d35de2727d8712"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-dvla-search/1.0.7/olcs-olcs-dvla-search-1.0.7.zip",
+                "reference": "f05c228621be42a275b72afb98086d8911948115",
+                "shasum": "f05c228621be42a275b72afb98086d8911948115"
             },
             "require": {
                 "caseyamcl/guzzle_retry_middleware": "2.3.3",
                 "elendev/nexus-composer-push": "^0.1",
                 "guzzlehttp/guzzle": "^6.0",
-                "php": ">=7.2",
+                "php": ">=7.4",
                 "psr/log": "^1.1"
             },
             "require-dev": {
@@ -4810,16 +4810,16 @@
                 "proprietary"
             ],
             "description": "DVSA Search API client",
-            "time": "2020-12-09T10:32:45+00:00"
+            "time": "2022-01-13T10:16:45+00:00"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "4.206.9",
+            "version": "4.206.10",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.9/olcs-olcs-logging-4.206.9.zip",
-                "reference": "910e4212335357d4deb2d5fad5fb4bf488db0eb6",
-                "shasum": "910e4212335357d4deb2d5fad5fb4bf488db0eb6"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.10/olcs-olcs-logging-4.206.10.zip",
+                "reference": "b58826a274e0159c9ac45ff9a450124ab21d6647",
+                "shasum": "b58826a274e0159c9ac45ff9a450124ab21d6647"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4831,7 +4831,7 @@
                 "laminas/laminas-mvc": "^2.5",
                 "laminas/laminas-servicemanager": "^2.5",
                 "laminas/laminas-session": "^2.5",
-                "php": ">=7.2",
+                "php": ">=7.4",
                 "psr/log": "~1.0"
             },
             "require-dev": {
@@ -4873,16 +4873,16 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2021-08-20T09:51:39+00:00"
+            "time": "2022-01-13T10:15:22+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.143",
+            "version": "4.206.144",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.143/olcs-olcs-transfer-4.206.143.zip",
-                "reference": "775c3aa3c63b1b9b6076a462cad0c31e964f082c",
-                "shasum": "775c3aa3c63b1b9b6076a462cad0c31e964f082c"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.144/olcs-olcs-transfer-4.206.144.zip",
+                "reference": "c4e34c042e49a88e619f8eb12a27addc85174fc0",
+                "shasum": "c4e34c042e49a88e619f8eb12a27addc85174fc0"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4898,7 +4898,7 @@
                 "laminas/laminas-stdlib": "^2.5",
                 "laminas/laminas-validator": "^2.5",
                 "laminas/laminas-xml": "^1.2.0",
-                "php": ">=7.2",
+                "php": ">=7.4",
                 "soflomo/purifier": "^1.0"
             },
             "require-dev": {
@@ -4942,16 +4942,16 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2022-01-06T21:53:00+00:00"
+            "time": "2022-01-13T10:21:52+00:00"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "4.206.12",
+            "version": "4.206.13",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.12/olcs-olcs-utils-4.206.12.zip",
-                "reference": "dd3e980a6fa83ff3ed836a883ad0de65e0adb07e",
-                "shasum": "dd3e980a6fa83ff3ed836a883ad0de65e0adb07e"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.13/olcs-olcs-utils-4.206.13.zip",
+                "reference": "3adf9eec267caf9ee9d97186b1747204e1d62074",
+                "shasum": "3adf9eec267caf9ee9d97186b1747204e1d62074"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4963,7 +4963,7 @@
                 "laminas/laminas-servicemanager": "^2.5",
                 "laminas/laminas-uri": "^2.5",
                 "laminas/laminas-view": "^2.5",
-                "php": ">=7.2"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "olcs/olcs-devtools": "~4.206.0",
@@ -5005,16 +5005,16 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2021-08-20T09:47:50+00:00"
+            "time": "2022-01-13T10:21:06+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "4.206.8",
+            "version": "4.206.9",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-xmltools/4.206.8/olcs-olcs-xmltools-4.206.8.zip",
-                "reference": "8c438853d32126a69bb4fc9d4d6404f732c21df9",
-                "shasum": "8c438853d32126a69bb4fc9d4d6404f732c21df9"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-xmltools/4.206.9/olcs-olcs-xmltools-4.206.9.zip",
+                "reference": "f9886e9cbf5397f2777e045c6da5cf40d4702f8e",
+                "shasum": "f9886e9cbf5397f2777e045c6da5cf40d4702f8e"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -5024,7 +5024,7 @@
                 "laminas/laminas-stdlib": "^2.5",
                 "laminas/laminas-validator": "^2.5",
                 "laminas/laminas-xml": "^1.2.0",
-                "php": ">=7.2"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "olcs/olcs-devtools": "~4.206.0"
@@ -5065,7 +5065,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2021-08-20T09:46:23+00:00"
+            "time": "2022-01-13T10:12:25+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -8015,12 +8015,12 @@
         },
         {
             "name": "olcs/olcs-testhelpers",
-            "version": "4.206.16",
+            "version": "4.206.17",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-testhelpers/4.206.16/olcs-olcs-testhelpers-4.206.16.zip",
-                "reference": "30fa6fb4f4a4d75a7bf1b1522f3d000921624c50",
-                "shasum": "30fa6fb4f4a4d75a7bf1b1522f3d000921624c50"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-testhelpers/4.206.17/olcs-olcs-testhelpers-4.206.17.zip",
+                "reference": "c3b693594d35c8903d078014a5cb1b416fee725e",
+                "shasum": "c3b693594d35c8903d078014a5cb1b416fee725e"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -8033,7 +8033,7 @@
                 "laminas/laminas-stdlib": "^2.5",
                 "laminas/laminas-validator": "^2.5",
                 "laminas/laminas-view": "^2.5",
-                "php": ">=7.2"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "olcs/olcs-devtools": "~4.206.0"
@@ -8050,7 +8050,7 @@
                 }
             },
             "description": "OLCS Test helpers",
-            "time": "2021-10-05T05:29:13+00:00"
+            "time": "2022-01-13T10:13:32+00:00"
         },
         {
             "name": "pdepend/pdepend",
@@ -10182,12 +10182,12 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-intl": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.2.31"
+        "php": "7.4.26"
     },
     "plugin-api-version": "1.1.0"
 }
