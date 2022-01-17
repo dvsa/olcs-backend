@@ -5,13 +5,14 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\OperatingCentres;
 use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
+use Mockery as m;
 
 /**
  * Operating Centres test
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class OperatingCentresTest extends \PHPUnit\Framework\TestCase
+class OperatingCentresTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     public function testGetQuery()
     {
@@ -97,7 +98,7 @@ class OperatingCentresTest extends \PHPUnit\Framework\TestCase
             ]
         ];
 
-        $parser = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
+        $parser = m::mock(RtfParser::class)->makePartial();
 
         $conditionUndertakings = "Conditions\n\n1).\tcondition 1\n\n" .
             "Undertakings\n\n1).\tundertaking 1\n\n2).\tundertaking 2";
@@ -111,10 +112,9 @@ class OperatingCentresTest extends \PHPUnit\Framework\TestCase
             'TAB_OC_CONDS_UNDERS' => $conditionUndertakings
         ];
 
-        $parser->expects($this->at(0))
-            ->method('replace')
+        $parser->expects('replace')
             ->with('snippet', $expectedRow)
-            ->willReturn('foo');
+            ->andReturn('foo');
 
         $bookmark = $this->createPartialMock(OperatingCentres::class, ['getSnippet']);
 
@@ -151,7 +151,7 @@ class OperatingCentresTest extends \PHPUnit\Framework\TestCase
             ]
         ];
 
-        $parser = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
+        $parser = m::mock(RtfParser::class)->makePartial();
 
         $expectedRow = [
             'TAB_OC_ADD' => "Address 1\nAddress 2",
@@ -162,10 +162,9 @@ class OperatingCentresTest extends \PHPUnit\Framework\TestCase
             'TAB_OC_CONDS_UNDERS' => ''
         ];
 
-        $parser->expects($this->at(0))
-            ->method('replace')
+        $parser->expects('replace')
             ->with('snippet', $expectedRow)
-            ->willReturn('foo');
+            ->andReturn('foo');
 
         $bookmark = $this->createPartialMock(OperatingCentres::class, ['getSnippet']);
 

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessLicenceForSurrender;
@@ -31,7 +30,7 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
         $this->auth->shouldReceive('getIdentity')->andReturn(null);
         $entity = m::mock(Licence::class);
         $entity->shouldReceive('getId')->once()->andReturn(111);
-        switch ($this->dataDescription()) {
+        switch ($this->dataName()) {
             case 'selfservice-user-owner':
                 $this->setIsValid('isOwner', [$entity], $isOwner);
                 $entity->shouldReceive('getStatus->getId')->once()->andReturn($licenceState);

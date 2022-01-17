@@ -104,7 +104,7 @@ class ProcessInspectionRequestEmailTest extends CommandHandlerTestCase
 
         $this->sut->handleCommand(Cmd::create([]));
 
-        $this->assertRegexp('/Could not retrieve email 4355/', $this->logWriter->events[0]['message']);
+        $this->assertMatchesRegularExpression('/Could not retrieve email 4355/', $this->logWriter->events[0]['message']);
     }
 
     public function testHandleCommandEmailInvalidSubject()
@@ -125,7 +125,7 @@ class ProcessInspectionRequestEmailTest extends CommandHandlerTestCase
 
         $this->sut->handleCommand(Cmd::create([]));
 
-        $this->assertRegexp('/Unable to parse email subject line: spam!/', $this->logWriter->events[0]['message']);
+        $this->assertMatchesRegularExpression('/Unable to parse email subject line: spam!/', $this->logWriter->events[0]['message']);
     }
 
     public function testHandleCommandNoEmails()
