@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender\Section;
 
 use Dvsa\Olcs\Api\Entity\Surrender;
@@ -12,7 +11,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class CommunityLicenceReveiwServiceTest extends MockeryTestCase
 {
-
     /** @var CommunityLicenceReviewService review service */
     protected $sut;
 
@@ -20,7 +18,6 @@ class CommunityLicenceReveiwServiceTest extends MockeryTestCase
     {
         $this->sut = new CommunityLicenceReviewService();
     }
-
 
     /**
      * @dataProvider dpTestGetConfigFromData
@@ -31,11 +28,10 @@ class CommunityLicenceReveiwServiceTest extends MockeryTestCase
         $args,
         $expected
     ) {
-
         $mockEntity = m::mock(Surrender::class);
         $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getDescription')->once()->andReturn($args['commLicDescription']);
         $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getId')->once()->andReturn($args['commLicStatus']);
-        if ($this->dataDescription() !== 'community_licence_destroyed') {
+        if ($this->dataName() !== 'community_licence_destroyed') {
             $mockEntity->shouldReceive('getCommunityLicenceDocumentInfo')->once()->andReturn($args['commLicInfo']);
         }
         $this->assertEquals($expected, $this->sut->getConfigFromData($mockEntity));
@@ -44,7 +40,6 @@ class CommunityLicenceReveiwServiceTest extends MockeryTestCase
     public function dpTestGetConfigFromData()
     {
         return [
-
             'stolen_community_licence' => [
                 [
                     'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
