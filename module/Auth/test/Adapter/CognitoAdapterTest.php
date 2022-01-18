@@ -12,6 +12,7 @@ use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
 use Dvsa\Contracts\Auth\ResourceOwnerInterface;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
+use Dvsa\Olcs\Auth\Exception\ResetPasswordException;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
 use Laminas\Authentication\Result;
 use Mockery as m;
@@ -210,6 +211,29 @@ class CognitoAdapterTest extends MockeryTestCase
      * @test
      * @dataProvider dpChangePasswordException
      */
+    public function resetPasswordWithException(string $exceptionClass): void
+    {
+        $exceptionMessage = 'exception message';
+        $this->expectException(ResetPasswordException::class);
+        $this->expectExceptionMessage($exceptionMessage);
+
+        $identifier = 'identifier';
+        $newPassword = 'new password';
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->expects('changePassword')
+            ->with($identifier, $newPassword)
+            ->andThrow($exceptionClass, $exceptionMessage);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $sut->resetPassword($identifier, $newPassword);
+    }
+
+    /**
+     * @test
+     * @dataProvider dpChangePasswordException
+     */
     public function changePasswordWithException(string $exceptionClass): void
     {
         $exceptionMessage = 'exception message';
@@ -236,6 +260,25 @@ class CognitoAdapterTest extends MockeryTestCase
             [ClientException::class],
             [\Exception::class]
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function resetPasswordNoException(): void
+    {
+        $identifier = 'identifier';
+        $newPassword = 'new password';
+        $expectedResult = true;
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->expects('changePassword')
+            ->with($identifier, $newPassword)
+            ->andReturn($expectedResult);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        static::assertEquals($expectedResult, $sut->resetPassword($identifier, $newPassword));
     }
 
     /**
