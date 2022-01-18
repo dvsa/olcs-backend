@@ -24,6 +24,9 @@ class OpenAm
 {
     const AUTHENTICATE_URI = '/json/authenticate';
     const CHANGE_PW_URI = 'json/users/%s?_action=changePassword';
+    const FORGOT_PW_URI = 'json/users/?_action=forgotPassword';
+    const RESET_PW_URI = 'json/users?_action=forgotPasswordReset';
+    const RESET_PW_CONFIRM_URI = 'json/users?_action=confirm';
     const MSG_SESSION_START_FAIL = 'Unable to begin an authentication session';
     const MSG_JSON_ENCODE_FAIL = 'POST data could not be json encoded: %s';
     const MSG_JSON_DECODE_FAIL = 'Unable to JSON decode response body: %s';
@@ -89,6 +92,85 @@ class OpenAm
         ];
 
         return $this->makeRequest($uri, $data, $headers);
+    }
+
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $newPassword
+     * @param string $realm
+     *
+     * @return array
+     * @throws ClientException
+     */
+    public function forgotPassword(string $username, string $subject, string $message, string $realm): array
+    {
+        $this->uriBuilder->setRealm($realm);
+
+        $data = [
+            'username' => $username,
+            'subject' => $subject,
+            'message' => $message,
+        ];
+
+        return $this->makeRequest(self::FORGOT_PW_URI, $data);
+    }
+
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $confirmationId
+     * @param string $realm
+     * @param string $token
+     *
+     * @return array
+     * @throws ClientException
+     * @throws InvalidTokenException
+     */
+    public function resetPassword(
+        string $username,
+        string $password,
+        string $confirmationId,
+        string $token,
+        string $realm
+    ): array {
+        $this->uriBuilder->setRealm($realm);
+
+        $data = [
+            'username' => $username,
+            'userpassword' => $password,
+            'tokenId' => $token,
+            'confirmationId' => $confirmationId
+        ];
+
+        return $this->makeRequest(self::RESET_PW_URI, $data);
+    }
+
+    /**
+     * @param string $username
+     * @param string $confirmationId
+     * @param string $token
+     * @param string $realm
+     *
+     * @return array
+     * @throws ClientException
+     * @throws InvalidTokenException
+     */
+    public function confirmPasswordResetValid(
+        string $username,
+        string $confirmationId,
+        string $token,
+        string $realm
+    ): array {
+        $this->uriBuilder->setRealm($realm);
+
+        $data = [
+            'username' => $username,
+            'tokenId' => $token,
+            'confirmationId' => $confirmationId
+        ];
+
+        return $this->makeRequest(self::RESET_PW_CONFIRM_URI, $data);
     }
 
     /**

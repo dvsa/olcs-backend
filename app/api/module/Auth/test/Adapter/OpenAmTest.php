@@ -14,9 +14,50 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class OpenAmTest extends MockeryTestCase
 {
-    /**
-     * @dataProvider dpAuthenticate
-     */
+    public function testConfirmPasswordResetValid(): void
+    {
+        $username = 'username';
+        $confirmationId = 'subject';
+        $tokenId = 'message';
+        $realm = 'realm';
+
+        $authResponse = ['response'];
+
+        $client = m::mock(OpenAmClient::class);
+        $client->expects('confirmPasswordResetValid')
+            ->with($username, $confirmationId, $tokenId, $realm)
+            ->andReturn($authResponse);
+
+        $identityProvider = m::mock(PidIdentityProvider::class);
+
+        $sut = new OpenAmAdapter($client, $identityProvider);
+        $sut->setRealm($realm);
+
+        $this->assertEquals($authResponse, $sut->confirmPasswordResetValid($username, $confirmationId, $tokenId));
+    }
+
+    public function testForgotPassword(): void
+    {
+        $username = 'username';
+        $subject = 'subject';
+        $message = 'message';
+        $realm = 'realm';
+
+        $authResponse = ['response'];
+
+        $client = m::mock(OpenAmClient::class);
+        $client->expects('forgotPassword')
+            ->with($username, $subject, $message, $realm)
+            ->andReturn($authResponse);
+
+        $identityProvider = m::mock(PidIdentityProvider::class);
+
+        $sut = new OpenAmAdapter($client, $identityProvider);
+        $sut->setRealm($realm);
+
+        $this->assertEquals($authResponse, $sut->forgotPassword($username, $subject, $message));
+    }
+
     public function testChangePassword(): void
     {
         $username = 'username';

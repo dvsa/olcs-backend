@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Dvsa\Olcs\Utils\Translation\TranslatorDelegator;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery\MockInterface;
 use Mockery as m;
@@ -38,6 +39,7 @@ trait MocksAbstractCommandHandlerServicesTrait
         $this->pidIdentityProvider();
         $this->transactionManager();
         $this->cacheEncryption();
+        $this->translator();
     }
 
     /**
@@ -119,5 +121,19 @@ trait MocksAbstractCommandHandlerServicesTrait
             );
         }
         return $this->serviceManager()->get(CacheEncryption::class);
+    }
+
+    /**
+     * @return TranslatorDelegator|MockInterface
+     */
+    protected function translator(): MockInterface
+    {
+        if (! $this->serviceManager()->has('translator')) {
+            $this->serviceManager()->setService(
+                'translator',
+                $this->setUpMockService(TranslatorDelegator::class)
+            );
+        }
+        return $this->serviceManager()->get('translator');
     }
 }

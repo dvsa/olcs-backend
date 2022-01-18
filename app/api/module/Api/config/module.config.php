@@ -613,6 +613,7 @@ return [
             'Sla' => RepositoryFactory::class,
             'LicenceNoGen' => RepositoryFactory::class,
             'User' => RepositoryFactory::class,
+            'UserPasswordReset' => RepositoryFactory::class,
             'PreviousConviction' => RepositoryFactory::class,
             'Prohibition' => RepositoryFactory::class,
             'ProhibitionDefect' => RepositoryFactory::class,

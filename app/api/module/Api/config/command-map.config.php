@@ -16,6 +16,10 @@ return [
     TransferCommand\Auth\ChangePassword::class => CommandHandler\Auth\ChangePasswordFactory::class,
     TransferCommand\Auth\RefreshTokens::class => CommandHandler\Auth\RefreshTokensFactory::class,
     TransferCommand\Auth\ChangeExpiredPassword::class => CommandHandler\Auth\ChangeExpiredPasswordFactory::class,
+    TransferCommand\Auth\ResetPassword::class => CommandHandler\Auth\ResetPasswordFactory::class,
+    TransferCommand\Auth\ForgotPassword::class => CommandHandler\Auth\ForgotPassword::class,
+    Command\Auth\ForgotPasswordOpenAm::class => CommandHandler\Auth\ForgotPasswordOpenAmFactory::class,
+    Command\Auth\ResetPasswordOpenAm::class => CommandHandler\Auth\ResetPasswordOpenAmFactory::class,
 
     // Transfer - Audit
     TransferCommand\Audit\ReadApplication::class => CommandHandler\Audit\ReadApplication::class,
@@ -815,6 +819,7 @@ return [
     Command\Email\SendEcmtShortTermApsgPartSuccessful::class => CommandHandler\Email\SendEcmtShortTermApsgPartSuccessful::class,
     Command\Email\SendEcmtShortTermAppSubmitted::class => CommandHandler\Email\SendEcmtShortTermAppSubmitted::class,
     Command\Email\SendFailedOrganisationsList::class => CommandHandler\Email\SendFailedOrganisationsList::class,
+    Command\Email\SendForgotPassword::class => CommandHandler\Email\SendForgotPassword::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,

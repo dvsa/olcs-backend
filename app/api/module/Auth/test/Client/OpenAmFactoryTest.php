@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\Olcs\Auth\Test\Service\OpenAm\Client;
+namespace Dvsa\Olcs\Auth\Test\Client;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Auth\Client\OpenAm;
@@ -12,6 +12,9 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
+/**
+ * @see OpenAmFactory
+ */
 class OpenAmFactoryTest extends MockeryTestCase
 {
     public function testCreateService(): void

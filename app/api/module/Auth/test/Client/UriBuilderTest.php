@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\Olcs\Auth\Test\Service\OpenAm\Client;
+namespace Dvsa\Olcs\Auth\Test\Client;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Auth\Client\UriBuilder;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
+/**
+ * @see UriBuilder
+ */
 class UriBuilderTest extends MockeryTestCase
 {
     public function testBuildWithRealmNotSet(): void
