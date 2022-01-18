@@ -167,6 +167,7 @@ return [
     'RolePermission' => 'User',
     'Team' => 'User',
     'User' => 'User',
+    'UserPasswordReset' => 'User',
     'GoodsDisc' => 'Vehicle',
     'Vehicle' => 'Vehicle',
     'ApplicationReadAudit' => 'Application',

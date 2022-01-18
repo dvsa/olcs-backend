@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\Olcs\Auth\Test\Service\OpenAm\Client;
+namespace Dvsa\Olcs\Auth\Test\Client;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
@@ -15,8 +15,14 @@ use Laminas\Http\Response as HttpResponse;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
+/**
+ * @see OpenAmClient
+ */
 class OpenAmTest extends MockeryTestCase
 {
+    /**
+     * @test
+     */
     public function testAuthenticate(): void
     {
         $identity = 'identity';
@@ -50,6 +56,9 @@ class OpenAmTest extends MockeryTestCase
         $sut->authenticate($identity, $password, $realm);
     }
 
+    /**
+     * @test
+     */
     public function testAuthenticateFailedToBeginSession(): void
     {
         $this->expectException(ClientException::class);
@@ -61,9 +70,7 @@ class OpenAmTest extends MockeryTestCase
         $builtUri = 'http://hostname:123/foo/bar';
         $body = 'failed to begin session';
 
-        $uriBuilder = m::mock(UriBuilder::class);
-        $uriBuilder->expects('build')->with(OpenAmClient::AUTHENTICATE_URI)->andReturn($builtUri);
-        $uriBuilder->expects('setRealm')->once()->with($realm);
+        $uriBuilder = $this->defaultUriBuilder($realm, OpenAmClient::AUTHENTICATE_URI, $builtUri);
 
         $httpResponse = m::mock(HttpResponse::class);
         $httpResponse->expects('isOk')->andReturnFalse();
@@ -80,6 +87,9 @@ class OpenAmTest extends MockeryTestCase
         $sut->authenticate($identity, $password, $realm);
     }
 
+    /**
+     * @test
+     */
     public function testFailedToEncodeRequest(): void
     {
         $this->expectException(ClientException::class);
@@ -104,6 +114,9 @@ class OpenAmTest extends MockeryTestCase
         $sut->makeRequest(OpenAmClient::AUTHENTICATE_URI, $brokenJson);
     }
 
+    /**
+     * @test
+     */
     public function testFailedToDecodeResponse(): void
     {
         $this->expectException(InvalidTokenException::class);
@@ -123,19 +136,16 @@ class OpenAmTest extends MockeryTestCase
         $uriBuilder = m::mock(UriBuilder::class);
         $uriBuilder->expects('build')->with(OpenAmClient::AUTHENTICATE_URI)->andReturn($builtUri);
 
-        $httpClient = m::mock(HttpClient::class);
-        $httpClient->expects('reset')->withNoArgs();
-        $httpClient->expects('setMethod')->with(HttpRequest::METHOD_POST);
-        $httpClient->expects('setUri')->with($builtUri);
-        $httpClient->expects('setHeaders')->with(m::type(HttpHeaders::class));
-        $httpClient->expects('setRawBody')->with($encodedData);
-        $httpClient->expects('send')->withNoArgs()->andReturn($httpResponse);
+        $httpClient = $this->defaultHttpClient($builtUri, $encodedData, $httpResponse);
 
         $sut = new OpenAmClient($uriBuilder, $httpClient, 'cookie-name');
         $sut->makeRequest(OpenAmClient::AUTHENTICATE_URI, $data);
     }
 
-    public function testChangePassword()
+    /**
+     * @test
+     */
+    public function testChangePassword(): void
     {
         $username = 'username';
         $oldPassword = 'old password';
@@ -153,18 +163,14 @@ class OpenAmTest extends MockeryTestCase
 
         $builtUri = 'http://hostname:123/foo/bar';
         $uriBuilderUri = sprintf(OpenAmClient::CHANGE_PW_URI, $username);
-        $uriBuilder = m::mock(UriBuilder::class);
-        $uriBuilder->expects('setRealm')->with($realm);
-        $uriBuilder->expects('build')->with($uriBuilderUri)->andReturn($builtUri);
+        $uriBuilder = $this->defaultUriBuilder($realm, $uriBuilderUri, $builtUri);
 
         $responseContent = ['response' => 'response'];
         $responseCode = 200;
 
         $response = json_encode($responseContent);
 
-        $httpResponse = m::mock(HttpResponse::class);
-        $httpResponse->expects('getContent')->withNoArgs()->andReturn($response);
-        $httpResponse->expects('getStatusCode')->withNoArgs()->andReturn($responseCode);
+        $httpResponse = $this->defaultHttpResponse($response, $responseCode);
 
         $httpClient = m::mock(HttpClient::class);
         $httpClient->expects('reset')->withNoArgs();
@@ -195,5 +201,132 @@ class OpenAmTest extends MockeryTestCase
             $clientResponse,
             $sut->changePassword($username, $oldPassword, $newPassword, $realm, $token)
         );
+    }
+
+    /**
+     * @test
+     */
+    public function testResetPassword(): void
+    {
+        $username = 'username';
+        $password = 'new password';
+        $realm = 'realm';
+        $tokenId = 'token';
+        $confirmationId = 'confirmation';
+        $cookieName = 'cookie-name';
+
+        $data = [
+            'username' => $username,
+            'userpassword' => $password,
+            'tokenId' => $tokenId,
+            'confirmationId' => $confirmationId,
+        ];
+
+        $encodedData = json_encode($data);
+
+        $builtUri = 'http://hostname:123/foo/bar';
+        $uriBuilder = $this->defaultUriBuilder($realm, OpenAmClient::RESET_PW_URI, $builtUri);
+
+        $responseContent = ['response' => 'response'];
+        $responseCode = 200;
+
+        $response = json_encode($responseContent);
+
+        $httpResponse = $this->defaultHttpResponse($response, $responseCode);
+        $httpClient = $this->defaultHttpClient($builtUri, $encodedData, $httpResponse);
+
+        $clientResponse = [
+            'response' => 'response',
+            'status' => $responseCode,
+            'provider' => OpenAmClient::class,
+        ];
+
+        $sut = new OpenAmClient($uriBuilder, $httpClient, $cookieName);
+        $this->assertEquals(
+            $clientResponse,
+            $sut->resetPassword($username, $password, $confirmationId, $tokenId, $realm)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function testConfirmPasswordResetValid(): void
+    {
+        $username = 'username';
+        $realm = 'realm';
+        $tokenId = 'token';
+        $confirmationId = 'confirmation';
+
+        $data = [
+            'username' => $username,
+            'tokenId' => $tokenId,
+            'confirmationId' => $confirmationId,
+        ];
+
+        $encodedData = json_encode($data);
+        $builtUri = 'http://hostname:123/foo/bar';
+
+        $uriBuilder = $this->defaultUriBuilder($realm, OpenAmClient::RESET_PW_CONFIRM_URI, $builtUri);
+
+        $responseContent = ['response' => 'response'];
+        $responseCode = 200;
+
+        $response = json_encode($responseContent);
+
+        $httpResponse = $this->defaultHttpResponse($response, $responseCode);
+        $httpClient = $this->defaultHttpClient($builtUri, $encodedData, $httpResponse);
+
+        $clientResponse = [
+            'response' => 'response',
+            'status' => $responseCode,
+            'provider' => OpenAmClient::class,
+        ];
+
+        $sut = new OpenAmClient($uriBuilder, $httpClient, 'cookie-name');
+        $this->assertEquals(
+            $clientResponse,
+            $sut->confirmPasswordResetValid($username, $confirmationId, $tokenId, $realm)
+        );
+    }
+
+    private function defaultUriBuilder(string $realm, string $uri, string $builtUri): m\MockInterface
+    {
+        $uriBuilder = m::mock(UriBuilder::class);
+        $uriBuilder->expects('setRealm')->with($realm);
+        $uriBuilder->expects('build')->with($uri)->andReturn($builtUri);
+
+        return $uriBuilder;
+    }
+
+    private function defaultHttpClient(string $builtUri, string $encodedData, m\MockInterface $httpResponse): m\MockInterface
+    {
+        $httpClient = m::mock(HttpClient::class);
+        $httpClient->expects('reset')->withNoArgs();
+        $httpClient->expects('setMethod')->with(HttpRequest::METHOD_POST);
+        $httpClient->expects('setUri')->with($builtUri);
+        $httpClient->expects('setHeaders')->with(m::type(HttpHeaders::class))->andReturnUsing(
+            function (HttpHeaders $headers) {
+                $expectedHeaders = [
+                    'Content-Type' => 'application/json',
+                ];
+                $this->assertEquals($expectedHeaders, $headers->toArray());
+
+                return $headers;
+            }
+        );
+        $httpClient->expects('setRawBody')->with($encodedData);
+        $httpClient->expects('send')->withNoArgs()->andReturn($httpResponse);
+
+        return $httpClient;
+    }
+
+    private function defaultHttpResponse(string $response, int $responseCode): m\MockInterface
+    {
+        $httpResponse = m::mock(HttpResponse::class);
+        $httpResponse->expects('getContent')->withNoArgs()->andReturn($response);
+        $httpResponse->expects('getStatusCode')->withNoArgs()->andReturn($responseCode);
+
+        return $httpResponse;
     }
 }

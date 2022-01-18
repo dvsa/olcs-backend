@@ -16,7 +16,6 @@ return [
     QueryHandler\User\Partner::class                                            => IsInternalUser::class,
     QueryHandler\User\PartnerList::class                                        => IsInternalUser::class,
     QueryHandler\User\RoleList::class                                           => NoValidationRequired::class,
-    QueryHandler\User\Pid::class                                                => NoValidationRequired::class,
     QueryHandler\User\UserList::class                                           => CanAccessUserList::class,
     QueryHandler\User\UserListInternal::class                                   => IsInternalUser::class,
     QueryHandler\User\UserListSelfserve::class                                  => CanManageUser::class,
