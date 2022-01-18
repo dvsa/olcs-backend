@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\Olcs\Auth\Test\Service\OpenAm\Client;
+namespace Dvsa\Olcs\Auth\Test\Client;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Auth\Client\UriBuilder;
@@ -11,6 +11,9 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
+/**
+ * @see UriBuilderFactory
+ */
 class UriBuilderFactoryTest extends MockeryTestCase
 {
     public function testCreateService(): void

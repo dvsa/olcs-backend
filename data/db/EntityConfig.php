@@ -102,6 +102,18 @@ return array(
             'type' => 'yesno'
         )
     ),
+    'user_password_reset' => array(
+        'user_id' => array(
+            'cascade' => array(
+                'persist',
+            ),
+            'inversedBy' => array(
+                'entity' => 'User',
+                'property' => 'passwordReset',
+                'fetch' => 'EXTRA_LAZY',
+            ),
+        ),
+    ),
     'user' => array(
         'account_disabled' => array(
             'type' => 'yesno'

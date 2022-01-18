@@ -9,6 +9,7 @@ use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
 use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
+use Dvsa\Olcs\Auth\Exception\ResetPasswordException;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
 use Laminas\Authentication\Adapter\AbstractAdapter;
 use Laminas\Authentication\Result;
@@ -104,6 +105,29 @@ class CognitoAdapter extends AbstractAdapter
         } catch (\Exception $e) {
             Logger::err('Unknown change password error from Cognito client: ' . $e->getMessage());
             throw new ChangePasswordException($e->getMessage());
+        }
+    }
+
+    /**
+     * @todo Using change password as no separate reset password method in DVSA client (use AWS adminSetUserPassword?)
+     * @todo This will only work up until change password implements checking the previous password
+     *
+     * @param string $identifier
+     * @param string $newPassword
+     *
+     * @return bool
+     * @throws ResetPasswordException
+     */
+    public function resetPassword(string $identifier, string $newPassword): bool
+    {
+        try {
+            return $this->client->changePassword($identifier, $newPassword);
+        } catch (ClientException $e) {
+            Logger::debug('Cognito client: reset password ClientException: ' . $e->getMessage());
+            throw new ResetPasswordException($e->getMessage());
+        } catch (\Exception $e) {
+            Logger::err('Unknown reset password error from Cognito client: ' . $e->getMessage());
+            throw new ResetPasswordException($e->getMessage());
         }
     }
 

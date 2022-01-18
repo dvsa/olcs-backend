@@ -64,6 +64,20 @@ class OpenAm extends AbstractAdapter
     }
 
     /**
+     * Forgot password (generates email to user)
+     *
+     * @param string $username
+     * @param string $subject
+     * @param string $message
+     *
+     * @return array
+     */
+    public function forgotPassword(string $username, string $subject, string $message): array
+    {
+        return $this->client->forgotPassword($username, $subject, $message, $this->realm);
+    }
+
+    /**
      * Confirm link is still valid (based on original from olcs-auth repo)
      *
      * @param string $username       Username
@@ -72,15 +86,9 @@ class OpenAm extends AbstractAdapter
      *
      * @return array
      */
-    public function confirmPasswordLink(string $username, string $confirmationId, string $tokenId): array
+    public function confirmPasswordResetValid(string $username, string $confirmationId, string $tokenId): array
     {
-        $data = [
-            'username' => $username,
-            'tokenId' => $tokenId,
-            'confirmationId' => $confirmationId
-        ];
-
-        return $this->client->makeRequest('json/users?_action=confirm', $data);
+        return $this->client->confirmPasswordResetValid($username, $confirmationId, $tokenId, $this->realm);
     }
 
     /**
@@ -95,14 +103,7 @@ class OpenAm extends AbstractAdapter
      */
     public function resetPassword(string $username, string $confirmationId, string $tokenId, string $newPassword): array
     {
-        $data = [
-            'userpassword' => $newPassword,
-            'username' => $username,
-            'tokenId' => $tokenId,
-            'confirmationId' => $confirmationId
-        ];
-
-        return $this->client->makeRequest('json/users?_action=forgotPasswordReset', $data);
+        return $this->client->resetPassword($username, $newPassword, $confirmationId, $tokenId, $this->realm);
     }
 
     /**

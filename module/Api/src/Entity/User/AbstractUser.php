@@ -256,6 +256,19 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     protected $organisationUsers;
 
     /**
+     * Password reset
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\User\UserPasswordReset",
+     *     mappedBy="user",
+     *     fetch="EXTRA_LAZY"
+     * )
+     */
+    protected $passwordResets;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -274,6 +287,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     {
         $this->roles = new ArrayCollection();
         $this->organisationUsers = new ArrayCollection();
+        $this->passwordResets = new ArrayCollection();
     }
 
     /**
@@ -793,6 +807,69 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     {
         if ($this->organisationUsers->contains($organisationUsers)) {
             $this->organisationUsers->removeElement($organisationUsers);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the password reset
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $passwordResets collection being set as the value
+     *
+     * @return User
+     */
+    public function setPasswordResets($passwordResets)
+    {
+        $this->passwordResets = $passwordResets;
+
+        return $this;
+    }
+
+    /**
+     * Get the password resets
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPasswordResets()
+    {
+        return $this->passwordResets;
+    }
+
+    /**
+     * Add a password resets
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $passwordResets collection being added
+     *
+     * @return User
+     */
+    public function addPasswordResets($passwordResets)
+    {
+        if ($passwordResets instanceof ArrayCollection) {
+            $this->passwordResets = new ArrayCollection(
+                array_merge(
+                    $this->passwordResets->toArray(),
+                    $passwordResets->toArray()
+                )
+            );
+        } elseif (!$this->passwordResets->contains($passwordResets)) {
+            $this->passwordResets->add($passwordResets);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a password resets
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $passwordResets collection being removed
+     *
+     * @return User
+     */
+    public function removePasswordResets($passwordResets)
+    {
+        if ($this->passwordResets->contains($passwordResets)) {
+            $this->passwordResets->removeElement($passwordResets);
         }
 
         return $this;
