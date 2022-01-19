@@ -36,10 +36,14 @@ use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\Identity;
+use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
+use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
 
@@ -58,10 +62,19 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockRepo('EventHistory', EventHistory::class);
         $this->mockRepo('EventHistoryType', EventHistoryType::class);
 
+        $mockConfig = [
+            'auth' => [
+                'identity_provider' => PidIdentityProvider::class
+            ]
+        ];
+
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            UserInterface::class => m::mock(UserInterface::class)
+            UserInterface::class => m::mock(UserInterface::class),
+            ValidatableAdapterInterface::class => m::mock(ValidatableAdapterInterface::class),
+            PasswordService::class => m::mock(PasswordService::class),
+            'Config' => $mockConfig
         ];
 
         parent::setUp();
@@ -455,6 +468,10 @@ class UpdateUserTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->mockedSmServices[PasswordService::class]
+            ->shouldReceive('generatePassword')
+            ->andReturn('password');
+
         $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
@@ -631,6 +648,11 @@ class UpdateUserTest extends CommandHandlerTestCase
             );
 
         $this->expectedUserCacheClear([$userId]);
+
+        $this->mockedSmServices[PasswordService::class]
+            ->shouldReceive('generatePassword')
+            ->andReturn('password');
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [

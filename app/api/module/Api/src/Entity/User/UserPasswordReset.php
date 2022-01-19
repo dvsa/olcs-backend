@@ -59,8 +59,7 @@ class UserPasswordReset extends AbstractUserPasswordReset
         }
 
         //make sure provided username matches
-        if ($username !== $this->user->getLoginId())
-        {
+        if ($username !== $this->user->getLoginId()) {
             return false;
         }
 
