@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Adapter;
 
+use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
 use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Contracts\Auth\AccessTokenInterface;
 use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
@@ -22,6 +23,12 @@ class CognitoAdapter extends AbstractAdapter
      * Authentication success.
      */
     const SUCCESS_WITH_CHALLENGE = 2;
+    const FAILURE_ACCOUNT_DISABLED = -5;
+
+    const USER_NOT_FOUND         = 'UserNotFoundException';
+    const NOT_AUTHORISED         = 'NotAuthorizedException';
+    const MESSAGE_INCORRECT_USERNAME_OR_PASSWORD = 'Incorrect username or password.';
+    const MESSAGE_USER_IS_DISABLED = 'User is disabled.';
 
     public const AWS_ERROR_INVALID_PASSWORD = 'InvalidPasswordException';
     public const AWS_ERROR_NOT_AUTHORIZED = 'NotAuthorizedException';
@@ -72,6 +79,25 @@ class CognitoAdapter extends AbstractAdapter
                 ]
             );
         } catch (InvalidTokenException | ClientException $e) {
+            $previous = $e->getPrevious();
+            if ($previous instanceof CognitoIdentityProviderException) {
+                switch ($previous->getAwsErrorCode()) {
+                    case static::USER_NOT_FOUND:
+                        return new Result(Result::FAILURE_IDENTITY_NOT_FOUND, [], [$e->getMessage()]);
+                    case static::NOT_AUTHORISED && $e->getMessage() === static::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD:
+                        return new Result(Result::FAILURE_CREDENTIAL_INVALID, [], [$e->getMessage()]);
+                    case static::NOT_AUTHORISED && $e->getMessage() === static::MESSAGE_USER_IS_DISABLED:
+                        return new Result(static::FAILURE_ACCOUNT_DISABLED, [], [$e->getMessage()]);
+                }
+            }
+            Logger::err(
+                sprintf(
+                    'There was an error attempting to login the user %s: %s',
+                    $this->getIdentity(),
+                    $e->getMessage()
+                ),
+                $e->getTrace()
+            );
             return new Result(Result::FAILURE, [], [$e->getMessage()]);
         }
     }
