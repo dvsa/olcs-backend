@@ -127,7 +127,8 @@ class ForgotPasswordTest extends CommandHandlerTestCase
         return ForgotPasswordCmd::create($cmdData);
     }
 
-    private function getCmdData(): array{
+    private function getCmdData(): array
+    {
         return [
             'username' => $this->username,
             'realm' => $this->realm,

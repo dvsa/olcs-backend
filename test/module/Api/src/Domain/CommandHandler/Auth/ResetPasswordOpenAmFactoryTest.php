@@ -17,7 +17,7 @@ use ZfcRbac\Service\AuthorizationService;
 /**
  * @see ResetPasswordOpenAmFactory
  */
-class  ResetPasswordOpenAmFactoryTest extends MockeryTestCase
+class ResetPasswordOpenAmFactoryTest extends MockeryTestCase
 {
     use MocksServicesTrait;
     use MocksAbstractCommandHandlerServicesTrait;

@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Query\User\User as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -32,9 +33,16 @@ class UserTest extends QueryHandlerTestCase
         $this->mockRepo('EventHistory', Repo::class);
         $this->mockRepo('EventHistoryType', Repo::class);
 
+        $mockedConfig = [
+            'auth' => [
+                'identity_provider' => PidIdentityProvider::class
+            ]
+        ];
+
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class),
+            'Config' => $mockedConfig
         ];
 
         parent::setUp();
@@ -55,7 +63,6 @@ class UserTest extends QueryHandlerTestCase
             ->with('pid')
             ->andReturn(
                 [
-                    'lastLoginTime' => '2016-12-06T16:12:46+0000',
                     'meta' => [
                         'locked' => '20170110090018.001Z',
                     ]
@@ -68,6 +75,7 @@ class UserTest extends QueryHandlerTestCase
         $mockUser->shouldReceive('getPid')->andReturn('pid');
         $mockUser->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
         $mockUser->shouldReceive('getUserType')->once()->andReturn('internal');
+        $mockUser->shouldReceive('getLastLoginAt')->once()->andReturn('2016-12-06T16:12:46+0000');
 
         $this->repoMap['User']->shouldReceive('fetchUsingId')->with($query)->andReturn($mockUser);
 
@@ -93,7 +101,7 @@ class UserTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'userType' => 'internal',
                 'lastLoggedInOn' => '2016-12-06T16:12:46+0000',
-                'lockedOn' => '2017-01-10T09:00:18+00:00',
+                'lockedOn' => '20170110090018.001Z',
                 'latestPasswordResetEvent' => 'PASSWORD RESET EVENT'
             ],
             $result
@@ -127,6 +135,7 @@ class UserTest extends QueryHandlerTestCase
         $mockUser->shouldReceive('getPid')->andReturn('pid');
         $mockUser->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
         $mockUser->shouldReceive('getUserType')->once()->andReturn('internal');
+        $mockUser->shouldReceive('getLastLoginAt')->once()->andReturnNull();
 
         $this->repoMap['User']->shouldReceive('fetchUsingId')->with($query)->andReturn($mockUser);
 
@@ -152,7 +161,7 @@ class UserTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'userType' => 'internal',
                 'lastLoggedInOn' => null,
-                'lockedOn' => '2017-01-10T09:00:18+00:00',
+                'lockedOn' => '20170110090018.001Z',
                 'latestPasswordResetEvent' => 'PASSWORD RESET EVENT'
             ],
             $result
@@ -180,6 +189,7 @@ class UserTest extends QueryHandlerTestCase
         $mockUser->shouldReceive('getPid')->andReturn('pid');
         $mockUser->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
         $mockUser->shouldReceive('getUserType')->once()->andReturn('internal');
+        $mockUser->shouldReceive('getLastLoginAt')->once()->andReturnNull();
 
         $this->repoMap['User']->shouldReceive('fetchUsingId')->with($query)->andReturn($mockUser);
 

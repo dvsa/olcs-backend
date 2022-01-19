@@ -320,7 +320,7 @@ class CognitoAdapterTest extends MockeryTestCase
 
         $mockClient = m::mock(Client::class);
         $mockClient->expects('changePassword')
-            ->with($identifier, $newPassword)
+            ->with($identifier, $newPassword, true)
             ->andThrow($exceptionClass, $exceptionMessage);
 
         $sut = new CognitoAdapter($mockClient);
@@ -371,7 +371,7 @@ class CognitoAdapterTest extends MockeryTestCase
 
         $mockClient = m::mock(Client::class);
         $mockClient->expects('changePassword')
-            ->with($identifier, $newPassword)
+            ->with($identifier, $newPassword, true)
             ->andReturn($expectedResult);
 
         $sut = new CognitoAdapter($mockClient);
