@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Test\Adapter;
 
+use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
+use Aws\CommandInterface;
 use Aws\Exception\AwsException;
 use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Contracts\Auth\AccessTokenInterface;
@@ -74,6 +76,102 @@ class CognitoAdapterTest extends MockeryTestCase
 
         // Assert
         static::assertEquals(Result::FAILURE, $result->getCode());
+    }
+
+    /**
+     * @test
+     */
+    public function authenticate_ReturnsFailureIdentityNotFoundResult_WhenClientExceptionIsThrown_WithUserNotFound()
+    {
+        // Setup
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('authenticate')->andThrow(
+            new ClientException(
+                '',
+                0,
+                new CognitoIdentityProviderException(
+                    '',
+                    m::mock(CommandInterface::class),
+                    [
+                        'code' => CognitoAdapter::USER_NOT_FOUND
+                    ]
+                )
+            )
+        );
+
+        $sut = new CognitoAdapter($mockClient);
+        $sut->setIdentity('identity');
+        $sut->setCredential('credential');
+
+        // Execute
+        $result = $sut->authenticate();
+
+        // Assert
+        static::assertEquals(Result::FAILURE_IDENTITY_NOT_FOUND, $result->getCode());
+    }
+
+    /**
+     * @test
+     */
+    public function authenticate_ReturnsFailureCredentialInvalidResult_WhenClientExceptionIsThrown_WithInvalidPassword()
+    {
+        // Setup
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('authenticate')->andThrow(
+            new ClientException(
+                CognitoAdapter::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD,
+                0,
+                new CognitoIdentityProviderException(
+                    '',
+                    m::mock(CommandInterface::class),
+                    [
+                        'code' => CognitoAdapter::AWS_ERROR_NOT_AUTHORIZED,
+                    ]
+                )
+            )
+        );
+
+        $sut = new CognitoAdapter($mockClient);
+        $sut->setIdentity('identity');
+        $sut->setCredential('credential');
+
+        // Execute
+        $result = $sut->authenticate();
+
+        // Assert
+        static::assertEquals(Result::FAILURE_CREDENTIAL_INVALID, $result->getCode());
+    }
+
+    /**
+     * @test
+     */
+    public function authenticate_ReturnsFailureAccountDisabledResult_WhenClientExceptionIsThrown_WithDisabledAccount()
+    {
+        // Setup
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('authenticate')->andThrow(
+            new ClientException(
+                CognitoAdapter::MESSAGE_USER_IS_DISABLED,
+                0,
+                new CognitoIdentityProviderException(
+                    '',
+                    m::mock(CommandInterface::class),
+                    [
+                        'code' => CognitoAdapter::AWS_ERROR_NOT_AUTHORIZED,
+                    ]
+                )
+            )
+        );
+
+        $sut = new CognitoAdapter($mockClient);
+        $sut->setIdentity('identity');
+        $sut->setCredential('credential');
+
+        // Execute
+        $result = $sut->authenticate();
+
+        // Assert
+        static::assertEquals(CognitoAdapter::FAILURE_ACCOUNT_DISABLED, $result->getCode());
     }
 
     /**
