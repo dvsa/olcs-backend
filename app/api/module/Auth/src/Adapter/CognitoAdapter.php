@@ -144,10 +144,10 @@ class CognitoAdapter extends AbstractAdapter
      * @return bool
      * @throws ResetPasswordException
      */
-    public function resetPassword(string $identifier, string $newPassword): bool
+    public function resetPassword(string $identifier, string $newPassword, bool $permanent = true): bool
     {
         try {
-            return $this->client->changePassword($identifier, $newPassword);
+            return $this->client->changePassword($identifier, $newPassword, $permanent);
         } catch (ClientException $e) {
             Logger::debug('Cognito client: reset password ClientException: ' . $e->getMessage());
             throw new ResetPasswordException($e->getMessage());
