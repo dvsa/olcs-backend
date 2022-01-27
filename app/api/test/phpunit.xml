@@ -11,7 +11,6 @@
       <file>../module/AwsSdk/src/Module.php</file>
       <file>../module/DocumentShare/src/Module.php</file>
       <file>../module/Email/src/Module.php</file>
-      <file>../module/CompaniesHouse/src/Module.php</file>
       <file>../module/Snapshot/src/Module.php</file>
       <file>../module/Address/src/Module.php</file>
       <file>../module/Scanning/src/Module.php</file>
