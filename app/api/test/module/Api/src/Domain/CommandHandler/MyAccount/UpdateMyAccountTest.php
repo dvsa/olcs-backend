@@ -3,8 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\MyAccount\UpdateMyAccount as Cmd;
@@ -39,10 +41,18 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         $this->mockRepo('Address', Address::class);
         $this->mockRepo('Person', Person::class);
 
+        $mockConfig = [
+            'auth' => [
+                'identity_provider' => PidIdentityProvider::class
+            ]
+        ];
+
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            UserInterface::class => m::mock(UserInterface::class)
+            UserInterface::class => m::mock(UserInterface::class),
+            ValidatableAdapterInterface::class => m::mock(ValidatableAdapterInterface::class),
+            'Config' => $mockConfig
         ];
 
         parent::setUp();

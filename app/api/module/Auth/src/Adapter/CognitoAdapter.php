@@ -239,6 +239,30 @@ class CognitoAdapter extends AbstractAdapter
     }
 
     /**
+     * @throws ClientException
+     */
+    public function changeAttribute(string $identifier, string $key, string $value): void
+    {
+        $this->client->changeAttribute($identifier, $key, $value);
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function disableUser(string $identifier): void
+    {
+        $this->client->disableUser($identifier);
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function enableUser(string $identifier): void
+    {
+        $this->client->enableUser($identifier);
+    }
+
+    /**
      * @param AccessTokenInterface $token
      * @return array
      * @throws InvalidTokenException
