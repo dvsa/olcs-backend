@@ -45,6 +45,7 @@ use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
+use Mockery\Mock;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -155,7 +156,12 @@ class UpdateUserTest extends CommandHandlerTestCase
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
 
-        /** @var UserEntity $user */
+        /** @var ContactDetailsEntity|m\Mock $contactDetails */
+        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
+
+
+        /** @var UserEntity|m\Mock $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->initCollections();
         $user->setId($userId);
@@ -163,6 +169,8 @@ class UpdateUserTest extends CommandHandlerTestCase
         $user->setLoginId($data['loginId']);
         $user->setTeam($team);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
+        $user->shouldReceive('getContactDetails')->twice()->andReturnNull();
+        $user->shouldReceive('getContactDetails')->once()->andReturn($contactDetails);
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -202,16 +210,6 @@ class UpdateUserTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-
-        $this->assertInstanceOf(ContactDetailsEntity::class, $savedUser->getContactDetails());
-        $this->assertEquals(
-            ContactDetailsEntity::CONTACT_TYPE_USER,
-            $savedUser->getContactDetails()->getContactType()->getId()
-        );
-        $this->assertEquals(
-            $data['contactDetails']['emailAddress'],
-            $savedUser->getContactDetails()->getEmailAddress()
-        );
     }
 
     public function testHandleCommandWithUpdatedContactDetails()
@@ -274,17 +272,19 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('resetPassword')
             ->never();
 
-        /** @var ContactDetailsEntity $contactDetails */
+        /** @var ContactDetailsEntity|m\Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
             ->once()
             ->with($data['contactDetails'])
             ->andReturnSelf();
 
+        $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
+
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
 
-        /** @var UserEntity $user */
+        /** @var UserEntity|m\Mock $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->initCollections();
         $user->setId($userId);
@@ -293,6 +293,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $user->setTeam($team);
         $user->setContactDetails($contactDetails);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
+        $user->shouldReceive('isDisabled')->andReturnTrue();
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -405,12 +406,13 @@ class UpdateUserTest extends CommandHandlerTestCase
                 }
             );
 
-        /** @var ContactDetailsEntity $contactDetails */
+        /** @var ContactDetailsEntity|m\Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
             ->once()
             ->with($data['contactDetails'])
             ->andReturnSelf();
+        $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
 
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
@@ -420,6 +422,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $user->setLoginId($data['loginId']);
         $user->setContactDetails($contactDetails);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
+        $user->shouldReceive('isDisabled')->andReturnfalse();
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -544,14 +547,11 @@ class UpdateUserTest extends CommandHandlerTestCase
                 }
             );
 
-        /** @var ContactDetailsEntity $contactDetails */
-        $contactDetails = m::mock(ContactDetailsEntity::class)
-            ->makePartial()
-            ->shouldReceive('setId');
+        /** @var ContactDetailsEntity|m\Mock $contactDetails */
+        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+        $contactDetails->shouldReceive('ssetId');
+        $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
 
-        $contactDetails->shouldReceive('update')
-            ->with($data['contactDetails'])
-            ->andReturnSelf();
 
         $licId = 123;
         /** @var LicenceEntity $licence */
@@ -567,7 +567,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $orgUser = m::mock(OrganisationUserEntity::class)->makePartial();
         $orgUser->setOrganisation($org);
 
-        /** @var UserEntity $user */
+        /** @var UserEntity|m\Mock $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->initCollections();
         $user->setId($userId);
@@ -576,6 +576,8 @@ class UpdateUserTest extends CommandHandlerTestCase
         $user->setContactDetails($contactDetails);
         $user->setOrganisationUsers(new ArrayCollection([$orgUser]));
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
+        $user->shouldReceive('getContactDetails')->twice()->andReturnNull();
+        $user->shouldReceive('getContactDetails')->once()->andReturn($contactDetails);
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -727,12 +729,13 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('resetPassword')
             ->never();
 
-        /** @var ContactDetailsEntity $contactDetails */
+        /** @var ContactDetailsEntity|Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
             ->once()
             ->with($data['contactDetails'])
             ->andReturnSelf();
+        $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
 
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();

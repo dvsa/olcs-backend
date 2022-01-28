@@ -147,8 +147,11 @@ class UpdateUserCognitoTest extends CommandHandlerTestCase
             ->andReturn($loggedInUser);
 
 
-        /** @var ContactDetailsEntity $contactDetails */
+        /** @var ContactDetailsEntity | m\Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
+
+        $contactDetails->shouldReceive('getEmailAddress')->andReturn('example@example.com');
+
         $contactDetails->shouldReceive('update')
             ->once()
             ->with($data['contactDetails'])
@@ -274,9 +277,11 @@ class UpdateUserCognitoTest extends CommandHandlerTestCase
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($loggedInUser);
 
-        /** @var ContactDetailsEntity $contactDetails */
-        $contactDetails = m::mock(ContactDetailsEntity::class)
-            ->makePartial()
+        /** @var ContactDetailsEntity|m\Mock $contactDetails */
+        $contactDetails = m::mock(ContactDetailsEntity::class);
+        $contactDetails->shouldReceive('getEmailAddress')
+            ->andReturnNull();
+        $contactDetails->makePartial()
             ->shouldReceive('setId');
 
         $contactDetails->shouldReceive('update')

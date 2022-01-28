@@ -194,7 +194,7 @@ final class CreateUser extends AbstractUserCommandHandler implements
      * @throws ClientException
      * @todo: Call directly from handle() once OpenAM removed
      */
-    private function storeUserInAuthService(CreateUserCommand $command, string &$password, $realm)
+    private function storeUserInAuthService(CreateUserCommand $command, string &$password, string $realm)
     {
         if ($this->adapter instanceof ValidatableAdapterInterface) {
             $this->adapter->register(
