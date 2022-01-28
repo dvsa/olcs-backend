@@ -4705,18 +4705,18 @@
         },
         {
             "name": "olcs/olcs-cpms",
-            "version": "4.206.5",
+            "version": "4.206.6",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.5/olcs-olcs-cpms-4.206.5.zip",
-                "reference": "2808a8e9f98c8e66b05bd2a161844b7ab6f175dd",
-                "shasum": "2808a8e9f98c8e66b05bd2a161844b7ab6f175dd"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.6/olcs-olcs-cpms-4.206.6.zip",
+                "reference": "630b041cf6be2660b52bcb48799308a0185e4035",
+                "shasum": "630b041cf6be2660b52bcb48799308a0185e4035"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
                 "guzzlehttp/guzzle": "^6.3",
                 "monolog/monolog": "^1.24",
-                "php": ">=7.2"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "olcs/olcs-devtools": "~4.206.0"
@@ -4766,7 +4766,7 @@
                 "proprietary"
             ],
             "description": "CPMS Module",
-            "time": "2021-08-20T09:52:37+00:00"
+            "time": "2022-01-18T08:10:09+00:00"
         },
         {
             "name": "olcs/olcs-dvla-search",
@@ -4898,12 +4898,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.144",
+            "version": "4.206.145",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.144/olcs-olcs-transfer-4.206.144.zip",
-                "reference": "c4e34c042e49a88e619f8eb12a27addc85174fc0",
-                "shasum": "c4e34c042e49a88e619f8eb12a27addc85174fc0"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.145/olcs-olcs-transfer-4.206.145.zip",
+                "reference": "48415b72a37348404585360857377b4e36bf1f49",
+                "shasum": "48415b72a37348404585360857377b4e36bf1f49"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4963,7 +4963,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2022-01-13T10:21:52+00:00"
+            "time": "2022-01-18T10:27:58+00:00"
         },
         {
             "name": "olcs/olcs-utils",
