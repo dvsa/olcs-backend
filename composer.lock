@@ -48,11 +48,11 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.209.6",
+            "version": "3.209.14",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.209.6/aws-aws-sdk-php-3.209.6.zip",
-                "reference": "fc4ac03c6ec4acea81c01e8b785c8606943d1fd6",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.209.14/aws-aws-sdk-php-3.209.14.zip",
+                "reference": "19121a960102f871b23233b8e91fb198b46498be",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2022-01-14T19:29:33+00:00"
+            "time": "2022-01-27T19:16:39+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -3800,11 +3800,11 @@
         },
         {
             "name": "laminas/laminas-stdlib",
-            "version": "2.7.8",
+            "version": "2.7.9",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/laminas/laminas-stdlib/2.7.8/laminas-laminas-stdlib-2.7.8.zip",
-                "reference": "da8ecaa0b35b92e0834d6c0c111bd5306b6dc471",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/laminas/laminas-stdlib/2.7.9/laminas-laminas-stdlib-2.7.9.zip",
+                "reference": "2b7ee69318bf08ed094ebf0b30f860bb26ddd9f6",
                 "shasum": ""
             },
             "require": {
@@ -3853,7 +3853,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-02-16T20:21:34+00:00"
+            "time": "2022-01-20T16:23:34+00:00"
         },
         {
             "name": "laminas/laminas-text",
@@ -5780,11 +5780,11 @@
         },
         {
             "name": "sabre/dav",
-            "version": "4.3.0",
+            "version": "4.3.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/dav/4.3.0/sabre-dav-4.3.0.zip",
-                "reference": "1f9bfa733a22e3c1f7526d645dab2cee96eba51a",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/dav/4.3.1/sabre-dav-4.3.1.zip",
+                "reference": "130abb7017f56e0d99b04eb94b041e000a8e9b39",
                 "shasum": ""
             },
             "require": {
@@ -5851,7 +5851,7 @@
                 "framework",
                 "iCalendar"
             ],
-            "time": "2021-12-14T08:56:03+00:00"
+            "time": "2022-01-20T13:59:29+00:00"
         },
         {
             "name": "sabre/event",
@@ -6586,11 +6586,11 @@
         },
         {
             "name": "symfony/lock",
-            "version": "v5.4.2",
+            "version": "v5.4.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/lock/v5.4.2/symfony-lock-v5.4.2.zip",
-                "reference": "5e1d6adfff3b2586f2854188dd2fc35afe42dd59",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/lock/v5.4.3/symfony-lock-v5.4.3.zip",
+                "reference": "a0cc3e6af48b3ede03e607a15336f1cda7c0db7e",
                 "shasum": ""
             },
             "require": {
@@ -6652,7 +6652,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-12-29T10:12:08+00:00"
+            "time": "2022-01-27T13:12:43+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -7420,18 +7420,18 @@
     "packages-dev": [
         {
             "name": "composer/pcre",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/pcre/1.0.0/composer-pcre-1.0.0.zip",
-                "reference": "3d322d715c43a1ac36c7fe215fa59336265500f2",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/pcre/1.0.1/composer-pcre-1.0.1.zip",
+                "reference": "67a32d7d6f9f560b726ab25a061b38ff3a80c560",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1",
+                "phpstan/phpstan": "^1.3",
                 "phpstan/phpstan-strict-rules": "^1.1",
                 "symfony/phpunit-bridge": "^4.2 || ^5"
             },
@@ -7477,7 +7477,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-12-06T15:17:27+00:00"
+            "time": "2022-01-21T20:24:37+00:00"
         },
         {
             "name": "composer/xdebug-handler",
@@ -8911,11 +8911,11 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.11",
+            "version": "9.5.13",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/phpunit/9.5.11/phpunit-phpunit-9.5.11.zip",
-                "reference": "2406855036db1102126125537adb1406f7242fdd",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/phpunit/9.5.13/phpunit-phpunit-9.5.13.zip",
+                "reference": "597cb647654ede35e43b137926dfdfef0fb11743",
                 "shasum": ""
             },
             "require": {
@@ -9000,7 +9000,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-12-25T07:07:57+00:00"
+            "time": "2022-01-24T07:33:35+00:00"
         },
         {
             "name": "sebastian/cli-parser",
