@@ -83,7 +83,6 @@
     </testsuite>
   </testsuites>
   <listeners>
-    <listener class="Coverage" file="./Coverage.php"/>
     <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
       <arguments>
         <array>
