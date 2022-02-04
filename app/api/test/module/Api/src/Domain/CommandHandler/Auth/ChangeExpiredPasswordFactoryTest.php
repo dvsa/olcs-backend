@@ -6,6 +6,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ChangeExpiredPassword;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ChangeExpiredPasswordFactory;
+use Dvsa\Olcs\Api\Domain\Repository\User;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\MocksRepositoriesTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
@@ -82,6 +84,10 @@ class ChangeExpiredPasswordFactoryTest extends MockeryTestCase
         // Setup
         $this->setUpSut();
 
+        // Expectations
+        $repositoryServiceManager = $this->repositoryServiceManager();
+        $repositoryServiceManager->expects('get')->with('User')->andReturn(m::mock(User::class));
+
         // Execute
         $result = $this->sut->__invoke($this->pluginManager(), null);
 
@@ -105,6 +111,7 @@ class ChangeExpiredPasswordFactoryTest extends MockeryTestCase
     protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->adapter();
+        $this->repositoryServiceManager();
         $this->setUpAbstractCommandHandlerServices();
     }
 
@@ -121,5 +128,16 @@ class ChangeExpiredPasswordFactoryTest extends MockeryTestCase
         }
 
         return $this->serviceManager->get(ValidatableAdapterInterface::class);
+    }
+
+    private function repositoryServiceManager()
+    {
+        if (!$this->serviceManager->has('RepositoryServiceManager')) {
+            $instance = $this->setUpMockService(RepositoryServiceManager::class);
+            $this->serviceManager->setService('RepositoryServiceManager', $instance);
+        }
+        $instance = $this->serviceManager->get('RepositoryServiceManager');
+
+        return $instance;
     }
 }
