@@ -415,6 +415,7 @@ class BusRegEntityTest extends EntityTester
             'isFromEbsr',
             'isCancelled',
             'isCancellation',
+            'canEditEndDate',
             'canWithdraw',
             'canRefuse',
             'canRefuseByShortNotice',
@@ -647,6 +648,42 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals($effectiveDate, $this->entity->getEffectiveDate());
         $this->assertEquals($endDate, $this->entity->getEndDate());
         $this->assertEquals($busNoticePeriod, $this->entity->getBusNoticePeriod());
+    }
+
+    public function testUpdateEndDate(): void
+    {
+        $endDate = '2022-12-25';
+        $status = new RefData(Entity::STATUS_REGISTERED);
+        $this->entity->setStatus($status);
+        $this->entity->updateEndDate('2022-12-25');
+        $this->assertEquals($endDate, $this->entity->getEndDate());
+    }
+
+    /**
+     * @dataProvider dpUpdateEndDateException
+     */
+    public function testUpdateEndDateException($status): void
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::FORBIDDEN_NO_PERMISSION_ERROR);
+        $status = new RefData($status);
+        $this->entity->setStatus($status);
+        $this->entity->updateEndDate('2022-12-25');
+    }
+
+    public function dpUpdateEndDateException(): array
+    {
+        return [
+            [Entity::STATUS_NEW],
+            [Entity::STATUS_VAR],
+            [Entity::STATUS_CANCEL],
+            [Entity::STATUS_ADMIN],
+            [Entity::STATUS_REFUSED],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_CNS],
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_EXPIRED],
+        ];
     }
 
     public function testCreateNew()
