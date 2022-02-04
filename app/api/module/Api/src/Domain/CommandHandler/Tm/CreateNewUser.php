@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
 
+use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendTmUserCreated as SendTmUserCreatedDto;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
@@ -23,11 +24,15 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Service\OpenAm\Client;
+use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
+use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
+use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 
 /**
  * Create New User
@@ -55,6 +60,29 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     protected $usernameErrorKey = 'username';
 
     /**
+     * @var ValidatableAdapterInterface | UserInterface
+     */
+    private $adapter;
+
+    /**
+     * @var PasswordService
+     */
+    private $passwordService;
+
+    /**
+     * CreateUser constructor.
+     *
+     * @param PasswordService $passwordService
+     * @param ValidatableAdapterInterface|null $adapter
+     */
+    public function __construct(PasswordService $passwordService, ?ValidatableAdapterInterface $adapter)
+    {
+        $this->adapter = $adapter;
+        $this->passwordService = $passwordService;
+    }
+
+
+    /**
      * Handle command
      *
      * @param CommandInterface $command command
@@ -63,6 +91,11 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
      */
     public function handleCommand(CommandInterface $command)
     {
+        //TODO: Remove once OpenAM is removed.
+        if (is_null($this->adapter)) {
+            $this->adapter = $this->getOpenAmUser();
+        }
+
         $username = trim($command->getUsername());
         $emailAddress = trim($command->getEmailAddress());
 
@@ -239,7 +272,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
             'transportManager' => $transportManagerApplication->getTransportManager()
         ];
 
-        $pid = $this->getOpenAmUser()->generatePid($command->getUsername());
+        $pid = $this->generatePid($command->getUsername());
 
         $user = User::create($pid, User::USER_TYPE_TRANSPORT_MANAGER, $userData);
         $user->setContactDetails($contactDetails);
@@ -253,16 +286,15 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
 
         $this->getRepo('User')->save($user);
 
-        $password = null;
+        $password = $this->passwordService->generatePassword();
+        $realm = Client::REALM_SELFSERVE;
 
-        $this->getOpenAmUser()->registerUser(
-            $command->getUsername(),
-            $command->getEmailAddress(),
-            Client::REALM_SELFSERVE,
-            function ($params) use (&$password) {
-                $password = $params['password'];
-            }
-        );
+        try {
+            $this->storeUserInAuthService($command, $password, $realm);
+        } catch (ClientException | FailedRequestException $e) {
+            $this->getRepo()->delete($user);
+            throw new \RuntimeException("Unable to store user in Auth Service", $e->getCode(), $e);
+        }
 
         try {
             // send welcome email
@@ -314,5 +346,43 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         if (!empty($messages)) {
             throw new ValidationException($messages);
         }
+    }
+
+    /**
+     * @throws FailedRequestException
+     * @throws ClientException
+     * @todo: Call directly from handle() once OpenAM removed
+     */
+    private function storeUserInAuthService(Cmd $command, string &$password, $realm)
+    {
+        if ($this->adapter instanceof ValidatableAdapterInterface) {
+            $this->adapter->register(
+                $command->getUsername(),
+                $password,
+                $command->getEmailAddress()
+            );
+        } else {
+            $this->adapter->registerUser(
+                $command->getUsername(),
+                $command->getEmailAddress(),
+                $realm,
+                function ($params) use (&$password) {
+                    $password = $params['password'];
+                }
+            );
+        }
+    }
+
+    /**
+     * @param string $loginId
+     * @return string
+     * @todo: Remove once OpenAM removed
+     */
+    private function generatePid(string $loginId)
+    {
+        if ($this->adapter instanceof ValidatableAdapterInterface) {
+            return null;
+        }
+        return $this->adapter->generatePid($loginId);
     }
 }
