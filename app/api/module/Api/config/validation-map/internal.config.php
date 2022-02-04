@@ -93,6 +93,7 @@ return [
     CommandHandler\Bus\RefuseBusReg::class => IsInternalEdit::class,
     CommandHandler\Bus\RefuseBusRegByShortNotice::class => IsInternalEdit::class,
     CommandHandler\Bus\ResetBusReg::class => IsInternalEdit::class,
+    CommandHandler\Bus\UpdateEndDate::class => IsInternalUser::class,
     CommandHandler\Bus\UpdateQualitySchemes::class => IsInternalUser::class,
     CommandHandler\Bus\UpdateServiceDetails::class => IsInternalUser::class,
     CommandHandler\Bus\UpdateServiceRegister::class => IsInternalUser::class,
