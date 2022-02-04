@@ -63,7 +63,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     const TXC_APP_CHARGEABLE = 'chargeableChange';
     const TXC_APP_NON_CHARGEABLE = 'nonChargeableChange';
 
-    const FORBIDDEN_ERROR = 'This bus reg can\'t be edited. It must be the latest variation, and not from EBSR';
+    const FORBIDDEN_NO_PERMISSION_ERROR = 'No permission to edit this record';
 
     /**
      * Statuses to be included in a registration history list
@@ -336,7 +336,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             return true;
         }
 
-        throw new ForbiddenException('No permission to edit this record');
+        throw new ForbiddenException(self::FORBIDDEN_NO_PERMISSION_ERROR);
     }
 
     /**
@@ -476,6 +476,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             'isFromEbsr' => $this->isFromEbsr(),
             'isCancelled' => $this->isCancelled(),
             'isCancellation' => $this->isCancellation(),
+            'canEditEndDate' => $this->canEditEndDate(),
             'canWithdraw' => $this->canWithdraw(),
             'canRefuse' => $this->canRefuse(),
             'canRefuseByShortNotice' => $this->canRefuseByShortNotice(),
@@ -646,7 +647,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         $routeDescription = null
     ) {
         if (!$this->isLatestVariation()) {
-            throw new ForbiddenException('No permission to edit this record');
+            throw new ForbiddenException(self::FORBIDDEN_NO_PERMISSION_ERROR);
         }
 
         $this->trcConditionChecked = $trcConditionChecked;
@@ -1363,6 +1364,31 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         }
 
         return $taskIds;
+    }
+
+    /**
+     * @param string $endDate
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    public function updateEndDate(string $endDate): void
+    {
+        if (!$this->canEditEndDate()) {
+            throw new ForbiddenException(self::FORBIDDEN_NO_PERMISSION_ERROR);
+        }
+
+        $this->endDate = $endDate;
+    }
+
+    /**
+     * VOL-2677 registered routes can now have the end dates edited
+     *
+     * @return bool
+     */
+    public function canEditEndDate()
+    {
+        return $this->isRegistered();
     }
 
     /**
