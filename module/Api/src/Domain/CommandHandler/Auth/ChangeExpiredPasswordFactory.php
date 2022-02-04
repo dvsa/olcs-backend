@@ -25,8 +25,8 @@ class ChangeExpiredPasswordFactory implements FactoryInterface
     {
         $sl = $container->getServiceLocator();
         $adapter = $sl->get(ValidatableAdapterInterface::class);
-        $instance = new ChangeExpiredPassword($adapter);
-        return $instance->createService($container);
+        $userRepository = $sl->get('RepositoryServiceManager')->get('User');
+        return (new ChangeExpiredPassword($adapter, $userRepository))->createService($container);
     }
 
     /**
