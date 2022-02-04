@@ -41,6 +41,7 @@ return [
     CommandHandler\Variation\TransportManagerDeleteDelta::class     => Misc\CanAccessApplicationWithId::class,
 
     CommandHandler\Tm\CreateNewUser::class                          => Misc\CanAccessApplicationWithApplication::class,
+    CommandHandler\Tm\CreateNewUserFactory::class                   => Misc\CanAccessApplicationWithApplication::class,
     CommandHandler\Tm\UpdateNysiisName::class                       => Misc\IsSystemUser::class,
 
     CommandHandler\Email\SendTmApplication::class     => Misc\CanAccessTmaWithId::class,
