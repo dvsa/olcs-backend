@@ -88,30 +88,6 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpCanBecomeStandardInternational
-     */
-    public function testCanBecomeStandardInternational($goodsOrPsv, $expected)
-    {
-        $goodsOrPsvRefData = new RefData($goodsOrPsv);
-
-        $licence = $this->instantiate(Entity::class);
-        $licence->setGoodsOrPsv($goodsOrPsvRefData);
-
-        $this->assertEquals(
-            $expected,
-            $licence->canBecomeStandardInternational()
-        );
-    }
-
-    public function dpCanBecomeStandardInternational()
-    {
-        return [
-            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
-            [Entity::LICENCE_CATEGORY_PSV, true],
-        ];
-    }
-
-    /**
      * @dataProvider updateSafetyDetails
      */
     public function testUpdateSafetyDetails(

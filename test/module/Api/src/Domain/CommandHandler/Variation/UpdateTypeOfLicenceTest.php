@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Variation\UpdateTypeOfLicence as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -49,10 +50,12 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->refData = [
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            LicenceEntity::LICENCE_TYPE_RESTRICTED,
             LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
             LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
-            LicenceEntity::LICENCE_CATEGORY_PSV
+            LicenceEntity::LICENCE_CATEGORY_PSV,
+            RefData::APP_VEHICLE_TYPE_HGV,
+            RefData::APP_VEHICLE_TYPE_LGV,
+            RefData::APP_VEHICLE_TYPE_MIXED,
         ];
 
         parent::initReferences();
@@ -62,6 +65,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     {
         $data = [
             'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+            'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
             'version' => 1
         ];
         $command = Cmd::create($data);
@@ -73,6 +77,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_HGV]);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -90,12 +95,20 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandWithChangeWhenNotAllowed()
-    {
+    /**
+     * @dataProvider dpHandleCommandWithChangeWhenNotAllowed
+     */
+    public function testHandleCommandWithChangeWhenNotAllowed(
+        $applicationLicenceType,
+        $applicationVehicleType,
+        $commandLicenceType,
+        $commandVehicleType
+    ) {
         $this->expectException(ForbiddenException::class);
 
         $data = [
-            'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            'licenceType' => $commandLicenceType,
+            'vehicleType' => $commandVehicleType,
             'version' => 1
         ];
         $command = Cmd::create($data);
@@ -106,7 +119,8 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
-        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $application->setLicenceType($this->refData[$applicationLicenceType]);
+        $application->setVehicleType($this->refData[$applicationVehicleType]);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence)
@@ -117,6 +131,24 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ->andReturn($application);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function dpHandleCommandWithChangeWhenNotAllowed()
+    {
+        return [
+            'standard national to standard international' => [
+                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_HGV,
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_LGV,
+            ],
+            'standard international lgv to standard international mixed' => [
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_LGV,
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+            ],
+        ];
     }
 
     public function testHandleCommandWithSrChangeWithoutPermission()
@@ -150,42 +182,12 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    public function testHandleCommandWithSiChangeWithoutPermission()
-    {
-        $this->expectException(ValidationException::class);
-
-        $data = [
-            'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            'version' => 1
-        ];
-        $command = Cmd::create($data);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setLicence($licence);
-        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->with(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence)
-            ->andReturn(true);
-
-        $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($application);
-
-        $this->sut->handleCommand($command);
-    }
-
     public function testHandleCommand()
     {
         $data = [
             'id' => 111,
-            'licenceType' => LicenceEntity::LICENCE_TYPE_RESTRICTED,
+            'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
             'version' => 1
         ];
         $command = Cmd::create($data);
@@ -208,6 +210,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
         $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
         $application->setFees([$fee]);
         $application->setId(111);
 
@@ -254,7 +257,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertSame(
-            $this->refData[LicenceEntity::LICENCE_TYPE_RESTRICTED],
+            $this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL],
             $application->getLicenceType()
         );
     }

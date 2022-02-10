@@ -196,7 +196,8 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
      */
     protected function hasUpdatedTypeOfLicence()
     {
-        return $this->application->getLicenceType() !== $this->licence->getLicenceType();
+        return $this->application->getLicenceType() !== $this->licence->getLicenceType() ||
+            $this->application->getVehicleType() != $this->licence->getVehicleType();
     }
 
     /**
