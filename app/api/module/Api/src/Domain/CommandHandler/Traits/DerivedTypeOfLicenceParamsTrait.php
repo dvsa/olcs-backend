@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Traits;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Derived type of licence params trait
@@ -14,18 +13,17 @@ trait DerivedTypeOfLicenceParamsTrait
     /**
      * Derive the correct vehicle type ref data for the application/licence based upon information in the command
      *
-     * @param CommandInterface $command
+     * @param string|null $vehicleType
+     * @param string $operatorType
      *
-     * @return RefData
+     * @return string
      */
-    public function getDerivedVehicleType(CommandInterface $command)
+    public function getDerivedVehicleType($vehicleType, $operatorType)
     {
-        $vehicleType = $command->getVehicleType();
-
         if ($vehicleType == RefData::APP_VEHICLE_TYPE_LGV ||
             $vehicleType == RefData::APP_VEHICLE_TYPE_MIXED
         ) {
-            return $this->getRepo()->getRefdataReference($vehicleType);
+            return $vehicleType;
         }
 
         $mappings = [
@@ -33,24 +31,23 @@ trait DerivedTypeOfLicenceParamsTrait
             Licence::LICENCE_CATEGORY_PSV => RefData::APP_VEHICLE_TYPE_PSV,
         ];
 
-        return $this->getRepo()->getRefdataReference(
-            $mappings[$this->getDerivedOperatorType($command)->getId()]
-        );
+        return $mappings[$operatorType];
     }
 
     /**
      * Derive the correct operator type ref data for the application/licence based upon information in the command
      *
-     * @param CommandInterface $command
+     * @param string $operatorType
+     * @param string $niFlag
      *
-     * @return RefData
+     * @return string
      */
-    public function getDerivedOperatorType(CommandInterface $command)
+    public function getDerivedOperatorType($operatorType, $niFlag)
     {
-        if ($command->getNiFlag() !== 'Y') {
-            return $this->getRepo()->getRefdataReference($command->getOperatorType());
+        if ($niFlag !== 'Y') {
+            return $operatorType;
         }
 
-        return $this->getRepo()->getRefdataReference(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
+        return Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
     }
 }

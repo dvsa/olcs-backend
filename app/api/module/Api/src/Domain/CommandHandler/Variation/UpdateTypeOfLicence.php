@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\DerivedTypeOfLicenceParamsTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -34,7 +35,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait, DerivedTypeOfLicenceParamsTrait;
 
     protected $repoServiceName = 'Application';
 
@@ -47,8 +48,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
 
         $licence = $application->getLicence();
 
-        // If we are not trying to update the licence type
-        if ($application->getLicenceType() === $this->getRepo()->getRefdataReference($command->getLicenceType())) {
+        if (!$this->isUpdateRequired($application, $command)) {
             $result->addMessage('No updates required');
             return $result;
         }
@@ -69,19 +69,18 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
             );
         }
 
-        if (!$licence->canBecomeStandardInternational()
-            && $command->getLicenceType() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
-        ) {
-            throw new ValidationException(
-                [
-                    'licenceType' => [
-                        Licence::ERROR_CANT_BE_SI => 'You are not able to change licence type to standard international'
-                    ]
-                ]
-            );
-        }
+        $derivedVehicleType = $this->getDerivedVehicleType(
+            $command->getVehicleType(),
+            $application->getGoodsOrPsv()->getId(),
+        );
 
-        $application->setLicenceType($this->getRepo()->getRefdataReference($command->getLicenceType()));
+        $application->updateTypeOfLicence(
+            $application->getNiFlag(),
+            $application->getGoodsOrPsv(),
+            $this->getRepo()->getRefdataReference($command->getLicenceType()),
+            $this->getRepo()->getRefdataReference($derivedVehicleType),
+            $command->getLgvDeclarationConfirmation()
+        );
 
         $this->getRepo()->save($application);
         $result->addMessage('Application saved successfully');
@@ -94,6 +93,35 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
         }
 
         return $result;
+    }
+
+    /**
+     * Do any changes need to be made to the variation?
+     *
+     * @param Application $application
+     * @param $command
+     *
+     * $return bool
+     */
+    private function isUpdateRequired(Application $application, $command)
+    {
+        $applicationLicenceType = (string)$application->getLicenceType();
+        $commandLicenceType = $command->getLicenceType();
+
+        $applicationVehicleType = (string)$application->getVehicleType();
+        $commandVehicleType = $command->getVehicleType();
+
+        if ($applicationLicenceType != $commandLicenceType) {
+            return true;
+        }
+
+        if ($applicationLicenceType == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL &&
+            $applicationVehicleType != $commandVehicleType
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     private function updateApplicationCompletion($id)

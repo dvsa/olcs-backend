@@ -10,6 +10,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -88,9 +89,24 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $this->initReferences();
 
         return [
-            'Changed Type Of Licence' => [
+            'Changed Type Of Licence and Vehicle Type' => [
                 'typeOfLicence',
                 $this->getApplicationState1(),
+                $this->getLicenceState2(),
+                [
+                    'TypeOfLicence' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
+                ],
+                [
+                    'TypeOfLicence' => UpdateVariationCompletion::STATUS_UPDATED,
+                    'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
+                ],
+                'N',
+                []
+            ],
+            'Change Vehicle Type only' => [
+                'typeOfLicence',
+                $this->getApplicationState2(RefData::APP_VEHICLE_TYPE_LGV),
                 $this->getLicenceState2(),
                 [
                     'TypeOfLicence' => UpdateVariationCompletion::STATUS_UNCHANGED,
@@ -1115,7 +1131,10 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
             LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            LicenceEntity::LICENCE_TYPE_RESTRICTED
+            LicenceEntity::LICENCE_TYPE_RESTRICTED,
+            RefData::APP_VEHICLE_TYPE_HGV,
+            RefData::APP_VEHICLE_TYPE_MIXED,
+            RefData::APP_VEHICLE_TYPE_LGV
         ];
 
         parent::initReferences();
@@ -1166,6 +1185,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
         $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
         $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_HGV]);
         $application->setDeclarationConfirmation('Y');
 
         $tmCollection = new ArrayCollection();
@@ -1200,12 +1220,13 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         return $application;
     }
 
-    private function getApplicationState2()
+    private function getApplicationState2($vehicleType = RefData::APP_VEHICLE_TYPE_MIXED)
     {
         $application = $this->newApplication();
 
         $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
         $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+        $application->setVehicleType($this->refData[$vehicleType]);
         $application->setDeclarationConfirmation('Y');
 
         $tmCollection = new ArrayCollection();
@@ -1311,6 +1332,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $licence = $this->newLicence();
 
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+        $licence->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_MIXED]);
 
         $vehicleCollection = new ArrayCollection();
         $licence->setLicenceVehicles($vehicleCollection);
