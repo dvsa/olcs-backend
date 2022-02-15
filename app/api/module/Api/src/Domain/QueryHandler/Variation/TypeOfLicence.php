@@ -33,7 +33,8 @@ class TypeOfLicence extends AbstractQueryHandler
             [
                 'canBecomeSpecialRestricted' => $licence->canBecomeSpecialRestricted(),
                 'canUpdateLicenceType' => $this->isGranted(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence),
-                'currentLicenceType' => $licence->getLicenceType()->getId()
+                'currentLicenceType' => $licence->getLicenceType()->getId(),
+                'currentVehicleType' => $licence->getVehicleType()->getId()
             ]
         );
     }

@@ -45,6 +45,9 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
         $licence->shouldReceive('getLicenceType->getId')
             ->withNoArgs()
             ->andReturn('curLicType');
+        $licence->shouldReceive('getVehicleType->getId')
+            ->withNoArgs()
+            ->andReturn('curVehType');
 
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial()
@@ -71,7 +74,8 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
             'foo' => 'bar',
             'canBecomeSpecialRestricted' => true,
             'canUpdateLicenceType' => true,
-            'currentLicenceType' => 'curLicType'
+            'currentLicenceType' => 'curLicType',
+            'currentVehicleType' => 'curVehType',
         ];
 
         $result = $this->sut->handleQuery($query);
