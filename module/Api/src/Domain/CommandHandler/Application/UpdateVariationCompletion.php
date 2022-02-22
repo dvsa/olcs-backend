@@ -644,7 +644,11 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
             }
         }
 
-        if ($this->application->isPsvDowngrade() && $this->isUnchanged('operating_centres')) {
+        if (($this->application->isPsvDowngrade() && $this->isUnchanged('operating_centres'))
+            || ($this->application->isLicenceChangeWhichRequiresOperatingCentre()
+                && $this->application->getOperatingCentres()->isEmpty()
+            )
+        ) {
             $this->markSectionRequired('operating_centres');
         }
     }

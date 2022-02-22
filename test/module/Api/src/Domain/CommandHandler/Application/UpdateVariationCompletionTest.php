@@ -119,6 +119,21 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 'N',
                 []
             ],
+            'Change Vehicle Type to something which requires Operating Centre' => [
+                'typeOfLicence',
+                $this->getApplicationState2(RefData::APP_VEHICLE_TYPE_MIXED),
+                $this->getLicenceState2(RefData::APP_VEHICLE_TYPE_LGV),
+                [
+                    'TypeOfLicence' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UPDATED,
+                ],
+                [
+                    'TypeOfLicence' => UpdateVariationCompletion::STATUS_UPDATED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
+                ],
+                'N',
+                []
+            ],
             'Unchanged Type Of Licence' => [
                 'typeOfLicence',
                 $this->getApplicationState2(),
@@ -1327,12 +1342,12 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         return $licence;
     }
 
-    private function getLicenceState2()
+    private function getLicenceState2($vehicleType = RefData::APP_VEHICLE_TYPE_MIXED)
     {
         $licence = $this->newLicence();
 
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-        $licence->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_MIXED]);
+        $licence->setVehicleType($this->refData[$vehicleType]);
 
         $vehicleCollection = new ArrayCollection();
         $licence->setLicenceVehicles($vehicleCollection);

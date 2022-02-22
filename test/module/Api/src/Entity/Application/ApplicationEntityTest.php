@@ -3061,6 +3061,108 @@ class ApplicationEntityTest extends EntityTester
         $this->assertEquals($expected, $application->allowFeePayments());
     }
 
+    public function dpIsLicenceChangeWhichRequiresOperatingCentre()
+    {
+        return [
+            'application' => [
+                'isVariation' => false,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'expected' => false,
+            ],
+            'lgv to hgv' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'expected' => true,
+            ],
+            'lgv to mixed' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'expected' => true,
+            ],
+            'lgv to psv' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'expected' => true,
+            ],
+            'hgv to lgv' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'expected' => false,
+            ],
+            'hgv to mixed' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'expected' => false,
+            ],
+            'hgv to psv' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'expected' => false,
+            ],
+            'mixed to lgv' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'expected' => false,
+            ],
+            'mixed to hgv' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'expected' => false,
+            ],
+            'mixed to psv' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'expected' => false,
+            ],
+            'psv to lgv' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'expected' => false,
+            ],
+            'psv to hgv' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'expected' => false,
+            ],
+            'psv to mixed' => [
+                'isVariation' => true,
+                'licenceVehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'applicationVehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'expected' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsLicenceChangeWhichRequiresOperatingCentre
+     */
+    public function testIsLicenceChangeWhichRequiresOperatingCentre($isVariation, $licenceVehicleType, $applicationVehicleType, $expected)
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setVehicleType(new RefData($licenceVehicleType));
+
+        /** @var Entity $application */
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setIsVariation($isVariation);
+        $application->setVehicleType(new RefData($applicationVehicleType));
+        $application->setLicence($licence);
+
+        $this->assertEquals($expected, $application->isLicenceChangeWhichRequiresOperatingCentre());
+    }
+
     public function testIsPsvDowngradeGoods()
     {
         /** @var Entity $application */

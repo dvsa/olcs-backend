@@ -613,6 +613,21 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Does the application involve a licence change which requires operating centre
+     *
+     * @return bool
+     */
+    public function isLicenceChangeWhichRequiresOperatingCentre(): bool
+    {
+        // only applies to a variation
+        if (!$this->isVariation()) {
+            return false;
+        }
+
+        return $this->mustHaveOperatingCentre() && !$this->getLicence()->mustHaveOperatingCentre();
+    }
+
+    /**
      * is Psv Downgrade
      *
      * @return bool
