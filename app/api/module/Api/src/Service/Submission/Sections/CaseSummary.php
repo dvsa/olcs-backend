@@ -73,11 +73,48 @@ final class CaseSummary extends AbstractSection
         $licenceData['licenceType'] = '';
         $licenceData['goodsOrPsv'] = '';
         $licenceData['licenceStatus'] = '';
-        $licenceData['totAuthorisedVehicles'] = '';
-        $licenceData['totAuthorisedTrailers'] = '';
         $licenceData['vehiclesInPossession'] = '';
-        $licenceData['vehiclesInPossession'] = '';
-        $licenceData['trailersInPossession'] = '';
+
+        $authPropertyToTemplateEntryMappings = [
+            'totAuthVehicles' => [
+                [
+                    'templateKey' => 'totAuthorisedVehicles',
+                    'accessMethod' => 'getTotAuthVehicles'
+                ]
+            ],
+            'totAuthHgvVehicles' => [
+                [
+                    'templateKey' => 'totAuthorisedHgvVehicles',
+                    'accessMethod' => 'getTotAuthHgvVehicles'
+                ]
+            ],
+            'totAuthLgvVehicles' => [
+                [
+                    'templateKey' => 'totAuthorisedLgvVehicles',
+                    'accessMethod' => 'getTotAuthLgvVehicles'
+                ]
+            ],
+            'totAuthTrailers' => [
+                [
+                    'templateKey' => 'totAuthorisedTrailers',
+                    'accessMethod' => 'getTotAuthTrailers'
+                ],
+                [
+                    'templateKey' => 'trailersInPossession',
+                    'accessMethod' => 'getTotAuthTrailers'
+                ]
+            ],
+        ];
+
+        $applicableAuthProperties = $licence->getApplicableAuthProperties();
+
+        foreach ($applicableAuthProperties as $propertyName) {
+            $templateEntries = $authPropertyToTemplateEntryMappings[$propertyName];
+            foreach ($templateEntries as $templateEntry) {
+                $templateKey = $templateEntry['templateKey'];
+                $licenceData[$templateKey] = '';
+            }
+        }
 
         if (!empty($licence) && $licence instanceof Licence) {
             $licenceData['licNo'] = $licence->getLicNo();
@@ -88,11 +125,17 @@ final class CaseSummary extends AbstractSection
                 !empty($licence->getGoodsOrPsv()) ? $licence->getGoodsOrPsv()->getDescription() : '';
             $licenceData['licenceStatus'] =
                 !empty($licence->getStatus()) ? $licence->getStatus()->getDescription() : '';
-            $licenceData['totAuthorisedVehicles'] = $licence->getTotAuthVehicles();
-            $licenceData['totAuthorisedTrailers'] = $licence->getTotAuthTrailers();
-            $licenceData['vehiclesInPossession'] = $licence->getTotAuthTrailers();
+
+            foreach ($applicableAuthProperties as $propertyName) {
+                $templateEntries = $authPropertyToTemplateEntryMappings[$propertyName];
+                foreach ($templateEntries as $templateEntry) {
+                    $templateKey = $templateEntry['templateKey'];
+                    $accessMethod = $templateEntry['accessMethod'];
+                    $licenceData[$templateKey] = $licence->$accessMethod();
+                }
+            }
+
             $licenceData['vehiclesInPossession'] = $licence->getActiveVehiclesCount();
-            $licenceData['trailersInPossession'] = $licence->getTotAuthTrailers();
         }
 
         return $licenceData;

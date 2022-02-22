@@ -316,10 +316,11 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
 
     protected function generateLicence(Organisation $organisation, $id = null)
     {
-        $licence = new Licence(
-            $organisation,
-            $this->generateRefDataEntity($this->licenceStatus)
-        );
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->initCollections();
+        $licence->setOrganisation($organisation);
+        $licence->setStatus($this->generateRefDataEntity($this->licenceStatus));
+
         $licence->setId($id);
         $licence->setVersion($id);
         $licence->setLicenceType($this->generateRefDataEntity($this->licenceType));
