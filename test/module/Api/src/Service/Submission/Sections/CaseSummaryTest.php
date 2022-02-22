@@ -12,7 +12,7 @@ class CaseSummaryTest extends AbstractSubmissionSectionTest
 
     protected $licenceStartDate = '2012-01-01 15:00:00';
 
-    protected $expectedResult = [
+    protected $baseExpectedResult = [
         'id' => 99,
         'caseType' => 'case type 1',
         'ecmsNo' => 'ecms1234',
@@ -25,10 +25,7 @@ class CaseSummaryTest extends AbstractSubmissionSectionTest
         'licenceType' => 'lic_type-desc',
         'goodsOrPsv' => 'goods-desc',
         'licenceStatus' => 'lic_status-desc',
-        'totAuthorisedVehicles' => null,
-        'totAuthorisedTrailers' => 5,
         'vehiclesInPossession' => 3,
-        'trailersInPossession' => 5,
         'serviceStandardDate' => '',
         'disqualificationStatus' => 'None',
     ];
@@ -40,12 +37,72 @@ class CaseSummaryTest extends AbstractSubmissionSectionTest
      */
     public function sectionTestProvider()
     {
-        $case = $this->getCase();
+        /* test data and expected result for existing pre lgv scenario */
 
-        $expectedResult = ['data' => ['overview' => $this->expectedResult]];
+        $preLgvCase = $this->getCase();
+        $preLgvCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthVehicles', 'totAuthTrailers']);
+
+        $preLgvExpectedResult = [
+            'data' => [
+                'overview' => array_merge(
+                    $this->baseExpectedResult,
+                    [
+                        'totAuthorisedVehicles' => null,
+                        'totAuthorisedTrailers' => 5,
+                        'trailersInPossession' => 5
+                    ]
+                )
+            ]
+        ];
+
+        /* test data and expected result for mixed fleet with lgv */
+
+        $mixedFleetCase = $this->getCase();
+        $mixedFleetCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthHgvVehicles', 'totAuthLgvVehicles', 'totAuthTrailers']);
+        $mixedFleetCase->getLicence()->setTotAuthHgvVehicles(7);
+        $mixedFleetCase->getLicence()->setTotAuthLgvVehicles(3);
+
+        $mixedFleetExpectedResult = [
+            'data' => [
+                'overview' => array_merge(
+                    $this->baseExpectedResult,
+                    [
+                        'totAuthorisedHgvVehicles' => 7,
+                        'totAuthorisedLgvVehicles' => 3,
+                        'totAuthorisedTrailers' => 5,
+                        'trailersInPossession' => 5
+                    ]
+                )
+            ]
+        ];
+
+        /* test data and expected result for lgv only */
+
+        $lgvOnlyCase = $this->getCase();
+        $lgvOnlyCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthLgvVehicles']);
+        $lgvOnlyCase->getLicence()->setTotAuthLgvVehicles(4);
+
+        $lgvOnlyExpectedResult = [
+            'data' => [
+                'overview' => array_merge(
+                    $this->baseExpectedResult,
+                    [
+                        'totAuthorisedLgvVehicles' => 4
+                     ]
+                )
+            ]
+        ];
 
         return [
-            [$case, $expectedResult],
+            [$preLgvCase, $preLgvExpectedResult],
+            [$mixedFleetCase, $mixedFleetExpectedResult],
+            [$lgvOnlyCase, $lgvOnlyExpectedResult],
         ];
     }
 
