@@ -63,7 +63,11 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
 
         $lockedOn = null;
         if ($this->config['auth']['identity_provider'] === PidIdentityProvider::class) {
-            $lockedOn = $this->getOpenAmUser()->fetchUser($user->getPid())['meta']['locked'] ?? null;
+            $authDetails = $this->getOpenAmUser()->fetchUser($user->getPid());
+            if (!empty($authDetails['meta']['locked'])) {
+                $lockedOn = \DateTime::createFromFormat('YmdHis.uT', $authDetails['meta']['locked'])
+                    ->format(\DateTime::W3C);
+            }
         }
 
         return $this->result(
