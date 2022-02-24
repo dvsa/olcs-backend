@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Query\Licence\Licence as Qry;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Type Of Licence Test
@@ -27,8 +26,6 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
     {
         $this->sut = new TypeOfLicence();
         $this->mockRepo('Licence', LicenceRepo::class);
-
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
         parent::setUp();
     }
@@ -43,9 +40,6 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
             ->andReturn(['foo' => 'bar'])
             ->shouldReceive('canBecomeSpecialRestricted')
             ->once()
-            ->andReturn(true)
-            ->shouldReceive('isSpecialRestricted')
-            ->once()
             ->andReturn(true);
 
         $query = Qry::create(['id' => 111]);
@@ -55,20 +49,10 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($licence);
 
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence)
-            ->andReturn(true)
-            ->shouldReceive('isGranted')
-            ->once()
-            ->with(Permission::SELFSERVE_USER, null)
-            ->andReturn(true);
-
         $expected = [
             'foo' => 'bar',
             'canBecomeSpecialRestricted' => true,
             'canUpdateLicenceType' => false,
-            'doesChangeRequireVariation' => true
         ];
 
         $result = $this->sut->handleQuery($query);
