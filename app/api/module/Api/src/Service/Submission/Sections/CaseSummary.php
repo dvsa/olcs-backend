@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -13,6 +14,37 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 final class CaseSummary extends AbstractSection
 {
+    const AUTH_PROPERTY_TO_TEMPLATE_ENTRY_MAPPINGS = [
+        'totAuthVehicles' => [
+            [
+                'templateKey' => 'totAuthorisedVehicles',
+                'accessMethod' => 'getTotAuthVehicles'
+            ]
+        ],
+        'totAuthHgvVehicles' => [
+            [
+                'templateKey' => 'totAuthorisedHgvVehicles',
+                'accessMethod' => 'getTotAuthHgvVehicles'
+            ]
+        ],
+        'totAuthLgvVehicles' => [
+            [
+                'templateKey' => 'totAuthorisedLgvVehicles',
+                'accessMethod' => 'getTotAuthLgvVehicles'
+            ]
+        ],
+        'totAuthTrailers' => [
+            [
+                'templateKey' => 'totAuthorisedTrailers',
+                'accessMethod' => 'getTotAuthTrailers'
+            ],
+            [
+                'templateKey' => 'trailersInPossession',
+                'accessMethod' => 'getTotAuthTrailers'
+            ]
+        ],
+    ];
+
     /**
      * Generate CaseSummary Submission Section
      *
@@ -37,7 +69,7 @@ final class CaseSummary extends AbstractSection
         $data += $this->extractOrganisationData($organisation);
 
         // licence data
-        $data += $this->extractLicenceData($licence);
+        $data += $this->extractLicenceData($licence, $application);
 
         // application data
         $data['serviceStandardDate'] = !empty($application) ?
@@ -59,83 +91,40 @@ final class CaseSummary extends AbstractSection
     }
 
     /**
-     * Extract licence data required for submission section from the licence
+     * Extract licence/application data required for submission section from the licence
      *
      * @param null|Licence $licence Licence or null
+     * @param null|Application $application Application or null
      *
      * @return array
      */
-    private function extractLicenceData($licence = null)
+    private function extractLicenceData($licence, $application)
     {
         $licenceData = [];
-        $licenceData['licNo'] = '';
-        $licenceData['licenceStartDate'] = '';
-        $licenceData['licenceType'] = '';
-        $licenceData['goodsOrPsv'] = '';
-        $licenceData['licenceStatus'] = '';
-        $licenceData['vehiclesInPossession'] = '';
+        $licenceData['licNo'] = $licence->getLicNo();
+        $licenceData['licenceStartDate'] = $this->formatDate($licence->getInForceDate());
+        $licenceData['licenceType'] = !empty($licence->getLicenceType()) ?
+            $licence->getLicenceType()->getDescription() : '';
+        $licenceData['goodsOrPsv'] =
+            !empty($licence->getGoodsOrPsv()) ? $licence->getGoodsOrPsv()->getDescription() : '';
+        $licenceData['licenceStatus'] =
+            !empty($licence->getStatus()) ? $licence->getStatus()->getDescription() : '';
+        $licenceData['vehiclesInPossession'] = $licence->getActiveVehiclesCount();
 
-        $authPropertyToTemplateEntryMappings = [
-            'totAuthVehicles' => [
-                [
-                    'templateKey' => 'totAuthorisedVehicles',
-                    'accessMethod' => 'getTotAuthVehicles'
-                ]
-            ],
-            'totAuthHgvVehicles' => [
-                [
-                    'templateKey' => 'totAuthorisedHgvVehicles',
-                    'accessMethod' => 'getTotAuthHgvVehicles'
-                ]
-            ],
-            'totAuthLgvVehicles' => [
-                [
-                    'templateKey' => 'totAuthorisedLgvVehicles',
-                    'accessMethod' => 'getTotAuthLgvVehicles'
-                ]
-            ],
-            'totAuthTrailers' => [
-                [
-                    'templateKey' => 'totAuthorisedTrailers',
-                    'accessMethod' => 'getTotAuthTrailers'
-                ],
-                [
-                    'templateKey' => 'trailersInPossession',
-                    'accessMethod' => 'getTotAuthTrailers'
-                ]
-            ],
-        ];
-
-        $applicableAuthProperties = $licence->getApplicableAuthProperties();
-
-        foreach ($applicableAuthProperties as $propertyName) {
-            $templateEntries = $authPropertyToTemplateEntryMappings[$propertyName];
-            foreach ($templateEntries as $templateEntry) {
-                $templateKey = $templateEntry['templateKey'];
-                $licenceData[$templateKey] = '';
-            }
+        $authPropertiesEntity = $licence;
+        if ($application instanceof Application && $application->isNew()) {
+            $authPropertiesEntity = $application;
         }
 
-        if (!empty($licence) && $licence instanceof Licence) {
-            $licenceData['licNo'] = $licence->getLicNo();
-            $licenceData['licenceStartDate'] = $this->formatDate($licence->getInForceDate());
-            $licenceData['licenceType'] = !empty($licence->getLicenceType()) ?
-                $licence->getLicenceType()->getDescription() : '';
-            $licenceData['goodsOrPsv'] =
-                !empty($licence->getGoodsOrPsv()) ? $licence->getGoodsOrPsv()->getDescription() : '';
-            $licenceData['licenceStatus'] =
-                !empty($licence->getStatus()) ? $licence->getStatus()->getDescription() : '';
+        $applicableAuthProperties = $authPropertiesEntity->getApplicableAuthProperties();
 
-            foreach ($applicableAuthProperties as $propertyName) {
-                $templateEntries = $authPropertyToTemplateEntryMappings[$propertyName];
-                foreach ($templateEntries as $templateEntry) {
-                    $templateKey = $templateEntry['templateKey'];
-                    $accessMethod = $templateEntry['accessMethod'];
-                    $licenceData[$templateKey] = $licence->$accessMethod();
-                }
+        foreach ($applicableAuthProperties as $propertyName) {
+            $templateEntries = self::AUTH_PROPERTY_TO_TEMPLATE_ENTRY_MAPPINGS[$propertyName];
+            foreach ($templateEntries as $templateEntry) {
+                $templateKey = $templateEntry['templateKey'];
+                $accessMethod = $templateEntry['accessMethod'];
+                $licenceData[$templateKey] = $licence->$accessMethod();
             }
-
-            $licenceData['vehiclesInPossession'] = $licence->getActiveVehiclesCount();
         }
 
         return $licenceData;

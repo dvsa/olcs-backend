@@ -37,13 +37,6 @@ class CaseSummaryTest extends AbstractSubmissionSectionTest
      */
     public function sectionTestProvider()
     {
-        /* test data and expected result for existing pre lgv scenario */
-
-        $preLgvCase = $this->getCase();
-        $preLgvCase->getLicence()->shouldReceive('getApplicableAuthProperties')
-            ->withNoArgs()
-            ->andReturn(['totAuthVehicles', 'totAuthTrailers']);
-
         $preLgvExpectedResult = [
             'data' => [
                 'overview' => array_merge(
@@ -56,15 +49,6 @@ class CaseSummaryTest extends AbstractSubmissionSectionTest
                 )
             ]
         ];
-
-        /* test data and expected result for mixed fleet with lgv */
-
-        $mixedFleetCase = $this->getCase();
-        $mixedFleetCase->getLicence()->shouldReceive('getApplicableAuthProperties')
-            ->withNoArgs()
-            ->andReturn(['totAuthHgvVehicles', 'totAuthLgvVehicles', 'totAuthTrailers']);
-        $mixedFleetCase->getLicence()->setTotAuthHgvVehicles(7);
-        $mixedFleetCase->getLicence()->setTotAuthLgvVehicles(3);
 
         $mixedFleetExpectedResult = [
             'data' => [
@@ -80,14 +64,6 @@ class CaseSummaryTest extends AbstractSubmissionSectionTest
             ]
         ];
 
-        /* test data and expected result for lgv only */
-
-        $lgvOnlyCase = $this->getCase();
-        $lgvOnlyCase->getLicence()->shouldReceive('getApplicableAuthProperties')
-            ->withNoArgs()
-            ->andReturn(['totAuthLgvVehicles']);
-        $lgvOnlyCase->getLicence()->setTotAuthLgvVehicles(4);
-
         $lgvOnlyExpectedResult = [
             'data' => [
                 'overview' => array_merge(
@@ -99,11 +75,107 @@ class CaseSummaryTest extends AbstractSubmissionSectionTest
             ]
         ];
 
+        /* existing pre lgv licence only */
+
+        $preLgvLicenceCase = $this->getCase();
+        $preLgvLicenceCase->setApplication(null);
+        $preLgvLicenceCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthVehicles', 'totAuthTrailers']);
+
+        /* mixed fleet with lgv licence only */
+
+        $mixedFleetLicenceCase = $this->getCase();
+        $mixedFleetLicenceCase->setApplication(null);
+        $mixedFleetLicenceCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthHgvVehicles', 'totAuthLgvVehicles', 'totAuthTrailers']);
+        $mixedFleetLicenceCase->getLicence()->updateTotAuthHgvVehicles(7);
+        $mixedFleetLicenceCase->getLicence()->updateTotAuthLgvVehicles(3);
+
+        /* lgv only licence only */
+
+        $lgvOnlyLicenceCase = $this->getCase();
+        $lgvOnlyLicenceCase->setApplication(null);
+        $lgvOnlyLicenceCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthLgvVehicles']);
+        $lgvOnlyLicenceCase->getLicence()->updateTotAuthLgvVehicles(4);
+
+        /* existing pre lgv application */
+
+        $preLgvApplicationCase = $this->getCase();
+        $preLgvApplicationCase->getApplication()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthVehicles', 'totAuthTrailers']);
+        $preLgvApplicationCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->never();
+
+        /* mixed fleet with lgv application */
+
+        $mixedFleetApplicationCase = $this->getCase();
+        $mixedFleetApplicationCase->getApplication()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthHgvVehicles', 'totAuthLgvVehicles', 'totAuthTrailers']);
+        $mixedFleetApplicationCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->never();
+        $mixedFleetApplicationCase->getLicence()->updateTotAuthHgvVehicles(7);
+        $mixedFleetApplicationCase->getLicence()->updateTotAuthLgvVehicles(3);
+
+        /* lgv only application */
+
+        $lgvOnlyApplicationCase = $this->getCase();
+        $lgvOnlyApplicationCase->getApplication()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthLgvVehicles']);
+        $lgvOnlyApplicationCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->never();
+        $lgvOnlyApplicationCase->getLicence()->updateTotAuthLgvVehicles(4);
+
+        /* existing pre lgv variation */
+
+        $preLgvVariationCase = $this->getCase();
+        $preLgvVariationCase->getApplication()->setIsVariation(true);
+        $preLgvVariationCase->getApplication()->shouldReceive('getApplicableAuthProperties')
+            ->never();
+        $preLgvVariationCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthVehicles', 'totAuthTrailers']);
+
+        /* mixed fleet with lgv variation */
+
+        $mixedFleetVariationCase = $this->getCase();
+        $mixedFleetVariationCase->getApplication()->setIsVariation(true);
+        $mixedFleetVariationCase->getApplication()->shouldReceive('getApplicableAuthProperties')
+            ->never();
+        $mixedFleetVariationCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthHgvVehicles', 'totAuthLgvVehicles', 'totAuthTrailers']);
+        $mixedFleetVariationCase->getLicence()->updateTotAuthHgvVehicles(7);
+        $mixedFleetVariationCase->getLicence()->updateTotAuthLgvVehicles(3);
+
+        /* lgv only variation */
+
+        $lgvOnlyVariationCase = $this->getCase();
+        $lgvOnlyVariationCase->getApplication()->setIsVariation(true);
+        $lgvOnlyVariationCase->getApplication()->shouldReceive('getApplicableAuthProperties')
+            ->never();
+        $lgvOnlyVariationCase->getLicence()->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn(['totAuthLgvVehicles']);
+        $lgvOnlyVariationCase->getLicence()->updateTotAuthLgvVehicles(4);
+
         return [
-            [$preLgvCase, $preLgvExpectedResult],
-            [$mixedFleetCase, $mixedFleetExpectedResult],
-            [$lgvOnlyCase, $lgvOnlyExpectedResult],
-        ];
+            [$preLgvLicenceCase, $preLgvExpectedResult],
+            [$mixedFleetLicenceCase, $mixedFleetExpectedResult],
+            [$lgvOnlyLicenceCase, $lgvOnlyExpectedResult],
+            [$preLgvApplicationCase, $preLgvExpectedResult],
+            [$mixedFleetApplicationCase, $mixedFleetExpectedResult],
+            [$lgvOnlyApplicationCase, $lgvOnlyExpectedResult],
+            [$preLgvVariationCase, $preLgvExpectedResult],
+            [$mixedFleetVariationCase, $mixedFleetExpectedResult],
+            [$lgvOnlyVariationCase, $lgvOnlyExpectedResult],
+         ];
     }
 
     protected function getCase()

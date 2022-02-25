@@ -555,11 +555,12 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
 
     protected function generateApplication($id, Licence $licence, $status, $isVariation = false)
     {
-        $application = new Application(
-            $licence,
-            $this->generateRefDataEntity($status),
-            $isVariation
-        );
+        $application = m::mock(Application::class)->makePartial();
+        $application->initCollections();
+        $application->setLicence($licence);
+        $application->setStatus($this->generateRefDataEntity($status));
+        $application->setIsVariation($isVariation);
+
         $application->setId($id);
         $application->setVersion(($id*2));
         $application->setReceivedDate(new \DateTime('2014-05-05'));
