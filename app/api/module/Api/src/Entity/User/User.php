@@ -52,8 +52,6 @@ class User extends AbstractUser implements OrganisationProviderInterface
 
     const ANON_USERNAME = 'anon';
 
-    const MIGRATED_USER_ID_MAX = 1000000;
-
     /**
      * List of all roles available by user type
      *
@@ -781,20 +779,6 @@ class User extends AbstractUser implements OrganisationProviderInterface
     public function canResetPassword(): bool
     {
         //disabled users can't reset
-        if ($this->isDisabled()) {
-            return false;
-        }
-
-        //logic duplicated from OLCS-15025 - catches migrated selfservice OLBS users
-        if (!$this->isInternal() && $this->id < self::MIGRATED_USER_ID_MAX) {
-            return true;
-        }
-
-        //unless a migrated OLBS user, they must have previously logged in
-        if ($this->getLastLoginAt() !== null) {
-            return true;
-        }
-
-        return false;
+        return !$this->isDisabled();
     }
 }
