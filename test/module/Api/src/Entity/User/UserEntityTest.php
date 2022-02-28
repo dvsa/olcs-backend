@@ -1313,82 +1313,20 @@ class UserEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpUserType
+     * @dataProvider dpCanResetPassword
      */
-    public function testCanResetPasswordDisabledUser(string $userType): void
+    public function testCanResetPassword(string $accountDisabled, bool $resetAllowed): void
     {
-        $user = new Entity('pid', $userType);
-        $user->setAccountDisabled('Y');
-        $this->assertFalse($user->canResetPassword());
+        $user = new Entity('pid', Entity::USER_TYPE_INTERNAL);
+        $user->setAccountDisabled($accountDisabled);
+        $this->assertEquals($resetAllowed, $user->canResetPassword());
     }
 
-    public function dpUserType(): array
+    public function dpCanResetPassword(): array
     {
         return [
-            [Entity::USER_TYPE_INTERNAL],
-            [Entity::USER_TYPE_LOCAL_AUTHORITY],
-            [Entity::USER_TYPE_OPERATOR],
-            [Entity::USER_TYPE_PARTNER],
-            [Entity::USER_TYPE_TRANSPORT_MANAGER],
-        ];
-    }
-
-    /**
-     * @dataProvider dpCanResetPasswordOlbsMigrated
-     */
-    public function testCanResetPasswordOlbsMigratedUser(string $userType, int $id, bool $canReset)
-    {
-        $user = new Entity('pid', $userType);
-        $user->setAccountDisabled('N');
-        $user->setId($id);
-        $this->assertEquals($canReset, $user->canResetPassword());
-    }
-
-    public function dpCanResetPasswordOlbsMigrated(): array
-    {
-        $highestAllowableId = Entity::MIGRATED_USER_ID_MAX - 1;
-
-        return [
-            [Entity::USER_TYPE_INTERNAL, Entity::MIGRATED_USER_ID_MAX, false],
-            [Entity::USER_TYPE_INTERNAL, $highestAllowableId, false],
-            [Entity::USER_TYPE_LOCAL_AUTHORITY, Entity::MIGRATED_USER_ID_MAX, false],
-            [Entity::USER_TYPE_LOCAL_AUTHORITY, $highestAllowableId, true],
-            [Entity::USER_TYPE_OPERATOR, Entity::MIGRATED_USER_ID_MAX, false],
-            [Entity::USER_TYPE_OPERATOR, $highestAllowableId, true],
-            [Entity::USER_TYPE_PARTNER, Entity::MIGRATED_USER_ID_MAX, false],
-            [Entity::USER_TYPE_PARTNER, $highestAllowableId, true],
-            [Entity::USER_TYPE_TRANSPORT_MANAGER, Entity::MIGRATED_USER_ID_MAX, false],
-            [Entity::USER_TYPE_TRANSPORT_MANAGER, $highestAllowableId, true],
-        ];
-    }
-
-    /**
-     * @dataProvider dpCanResetPasswordNeverLoggedIn
-     */
-    public function testCanResetPasswordNeverLoggedIn(string $userType, ?\DateTime $lastLogin, bool $canReset)
-    {
-        $user = new Entity('pid', $userType);
-        $user->setAccountDisabled('N');
-        $user->setId(Entity::MIGRATED_USER_ID_MAX);
-        $user->setLastLoginAt($lastLogin);
-        $this->assertEquals($canReset, $user->canResetPassword());
-    }
-
-    public function dpCanResetPasswordNeverLoggedIn(): array
-    {
-        $dateTime = new \DateTime();
-
-        return [
-            [Entity::USER_TYPE_INTERNAL, null, false],
-            [Entity::USER_TYPE_INTERNAL, $dateTime, true],
-            [Entity::USER_TYPE_LOCAL_AUTHORITY, null, false],
-            [Entity::USER_TYPE_LOCAL_AUTHORITY, $dateTime, true],
-            [Entity::USER_TYPE_OPERATOR, null, false],
-            [Entity::USER_TYPE_OPERATOR, $dateTime, true],
-            [Entity::USER_TYPE_PARTNER, null, false],
-            [Entity::USER_TYPE_PARTNER, $dateTime, true],
-            [Entity::USER_TYPE_TRANSPORT_MANAGER, null, false],
-            [Entity::USER_TYPE_TRANSPORT_MANAGER, $dateTime, true],
+            'account disabled, reset not allowed' => ['Y', false],
+            'account active, reset allowed' => ['N', true],
         ];
     }
 }
