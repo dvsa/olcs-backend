@@ -199,11 +199,28 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             $this->setLicenceType($licenceType);
             $this->setVehicleType($vehicleType);
             $this->setLgvDeclarationConfirmation($lgvDeclarationConfirmation);
+
+            // reset TotAuthVehicles
+            $this->resetTotAuthVehicles();
+
             return true;
         }
         return null;
     }
-    
+
+    /**
+     * Resets TotAuthVehicles based on Vehicle Type
+     *
+     * @return void
+     */
+    private function resetTotAuthVehicles()
+    {
+        if (!$this->canHaveLgv() && $this->totAuthLgvVehicles !== null) {
+            // can't have LGV, reset TotAuthLgvVehicles
+            $this->updateTotAuthLgvVehicles(null);
+        }
+    }
+
     /**
      * Is Type of Licence valid
      *
