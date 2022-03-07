@@ -29,7 +29,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
     /**
      * @dataProvider providerGetConfigFromData
      */
-    public function testGetConfigFromData($withAd, $adDocuments, $expectedAdvertisements, $needToMockTranslator, $isEligibleForLgv, $expectedTotalVehiclesLabel)
+    public function testGetConfigFromData($withAd, $adDocuments, $expectedAdvertisements, $needToMockTranslator, $totAuthLgvVehicles, $expectedTotalVehiclesLabel)
     {
         $data = [
             'id' => 321,
@@ -41,7 +41,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
             'permission' => 'N',
             'application' => [
                 'id' => 123,
-                'isEligibleForLgv' => $isEligibleForLgv,
+                'totAuthLgvVehicles' => $totAuthLgvVehicles,
             ],
             'operatingCentre' => [
                 'adDocuments' => $adDocuments,
@@ -144,7 +144,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                     ]
                 ],
                 true,
-                'isEligibleForLgv' => false,
+                'totAuthLgvVehicles' => null,
                 'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles',
             ],
             [
@@ -157,7 +157,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                     ]
                 ],
                 true,
-                'isEligibleForLgv' => true,
+                'totAuthLgvVehicles' => 5,
                 'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles-hgv',
             ],
             [
@@ -170,7 +170,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                     ]
                 ],
                 true,
-                'isEligibleForLgv' => false,
+                'totAuthLgvVehicles' => null,
                 'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles',
             ],
             [
@@ -217,7 +217,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                     ]
                 ],
                 true,
-                'isEligibleForLgv' => false,
+                'totAuthLgvVehicles' => null,
                 'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles',
             ],
             [
@@ -243,7 +243,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
                     ]
                 ],
                 true,
-                'isEligibleForLgv' => false,
+                'totAuthLgvVehicles' => null,
                 'expectedTotalVehiclesLabel' => 'review-operating-centre-total-vehicles',
             ]
         ];

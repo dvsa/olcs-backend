@@ -24,22 +24,28 @@ class OperatingCentresReviewService extends AbstractReviewService
      */
     public function getConfigFromData(ContinuationDetail $continuationDetail)
     {
-        $locs = $continuationDetail->getLicence()->getOperatingCentres();
-        $isGoods =
-            $continuationDetail->getLicence()->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
+        $licence = $continuationDetail->getLicence();
+
+        $locs = $licence->getOperatingCentres();
+        $canHaveTrailers = $licence->canHaveTrailer();
+
+        $vehiclesColumnSuffix = 'vehicles';
+        if ($licence->isVehicleTypeMixedWithLgv()) {
+            $vehiclesColumnSuffix = 'heavy-goods-vehicles';
+        }
 
         $header = [
             [
                 ['value' => 'continuations.oc-section.table.name', 'header' => true],
-                ['value' => 'continuations.oc-section.table.vehicles', 'header' => true],
+                ['value' => 'continuations.oc-section.table.' . $vehiclesColumnSuffix, 'header' => true],
             ]
         ];
-        if ($isGoods) {
+        if ($canHaveTrailers) {
             $header[0][] = ['value' => 'continuations.oc-section.table.trailers', 'header' => true];
         }
 
         $config = [];
-        /** @var LicenceOperatingCentre $lv */
+        /** @var LicenceOperatingCentre $loc */
         foreach ($locs as $loc) {
             /** @var OperatingCentre $oc */
             $oc = $loc->getOperatingCentre();
@@ -48,11 +54,10 @@ class OperatingCentresReviewService extends AbstractReviewService
                 ['value' => implode(', ', [$address->getAddressLine1(), $address->getTown()])],
                 ['value' => $loc->getNoOfVehiclesRequired()]
             ];
-            if ($isGoods) {
+            if ($canHaveTrailers) {
                 $row[] = ['value' => $loc->getNoOfTrailersRequired()];
             }
             $config[] = $row;
-
         }
         usort(
             $config,
@@ -75,16 +80,38 @@ class OperatingCentresReviewService extends AbstractReviewService
     {
         $licence = $continuationDetail->getLicence();
 
-        $summary = [
-            [
-                ['value' => 'continuations.oc-section.table.vehicles', 'header' => true],
-                ['value' => $licence->getTotAuthVehicles()]
+        $mappings = [
+            'totAuthVehicles' => [
+                'suffix' => 'vehicles',
+                'value' => $licence->getTotAuthVehicles()
             ],
-            [
-                ['value' => 'continuations.oc-section.table.trailers', 'header' => true],
-                ['value' => $licence->getTotAuthTrailers()]
-            ]
+            'totAuthHgvVehicles' => [
+                'suffix' => 'heavy-goods-vehicles',
+                'value' => $licence->getTotAuthHgvVehicles()
+            ],
+            'totAuthLgvVehicles' => [
+                'suffix' => 'light-goods-vehicles',
+                'value' => $licence->getTotAuthLgvVehicles()
+            ],
+            'totAuthTrailers' => [
+                'suffix' => 'trailers',
+                'value' => $licence->getTotAuthTrailers()
+            ],
         ];
+
+        $applicableAuthProperties = $licence->getApplicableAuthProperties();
+        $summary = [];
+
+        foreach ($applicableAuthProperties as $propertyName) {
+            $mapping = $mappings[$propertyName];
+            $suffix = $mapping['suffix'];
+            $value = $mapping['value'];
+
+            $summary[] = [
+                ['value' => 'continuations.oc-section.table.' . $suffix, 'header' => true],
+                ['value' => $value]
+            ];
+        }
 
         return $summary;
     }

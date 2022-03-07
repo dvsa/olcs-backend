@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\AbstractUpdateInterim as Cmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -32,9 +33,10 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 abstract class AbstractUpdateInterim extends AbstractCommandHandler implements TransactionedInterface
 {
     const ERR_REQUIRED = 'Value is required and can\'t be empty';
+    const ERR_VALUE_BELOW_ONE = 'A value greater than 0 must be entered';
     const ERR_VEHICLE_AUTHORITY_EXCEEDED = "The interim vehicle authority cannot exceed the total vehicle authority";
-    const ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Heavy Goods Vehicle Authority cannot exceed the total Heavy Goods Vehicle Authority';
-    const ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Light Goods Vehicle Authority cannot exceed the total Light Goods Vehicle Authority';
+    const ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Heavy goods vehicle authority cannot exceed the total Heavy goods vehicle authority';
+    const ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Light goods vehicle authority cannot exceed the total Light goods vehicle authority';
     const ERR_TRAILER_AUTHORITY_EXCEEDED = "The interim trailer authority cannot exceed the total trailer authority";
 
     const ERR_INTERIMSTARTDATE_EMPTY = "The interim start date is required";
@@ -44,7 +46,7 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
 
     protected $extraRepos = ['GoodsDisc', 'Fee', 'LicenceVehicle'];
 
-    protected $allowZeroAuthHgvVehicles = false;
+    protected $allowZeroAuthVehicles = false;
 
     /**
      * Handle command
@@ -163,13 +165,18 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
                 null !== $command->getStartDate() ? new DateTime($command->getStartDate()) : null
             );
             $application->setInterimEnd(null !== $command->getEndDate() ? new DateTime($command->getEndDate()) : null);
-            $application->updateInterimAuthHgvVehicles((int)$command->getAuthHgvVehicles());
+
+            if ($command->getAuthHgvVehicles() !== null) {
+                $application->updateInterimAuthHgvVehicles((int)$command->getAuthHgvVehicles());
+            }
 
             if ($command->getAuthLgvVehicles() !== null) {
                 $application->updateInterimAuthLgvVehicles((int)$command->getAuthLgvVehicles());
             }
 
-            $application->setInterimAuthTrailers((int)$command->getAuthTrailers());
+            if ($command->getAuthTrailers() !== null) {
+                $application->setInterimAuthTrailers((int)$command->getAuthTrailers());
+            }
 
             if ($status !== null) {
                 $application->setInterimStatus($status);
@@ -313,26 +320,56 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
 
         $authHgvVehicles = $command->getAuthHgvVehicles();
         $authLgvVehicles = $command->getAuthLgvVehicles();
+        $authTrailers = $command->getAuthTrailers();
 
-        if (!$this->allowZeroAuthHgvVehicles && empty($authHgvVehicles)) {
-            $messages['authHgvVehicles'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
-        }
+        switch ((string)$application->getVehicleType()) {
+            case RefData::APP_VEHICLE_TYPE_LGV:
+                if (!$this->allowZeroAuthVehicles && empty($authLgvVehicles)) {
+                    $error = ($authLgvVehicles === '0') ? self::ERR_VALUE_BELOW_ONE : self::ERR_REQUIRED;
+                    $messages['authLgvVehicles'][$error] = $error;
+                } elseif ((int)$application->getTotAuthLgvVehicles() < (int)$authLgvVehicles) {
+                    $messages['authLgvVehicles'][self::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED] = self::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED;
+                }
+                break;
+            case RefData::APP_VEHICLE_TYPE_HGV:
+            case RefData::APP_VEHICLE_TYPE_PSV:
+                if (!$this->allowZeroAuthVehicles && empty($authHgvVehicles)) {
+                    $error = ($authHgvVehicles === '0') ? self::ERR_VALUE_BELOW_ONE : self::ERR_REQUIRED;
+                    $messages['authHgvVehicles'][$error] = $error;
+                } elseif ((int)$application->getTotAuthHgvVehicles() < (int)$authHgvVehicles) {
+                    $messages['authHgvVehicles'][self::ERR_VEHICLE_AUTHORITY_EXCEEDED] = self::ERR_VEHICLE_AUTHORITY_EXCEEDED;
+                }
+                if ($authTrailers === null) {
+                    $messages['authTrailers'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
+                } elseif ((int)$application->getTotAuthTrailers() < (int)$authTrailers) {
+                    $messages['authTrailers'][self::ERR_TRAILER_AUTHORITY_EXCEEDED] = self::ERR_TRAILER_AUTHORITY_EXCEEDED;
+                }
+                break;
+            case RefData::APP_VEHICLE_TYPE_MIXED:
+            default:
+                $authVehicles = (int)$authHgvVehicles + (int)$authLgvVehicles;
 
-        if ((int)$application->getTotAuthHgvVehicles() < (int)$authHgvVehicles) {
-            $error = $application->isEligibleForLgv() ? self::ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED : self::ERR_VEHICLE_AUTHORITY_EXCEEDED;
-            $messages['authHgvVehicles'][$error] = $error;
-        }
+                if (!$this->allowZeroAuthVehicles && empty($authVehicles)) {
+                    $hgvError = ($authHgvVehicles === '0') ? self::ERR_VALUE_BELOW_ONE : self::ERR_REQUIRED;
+                    $messages['authHgvVehicles'][$hgvError] = $hgvError;
 
-        if ((int)$application->getTotAuthLgvVehicles() < (int)$authLgvVehicles) {
-            $messages['authLgvVehicles'][self::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED] = self::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED;
-        }
-
-        if ($command->getAuthTrailers() === null) {
-            $messages['authTrailers'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
-        }
-
-        if ($application->getTotAuthTrailers() < $command->getAuthTrailers()) {
-            $messages['authTrailers'][self::ERR_TRAILER_AUTHORITY_EXCEEDED] = self::ERR_TRAILER_AUTHORITY_EXCEEDED;
+                    if ($application->getTotAuthLgvVehicles() !== null) {
+                        $lgvError = ($authLgvVehicles === '0') ? self::ERR_VALUE_BELOW_ONE : self::ERR_REQUIRED;
+                        $messages['authLgvVehicles'][$lgvError] = $lgvError;
+                    }
+                }
+                if ((int)$application->getTotAuthHgvVehicles() < (int)$authHgvVehicles) {
+                    $messages['authHgvVehicles'][self::ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED] = self::ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED;
+                }
+                if ((int)$application->getTotAuthLgvVehicles() < (int)$authLgvVehicles) {
+                    $messages['authLgvVehicles'][self::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED] = self::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED;
+                }
+                if ($authTrailers === null) {
+                    $messages['authTrailers'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
+                } elseif ((int)$application->getTotAuthTrailers() < (int)$authTrailers) {
+                    $messages['authTrailers'][self::ERR_TRAILER_AUTHORITY_EXCEEDED] = self::ERR_TRAILER_AUTHORITY_EXCEEDED;
+                }
+                break;
         }
 
         if ($command->getStatus() === ApplicationEntity::INTERIM_STATUS_GRANTED) {

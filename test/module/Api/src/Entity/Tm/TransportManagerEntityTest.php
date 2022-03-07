@@ -304,6 +304,89 @@ class TransportManagerEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpGetLgvAcquiredRightsQualificationReturnsNull
+     */
+    public function testGetLgvAcquiredRightsQualificationReturnsNull(array $qualificationTypes)
+    {
+        $entity = new Entity();
+
+        foreach ($qualificationTypes as $qualificationType) {
+            $qualification = new TmQualification();
+            $qualification->setQualificationType($this->getRefData($qualificationType));
+            $entity->addQualifications($qualification);
+        }
+
+        $this->assertNull($entity->getLgvAcquiredRightsQualification());
+    }
+
+    public function dpGetLgvAcquiredRightsQualificationReturnsNull()
+    {
+        return [
+            [[]],
+            [[TmQualification::QUALIFICATION_TYPE_NIAR]],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetLgvAcquiredRightsQualificationReturnsTmQualification
+     */
+    public function testGetLgvAcquiredRightsQualificationReturnsTmQualification($expected, array $qualificationTypes)
+    {
+        $entity = new Entity();
+
+        foreach ($qualificationTypes as $qualificationType) {
+            $qualification = new TmQualification();
+            $qualification->setQualificationType($this->getRefData($qualificationType));
+            $entity->addQualifications($qualification);
+        }
+
+        $lgvAcquiredRightsQualification = $entity->getLgvAcquiredRightsQualification();
+
+        $this->assertInstanceOf(TmQualification::class, $lgvAcquiredRightsQualification);
+        $this->assertEquals($expected, $lgvAcquiredRightsQualification->getQualificationType()->getId());
+    }
+
+    public function dpGetLgvAcquiredRightsQualificationReturnsTmQualification()
+    {
+        return [
+            [
+                TmQualification::QUALIFICATION_TYPE_LGVAR,
+                [TmQualification::QUALIFICATION_TYPE_NIAR, TmQualification::QUALIFICATION_TYPE_LGVAR]
+            ],
+            [
+                TmQualification::QUALIFICATION_TYPE_NILGVAR,
+                [TmQualification::QUALIFICATION_TYPE_NIAR, TmQualification::QUALIFICATION_TYPE_NILGVAR]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpHasLgvAcquiredRightsQualification
+     */
+    public function testHasLgvAcquiredRightsQualification($expected, array $qualificationTypes)
+    {
+        $entity = new Entity();
+
+        foreach ($qualificationTypes as $qualificationType) {
+            $qualification = new TmQualification();
+            $qualification->setQualificationType($this->getRefData($qualificationType));
+            $entity->addQualifications($qualification);
+        }
+
+        $this->assertSame($expected, $entity->hasLgvAcquiredRightsQualification());
+    }
+
+    public function dpHasLgvAcquiredRightsQualification()
+    {
+        return [
+            [false, []],
+            [false, [TmQualification::QUALIFICATION_TYPE_NIAR]],
+            [true, [TmQualification::QUALIFICATION_TYPE_NIAR, TmQualification::QUALIFICATION_TYPE_LGVAR]],
+            [true, [TmQualification::QUALIFICATION_TYPE_NIAR, TmQualification::QUALIFICATION_TYPE_NILGVAR]],
+        ];
+    }
+
+    /**
      * @dataProvider dpNiFlag
      */
     public function testIsSiQualificationRequiredNotSi($niFlag)

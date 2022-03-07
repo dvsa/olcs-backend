@@ -223,6 +223,83 @@ class ConditionUndertakingTest extends RepositoryTestCase
         $this->assertEquals('results', $this->sut->fetchSmallVehilceUndertakings($licenceId));
     }
 
+    /**
+     * @dataProvider dpHasLightGoodsVehicleUndertakings
+     */
+    public function testHasLightGoodsVehicleUndertakings($resultCount, $expected)
+    {
+        $licenceId = 42;
+
+        $qb = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('getRepository->createQueryBuilder')
+            ->with('m')
+            ->once()
+            ->andReturn($qb);
+
+        $qb->shouldReceive('select')
+            ->with('count(m.id)')
+            ->once()
+            ->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')
+           ->with('m.licence', ':licence')
+           ->once()
+           ->andReturn('licexpr');
+        $qb->shouldReceive('andWhere')
+           ->with('licexpr')
+           ->once()
+           ->andReturnSelf();
+        $qb->shouldReceive('setParameter')
+           ->with('licence', $licenceId)
+           ->once()
+           ->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')
+           ->with('m.conditionType', ':conditionType')
+           ->once()
+           ->andReturn('condexpr');
+        $qb->shouldReceive('andWhere')
+           ->with('condexpr')
+           ->once()
+           ->andReturnSelf();
+        $qb->shouldReceive('setParameter')
+           ->with('conditionType', ConditionUndertakingEntity::TYPE_UNDERTAKING)
+           ->once()
+           ->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')
+           ->with('m.notes', ':note')
+           ->once()
+           ->andReturn('eqexpr');
+        $qb->shouldReceive('andWhere')
+           ->with('eqexpr')
+           ->once()
+           ->andReturnSelf();
+        $qb->shouldReceive('setParameter')
+           ->with('note', ConditionUndertakingEntity::LIGHT_GOODS_VEHICLE_UNDERTAKINGS)
+           ->once()
+           ->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getSingleScalarResult')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($resultCount);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->hasLightGoodsVehicleUndertakings($licenceId)
+        );
+    }
+
+    public function dpHasLightGoodsVehicleUndertakings()
+    {
+        return [
+            [0, false],
+            [1, true],
+            [2, true],
+        ];
+    }
+
     public function testDeleteFromVariations()
     {
         $ids = [9001, 9002, 9003];

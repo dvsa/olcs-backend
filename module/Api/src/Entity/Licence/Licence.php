@@ -62,6 +62,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     use TotAuthVehiclesTrait;
 
     const ERROR_CANT_BE_SR = 'LIC-TOL-1';
+    const ERROR_CANT_BE_SI = 'LIC-TOL-2';
     const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
     const ERROR_SAFETY_REQUIRES_TACHO_NAME = 'LIC-SAFE-TACH-1';
 
@@ -134,6 +135,16 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV
             && $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED
         );
+    }
+
+    /**
+     * Whether this licence is permitted to become a goods standard international licence by means of a variation
+     *
+     * @return bool
+     */
+    public function canBecomeStandardInternational()
+    {
+        return (string)$this->getGoodsOrPsv() == self::LICENCE_CATEGORY_PSV;
     }
 
     /**
@@ -361,7 +372,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         return [
             'niFlag' => $this->getNiFlag(),
-            'isEligibleForLgv' => $this->isEligibleForLgv(),
         ];
     }
 
@@ -744,19 +754,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
-     * Is this licence eligible for LGV
-     *
-     * @return bool
-     */
-    public function isEligibleForLgv(): bool
-    {
-        // temporarily hardcoded to false to avoid functional changes when merged to master 
-        return false;
-
-        return $this->isGoods() && $this->isStandardInternational();
-    }
-
-    /**
      * Helper method to get the first trading name from a licence
      * (Sorts trading names by createdOn date then alphabetically)
      *
@@ -884,6 +881,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
 
             if ($appCompletion->variationSectionUpdated('typeOfLicence')) {
                 $this->setLicenceType($application->getLicenceType());
+                $this->setVehicleType($application->getVehicleType());
+                $this->setLgvDeclarationConfirmation($application->getLgvDeclarationConfirmation());
             }
 
             if ($appCompletion->variationSectionUpdated('operatingCentres')) {
@@ -898,6 +897,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
 
         //application isn't a variation, we don't need to do conditional checks
         $this->setLicenceType($application->getLicenceType());
+        $this->setVehicleType($application->getVehicleType());
+        $this->setLgvDeclarationConfirmation($application->getLgvDeclarationConfirmation());
         $this->setTotAuthTrailers($application->getTotAuthTrailers());
         $this->setTotAuthVehicles($application->getTotAuthVehicles());
         $this->setTotAuthHgvVehicles($application->getTotAuthHgvVehicles());
@@ -1089,16 +1090,20 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function getAuthorisations()
     {
+        $authProperties = $this->getApplicableAuthProperties();
+
         $rows = [];
 
-        if ($this->isEligibleForLgv()) {
+        if (in_array('totAuthHgvVehicles', $authProperties)) {
             $rows[self::AUTHORISATION_HGV_COUNT] = $this->getTotAuthHgvVehiclesZeroCoalesced();
+        }
+        if (in_array('totAuthLgvVehicles', $authProperties)) {
             $rows[self::AUTHORISATION_LGV_COUNT] = $this->getTotAuthLgvVehiclesZeroCoalesced();
-        } else {
+        }
+        if (in_array('totAuthVehicles', $authProperties)) {
             $rows[self::AUTHORISATION_VEHICLE_COUNT] = $this->getTotAuthVehicles() ?? 0;
         }
-
-        if ($this->isGoods()) {
+        if (in_array('totAuthTrailers', $authProperties)) {
             $rows[self::AUTHORISATION_TRAILER_COUNT] = $this->getTotAuthTrailers() ?? 0;
         }
 

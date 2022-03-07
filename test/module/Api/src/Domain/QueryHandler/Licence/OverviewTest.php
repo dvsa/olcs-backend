@@ -45,6 +45,10 @@ class OverviewTest extends QueryHandlerTestCase
     {
         $licenceId = 7;
         $organisationId = 1;
+        $applicableAuthProperties = [
+            'totAuthVehicles',
+            'totAuthTrailers',
+        ];
 
         $query = Qry::create(['id' => $licenceId]);
 
@@ -80,6 +84,10 @@ class OverviewTest extends QueryHandlerTestCase
             ->shouldReceive('getFirstApplicationId')
             ->andReturn(1)
             ->once()
+            ->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($applicableAuthProperties)
             ->getMock();
 
         $this->repoMap['Licence']
@@ -141,7 +149,8 @@ class OverviewTest extends QueryHandlerTestCase
                 'busCount' => '4',
                 'organisationLicenceCount' => 3,
                 'numberOfVehicles' => 2,
-                'firstApplicationId' => 1
+                'firstApplicationId' => 1,
+                'applicableAuthProperties' => $applicableAuthProperties,
             ],
             $result->serialize()
         );

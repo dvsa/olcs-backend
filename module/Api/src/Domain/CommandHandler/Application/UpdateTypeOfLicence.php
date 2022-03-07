@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\DerivedTypeOfLicenceParamsTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -16,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as ResetApplicationCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber as GenerateLicenceNumberCommand;
@@ -29,6 +31,8 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\CancelLicenceFees;
  */
 final class UpdateTypeOfLicence extends AbstractCommandHandler implements TransactionedInterface
 {
+    use DerivedTypeOfLicenceParamsTrait;
+
     protected $repoServiceName = 'Application';
 
     public function handleCommand(CommandInterface $command)
@@ -52,8 +56,10 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
 
         $application->updateTypeOfLicence(
             $command->getNiFlag(),
-            $this->getOperatorTypeFromCommand($command),
-            $this->getRepo()->getRefdataReference($command->getLicenceType())
+            $this->getDerivedOperatorType($command),
+            $this->getRepo()->getRefdataReference($command->getLicenceType()),
+            $this->getDerivedVehicleType($command),
+            $command->getLgvDeclarationConfirmation() ?? 0
         );
 
         $this->getRepo()->save($application);
@@ -71,18 +77,13 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
         $sideEffects = [];
 
         if ($this->updatingForTheFirstTime($application)) {
-
             $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
             $sideEffects[] = $this->createGenerateLicenceNumberCommand($application);
-
-        } elseif (
-            $this->licenceTypeWillChange($application, $command)
+        } elseif ($this->licenceTypeWillChange($application, $command)
             && $this->applicationFeeNotPaid($application)
         ) {
-
             $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
             $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
-
         }
 
         $sideEffects[] = $this->createUpdateApplicationCompletionCommand($application);
@@ -101,7 +102,8 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     {
         return $application->getNiFlag() !== $command->getNiFlag()
             || $application->getLicenceType() !== $this->getRepo()->getRefdataReference($command->getLicenceType())
-            || $application->getGoodsOrPsv() !== $this->getOperatorTypeFromCommand($command);
+            || $application->getGoodsOrPsv() !== $this->getDerivedOperatorType($command)
+            || $application->getVehicleType() !== $this->getRepo()->getRefdataReference($command->getVehicleType());
     }
 
     private function createCreateApplicationFeeCommand(Application $application)
@@ -128,7 +130,11 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
 
     private function createResetApplicationCommand(Cmd $command)
     {
-        return ResetApplicationCommand::create($command->getArrayCopy());
+        $params = $command->getArrayCopy();
+        $params['operatorType'] = $this->getDerivedOperatorType($command)->getId();
+        $params['vehicleType'] = $this->getDerivedVehicleType($command)->getId();
+
+        return ResetApplicationCommand::create($params);
     }
 
     /**
@@ -143,6 +149,8 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
         return !$this->updatingForTheFirstTime($application) && (
             $this->typeOfLicenceWillChange($application, $command)
             || $this->changingToOrFromSr($application, $command)
+            || $this->changingBetweenMixedAndLgv($application, $command)
+            || $this->changingBetweenGoodsStandardInternationalAndOther($application, $command)
         );
     }
 
@@ -160,6 +168,67 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
 
         return $this->licenceTypeWillChange($application, $command)
             && ($application->getLicenceType() === $sr || $newLicenceType === $sr);
+    }
+
+    /**
+     * Whether we are changing between mixed and lgv vehicle type
+     *
+     * @param Application $application
+     * @param Cmd $command
+     *
+     * @return boolean
+     */
+    private function changingBetweenMixedAndLgv(Application $application, Cmd $command)
+    {
+        $commandVehicleType = $command->getVehicleType();
+        $applicationVehicleType = (string)$application->getVehicleType();
+
+        if ($commandVehicleType == RefData::APP_VEHICLE_TYPE_LGV &&
+            $applicationVehicleType == RefData::APP_VEHICLE_TYPE_MIXED
+        ) {
+            return true;
+        }
+
+        if ($commandVehicleType == RefData::APP_VEHICLE_TYPE_MIXED &&
+            $applicationVehicleType == RefData::APP_VEHICLE_TYPE_LGV
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether we are changing between goods standard international and other licence type
+     *
+     * @param Application $application
+     * @param Cmd $command
+     *
+     * @return boolean
+     */
+    private function changingBetweenGoodsStandardInternationalAndOther(Application $application, Cmd $command)
+    {
+        $goodsStandardInternationalVehicleTypes = [
+            RefData::APP_VEHICLE_TYPE_LGV,
+            RefData::APP_VEHICLE_TYPE_MIXED,
+        ];
+
+        $commandVehicleType = $command->getVehicleType();
+        $applicationVehicleType = (string)$application->getVehicleType();
+
+        if (in_array($commandVehicleType, $goodsStandardInternationalVehicleTypes) &&
+            !in_array($applicationVehicleType, $goodsStandardInternationalVehicleTypes)
+        ) {
+            return true;
+        }
+
+        if (in_array($applicationVehicleType, $goodsStandardInternationalVehicleTypes) &&
+            !in_array($commandVehicleType, $goodsStandardInternationalVehicleTypes)
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -186,7 +255,7 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     private function typeOfLicenceWillChange(Application $application, Cmd $command)
     {
         return $application->getNiFlag() !== $command->getNiFlag()
-            || $application->getGoodsOrPsv() !== $this->getOperatorTypeFromCommand($command);
+            || $application->getGoodsOrPsv() !== $this->getDerivedOperatorType($command);
     }
 
     /**
@@ -216,14 +285,5 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
         }
 
         return true;
-    }
-
-    private function getOperatorTypeFromCommand(Cmd $command)
-    {
-        if ($command->getNiFlag() !== 'Y') {
-            return $this->getRepo()->getRefdataReference($command->getOperatorType());
-        }
-
-        return $this->getRepo()->getRefdataReference(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
     }
 }

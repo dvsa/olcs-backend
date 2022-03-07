@@ -21,11 +21,21 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommand
 
     protected $operatingCentre;
 
+    protected $postcode;
+
     /**
      * @return mixed
      */
     public function getOperatingCentre()
     {
         return $this->operatingCentre;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
     }
 }

@@ -49,6 +49,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->refData = [
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            LicenceEntity::LICENCE_TYPE_RESTRICTED,
             LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
             LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
             LicenceEntity::LICENCE_CATEGORY_PSV
@@ -149,11 +150,42 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
+    public function testHandleCommandWithSiChangeWithoutPermission()
+    {
+        $this->expectException(ValidationException::class);
+
+        $data = [
+            'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            'version' => 1
+        ];
+        $command = Cmd::create($data);
+
+        /** @var LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence)
+            ->andReturn(true);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application);
+
+        $this->sut->handleCommand($command);
+    }
+
     public function testHandleCommand()
     {
         $data = [
             'id' => 111,
-            'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            'licenceType' => LicenceEntity::LICENCE_TYPE_RESTRICTED,
             'version' => 1
         ];
         $command = Cmd::create($data);
@@ -222,7 +254,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertSame(
-            $this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL],
+            $this->refData[LicenceEntity::LICENCE_TYPE_RESTRICTED],
             $application->getLicenceType()
         );
     }

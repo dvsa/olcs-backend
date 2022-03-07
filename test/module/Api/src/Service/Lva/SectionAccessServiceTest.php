@@ -78,6 +78,10 @@ class SectionAccessServiceTest extends MockeryTestCase
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
 
+        /** @var RefData $vehicleType */
+        $vehicleType = m::mock(RefData::class)->makePartial();
+        $vehicleType->setId(RefData::APP_VEHICLE_TYPE_HGV);
+
         /** @var Licence|m\MockInterface $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->shouldReceive('hasApprovedUnfulfilledConditions')
@@ -88,6 +92,7 @@ class SectionAccessServiceTest extends MockeryTestCase
         $application->setIsVariation(false);
         $application->setGoodsOrPsv($goodsOrPsv);
         $application->setLicenceType($licenceType);
+        $application->setVehicleType($vehicleType);
         $application->setLicence($licence);
 
         $this->authService->shouldReceive('isGranted')
@@ -99,6 +104,7 @@ class SectionAccessServiceTest extends MockeryTestCase
             'application',
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            RefData::APP_VEHICLE_TYPE_HGV,
             'noConditions'
         ];
 
@@ -131,6 +137,10 @@ class SectionAccessServiceTest extends MockeryTestCase
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
 
+        /** @var RefData $vehicleType */
+        $vehicleType = m::mock(RefData::class)->makePartial();
+        $vehicleType->setId(RefData::APP_VEHICLE_TYPE_HGV);
+
         /** @var Licence|m\MockInterface $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->shouldReceive('hasApprovedUnfulfilledConditions')
@@ -141,6 +151,7 @@ class SectionAccessServiceTest extends MockeryTestCase
         $application->setIsVariation(true);
         $application->setGoodsOrPsv($goodsOrPsv);
         $application->setLicenceType($licenceType);
+        $application->setVehicleType($vehicleType);
         $application->setLicence($licence);
         $application->setApplicationCompletion($appCompletion);
 
@@ -156,6 +167,7 @@ class SectionAccessServiceTest extends MockeryTestCase
             'variation',
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            RefData::APP_VEHICLE_TYPE_HGV,
             'hasConditions'
         ];
 

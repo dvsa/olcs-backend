@@ -85,7 +85,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
             if ($licence->isPsv()) {
                 $this->updateHelper->validatePsv($licence, $command);
             } else {
-                $this->updateHelper->validateTotalAuthTrailers($command, $totals);
+                $this->updateHelper->validateTotalAuthTrailers($licence, $command, $totals);
                 $this->updateHelper->validateTotalAuthLgvVehicles($licence, $command);
             }
 

@@ -32,6 +32,12 @@ class LicenceChecklistTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
+        $applicableAuthProperties = [
+            'totAuthHgvVehicles',
+            'totAuthLgvVehicles',
+            'totAuthTrailers',
+        ];
+
         $mockLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getConditionUndertakings')
             ->andReturn([])
@@ -45,6 +51,18 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             ->shouldReceive('getId')
             ->andReturn(1)
             ->once()
+            ->shouldReceive('canHaveTrailer')
+            ->andReturn(true)
+            ->once()
+            ->withNoArgs()
+            ->shouldReceive('getApplicableAuthProperties')
+            ->andReturn($applicableAuthProperties)
+            ->once()
+            ->withNoArgs()
+            ->shouldReceive('isVehicleTypeMixedWithLgv')
+            ->andReturn(true)
+            ->once()
+            ->withNoArgs()
             ->getMock();
 
         /** @var ContinuationDetailEntity $continuationDetail */
@@ -207,7 +225,10 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             ],
             'ocChanges' => 1,
             'tmChanges' => 2,
-            'hasConditionsUndertakings' => 1
+            'hasConditionsUndertakings' => 1,
+            'canHaveTrailers' => true,
+            'applicableAuthProperties' => $applicableAuthProperties,
+            'isMixedWithLgv' => true,
         ];
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
     }

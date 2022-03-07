@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\InterimOperatingCentres as Qry;
 
 /**
@@ -32,7 +33,7 @@ class InterimOperatingCentres extends DynamicBookmark
         }
 
         $isGoods = $this->data['goodsOrPsv']['id'] === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
-        $isEligibleForLgv = $this->data['isEligibleForLgv'] ?? false;
+        $isMixedWithLgv = ($this->data['vehicleType']['id'] === RefData::APP_VEHICLE_TYPE_MIXED) && ($this->data['totAuthLgvVehicles'] !== null);
         $rows = [];
 
         foreach ($this->data['operatingCentres'] as $childOc) {
@@ -48,7 +49,7 @@ class InterimOperatingCentres extends DynamicBookmark
 
             $rows[] = [
                 'TAB_OC_ADD' => Formatter\Address::format($oc['address']),
-                'TAB_VEH' => $isEligibleForLgv ? 'Heavy Goods Vehicles' : 'Vehicles',
+                'TAB_VEH' => $isMixedWithLgv ? 'Heavy goods vehicles' : 'Vehicles',
                 'TAB_OC_VEH' => $childOc['noOfVehiclesRequired'],
                 'TAB_TRAILER' => $isGoods ? 'Trailers' : '',
                 'TAB_OC_TRAILER' => $isGoods ? $childOc['noOfTrailersRequired'] : '',

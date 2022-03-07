@@ -355,38 +355,82 @@ class FinancialStandingHelperService implements FactoryInterface
         return $this->rates;
     }
 
-
     /**
-     * Gets the vehicle rates to display in the help section of the page. Note
-     * that currently we only display the rates according to the current
-     * application category (Goods or PSV) - if the operator holds another
-     * category of licence those figures will be used for the calculation but
-     * are not shown.
+     * Gets the vehicle rates to display in the help section of the page.
      *
-     * @param string $goodsOrPsv
      * @return array
      */
-    public function getRatesForView($goodsOrPsv)
+    public function getRatesForView()
     {
         return [
-            'standardFirst' => $this->getFirstVehicleRate(
-                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                $goodsOrPsv,
-                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
-            ),
-            'standardAdditional' => $this->getAdditionalVehicleRate(
-                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                $goodsOrPsv,
-                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
-            ),
-            'restrictedFirst' => $this->getFirstVehicleRate(
+            'restrictedHeavyGoodsFirst' => $this->getFirstVehicleRate(
                 Licence::LICENCE_TYPE_RESTRICTED,
-                $goodsOrPsv,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
             ),
-            'restrictedAdditional' => $this->getAdditionalVehicleRate(
+            'restrictedHeavyGoodsAdditional' => $this->getAdditionalVehicleRate(
                 Licence::LICENCE_TYPE_RESTRICTED,
-                $goodsOrPsv,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
+            ),
+            'restrictedPassengerServiceFirst' => $this->getFirstVehicleRate(
+                Licence::LICENCE_TYPE_RESTRICTED,
+                Licence::LICENCE_CATEGORY_PSV,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
+            ),
+            'restrictedPassengerServiceAdditional' => $this->getAdditionalVehicleRate(
+                Licence::LICENCE_TYPE_RESTRICTED,
+                Licence::LICENCE_CATEGORY_PSV,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
+            ),
+            'standardNationalHeavyGoodsFirst' => $this->getFirstVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
+            ),
+            'standardNationalHeavyGoodsAdditional' => $this->getAdditionalVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
+            ),
+            'standardNationalPassengerServiceFirst' => $this->getFirstVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Licence::LICENCE_CATEGORY_PSV,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
+            ),
+            'standardNationalPassengerServiceAdditional' => $this->getAdditionalVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                Licence::LICENCE_CATEGORY_PSV,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
+            ),
+            'standardInternationalHeavyGoodsFirst' => $this->getFirstVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                FinancialStandingRate::VEHICLE_TYPE_HGV
+            ),
+            'standardInternationalHeavyGoodsAdditional' => $this->getAdditionalVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                FinancialStandingRate::VEHICLE_TYPE_HGV
+            ),
+            'standardInternationalLightGoodsFirst' => $this->getFirstVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                FinancialStandingRate::VEHICLE_TYPE_LGV
+            ),
+            'standardInternationalLightGoodsAdditional' => $this->getAdditionalVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                FinancialStandingRate::VEHICLE_TYPE_LGV
+            ),
+            'standardInternationalPassengerServiceFirst' => $this->getFirstVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Licence::LICENCE_CATEGORY_PSV,
+                FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
+            ),
+            'standardInternationalPassengerServiceAdditional' => $this->getAdditionalVehicleRate(
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Licence::LICENCE_CATEGORY_PSV,
                 FinancialStandingRate::VEHICLE_TYPE_NOT_APPLICABLE
             ),
         ];

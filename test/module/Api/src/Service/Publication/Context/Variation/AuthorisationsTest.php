@@ -46,13 +46,21 @@ class AuthorisationsTest extends MockeryTestCase
         parent::setUp();
     }
 
-    public function testSetContextWhenAuthorisationIncreased()
-    {
+    /**
+     * @dataProvider dpSetContextWhenAuthorisationIncreasedOrChangedFromNullToNumeric
+     */
+    public function testSetContextWhenAuthorisationIncreasedOrChangedFromNullToNumeric(
+        $increased,
+        $changedFromNullToNumeric
+    ) {
         $totAuthLgvVehicles = 7;
 
         $this->application->shouldReceive('hasLgvAuthorisationIncreased')
             ->withNoArgs()
-            ->andReturnTrue();
+            ->andReturn($increased);
+        $this->application->shouldReceive('hasLgvAuthorisationChangedFromNullToNumeric')
+            ->withNoArgs()
+            ->andReturn($changedFromNullToNumeric);
         $this->application->shouldReceive('getTotAuthLgvVehicles')
             ->withNoArgs()
             ->andReturn($totAuthLgvVehicles);
@@ -66,9 +74,21 @@ class AuthorisationsTest extends MockeryTestCase
         );
     }
 
-    public function testDoNothingWhenAuthorisationNotIncreased()
+    public function dpSetContextWhenAuthorisationIncreasedOrChangedFromNullToNumeric()
+    {
+        return [
+            [true, false],
+            [false, true],
+            [true, true],
+        ];
+    }
+
+    public function testDoNothingWhenAuthorisationNotIncreasedAndNotChangedFromNullToNumeric()
     {
         $this->application->shouldReceive('hasLgvAuthorisationIncreased')
+            ->withNoArgs()
+            ->andReturnFalse();
+        $this->application->shouldReceive('hasLgvAuthorisationChangedFromNullToNumeric')
             ->withNoArgs()
             ->andReturnFalse();
 

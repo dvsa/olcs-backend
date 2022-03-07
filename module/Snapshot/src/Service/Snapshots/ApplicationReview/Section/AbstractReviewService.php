@@ -114,4 +114,17 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
         ];
         return $this->translateReplace(self::SIGNATURE, $additionalParts);
     }
+
+    /**
+     * Get the translation key to be used by this section of the snapshot
+     *
+     * @param array $reviewData
+     * @param string $section
+     *
+     * @return string
+     */
+    public function getHeaderTranslationKey(array $reviewData, $section)
+    {
+        return 'review-' . $section;
+    }
 }

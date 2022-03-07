@@ -171,7 +171,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
         $case->setConvictions($this->generateConvictions());
         $case->setConvictionNote('conv_note1');
 
-        $case->setSeriousInfringements($this->generateSeriousInfringements($case));
+        $case->setSeriousInfringements($this->generateSeriousInfringements());
         $case->setErruRequest($this->generateErruRequest());
         $case->setPenaltiesNote('pen-notes1');
 
@@ -563,6 +563,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
         $application->setVersion(($id*2));
         $application->setReceivedDate(new \DateTime('2014-05-05'));
         $application->setGoodsOrPsv($this->generateRefDataEntity('goods'));
+        $application->setVehicleType($this->generateRefDataEntity(RefData::APP_VEHICLE_TYPE_HGV));
         $application->setLicenceType($this->generateRefDataEntity('lic_type'));
 
         $application->setConditionUndertakings(
@@ -846,7 +847,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
         return $entity;
     }
 
-    protected function generateSeriousInfringements(CasesEntity $case)
+    protected function generateSeriousInfringements()
     {
         $sis = new ArrayCollection();
 

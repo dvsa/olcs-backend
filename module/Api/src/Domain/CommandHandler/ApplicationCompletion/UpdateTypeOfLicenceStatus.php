@@ -39,7 +39,9 @@ final class UpdateTypeOfLicenceStatus extends AbstractUpdateStatus
         return $application->isValidTol(
             $application->getNiFlag(),
             $application->getGoodsOrPsv(),
-            $application->getLicenceType()
+            $application->getLicenceType(),
+            $application->getVehicleType(),
+            $application->getLgvDeclarationConfirmation()
         );
     }
 }

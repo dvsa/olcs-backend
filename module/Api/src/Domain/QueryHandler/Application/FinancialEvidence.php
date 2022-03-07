@@ -52,7 +52,7 @@ class FinancialEvidence extends AbstractQueryHandler
         $financialEvidence['requiredFinance'] = $this->helper->getRequiredFinance($application);
         $financialEvidence = array_merge(
             $financialEvidence,
-            $this->helper->getRatesForView($application->getGoodsOrPsv()->getId())
+            $this->helper->getRatesForView()
         );
 
         return $this->result(

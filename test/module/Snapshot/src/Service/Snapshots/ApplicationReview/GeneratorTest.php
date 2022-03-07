@@ -90,6 +90,9 @@ class GeneratorTest extends MockeryTestCase
         $mockVehicles->shouldReceive('getConfigFromData')
             ->with($expectedData)
             ->andReturn(['bar' => 'foo']);
+        $mockVehicles->shouldReceive('getHeaderTranslationKey')
+            ->with($expectedData, 'vehicles')
+            ->andReturn('review-vehicles-from-service');
 
         $this->sm->setService('Review\VariationVehicles', $mockVehicles);
 
@@ -135,7 +138,7 @@ class GeneratorTest extends MockeryTestCase
                         'subTitle' => 'Foo ltd AB12345678/111',
                         'sections' => [
                             [
-                                'header' => 'review-vehicles',
+                                'header' => 'review-vehicles-from-service',
                                 'config' => ['bar' => 'foo']
                             ]
                         ]
@@ -175,11 +178,17 @@ class GeneratorTest extends MockeryTestCase
         $mockVehicles->shouldReceive('getConfigFromData')
             ->with($expectedData)
             ->andReturn(['bar' => 'foo']);
+        $mockVehicles->shouldReceive('getHeaderTranslationKey')
+            ->with($expectedData, 'vehicles')
+            ->andReturn('review-vehicles-from-service');
 
         $mockPeople = m::mock();
         $mockPeople->shouldReceive('getConfigFromData')
             ->with($expectedData)
             ->andReturn(['people' => 'foo']);
+        $mockPeople->shouldReceive('getHeaderTranslationKey')
+            ->with($expectedData, 'people')
+            ->andReturn('review-people-from-service');
 
         $this->sm->setService('Review\ApplicationVehicles', $mockVehicles);
         $this->sm->setService('Review\ApplicationPeople', $mockPeople);
@@ -221,11 +230,11 @@ class GeneratorTest extends MockeryTestCase
                         'subTitle' => 'Foo ltd AB12345678/111',
                         'sections' => [
                             [
-                                'header' => 'review-vehicles',
+                                'header' => 'review-vehicles-from-service',
                                 'config' => ['bar' => 'foo']
                             ],
                             [
-                                'header' => 'review-people',
+                                'header' => 'review-people-from-service',
                                 'config' => ['people' => 'foo']
                             ],
                             [
@@ -269,11 +278,17 @@ class GeneratorTest extends MockeryTestCase
         $mockVehicles->shouldReceive('getConfigFromData')
             ->with($expectedData)
             ->andReturn(['bar' => 'foo']);
+        $mockVehicles->shouldReceive('getHeaderTranslationKey')
+            ->with($expectedData, 'vehicles')
+            ->andReturn('review-vehicles-from-service');
 
         $mockUndertakings = m::mock();
         $mockUndertakings->shouldReceive('getConfigFromData')
             ->with($expectedData)
             ->andReturn(['undertakings' => 'foo']);
+        $mockUndertakings->shouldReceive('getHeaderTranslationKey')
+            ->with($expectedData, 'undertakings')
+            ->andReturn('review-undertakings-from-service');
 
         $this->sm->setService('Review\ApplicationVehicles', $mockVehicles);
         $this->sm->setService('Review\ApplicationUndertakings', $mockUndertakings);
@@ -316,11 +331,11 @@ class GeneratorTest extends MockeryTestCase
                         'subTitle' => 'Foo ltd AB12345678/111',
                         'sections' => [
                             [
-                                'header' => 'review-vehicles',
+                                'header' => 'review-vehicles-from-service',
                                 'config' => ['bar' => 'foo']
                             ],
                             [
-                                'header' => 'review-undertakings',
+                                'header' => 'review-undertakings-from-service',
                                 'config' => ['undertakings' => 'foo']
                             ],
                             [

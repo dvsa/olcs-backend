@@ -4,6 +4,9 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetDetails as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use ZfcRbac\Service\AuthorizationService;
@@ -37,7 +40,29 @@ class GetDetailsTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function dpHandleQuery()
+    {
+        $lgvArQualification = m::mock(TmQualification::class);
+        $lgvArQualification->shouldReceive('getSerialNo')
+            ->withNoArgs()
+            ->andReturn('ABC1234');
+
+        return [
+            'with LGV AR qualification' => [
+                'lgvArQualification' => $lgvArQualification,
+                'expectedLgvAcquiredRightsReferenceNumber' => 'ABC1234',
+            ],
+            'without LGV AR qualification' => [
+                'lgvArQualification' => null,
+                'expectedLgvAcquiredRightsReferenceNumber' => '',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpHandleQuery
+     */
+    public function testHandleQuery($lgvArQualification, $expectedLgvAcquiredRightsReferenceNumber)
     {
         $query = Query::create(['id' => 32]);
 
@@ -51,13 +76,19 @@ class GetDetailsTest extends QueryHandlerTestCase
             m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class),
             false
         );
-        $tm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+        $application->setId(53);
+
+        $tm = m::mock(TransportManager::class)->makePartial();
         $tm->setId(213);
+        $tm->shouldReceive('getLgvAcquiredRightsQualification')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($lgvArQualification);
 
         $tmaOl = new \Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence();
 
-        $tma = new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication();
-        $application->setId(53);
+        $tma = m::mock(TransportManagerApplication::class)->makePartial();
+        $tma->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $tma->setApplication($application);
         $tma->setTransportManager($tm);
         $tma->setOtherLicences([$tmaOl]);
@@ -81,11 +112,21 @@ class GetDetailsTest extends QueryHandlerTestCase
         // loadTransportManagerEmployements
         $this->repoMap['TmEmployment']->shouldReceive('fetchByTransportManager')->with(213)->once();
 
-        $this->repoMap['SystemParameter']->shouldReceive('getDisableGdsVerifySignatures')->once();
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableGdsVerifySignatures')
+            ->once()
+            ->andReturn('disable gds verify signatures value');
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
-        $this->sut->handleQuery($query);
+        $expected = [
+            'foo' => 'bar',
+            'isTmLoggedInUser' => true,
+            'disableSignatures' => 'disable gds verify signatures value',
+            'lgvAcquiredRightsReferenceNumber' => $expectedLgvAcquiredRightsReferenceNumber,
+        ];
+
+        $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
     }
 }

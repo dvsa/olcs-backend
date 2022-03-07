@@ -30,6 +30,7 @@ class UpdateOperatingCentreHelper implements FactoryInterface
     const ERR_OC_T_4 = 'ERR_OC_T_4'; // no-operating-centre
     const ERR_OC_EA_EMPTY = 'ERR_OC_EA_EMPTY';
     const ERR_OC_LGV_1 = 'ERR_OC_LGV_1'; // lgvs-not-supported-on-licence-type
+    const ERR_OC_LGV_2 = 'ERR_OC_LGV_2'; // no-lgvs
 
     /**
      * @var AuthorizationService
@@ -70,7 +71,7 @@ class UpdateOperatingCentreHelper implements FactoryInterface
         assert($command instanceof UpdateLicenceOperatingCentres || $command instanceof UpdateApplicationOperatingCentres);
         assert($entity instanceof Licence || $entity instanceof Application);
 
-        if ($totals['noOfOperatingCentres'] === 0) {
+        if ($entity->mustHaveOperatingCentre() && $totals['noOfOperatingCentres'] === 0) {
             $this->addMessage('totAuthHgvVehicles', self::ERR_OC_V_4);
         }
 
@@ -98,14 +99,23 @@ class UpdateOperatingCentreHelper implements FactoryInterface
         assert($command instanceof UpdateLicenceOperatingCentres || $command instanceof UpdateApplicationOperatingCentres);
         assert($entity instanceof Licence || $entity instanceof Application);
 
-        if ($command->getTotAuthLgvVehicles() && !$entity->isEligibleForLgv()) {
+        if ($command->getTotAuthLgvVehicles() && !$entity->canHaveLgv()) {
             $this->addMessage('totAuthLgvVehicles', UpdateOperatingCentreHelper::ERR_OC_LGV_1);
+        }
+
+        if ($entity->mustHaveLgv() && !$command->getTotAuthLgvVehicles()) {
+            $this->addMessage('totAuthLgvVehicles', UpdateOperatingCentreHelper::ERR_OC_LGV_2);
         }
     }
 
-    public function validateTotalAuthTrailers($command, $totals)
+    /**
+     * @param Licence|Application $entity
+     * @param UpdateLicenceOperatingCentres|UpdateApplicationOperatingCentres $command
+     * @param array $totals
+     */
+    public function validateTotalAuthTrailers($entity, $command, $totals)
     {
-        if ($totals['noOfOperatingCentres'] === 0) {
+        if ($entity->mustHaveOperatingCentre() && $totals['noOfOperatingCentres'] === 0) {
             $this->addMessage('totAuthTrailers', self::ERR_OC_T_4);
         }
 
