@@ -12,6 +12,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationUndertakingsReviewService;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Application Undertakings Review Service Test
@@ -41,11 +42,56 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         $mockTranslator->shouldReceive('translate')
-            ->andReturnUsing(
-                function ($string) {
-                    return $string . '-translated';
-                }
-            );
+            ->with('markup-application_undertakings_PSV356')
+            ->andReturn('PSV356-translated');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_PSV421')
+            ->andReturn('PSV421-translated [%s] [%s]');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_PSV421-Standard')
+            ->andReturn('PSV421-standard-translated');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_PSV421-declare')
+            ->andReturn('PSV421-declare-translated');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-auth-lgv')
+            ->andReturn('GV79-auth-lgv-translated');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-auth-other')
+            ->andReturn('GV79-auth-other-translated');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-NI-auth-other')
+            ->andReturn('GV79-NI-auth-other-translated');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79')
+            ->andReturn('GV79-translated [%s] [%s] [%s]');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-Standard')
+            ->andReturn('GV79-standard-translated');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-declare')
+            ->andReturn('GV79-declare-translated');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-NI')
+            ->andReturn('GV79-NI-translated [%s] [%s] [%s]');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-NI-Standard')
+            ->andReturn('GV79-NI-standard-translated');
+
+        $mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-NI-declare')
+            ->andReturn('GV79-NI-declare-translated');
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));
     }
@@ -53,106 +99,351 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
     public function providerGetConfigFromData()
     {
         return [
-            [
+            'psv, special restricted' => [
                 [
                     'isGoods' => false,
-                    'licenceType' => ['id' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED],
-                    'isInternal' => true,
-                    'licence' => [
-                        'organisation' => [
-                            'type' => [
-                                'id' => 'org_t_rc'
-                            ]
-                        ]
-                    ],
-                    'niFlag' => 'N'
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED
+                    ]
                 ],
                 [
-                    'markup' => 'markup-application_undertakings_PSV356-translated'
+                    'markup' => 'PSV356-translated',
                 ]
             ],
-            [
+            'psv, restricted, not internal' => [
                 [
                     'isGoods' => false,
-                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-                    'isInternal' => true,
-                    'licence' => [
-                        'organisation' => [
-                            'type' => [
-                                'id' => 'org_t_rc'
-                            ]
-                        ]
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_RESTRICTED
                     ],
-                    'niFlag' => 'N'
+                    'isInternal' => false,
                 ],
                 [
-                    'markup' => 'markup-application_undertakings_PSV421-translated'
+                    'markup' => 'PSV421-translated [] []',
                 ]
             ],
-            [
+            'psv, standard national, not internal' => [
                 [
-                    'isGoods' => true,
-                    'niFlag' => 'Y',
-                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-                    'isInternal' => true,
-                    'licence' => [
-                        'organisation' => [
-                            'type' => [
-                                'id' => 'org_t_rc'
-                            ]
-                        ]
+                    'isGoods' => false,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
                     ],
+                    'isInternal' => false,
                 ],
                 [
-                    'markup' => 'markup-application_undertakings_GV79-NI-translated'
+                    'markup' => 'PSV421-translated [PSV421-standard-translated] []',
                 ]
             ],
-            [
+            'psv, standard international, not internal' => [
                 [
-                    'isGoods' => true,
-                    'niFlag' => 'N',
-                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-                    'isInternal' => true,
-                    'licence' => [
-                        'organisation' => [
-                            'type' => [
-                                'id' => 'org_t_rc'
-                            ]
-                        ]
+                    'isGoods' => false,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
                     ],
+                    'isInternal' => false,
                 ],
                 [
-                    'markup' => 'markup-application_undertakings_GV79-translated'
+                    'markup' => 'PSV421-translated [PSV421-standard-translated] []',
                 ]
-            ]
+            ],
+            'psv, restricted, internal' => [
+                [
+                    'isGoods' => false,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_RESTRICTED
+                    ],
+                    'isInternal' => true,
+                ],
+                [
+                    'markup' => 'PSV421-translated [] [PSV421-declare-translated]',
+                ]
+            ],
+            'psv, standard national, internal' => [
+                [
+                    'isGoods' => false,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
+                    ],
+                    'isInternal' => true,
+                ],
+                [
+                    'markup' => 'PSV421-translated [PSV421-standard-translated] [PSV421-declare-translated]',
+                ]
+            ],
+            'psv, standard international, internal' => [
+                [
+                    'isGoods' => false,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    ],
+                    'isInternal' => true,
+                ],
+                [
+                    'markup' => 'PSV421-translated [PSV421-standard-translated] [PSV421-declare-translated]',
+                ]
+            ],
+            'goods, restricted, hgv, not internal, not ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_RESTRICTED
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
+                    'isInternal' => false,
+                    'niFlag' => false,
+                ],
+                [
+                    'markup' => 'GV79-translated [GV79-auth-other-translated] [] []',
+                ]
+            ],
+            'goods, standard national, hgv, not internal, not ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
+                    'isInternal' => false,
+                    'niFlag' => false,
+                ],
+                [
+                    'markup' => 'GV79-translated [GV79-auth-other-translated] [GV79-standard-translated] []',
+                ]
+            ],
+            'goods, standard international, mixed, not internal, not ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_MIXED
+                    ],
+                    'isInternal' => false,
+                    'niFlag' => false,
+                ],
+                [
+                    'markup' => 'GV79-translated [GV79-auth-other-translated] [GV79-standard-translated] []',
+                ]
+            ],
+            'goods, standard international, lgv, not internal, not ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_LGV
+                    ],
+                    'isInternal' => false,
+                    'niFlag' => false,
+                ],
+                [
+                    'markup' => 'GV79-translated [GV79-auth-lgv-translated] [GV79-standard-translated] []',
+                ]
+            ],
+            'goods, restricted, hgv, internal, not ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_RESTRICTED
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
+                    'isInternal' => true,
+                    'niFlag' => false,
+                ],
+                [
+                    'markup' => 'GV79-translated [GV79-auth-other-translated] [] [GV79-declare-translated]',
+                ]
+            ],
+            'goods, standard national, hgv, internal, not ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
+                    'isInternal' => true,
+                    'niFlag' => false,
+                ],
+                [
+                    'markup' => 'GV79-translated [GV79-auth-other-translated] [GV79-standard-translated] ' .
+                        '[GV79-declare-translated]',
+                ]
+            ],
+            'goods, standard international, mixed, internal, not ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_MIXED
+                    ],
+                    'isInternal' => true,
+                    'niFlag' => false,
+                ],
+                [
+                    'markup' => 'GV79-translated [GV79-auth-other-translated] [GV79-standard-translated] ' .
+                        '[GV79-declare-translated]',
+                ]
+            ],
+            'goods, standard international, lgv, internal, not ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_LGV
+                    ],
+                    'isInternal' => true,
+                    'niFlag' => false,
+                ],
+                [
+                    'markup' => 'GV79-translated [GV79-auth-lgv-translated] [GV79-standard-translated] ' .
+                        '[GV79-declare-translated]',
+                ]
+            ],
+            'goods, restricted, hgv, not internal, ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_RESTRICTED
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
+                    'isInternal' => false,
+                    'niFlag' => true,
+                ],
+                [
+                    'markup' => 'GV79-NI-translated [GV79-NI-auth-other-translated] [] []',
+                ]
+            ],
+            'goods, standard national, hgv, not internal, ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
+                    'isInternal' => false,
+                    'niFlag' => true,
+                ],
+                [
+                    'markup' => 'GV79-NI-translated [GV79-NI-auth-other-translated] [GV79-NI-standard-translated] []',
+                ]
+            ],
+            'goods, standard international, mixed, not internal, ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_MIXED
+                    ],
+                    'isInternal' => false,
+                    'niFlag' => true,
+                ],
+                [
+                    'markup' => 'GV79-NI-translated [GV79-NI-auth-other-translated] [GV79-NI-standard-translated] []',
+                ]
+            ],
+            'goods, standard international, lgv, not internal, ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_LGV
+                    ],
+                    'isInternal' => false,
+                    'niFlag' => true,
+                ],
+                [
+                    'markup' => 'GV79-NI-translated [GV79-auth-lgv-translated] [GV79-NI-standard-translated] []',
+                ]
+            ],
+            'goods, restricted, hgv, internal, ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_RESTRICTED
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
+                    'isInternal' => true,
+                    'niFlag' => true,
+                ],
+                [
+                    'markup' => 'GV79-NI-translated [GV79-NI-auth-other-translated] [] [GV79-NI-declare-translated]',
+                ]
+            ],
+            'goods, standard national, hgv, internal, ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
+                    'isInternal' => true,
+                    'niFlag' => true,
+                ],
+                [
+                    'markup' => 'GV79-NI-translated [GV79-NI-auth-other-translated] [GV79-NI-standard-translated] ' .
+                        '[GV79-NI-declare-translated]',
+                ]
+            ],
+            'goods, standard international, mixed, internal, ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_MIXED
+                    ],
+                    'isInternal' => true,
+                    'niFlag' => true,
+                ],
+                [
+                    'markup' => 'GV79-NI-translated [GV79-NI-auth-other-translated] [GV79-NI-standard-translated] ' .
+                        '[GV79-NI-declare-translated]',
+                ]
+            ],
+            'goods, standard international, lgv, internal, ni' => [
+                [
+                    'isGoods' => true,
+                    'licenceType' => [
+                        'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_LGV
+                    ],
+                    'isInternal' => true,
+                    'niFlag' => true,
+                ],
+                [
+                    'markup' => 'GV79-NI-translated [GV79-auth-lgv-translated] [GV79-NI-standard-translated] ' .
+                        '[GV79-NI-declare-translated]',
+                ]
+            ],
         ];
-    }
-
-    /**
-     * @dataProvider providerGetConfigFromData
-     *
-     * Use the same data set as "testGetConfigFromData" to test we get the same results
-     */
-    public function testGetMarkupForLicence($data, $expected)
-    {
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
-            ->andReturnUsing(
-                function ($string) {
-                    return $string . '-translated';
-                }
-            );
-
-        $mockLicence = m::mock(Licence::class);
-        $mockLicence->shouldReceive('getLicenceType->getId')->with()->once()->andReturn($data['licenceType']['id']);
-        $mockLicence->shouldReceive('getOrganisation->getType->getId')->with()->once()->andReturn(
-            $data['licence']['organisation']['type']['id']
-        );
-        $mockLicence->shouldReceive('isGoods')->with()->once()->andReturn($data['isGoods']);
-        $mockLicence->shouldReceive('getTrafficArea->getIsNi')->with()->once()->andReturn($data['niFlag'] === 'Y');
-
-        $this->assertEquals($expected['markup'], $this->sut->getMarkupForLicence($mockLicence, $data['isInternal']));
     }
 }

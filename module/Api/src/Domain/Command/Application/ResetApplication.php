@@ -22,6 +22,10 @@ final class ResetApplication extends AbstractCommand
 
     protected $licenceType;
 
+    protected $vehicleType;
+
+    protected $lgvDeclarationConfirmation;
+
     protected $niFlag;
 
     protected $confirm = false;
@@ -39,6 +43,16 @@ final class ResetApplication extends AbstractCommand
     public function getLicenceType()
     {
         return $this->licenceType;
+    }
+
+    public function getVehicleType()
+    {
+        return $this->vehicleType;
+    }
+
+    public function getLgvDeclarationConfirmation()
+    {
+        return $this->lgvDeclarationConfirmation;
     }
 
     public function getNiFlag()

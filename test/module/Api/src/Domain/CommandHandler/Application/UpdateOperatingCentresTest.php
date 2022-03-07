@@ -233,7 +233,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validateTotalAuthTrailers')
             ->once()
-            ->with($command, $expectedTotalsMatcher)
+            ->with($application, $command, $expectedTotalsMatcher)
             ->shouldReceive('validateTotalAuthHgvVehicles')
             ->once()
             ->with($application, $command, $expectedTotalsMatcher)
@@ -312,7 +312,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validateTotalAuthTrailers')
             ->once()
-            ->with($command, $expectedTotalsMatcher)
+            ->with($application, $command, $expectedTotalsMatcher)
             ->shouldReceive('validateTotalAuthHgvVehicles')
             ->once()
             ->with($application, $command, $expectedTotalsMatcher)
@@ -419,7 +419,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['UpdateOperatingCentreHelper']->shouldReceive('validateTotalAuthTrailers')
             ->once()
-            ->with($command, $expectedTotalsMatcher)
+            ->with($application, $command, $expectedTotalsMatcher)
             ->shouldReceive('validateTotalAuthHgvVehicles')
             ->once()
             ->with($application, $command, $expectedTotalsMatcher)
@@ -848,11 +848,10 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      */
     public function handleCommand_SetsTotalAuthLgvVehicles_ForGoodsVehicleOperatingCentre()
     {
-        $this->markTestIncomplete('Test temporarily disabled while isEligibleForLgv return value hardcoded to false');
-
         // Setup
         $this->setUpSut();
         $variation = ApplicationBuilder::variationForLicence(LicenceBuilder::aGoodsLicence()->ofTypeStandardInternational())
+            ->forMixedVehicleType()
             ->authorizedFor(static::ONE_HGV, static::ONE_LGV)
             ->withValidAuthorizations()
             ->build();
@@ -879,11 +878,10 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      */
     public function handleCommand_DoesNotThrowValidationException_WhenCommunityLicencesAreEqualToTheTotalNumberOfVehicles()
     {
-        $this->markTestIncomplete('Test temporarily disabled while isEligibleForLgv return value hardcoded to false');
-
         // Setup
         $this->setUpSut();
         $variation = ApplicationBuilder::variationForLicence(LicenceBuilder::aGoodsLicence()->ofTypeStandardInternational())
+            ->forMixedVehicleType()
             ->authorizedFor(static::ONE_HGV, static::TWO_LGVS)
             ->withValidAuthorizations()
             ->build();

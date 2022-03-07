@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\PrintLicence;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
@@ -38,7 +39,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testHandleCommand($command, $isGoods, $isSpecialRestricted, $niFlag, array $expect)
+    public function testHandleCommand($command, $isGoods, $vehicleType, $isSpecialRestricted, $niFlag, array $expect)
     {
         /** @var LicenceEntity | m\MockInterface $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
@@ -46,6 +47,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
         $licence->shouldReceive('isGoods')->andReturn($isGoods);
         $licence->shouldReceive('isSpecialRestricted')->andReturn($isSpecialRestricted);
         $licence->shouldReceive('getNiFlag')->andReturn($niFlag);
+        $licence->setVehicleType(new RefData($vehicleType));
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -93,9 +95,10 @@ class PrintLicenceTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 111]);
 
         return [
-            [
+            'GB goods mixed fleet' => [
                 'cmd' => $command,
                 'isGoods' => true,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
                 'isSpecialRestricted' => false,
                 'niFlag' => 'N',
                 'expect' => [
@@ -103,9 +106,21 @@ class PrintLicenceTest extends CommandHandlerTestCase
                     'desc' => 'GV Licence',
                 ],
             ],
-            [
+            'GB goods lgv' => [
+                'cmd' => $command,
+                'isGoods' => true,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'isSpecialRestricted' => false,
+                'niFlag' => 'N',
+                'expect' => [
+                    'docId' => Document::GV_LGV_LICENCE_GB,
+                    'desc' => 'GV Licence LGV Only',
+                ],
+            ],
+            'GB psv' => [
                 'cmd' => $command,
                 'isGoods' => false,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
                 'isSpecialRestricted' => false,
                 'niFlag' => 'N',
                 'expect' => [
@@ -113,19 +128,10 @@ class PrintLicenceTest extends CommandHandlerTestCase
                     'desc' => 'PSV Licence',
                 ],
             ],
-            [
-                'cmd' => $command,
-                'isGoods' => true,
-                'isSpecialRestricted' => true,
-                'niFlag' => 'N',
-                'expect' => [
-                    'docId' => Document::GV_LICENCE_GB,
-                    'desc' => 'GV Licence',
-                ],
-            ],
-            [
+            'GB psv special restricted' => [
                 'cmd' => $command,
                 'isGoods' => false,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
                 'isSpecialRestricted' => true,
                 'niFlag' => 'N',
                 'expect' => [
@@ -133,9 +139,10 @@ class PrintLicenceTest extends CommandHandlerTestCase
                     'desc' => 'PSV-SR Licence',
                 ],
             ],
-            [
+            'NI goods mixed fleet' => [
                 'cmd' => $command,
                 'isGoods' => true,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
                 'isSpecialRestricted' => false,
                 'niFlag' => 'Y',
                 'expect' => [
@@ -143,9 +150,21 @@ class PrintLicenceTest extends CommandHandlerTestCase
                     'desc' => 'GV Licence',
                 ],
             ],
-            [
+            'NI goods lgv' => [
+                'cmd' => $command,
+                'isGoods' => true,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'isSpecialRestricted' => false,
+                'niFlag' => 'Y',
+                'expect' => [
+                    'docId' => Document::GV_LGV_LICENCE_GB,
+                    'desc' => 'GV Licence LGV Only',
+                ],
+            ],
+            'NI psv' => [
                 'cmd' => $command,
                 'isGoods' => false,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
                 'isSpecialRestricted' => false,
                 'niFlag' => 'Y',
                 'expect' => [
@@ -153,19 +172,10 @@ class PrintLicenceTest extends CommandHandlerTestCase
                     'desc' => 'PSV Licence',
                 ],
             ],
-            [
-                'cmd' => $command,
-                'isGoods' => true,
-                'isSpecialRestricted' => true,
-                'niFlag' => 'Y',
-                'expect' => [
-                    'docId' => Document::GV_LICENCE_NI,
-                    'desc' => 'GV Licence',
-                ],
-            ],
-            [
+            'NI psv special restricted' => [
                 'cmd' => $command,
                 'isGoods' => false,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
                 'isSpecialRestricted' => true,
                 'niFlag' => 'Y',
                 'expect' => [
@@ -186,6 +196,7 @@ class PrintLicenceTest extends CommandHandlerTestCase
         $licence->shouldReceive('isGoods')->andReturn(false);
         $licence->shouldReceive('isSpecialRestricted')->andReturn(true);
         $licence->shouldReceive('getNiFlag')->andReturn('Y');
+        $licence->setVehicleType(new RefData(RefData::APP_VEHICLE_TYPE_PSV));
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)

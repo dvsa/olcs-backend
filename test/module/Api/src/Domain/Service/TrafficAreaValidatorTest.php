@@ -5,10 +5,13 @@ namespace Dvsa\OlcsTest\Api\Domain\Service;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * TrafficAreaValidatorTest
@@ -26,58 +29,55 @@ class TrafficAreaValidatorTest extends MockeryTestCase
 
     protected $adminAreaTrafficAreaRepo;
 
-    protected $documentRepo;
-
     public function setUp(): void
     {
-        $this->sut = new \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator();
+        $this->addressService = m::mock();
+        $this->adminAreaTrafficAreaRepo = m::mock();
+
+        $repositoryServiceManager = m::mock();
+        $repositoryServiceManager->shouldReceive('get')
+            ->with('AdminAreaTrafficArea')
+            ->once()
+            ->andReturn($this->adminAreaTrafficAreaRepo);
+
+        $serviceLocator = m::mock(ServiceLocatorInterface::class);
+        $serviceLocator->shouldReceive('get')
+            ->with('AddressService')
+            ->once()
+            ->andReturn($this->addressService)
+            ->shouldReceive('get')
+            ->with('RepositoryServiceManager')
+            ->once()
+            ->andReturn($repositoryServiceManager);
+
+        $this->sut = new TrafficAreaValidator();
+        $this->sut->createService($serviceLocator);
     }
 
     public function testCalidateForSameTrafficAreasWithPostcodeWithNullPostcode()
     {
-        $addressService = m::mock();
-        $adminAreaTrafficAreaRepo = m::mock();
-
-        $repositoryServiceManager = m::mock();
-        $repositoryServiceManager->shouldReceive('get')->with('AdminAreaTrafficArea')->once()
-            ->andReturn($adminAreaTrafficAreaRepo);
-
-        $serviceLocator = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
-        $serviceLocator->shouldReceive('get')->with('AddressService')->once()->andReturn($addressService);
-        $serviceLocator->shouldReceive('get')->with('RepositoryServiceManager')->once()
-            ->andReturn($repositoryServiceManager);
-
-        $addressService->shouldReceive('fetchTrafficAreaByPostcode')->with('POSTCODE', $adminAreaTrafficAreaRepo)
-            ->once()->andReturn(null);
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('POSTCODE', $this->adminAreaTrafficAreaRepo)
+            ->once()
+            ->andReturn(null);
 
         $application = m::mock(Application::class);
 
-        $this->sut->createService($serviceLocator);
         $this->assertTrue($this->sut->validateForSameTrafficAreasWithPostcode($application, 'POSTCODE'));
     }
 
     public function testCalidateForSameTrafficAreasWithPostcode()
     {
-        $addressService = m::mock();
-        $adminAreaTrafficAreaRepo = m::mock();
-
-        $repositoryServiceManager = m::mock();
-        $repositoryServiceManager->shouldReceive('get')->with('AdminAreaTrafficArea')->once()
-            ->andReturn($adminAreaTrafficAreaRepo);
-
-        $serviceLocator = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
-        $serviceLocator->shouldReceive('get')->with('AddressService')->once()->andReturn($addressService);
-        $serviceLocator->shouldReceive('get')->with('RepositoryServiceManager')->once()
-            ->andReturn($repositoryServiceManager);
-
         $trafficArea = m::mock()->shouldReceive('getId')->with()->once()->andReturn('X')->getMock();
-        $addressService->shouldReceive('fetchTrafficAreaByPostcode')->with('POSTCODE', $adminAreaTrafficAreaRepo)
-            ->once()->andReturn($trafficArea);
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('POSTCODE', $this->adminAreaTrafficAreaRepo)
+            ->once()
+            ->andReturn($trafficArea);
 
         $application = m::mock(Application::class);
         $application->shouldReceive('getLicence->getOrganisation->getLicences')->with()->once()->andReturn([]);
 
-        $this->sut->createService($serviceLocator);
         $this->assertTrue($this->sut->validateForSameTrafficAreasWithPostcode($application, 'POSTCODE'));
     }
 
@@ -512,5 +512,123 @@ class TrafficAreaValidatorTest extends MockeryTestCase
             [Application::APPLICATION_STATUS_VALID, false],
             [Application::APPLICATION_STATUS_WITHDRAWN, false],
         ];
+    }
+
+    public function testValidateTrafficAreaWithPostcodeWithEmptyPostcode()
+    {
+        $postcode = '';
+
+        $app = m::mock(Application::class);
+
+        $exception = false;
+        try {
+            $this->sut->validateTrafficAreaWithPostcode($app, $postcode);
+        } catch (\Exception $e) {
+            $exception = true;
+        }
+
+        $this->assertFalse($exception);
+    }
+
+    public function testValidateTrafficAreaWithPostcodeWithAddressServiceFailure()
+    {
+        $postcode = 'AB1 2CD';
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with($postcode, $this->adminAreaTrafficAreaRepo)
+            ->once()
+            ->andThrow(new \Exception);
+
+        $app = m::mock(Application::class);
+
+        $exception = false;
+        try {
+            $this->sut->validateTrafficAreaWithPostcode($app, $postcode);
+        } catch (\Exception $e) {
+            $exception = true;
+        }
+
+        $this->assertFalse($exception);
+    }
+
+    public function testValidateTrafficAreaWithPostcodeWithNoTaMatched()
+    {
+        $postcode = 'AB1 2CD';
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with($postcode, $this->adminAreaTrafficAreaRepo)
+            ->once()
+            ->andReturn(null);
+
+        $app = m::mock(Application::class);
+
+        $exception = false;
+        try {
+            $this->sut->validateTrafficAreaWithPostcode($app, $postcode);
+        } catch (\Exception $e) {
+            $exception = true;
+        }
+
+        $this->assertFalse($exception);
+    }
+
+    public function testValidateTrafficAreaWithPostcodeForGbAppAndNiTa()
+    {
+        $postcode = 'AB1 2CD';
+
+        $trafficArea = new TrafficArea();
+        $trafficArea->setId(TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with($postcode, $this->adminAreaTrafficAreaRepo)
+            ->once()
+            ->andReturn($trafficArea);
+
+        $app = m::mock(Application::class);
+        $app->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue()
+            ->shouldReceive('getNiFlag')
+            ->withNoArgs()
+            ->once()
+            ->andReturn('N');
+
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage(TrafficAreaValidator::ERR_TA_NI_APP);
+
+        $this->sut->validateTrafficAreaWithPostcode($app, $postcode);
+    }
+
+    public function testValidateTrafficAreaWithPostcodeForNiAppAndNiTa()
+    {
+        $postcode = 'AB1 2CD';
+
+        $trafficArea = new TrafficArea();
+        $trafficArea->setId(TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with($postcode, $this->adminAreaTrafficAreaRepo)
+            ->once()
+            ->andReturn($trafficArea);
+
+        $app = m::mock(Application::class);
+        $app->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue()
+            ->shouldReceive('getNiFlag')
+            ->withNoArgs()
+            ->once()
+            ->andReturn('Y');
+
+        $exception = false;
+        try {
+            $this->sut->validateTrafficAreaWithPostcode($app, $postcode);
+        } catch (\Exception $e) {
+            $exception = true;
+        }
+
+        $this->assertFalse($exception);
     }
 }

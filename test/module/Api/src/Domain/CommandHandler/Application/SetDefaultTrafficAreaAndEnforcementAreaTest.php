@@ -172,7 +172,7 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommand()
+    public function testHandleCommandWithOperatingCentre()
     {
         $command = Cmd::create(['id' => 111, 'operatingCentre' => 222]);
 
@@ -222,6 +222,66 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
             'trafficArea' => TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE
         ];
         $this->expectedSideEffect(UpdateTrafficArea::class, $data, $result);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Traffic area updated',
+                'Enforcement area updated'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertSame(
+            $this->references[EnforcementArea::class][EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE],
+            $licence->getEnforcementArea()
+        );
+    }
+
+    public function testHandleCommandWithPostcode()
+    {
+        $command = Cmd::create(['id' => 111, 'postcode' => 'AB1 1BA']);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setId(123);
+        $licence->setVersion(1);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setNiFlag('N');
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with($application);
+
+        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+            ->once()
+            ->with('AB1 1BA', $this->repoMap['AdminAreaTrafficArea'])
+            ->andReturn($this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE])
+            ->shouldReceive('fetchEnforcementAreaByPostcode')
+            ->once()
+            ->with('AB1 1BA', $this->repoMap['PostcodeEnforcementArea'])
+            ->andReturn(
+                $this->references[EnforcementArea::class][EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE]
+            );
+
+        $this->expectedSideEffect(
+            UpdateTrafficArea::class,
+            [
+                'id' => 123,
+                'version' => 1,
+                'trafficArea' => TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE
+            ],
+            (new Result())->addMessage('Traffic area updated')
+        );
 
         $result = $this->sut->handleCommand($command);
 

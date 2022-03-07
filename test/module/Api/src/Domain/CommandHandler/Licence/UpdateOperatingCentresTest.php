@@ -151,7 +151,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldIgnoreMissing()
             ->shouldReceive('validateTotalAuthTrailers')
             ->once()
-            ->with($command, $expectedTotals)
+            ->with($licence, $command, $expectedTotals)
             ->shouldReceive('validateTotalAuthHgvVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
@@ -283,7 +283,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->shouldIgnoreMissing()
             ->shouldReceive('validateTotalAuthTrailers')
             ->once()
-            ->with($command, $expectedTotals)
+            ->with($licence, $command, $expectedTotals)
             ->shouldReceive('validateTotalAuthHgvVehicles')
             ->once()
             ->with($licence, $command, $expectedTotals)
@@ -318,7 +318,10 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     {
         // Setup
         $this->setUpSut();
-        $licence = LicenceBuilder::aLicence()->withValidVehicleAuthorizations()->build();
+        $licence = LicenceBuilder::aLicence()
+            ->forMixedVehicleType()
+            ->withValidVehicleAuthorizations()
+            ->build();
         $this->injectEntities($licence);
         $command = Cmd::create([
             static::ID_COMMAND_PROPERTY => $licence->getId(),
@@ -444,11 +447,13 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      */
     public function handleCommand_SetsTotalAuthLgvVehicles_ForGoodsVehicleOperatingCentre()
     {
-        $this->markTestIncomplete('Test temporarily disabled while isEligibleForLgv return value hardcoded to false');
-
         // Setup
         $this->setUpSut();
-        $licence = LicenceBuilder::aGoodsLicence()->ofTypeStandardInternational()->withValidVehicleAuthorizations()->build();
+        $licence = LicenceBuilder::aGoodsLicence()
+            ->ofTypeStandardInternational()
+            ->forMixedVehicleType()
+            ->withValidVehicleAuthorizations()
+            ->build();
         $this->injectEntities($licence);
         $command = Cmd::create([
             static::ID_COMMAND_PROPERTY => $licence->getId(),
@@ -476,7 +481,11 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     {
         // Setup
         $this->setUpSut();
-        $licence = LicenceBuilder::aGoodsLicence()->ofTypeStandardInternational()->withExtraOperatingCentreCapacityFor(static::ONE_HGV)->build();
+        $licence = LicenceBuilder::aGoodsLicence()
+            ->ofTypeStandardInternational()
+            ->forMixedVehicleType()
+            ->withExtraOperatingCentreCapacityFor(static::ONE_HGV)
+            ->build();
         $this->injectEntities($licence);
         $command = Cmd::create([
             static::ID_COMMAND_PROPERTY => $licence->getId(),

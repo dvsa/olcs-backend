@@ -56,7 +56,6 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
             'without changes' => [
                 'data' => [
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-                    'isEligibleForLgv' => false,
                     'totAuthVehicles' => 10,
                     'totAuthHgvVehicles' => 10,
                     'totAuthLgvVehicles' => null,
@@ -73,7 +72,6 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
             'without changes - eligible for LGV' => [
                 'data' => [
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL],
-                    'isEligibleForLgv' => true,
                     'totAuthVehicles' => 10,
                     'totAuthHgvVehicles' => 7,
                     'totAuthLgvVehicles' => 3,
@@ -92,7 +90,6 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
             'with changes' => [
                 'data' => [
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-                    'isEligibleForLgv' => false,
                     'totAuthVehicles' => 10,
                     'totAuthHgvVehicles' => 10,
                     'totAuthLgvVehicles' => null,
@@ -123,7 +120,6 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
             'with changes - eligible for LGV' => [
                 'data' => [
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL],
-                    'isEligibleForLgv' => true,
                     'totAuthVehicles' => 10,
                     'totAuthHgvVehicles' => 7,
                     'totAuthLgvVehicles' => 3,
@@ -164,7 +160,6 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
             'with changes to zero' => [
                 'data' => [
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL],
-                    'isEligibleForLgv' => false,
                     'totAuthVehicles' => 20,
                     'totAuthHgvVehicles' => 20,
                     'totAuthLgvVehicles' => null,
@@ -191,7 +186,6 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
             'with changes to zero - eligible for LGV' => [
                 'data' => [
                     'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL],
-                    'isEligibleForLgv' => true,
                     'totAuthVehicles' => 20,
                     'totAuthHgvVehicles' => 15,
                     'totAuthLgvVehicles' => 0,
@@ -216,6 +210,34 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
                             [
                                 'label' => 'review-operating-centres-authorisation-trailers',
                                 'value' => 'decreased from 4 to 0'
+                            ],
+                        ]
+                    ]
+                ],
+            ],
+            'with changes from null to zero - eligible for LGV' => [
+                'data' => [
+                    'licenceType' => ['id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL],
+                    'totAuthVehicles' => 20,
+                    'totAuthHgvVehicles' => 15,
+                    'totAuthLgvVehicles' => 0,
+                    'totAuthTrailers' => 0,
+                    'totCommunityLicences' => 15,
+                    'licence' => [
+                        'totAuthVehicles' => 20,
+                        'totAuthHgvVehicles' => 15,
+                        'totAuthLgvVehicles' => null,
+                        'totAuthTrailers' => 5,
+                        'totCommunityLicences' => 15,
+                    ]
+                ],
+                'expected' => [
+                    'header' => 'review-operating-centres-authorisation-title',
+                    'multiItems' => [
+                        [
+                            [
+                                'label' => 'review-operating-centres-authorisation-trailers',
+                                'value' => 'decreased from 5 to 0'
                             ],
                         ]
                     ]

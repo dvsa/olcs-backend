@@ -11,6 +11,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationOperatingCentresReviewService;
 
 /**
@@ -159,6 +160,33 @@ class VariationOperatingCentresReviewServiceTest extends MockeryTestCase
                 'PsvOperatingCentre',
                 'VariationPsvOcTotalAuth'
             ]
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetHeaderTranslationKey
+     */
+    public function testGetHeaderTranslationKey($vehicleTypeId, $expectedTranslationKey)
+    {
+        $reviewData = [
+            'vehicleType' => [
+                'id' => $vehicleTypeId
+            ]
+        ];
+
+        $this->assertEquals(
+            $expectedTranslationKey,
+            $this->sut->getHeaderTranslationKey($reviewData, 'section-key')
+        );
+    }
+
+    public function dpGetHeaderTranslationKey()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_PSV, 'review-section-key'],
+            [RefData::APP_VEHICLE_TYPE_HGV, 'review-section-key'],
+            [RefData::APP_VEHICLE_TYPE_MIXED, 'review-section-key'],
+            [RefData::APP_VEHICLE_TYPE_LGV, 'review-authorisation'],
         ];
     }
 }

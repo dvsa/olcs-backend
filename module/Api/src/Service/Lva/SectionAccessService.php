@@ -110,11 +110,17 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
             $licenceType = $entity->getLicenceType()->getId();
         }
 
+        $vehicleType = null;
+        if ($entity->getVehicleType() !== null) {
+            $vehicleType = $entity->getVehicleType()->getId();
+        }
+
         $access = [
             $location,
             $lva,
             $goodsOrPsv,
             $licenceType,
+            $vehicleType,
             $hasConditions ? 'hasConditions' : 'noConditions'
         ];
 

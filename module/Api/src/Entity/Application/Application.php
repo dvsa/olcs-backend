@@ -24,6 +24,7 @@ use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Transfer\Validators;
 use Laminas\Filter\Word\CamelCaseToUnderscore;
 use Dvsa\Olcs\Api\Entity\Traits\TotAuthVehiclesTrait;
+use RuntimeException;
 
 /**
  * Application Entity
@@ -184,16 +185,20 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      *
      * @param string  $niFlag      'Y' or 'N'
      * @param RefData $goodsOrPsv  Goods or psv refdata
-     * @param RefData $licenceType Licence tyoe refdata
+     * @param RefData $licenceType Licence type refdata
+     * @param RefData|null $vehicleType Vehicle type refdata or null if not applicable
+     * @param mixed $lgvDeclarationConfirmation
      *
      * @return true|null
      */
-    public function updateTypeOfLicence($niFlag, $goodsOrPsv, $licenceType)
+    public function updateTypeOfLicence($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation)
     {
-        if ($this->validateTol($niFlag, $goodsOrPsv, $licenceType)) {
+        if ($this->validateTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation)) {
             $this->setNiFlag($niFlag);
             $this->setGoodsOrPsv($goodsOrPsv);
             $this->setLicenceType($licenceType);
+            $this->setVehicleType($vehicleType);
+            $this->setLgvDeclarationConfirmation($lgvDeclarationConfirmation);
             return true;
         }
         return null;
@@ -204,14 +209,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      *
      * @param string  $niFlag      'Y' or 'N'
      * @param RefData $goodsOrPsv  Goods or psv refdata
-     * @param RefData $licenceType Licence tyoe refdata
+     * @param RefData $licenceType Licence type refdata
+     * @param RefData|null $vehicleType Vehicle type refdata or null if not applicable
+     * @param mixed $lgvDeclarationConfirmation
      *
      * @return false|null
      */
-    public function isValidTol($niFlag, $goodsOrPsv, $licenceType)
+    public function isValidTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation)
     {
         try {
-            return $this->validateTol($niFlag, $goodsOrPsv, $licenceType);
+            return $this->validateTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation);
         } catch (ValidationException $ex) {
             return false;
         }
@@ -223,11 +230,13 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * @param string  $niFlag      Is Northern Ireland
      * @param RefData $goodsOrPsv  Goods or Psv
      * @param RefData $licenceType Licence type
+     * @param RefData|null $vehicleType Vehicle type refdata or null if not applicable
+     * @param mixed $lgvDeclarationConfirmation
      *
      * @return bool
      * @throws ValidationException
      */
-    public function validateTol($niFlag, $goodsOrPsv, $licenceType)
+    public function validateTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation)
     {
         $errors = [];
 
@@ -262,6 +271,51 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                 $errors['niFlag'][] = [
                     self::ERROR_GV_NON_SR => 'GV operators cannot apply for special restricted licences',
                 ];
+            }
+        }
+
+        if (is_null($vehicleType)) {
+            $errors['licenceType'][] = [
+                'Vehicle type must be specified for all licences'
+            ];
+        } else {
+            if ($goodsOrPsv->getId() == Licence::LICENCE_CATEGORY_GOODS_VEHICLE &&
+                $licenceType->getId() == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            ) {
+                $validVehicleTypes = [
+                    RefData::APP_VEHICLE_TYPE_MIXED,
+                    RefData::APP_VEHICLE_TYPE_LGV
+                ];
+
+                $vehicleTypeId = $vehicleType->getId();
+                if (!in_array($vehicleTypeId, $validVehicleTypes)) {
+                    $errors['licenceType'][] = [
+                        'Vehicle type must be either HGV or LGV when application is for Goods/Standard International'
+                    ];
+                } elseif (($vehicleTypeId == RefData::APP_VEHICLE_TYPE_LGV) && ($lgvDeclarationConfirmation != 1)) {
+                    $errors['licenceType'][] = [
+                        'LGV declaration confirmation must be ticked for Goods/Standard International/LGV'
+                    ];
+                }
+            } else {
+                $mappings = [
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE => RefData::APP_VEHICLE_TYPE_HGV,
+                    Licence::LICENCE_CATEGORY_PSV => RefData::APP_VEHICLE_TYPE_PSV,
+                ];
+
+                if (!isset($mappings[$goodsOrPsv->getId()]) ||
+                    $mappings[$goodsOrPsv->getId()] != $vehicleType->getId()
+                ) {
+                    $errors['licenceType'][] = [
+                        'Provided vehicle type must match the corresponding licence category value'
+                    ];
+                }
+
+                if ($lgvDeclarationConfirmation != 0) {
+                    $errors['licenceType'][] = [
+                        'LGV declaration confirmation must only be specified for Goods/Standard International licences'
+                    ];
+                }
             }
         }
 
@@ -723,6 +777,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Is Northern Ireland application
+     *
+     * @return boolean
+     */
+    public function isNi(): bool
+    {
+        return $this->getNiFlag() === 'Y';
+    }
+
+    /**
      * Is Special Restricted
      *
      * @return boolean
@@ -779,20 +843,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * Is this application eligible for LGV
-     *
-     * @return bool
-     */
-    public function isEligibleForLgv(): bool
-    {
-        // temporarily hardcoded to false to avoid functional changes when merged to master
-        return false;
-
-        // for now only variations are eligible
-        return $this->isVariation() && $this->isGoods() && $this->isStandardInternational();
-    }
-
-    /**
      * Has the HGV authorisation of this variation increased relative to the associated licence? Always returns false
      * for non-variation applications as the concept does not apply to these
      *
@@ -826,6 +876,26 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $licenceAuthorisation = $this->getLicence()->getTotAuthLgvVehiclesZeroCoalesced();
 
         return $variationAuthorisation > $licenceAuthorisation;
+    }
+
+    /**
+     * Has the LGV authorisation of this variation changed from null on the licence to a non-null numeric value on the
+     * variation?
+     *
+     * @return bool
+     *
+     * @throws RuntimeException
+     */
+    public function hasLgvAuthorisationChangedFromNullToNumeric(): bool
+    {
+        if (!$this->isVariation()) {
+            throw new RuntimeException(__FUNCTION__ . ' is only applicable in a variation context');
+        }
+
+        $variationAuthorisation = $this->getTotAuthLgvVehicles();
+        $licenceAuthorisation = $this->getLicence()->getTotAuthLgvVehicles();
+
+        return !is_null($variationAuthorisation) && is_null($licenceAuthorisation);
     }
 
     /**
@@ -1096,6 +1166,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         $this->setLicenceType($licence->getLicenceType());
         $this->setGoodsOrPsv($licence->getGoodsOrPsv());
+        $this->setVehicleType($licence->getVehicleType());
+        $this->setLgvDeclarationConfirmation($licence->getLgvDeclarationConfirmation());
         $this->setTotAuthTrailers($licence->getTotAuthTrailers());
         $this->setTotAuthVehicles($licence->getTotAuthVehicles());
         $this->setTotAuthHgvVehicles($licence->getTotAuthHgvVehicles());
@@ -1142,12 +1214,17 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     /**
      * Get the Out Of Representation Date
      *
-     * @return DateTime|string DateTime if date can be calculated, otherwise a string const NOT_APPLCABLE or UNKNOWN
+     * @return DateTime|string DateTime if date can be calculated, otherwise a string const NOT_APPLICABLE or UNKNOWN
      */
     public function getOutOfRepresentationDate()
     {
-        // If PSV application then
-        if ($this->isPsv()) {
+        // out of representation date not applicable to psv or lgv
+        $notApplicableVehicleTypes = [
+            RefData::APP_VEHICLE_TYPE_PSV,
+            RefData::APP_VEHICLE_TYPE_LGV,
+        ];
+
+        if (in_array($this->vehicleType->getId(), $notApplicableVehicleTypes)) {
             return self::NOT_APPLICABLE;
         }
 
@@ -2106,7 +2183,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         return [
             'applicationReference' => $this->getApplicationReference(),
-            'isEligibleForLgv' => $this->isEligibleForLgv(),
         ];
     }
 

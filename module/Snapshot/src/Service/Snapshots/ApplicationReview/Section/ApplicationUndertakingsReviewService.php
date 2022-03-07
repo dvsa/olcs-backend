@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Utils\Helper\ValueHelper;
 
 /**
@@ -22,6 +23,10 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
     const GV79 = 'markup-application_undertakings_GV79';
     const GV79_STANDARD = 'markup-application_undertakings_GV79-Standard';
     const GV79_DECLARE = 'markup-application_undertakings_GV79-declare';
+
+    const GV79_AUTH_LGV = 'markup-application_undertakings_GV79-auth-lgv';
+    const GV79_AUTH_OTHER = 'markup-application_undertakings_GV79-auth-other';
+    const GV79NI_AUTH_OTHER = 'markup-application_undertakings_GV79-NI-auth-other';
 
     const GV79NI = 'markup-application_undertakings_GV79-NI';
     const GV79NI_STANDARD = 'markup-application_undertakings_GV79-NI-Standard';
@@ -51,27 +56,6 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         ];
     }
 
-    /**
-     * Generate markup from a licence
-     *
-     * @param Licence $licence    Licence
-     * @param bool    $isInternal For Internal or Selfserve
-     *
-     * @return string HTML
-     */
-    public function getMarkupForLicence(Licence $licence, $isInternal = false)
-    {
-        $data = [
-            'licenceType' => ['id' => $licence->getLicenceType()->getId()],
-            'licence' => ['organisation' => ['type' => ['id' => $licence->getOrganisation()->getType()->getId()]]],
-            'isGoods' => $licence->isGoods(),
-            'isInternal' => $isInternal,
-            'niFlag' => $licence->getTrafficArea()->getIsNi() ? 'Y' : 'N',
-        ];
-
-        return $this->getMarkup($data);
-    }
-
     public function getMarkup($data)
     {
         if ($this->isPsv($data)) {
@@ -95,6 +79,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         $isInternal = $this->isInternal($data);
 
         $additionalParts = [
+            $this->translate($this->getGv79AuthTranslationKey($data)),
             $isStandard ? $this->translate(self::GV79_STANDARD) : '',
             $isInternal ? $this->translate(self::GV79_DECLARE) : ''
         ];
@@ -108,11 +93,33 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         $isInternal = $this->isInternal($data);
 
         $additionalParts = [
+            $this->translate($this->getGv79AuthTranslationKey($data)),
             $isStandard ? $this->translate(self::GV79NI_STANDARD) : '',
             $isInternal ? $this->translate(self::GV79NI_DECLARE) : ''
         ];
 
         return $this->translateReplace(self::GV79NI, $additionalParts);
+    }
+
+    /**
+     * Get the translation key corresponding to the auth bullet points within the declaration
+     *
+     * @param array $data
+     *
+     * @return string
+     */
+    private function getGv79AuthTranslationKey(array $data)
+    {
+        $vehicleTypeId = $data['vehicleType']['id'];
+        if ($vehicleTypeId == RefData::APP_VEHICLE_TYPE_LGV) {
+            return self::GV79_AUTH_LGV;
+        }
+
+        if (ValueHelper::isOn($data['niFlag'])) {
+            return self::GV79NI_AUTH_OTHER;
+        }
+
+        return self::GV79_AUTH_OTHER;
     }
 
     private function getPsv421(array $data)

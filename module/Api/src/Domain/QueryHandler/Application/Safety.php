@@ -40,8 +40,6 @@ class Safety extends AbstractQueryHandler
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($query);
 
-        $goodsOrPsv = $application->getGoodsOrPsv()->getId();
-
         $safetyDocuments = $application->getApplicationDocuments(
             $this->getRepo()->getCategoryReference(Category::CATEGORY_APPLICATION),
             $this->getRepo()->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_MAINT_OTHER_DIGITAL)
@@ -57,7 +55,7 @@ class Safety extends AbstractQueryHandler
             ],
             [
                 'safetyDocuments' => $this->resultList($safetyDocuments),
-                'canHaveTrailers' => ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
+                'canHaveTrailers' => $application->canHaveTrailer(),
                 'isShowTrailers' => ($totalTrailers > 0 || $totalTrailers === null),
                 'workshops' => [
                     'results' => $this->resultList(

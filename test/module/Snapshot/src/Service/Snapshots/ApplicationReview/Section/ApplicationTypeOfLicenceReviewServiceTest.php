@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationTypeOfLicenceReviewService;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Application Type Of Licence Review Service Test
@@ -42,9 +43,13 @@ class ApplicationTypeOfLicenceReviewServiceTest extends \PHPUnit\Framework\TestC
                     'goodsOrPsv' => [
                         'id' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE
                     ],
+                    'lgvDeclarationConfirmation' => false,
                     'licenceType' => [
                         'description' => 'Standard National'
-                    ]
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
                 ],
                 [
                     'multiItems' => [
@@ -74,9 +79,13 @@ class ApplicationTypeOfLicenceReviewServiceTest extends \PHPUnit\Framework\TestC
                     'goodsOrPsv' => [
                         'id' => Licence::LICENCE_CATEGORY_PSV
                     ],
+                    'lgvDeclarationConfirmation' => false,
                     'licenceType' => [
                         'description' => 'Standard International'
-                    ]
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_MIXED
+                    ],
                 ],
                 [
                     'multiItems' => [
@@ -94,8 +103,58 @@ class ApplicationTypeOfLicenceReviewServiceTest extends \PHPUnit\Framework\TestC
                             [
                                 'label' => 'application-review-type-of-licence-licence-type',
                                 'value' => 'Standard International'
+                            ],
+                            [
+                                'label' => 'application-review-type-of-licence-vehicle-type',
+                                'value' => 'No'
                             ]
-                        ]
+                        ],
+                    ]
+                ]
+            ],
+            [
+                [
+                    'niFlag' => 'N',
+                    'isGoods' => false,
+                    'goodsOrPsv' => [
+                        'id' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+                    ],
+                    'lgvDeclarationConfirmation' => true,
+                    'licenceType' => [
+                        'description' => 'Standard International'
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_LGV
+                    ],
+                ],
+                [
+                    'multiItems' => [
+                        [
+                            [
+                                'label' => 'application-review-type-of-licence-operator-location',
+                                'value' => 'Great Britain'
+                            ],
+                            [
+                                'label' => 'application-review-type-of-licence-operator-type',
+                                'value' => 'PSV'
+                            ]
+                        ],
+                        [
+                            [
+                                'label' => 'application-review-type-of-licence-licence-type',
+                                'value' => 'Standard International'
+                            ],
+                            [
+                                'label' => 'application-review-type-of-licence-vehicle-type',
+                                'value' => 'Yes'
+                            ]
+                        ],
+                        [
+                            [
+                                'label' => 'application-review-type-of-licence-lgv-declaration-confirmation',
+                                'value' => 'Confirmed'
+                            ]
+                        ],
                     ]
                 ]
             ],
@@ -103,8 +162,11 @@ class ApplicationTypeOfLicenceReviewServiceTest extends \PHPUnit\Framework\TestC
                 [
                     'niFlag' => 'Y',
                     'licenceType' => [
-                        'description' => 'Standard International'
-                    ]
+                        'description' => 'Standard National'
+                    ],
+                    'vehicleType' => [
+                        'id' => RefData::APP_VEHICLE_TYPE_HGV
+                    ],
                 ],
                 [
                     'multiItems' => [
@@ -117,7 +179,7 @@ class ApplicationTypeOfLicenceReviewServiceTest extends \PHPUnit\Framework\TestC
                         [
                             [
                                 'label' => 'application-review-type-of-licence-licence-type',
-                                'value' => 'Standard International'
+                                'value' => 'Standard National'
                             ]
                         ]
                     ]

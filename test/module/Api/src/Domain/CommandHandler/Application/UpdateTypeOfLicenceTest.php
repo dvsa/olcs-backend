@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -47,7 +48,12 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            Licence::LICENCE_TYPE_SPECIAL_RESTRICTED
+            Licence::LICENCE_TYPE_RESTRICTED,
+            Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+            RefData::APP_VEHICLE_TYPE_LGV,
+            RefData::APP_VEHICLE_TYPE_MIXED,
+            RefData::APP_VEHICLE_TYPE_HGV,
+            RefData::APP_VEHICLE_TYPE_PSV,
         ];
 
         parent::initReferences();
@@ -90,8 +96,15 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     /**
      * @dataProvider requireReset
      */
-    public function testHandleCommandWithReset($command, $application, $resetData)
+    public function testHandleCommandWithReset($command, $applicationData, $resetData)
     {
+        // Calling getApplication needs to be deferred to here rather than in the dataProvider to avoid initialising
+        // references twice and creating duplicate refdata entries in the process
+        $application = call_user_func_array(
+            [$this, 'getApplication'],
+            $applicationData
+        );
+
         // Expectations
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -175,12 +188,14 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         // Params
         $command = $this->getCommand(
             'Y',
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            null,
+            RefData::APP_VEHICLE_TYPE_HGV
         );
 
         $application = $this->getApplication(
             'Y',
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_RESTRICTED,
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE
         );
 
@@ -190,7 +205,9 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ->with(
                 'Y',
                 $this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE),
-                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL),
+                $this->mapRefData(RefData::APP_VEHICLE_TYPE_HGV),
+                0
             )
             ->shouldReceive('getLicence')
             ->andReturn(
@@ -250,11 +267,11 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     public function testHandleCommandWithPartPaidApplicationFee()
     {
         // Params
-        $command = $this->getCommand('N', Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL, Licence::LICENCE_CATEGORY_PSV);
+        $command = $this->getCommand('N', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV);
 
         $application = $this->getApplication(
             'N',
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_RESTRICTED,
             Licence::LICENCE_CATEGORY_PSV
         );
 
@@ -264,7 +281,9 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ->with(
                 'N',
                 $this->mapRefData(Licence::LICENCE_CATEGORY_PSV),
-                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL),
+                $this->mapRefData(RefData::APP_VEHICLE_TYPE_PSV),
+                0
             )
             ->shouldReceive('getLicence')
             ->andReturn(
@@ -321,108 +340,275 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 
     public function requireReset()
     {
-        $this->initReferences();
         return [
             'niFlag changed' => [
                 $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
-                $this->getApplication('N', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_PSV
+                ],
                 [
                     'id' => 111,
                     'niFlag' => 'Y',
-                    'operatorType' => Licence::LICENCE_CATEGORY_PSV,
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                     'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
                     'confirm' => false
-                ]
+                ],
             ],
             'operatorType changed' => [
                 $this->getCommand(
                     'Y',
                     Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                     Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    null,
                     true
                 ),
-                $this->getApplication('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
+                [
+                    'Y',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_PSV
+                ],
                 [
                     'id' => 111,
                     'niFlag' => 'Y',
                     'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                     'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
                     'confirm' => true
                 ]
             ],
             'to SR' => [
                 $this->getCommand('Y', Licence::LICENCE_TYPE_SPECIAL_RESTRICTED, Licence::LICENCE_CATEGORY_PSV),
-                $this->getApplication('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
+                [
+                    'Y',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_PSV
+                ],
                 [
                     'id' => 111,
                     'niFlag' => 'Y',
-                    'operatorType' => Licence::LICENCE_CATEGORY_PSV,
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                     'licenceType' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
                     'confirm' => false
                 ]
             ],
             'from SR' => [
                 $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
-                $this->getApplication('Y', Licence::LICENCE_TYPE_SPECIAL_RESTRICTED, Licence::LICENCE_CATEGORY_PSV),
+                [
+                    'Y',
+                    Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                    Licence::LICENCE_CATEGORY_PSV
+                ],
                 [
                     'id' => 111,
                     'niFlag' => 'Y',
-                    'operatorType' => Licence::LICENCE_CATEGORY_PSV,
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                     'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
                     'confirm' => false
                 ]
-            ]
+            ],
+            'from LGV to mixed' => [
+                $this->getCommand(
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_LGV
+                ),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_MIXED
+                ],
+                [
+                    'id' => 111,
+                    'niFlag' => 'N',
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    'licenceType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                    'confirm' => false
+                ]
+            ],
+            'from mixed to LGV' => [
+                $this->getCommand(
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_MIXED
+                ),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_LGV
+                ],
+                [
+                    'id' => 111,
+                    'niFlag' => 'N',
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    'licenceType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                    'confirm' => false
+                ]
+            ],
+            'from standard international lgv to standard national' => [
+                $this->getCommand(
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    null
+                ),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_LGV
+                ],
+                [
+                    'id' => 111,
+                    'niFlag' => 'N',
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                    'confirm' => false
+                ]
+            ],
+            'from standard international mixed to standard national' => [
+                $this->getCommand(
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    null
+                ),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_MIXED
+                ],
+                [
+                    'id' => 111,
+                    'niFlag' => 'N',
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                    'confirm' => false
+                ]
+            ],
+            'from standard national to standard international lgv' => [
+                $this->getCommand(
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_LGV
+                ),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_HGV
+                ],
+                [
+                    'id' => 111,
+                    'niFlag' => 'N',
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    'licenceType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                    'confirm' => false
+                ]
+            ],
+            'from standard national to standard international mixed' => [
+                $this->getCommand(
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_MIXED
+                ),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    RefData::APP_VEHICLE_TYPE_HGV
+                ],
+                [
+                    'id' => 111,
+                    'niFlag' => 'N',
+                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    'licenceType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                    'confirm' => false
+                ]
+            ],
         ];
     }
 
-    protected function getCommand($niFlag, $licenceType, $operatorType = null, $confirm = false)
-    {
+    protected function getCommand(
+        $niFlag,
+        $licenceType,
+        $operatorType = null,
+        $vehicleType = null,
+        $confirm = false,
+        $lgvDeclarationConfirmation = null
+    ) {
         $data = [
             'id' => 111,
             'version' => 1,
             'niFlag' => $niFlag,
             'operatorType' => $operatorType,
             'licenceType' => $licenceType,
-            'confirm' => $confirm
+            'vehicleType' => $vehicleType,
+            'confirm' => $confirm,
+            'lgvDeclarationConfirmation' => $lgvDeclarationConfirmation
         ];
 
         return Cmd::create($data);
     }
 
-    protected function getApplication($niFlag, $licenceType, $operatorType)
+    protected function getApplication($niFlag, $licenceType, $operatorType, $vehicleType = null)
     {
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setId(111);
         $application->setNiFlag($niFlag);
         $application->setLicenceType($this->mapRefData($licenceType));
         $application->setGoodsOrPsv($this->mapRefData($operatorType));
+        $application->setVehicleType($this->mapRefData($vehicleType));
         $application->setFees([]);
 
         return $application;
     }
 
-    public function testHandleCommandWithAllowedUpdateGb()
-    {
-        // Params
-        $command = $this->getCommand(
-            'N',
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
-        );
-
-        $application = $this->getApplication(
-            'N',
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+    /**
+     * @dataProvider dpHandleCommandWithAllowedUpdateGb
+     */
+    public function testHandleCommandWithAllowedUpdateGb(
+        $command,
+        $applicationData,
+        $expectedNiFlag,
+        $expectedGoodsOrPsv,
+        $expectedLicenceType,
+        $expectedVehicleType,
+        $expectedLgvDeclarationConfirmation
+    ) {
+        // Calling getApplication needs to be deferred to here rather than in the dataProvider to avoid initialising
+        // references twice and creating duplicate refdata entries in the process
+        $application = call_user_func_array(
+            [$this, 'getApplication'],
+            $applicationData
         );
 
         // Expectations
         $application->shouldReceive('updateTypeOfLicence')
             ->once()
             ->with(
-                'N',
-                $this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE),
-                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+                $expectedNiFlag,
+                $this->mapRefData($expectedGoodsOrPsv),
+                $this->mapRefData($expectedLicenceType),
+                $this->mapRefData($expectedVehicleType),
+                $expectedLgvDeclarationConfirmation
             )
             ->shouldReceive('getLicence')
             ->andReturn(
@@ -477,5 +663,71 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function dpHandleCommandWithAllowedUpdateGb()
+    {
+        return [
+            'goods standard international' => [
+                $this->getCommand(
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    Licence::LICENCE_CATEGORY_PSV,
+                    null,
+                    false,
+                    0
+                ),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_PSV
+                ],
+                'N',
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_PSV,
+                0
+            ],
+            'derive goods vehicle type for non standard international' => [
+                $this->getCommand(
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    null,
+                    false,
+                    0
+                ),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_RESTRICTED,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+                ],
+                'N',
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_HGV,
+                0
+            ],
+            'derive goods vehicle type for non standard international' => [
+                $this->getCommand(
+                    'N',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_PSV,
+                    null,
+                    false,
+                    0
+                ),
+                [
+                    'N',
+                    Licence::LICENCE_TYPE_RESTRICTED,
+                    Licence::LICENCE_CATEGORY_PSV
+                ],
+                'N',
+                Licence::LICENCE_CATEGORY_PSV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_PSV,
+                0
+            ],
+        ];
     }
 }

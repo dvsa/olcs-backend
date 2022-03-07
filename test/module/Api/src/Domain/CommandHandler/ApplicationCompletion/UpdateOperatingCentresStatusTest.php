@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateOperatingCen
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Update Operating Centres Status Test
@@ -34,11 +35,10 @@ class UpdateOperatingCentresStatusTest extends AbstractUpdateStatusTestCase
     public function initReferences()
     {
         $this->refData = [
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-            Licence::LICENCE_CATEGORY_PSV,
-            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            Licence::LICENCE_TYPE_RESTRICTED
+            RefData::APP_VEHICLE_TYPE_HGV,
+            RefData::APP_VEHICLE_TYPE_LGV,
+            RefData::APP_VEHICLE_TYPE_MIXED,
+            RefData::APP_VEHICLE_TYPE_PSV,
         ];
 
         parent::initReferences();
@@ -48,6 +48,7 @@ class UpdateOperatingCentresStatusTest extends AbstractUpdateStatusTestCase
     {
         $this->applicationCompletion->setOperatingCentresStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
+        $this->application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_HGV]);
         $this->application->setOperatingCentres([]);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
@@ -57,43 +58,75 @@ class UpdateOperatingCentresStatusTest extends AbstractUpdateStatusTestCase
     {
         $this->applicationCompletion->setOperatingCentresStatus(ApplicationCompletionEntity::STATUS_INCOMPLETE);
 
+        $this->application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_HGV]);
         $this->application->setOperatingCentres([]);
 
         $this->expectStatusUnchanged(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
 
-    public function testHandleCommandGvNoTotAuth()
+    public function testHandleCommandHgvNoTotAuth()
     {
         $this->applicationCompletion->setOperatingCentresStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
-        $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
-
+        $this->application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_HGV]);
         $this->application->setOperatingCentres(['foo']);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
 
-    public function testHandleCommandGvNoTotAuthTrailers()
+    public function testHandleCommandHgvNoTotAuthTrailers()
     {
         $this->applicationCompletion->setOperatingCentresStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
-        $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
-
+        $this->application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_HGV]);
         $this->application->setOperatingCentres(['foo']);
         $this->application->updateTotAuthHgvVehicles(10);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
 
-    public function testHandleCommandGv()
+    public function testHandleCommandHgv()
     {
         $this->applicationCompletion->setOperatingCentresStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
-        $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
-
+        $this->application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_HGV]);
         $this->application->setOperatingCentres(['foo']);
         $this->application->updateTotAuthHgvVehicles(10);
-        $this->application->setTotAuthTrailers(10);
+        $this->application->setTotAuthTrailers(0);
+
+        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
+    }
+
+    public function testHandleCommandLgv()
+    {
+        $this->applicationCompletion->setOperatingCentresStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
+
+        $this->application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_LGV]);
+        $this->application->updateTotAuthLgvVehicles(10);
+
+        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
+    }
+
+    public function testHandleCommandMixed()
+    {
+        $this->applicationCompletion->setOperatingCentresStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
+
+        $this->application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_MIXED]);
+        $this->application->setOperatingCentres(['foo']);
+        $this->application->updateTotAuthHgvVehicles(10);
+        $this->application->updateTotAuthLgvVehicles(0);
+        $this->application->setTotAuthTrailers(0);
+
+        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
+    }
+
+    public function testHandleCommandPsv()
+    {
+        $this->applicationCompletion->setOperatingCentresStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
+
+        $this->application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_PSV]);
+        $this->application->setOperatingCentres(['foo']);
+        $this->application->updateTotAuthHgvVehicles(10);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }

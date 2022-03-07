@@ -66,6 +66,15 @@ class ApplicationBuilder implements BuilderInterface
     /**
      * @return $this
      */
+    public function forMixedVehicleType(): self
+    {
+        $this->instance->setVehicleType(new RefData(RefData::APP_VEHICLE_TYPE_MIXED));
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
     public function withValidAuthorizations(): self
     {
         $operatingCentre = ApplicationOperatingCentreBuilder::forApplication($this->instance, static::AN_ID)->build();

@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\PrintInterimDocument as Cmd;
@@ -42,9 +43,21 @@ final class PrintInterimDocument extends AbstractCommandHandler implements Trans
         if ($application->isVariation()) {
             $template = 'GV_INT_DIRECTION_V1';
             $description = 'GV Interim Direction';
+
+            if (RefData::APP_VEHICLE_TYPE_LGV === (string)$application->getVehicleType()) {
+                // use different template for LGV only
+                $template = 'GV_LGV_INT_DIRECTION_V1';
+                $description = 'GV Interim Direction LGV Only';
+            }
         } else {
             $template = 'GV_INT_LICENCE_V1';
             $description = 'GV Interim Licence';
+
+            if (RefData::APP_VEHICLE_TYPE_LGV === (string)$application->getVehicleType()) {
+                // use different template for LGV only
+                $template = 'GV_LGV_INT_LICENCE_V1';
+                $description = 'GV Interim Licence LGV Only';
+            }
         }
 
         $dtoData = [

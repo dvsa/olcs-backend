@@ -24,8 +24,9 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
             return;
         }
 
-        $this->addTextLine($context->offsetGet('licenceAddress'));
+        $this->addLicenceAddressText($context);
         $this->addOperatingCentreText($publicationLink);
+        $this->addAuthorisationText($context, $publicationLink);
         $this->addTransportManagerText($context);
         $this->addConditionsAndUndertakingsText($context);
 
@@ -33,22 +34,40 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
     }
 
     /**
+     * Add the licence address to the internally stored collection of text lines
+     *
+     * @param ImmutableArrayObject $context
+     */
+    private function addLicenceAddressText(ImmutableArrayObject $context)
+    {
+        $this->addTextLine($context->offsetGet('licenceAddress'));
+    }
+
+    /**
      * @param PublicationLink $publicationLink
      */
     private function addOperatingCentreText(PublicationLink $publicationLink)
     {
-        foreach ($publicationLink->getApplication()->getOperatingCentres() as $aoc) {
-            /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
+        $useHgvCaption = $publicationLink->getApplication()->isVehicleTypeMixedWithLgv();
 
-            // don't include OC's that are part of an S4
-            if (!empty($aoc->getS4()) && !$publicationLink->getPublicationSection()->isDecisionSection()) {
-                continue;
-            }
-
+        foreach ($this->getApplicationOperatingCentres($publicationLink) as $aoc) {
             $this->addTextLine(
                 'Operating Centre: '. Formatter\Address::format($aoc->getOperatingCentre()->getAddress())
             );
-            $this->addTextLine('Authorisation: '. Formatter\OcVehicleTrailer::format($aoc));
+            $this->addTextLine('Authorisation: '. Formatter\OcVehicleTrailer::format($aoc, $useHgvCaption));
+        }
+    }
+
+    /**
+     * @param ImmutableArrayObject $context
+     */
+    private function addAuthorisationText(ImmutableArrayObject $context, PublicationLink $publicationLink)
+    {
+        if ($context->offsetExists('authorisation')) {
+            if (count($this->getApplicationOperatingCentres($publicationLink)) > 0) {
+                $this->addLicenceAddressText($context);
+            }
+            $this->addTextLine($context->offsetGet('authorisation'));
         }
     }
 
@@ -76,5 +95,30 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
         foreach ($textLines as $text) {
             $this->addTextLine($text);
         }
+    }
+
+    /**
+     * Return a list of the operating centres that need to be listed within the publication summary
+     *
+     * @param PublicationLink $publicationLink
+     *
+     * @return array
+     */
+    private function getApplicationOperatingCentres(PublicationLink $publicationLink)
+    {
+        $applicationOperatingCentres = [];
+
+        foreach ($publicationLink->getApplication()->getOperatingCentres() as $aoc) {
+            /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
+
+            // don't include OC's that are part of an S4
+            if (!empty($aoc->getS4()) && !$publicationLink->getPublicationSection()->isDecisionSection()) {
+                continue;
+            }
+
+            $applicationOperatingCentres[] = $aoc;
+        }
+
+        return $applicationOperatingCentres;
     }
 }

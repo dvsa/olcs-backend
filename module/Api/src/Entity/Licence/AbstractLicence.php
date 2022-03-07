@@ -37,7 +37,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_licence_tachograph_ins", columns={"tachograph_ins"}),
  *        @ORM\Index(name="ix_licence_traffic_area_id", columns={"traffic_area_id"}),
  *        @ORM\Index(name="ix_licence_transport_consultant_cd_id",
-     *     columns={"transport_consultant_cd_id"})
+     *     columns={"transport_consultant_cd_id"}),
+ *        @ORM\Index(name="ix_licence_vehicle_type", columns={"vehicle_type"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_licence_lic_no", columns={"lic_no"}),
@@ -226,6 +227,18 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
+
+    /**
+     * Lgv declaration confirmation
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="lgv_declaration_confirmation",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $lgvDeclarationConfirmation = 0;
 
     /**
      * Lic no
@@ -471,6 +484,16 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
      * @ORM\JoinColumn(name="transport_consultant_cd_id", referencedColumnName="id", nullable=true)
      */
     protected $transportConsultantCd;
+
+    /**
+     * Vehicle type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="vehicle_type", referencedColumnName="id", nullable=true)
+     */
+    protected $vehicleType;
 
     /**
      * Version
@@ -1227,6 +1250,30 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     }
 
     /**
+     * Set the lgv declaration confirmation
+     *
+     * @param boolean $lgvDeclarationConfirmation new value being set
+     *
+     * @return Licence
+     */
+    public function setLgvDeclarationConfirmation($lgvDeclarationConfirmation)
+    {
+        $this->lgvDeclarationConfirmation = $lgvDeclarationConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the lgv declaration confirmation
+     *
+     * @return boolean
+     */
+    public function getLgvDeclarationConfirmation()
+    {
+        return $this->lgvDeclarationConfirmation;
+    }
+
+    /**
      * Set the lic no
      *
      * @param string $licNo new value being set
@@ -1872,6 +1919,30 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     public function getTransportConsultantCd()
     {
         return $this->transportConsultantCd;
+    }
+
+    /**
+     * Set the vehicle type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $vehicleType entity being set as the value
+     *
+     * @return Licence
+     */
+    public function setVehicleType($vehicleType)
+    {
+        $this->vehicleType = $vehicleType;
+
+        return $this;
+    }
+
+    /**
+     * Get the vehicle type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getVehicleType()
+    {
+        return $this->vehicleType;
     }
 
     /**

@@ -920,7 +920,7 @@ return [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class,
-                Dvsa\Olcs\Api\Service\Publication\Context\Application\OperatingCentres::class,
+                Dvsa\Olcs\Api\Service\Publication\Context\Application\Authorisations::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,

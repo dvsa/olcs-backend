@@ -26,6 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="application",
  *    indexes={
  *        @ORM\Index(name="fk_application_grant_authority_ref_data_id", columns={"grant_authority"}),
+ *        @ORM\Index(name="fk_application_vehicle_type_ref_data_id", columns={"vehicle_type"}),
  *        @ORM\Index(name="ix_application_applied_via", columns={"applied_via"}),
  *        @ORM\Index(name="ix_application_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_application_digital_signature_id", columns={"digital_signature_id"}),
@@ -323,6 +324,18 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
+
+    /**
+     * Lgv declaration confirmation
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="lgv_declaration_confirmation",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $lgvDeclarationConfirmation = 0;
 
     /**
      * Licence
@@ -685,6 +698,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\JoinColumn(name="variation_type", referencedColumnName="id", nullable=true)
      */
     protected $variationType;
+
+    /**
+     * Vehicle type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="vehicle_type", referencedColumnName="id", nullable=true)
+     */
+    protected $vehicleType;
 
     /**
      * Version
@@ -1633,6 +1656,30 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the lgv declaration confirmation
+     *
+     * @param boolean $lgvDeclarationConfirmation new value being set
+     *
+     * @return Application
+     */
+    public function setLgvDeclarationConfirmation($lgvDeclarationConfirmation)
+    {
+        $this->lgvDeclarationConfirmation = $lgvDeclarationConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get the lgv declaration confirmation
+     *
+     * @return boolean
+     */
+    public function getLgvDeclarationConfirmation()
+    {
+        return $this->lgvDeclarationConfirmation;
     }
 
     /**
@@ -2587,6 +2634,30 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getVariationType()
     {
         return $this->variationType;
+    }
+
+    /**
+     * Set the vehicle type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $vehicleType entity being set as the value
+     *
+     * @return Application
+     */
+    public function setVehicleType($vehicleType)
+    {
+        $this->vehicleType = $vehicleType;
+
+        return $this;
+    }
+
+    /**
+     * Get the vehicle type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getVehicleType()
+    {
+        return $this->vehicleType;
     }
 
     /**

@@ -7,7 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationGoodsOcTotalAuthReviewService;
 
 /**
@@ -24,27 +24,28 @@ class ApplicationGoodsOcTotalAuthReviewServiceTest extends \PHPUnit\Framework\Te
         $this->sut = new ApplicationGoodsOcTotalAuthReviewService();
     }
 
-    public function testGetConfigFromData()
+    public function testGetConfigFromDataWithHgv()
     {
         $data = [
-            'totAuthVehicles' => 100,
-            'totAuthTrailers' => 150,
-            'licenceType' => [
-                'id' => Licence::LICENCE_TYPE_STANDARD_NATIONAL
+            'totAuthVehicles' => 25,
+            'totAuthLgvVehicles' => null,
+            'totAuthTrailers' => 200,
+            'vehicleType' => [
+                'id' => RefData::APP_VEHICLE_TYPE_HGV
             ]
-
         ];
+
         $expected = [
             'header' => 'review-operating-centres-authorisation-title',
             'multiItems' => [
                 [
                     [
                         'label' => 'review-operating-centres-authorisation-vehicles',
-                        'value' => 100
+                        'value' => 25
                     ],
                     [
                         'label' => 'review-operating-centres-authorisation-trailers',
-                        'value' => 150
+                        'value' => 200
                     ]
                 ]
             ]
@@ -53,28 +54,109 @@ class ApplicationGoodsOcTotalAuthReviewServiceTest extends \PHPUnit\Framework\Te
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));
     }
 
-    public function testGetConfigFromDataWithStandardInternational()
+    public function testGetConfigFromDataWithMixedAndNullLgvAuth()
     {
         $data = [
-            'totAuthVehicles' => 100,
-            'totAuthTrailers' => 150,
+            'totAuthHgvVehicles' => 50,
+            'totAuthVehicles' => 50,
+            'totAuthLgvVehicles' => null,
+            'totAuthTrailers' => 12,
             'totCommunityLicences' => 200,
-            'licenceType' => [
-                'id' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            'vehicleType' => [
+                'id' => RefData::APP_VEHICLE_TYPE_MIXED
             ]
-
         ];
+
         $expected = [
             'header' => 'review-operating-centres-authorisation-title',
             'multiItems' => [
                 [
                     [
                         'label' => 'review-operating-centres-authorisation-vehicles',
-                        'value' => 100
+                        'value' => 50
                     ],
                     [
                         'label' => 'review-operating-centres-authorisation-trailers',
-                        'value' => 150
+                        'value' => 12
+                    ],
+                    [
+                        'label' => 'review-operating-centres-authorisation-community-licences',
+                        'value' => 200
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $this->sut->getConfigFromData($data));
+    }
+
+    /**
+     * @dataProvider dpGetConfigFromDataWithMixedAndNumericLgvAuth
+     */
+    public function testGetConfigFromDataWithMixedAndNumericLgvAuth($totAuthLgvVehicles)
+    {
+        $data = [
+            'totAuthHgvVehicles' => 50,
+            'totAuthLgvVehicles' => $totAuthLgvVehicles,
+            'totAuthTrailers' => 12,
+            'totCommunityLicences' => 200,
+            'vehicleType' => [
+                'id' => RefData::APP_VEHICLE_TYPE_MIXED
+            ]
+        ];
+
+        $expected = [
+            'header' => 'review-operating-centres-authorisation-title',
+            'multiItems' => [
+                [
+                    [
+                        'label' => 'review-operating-centres-authorisation-heavy-goods-vehicles',
+                        'value' => 50
+                    ],
+                    [
+                        'label' => 'review-operating-centres-authorisation-light-goods-vehicles',
+                        'value' => $totAuthLgvVehicles
+                    ],
+                    [
+                        'label' => 'review-operating-centres-authorisation-trailers',
+                        'value' => 12
+                    ],
+                    [
+                        'label' => 'review-operating-centres-authorisation-community-licences',
+                        'value' => 200
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $this->sut->getConfigFromData($data));
+    }
+
+    public function dpGetConfigFromDataWithMixedAndNumericLgvAuth()
+    {
+        return [
+            [0],
+            [5],
+        ];
+    }
+
+    public function testGetConfigFromDataWithLgv()
+    {
+        $data = [
+            'totAuthLgvVehicles' => 25,
+            'totCommunityLicences' => 200,
+            'vehicleType' => [
+                'id' => RefData::APP_VEHICLE_TYPE_LGV
+            ]
+        ];
+
+        $expected = [
+            'header' => 'review-operating-centres-authorisation-title',
+            'multiItems' => [
+                [
+                    [
+                        'label' => 'review-operating-centres-authorisation-light-goods-vehicles',
+                        'value' => 25
                     ],
                     [
                         'label' => 'review-operating-centres-authorisation-community-licences',

@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as LicenceQry;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle as ApplicationQry;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -64,6 +65,9 @@ abstract class AbstractStandardConditions extends DynamicBookmark
 
             case Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL:
                 $type = 'STANDARD_INT';
+                if ($this->data['vehicleType']['id'] == RefData::APP_VEHICLE_TYPE_LGV) {
+                    $type .= '_LGV';
+                }
                 break;
         }
 

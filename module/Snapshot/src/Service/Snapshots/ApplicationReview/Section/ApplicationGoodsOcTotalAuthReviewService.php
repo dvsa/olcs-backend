@@ -7,7 +7,7 @@
  */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Application Goods Oc Total Auth Review Service
@@ -16,6 +16,25 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  */
 class ApplicationGoodsOcTotalAuthReviewService extends AbstractReviewService
 {
+    const OTHER_ROW_DEFINITIONS = [
+        [
+            'label' => 'review-operating-centres-authorisation-trailers',
+            'sourceKey' => 'totAuthTrailers',
+            'vehicleTypeIds' => [
+                RefData::APP_VEHICLE_TYPE_HGV,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+            ]
+        ],
+        [
+            'label' => 'review-operating-centres-authorisation-community-licences',
+            'sourceKey' => 'totCommunityLicences',
+            'vehicleTypeIds' => [
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                RefData::APP_VEHICLE_TYPE_LGV,
+            ]
+        ]
+    ];
+
     /**
      * Get total auth config
      *
@@ -24,29 +43,46 @@ class ApplicationGoodsOcTotalAuthReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array())
     {
-        $config = [
-            'header' => 'review-operating-centres-authorisation-title',
-            'multiItems' => [
-                [
-                    [
-                        'label' => 'review-operating-centres-authorisation-vehicles',
-                        'value' => $data['totAuthVehicles']
-                    ],
-                    [
-                        'label' => 'review-operating-centres-authorisation-trailers',
-                        'value' => $data['totAuthTrailers']
-                    ]
-                ]
-            ]
-        ];
+        $multiItems = [];
+        $vehicleTypeId = $data['vehicleType']['id'];
 
-        if ($data['licenceType']['id'] === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
-            $config['multiItems'][0][] = [
-                'label' => 'review-operating-centres-authorisation-community-licences',
-                'value' => $data['totCommunityLicences']
+        if (($vehicleTypeId == RefData::APP_VEHICLE_TYPE_HGV) ||
+            ($vehicleTypeId == RefData::APP_VEHICLE_TYPE_MIXED && is_null($data['totAuthLgvVehicles']))
+        ) {
+            $multiItems[] = [
+                'label' => 'review-operating-centres-authorisation-vehicles',
+                'value' => $data['totAuthVehicles']
             ];
         }
 
-        return $config;
+        if ($vehicleTypeId == RefData::APP_VEHICLE_TYPE_MIXED && !is_null($data['totAuthLgvVehicles'])) {
+            $multiItems[] = [
+                'label' => 'review-operating-centres-authorisation-heavy-goods-vehicles',
+                'value' => $data['totAuthHgvVehicles']
+            ];
+        }
+
+        if ($vehicleTypeId == (RefData::APP_VEHICLE_TYPE_LGV) ||
+            ($vehicleTypeId == RefData::APP_VEHICLE_TYPE_MIXED && !is_null($data['totAuthLgvVehicles']))
+        ) {
+            $multiItems[] = [
+                'label' => 'review-operating-centres-authorisation-light-goods-vehicles',
+                'value' => $data['totAuthLgvVehicles']
+            ];
+        }
+
+        foreach (self::OTHER_ROW_DEFINITIONS as $definition) {
+            if (in_array($vehicleTypeId, $definition['vehicleTypeIds'])) {
+                $multiItems[] = [
+                    'label' => $definition['label'],
+                    'value' => $data[$definition['sourceKey']]
+                ];
+            }
+        }
+
+        return [
+            'header' => 'review-operating-centres-authorisation-title',
+            'multiItems' => [$multiItems]
+        ];
     }
 }

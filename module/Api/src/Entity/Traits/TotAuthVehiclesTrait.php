@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Entity\Traits;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use RuntimeException;
+
 /**
  * @see \Dvsa\OlcsTest\Api\Entity\Traits\TotAuthVehiclesTraitTest
  */
@@ -62,5 +66,124 @@ trait TotAuthVehiclesTrait
     public function getTotAuthLgvVehiclesZeroCoalesced()
     {
         return $this->getTotAuthLgvVehicles() ?? 0;
+    }
+
+    /**
+     * Can this entity have LGV
+     *
+     * @return bool
+     */
+    public function canHaveLgv(): bool
+    {
+        return in_array(
+            (string)$this->vehicleType,
+            [
+                RefData::APP_VEHICLE_TYPE_LGV,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+            ]
+        );
+    }
+
+    /**
+     * Must this entity have LGV
+     *
+     * @return bool
+     */
+    public function mustHaveLgv(): bool
+    {
+        return (RefData::APP_VEHICLE_TYPE_LGV === (string)$this->vehicleType);
+    }
+
+    /**
+     * Must this entity have operating centre
+     *
+     * @return bool
+     */
+    public function mustHaveOperatingCentre(): bool
+    {
+        return in_array(
+            (string)$this->vehicleType,
+            [
+                RefData::APP_VEHICLE_TYPE_HGV,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                RefData::APP_VEHICLE_TYPE_PSV,
+            ]
+        );
+    }
+
+    /**
+     * Can this entity have trailer
+     *
+     * @return bool
+     */
+    public function canHaveTrailer(): bool
+    {
+        return in_array(
+            (string)$this->vehicleType,
+            [
+                RefData::APP_VEHICLE_TYPE_HGV,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+            ]
+        );
+    }
+
+    /**
+     * Get the list of authorisation properties applicable to this licence/application
+     *
+     * @return array
+     */
+    public function getApplicableAuthProperties()
+    {
+        if (is_null($this->vehicleType)) {
+            return [];
+        }
+
+        if ((string)$this->licenceType == Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+            return [];
+        }
+
+        if ((string)$this->vehicleType == RefData::APP_VEHICLE_TYPE_MIXED &&
+            is_null($this->totAuthLgvVehicles)
+        ) {
+            return [
+                'totAuthVehicles',
+                'totAuthTrailers'
+            ];
+        }
+
+        $typeMappings = [
+            RefData::APP_VEHICLE_TYPE_PSV => [
+                'totAuthVehicles',
+            ],
+            RefData::APP_VEHICLE_TYPE_HGV => [
+                'totAuthVehicles',
+                'totAuthTrailers',
+            ],
+            RefData::APP_VEHICLE_TYPE_MIXED => [
+                'totAuthHgvVehicles',
+                'totAuthLgvVehicles',
+                'totAuthTrailers',
+            ],
+            RefData::APP_VEHICLE_TYPE_LGV => [
+                'totAuthLgvVehicles',
+            ],
+        ];
+
+        $vehicleTypeId = $this->vehicleType->getId();
+        if (!isset($typeMappings[$vehicleTypeId])) {
+            throw new RuntimeException('Unrecognised vehicle type id: ' . $vehicleTypeId);
+        }
+
+        return $typeMappings[$vehicleTypeId];
+    }
+
+    /**
+     * Whether this licence/application has a mixed vehicle type and a non-null lgv authorisation
+     *
+     * @return bool
+     */
+    public function isVehicleTypeMixedWithLgv()
+    {
+        return (string)$this->vehicleType == RefData::APP_VEHICLE_TYPE_MIXED && !is_null($this->totAuthLgvVehicles);
     }
 }

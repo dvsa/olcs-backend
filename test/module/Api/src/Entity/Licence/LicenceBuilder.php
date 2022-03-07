@@ -68,6 +68,15 @@ class LicenceBuilder implements BuilderInterface
     }
 
     /**
+     * @return $this
+     */
+    public function forMixedVehicleType(): self
+    {
+        $this->instance->setVehicleType(new RefData(RefData::APP_VEHICLE_TYPE_MIXED));
+        return $this;
+    }
+
+    /**
      * @param int $hgvCount
      * @param int $lgvCount
      * @return $this

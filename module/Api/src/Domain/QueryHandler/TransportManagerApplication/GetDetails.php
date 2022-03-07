@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -41,6 +42,12 @@ class GetDetails extends AbstractQueryHandler
 
         $tmId = $tma->getTransportManager()->getId();
 
+        // get LGV Acquired Rights reference number
+        $lgvAcquiredRightsQualification = $tma->getTransportManager()->getLgvAcquiredRightsQualification();
+
+        $lgvAcquiredRightsReferenceNumber = ($lgvAcquiredRightsQualification instanceof TmQualification)
+            ? $lgvAcquiredRightsQualification->getSerialNo() : '';
+
         // populate the required associated entities
         $this->getRepo('ApplicationOperatingCentre')->fetchByApplication($tma->getApplication()->getId());
         $this->getRepo('LicenceOperatingCentre')->fetchByLicence($tma->getApplication()->getLicence()->getId());
@@ -68,7 +75,8 @@ class GetDetails extends AbstractQueryHandler
                                 'countryCode'
                             ]
                         ]
-                    ]
+                    ],
+                    'vehicleType',
                 ],
                 'transportManager' => [
                     'homeCd' => [
@@ -105,7 +113,8 @@ class GetDetails extends AbstractQueryHandler
             ],
             [
                 'isTmLoggedInUser' => $this->getCurrentUser()->getTransportManager() === $tma->getTransportManager(),
-                'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures()
+                'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
+                'lgvAcquiredRightsReferenceNumber' => $lgvAcquiredRightsReferenceNumber,
             ]
         );
     }
