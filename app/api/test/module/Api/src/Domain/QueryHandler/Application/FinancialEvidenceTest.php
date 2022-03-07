@@ -106,13 +106,23 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getRatesForView')
-            ->with($goodsOrPsv)
+            ->withNoArgs()
             ->andReturn(
                 [
-                    'standardFirst' => 7000,
-                    'standardAdditional' => 3900,
-                    'restrictedFirst' => 3100,
-                    'restrictedAdditional' => 1700,
+                    'restrictedHeavyGoodsFirst' => 3100,
+                    'restrictedHeavyGoodsAdditional' => 1700,
+                    'restrictedPassengerServiceFirst' => 3100,
+                    'restrictedPassengerServiceAdditional' => 1700,
+                    'standardNationalHeavyGoodsFirst' => 8000,
+                    'standardNationalHeavyGoodsAdditional' => 4500,
+                    'standardNationalPassengerServiceFirst' => 8000,
+                    'standardNationalPassengerServiceAdditional' => 4500,
+                    'standardInternationalHeavyGoodsFirst' => 8000,
+                    'standardInternationalHeavyGoodsAdditional' => 4500,
+                    'standardInternationalLightGoodsFirst' => 1600,
+                    'standardInternationalLightGoodsAdditional' => 800,
+                    'standardInternationalPassengerServiceFirst' => 8000,
+                    'standardInternationalPassengerServiceAdditional' => 4500,
                 ]
             );
         $this->mockedSmServices['FinancialStandingHelperService']
@@ -134,10 +144,20 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             'documents' => [['doc' => 'bar']],
             'financialEvidence' => [
                 'requiredFinance' => $totalRequired,
-                'standardFirst' => 7000,
-                'standardAdditional' => 3900,
-                'restrictedFirst' => 3100,
-                'restrictedAdditional' => 1700,
+                'restrictedHeavyGoodsFirst' => 3100,
+                'restrictedHeavyGoodsAdditional' => 1700,
+                'restrictedPassengerServiceFirst' => 3100,
+                'restrictedPassengerServiceAdditional' => 1700,
+                'standardNationalHeavyGoodsFirst' => 8000,
+                'standardNationalHeavyGoodsAdditional' => 4500,
+                'standardNationalPassengerServiceFirst' => 8000,
+                'standardNationalPassengerServiceAdditional' => 4500,
+                'standardInternationalHeavyGoodsFirst' => 8000,
+                'standardInternationalHeavyGoodsAdditional' => 4500,
+                'standardInternationalLightGoodsFirst' => 1600,
+                'standardInternationalLightGoodsAdditional' => 800,
+                'standardInternationalPassengerServiceFirst' => 8000,
+                'standardInternationalPassengerServiceAdditional' => 4500,
                 'applicationVehicles' => 3,
                 'otherLicenceVehicles' => 4,
                 'otherApplicationVehicles' => 2,

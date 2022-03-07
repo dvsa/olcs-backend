@@ -25,7 +25,7 @@ final class UpdateOperatingCentresStatus extends AbstractUpdateStatus
 
     protected function isSectionValid(Application $application)
     {
-        if (count($application->getOperatingCentres()) === 0) {
+        if ($application->mustHaveOperatingCentre() && count($application->getOperatingCentres()) === 0) {
             return false;
         }
 
@@ -33,9 +33,7 @@ final class UpdateOperatingCentresStatus extends AbstractUpdateStatus
             return false;
         }
 
-        if ($application->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE
-            && $application->getTotAuthTrailers() === null
-        ) {
+        if ($application->canHaveTrailer() && $application->getTotAuthTrailers() === null) {
             return false;
         }
 

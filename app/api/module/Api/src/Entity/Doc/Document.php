@@ -37,9 +37,11 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
     const PSV_CONTINUATION_CHECKLIST_SR = 'PSVSRChecklist';
 
     const GV_LICENCE_GB     = 'GV_LICENCE_V1';
+    const GV_LGV_LICENCE_GB = 'GV_LGV_LICENCE_V1';
     const PSV_LICENCE_GB    = 'PSV_LICENCE_V1';
     const PSR_SR_LICENCE_GB = 'PSVSRLicence';
     const GV_LICENCE_NI     = 'GV_LICENCE_V1';
+    const GV_LGV_LICENCE_NI = 'GV_LGV_LICENCE_V1';
     const PSV_LICENCE_NI    = 'PSV_LICENCE_V1';
     const PSR_SR_LICENCE_NI = 'PSVSRLicence';
 

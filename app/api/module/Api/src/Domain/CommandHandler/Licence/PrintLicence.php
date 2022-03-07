@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 
@@ -62,7 +63,9 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
     {
         if ($licence->getNiFlag() === 'Y') {
             if ($licence->isGoods()) {
-                return Document::GV_LICENCE_NI;
+                return (RefData::APP_VEHICLE_TYPE_LGV === (string)$licence->getVehicleType())
+                    ? Document::GV_LGV_LICENCE_NI
+                    : Document::GV_LICENCE_NI;
             }
 
             if ($licence->isSpecialRestricted()) {
@@ -73,7 +76,9 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
         }
 
         if ($licence->isGoods()) {
-            return Document::GV_LICENCE_GB;
+            return (RefData::APP_VEHICLE_TYPE_LGV === (string)$licence->getVehicleType())
+                ? Document::GV_LGV_LICENCE_GB
+                : Document::GV_LICENCE_GB;
         }
 
         if ($licence->isSpecialRestricted()) {
@@ -93,7 +98,9 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
     private function getDescription(LicenceEntity $licence)
     {
         if ($licence->isGoods()) {
-            return 'GV Licence';
+            return (RefData::APP_VEHICLE_TYPE_LGV === (string)$licence->getVehicleType())
+                ? 'GV Licence LGV Only'
+                : 'GV Licence';
         }
 
         if ($licence->isSpecialRestricted()) {

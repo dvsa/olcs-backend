@@ -6,5 +6,5 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUpdateInterim;
 
 final class UpdateInterim extends AbstractUpdateInterim
 {
-    protected $allowZeroAuthHgvVehicles = true;
+    protected $allowZeroAuthVehicles = true;
 }

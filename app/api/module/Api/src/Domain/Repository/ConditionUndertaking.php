@@ -242,6 +242,28 @@ class ConditionUndertaking extends AbstractRepository
     }
 
     /**
+     * Whether this licence id has the light goods vehicle undertakings
+     *
+     * @param int $licenceId licence id
+     *
+     * @return bool
+     */
+    public function hasLightGoodsVehicleUndertakings($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->select('count(' . $this->alias . '.id)');
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.conditionType', ':conditionType'))
+            ->setParameter('conditionType', Entity::TYPE_UNDERTAKING);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.notes', ':note'))
+            ->setParameter('note', Entity::LIGHT_GOODS_VEHICLE_UNDERTAKINGS);
+
+        return $qb->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    /**
      * Remove from Variation, after delete CUs from licence
      *
      * @param array $ids Condition Undertaking identifiers

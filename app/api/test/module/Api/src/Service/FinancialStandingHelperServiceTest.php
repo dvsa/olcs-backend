@@ -217,38 +217,29 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
         ];
     }
 
-    /**
-     * @dataProvider goodsOrPsvProvider
-     * @param string $goodsOrPsv
-     * @param array $expected
-     */
-    public function testGetRatesForView($goodsOrPsv, $expected)
+    public function testGetRatesForView()
     {
-        $this->assertEquals($expected, $this->sut->getRatesForView($goodsOrPsv));
-    }
-
-    public function goodsOrPsvProvider()
-    {
-        return [
-            [
-                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-                [
-                    'standardFirst' => 7000,
-                    'standardAdditional' => 3900,
-                    'restrictedFirst' => 3100,
-                    'restrictedAdditional' => 1700,
-                ],
-            ],
-            [
-                Licence::LICENCE_CATEGORY_PSV,
-                [
-                    'standardFirst' => 8000,
-                    'standardAdditional' => 4900,
-                    'restrictedFirst' => 4100,
-                    'restrictedAdditional' => 2700,
-                ],
-            ],
+        $expected = [
+            'restrictedHeavyGoodsFirst' => 3100.0,
+            'restrictedHeavyGoodsAdditional' => 1700.0,
+            'restrictedPassengerServiceFirst' => 4100.0,
+            'restrictedPassengerServiceAdditional' => 2700.0,
+            'standardNationalHeavyGoodsFirst' => 7000.0,
+            'standardNationalHeavyGoodsAdditional' => 3900.0,
+            'standardNationalPassengerServiceFirst' => 8000.0,
+            'standardNationalPassengerServiceAdditional' => 4900.0,
+            'standardInternationalHeavyGoodsFirst' => 7000.0,
+            'standardInternationalHeavyGoodsAdditional' => 3900.0,
+            'standardInternationalLightGoodsFirst' => 1600.0,
+            'standardInternationalLightGoodsAdditional' => 800.0,
+            'standardInternationalPassengerServiceFirst' => 8000.0,
+            'standardInternationalPassengerServiceAdditional' => 4900.0,
         ];
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->getRatesForView()
+        );
     }
 
     public function testGetAdditionalVehicleRateNull()

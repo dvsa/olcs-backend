@@ -11,6 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateTypeOfLicenceStatus as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateTypeOfLicenceStatus;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
 
@@ -35,9 +36,11 @@ class UpdateTypeOfLicenceStatusTest extends AbstractUpdateStatusTestCase
     {
         $this->refData = [
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
             Licence::LICENCE_TYPE_RESTRICTED,
             Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-            Licence::LICENCE_CATEGORY_PSV
+            Licence::LICENCE_CATEGORY_PSV,
+            RefData::APP_VEHICLE_TYPE_PSV,
         ];
 
         parent::initReferences();
@@ -71,7 +74,6 @@ class UpdateTypeOfLicenceStatusTest extends AbstractUpdateStatusTestCase
         $this->applicationCompletion->setTypeOfLicenceStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
         $this->application->setNiFlag('Y');
-        $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
@@ -94,6 +96,7 @@ class UpdateTypeOfLicenceStatusTest extends AbstractUpdateStatusTestCase
         $this->application->setNiFlag('N');
         $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_PSV]);
         $this->application->setLicenceType($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $this->application->setVehicleType($this->refData[RefData::APP_VEHICLE_TYPE_PSV]);
 
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
     }

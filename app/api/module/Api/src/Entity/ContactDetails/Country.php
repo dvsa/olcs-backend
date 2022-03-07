@@ -55,6 +55,7 @@ class Country extends AbstractCountry
     const ID_TUNISIA = 'TN';
     const ID_TURKEY = 'TR';
     const ID_UKRAINE = 'UA';
+    const ID_UNITED_KINGDOM = 'GB';
 
     /**
      * Whether this country is Morocco

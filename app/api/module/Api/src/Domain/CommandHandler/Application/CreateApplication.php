@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateAplic
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\DerivedTypeOfLicenceParamsTrait;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -32,7 +33,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
  */
 final class CreateApplication extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait, DerivedTypeOfLicenceParamsTrait;
 
     protected $repoServiceName = 'Application';
 
@@ -73,17 +74,12 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
     private function populateTypeOfLicence(Cmd $command, Application $application)
     {
         if ($command->getNiFlag() !== null && $command->getLicenceType() !== null) {
-
-            if ($command->getNiFlag() !== 'Y') {
-                $operatorType = $this->getRepo()->getRefdataReference($command->getOperatorType());
-            } else {
-                $operatorType = $this->getRepo()->getRefdataReference(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
-            }
-
             $application->updateTypeOfLicence(
                 $command->getNiFlag(),
-                $operatorType,
-                $this->getRepo()->getRefdataReference($command->getLicenceType())
+                $this->getDerivedOperatorType($command),
+                $this->getRepo()->getRefdataReference($command->getLicenceType()),
+                $this->getDerivedVehicleType($command),
+                $command->getLgvDeclarationConfirmation() ?? 0
             );
 
             return true;

@@ -59,6 +59,7 @@ class Overview extends AbstractQueryHandler
                 'outOfRepresentationDate' => $this->getDateOrString($application->getOutOfRepresentationDate()),
                 'operatingCentresNetDelta' => $application->getOperatingCentresNetDelta(),
                 'licenceVehicles' => $this->resultList($application->getActiveVehicles()),
+                'applicableAuthProperties' => $application->getApplicableAuthProperties(),
             ]
         );
     }

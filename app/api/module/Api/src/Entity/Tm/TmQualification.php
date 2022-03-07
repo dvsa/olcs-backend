@@ -5,6 +5,8 @@ namespace Dvsa\Olcs\Api\Entity\Tm;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -36,6 +38,29 @@ class TmQualification extends AbstractTmQualification
     const QUALIFICATION_TYPE_NIAR = 'tm_qt_niar';
     const QUALIFICATION_TYPE_NICPCSI = 'tm_qt_nicpcsi';
     const QUALIFICATION_TYPE_NIEXSI = 'tm_qt_niexsi';
+    const QUALIFICATION_TYPE_LGVAR = 'tm_qt_lgvar';
+    const QUALIFICATION_TYPE_NILGVAR = 'tm_qt_nilgvar';
+
+    /**
+     * Create TmQualification object
+     *
+     * @param TransportManager $tm
+     * @param Country $country
+     * @param RefData $qualificationType
+     * @param string $serialNo
+     *
+     * @return TmQualification
+     */
+    public static function create(TransportManager $tm, Country $country, RefData $qualificationType, string $serialNo)
+    {
+        $tmQualification = new static();
+        $tmQualification->setTransportManager($tm);
+        $tmQualification->setCountryCode($country);
+        $tmQualification->setQualificationType($qualificationType);
+        $tmQualification->setSerialNo($serialNo);
+
+        return $tmQualification;
+    }
 
     public function updateTmQualification(
         $qualificationType,

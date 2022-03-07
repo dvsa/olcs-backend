@@ -69,6 +69,18 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
             );
         }
 
+        if (!$licence->canBecomeStandardInternational()
+            && $command->getLicenceType() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        ) {
+            throw new ValidationException(
+                [
+                    'licenceType' => [
+                        Licence::ERROR_CANT_BE_SI => 'You are not able to change licence type to standard international'
+                    ]
+                ]
+            );
+        }
+
         $application->setLicenceType($this->getRepo()->getRefdataReference($command->getLicenceType()));
 
         $this->getRepo()->save($application);

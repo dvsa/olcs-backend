@@ -712,7 +712,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         if ($this->application->isPsv()) {
             $this->updateHelper->validatePsv($this->application, $command);
         } else {
-            $this->updateHelper->validateTotalAuthTrailers($command, $totals);
+            $this->updateHelper->validateTotalAuthTrailers($this->application, $command, $totals);
         }
 
         $this->updateHelper->validateTotalAuthHgvVehicles($this->application, $command, $totals);

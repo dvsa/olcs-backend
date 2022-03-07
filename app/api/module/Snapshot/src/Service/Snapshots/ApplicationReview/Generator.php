@@ -302,16 +302,18 @@ class Generator extends AbstractGenerator
             $serviceName = 'Review\\' . $entity . ucfirst($filter->filter($section));
 
             $config = null;
+            $header = 'review-' . $section;
 
             // @NOTE this check is in place while we implement each section
             // eventually we should be able to remove the if
             if ($this->getServiceLocator()->has($serviceName)) {
                 $service = $this->getServiceLocator()->get($serviceName);
+                $header = $service->getHeaderTranslationKey($reviewData, $section);
                 $config = $service->getConfigFromData($reviewData);
             }
 
             $sectionConfig[] = [
-                'header' => 'review-' . $section,
+                'header' => $header,
                 'config' => $config
             ];
         }

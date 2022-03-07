@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Service\Lva;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
 
 /**
@@ -137,7 +138,10 @@ class SectionConfig
             'restricted' => [
                 [
                     'licence',
-                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+                    [
+                        RefData::APP_VEHICLE_TYPE_HGV,
+                        RefData::APP_VEHICLE_TYPE_MIXED,
+                    ]
                 ]
             ]
         ],

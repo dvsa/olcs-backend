@@ -5,6 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateLightGoodsVehicleCondition
+    as CreateLightGoodsVehicleConditionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -49,6 +51,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         $this->updateStatus($application);
 
         $this->result->merge($this->createTask($application));
+        $this->result->merge($this->maybeCreateLightGoodsVehicleCondition($application));
 
         if ($this->shouldPublishApplication($application)) {
             $this->result->merge($this->createPublication($application));
@@ -195,8 +198,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             return $taskData;
         }
 
-        if($application::CODE_GV_VAR_UPGRADE === $application->getCode())
-        {
+        if ($application::CODE_GV_VAR_UPGRADE === $application->getCode()) {
             $taskData['urgent'] = 'Y';
         }
 
@@ -209,8 +211,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
             //  If was not added, but was removed at least ONE transport manager
             $statByAction = $stat['action'];
-            if (
-                (int)$statByAction[Entity\Tm\TransportManagerApplication::ACTION_ADD] === 0
+            if ((int)$statByAction[Entity\Tm\TransportManagerApplication::ACTION_ADD] === 0
                 && $statByAction[Entity\Tm\TransportManagerApplication::ACTION_DELETE] > 0
             ) {
                 $taskData['subCategory'] = CategoryEntity::TASK_SUB_CATEGORY_APPLICATION_TM1_REMOVAL_VARIATION;
@@ -330,6 +331,22 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
                 [
                     'id' => $application->getId(),
                 ]
+            )
+        );
+    }
+
+    /**
+     * Maybe create light goods vehicle condition
+     *
+     * @param ApplicationEntity $application
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
+    protected function maybeCreateLightGoodsVehicleCondition(ApplicationEntity $application)
+    {
+        return $this->handleSideEffectAsSystemUser(
+            CreateLightGoodsVehicleConditionCmd::create(
+                ['applicationId' => $application->getId()]
             )
         );
     }

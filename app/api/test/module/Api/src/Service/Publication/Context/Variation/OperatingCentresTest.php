@@ -37,9 +37,9 @@ class OperatingCentresTest extends MockeryTestCase
     /**
      * @dataProvider dpTestProvideAdded
      */
-    public function testProvideAdded($isEligibleForLgv, $expectedContext)
+    public function testProvideAdded($isVehicleTypeMixedWithLgv, $expectedContext)
     {
-        $publicationLink = $this->getPublicationLink($isEligibleForLgv);
+        $publicationLink = $this->getPublicationLink($isVehicleTypeMixedWithLgv);
         $context = new \ArrayObject();
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
@@ -103,9 +103,9 @@ class OperatingCentresTest extends MockeryTestCase
     /**
      * @dataProvider dpTestProvideS4Ignored
      */
-    public function testProvideS4Ignored($isEligibleForLgv, $expectedContext)
+    public function testProvideS4Ignored($isVehicleTypeMixedWithLgv, $expectedContext)
     {
-        $publicationLink = $this->getPublicationLink($isEligibleForLgv);
+        $publicationLink = $this->getPublicationLink($isVehicleTypeMixedWithLgv);
         $context = new \ArrayObject();
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
@@ -166,9 +166,9 @@ class OperatingCentresTest extends MockeryTestCase
     /**
      * @dataProvider dpTestProvideUpdated
      */
-    public function testProvideUpdated($isEligibleForLgv, $expectedContext)
+    public function testProvideUpdated($isVehicleTypeMixedWithLgv, $expectedContext)
     {
-        $publicationLink = $this->getPublicationLink($isEligibleForLgv);
+        $publicationLink = $this->getPublicationLink($isVehicleTypeMixedWithLgv);
         $context = new \ArrayObject();
 
         $mockAddressFormatter = m::mock(FormatAddress::class);
@@ -342,11 +342,11 @@ class OperatingCentresTest extends MockeryTestCase
     }
 
     /**
-     * @param bool $isEligibleForLgv
+     * @param bool $isVehicleTypeMixedWithLgv
      *
      * @return PublicationLink
      */
-    private function getPublicationLink($isEligibleForLgv)
+    private function getPublicationLink($isVehicleTypeMixedWithLgv)
     {
         $publicationLink = new PublicationLink();
 
@@ -360,13 +360,17 @@ class OperatingCentresTest extends MockeryTestCase
         $licence = m::mock(\Dvsa\Olcs\Api\Entity\Licence\Licence::class)->makePartial();
         $licence->setOperatingCentres(new ArrayCollection());
         $licence->setOrganisation($organisation);
-        $licence->shouldReceive('isEligibleForLgv')
-            ->withNoArgs()
-            ->andReturn($isEligibleForLgv);
 
         $publicationLink->setLicence($licence);
 
-        $application = new \Dvsa\Olcs\Api\Entity\Application\Application($licence, new RefData(), true);
+        $application = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)->makePartial();
+        $application->initCollections();
+        $application->setLicence($licence);
+        $application->setIsVariation(true);
+        $application->shouldReceive('isVehicleTypeMixedWithLgv')
+            ->withNoArgs()
+            ->andReturn($isVehicleTypeMixedWithLgv);
+
         $publicationLink->setApplication($application);
 
         return $publicationLink;

@@ -26,7 +26,7 @@ class VariationGoodsOcTotalAuthReviewService extends AbstractVariationOcTotalAut
     {
         $changedKeys = [];
 
-        if ($data['isEligibleForLgv']) {
+        if (!is_null($data['totAuthLgvVehicles'])) {
             $changedKeys['totAuthHgvVehicles'] = 'vehicles-hgv';
             $changedKeys['totAuthLgvVehicles'] = 'vehicles-lgv';
         } else {

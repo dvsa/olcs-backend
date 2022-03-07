@@ -3,11 +3,20 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler;
-use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication;
-use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Repository\TmQualification as TmQualificationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
+use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\Tm\TmEmployment;
+use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -26,8 +35,9 @@ class UpdateDetailsTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new CommandHandler\TransportManagerApplication\UpdateDetails();
-        $this->mockRepo('TransportManagerApplication', TransportManagerApplication::class);
-        $this->mockRepo('ContactDetails', ContactDetails::class);
+        $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
+        $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
+        $this->mockRepo('TmQualification', TmQualificationRepo::class);
         $this->mockRepo('Address', \Dvsa\Olcs\Api\Domain\Repository\Address::class);
         $this->mockRepo('TmEmployment', \Dvsa\Olcs\Api\Domain\Repository\TmEmployment::class);
         $this->mockRepo('OtherLicence', \Dvsa\Olcs\Api\Domain\Repository\OtherLicence::class);
@@ -37,16 +47,22 @@ class UpdateDetailsTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
-        $this->refData = ['TM_TYPE', 'ct_tm', 'tmap_st_awaiting_signature'];
+        $this->refData = [
+            'TM_TYPE',
+            'ct_tm',
+            'tmap_st_awaiting_signature',
+            TmQualification::QUALIFICATION_TYPE_LGVAR,
+            TmQualification::QUALIFICATION_TYPE_NILGVAR,
+        ];
 
         $this->references = [
             \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre::class => [
                 12 => m::mock(\Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre::class),
                 65 => m::mock(\Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre::class),
             ],
-            \Dvsa\Olcs\Api\Entity\ContactDetails\Country::class => [
-                'DE' => m::mock(\Dvsa\Olcs\Api\Entity\ContactDetails\Country::class),
-                'GB' => m::mock(\Dvsa\Olcs\Api\Entity\ContactDetails\Country::class),
+            Country::class => [
+                Country::ID_GERMANY => m::mock(Country::class),
+                Country::ID_UNITED_KINGDOM => m::mock(Country::class),
             ]
         ];
 
@@ -59,15 +75,15 @@ class UpdateDetailsTest extends CommandHandlerTestCase
     public function testHandleCommand($commandData)
     {
         $command = Command::create($commandData);
-        $tma = new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication();
+        $tma = new TransportManagerApplication();
         $tma->setId(863);
-        $tma->setTransportManager(new \Dvsa\Olcs\Api\Entity\Tm\TransportManager());
+        $tma->setTransportManager(new TransportManager());
         $tma->getTransportManager()->setHomeCd(
-            new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(
-                m::mock(\Dvsa\Olcs\Api\Entity\System\RefData::class)
+            new ContactDetails(
+                m::mock(RefData::class)
             )
         );
-        $tma->getTransportManager()->getHomeCd()->setPerson(new \Dvsa\Olcs\Api\Entity\Person\Person());
+        $tma->getTransportManager()->getHomeCd()->setPerson(new Person());
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)->andReturn($tma);
@@ -146,7 +162,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'LINE_4',
                         'town' => 'TOWN',
                         'postcode' => 'POSTCODE',
-                        'countryCode' => 'GB',
+                        'countryCode' => Country::ID_UNITED_KINGDOM,
                     ],
                     'workAddress' => [
                         'addressLine1' => 'W_LINE_1',
@@ -155,7 +171,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'W_LINE_4',
                         'town' => 'W_TOWN',
                         'postcode' => 'W_POSTCODE',
-                        'countryCode' => 'DE',
+                        'countryCode' => Country::ID_GERMANY,
                     ],
                     'tmType' => 'TM_TYPE',
                     'isOwner' => 'Y',
@@ -189,7 +205,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'LINE_4',
                         'town' => 'TOWN',
                         'postcode' => 'POSTCODE',
-                        'countryCode' => 'GB',
+                        'countryCode' => Country::ID_UNITED_KINGDOM,
                     ],
                     'workAddress' => [
                         'addressLine1' => 'W_LINE_1',
@@ -198,7 +214,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'W_LINE_4',
                         'town' => 'W_TOWN',
                         'postcode' => 'W_POSTCODE',
-                        'countryCode' => 'DE',
+                        'countryCode' => Country::ID_GERMANY,
                     ],
                     'tmType' => 'TM_TYPE',
                     'isOwner' => 'Y',
@@ -232,7 +248,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'LINE_4',
                         'town' => 'TOWN',
                         'postcode' => 'POSTCODE',
-                        'countryCode' => 'GB',
+                        'countryCode' => Country::ID_UNITED_KINGDOM,
                     ],
                     'workAddress' => [
                         'addressLine1' => 'W_LINE_1',
@@ -241,7 +257,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'W_LINE_4',
                         'town' => 'W_TOWN',
                         'postcode' => 'W_POSTCODE',
-                        'countryCode' => 'DE',
+                        'countryCode' => Country::ID_GERMANY,
                     ],
                     'tmType' => 'TM_TYPE',
                     'isOwner' => 'Y',
@@ -274,7 +290,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'LINE_4',
                         'town' => 'TOWN',
                         'postcode' => 'POSTCODE',
-                        'countryCode' => 'GB',
+                        'countryCode' => Country::ID_UNITED_KINGDOM,
                     ],
                     'workAddress' => [
                         'addressLine1' => 'W_LINE_1',
@@ -283,7 +299,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'W_LINE_4',
                         'town' => 'W_TOWN',
                         'postcode' => 'W_POSTCODE',
-                        'countryCode' => 'DE',
+                        'countryCode' => Country::ID_GERMANY,
                     ],
                     'tmType' => 'TM_TYPE',
                     'isOwner' => 'Y',
@@ -316,7 +332,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'LINE_4',
                         'town' => 'TOWN',
                         'postcode' => 'POSTCODE',
-                        'countryCode' => 'GB',
+                        'countryCode' => Country::ID_UNITED_KINGDOM,
                     ],
                     'workAddress' => [
                         'addressLine1' => 'W_LINE_1',
@@ -325,7 +341,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                         'addressLine4' => 'W_LINE_4',
                         'town' => 'W_TOWN',
                         'postcode' => 'W_POSTCODE',
-                        'countryCode' => 'DE',
+                        'countryCode' => Country::ID_GERMANY,
                     ],
                     'tmType' => 'TM_TYPE',
                     'isOwner' => 'Y',
@@ -347,5 +363,173 @@ class UpdateDetailsTest extends CommandHandlerTestCase
         ];
 
         return $commands;
+    }
+
+    public function dpHandleCommandWithLgvAcquiredRightsReferenceNumber()
+    {
+        return [
+            'NI' => [
+                'isNi' => true,
+                'expectedQualificationType' => TmQualification::QUALIFICATION_TYPE_NILGVAR,
+            ],
+            'non-NI' => [
+                'isNi' => false,
+                'expectedQualificationType' => TmQualification::QUALIFICATION_TYPE_LGVAR,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpHandleCommandWithLgvAcquiredRightsReferenceNumber
+     */
+    public function testHandleCommandWithLgvAcquiredRightsReferenceNumber($isNi, $expectedQualificationType)
+    {
+        $commandData = [
+            'id' => 863,
+            'version' => 234,
+            'lgvAcquiredRightsReferenceNumber' => 'ABC1234',
+            'homeAddress' => [
+                'addressLine1' => 'LINE_1',
+                'addressLine2' => 'LINE_2',
+                'addressLine3' => 'LINE_3',
+                'addressLine4' => 'LINE_4',
+                'town' => 'TOWN',
+                'postcode' => 'POSTCODE',
+                'countryCode' => Country::ID_UNITED_KINGDOM,
+            ],
+            'workAddress' => [
+                'addressLine1' => 'W_LINE_1',
+                'addressLine2' => 'W_LINE_2',
+                'addressLine3' => 'W_LINE_3',
+                'addressLine4' => 'W_LINE_4',
+                'town' => 'W_TOWN',
+                'postcode' => 'W_POSTCODE',
+                'countryCode' => Country::ID_GERMANY,
+            ],
+            'submit' => 'N',
+        ];
+
+        $command = Command::create($commandData);
+
+        $tm = m::mock(TransportManager::class)->makePartial();
+        $tm->shouldReceive('hasLgvAcquiredRightsQualification')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->shouldReceive('isNi')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($isNi);
+
+        $tma = new TransportManagerApplication();
+        $tma->setId(863);
+        $tma->setTransportManager($tm);
+        $tma->getTransportManager()->setHomeCd(
+            new ContactDetails(
+                m::mock(RefData::class)
+            )
+        );
+        $tma->getTransportManager()->getHomeCd()->setPerson(new Person());
+        $tma->setApplication($application);
+
+        $this->repoMap['TmQualification']
+            ->shouldReceive('save')
+            ->withArgs(function ($tmQualification) use ($tm, $expectedQualificationType) {
+                $this->assertSame(
+                    $tm,
+                    $tmQualification->getTransportManager()
+                );
+                $this->assertSame(
+                    $this->references[Country::class][Country::ID_UNITED_KINGDOM],
+                    $tmQualification->getCountryCode()
+                );
+                $this->assertSame(
+                    $this->refData[$expectedQualificationType],
+                    $tmQualification->getQualificationType()
+                );
+                $this->assertEquals('ABC1234', $tmQualification->getSerialNo());
+                return true;
+            })
+            ->once();
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)
+            ->andReturn($tma);
+
+        $this->repoMap['Address']->shouldReceive('save')->once();
+        $this->repoMap['ContactDetails']->shouldReceive('save')->once();
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Transport Manager Application ID 863 updated'], $result->getMessages());
+    }
+
+    public function testHandleCommandWithLgvAcquiredRightsReferenceNumberAndQualificationAlreadySet()
+    {
+        $commandData = [
+            'id' => 863,
+            'version' => 234,
+            'lgvAcquiredRightsReferenceNumber' => 'ABC1234',
+            'homeAddress' => [
+                'addressLine1' => 'LINE_1',
+                'addressLine2' => 'LINE_2',
+                'addressLine3' => 'LINE_3',
+                'addressLine4' => 'LINE_4',
+                'town' => 'TOWN',
+                'postcode' => 'POSTCODE',
+                'countryCode' => Country::ID_UNITED_KINGDOM,
+            ],
+            'workAddress' => [
+                'addressLine1' => 'W_LINE_1',
+                'addressLine2' => 'W_LINE_2',
+                'addressLine3' => 'W_LINE_3',
+                'addressLine4' => 'W_LINE_4',
+                'town' => 'W_TOWN',
+                'postcode' => 'W_POSTCODE',
+                'countryCode' => Country::ID_GERMANY,
+            ],
+            'submit' => 'N',
+        ];
+
+        $command = Command::create($commandData);
+
+        $tm = m::mock(TransportManager::class)->makePartial();
+        $tm->shouldReceive('hasLgvAcquiredRightsQualification')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $tma = new TransportManagerApplication();
+        $tma->setId(863);
+        $tma->setTransportManager($tm);
+        $tma->getTransportManager()->setHomeCd(
+            new ContactDetails(
+                m::mock(RefData::class)
+            )
+        );
+        $tma->getTransportManager()->getHomeCd()->setPerson(new Person());
+
+        $this->repoMap['TmQualification']
+            ->shouldReceive('save')
+            ->never();
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)
+            ->andReturn($tma);
+
+        $this->repoMap['Address']->shouldReceive('save')->once();
+        $this->repoMap['ContactDetails']->shouldReceive('save')->once();
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Transport Manager Application ID 863 updated'], $result->getMessages());
     }
 }

@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 
 /**
@@ -45,6 +46,7 @@ class ResetApplicationTest extends CommandHandlerTestCase
             LicenceEntity::LICENCE_CATEGORY_PSV,
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             ApplicationEntity::APPLIED_VIA_POST,
+            RefData::APP_VEHICLE_TYPE_PSV,
         ];
 
         parent::initReferences();
@@ -84,7 +86,8 @@ class ResetApplicationTest extends CommandHandlerTestCase
         $data = [
             'niFlag' => 'N',
             'operatorType' => LicenceEntity::LICENCE_CATEGORY_PSV,
-            'licenceType' => LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED
+            'licenceType' => LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
+            'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
         ];
         $command = Cmd::create($data);
 

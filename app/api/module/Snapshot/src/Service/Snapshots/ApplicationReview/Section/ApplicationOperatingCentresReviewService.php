@@ -12,7 +12,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ApplicationOperatingCentresReviewService extends AbstractReviewService
+class ApplicationOperatingCentresReviewService extends AbstractOperatingCentresReviewService
 {
     /**
      * Format the readonly config from the given data

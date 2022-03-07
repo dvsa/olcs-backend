@@ -23,7 +23,7 @@ final class Authorisations extends AbstractContext
     {
         $variation = $publicationLink->getApplication();
 
-        if ($variation->hasLgvAuthorisationIncreased()) {
+        if ($variation->hasLgvAuthorisationIncreased() || $variation->hasLgvAuthorisationChangedFromNullToNumeric()) {
             $text = sprintf(
                 'Light goods vehicles authorised on the licence. New authorisation will be %d vehicle(s)',
                 $variation->getTotAuthLgvVehicles()

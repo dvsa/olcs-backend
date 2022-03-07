@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TmEmployment as TmEmploymentRepo;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as UpdateDetailsCommand;
@@ -31,6 +32,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         'ContactDetails',
         'Address',
         'TmEmployment',
+        'TmQualification',
         'OtherLicence',
         'PreviousConviction',
     ];
@@ -65,9 +67,35 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
             $command->getDob() ? new DateTime($command->getDob()) : null
         );
 
+        $this->maybeAddLgvAcquiredRightsQualification($tma, $command);
+
         $this->getRepo()->save($tma);
 
         return $this->result->addMessage("Transport Manager Application ID {$tma->getId()} updated");
+    }
+
+    /**
+     * Add LGV Acquired Rights qualification if reference number is provided and this TM doesn't have one already
+     *
+     * @param TransportManagerApplication $tma
+     * @param UpdateDetailsCommand $command
+     *
+     * @return void
+     */
+    private function maybeAddLgvAcquiredRightsQualification(TransportManagerApplication $tma, UpdateDetailsCommand $command): void
+    {
+        if ($command->getLgvAcquiredRightsReferenceNumber() && !$tma->getTransportManager()->hasLgvAcquiredRightsQualification()) {
+            $qualificationType = $tma->getApplication()->isNi()
+                ? TmQualification::QUALIFICATION_TYPE_NILGVAR : TmQualification::QUALIFICATION_TYPE_LGVAR;
+
+            $tmQualification = TmQualification::create(
+                $tma->getTransportManager(),
+                $this->getRepo()->getReference(Country::class, Country::ID_UNITED_KINGDOM),
+                $this->getRepo()->getRefdataReference($qualificationType),
+                $command->getLgvAcquiredRightsReferenceNumber()
+            );
+            $this->getRepo('TmQualification')->save($tmQualification);
+        }
     }
 
     private function maybeDeleteAssociatedData(TransportManagerApplication $tma, UpdateDetailsCommand $command): void
