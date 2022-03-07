@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplication;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
@@ -55,7 +56,10 @@ class CreateApplicationTest extends CommandHandlerTestCase
             ApplicationEntity::APPLIED_VIA_PHONE,
             ApplicationEntity::APPLIED_VIA_SELFSERVE,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+            RefData::APP_VEHICLE_TYPE_LGV,
+            RefData::APP_VEHICLE_TYPE_HGV,
         ];
 
         $this->references = [
@@ -216,7 +220,8 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertSame($this->refData[$licenceStatus], $app->getLicence()->getStatus());
         if ($isInternal) {
             $this->assertSame(
-                $this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus()
+                $this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION],
+                $app->getStatus()
             );
         }
         $this->assertSame($this->refData[$appliedVia], $app->getAppliedVia());
@@ -231,6 +236,7 @@ class CreateApplicationTest extends CommandHandlerTestCase
             $this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE],
             $app->getLicence()->getTrafficArea()
         );
+        $this->assertSame(0, $app->getLgvDeclarationConfirmation());
     }
 
     /**
@@ -254,8 +260,10 @@ class CreateApplicationTest extends CommandHandlerTestCase
                 'trafficArea' => TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE,
                 'niFlag' => 'N',
                 'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-                'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                'appliedVia' => ApplicationEntity::APPLIED_VIA_PHONE
+                'licenceType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'lgvDeclarationConfirmation' => 1,
+                'appliedVia' => ApplicationEntity::APPLIED_VIA_PHONE,
             ]
         );
         /** @var ApplicationEntity $app */
@@ -322,7 +330,8 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertSame($this->refData[$licenceStatus], $app->getLicence()->getStatus());
         if ($isInternal) {
             $this->assertSame(
-                $this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION], $app->getStatus()
+                $this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION],
+                $app->getStatus()
             );
         }
         $this->assertSame($this->refData[$appliedVia], $app->getAppliedVia());
@@ -331,12 +340,14 @@ class CreateApplicationTest extends CommandHandlerTestCase
         $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals('2015-02-26', $app->getTargetCompletionDate()->format('Y-m-d')); // +8 weeks
         $this->assertEquals('N', $app->getNiFlag());
-        $this->assertSame($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL], $app->getLicenceType());
+        $this->assertSame($this->refData[Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL], $app->getLicenceType());
         $this->assertSame($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE], $app->getGoodsOrPsv());
         $this->assertSame(
             $this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE],
             $app->getLicence()->getTrafficArea()
         );
+        $this->assertSame($this->refData[RefData::APP_VEHICLE_TYPE_LGV], $app->getVehicleType());
+        $this->assertSame(1, $app->getLgvDeclarationConfirmation());
     }
 
     public function environmentProvider()

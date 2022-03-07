@@ -24,7 +24,10 @@ class OperatingCentresReviewServiceTest extends MockeryTestCase
         $this->sut = new OperatingCentresReviewService();
     }
 
-    public function testGetConfigFromData()
+    /**
+     * @dataProvider dpGetConfigFromData
+     */
+    public function testGetConfigFromData($canHaveTrailer, $isVehicleTypeMixedWithLgv, $expected)
     {
         $continuationDetail = new ContinuationDetail();
 
@@ -54,7 +57,7 @@ class OperatingCentresReviewServiceTest extends MockeryTestCase
             ->once()
             ->shouldReceive('getNoOfTrailersRequired')
             ->andReturn(2)
-            ->once()
+            ->withNoArgs()
             ->getMock();
 
         $loc2 = m::mock()
@@ -81,7 +84,7 @@ class OperatingCentresReviewServiceTest extends MockeryTestCase
             ->once()
             ->shouldReceive('getNoOfTrailersRequired')
             ->andReturn(4)
-            ->once()
+            ->withNoArgs()
             ->getMock();
 
         $licenceOperatingCentres->add($loc1);
@@ -91,67 +94,176 @@ class OperatingCentresReviewServiceTest extends MockeryTestCase
             ->shouldReceive('getOperatingCentres')
             ->andReturn($licenceOperatingCentres)
             ->once()
-            ->shouldReceive('getGoodsOrPsv')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE)
-                ->once()
-                ->getMock()
-            )
+            ->shouldReceive('canHaveTrailer')
+            ->andReturn($canHaveTrailer)
+            ->withNoArgs()
+            ->once()
+            ->shouldReceive('isVehicleTypeMixedWithLgv')
+            ->andReturn($isVehicleTypeMixedWithLgv)
+            ->withNoArgs()
             ->once()
             ->getMock();
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
-            [
-                ['value' => 'continuations.oc-section.table.name', 'header' => true],
-                ['value' => 'continuations.oc-section.table.vehicles', 'header' => true],
-                ['value' => 'continuations.oc-section.table.trailers', 'header' => true]
-            ],
-            [
-                ['value' => 'Baz, Cake'],
-                ['value' => '3'],
-                ['value' => '4']
-            ],
-            [
-                ['value' => 'Foo, Bar'],
-                ['value' => '1'],
-                ['value' => '2']
-            ]
-        ];
-
         $this->assertEquals($expected, $this->sut->getConfigFromData($continuationDetail));
     }
 
-    public function testGetSummaryFromData()
+    public function dpGetConfigFromData()
+    {
+        return [
+            'licence cannot have trailers, vehicle type not mixed with lgv' => [
+                false,
+                false,
+                [
+                    [
+                        ['value' => 'continuations.oc-section.table.name', 'header' => true],
+                        ['value' => 'continuations.oc-section.table.vehicles', 'header' => true]
+                    ],
+                    [
+                        ['value' => 'Baz, Cake'],
+                        ['value' => '3']
+                    ],
+                    [
+                        ['value' => 'Foo, Bar'],
+                        ['value' => '1']
+                    ]
+                ]
+            ],
+            'licence cannot have trailers, vehicle type mixed with lgv' => [
+                false,
+                true,
+                [
+                    [
+                        ['value' => 'continuations.oc-section.table.name', 'header' => true],
+                        ['value' => 'continuations.oc-section.table.heavy-goods-vehicles', 'header' => true]
+                    ],
+                    [
+                        ['value' => 'Baz, Cake'],
+                        ['value' => '3']
+                    ],
+                    [
+                        ['value' => 'Foo, Bar'],
+                        ['value' => '1']
+                    ]
+                ]
+            ],
+            'licence can have trailers, vehicle type not mixed with lgv' => [
+                true,
+                false,
+                [
+                    [
+                        ['value' => 'continuations.oc-section.table.name', 'header' => true],
+                        ['value' => 'continuations.oc-section.table.vehicles', 'header' => true],
+                        ['value' => 'continuations.oc-section.table.trailers', 'header' => true]
+                    ],
+                    [
+                        ['value' => 'Baz, Cake'],
+                        ['value' => '3'],
+                        ['value' => '4']
+                    ],
+                    [
+                        ['value' => 'Foo, Bar'],
+                        ['value' => '1'],
+                        ['value' => '2']
+                    ]
+                ]
+            ],
+            'licence can have trailers, vehicle type mixed with lgv' => [
+                true,
+                true,
+                [
+                    [
+                        ['value' => 'continuations.oc-section.table.name', 'header' => true],
+                        ['value' => 'continuations.oc-section.table.heavy-goods-vehicles', 'header' => true],
+                        ['value' => 'continuations.oc-section.table.trailers', 'header' => true]
+                    ],
+                    [
+                        ['value' => 'Baz, Cake'],
+                        ['value' => '3'],
+                        ['value' => '4']
+                    ],
+                    [
+                        ['value' => 'Foo, Bar'],
+                        ['value' => '1'],
+                        ['value' => '2']
+                    ]
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetSummaryFromData
+     */
+    public function testGetSummaryFromData($applicableAuthProperties, $expected)
     {
         $continuationDetail = new ContinuationDetail();
 
         $mockLicence = m::mock(Licence::class)
             ->shouldReceive('getTotAuthVehicles')
-            ->andReturn(1)
-            ->once()
+            ->withNoArgs()
+            ->andReturn(8)
+            ->shouldReceive('getTotAuthHgvVehicles')
+            ->withNoArgs()
+            ->andReturn(5)
+            ->shouldReceive('getTotAuthLgvVehicles')
+            ->withNoArgs()
+            ->andReturn(3)
             ->shouldReceive('getTotAuthTrailers')
+            ->withNoArgs()
             ->andReturn(2)
-            ->once()
+            ->shouldReceive('getApplicableAuthProperties')
+            ->withNoArgs()
+            ->andReturn($applicableAuthProperties)
             ->getMock();
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected = [
-            [
-                ['value' => 'continuations.oc-section.table.vehicles', 'header' => true],
-                ['value' => 1]
-            ],
-            [
-                ['value' => 'continuations.oc-section.table.trailers', 'header' => true],
-                ['value' => 2]
-            ]
-        ];
-
         $this->assertEquals($expected, $this->sut->getSummaryFromData($continuationDetail));
+    }
+
+    public function dpGetSummaryFromData()
+    {
+        return [
+            'vehicles and trailers' => [
+                [
+                    'totAuthVehicles',
+                    'totAuthTrailers',
+                ],
+                [
+                    [
+                        ['value' => 'continuations.oc-section.table.vehicles', 'header' => true],
+                        ['value' => 8]
+                    ],
+                    [
+                        ['value' => 'continuations.oc-section.table.trailers', 'header' => true],
+                        ['value' => 2]
+                    ]
+                ]
+            ],
+            'hgv, lgv and trailers' => [
+                [
+                    'totAuthHgvVehicles',
+                    'totAuthLgvVehicles',
+                    'totAuthTrailers',
+                ],
+                [
+                    [
+                        ['value' => 'continuations.oc-section.table.heavy-goods-vehicles', 'header' => true],
+                        ['value' => 5]
+                    ],
+                    [
+                        ['value' => 'continuations.oc-section.table.light-goods-vehicles', 'header' => true],
+                        ['value' => 3]
+                    ],
+                    [
+                        ['value' => 'continuations.oc-section.table.trailers', 'header' => true],
+                        ['value' => 2]
+                    ]
+                ]
+            ],
+        ];
     }
 
     public function testGetSummaryHeader()

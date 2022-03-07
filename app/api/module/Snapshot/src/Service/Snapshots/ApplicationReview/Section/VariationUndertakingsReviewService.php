@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Utils\Helper\ValueHelper;
 
 /**
@@ -24,6 +25,10 @@ class VariationUndertakingsReviewService extends AbstractReviewService
     const GV81NI = 'markup-application_undertakings_GV81-NI';
     const GV81NI_STANDARD = 'markup-application_undertakings_GV81-NI-Standard';
     const GV81NI_DECLARE = 'markup-application_undertakings_GV81-NI-declare';
+
+    const GV81_AUTH_LGV = 'markup-application_undertakings_GV81-auth-lgv';
+    const GV81_AUTH_OTHER = 'markup-application_undertakings_GV81-auth-other';
+    const GV81NI_AUTH_OTHER = 'markup-application_undertakings_GV81-NI-auth-other';
 
     const GV80A = 'markup-application_undertakings_GV80A';
     const GV80A_DECLARE = 'markup-application_undertakings_GV80A-declare';
@@ -84,6 +89,7 @@ class VariationUndertakingsReviewService extends AbstractReviewService
         $additionalParts = [
             $isInternal ? $this->translate(self::GV81_DECLARE) : '',
             $isInternal ? $this->getSignature($data) : '',
+            $this->translate($this->getGv81AuthTranslationKey($data)),
             $isStandard ? $this->translate(self::GV81_STANDARD) : ''
         ];
 
@@ -98,10 +104,32 @@ class VariationUndertakingsReviewService extends AbstractReviewService
         $additionalParts = [
             $isInternal ? $this->translate(self::GV81NI_DECLARE) : '',
             $isInternal ? $this->getSignature($data) : '',
+            $this->translate($this->getGv81AuthTranslationKey($data)),
             $isStandard ? $this->translate(self::GV81NI_STANDARD) : ''
         ];
 
         return $this->translateReplace(self::GV81NI, $additionalParts);
+    }
+
+    /**
+     * Get the translation key corresponding to the auth bullet points within the declaration
+     *
+     * @param array $data
+     *
+     * @return string
+     */
+    private function getGv81AuthTranslationKey(array $data)
+    {
+        $vehicleTypeId = $data['vehicleType']['id'];
+        if ($vehicleTypeId == RefData::APP_VEHICLE_TYPE_LGV) {
+            return self::GV81_AUTH_LGV;
+        }
+
+        if (ValueHelper::isOn($data['niFlag'])) {
+            return self::GV81NI_AUTH_OTHER;
+        }
+
+        return self::GV81_AUTH_OTHER;
     }
 
     private function getGv80A(array $data)

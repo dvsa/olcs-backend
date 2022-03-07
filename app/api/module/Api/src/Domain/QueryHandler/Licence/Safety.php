@@ -44,15 +44,13 @@ class Safety extends AbstractQueryHandler
             $this->getRepo()->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_MAINT_OTHER_DIGITAL)
         );
 
-        $goodsOrPsv = $licence->getGoodsOrPsv()->getId();
-
         $totalTrailers = $licence->getTotAuthTrailers();
         return $this->result(
             $licence,
             [],
             [
                 'safetyDocuments' => $this->resultList($safetyDocuments),
-                'canHaveTrailers' => ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
+                'canHaveTrailers' => $licence->canHaveTrailer(),
                 'isShowTrailers' => ($totalTrailers > 0 || $totalTrailers === null),
                 'workshops' => [
                     'results' => $this->resultList(

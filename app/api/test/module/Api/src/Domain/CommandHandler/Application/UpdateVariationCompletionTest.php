@@ -678,7 +678,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
             } else {
                 $this->updateHelper
                     ->shouldReceive('validateTotalAuthTrailers')
-                    ->with(m::type(UpdateOperatingCentresCmd::class), $totals)
+                    ->with($application, m::type(UpdateOperatingCentresCmd::class), $totals)
                     ->getMock();
 
                 $this->vocHelper

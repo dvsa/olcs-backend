@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant Interim Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -27,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
- * Grant Interim Test
+ * Update Interim Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
@@ -61,7 +56,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
     /**
      * @dataProvider dpValidate
      */
-    public function testValidate($isEligibleForLgv, $totAuthHgvVehicles, $totAuthLgvVehicles, $totAuthTrailers, $data, $expected)
+    public function testValidate($vehicleType, $totAuthHgvVehicles, $totAuthLgvVehicles, $totAuthTrailers, $data, $expected)
     {
         $this->expectException(ValidationException::class);
 
@@ -69,9 +64,9 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->shouldReceive('isEligibleForLgv')
+        $application->shouldReceive('getVehicleType')
             ->withNoArgs()
-            ->andReturn($isEligibleForLgv)
+            ->andReturn(new RefData($vehicleType))
             ->shouldReceive('getTotAuthHgvVehicles')
             ->withNoArgs()
             ->andReturn($totAuthHgvVehicles)
@@ -97,11 +92,68 @@ class UpdateInterimTest extends CommandHandlerTestCase
     public function dpValidate()
     {
         return [
-            'without required data' => [
-                'isEligibleForLgv' => false,
+            'LGV without required data' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'totAuthHgvVehicles' => null,
+                'totAuthLgvVehicles' => 3,
+                'totAuthTrailers' => null,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                ],
+                'expected' => [
+                    'reason' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authLgvVehicles' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                ],
+            ],
+            'LGV with zero vehicles requested' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'totAuthHgvVehicles' => null,
+                'totAuthLgvVehicles' => 3,
+                'totAuthTrailers' => null,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                    'authLgvVehicles' => '0',
+                ],
+                'expected' => [
+                    'reason' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authLgvVehicles' => [
+                        UpdateInterim::ERR_VALUE_BELOW_ONE => UpdateInterim::ERR_VALUE_BELOW_ONE,
+                    ],
+                ],
+            ],
+            'LGV with authorities exceeded' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'totAuthHgvVehicles' => null,
+                'totAuthLgvVehicles' => 3,
+                'totAuthTrailers' => null,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                    'reason' => 'Foo',
+                    'authLgvVehicles' => '11',
+                ],
+                'expected' => [
+                    'authLgvVehicles' => [
+                        UpdateInterim::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED,
+                    ],
+                ],
+            ],
+            'HGV without required data' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
                 'totAuthHgvVehicles' => 3,
                 'totAuthLgvVehicles' => null,
-                'totAuthTrailers' => 0,
+                'totAuthTrailers' => 1,
                 'data' => [
                     'id' => 111,
                     'version' => 1,
@@ -119,45 +171,155 @@ class UpdateInterimTest extends CommandHandlerTestCase
                     ],
                 ],
             ],
-            'authorities exceeded' => [
-                'isEligibleForLgv' => false,
+            'HGV with zero vehicles requested' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
                 'totAuthHgvVehicles' => 3,
                 'totAuthLgvVehicles' => null,
-                'totAuthTrailers' => 0,
+                'totAuthTrailers' => 1,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                    'authHgvVehicles' => '0',
+                    'authTrailers' => '0',
+                ],
+                'expected' => [
+                    'reason' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authHgvVehicles' => [
+                        UpdateInterim::ERR_VALUE_BELOW_ONE => UpdateInterim::ERR_VALUE_BELOW_ONE,
+                    ],
+                ],
+            ],
+            'HGV with authorities exceeded' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => null,
+                'totAuthTrailers' => 1,
                 'data' => [
                     'id' => 111,
                     'version' => 1,
                     'requested' => 'Y',
                     'reason' => 'Foo',
-                    'authHgvVehicles' => 10,
-                    'authLgvVehicles' => 11,
-                    'authTrailers' => 12,
+                    'authHgvVehicles' => '10',
+                    'authTrailers' => '12',
                 ],
                 'expected' => [
                     'authHgvVehicles' => [
                         UpdateInterim::ERR_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_VEHICLE_AUTHORITY_EXCEEDED,
-                    ],
-                    'authLgvVehicles' => [
-                        UpdateInterim::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED,
                     ],
                     'authTrailers' => [
                         UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED => UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED,
                     ],
                 ],
             ],
-            'authorities exceeded - eligible for lgv' => [
-                'isEligibleForLgv' => true,
+            'Mixed fleet without required data' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
                 'totAuthHgvVehicles' => 3,
-                'totAuthLgvVehicles' => 4,
-                'totAuthTrailers' => 5,
+                'totAuthLgvVehicles' => 2,
+                'totAuthTrailers' => 1,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                ],
+                'expected' => [
+                    'reason' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authHgvVehicles' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authLgvVehicles' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authTrailers' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                ],
+            ],
+            'Mixed fleet without required data - migration' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => null,
+                'totAuthTrailers' => 1,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                ],
+                'expected' => [
+                    'reason' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authHgvVehicles' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authTrailers' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                ],
+            ],
+            'Mixed fleet with zero vehicles requested' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => 2,
+                'totAuthTrailers' => 1,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                    'authHgvVehicles' => '0',
+                    'authLgvVehicles' => '0',
+                    'authTrailers' => '0',
+                ],
+                'expected' => [
+                    'reason' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authHgvVehicles' => [
+                        UpdateInterim::ERR_VALUE_BELOW_ONE => UpdateInterim::ERR_VALUE_BELOW_ONE,
+                    ],
+                    'authLgvVehicles' => [
+                        UpdateInterim::ERR_VALUE_BELOW_ONE => UpdateInterim::ERR_VALUE_BELOW_ONE,
+                    ],
+                ],
+            ],
+            'Mixed fleet with zero vehicles requested - migration' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => null,
+                'totAuthTrailers' => 1,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                    'authHgvVehicles' => '0',
+                    'authTrailers' => '0',
+                ],
+                'expected' => [
+                    'reason' => [
+                        UpdateInterim::ERR_REQUIRED => UpdateInterim::ERR_REQUIRED,
+                    ],
+                    'authHgvVehicles' => [
+                        UpdateInterim::ERR_VALUE_BELOW_ONE => UpdateInterim::ERR_VALUE_BELOW_ONE,
+                    ],
+                ],
+            ],
+            'Mixed fleet with authorities exceeded' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => 2,
+                'totAuthTrailers' => 1,
                 'data' => [
                     'id' => 111,
                     'version' => 1,
                     'requested' => 'Y',
                     'reason' => 'Foo',
-                    'authHgvVehicles' => 10,
-                    'authLgvVehicles' => 11,
-                    'authTrailers' => 12,
+                    'authHgvVehicles' => '10',
+                    'authLgvVehicles' => '11',
+                    'authTrailers' => '12',
                 ],
                 'expected' => [
                     'authHgvVehicles' => [
@@ -171,8 +333,30 @@ class UpdateInterimTest extends CommandHandlerTestCase
                     ],
                 ],
             ],
+            'Mixed fleet with authorities exceeded - migration' => [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'totAuthHgvVehicles' => 3,
+                'totAuthLgvVehicles' => null,
+                'totAuthTrailers' => 1,
+                'data' => [
+                    'id' => 111,
+                    'version' => 1,
+                    'requested' => 'Y',
+                    'reason' => 'Foo',
+                    'authHgvVehicles' => '10',
+                    'authTrailers' => '12',
+                ],
+                'expected' => [
+                    'authHgvVehicles' => [
+                        UpdateInterim::ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED,
+                    ],
+                    'authTrailers' => [
+                        UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED => UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED,
+                    ],
+                ],
+            ],
             'granted' => [
-                'isEligibleForLgv' => false,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
                 'totAuthHgvVehicles' => 3,
                 'totAuthLgvVehicles' => 4,
                 'totAuthTrailers' => 5,
@@ -181,9 +365,9 @@ class UpdateInterimTest extends CommandHandlerTestCase
                     'version' => 1,
                     'requested' => 'Y',
                     'reason' => 'Foo',
-                    'authHgvVehicles' => 3,
-                    'authLgvVehicles' => 4,
-                    'authTrailers' => 5,
+                    'authHgvVehicles' => '3',
+                    'authLgvVehicles' => '4',
+                    'authTrailers' => '5',
                     'status' => ApplicationEntity::INTERIM_STATUS_GRANTED,
                 ],
                 'expected' => [

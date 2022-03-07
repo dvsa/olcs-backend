@@ -126,7 +126,10 @@ class LicenceChecklist extends AbstractQueryHandler
                 'sections' => $sections,
                 'ocChanges' => $licence->getOcPendingChanges(),
                 'tmChanges' => $licence->getTmPendingChanges(),
-                'hasConditionsUndertakings' => count($conditionsUndertakings) > 0
+                'hasConditionsUndertakings' => count($conditionsUndertakings) > 0,
+                'canHaveTrailers' => $licence->canHaveTrailer(),
+                'applicableAuthProperties' => $licence->getApplicableAuthProperties(),
+                'isMixedWithLgv' => $licence->isVehicleTypeMixedWithLgv(),
             ]
         );
     }

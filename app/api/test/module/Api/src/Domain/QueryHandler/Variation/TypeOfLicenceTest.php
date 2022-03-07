@@ -12,6 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Variation\TypeOfLicence;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Transfer\Query\Variation\TypeOfLicence as Qry;
@@ -34,16 +35,27 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    /**
+     * @dataProvider dpHandleQuery
+     */
+    public function testHandleQuery($canUpdateLicenceGranted, $vehicleTypeId, $expectedCanUpdateLicenceType)
     {
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->shouldReceive('canBecomeSpecialRestricted')
             ->once()
             ->andReturn(true);
+        $licence->shouldReceive('canBecomeStandardInternational')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true);
 
         $licence->shouldReceive('getLicenceType->getId')
             ->andReturn('curLicType');
+
+        $licence->shouldReceive('getVehicleType->getId')
+            ->withNoArgs()
+            ->andReturn($vehicleTypeId);
 
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial()
@@ -64,16 +76,31 @@ class TypeOfLicenceTest extends QueryHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence)
-            ->andReturn(true);
+            ->andReturn($canUpdateLicenceGranted);
 
         $expected = [
             'foo' => 'bar',
             'canBecomeSpecialRestricted' => true,
-            'canUpdateLicenceType' => true,
+            'canBecomeStandardInternational' => true,
+            'canUpdateLicenceType' => $expectedCanUpdateLicenceType,
             'currentLicenceType' => 'curLicType'
         ];
 
         $result = $this->sut->handleQuery($query);
         $this->assertEquals($expected, $result->serialize());
+    }
+
+    public function dpHandleQuery()
+    {
+        return [
+            [false, RefData::APP_VEHICLE_TYPE_PSV, false],
+            [false, RefData::APP_VEHICLE_TYPE_HGV, false],
+            [false, RefData::APP_VEHICLE_TYPE_MIXED, false],
+            [false, RefData::APP_VEHICLE_TYPE_LGV, false],
+            [true, RefData::APP_VEHICLE_TYPE_PSV, true],
+            [true, RefData::APP_VEHICLE_TYPE_HGV, true],
+            [true, RefData::APP_VEHICLE_TYPE_MIXED, false],
+            [true, RefData::APP_VEHICLE_TYPE_LGV, false],
+        ];
     }
 }

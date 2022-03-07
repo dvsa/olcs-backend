@@ -24,14 +24,18 @@ class ResetApplicationTest extends \PHPUnit\Framework\TestCase
                 'foo' => 'bar',
                 'operatorType' => 'op-type',
                 'licenceType' => 'lic-type',
+                'vehicleType' => 'veh-type',
+                'lgvDeclarationConfirmation' => '1',
                 'niFlag' => 'Y',
-                'confirm' => true
+                'confirm' => true,
             ]
         );
 
         $this->assertEquals(111, $command->getId());
         $this->assertEquals('op-type', $command->getOperatorType());
         $this->assertEquals('lic-type', $command->getLicenceType());
+        $this->assertEquals('veh-type', $command->getVehicleType());
+        $this->assertEquals('1', $command->getLgvDeclarationConfirmation());
         $this->assertEquals('Y', $command->getNiFlag());
         $this->assertEquals(true, $command->getConfirm());
 
@@ -40,6 +44,8 @@ class ResetApplicationTest extends \PHPUnit\Framework\TestCase
                 'id' => 111,
                 'operatorType' => 'op-type',
                 'licenceType' => 'lic-type',
+                'vehicleType' => 'veh-type',
+                'lgvDeclarationConfirmation' => '1',
                 'niFlag' => 'Y',
                 'confirm' => true
             ],

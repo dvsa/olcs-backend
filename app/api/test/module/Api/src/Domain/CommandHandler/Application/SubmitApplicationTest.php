@@ -4,6 +4,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateLightGoodsVehicleCondition
+    as CreateLightGoodsVehicleConditionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\SubmitApplication;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -47,7 +49,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockTmaRepo = $this->mockRepo(
-            'TransportManagerApplication', Repository\TransportManagerApplication::class
+            'TransportManagerApplication',
+            Repository\TransportManagerApplication::class
         );
 
         $trafficArea = new Entity\TrafficArea\TrafficArea();
@@ -180,14 +183,21 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $taskResult->addMessage('task created');
         $this->expectedSideEffect(CreateTaskCmd::class, $expectedTaskData, $taskResult);
 
+        $this->expectedSideEffectAsSystemUser(
+            CreateLightGoodsVehicleConditionCmd::class,
+            ['applicationId' => self::APP_ID],
+            (new Result())->addMessage('unit LightGoodsVehicleCondition created')
+        );
+
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
-            CreateSnapshot::class, ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT], $result1
+            CreateSnapshot::class,
+            ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT],
+            $result1
         );
 
-        if (
-            !$isInternalUser
+        if (!$isInternalUser
             && !(
                 $isVariation
                 && $goodOrPsv === LicenceEntity::LICENCE_CATEGORY_PSV
@@ -234,6 +244,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'Application updated',
                         'Licence updated',
                         'task created',
+                        'unit LightGoodsVehicleCondition created',
                         'unit Publication created',
                         'unit TexTask created',
                     ],
@@ -255,6 +266,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'Application updated',
                         'Licence updated',
                         'task created',
+                        'unit LightGoodsVehicleCondition created',
                     ],
                 ],
                 'isInternalUser' => false,
@@ -272,6 +284,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'Snapshot created',
                         'Application updated',
                         'task created',
+                        'unit LightGoodsVehicleCondition created',
                         'unit Publication created',
                         'unit TexTask created',
                     ],
@@ -291,6 +304,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'Snapshot created',
                         'Application updated',
                         'task created',
+                        'unit LightGoodsVehicleCondition created',
                     ],
                 ],
                 'isInternalUser' => false,
@@ -310,6 +324,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                         'Application updated',
                         'Licence updated',
                         'task created',
+                        'unit LightGoodsVehicleCondition created',
                     ],
                 ],
                 true,
@@ -384,10 +399,18 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $taskResult->addMessage('task created');
         $this->expectedSideEffect(CreateTaskCmd::class, $expectedTaskData, $taskResult);
 
+        $this->expectedSideEffectAsSystemUser(
+            CreateLightGoodsVehicleConditionCmd::class,
+            ['applicationId' => self::APP_ID],
+            (new Result())->addMessage('unit LightGoodsVehicleCondition created')
+        );
+
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
-            CreateSnapshot::class, ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT], $result1
+            CreateSnapshot::class,
+            ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT],
+            $result1
         );
 
         $result = $this->sut->handleCommand($command);
@@ -402,7 +425,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             'messages' => [
                 'Snapshot created',
                 'Application updated',
-                'task created'
+                'task created',
+                'unit LightGoodsVehicleCondition created',
             ],
         ];
 
@@ -426,6 +450,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 'Application updated',
                 'Licence updated',
                 'task created',
+                'unit LightGoodsVehicleCondition created',
             ],
         ];
 
@@ -491,10 +516,18 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $taskResult->addMessage('task created');
         $this->expectedSideEffect(CreateTaskCmd::class, $expectedTaskData, $taskResult);
 
+        $this->expectedSideEffectAsSystemUser(
+            CreateLightGoodsVehicleConditionCmd::class,
+            ['applicationId' => self::APP_ID],
+            (new Result())->addMessage('unit LightGoodsVehicleCondition created')
+        );
+
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
-            CreateSnapshot::class, ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT], $result1
+            CreateSnapshot::class,
+            ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT],
+            $result1
         );
 
         $result = $this->sut->handleCommand($command);
@@ -574,10 +607,18 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $taskResult->addMessage('task created');
         $this->expectedSideEffect(CreateTaskCmd::class, $expectedTaskData, $taskResult);
 
+        $this->expectedSideEffectAsSystemUser(
+            CreateLightGoodsVehicleConditionCmd::class,
+            ['applicationId' => self::APP_ID],
+            (new Result())->addMessage('unit LightGoodsVehicleCondition created')
+        );
+
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
-            CreateSnapshot::class, ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT], $result1
+            CreateSnapshot::class,
+            ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT],
+            $result1
         );
 
         $this->sut->handleCommand($command);
@@ -724,7 +765,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 [],
                 'GV80A Application',
                 \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
-                array_merge($expectedTaskData,['urgent' =>'Y']),
+                array_merge($expectedTaskData, ['urgent' =>'Y']),
                 'GV80A'
             ]
         ];

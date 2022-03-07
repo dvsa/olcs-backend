@@ -1126,6 +1126,8 @@ return [
     // Command - ConditionUndertaking
     Command\ConditionUndertaking\CreateSmallVehicleCondition::class =>
         CommandHandler\ConditionUndertaking\CreateSmallVehicleCondition::class,
+    Command\ConditionUndertaking\CreateLightGoodsVehicleCondition::class =>
+        CommandHandler\ConditionUndertaking\CreateLightGoodsVehicleCondition::class,
 
     // GdsVerify
     TransferCommand\GdsVerify\ProcessSignatureResponse::class =>

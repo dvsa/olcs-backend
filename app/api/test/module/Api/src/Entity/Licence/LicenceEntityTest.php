@@ -37,6 +37,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\OlcsTest\Api\Entity\Traits\TotAuthVehiclesTraitTest;
+use RuntimeException;
 
 /**
  * Licence Entity Unit Tests
@@ -84,6 +85,30 @@ class LicenceEntityTest extends EntityTester
         $licence->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
 
         $this->assertEquals($expected, $licence->canBecomeSpecialRestricted());
+    }
+
+    /**
+     * @dataProvider dpCanBecomeStandardInternational
+     */
+    public function testCanBecomeStandardInternational($goodsOrPsv, $expected)
+    {
+        $goodsOrPsvRefData = new RefData($goodsOrPsv);
+
+        $licence = $this->instantiate(Entity::class);
+        $licence->setGoodsOrPsv($goodsOrPsvRefData);
+
+        $this->assertEquals(
+            $expected,
+            $licence->canBecomeStandardInternational()
+        );
+    }
+
+    public function dpCanBecomeStandardInternational()
+    {
+        return [
+            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_CATEGORY_PSV, true],
+        ];
     }
 
     /**
@@ -547,33 +572,100 @@ class LicenceEntityTest extends EntityTester
             [null, 0],
         ];
     }
-    
+
     /**
-     * @dataProvider dpIsEligibleForLgv
+     * @dataProvider dpCanHaveLgv
      */
-    public function testIsEligibleForLgv($goodsOrPsv, $licenceType, $expectedResult)
+    public function testCanHaveLgv($vehicleType, $expected)
     {
-        $this->markTestIncomplete('Test temporarily disabled while return value hardcoded to false');
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setVehicleType(new RefData($vehicleType));
 
-        /** @var Entity $licence */
-        $licence = $this->instantiate(Entity::class);
-        $licence->setGoodsOrPsv(new RefData($goodsOrPsv));
-        $licence->setLicenceType(new RefData($licenceType));
-
-        $this->assertEquals($expectedResult, $licence->isEligibleForLgv());
+        $this->assertEquals(
+            $expected,
+            $licence->canHaveLgv()
+        );
     }
 
-    public function dpIsEligibleForLgv()
+    public function dpCanHaveLgv()
     {
         return [
-            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_RESTRICTED, false],
-            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_STANDARD_NATIONAL, false],
-            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
-            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL, false],
-            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_RESTRICTED, false],
-            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_STANDARD_NATIONAL, false],
-            [Entity::LICENCE_CATEGORY_PSV, Entity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
+            [RefData::APP_VEHICLE_TYPE_HGV, false],
+            [RefData::APP_VEHICLE_TYPE_LGV, true],
+            [RefData::APP_VEHICLE_TYPE_MIXED, true],
+            [RefData::APP_VEHICLE_TYPE_PSV, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpMustHaveLgv
+     */
+    public function testMustHaveLgv($vehicleType, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $licence->mustHaveLgv()
+        );
+    }
+
+    public function dpMustHaveLgv()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, false],
+            [RefData::APP_VEHICLE_TYPE_LGV, true],
+            [RefData::APP_VEHICLE_TYPE_MIXED, false],
+            [RefData::APP_VEHICLE_TYPE_PSV, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpMustHaveOperatingCentre
+     */
+    public function testMustHaveOperatingCentre($vehicleType, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $licence->mustHaveOperatingCentre()
+        );
+    }
+
+    public function dpMustHaveOperatingCentre()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, true],
+            [RefData::APP_VEHICLE_TYPE_PSV, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanHaveTrailer
+     */
+    public function testCanHaveTrailer($vehicleType, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $licence->canHaveTrailer()
+        );
+    }
+
+    public function dpCanHaveTrailer()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, true],
+            [RefData::APP_VEHICLE_TYPE_PSV, false],
         ];
     }
 
@@ -931,6 +1023,10 @@ class LicenceEntityTest extends EntityTester
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
         $application->setLicenceType($licenceType);
+        $vehicleType = m::mock(RefData::class)->makePartial();
+        $vehicleType->setId(RefData::APP_VEHICLE_TYPE_HGV);
+        $application->setVehicleType($vehicleType);
+        $application->setLgvDeclarationConfirmation(true);
         $application->shouldReceive('isVariation')->once()->withNoArgs()->andReturn(false);
 
         $goodsOrPsv = m::mock(RefData::class)->makePartial();
@@ -946,6 +1042,8 @@ class LicenceEntityTest extends EntityTester
         $licence->copyInformationFromApplication($application);
 
         $this->assertSame($licenceType, $licence->getLicenceType());
+        $this->assertSame($vehicleType, $licence->getVehicleType());
+        $this->assertTrue($licence->getLgvDeclarationConfirmation());
         $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
         $this->assertEquals(9, $licence->getTotAuthTrailers());
         $this->assertEquals(12, $licence->getTotAuthVehicles());
@@ -997,6 +1095,7 @@ class LicenceEntityTest extends EntityTester
         $appCompletion->shouldReceive('variationSectionUpdated')->with('operatingCentres')->once()->andReturn(true);
 
         $licenceType = m::mock(RefData::class);
+        $vehicleType = m::mock(RefData::class);
         $goodsOrPsv = m::mock(RefData::class);
         $totAuthTrailers = 9;
         $totAuthVehicles = 12;
@@ -1006,6 +1105,8 @@ class LicenceEntityTest extends EntityTester
         $application->shouldReceive('isVariation')->once()->withNoArgs()->andReturn(true);
         $application->shouldReceive('getApplicationCompletion')->once()->withNoArgs()->andReturn($appCompletion);
         $application->shouldReceive('getLicenceType')->once()->withNoArgs()->andReturn($licenceType);
+        $application->shouldReceive('getVehicleType')->once()->withNoArgs()->andReturn($vehicleType);
+        $application->shouldReceive('getLgvDeclarationConfirmation')->once()->withNoArgs()->andReturnTrue();
         $application->shouldReceive('getGoodsOrPsv')->once()->withNoArgs()->andReturn($goodsOrPsv);
         $application->shouldReceive('getTotAuthTrailers')->once()->withNoArgs()->andReturn($totAuthTrailers);
         $application->allows('getTotAuthVehicles')->andReturn($totAuthVehicles);
@@ -1016,6 +1117,8 @@ class LicenceEntityTest extends EntityTester
         $licence->copyInformationFromApplication($application);
 
         $this->assertSame($licenceType, $licence->getLicenceType());
+        $this->assertSame($vehicleType, $licence->getVehicleType());
+        $this->assertTrue($licence->getLgvDeclarationConfirmation());
         $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
         $this->assertEquals($totAuthTrailers, $licence->getTotAuthTrailers());
         $this->assertEquals($totAuthVehicles, $licence->getTotAuthVehicles());
@@ -1037,16 +1140,21 @@ class LicenceEntityTest extends EntityTester
         $application->shouldReceive('getApplicationCompletion')->once()->withNoArgs()->andReturn($appCompletion);
         $application->shouldReceive('getGoodsOrPsv')->once()->withNoArgs()->andReturn($goodsOrPsv);
         $application->shouldReceive('getLicenceType')->never();
+        $application->shouldReceive('getVehicleType')->never();
+        $application->shouldReceive('getLgvDeclarationConfirmation')->never();
         $application->shouldReceive('getTotAuthTrailers')->never();
         $application->shouldReceive('getTotAuthVehicles')->never();
 
         $originalLicenceType = m::mock(RefData::class);
+        $originalVehicleType = m::mock(RefData::class);
         $originalTotAuthTrailers = 6;
         $originalTotAuthVehicles = 10;
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
         $licence->setLicenceType($originalLicenceType);
+        $licence->setVehicleType($originalVehicleType);
+        $licence->setLgvDeclarationConfirmation(false);
         $licence->setTotAuthTrailers($originalTotAuthTrailers);
         $licence->updateTotAuthHgvVehicles($originalTotAuthVehicles);
 
@@ -1054,6 +1162,8 @@ class LicenceEntityTest extends EntityTester
 
         //only goodsOrPsv should have changed
         $this->assertSame($originalLicenceType, $licence->getLicenceType());
+        $this->assertSame($originalVehicleType, $licence->getVehicleType());
+        $this->assertFalse($licence->getLgvDeclarationConfirmation());
         $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
         $this->assertEquals($originalTotAuthTrailers, $licence->getTotAuthTrailers());
         $this->assertEquals($originalTotAuthVehicles, $licence->getTotAuthVehicles());
@@ -1192,7 +1302,7 @@ class LicenceEntityTest extends EntityTester
     /**
      * @dataProvider dpTestGetAuthorisations
      */
-    public function testGetAuthorisations($isEligibleForLgv, $isGoods, $expectedAuthorisations)
+    public function testGetAuthorisations($vehicleTypeId, $licenceTypeId, $expectedAuthorisations)
     {
         $licence = m::mock(Entity::class)->makePartial();
 
@@ -1201,13 +1311,11 @@ class LicenceEntityTest extends EntityTester
         $licence->setTotAuthLgvVehicles(3);
         $licence->setTotAuthTrailers(1);
 
-        $licence->shouldReceive('isEligibleForLgv')
-            ->withNoArgs()
-            ->andReturn($isEligibleForLgv);
+        $vehicleTypeRefdata = new RefData($vehicleTypeId);
+        $licence->setVehicleType($vehicleTypeRefdata);
 
-        $licence->shouldReceive('isGoods')
-            ->withNoArgs()
-            ->andReturn($isGoods);
+        $licenceTypeRefdata = new RefData($licenceTypeId);
+        $licence->setLicenceType($licenceTypeRefdata);
 
         $this->assertEquals(
             $expectedAuthorisations,
@@ -1218,9 +1326,16 @@ class LicenceEntityTest extends EntityTester
     public function dpTestGetAuthorisations()
     {
         return [
-            'goods/standard international' => [
-                true,
-                true,
+            'goods/standard international/lgv' => [
+                RefData::APP_VEHICLE_TYPE_LGV,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                [
+                    Entity::AUTHORISATION_LGV_COUNT => 3,
+                ],
+            ],
+            'goods/standard international/mixed' => [
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                 [
                     Entity::AUTHORISATION_HGV_COUNT => 4,
                     Entity::AUTHORISATION_LGV_COUNT => 3,
@@ -1228,21 +1343,36 @@ class LicenceEntityTest extends EntityTester
                 ],
             ],
             'goods/other' => [
-                false,
-                true,
+                RefData::APP_VEHICLE_TYPE_HGV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                 [
                     Entity::AUTHORISATION_VEHICLE_COUNT => 7,
                     Entity::AUTHORISATION_TRAILER_COUNT => 1,
                 ],
             ],
-            'psv' => [
-                false,
-                false,
+            'psv/special restricted' => [
+                RefData::APP_VEHICLE_TYPE_PSV,
+                Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                [],
+            ],
+            'psv/other' => [
+                RefData::APP_VEHICLE_TYPE_PSV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                 [
                     Entity::AUTHORISATION_VEHICLE_COUNT => 7,
                 ],
             ],
         ];
+    }
+
+    public function testGetAuthorisationsNullVehicleType()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $this->assertEquals(
+            [],
+            $licence->getAuthorisations()
+        );
     }
 
     /**
@@ -1321,13 +1451,11 @@ class LicenceEntityTest extends EntityTester
     {
         $licence = m::mock(Entity::class)->makePartial();
         $licence->shouldReceive('getNiFlag')->withNoArgs()->once()->andReturn('Y');
-        $licence->shouldReceive('isEligibleForLgv')->withNoArgs()->once()->andReturn(true);
 
         $result = $licence->getCalculatedBundleValues();
 
         $expected = [
             'niFlag' => 'Y',
-            'isEligibleForLgv' => true,
         ];
 
         $this->assertSame($expected, $result);
@@ -3127,5 +3255,153 @@ class LicenceEntityTest extends EntityTester
         $applicationCompletion->setOperatingCentresStatus(ApplicationCompletion::STATUS_VARIATION_UPDATED);
         $instance->setApplicationCompletion($applicationCompletion);
         return $instance;
+    }
+
+    /**
+     * @dataProvider dpGetApplicableAuthProperties
+     */
+    public function testGetApplicableAuthProperties(
+        $vehicleTypeId,
+        $licenceTypeId,
+        $totAuthLgvVehicles,
+        $expectedAuthProperties
+    ) {
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $vehicleTypeRefdata = new RefData($vehicleTypeId);
+        $licence->setVehicleType($vehicleTypeRefdata);
+
+        $licenceTypeRefdata = new RefData($licenceTypeId);
+        $licence->setLicenceType($licenceTypeRefdata);
+
+        $licence->setTotAuthLgvVehicles($totAuthLgvVehicles);
+
+        $this->assertEquals(
+            $expectedAuthProperties,
+            $licence->getApplicableAuthProperties()
+        );
+    }
+
+    public function dpGetApplicableAuthProperties()
+    {
+        return [
+            'goods/standard international/lgv/null lgv count' => [
+                RefData::APP_VEHICLE_TYPE_LGV,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                null,
+                [
+                    'totAuthLgvVehicles',
+                ],
+            ],
+            'goods/standard international/lgv/nonzero lgv count' => [
+                RefData::APP_VEHICLE_TYPE_LGV,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                5,
+                [
+                    'totAuthLgvVehicles',
+                ],
+            ],
+            'goods/standard international/mixed/null lgv count' => [
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                null,
+                [
+                    'totAuthVehicles',
+                    'totAuthTrailers',
+                ],
+            ],
+            'goods/standard international/mixed/zero lgv count' => [
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                0,
+                [
+                    'totAuthHgvVehicles',
+                    'totAuthLgvVehicles',
+                    'totAuthTrailers',
+                ],
+            ],
+            'goods/standard international/mixed/nonzero lgv count' => [
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                4,
+                [
+                    'totAuthHgvVehicles',
+                    'totAuthLgvVehicles',
+                    'totAuthTrailers',
+                ],
+            ],
+            'goods/other' => [
+                RefData::APP_VEHICLE_TYPE_HGV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                null,
+                [
+                    'totAuthVehicles',
+                    'totAuthTrailers',
+                ],
+            ],
+            'psv/special restricted' => [
+                RefData::APP_VEHICLE_TYPE_PSV,
+                Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                null,
+                [],
+            ],
+            'psv/other' => [
+                RefData::APP_VEHICLE_TYPE_PSV,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                null,
+                [
+                    'totAuthVehicles',
+                ],
+            ],
+        ];
+    }
+
+    public function testGetApplicableAuthPropertiesException()
+    {
+        $this->expectException(RuntimeException::class);
+
+        $licence = m::mock(Entity::class)->makePartial();
+
+        $vehicleTypeRefdata = new RefData('foo');
+        $licence->setVehicleType($vehicleTypeRefdata);
+
+        $licence->getApplicableAuthProperties();
+    }
+
+    /**
+     * @dataProvider dpIsVehicleTypeMixedWithLgv
+     */
+    public function testIsVehicleTypeMixedWithLgv($vehicleTypeId, $totAuthLgvVehicles, $expected)
+    {
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->setVehicleType(
+            new RefData($vehicleTypeId)
+        );
+
+        $licence->setTotAuthLgvVehicles($totAuthLgvVehicles);
+
+        $this->assertEquals(
+            $expected,
+            $licence->isVehicleTypeMixedWithLgv()
+        );
+    }
+
+    public function dpIsVehicleTypeMixedWithLgv()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_PSV, null, false],
+            [RefData::APP_VEHICLE_TYPE_HGV, null, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, null, false],
+            [RefData::APP_VEHICLE_TYPE_LGV, null, false],
+            [RefData::APP_VEHICLE_TYPE_PSV, 0, false],
+            [RefData::APP_VEHICLE_TYPE_HGV, 0, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, 0, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, 0, false],
+            [RefData::APP_VEHICLE_TYPE_PSV, 1, false],
+            [RefData::APP_VEHICLE_TYPE_HGV, 1, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, 1, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, 1, false],
+        ];
     }
 }

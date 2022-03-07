@@ -5,6 +5,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\InterimOperatingCentres;
 use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
 /**
@@ -34,14 +35,51 @@ class InterimOperatingCentresTest extends m\Adapter\Phpunit\MockeryTestCase
         $this->assertEquals('', $result);
     }
 
-    public function testRenderWithGoodsLicence()
+    public function dpRenderWithGoodsLicence()
+    {
+        return [
+            [
+                'vehicleTypeId' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'totAuthLgvVehicles' => null,
+                'expectedTabVeh' => 'Vehicles',
+            ],
+            [
+                'vehicleTypeId' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'totAuthLgvVehicles' => 0,
+                'expectedTabVeh' => 'Heavy goods vehicles',
+            ],
+            [
+                'vehicleTypeId' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'totAuthLgvVehicles' => 1,
+                'expectedTabVeh' => 'Heavy goods vehicles',
+            ],
+            [
+                'vehicleTypeId' => RefData::APP_VEHICLE_TYPE_HGV,
+                'totAuthLgvVehicles' => null,
+                'expectedTabVeh' => 'Vehicles',
+            ],
+            [
+                'vehicleTypeId' => RefData::APP_VEHICLE_TYPE_LGV,
+                'totAuthLgvVehicles' => 10,
+                'expectedTabVeh' => 'Vehicles',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpRenderWithGoodsLicence
+     */
+    public function testRenderWithGoodsLicence($vehicleTypeId, $totAuthLgvVehicles, $expectedTabVeh)
     {
         $data = [
             'id' => 50,
             'goodsOrPsv' => [
                 'id' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
             ],
-            'isEligibleForLgv' => true,
+            'vehicleType' => [
+                'id' => $vehicleTypeId,
+            ],
+            'totAuthLgvVehicles' => $totAuthLgvVehicles,
             'licence' => [
                 'id' => 100
             ],
@@ -180,7 +218,7 @@ class InterimOperatingCentresTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $expectedRow = [
             'TAB_OC_ADD' => "Address 1\nAddress 2",
-            'TAB_VEH' => 'Heavy Goods Vehicles',
+            'TAB_VEH' => $expectedTabVeh,
             'TAB_OC_VEH' => 10,
             'TAB_TRAILER' => 'Trailers',
             'TAB_OC_TRAILER' => 5,
@@ -211,7 +249,9 @@ class InterimOperatingCentresTest extends m\Adapter\Phpunit\MockeryTestCase
             'goodsOrPsv' => [
                 'id' => Licence::LICENCE_CATEGORY_PSV,
             ],
-            'isEligibleForLgv' => false,
+            'vehicleType' => [
+                'id' => RefData::APP_VEHICLE_TYPE_PSV,
+            ],
             'licence' => [
                 'id' => 100
             ],

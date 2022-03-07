@@ -2,8 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\Service;
 
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
 /**
  * TrafficAreaValidator
@@ -16,6 +18,7 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\FactoryInterface
     const ERR_TA_PSV = 'ERR_TA_PSV';       // Operator already has PSV licence/application in same Traffic Area
     const ERR_TA_PSV_SR = 'ERR_TA_PSV_SR'; // Operator already has PSV SR licence/application in same Traffic Area
     const ERR_TA_PSV_RES = 'ERR_TA_PSV_RES'; // Operator already has PSV Restricted licence/application in same Traffic Area
+    const ERR_TA_NI_APP = 'ERR_TA_NI_APP'; // GB application with NI traffic area
 
     protected $messages = [];
 
@@ -35,6 +38,50 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\FactoryInterface
         $this->adminAreaTrafficAreaRepo = $serviceLocator->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
 
         return $this;
+    }
+
+    /**
+     * Validate traffic area based on postcode
+     *
+     * @param Application|Licence $entity Application or Licence entity
+     * @param string $postcode
+     *
+     * @return void
+     * @throws ValidationException
+     */
+    public function validateTrafficAreaWithPostcode($entity, $postcode)
+    {
+        // If we have no postcode, then we can skip this validation
+        if (empty($postcode)) {
+            return;
+        }
+
+        try {
+            $trafficArea = $this->addressService->fetchTrafficAreaByPostcode(
+                $postcode,
+                $this->adminAreaTrafficAreaRepo
+            );
+        } catch (\Exception $e) {
+            // If address service is not available then we can skip validation
+            return;
+        }
+
+        // If we can't match the postcode to a TA, then we can skip
+        if ($trafficArea === null) {
+            return;
+        }
+
+        if ($entity instanceof Application && $entity->isNew()) {
+            // new application
+            if ($trafficArea->getId() === TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+                && $entity->getNiFlag() === 'N'
+            ) {
+                // GB application with NI traffic area
+                throw new ValidationException([self::ERR_TA_NI_APP]);
+            }
+        }
+
+        return;
     }
 
     /**

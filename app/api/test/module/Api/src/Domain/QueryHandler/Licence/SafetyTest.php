@@ -50,7 +50,7 @@ class SafetyTest extends QueryHandlerTestCase
     /**
      * @dataProvider trailersProvider
      */
-    public function testHandleQuery($licenceType, $canHaveTrailers)
+    public function testHandleQuery($canHaveTrailer)
     {
         $licence = m::mock(BundleSerializableInterface::class);
 
@@ -60,14 +60,9 @@ class SafetyTest extends QueryHandlerTestCase
             ->once()
             ->getMock();
 
-        $licence->shouldReceive('getGoodsOrPsv')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn($licenceType)
-                ->once()
-                ->getMock()
-            )
+        $licence->shouldReceive('canHaveTrailer')
+            ->withNoArgs()
+            ->andReturn($canHaveTrailer)
             ->shouldReceive('getLicenceDocuments')
             ->andReturn([$mockSafetyDocument])
             ->once()
@@ -94,7 +89,7 @@ class SafetyTest extends QueryHandlerTestCase
         $this->assertEquals(
             [
                 'foo' => 'bar',
-                'canHaveTrailers' => $canHaveTrailers,
+                'canHaveTrailers' => $canHaveTrailer,
                 'isShowTrailers' => false,
                 'safetyDocuments' => [['DOCUMENT']],
                 'workshops' => [
@@ -109,14 +104,8 @@ class SafetyTest extends QueryHandlerTestCase
     public function trailersProvider()
     {
         return [
-            [
-                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-                true
-            ],
-            [
-                Licence::LICENCE_CATEGORY_PSV,
-                false
-            ],
+            [true],
+            [false],
         ];
     }
 }

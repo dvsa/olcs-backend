@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query as DomainQry;
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\AbstractStandardConditions;
 use Dvsa\Olcs\Transfer\FieldType\IdentityInterface;
 use Dvsa\OlcsTest\Api\Service\Document\Bookmark\Stub\AbstractStandardConditionsStub;
@@ -63,7 +64,7 @@ class AbstractStandardConditionsTest extends MockeryTestCase
     /**
      * @dataProvider dbTestRender
      */
-    public function testRender($licType, $expect)
+    public function testRender($licType, $vehType, $expect)
     {
         /** @var m\MockInterface|AbstractStandardConditionsStub $sut */
         $sut = m::mock(AbstractStandardConditionsStub::class . '[getSnippet]');
@@ -78,6 +79,9 @@ class AbstractStandardConditionsTest extends MockeryTestCase
                 'licenceType' => [
                     'id' => $licType,
                 ],
+                'vehicleType' => [
+                    'id' => $vehType,
+                ],
             ]
         );
 
@@ -89,14 +93,17 @@ class AbstractStandardConditionsTest extends MockeryTestCase
         return [
             [
                 'licType' => Entity\Licence\Licence::LICENCE_TYPE_RESTRICTED,
+                'vehType' => RefData::APP_VEHICLE_TYPE_HGV,
                 'expect' => 'RESTRICTED',
             ],
             [
                 'licType' => Entity\Licence\Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'vehType' => RefData::APP_VEHICLE_TYPE_HGV,
                 'expect' => 'STANDARD',
             ],
             [
                 'licType' => Entity\Licence\Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                'vehType' => RefData::APP_VEHICLE_TYPE_HGV,
                 'expect' => 'STANDARD_INT',
             ],
         ];

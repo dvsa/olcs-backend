@@ -45,9 +45,14 @@ class ConditionUndertaking extends AbstractConditionUndertaking
 
     const SMALL_VEHICLE_UNDERTAKINGS = 'Small vehicles undertakings';
 
+    const LIGHT_GOODS_VEHICLE_UNDERTAKINGS =
+        'All authorised vehicles shall not exceed 3,500 Kilograms (kg), including when combined with a trailer.';
+
     const ACTION_ADD = 'A';
     const ACTION_UPDATE = 'U';
     const ACTION_DELETE = 'D';
+
+    const CATEGORY_OTHER = 'cu_cat_other';
 
     /**
      * Construct Condition Undertaking entity

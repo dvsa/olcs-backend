@@ -70,7 +70,8 @@ class Overview extends AbstractQueryHandler
                 ],
                 'organisationLicenceCount' => $licence->getOrganisation()->getActiveLicences()->count(),
                 'numberOfVehicles' => $licence->getActiveVehicles()->count(),
-                'firstApplicationId' => $licence->getFirstApplicationId()
+                'firstApplicationId' => $licence->getFirstApplicationId(),
+                'applicableAuthProperties' => $licence->getApplicableAuthProperties(),
             ]
         );
     }

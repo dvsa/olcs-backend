@@ -124,7 +124,9 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
             $application->validateTol(
                 $command->getNiFlag(),
                 $this->getRepo()->getRefdataReference($command->getOperatorType()),
-                $this->getRepo()->getRefdataReference($command->getLicenceType())
+                $this->getRepo()->getRefdataReference($command->getLicenceType()),
+                $this->getRepo()->getRefDataReference($command->getVehicleType()),
+                $command->getLgvDeclarationConfirmation()
             );
 
             // Tell the UI we need confirmation
