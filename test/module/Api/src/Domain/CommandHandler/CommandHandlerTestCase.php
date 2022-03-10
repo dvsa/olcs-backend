@@ -409,6 +409,22 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             ->andReturn([]);
     }
 
+    public function expectedSingleCacheClear(string $cacheType, string $uniqueId)
+    {
+        $this->mockedSmServices[CacheEncryption::class]
+            ->expects('removeCustomItem')
+            ->with($cacheType, $uniqueId)
+            ->andReturnTrue();
+    }
+
+    public function expectedListCacheClear(string $cacheType)
+    {
+        $this->mockedSmServices[CacheEncryption::class]
+            ->expects('removeCustomItem')
+            ->with($cacheType)
+            ->andReturnTrue();
+    }
+
     public function expectedCacheClearFromUserCollection($entityMock)
     {
         $this->expectedUserCacheClear([111, 222]);

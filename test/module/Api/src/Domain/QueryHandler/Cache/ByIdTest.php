@@ -61,8 +61,38 @@ class ByIdTest extends QueryHandlerTestCase
         $this->sut->expects('getQueryHandler')->withNoArgs()->andReturn($queryHandler);
 
         $this->mockedSmServices[CacheEncryption::class]
+            ->expects('hasCustomItem')
+            ->with($cacheId, $uniqueId)
+            ->andReturnFalse();
+
+        $this->mockedSmServices[CacheEncryption::class]
             ->expects('setCustomItem')
             ->with($cacheId, $cacheValue, $uniqueId);
+
+        $query = ByIdQry::create($queryParams);
+        $this->assertEquals($cacheValue, $this->sut->handleQuery($query));
+    }
+
+    public function testHandleQueryCacheExists()
+    {
+        $cacheId = CacheEncryption::TRANSLATION_KEY_IDENTIFIER;
+        $uniqueId = 'uniqueId';
+        $cacheValue = 'cache value';
+
+        $queryParams = [
+            'id' => $cacheId,
+            'uniqueId' => $uniqueId
+        ];
+
+        $this->mockedSmServices[CacheEncryption::class]
+            ->expects('hasCustomItem')
+            ->with($cacheId, $uniqueId)
+            ->andReturnTrue();
+
+        $this->mockedSmServices[CacheEncryption::class]
+            ->expects('getCustomItem')
+            ->with($cacheId, $uniqueId)
+            ->andReturn($cacheValue);
 
         $query = ByIdQry::create($queryParams);
         $this->assertEquals($cacheValue, $this->sut->handleQuery($query));

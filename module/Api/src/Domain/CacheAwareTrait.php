@@ -107,4 +107,26 @@ trait CacheAwareTrait
 
         $this->clearUserCaches($userIds);
     }
+
+    /**
+     * Clear a system parameter cache - also clears the parameter list as a whole
+     *
+     * @param string $id
+     * @return void
+     */
+    public function clearSystemParamCache(string $id): void
+    {
+        $this->clearSystemParamListCache();
+        $this->cacheService->removeCustomItem(CacheEncryption::SYS_PARAM_IDENTIFIER, $id);
+    }
+
+    /**
+     * Clears the list of system parameters from the cache
+     *
+     * @return void
+     */
+    public function clearSystemParamListCache(): void
+    {
+        $this->cacheService->removeCustomItem(CacheEncryption::SYS_PARAM_LIST_IDENTIFIER);
+    }
 }

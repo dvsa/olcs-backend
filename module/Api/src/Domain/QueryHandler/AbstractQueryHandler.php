@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Transfer\Query\Cache\ById as CacheById;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
 
@@ -118,6 +119,23 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         }
 
         return $this->repos[$name];
+    }
+
+    /**
+     * @param string $cacheIdentifier
+     * @param string $uniqueId
+     *
+     * @return Result
+     */
+    protected function getCacheById(string $cacheIdentifier, string $uniqueId = ''): Result
+    {
+        $params = [
+            'id' => $cacheIdentifier,
+            'uniqueId' => $uniqueId,
+        ];
+
+        $qry = CacheById::create($params);
+        return $this->queryHandler->handleQuery($qry);
     }
 
     /**

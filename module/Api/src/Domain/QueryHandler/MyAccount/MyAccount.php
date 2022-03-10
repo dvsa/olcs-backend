@@ -4,9 +4,9 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Olcs\Logging\Log\Logger;
@@ -17,8 +17,6 @@ use Olcs\Logging\Log\Logger;
 class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
 {
     use CacheAwareTrait;
-
-    protected $extraRepos = ['SystemParameter'];
 
     /**
      * Handle my account query
@@ -48,9 +46,47 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
             return $this->cacheService->getCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $userId);
         }
 
-        /** @var SystemParameter $systemParameterRepo */
-        $systemParameterRepo = $this->getRepo('SystemParameter');
-        $isEligibleForPermits = $user->isEligibleForPermits();
+        $isEligibleForPermits = false;
+        $isEligibleForPrompt = false;
+        $hasActivePsv = false;
+        $hasSubmittedLicenceApplication = false;
+        $numVehicles = 0;
+
+        $dataAccess = [];
+        $isInternal = $user->isInternal();
+
+        if ($isInternal) {
+            $teamDataExclusionsParam = $this->getCacheById(
+                CacheEncryption::SYS_PARAM_IDENTIFIER,
+                SystemParameter::DATA_SEPARATION_TEAMS_EXEMPT
+            );
+
+            $teamsExcluded = explode(",", $teamDataExclusionsParam->getObject()->getParamValue());
+
+            $team = $user->getTeam();
+
+            $dataAccess = [
+                'canAccessAll' => $team->canAccessAllData($teamsExcluded),
+                'canAccessGb' => $team->canAccessGbData($teamsExcluded),
+                'canAccessNi' => $team->canAccessNiData($teamsExcluded),
+                'trafficAreas' => $team->getAllowedTrafficAreas($teamsExcluded),
+            ];
+        } else {
+            $isEligibleForPermits = $user->isEligibleForPermits();
+
+            if ($isEligibleForPermits) {
+                $selfservePrompt = $this->getCacheById(
+                    CacheEncryption::SYS_PARAM_IDENTIFIER,
+                    SystemParameter::ENABLE_SELFSERVE_PROMPT
+                );
+
+                $isEligibleForPrompt = $selfservePrompt->getObject()->getParamValue();
+            }
+
+            $hasActivePsv = $user->hasActivePsvLicence();
+            $numVehicles = $user->getNumberOfVehicles();
+            $hasSubmittedLicenceApplication = $user->hasOrganisationSubmittedLicenceApplication();
+        }
 
         $result = $this->result(
             $user,
@@ -70,11 +106,13 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
                 'roles' => ['role']
             ],
             [
-                'hasActivePsvLicence' => $user->hasActivePsvLicence(),
-                'numberOfVehicles' => $user->getNumberOfVehicles(),
-                'hasOrganisationSubmittedLicenceApplication' => $user->hasOrganisationSubmittedLicenceApplication(),
+                'hasActivePsvLicence' => $hasActivePsv,
+                'numberOfVehicles' => $numVehicles,
+                'hasOrganisationSubmittedLicenceApplication' => $hasSubmittedLicenceApplication,
                 'eligibleForPermits' => $isEligibleForPermits,
-                'eligibleForPrompt' => $isEligibleForPermits && $systemParameterRepo->isSelfservePromptEnabled(),
+                'eligibleForPrompt' => $isEligibleForPrompt,
+                'dataAccess' => $dataAccess,
+                'isInternal' => $isInternal,
             ]
         );
 
