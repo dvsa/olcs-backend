@@ -526,6 +526,7 @@ return [
     TransferQuery\ContactDetail\ContactDetailsList::class => QueryHandler\ContactDetail\ContactDetailsList::class,
     TransferQuery\ContactDetail\PhoneContact\Get::class => QueryHandler\ContactDetail\PhoneContact\Get::class,
     TransferQuery\ContactDetail\PhoneContact\GetList::class => QueryHandler\ContactDetail\PhoneContact\GetList::class,
+    TransferQuery\TrafficArea\TrafficAreaInternalList::class => QueryHandler\TrafficArea\TrafficAreaInternalList::class,
     TransferQuery\TrafficArea\TrafficAreaList::class => QueryHandler\TrafficArea\TrafficAreaList::class,
     TransferQuery\TrafficArea\Get::class => QueryHandler\TrafficArea\Get::class,
 
@@ -719,4 +720,6 @@ return [
     TransferQuery\Cache\ById::class => QueryHandler\Cache\ById::class,
     Query\Cache\Replacements::class => QueryHandler\Cache\Replacements::class,
     Query\Cache\TranslationKey::class => QueryHandler\Cache\TranslationKey::class,
+    Query\Cache\Single::class => QueryHandler\Cache\Single::class,
+    Query\Cache\RecordList::class => QueryHandler\Cache\RecordList::class,
 ];

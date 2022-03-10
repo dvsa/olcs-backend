@@ -1,12 +1,10 @@
 <?php
 
-/**
- * Create SystemParameter Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\SystemParameter;
 
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\SystemParameter\Create as Create;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
@@ -14,17 +12,13 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\SystemParameter\CreateSystemParameter as Cmd;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 
-/**
- * Create SystemParameter Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class CreateTest extends CommandHandlerTestCase
 {
     public function setUp(): void
     {
         $this->sut = new Create();
         $this->mockRepo('SystemParameter', SystemParameterRepo::class);
+        $this->mockedSmServices[CacheEncryption::class] = m::mock(CacheEncryption::class);
 
         parent::setUp();
     }
@@ -33,7 +27,6 @@ class CreateTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(['id' => 'foo', 'paramValue' => 'bar', 'description' => 'cake']);
 
-        $systemParameter = null;
         $this->repoMap['SystemParameter']
             ->shouldReceive('save')
             ->once()
@@ -47,6 +40,8 @@ class CreateTest extends CommandHandlerTestCase
                 }
             )
             ->getMock();
+
+        $this->expectedListCacheClear(CacheEncryption::SYS_PARAM_LIST_IDENTIFIER);
 
         $result = $this->sut->handleCommand($command);
 

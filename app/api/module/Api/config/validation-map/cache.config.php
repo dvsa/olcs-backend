@@ -13,6 +13,8 @@ return [
     QueryHandler\Cache\ById::class => NoValidationRequired::class,
     QueryHandler\Cache\Replacements::class => NoValidationRequired::class,
     QueryHandler\Cache\TranslationKey::class => NoValidationRequired::class,
+    QueryHandler\Cache\Single::class => NoValidationRequired::class,
+    QueryHandler\Cache\RecordList::class => NoValidationRequired::class,
 
     CommandHandler\Cache\ClearForOrganisation::class => IsSideEffect::class,
     CommandHandler\Cache\ClearForLicence::class => IsSideEffect::class,
