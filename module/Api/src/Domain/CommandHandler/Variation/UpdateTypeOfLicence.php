@@ -20,7 +20,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\DerivedTypeOfLicenceParamsTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\EntityCloner;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -38,6 +40,8 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     use AuthAwareTrait, DerivedTypeOfLicenceParamsTrait;
 
     protected $repoServiceName = 'Application';
+
+    protected $extraRepos = ['ApplicationOperatingCentre'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -85,7 +89,33 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
         $this->getRepo()->save($application);
         $result->addMessage('Application saved successfully');
 
-        $result->merge($this->updateApplicationCompletion($command->getId()));
+        // update application completion - typeOfLicence section
+        $result->merge($this->updateApplicationCompletion($command->getId(), 'typeOfLicence'));
+
+        // check if the new type of licence requires OCs to be removed
+        if (!$application->canHaveOperatingCentre()
+            && (!$application->getOperatingCentres()->isEmpty() || !$licence->getOperatingCentres()->isEmpty())
+        ) {
+            // can't have OCs, remove them
+            // delete all OCs already linked to this application
+            foreach ($application->getOperatingCentres() as $aoc) {
+                $this->getRepo('ApplicationOperatingCentre')->delete($aoc);
+            }
+
+            // for each and every OC linked to the related licence
+            // create a record against the application which will remove it
+            foreach ($licence->getOperatingCentres() as $loc) {
+                /** @var ApplicationOperatingCentre $aoc */
+                $aoc = EntityCloner::cloneEntityInto($loc, ApplicationOperatingCentre::class);
+                $aoc->setAction(ApplicationOperatingCentre::ACTION_DELETE);
+                $aoc->setApplication($application);
+
+                $this->getRepo('ApplicationOperatingCentre')->save($aoc);
+            }
+
+            // update application completion - operatingCentres section
+            $result->merge($this->updateApplicationCompletion($command->getId(), 'operatingCentres'));
+        }
 
         // OLCS-10953: don't invoke fee logic if application was created internally
         if (!$application->createdInternally()) {
@@ -124,10 +154,18 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
         return false;
     }
 
-    private function updateApplicationCompletion($id)
+    /**
+     * Update application completion
+     *
+     * @param int $id
+     * @param string $section
+     *
+     * @return Result
+     */
+    private function updateApplicationCompletion($id, $section)
     {
         return $this->handleSideEffect(
-            UpdateApplicationCompletion::create(['id' => $id, 'section' => 'typeOfLicence'])
+            UpdateApplicationCompletion::create(['id' => $id, 'section' => $section])
         );
     }
 

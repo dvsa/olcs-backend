@@ -127,6 +127,63 @@ class ApplicationEntityTest extends EntityTester
         static::assertEquals(0, $sut->getLgvDeclarationConfirmation());
     }
 
+    /** @dataProvider dpUpdateTypeOfLicenceFromMixed */
+    public function testUpdateTypeOfLicenceFromMixed($vehType, $expectTotAuthLgvVehicles, $expectTotAuthHgvVehicles, $expectTotAuthTrailers)
+    {
+        $niFlag = 'unit_niFlag';
+        $gop = 'unit_goodsOrPsv';
+        $licType = 'unit_licType';
+        $lgvDecCon = 'unit_lgvDec';
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('validateTol')
+            ->once()
+            ->with($niFlag, $gop, $licType, $vehType, $lgvDecCon)
+            ->andReturnTrue();
+        $sut->setVehicleType(RefData::APP_VEHICLE_TYPE_MIXED);
+        $sut->updateTotAuthLgvVehicles(3);
+        $sut->updateTotAuthHgvVehicles(10);
+        $sut->setTotAuthTrailers(5);
+
+        static::assertTrue($sut->updateTypeOfLicence($niFlag, $gop, $licType, $vehType, $lgvDecCon));
+
+        static::assertEquals($vehType, $sut->getVehicleType());
+        static::assertEquals($expectTotAuthLgvVehicles, $sut->getTotAuthLgvVehicles());
+        static::assertEquals($expectTotAuthHgvVehicles, $sut->getTotAuthHgvVehicles());
+        static::assertEquals($expectTotAuthTrailers, $sut->getTotAuthTrailers());
+    }
+
+    public function dpUpdateTypeOfLicenceFromMixed()
+    {
+        return [
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'expectTotAuthLgvVehicles' => null,
+                'expectTotAuthHgvVehicles' => 10,
+                'expectTotAuthTrailers' => 5,
+            ],
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'expectTotAuthLgvVehicles' => null,
+                'expectTotAuthHgvVehicles' => 10,
+                'expectTotAuthTrailers' => null,
+            ],
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'expectTotAuthLgvVehicles' => 3,
+                'expectTotAuthHgvVehicles' => null,
+                'expectTotAuthTrailers' => null,
+            ],
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'expectTotAuthLgvVehicles' => 3,
+                'expectTotAuthHgvVehicles' => 10,
+                'expectTotAuthTrailers' => 5,
+            ],
+        ];
+    }
+
     /** @dataProvider dpUpdateTypeOfLicenceFromLgvOnly */
     public function testUpdateTypeOfLicenceFromLgvOnly($vehType, $expectTotAuthLgvVehicles)
     {
@@ -168,6 +225,102 @@ class ApplicationEntityTest extends EntityTester
             [
                 'vehType' => RefData::APP_VEHICLE_TYPE_MIXED,
                 'expectTotAuthLgvVehicles' => 10,
+            ],
+        ];
+    }
+
+    /** @dataProvider dpUpdateTypeOfLicenceFromHgvOnly */
+    public function testUpdateTypeOfLicenceFromHgvOnly($vehType, $expectTotAuthHgvVehicles, $expectTotAuthTrailers)
+    {
+        $niFlag = 'unit_niFlag';
+        $gop = 'unit_goodsOrPsv';
+        $licType = 'unit_licType';
+        $lgvDecCon = 'unit_lgvDec';
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('validateTol')
+            ->once()
+            ->with($niFlag, $gop, $licType, $vehType, $lgvDecCon)
+            ->andReturnTrue();
+        $sut->setVehicleType(RefData::APP_VEHICLE_TYPE_HGV);
+        $sut->updateTotAuthHgvVehicles(10);
+        $sut->setTotAuthTrailers(5);
+
+        static::assertTrue($sut->updateTypeOfLicence($niFlag, $gop, $licType, $vehType, $lgvDecCon));
+
+        static::assertEquals($vehType, $sut->getVehicleType());
+        static::assertEquals($expectTotAuthHgvVehicles, $sut->getTotAuthHgvVehicles());
+        static::assertEquals($expectTotAuthTrailers, $sut->getTotAuthTrailers());
+    }
+
+    public function dpUpdateTypeOfLicenceFromHgvOnly()
+    {
+        return [
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'expectTotAuthHgvVehicles' => 10,
+                'expectTotAuthTrailers' => 5,
+            ],
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'expectTotAuthHgvVehicles' => 10,
+                'expectTotAuthTrailers' => null,
+            ],
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'expectTotAuthHgvVehicles' => null,
+                'expectTotAuthTrailers' => null,
+            ],
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'expectTotAuthHgvVehicles' => 10,
+                'expectTotAuthTrailers' => 5,
+            ],
+        ];
+    }
+
+    /** @dataProvider dpUpdateTypeOfLicenceFromPsv */
+    public function testUpdateTypeOfLicenceFromPsv($vehType, $expectTotAuthHgvVehicles)
+    {
+        $niFlag = 'unit_niFlag';
+        $gop = 'unit_goodsOrPsv';
+        $licType = 'unit_licType';
+        $lgvDecCon = 'unit_lgvDec';
+
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->shouldReceive('validateTol')
+            ->once()
+            ->with($niFlag, $gop, $licType, $vehType, $lgvDecCon)
+            ->andReturnTrue();
+        $sut->setVehicleType(RefData::APP_VEHICLE_TYPE_PSV);
+        $sut->updateTotAuthHgvVehicles(10);
+
+        static::assertTrue($sut->updateTypeOfLicence($niFlag, $gop, $licType, $vehType, $lgvDecCon));
+
+        static::assertEquals($vehType, $sut->getVehicleType());
+        static::assertEquals($expectTotAuthHgvVehicles, $sut->getTotAuthHgvVehicles());
+    }
+
+    public function dpUpdateTypeOfLicenceFromPsv()
+    {
+        return [
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'expectTotAuthHgvVehicles' => 10,
+            ],
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'expectTotAuthHgvVehicles' => 10,
+            ],
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'expectTotAuthHgvVehicles' => null,
+            ],
+            [
+                'vehType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'expectTotAuthHgvVehicles' => 10,
             ],
         ];
     }
@@ -2636,6 +2789,54 @@ class ApplicationEntityTest extends EntityTester
             [RefData::APP_VEHICLE_TYPE_LGV, true],
             [RefData::APP_VEHICLE_TYPE_MIXED, false],
             [RefData::APP_VEHICLE_TYPE_PSV, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanHaveHgv
+     */
+    public function testCanHaveHgv($vehicleType, $expected)
+    {
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $application->canHaveHgv()
+        );
+    }
+
+    public function dpCanHaveHgv()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, true],
+            [RefData::APP_VEHICLE_TYPE_PSV, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanHaveOperatingCentre
+     */
+    public function testCanHaveOperatingCentre($vehicleType, $expected)
+    {
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $application->canHaveOperatingCentre()
+        );
+    }
+
+    public function dpCanHaveOperatingCentre()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, true],
+            [RefData::APP_VEHICLE_TYPE_PSV, true],
         ];
     }
 

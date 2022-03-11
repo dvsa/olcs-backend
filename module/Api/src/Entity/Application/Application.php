@@ -219,6 +219,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             // can't have LGV, reset TotAuthLgvVehicles
             $this->updateTotAuthLgvVehicles(null);
         }
+
+        if (!$this->canHaveHgv() && $this->totAuthHgvVehicles !== null) {
+            // can't have HGV, reset TotAuthHgvVehicles
+            $this->updateTotAuthHgvVehicles(null);
+        }
+
+        if (!$this->canHaveTrailer() && $this->totAuthTrailers !== null) {
+            // can't have Trailer, reset TotAuthTrailers
+            $this->setTotAuthTrailers(null);
+        }
     }
 
     /**
