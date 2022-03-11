@@ -598,6 +598,54 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpCanHaveHgv
+     */
+    public function testCanHaveHgv($vehicleType, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $licence->canHaveHgv()
+        );
+    }
+
+    public function dpCanHaveHgv()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, true],
+            [RefData::APP_VEHICLE_TYPE_PSV, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanHaveOperatingCentre
+     */
+    public function testCanHaveOperatingCentre($vehicleType, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $licence->canHaveOperatingCentre()
+        );
+    }
+
+    public function dpCanHaveOperatingCentre()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, true],
+            [RefData::APP_VEHICLE_TYPE_PSV, true],
+        ];
+    }
+
+    /**
      * @dataProvider dpMustHaveOperatingCentre
      */
     public function testMustHaveOperatingCentre($vehicleType, $expected)
