@@ -10,9 +10,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ApplicationCompletion;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateSafetyStatus as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion\UpdateSafetyStatus;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Mockery as m;
 
 /**
  * Update Safety Status Test
@@ -34,9 +35,11 @@ class UpdateSafetyStatusTest extends AbstractUpdateStatusTestCase
     public function initReferences()
     {
         $this->refData = [
-            Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-            Licence::LICENCE_CATEGORY_PSV,
-            Licence::TACH_EXT
+            Licence::TACH_EXT,
+            RefData::APP_VEHICLE_TYPE_MIXED,
+            RefData::APP_VEHICLE_TYPE_LGV,
+            RefData::APP_VEHICLE_TYPE_HGV,
+            RefData::APP_VEHICLE_TYPE_PSV,
         ];
 
         parent::initReferences();
@@ -112,27 +115,50 @@ class UpdateSafetyStatusTest extends AbstractUpdateStatusTestCase
         $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
     }
 
-    public function testHandleCommandWithoutTrailers()
+    public function dpHandleCommandTrailers()
     {
-        $this->applicationCompletion->setSafetyStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
-
-        $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
-
-        $this->licence->setSafetyInsVehicles(1);
-        $this->licence->setSafetyInsVaries('Y');
-        $this->licence->setTachographIns($this->refData[Licence::TACH_EXT]);
-        $this->licence->setWorkshops(['foo']);
-        $this->application->setSafetyConfirmation('Y');
-        $this->licence->setTachographInsName('Foo');
-
-        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_INCOMPLETE);
+        return [
+            [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'safetyInsTrailers' => null,
+                'expected' => ApplicationCompletionEntity::STATUS_INCOMPLETE,
+            ],
+            [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                'safetyInsTrailers' => 1,
+                'expected' => ApplicationCompletionEntity::STATUS_COMPLETE,
+            ],
+            [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'safetyInsTrailers' => null,
+                'expected' => ApplicationCompletionEntity::STATUS_INCOMPLETE,
+            ],
+            [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                'safetyInsTrailers' => 1,
+                'expected' => ApplicationCompletionEntity::STATUS_COMPLETE,
+            ],
+            [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'safetyInsTrailers' => null,
+                'expected' => ApplicationCompletionEntity::STATUS_COMPLETE,
+            ],
+            [
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
+                'safetyInsTrailers' => null,
+                'expected' => ApplicationCompletionEntity::STATUS_COMPLETE,
+            ],
+        ];
     }
 
-    public function testHandleCommandWithTrailers()
+    /**
+     * @dataProvider dpHandleCommandTrailers
+     */
+    public function testHandleCommandTrailers($vehicleType, $safetyInsTrailers, $expected)
     {
         $this->applicationCompletion->setSafetyStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
 
-        $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_GOODS_VEHICLE]);
+        $this->application->setVehicleType($this->refData[$vehicleType]);
 
         $this->licence->setSafetyInsVehicles(1);
         $this->licence->setSafetyInsVaries('Y');
@@ -140,24 +166,8 @@ class UpdateSafetyStatusTest extends AbstractUpdateStatusTestCase
         $this->licence->setWorkshops(['foo']);
         $this->application->setSafetyConfirmation('Y');
         $this->licence->setTachographInsName('Foo');
-        $this->licence->setSafetyInsTrailers(1);
+        $this->licence->setSafetyInsTrailers($safetyInsTrailers);
 
-        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
-    }
-
-    public function testHandleCommandPsv()
-    {
-        $this->applicationCompletion->setSafetyStatus(ApplicationCompletionEntity::STATUS_NOT_STARTED);
-
-        $this->application->setGoodsOrPsv($this->refData[Licence::LICENCE_CATEGORY_PSV]);
-
-        $this->licence->setSafetyInsVehicles(1);
-        $this->licence->setSafetyInsVaries('Y');
-        $this->licence->setTachographIns($this->refData[Licence::TACH_EXT]);
-        $this->licence->setWorkshops(['foo']);
-        $this->application->setSafetyConfirmation('Y');
-        $this->licence->setTachographInsName('Foo');
-
-        $this->expectStatusChange(ApplicationCompletionEntity::STATUS_COMPLETE);
+        $this->expectStatusChange($expected);
     }
 }
