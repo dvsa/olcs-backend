@@ -64,7 +64,7 @@ class ApplicationSafetyReviewService extends AbstractReviewService
         ];
 
         if (!$this->isPsv($data)) {
-            if ($data['totAuthTrailers'] !== 0) {
+            if (!empty($data['totAuthTrailers'])) {
                 $multiItems['safetyIns'][] = [
                     'label' => 'application-review-safety-safetyInsTrailers',
                     'value' => $this->formatDuration($data['licence']['safetyInsTrailers'])

@@ -52,8 +52,7 @@ final class UpdateSafetyStatus extends AbstractUpdateStatus
             return false;
         }
 
-        if ($application->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE
-            && $licence->getSafetyInsTrailers() === null) {
+        if ($application->canHaveTrailer() && $licence->getSafetyInsTrailers() === null) {
             return false;
         }
 
