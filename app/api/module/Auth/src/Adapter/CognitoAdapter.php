@@ -4,17 +4,18 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Auth\Adapter;
 
 use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
+use Aws\Exception\AwsException;
 use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Contracts\Auth\AccessTokenInterface;
 use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
-use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
+use Dvsa\Contracts\Auth\ResourceOwnerInterface;
 use Dvsa\Olcs\Auth\Exception\ResetPasswordException;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
+use Dvsa\Olcs\Transfer\Result\Auth\ChangePasswordResult;
 use Laminas\Authentication\Adapter\AbstractAdapter;
 use Laminas\Authentication\Result;
-use Laminas\Http\Response;
 use Olcs\Logging\Log\Logger;
 
 class CognitoAdapter extends AbstractAdapter
@@ -22,26 +23,17 @@ class CognitoAdapter extends AbstractAdapter
     /**
      * Authentication success.
      */
-    const SUCCESS_WITH_CHALLENGE = 2;
-    const FAILURE_ACCOUNT_DISABLED = -5;
+    public const SUCCESS_WITH_CHALLENGE = 2;
+    public const FAILURE_ACCOUNT_DISABLED = -5;
 
-    const USER_NOT_FOUND         = 'UserNotFoundException';
-    const NOT_AUTHORISED         = 'NotAuthorizedException';
-    const MESSAGE_INCORRECT_USERNAME_OR_PASSWORD = 'Incorrect username or password.';
-    const MESSAGE_USER_IS_DISABLED = 'User is disabled.';
+    public const MESSAGE_INCORRECT_USERNAME_OR_PASSWORD = 'Incorrect username or password.';
+    public const MESSAGE_USER_IS_DISABLED = 'User is disabled.';
 
-    public const AWS_ERROR_INVALID_PASSWORD = 'InvalidPasswordException';
-    public const AWS_ERROR_NOT_AUTHORIZED = 'NotAuthorizedException';
+    public const EXCEPTION_INVALID_PASSWORD = 'InvalidPasswordException';
+    public const EXCEPTION_NOT_AUTHORIZED = 'NotAuthorizedException';
+    public const EXCEPTION_USER_NOT_FOUND = 'UserNotFoundException';
 
-    /**
-     * @var Client
-     */
-    protected $client;
-
-    /**
-     * @var String
-     */
-    protected $realm;
+    protected Client $client;
 
     /**
      * CognitoAdapter constructor.
@@ -50,14 +42,6 @@ class CognitoAdapter extends AbstractAdapter
     public function __construct(Client $client)
     {
         $this->client = $client;
-    }
-
-    /**
-     * @param string $realm
-     */
-    public function setRealm(string $realm)
-    {
-        $this->realm = $realm;
     }
 
     /**
@@ -82,11 +66,11 @@ class CognitoAdapter extends AbstractAdapter
             $previous = $e->getPrevious();
             if ($previous instanceof CognitoIdentityProviderException) {
                 switch ($previous->getAwsErrorCode()) {
-                    case static::USER_NOT_FOUND:
+                    case static::EXCEPTION_USER_NOT_FOUND:
                         return new Result(Result::FAILURE_IDENTITY_NOT_FOUND, [], [$e->getMessage()]);
-                    case static::NOT_AUTHORISED && $e->getMessage() === static::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD:
+                    case static::EXCEPTION_NOT_AUTHORIZED && $e->getMessage() === static::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD:
                         return new Result(Result::FAILURE_CREDENTIAL_INVALID, [], [$e->getMessage()]);
-                    case static::NOT_AUTHORISED && $e->getMessage() === static::MESSAGE_USER_IS_DISABLED:
+                    case static::EXCEPTION_NOT_AUTHORIZED && $e->getMessage() === static::MESSAGE_USER_IS_DISABLED:
                         return new Result(static::FAILURE_ACCOUNT_DISABLED, [], [$e->getMessage()]);
                 }
             }
@@ -102,46 +86,47 @@ class CognitoAdapter extends AbstractAdapter
         }
     }
 
-    /**
-     * @todo the client doesn't currently check the old password - needs addressing in upstream DVSA client
-     * @todo are there other possible exceptions we're expecting here? Upstream DVSA client only throws ClientExcpetion
-     * have put in a catch-all for \Exception for now
-     *
-     * @param string $identifier
-     * @param string $oldPassword
-     * @param string $newPassword
-     *
-     * @return array
-     * @throws ChangePasswordException
-     */
-    public function changePassword(string $identifier, string $oldPassword, string $newPassword): array
+    public function changePassword(string $identifier, string $previousPassword, string $newPassword, bool $permanent = true): ChangePasswordResult
     {
         try {
-            $success = $this->client->changePassword($identifier, $newPassword);
-            $code = Response::STATUS_CODE_200;
-
-            if (!$success) {
-                $code = Response::STATUS_CODE_500;
+            $this->client->authenticate($identifier, $previousPassword);
+        } catch (ClientException $e) {
+            $previousException = $e->getPrevious();
+            $errorCode = $previousException->getAwsErrorCode();
+            $errorMessage = $previousException->getAwsErrorMessage();
+            assert($previousException instanceof AwsException);
+            if ($errorCode === static::EXCEPTION_NOT_AUTHORIZED && $errorMessage === static::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD) {
+                return new ChangePasswordResult(ChangePasswordResult::FAILURE_OLD_PASSWORD_INVALID, ChangePasswordResult::MESSAGE_OLD_PASSWORD_INVALID);
             }
+            Logger::debug('Cognito client: change password ClientException checking previous password: ' . $e->getMessage());
+            return new ChangePasswordResult(ChangePasswordResult::FAILURE_CLIENT_ERROR, $e->getMessage());
+        } catch (ChallengeException $e) {
+            // Do nothing as this means the password was valid
+        }
 
-            return ['status' => $code];
+        if ($previousPassword === $newPassword) {
+            return new ChangePasswordResult(ChangePasswordResult::FAILURE_PASSWORD_REUSE, ChangePasswordResult::MESSAGE_PASSWORD_REUSE);
+        }
+
+        try {
+            $this->client->changePassword($identifier, $newPassword, $permanent);
+            return new ChangePasswordResult(ChangePasswordResult::SUCCESS);
         } catch (ClientException $e) {
             Logger::debug('Cognito client: change password ClientException: ' . $e->getMessage());
-            throw new ChangePasswordException($e->getMessage());
-        } catch (\Exception $e) {
-            Logger::err('Unknown change password error from Cognito client: ' . $e->getMessage());
-            throw new ChangePasswordException($e->getMessage());
+            $previousException = $e->getPrevious();
+            assert($previousException instanceof AwsException);
+            switch ($previousException->getAwsErrorCode()) {
+                case 'InvalidPasswordException':
+                    return new ChangePasswordResult(ChangePasswordResult::FAILURE_NEW_PASSWORD_INVALID, $e->getMessage());
+                case 'NotAuthorizedException':
+                    return new ChangePasswordResult(ChangePasswordResult::FAILURE_NOT_AUTHORIZED, $e->getMessage());
+                default:
+                    return new ChangePasswordResult(ChangePasswordResult::FAILURE, $e->getMessage());
+            }
         }
     }
 
     /**
-     * @todo Using change password as no separate reset password method in DVSA client (use AWS adminSetUserPassword?)
-     * @todo This will only work up until change password implements checking the previous password
-     *
-     * @param string $identifier
-     * @param string $newPassword
-     *
-     * @return bool
      * @throws ResetPasswordException
      */
     public function resetPassword(string $identifier, string $newPassword, bool $permanent = true): bool
@@ -177,6 +162,26 @@ class CognitoAdapter extends AbstractAdapter
      */
     public function changeExpiredPassword(string $newPassword, string $challengeToken, string $username): ChangeExpiredPasswordResult
     {
+        try {
+            $this->client->authenticate($username, $newPassword);
+        } catch (ClientException $e) {
+            $previousException = $e->getPrevious();
+            assert($previousException instanceof AwsException);
+            if ($previousException->getAwsErrorCode() === static::EXCEPTION_NOT_AUTHORIZED && $previousException->getAwsErrorMessage() === static::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD) {
+                // If authentication fails, we're good. It means the user is not using their existing password for
+                // their new password. Break free :)
+                goto break_free_of_authenticate;
+            }
+            Logger::err('Cognito client: change password ClientException checking previous password: ' . $e->getMessage());
+            return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE_CLIENT_ERROR, [], [$e->getMessage()]);
+        } catch (ChallengeException $e) {
+            if ($e->getChallengeName() === 'NEW_PASSWORD_REQUIRED') {
+                return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_MATCHES_OLD, [], [$e->getMessage()]);
+            }
+        }
+
+        break_free_of_authenticate:
+
         try {
             $token = $this->client->responseToAuthChallenge(
                 'NEW_PASSWORD_REQUIRED',
@@ -260,6 +265,31 @@ class CognitoAdapter extends AbstractAdapter
     public function enableUser(string $identifier): void
     {
         $this->client->enableUser($identifier);
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function getUserByIdentifier(string $identifier): ResourceOwnerInterface
+    {
+        return $this->client->getUserByIdentifier($identifier);
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function registerIfNotPresent(string $identifier, string $password, string $email, array $attributes = []): bool
+    {
+        try {
+            $this->getUserByIdentifier($identifier);
+        } catch (ClientException $e) {
+            if ($e->getPrevious()->getAwsErrorCode() === static::EXCEPTION_USER_NOT_FOUND) {
+                $this->register($identifier, $password, $email, $attributes);
+                return true;
+            }
+            throw $e;
+        }
+        return false;
     }
 
     /**

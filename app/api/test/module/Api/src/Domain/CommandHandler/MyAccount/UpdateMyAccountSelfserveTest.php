@@ -27,11 +27,10 @@ class UpdateMyAccountSelfserveTest extends CommandHandlerTestCase
         $data = [
             'id' => 111,
             'version' => 1,
-            'loginId' => 'login_id',
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
+                'forename' => 'updated forename',
                 'person' => [
-                    'forename' => 'updated forename',
                     'familyName' => 'updated familyName',
                 ],
             ],

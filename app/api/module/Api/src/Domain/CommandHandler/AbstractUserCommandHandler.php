@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\User\Role;
 use Olcs\Logging\Log\Logger;
@@ -30,22 +31,16 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler impleme
     /**
      * Validates username
      *
-     * @param string $new
-     * @param string $current
-     *
+     * @param string $username
      * @return void
+     * @throws RuntimeException
      * @throws ValidationException
      */
-    protected function validateUsername($new, $current = null)
+    protected function validateUsername(string $username): void
     {
-        if (isset($current) && ($new === $current)) {
-            // username has not changed
-            return true;
-        }
-
         $repo = $this->getRepo();
         $repo->disableSoftDeleteable();
-        $users = $repo->fetchByLoginId($new);
+        $users = $repo->fetchByLoginId($username);
         $repo->enableSoftDeleteable();
 
         if (!empty($users)) {

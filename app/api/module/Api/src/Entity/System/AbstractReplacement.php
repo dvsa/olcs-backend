@@ -23,6 +23,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_replacement_users_created_by", columns={"created_by"}),
  *        @ORM\Index(name="fk_replacement_users_last_modified_by", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="placeholder", columns={"placeholder"})
  *    }
  * )
  */

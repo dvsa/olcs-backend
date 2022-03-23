@@ -4,19 +4,24 @@ declare(strict_types = 1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
+use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Api\Domain\Command\Auth\ForgotPasswordOpenAm;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendForgotPassword as ForgotPasswordEmailCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Domain\Repository\UserPasswordReset as UserPasswordResetRepo;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\UserPasswordReset as UserPasswordResetEntity;
+use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
+use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\Auth\ForgotPassword as ForgotPasswordCmd;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendForgotPassword as ForgotPasswordEmailCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 
 class ForgotPassword extends AbstractCommandHandler implements ConfigAwareInterface
 {
@@ -31,8 +36,21 @@ class ForgotPassword extends AbstractCommandHandler implements ConfigAwareInterf
     const MSG_USER_NOT_ALLOWED_RESET = 'account-not-active'; //preserves existing behaviour, review needed
 
     /**
+     * @var ValidatableAdapterInterface|CognitoAdapter
+     */
+    private ValidatableAdapterInterface $authAdapter;
+    private PasswordService $passwordService;
+
+    public function __construct(ValidatableAdapterInterface $authAdapter, PasswordService $passwordService)
+    {
+        $this->authAdapter = $authAdapter;
+        $this->passwordService = $passwordService;
+    }
+
+    /**
      * @param CommandInterface $command
      * @return Result
+     * @throws ClientException|RuntimeException
      */
     public function handleCommand(CommandInterface $command): Result
     {
@@ -61,6 +79,13 @@ class ForgotPassword extends AbstractCommandHandler implements ConfigAwareInterf
         if ($this->config['auth']['default_adapter'] === self::OPENAM_ADAPTER_CONFIG_VALUE) {
             return $this->proxyCommand($command, ForgotPasswordOpenAm::class);
         }
+
+        // Register user in Cognito if they haven't been migrated via login yet
+        $this->authAdapter->registerIfNotPresent(
+            $user->getLoginId(),
+            $this->passwordService->generatePassword(),
+            $user->getContactDetails()->getEmailAddress()
+        );
 
         //@todo check for existing reset? Do we want to do anything to prevent spamming of this service?
         $confirmation = hash('sha256', random_bytes(512));
