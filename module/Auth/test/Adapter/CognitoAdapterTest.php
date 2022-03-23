@@ -691,4 +691,78 @@ class CognitoAdapterTest extends MockeryTestCase
         // Execute
         $sut->registerIfNotPresent($username, $password, $email, $attributes);
     }
+
+    /**
+     * @test
+     */
+    public function doesUserExist_ReturnsTrue_WhenUserExistsInCognito(): void
+    {
+        // Setup
+        $username = 'user4574';
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('getUserByIdentifier')->with($username)->once()->andReturn(
+            new class(['id' => 1001]) extends AbstractResourceOwner implements ResourceOwnerInterface {
+                public function getId(): string
+                {
+                    return $this->get('id');
+                }
+            }
+        );
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->doesUserExist($username);
+
+        // Assert
+        static::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function doesUserExist_ReturnsFalse_WhenUserDoesNotExistInCognito():void
+    {
+        $username = 'user4574';
+
+        // Setup
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn(CognitoAdapter::EXCEPTION_USER_NOT_FOUND);
+        $exception = new ClientException('null', 0, $previousException);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('getUserByIdentifier')->with($username)->once()->andThrow($exception);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->doesUserExist($username);
+
+        // Assert
+        static::assertFalse($result);
+    }
+
+    /**
+     * @test
+     */
+    public function doesUserExist_BubblesUnexpectedException_WhenClientThrowsUnexpectedException(): void
+    {
+        $username = 'user4574';
+
+        // Setup
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn('SomeOtherThing');
+        $exception = new ClientException('null', 0, $previousException);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('getUserByIdentifier')->with($username)->once()->andThrow($exception);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $this->expectException(ClientException::class);
+
+        // Execute
+        $sut->doesUserExist($username);
+    }
 }
