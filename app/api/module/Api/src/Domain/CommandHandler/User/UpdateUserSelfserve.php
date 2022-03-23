@@ -114,19 +114,16 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
 
         //TODO:VOL-2661 Remove instance check
         if ($this->provider === JWTIdentityProvider::class) {
-            // $created is unused at this point. Will be used later on when we move the update call to cognito from OpenAM
-            $created = $this->authAdapter->registerIfNotPresent(
+            if ($this->authAdapter->doesUserExist($user->getLoginId())) {
+                $this->authAdapter->changeAttribute($user->getLoginId(), 'email', $user->getContactDetails()->getEmailAddress());
+            }
+        } else {
+            $this->getOpenAmUser()->updateUser(
+                $user->getPid(),
                 $user->getLoginId(),
-                $this->passwordService->generatePassword(),
-                $user->getContactDetails()->getEmailAddress()
+                $command->getContactDetails()['emailAddress']
             );
         }
-
-        $this->getOpenAmUser()->updateUser(
-            $user->getPid(),
-            $user->getLoginId(),
-            $command->getContactDetails()['emailAddress']
-        );
 
         $userId = $user->getId();
 

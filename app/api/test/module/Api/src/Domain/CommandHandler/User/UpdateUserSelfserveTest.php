@@ -30,6 +30,11 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class UpdateUserSelfserveTest extends CommandHandlerTestCase
 {
+    /**
+     * @var m\LegacyMockInterface|m\MockInterface|null
+     */
+    private $mockAuthAdapter;
+
     public function setUp(): void
     {
         $this->mockRepo('User', User::class);
@@ -46,9 +51,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
             ->andReturn('GENERATED_PASSWORD')
             ->getMock();
 
-        $mockAuthAdapter = m::mock(ValidatableAdapterInterface::class)
-            ->shouldReceive('registerIfNotPresent')
-            ->getMock();
+        $this->mockAuthAdapter = m::mock(ValidatableAdapterInterface::class);
 
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
@@ -59,7 +62,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         ];
 
         $this->sut = new Sut(
-            $mockAuthAdapter,
+            $this->mockAuthAdapter,
             $mockPasswordService,
             $this->mockedSmServices['EventHistoryCreator']
         );
@@ -149,6 +152,16 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
                     $savedUser = $user;
                 }
             );
+
+        $this->mockAuthAdapter
+            ->shouldReceive('doesUserExist')
+            ->with('login_id')
+            ->once()
+            ->andReturnTrue();
+        $this->mockAuthAdapter
+            ->shouldReceive('changeAttribute')
+            ->with('login_id', 'email', 'test1@test.me')
+            ->once();
 
         $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
@@ -251,6 +264,16 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
                     $savedUser = $user;
                 }
             );
+
+        $this->mockAuthAdapter
+            ->shouldReceive('doesUserExist')
+            ->with('login_id')
+            ->once()
+            ->andReturnTrue();
+        $this->mockAuthAdapter
+            ->shouldReceive('changeAttribute')
+            ->with('login_id', 'email', $existingEmail)
+            ->once();
 
         $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);

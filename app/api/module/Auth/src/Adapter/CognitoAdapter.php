@@ -280,16 +280,27 @@ class CognitoAdapter extends AbstractAdapter
      */
     public function registerIfNotPresent(string $identifier, string $password, string $email, array $attributes = []): bool
     {
+        if (!$this->doesUserExist($identifier)) {
+            $this->register($identifier, $password, $email, $attributes);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function doesUserExist(string $identifier): bool
+    {
         try {
             $this->getUserByIdentifier($identifier);
         } catch (ClientException $e) {
             if ($e->getPrevious()->getAwsErrorCode() === static::EXCEPTION_USER_NOT_FOUND) {
-                $this->register($identifier, $password, $email, $attributes);
-                return true;
+                return false;
             }
             throw $e;
         }
-        return false;
+        return true;
     }
 
     /**
