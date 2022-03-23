@@ -7,7 +7,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ResetPassword;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\UserPasswordReset as UserPasswordResetRepo;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\UserPasswordReset as UserPasswordResetEntity;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\Auth\ResetPassword as ResetPasswordCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
@@ -19,6 +22,7 @@ use Mockery as m;
 class ResetPasswordTest extends CommandHandlerTestCase
 {
     private m\MockInterface $adapter;
+    private m\MockInterface $eventHistoryCreator;
     private string $username = 'username';
     private string $password = 'password';
     private string $realm = 'realm';
@@ -29,15 +33,17 @@ class ResetPasswordTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->adapter = m::mock(ValidatableAdapterInterface::class);
+        $this->eventHistoryCreator = m::mock(EventHistoryCreator::class);
 
         $this->mockRepo('UserPasswordReset', UserPasswordResetRepo::class);
 
         $this->mockedSmServices = [
             ValidatableAdapterInterface::class => $this->adapter,
+            'EventHistoryCreator' => $this->eventHistoryCreator,
         ];
 
         $this->command = $this->getCommand();
-        $this->sut = new ResetPassword($this->adapter);
+        $this->sut = new ResetPassword($this->adapter, $this->eventHistoryCreator);
 
         parent::setUp();
     }
@@ -97,19 +103,24 @@ class ResetPasswordTest extends CommandHandlerTestCase
         $id = 111;
         $userPasswordReset = $this->passwordReset(true);
         $userPasswordReset->expects('setSuccess')->with(true);
+        $user = m::mock(UserEntity::class);
 
         $this->fetchReset($userPasswordReset);
 
         $this->repoMap['UserPasswordReset']->expects('save')
             ->with($userPasswordReset)
             ->andReturnUsing(
-                function (UserPasswordResetEntity $userPasswordReset) use (&$savedEntity, $id) {
-                    $userPasswordReset->expects('getId')->andReturn($id);
+                function (UserPasswordResetEntity $userPasswordReset) use (&$savedEntity, $id, $user) {
+                    $userPasswordReset->expects('getId')->withNoArgs()->andReturn($id);
+                    $userPasswordReset->expects('getUser')->withNoArgs()->andReturn($user);
                     $savedEntity = $userPasswordReset;
 
                     return $savedEntity;
                 }
             );
+
+        $this->eventHistoryCreator->expects('create')
+            ->with($user, EventHistoryTypeEntity::EVENT_CODE_PASSWORD_RESET);
 
         $this->adapterAttempt(true);
 

@@ -86,7 +86,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             'id' => 111,
             'version' => 1,
             'team' => 1,
-            'loginId' => 'login_id',
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
                 'person' => [
@@ -133,7 +132,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->andReturn($user);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('some-pid', 'login_id', 'test1@test.me');
+            ->with('some-pid', null, 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -198,7 +197,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->andReturn($mockUser);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('some-pid', 'login_id', 'test1@test.me');
+            ->with('some-pid', null, 'test1@test.me');
 
         $command = Cmd::create($data);
 
@@ -291,7 +290,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
-        $user->setLoginId($data['loginId']);
+        $user->setLoginId('login_id');
         $user->setTeam($team);
         $user->setContactDetails($contactDetails);
         $user->setPid('some-pid');
@@ -344,7 +343,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                     'id' => 111,
                     'version' => 1,
                     'team' => 1,
-                    'loginId' => 'login_id',
                     'contactDetails' => [
                         'emailAddress' => 'test1@test.me',
                         'address' => [
@@ -371,7 +369,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                     'id' => 111,
                     'version' => 1,
                     'team' => 1,
-                    'loginId' => 'login_id',
                     'contactDetails' => [
                         'emailAddress' => 'test1@test.me',
                         'person' => [
@@ -402,156 +399,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         ];
     }
 
-    public function testHandleCommandThrowsUsernameExistsException()
-    {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
-
-        $userId = 111;
-
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'loginId' => 'updated login_id',
-        ];
-
-        $command = Cmd::create($data);
-
-        /** @var UserEntity $user */
-        $user = m::mock(UserEntity::class)->makePartial();
-        $user->setId($userId);
-        $user->setLoginId('loginId');
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
-
-        $this->repoMap['User']->shouldReceive('fetchById')
-            ->once()
-            ->with($userId, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($user);
-
-        $this->repoMap['User']
-            ->shouldReceive('disableSoftDeleteable')
-            ->once()
-            ->shouldReceive('fetchByLoginId')
-            ->once()
-            ->with($data['loginId'])
-            ->andReturn([m::mock(UserEntity::class)])
-            ->shouldReceive('enableSoftDeleteable')
-            ->once();
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandWithNewLoginId()
-    {
-        $userId = 1;
-
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'team' => 1,
-            'loginId' => 'login_id',
-            'contactDetails' => [
-                'emailAddress' => 'test1@test.me',
-                'person' => [
-                    'title' => m::mock(RefData::class),
-                    'forename' => 'updated forename',
-                    'familyName' => 'updated familyName',
-                    'birthDate' => '1975-12-12',
-                ],
-                'address' => [
-                    'addressLine1' => 'a12',
-                    'addressLine2' => 'a23',
-                    'addressLine3' => 'a34',
-                    'addressLine4' => 'a45',
-                    'town' => 'town',
-                    'postcode' => 'LS1 2AB',
-                    'countryCode' => m::mock(Country::class),
-                ],
-                'phoneContacts' => [
-                    [
-                        'phoneContactType' => m::mock(RefData::class),
-                        'phoneNumber' => '111',
-                    ],
-                    [
-                        'phoneContactType' => m::mock(RefData::class),
-                        'phoneNumber' => '222',
-                    ]
-                ],
-            ],
-        ];
-
-        $command = Cmd::create($data);
-
-        /** @var TeamEntity $user */
-        $team = m::mock(Team::class)->makePartial();
-
-        /** @var UserEntity $user */
-        $user = m::mock(UserEntity::class)->makePartial();
-        $user->setId($userId);
-        $user->setLoginId('old-login_id');
-        $user->setTeam($team);
-        $user->setPid('some-pid');
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
-
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('some-pid', 'login_id', 'test1@test.me');
-
-        $this->repoMap['User']->shouldReceive('fetchById')
-            ->once()
-            ->with($userId, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($user)
-            ->shouldReceive('populateRefDataReference')
-            ->once()
-            ->andReturn($data)
-            ->shouldReceive('disableSoftDeleteable')
-            ->once()
-            ->shouldReceive('fetchByLoginId')
-            ->with('login_id')
-            ->andReturn([])
-            ->shouldReceive('enableSoftDeleteable')
-            ->once();
-
-        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
-            ->once()
-            ->with($data['contactDetails'])
-            ->andReturn($data['contactDetails']);
-
-        /** @var UserEntity $savedUser */
-        $savedUser = null;
-
-        $this->repoMap['User']->shouldReceive('save')
-            ->once()
-            ->with(m::type(UserEntity::class))
-            ->andReturnUsing(
-                function (UserEntity $user) use (&$savedUser) {
-                    $savedUser = $user;
-                }
-            );
-
-        $this->expectedUserCacheClear([$userId]);
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'user' => $userId,
-            ],
-            'messages' => [
-                'User updated successfully'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-
-        $this->assertInstanceOf(ContactDetailsEntity::class, $savedUser->getContactDetails());
-        $this->assertEquals(
-            $data['contactDetails']['emailAddress'],
-            $savedUser->getContactDetails()->getEmailAddress()
-        );
-    }
-
     public function testHandleCommandWithNoPersonTitle()
     {
         $userId = 1;
@@ -560,7 +407,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             'id' => 111,
             'version' => 1,
             'team' => 1,
-            'loginId' => 'login_id',
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
                 'person' => [
@@ -598,7 +444,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId($userId);
-        $user->setLoginId('old-login_id');
+        $user->setLoginId('login_id');
         $user->setTeam($team);
         $user->setPid('some-pid');
 
@@ -606,7 +452,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->andReturn($user);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('some-pid', 'login_id', 'test1@test.me');
+            ->with('some-pid', null, 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -614,14 +460,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             ->andReturn($user)
             ->shouldReceive('populateRefDataReference')
             ->once()
-            ->andReturn($data)
-            ->shouldReceive('disableSoftDeleteable')
-            ->once()
-            ->shouldReceive('fetchByLoginId')
-            ->with('login_id')
-            ->andReturn([])
-            ->shouldReceive('enableSoftDeleteable')
-            ->once();
+            ->andReturn($data);
 
         $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
             ->once()
@@ -659,42 +498,5 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
             $data['contactDetails']['emailAddress'],
             $savedUser->getContactDetails()->getEmailAddress()
         );
-    }
-
-    public function testHandleCommandWithNewLoginIdWithLoginIdClash()
-    {
-        $this->expectException(ValidationException::class);
-
-        $userId = 1;
-
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'loginId' => 'login_id',
-        ];
-
-        $command = Cmd::create($data);
-
-        /** @var UserEntity $user */
-        $user = m::mock(UserEntity::class)->makePartial();
-        $user->setId($userId);
-        $user->setLoginId('old-login_id');
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($user);
-
-        $this->repoMap['User']->shouldReceive('fetchById')
-            ->once()
-            ->with($userId, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($user)
-            ->shouldReceive('disableSoftDeleteable')
-            ->once()
-            ->shouldReceive('fetchByLoginId')
-            ->with('login_id')
-            ->andReturn(['clashed_user'])
-            ->shouldReceive('enableSoftDeleteable')
-            ->once();
-
-        $this->sut->handleCommand($command);
     }
 }

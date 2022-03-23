@@ -39,7 +39,6 @@ use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
-use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
@@ -52,7 +51,7 @@ use ZfcRbac\Service\AuthorizationService;
 /**
  * Update User Test
  */
-class UpdateUserTest extends CommandHandlerTestCase
+class UpdateUserOpenAMTest extends CommandHandlerTestCase
 {
     public function setUp(): void
     {
@@ -66,25 +65,16 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         $mockConfig = [
             'auth' => [
-                'identity_provider' => JWTIdentityProvider::class
+                'identity_provider' => PidIdentityProvider::class
             ]
         ];
-
-        $mockPasswordService = m::mock(PasswordService::class)
-            ->shouldReceive('generatePassword')
-            ->andReturn('GENERATED_PASSWORD')
-            ->getMock();
-
-        $mockAuthAdapter = m::mock(ValidatableAdapterInterface::class)
-            ->shouldReceive('registerIfNotPresent')
-            ->getMock();
 
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class),
-            ValidatableAdapterInterface::class => $mockAuthAdapter,
-            PasswordService::class => $mockPasswordService,
+            ValidatableAdapterInterface::class => m::mock(ValidatableAdapterInterface::class),
+            PasswordService::class => m::mock(PasswordService::class),
             'Config' => $mockConfig
         ];
 
@@ -159,10 +149,9 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('getIdentity')
             ->andReturn($this->getMockIdentity());
 
-        $this->mockedSmServices[ValidatableAdapterInterface::class]
-            ->shouldReceive('changeAttribute')
-            ->with('login_id', 'email', 'test1@test.me')
-            ->once();
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
+            ->once()
+            ->with('pid', 'login_id', 'test1@test.me', false);
 
         /** @var TeamEntity $user */
         $team = m::mock(Team::class)->makePartial();
@@ -170,6 +159,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         /** @var ContactDetailsEntity|m\Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
+
 
         /** @var UserEntity|m\Mock $user */
         $user = m::mock(UserEntity::class)->makePartial();
@@ -180,7 +170,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $user->setTeam($team);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
         $user->shouldReceive('getContactDetails')->twice()->andReturnNull();
-        $user->shouldReceive('getContactDetails')->andReturn($contactDetails);
+        $user->shouldReceive('getContactDetails')->once()->andReturn($contactDetails);
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -274,6 +264,13 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->andReturn(true)
             ->shouldReceive('getIdentity')
             ->andReturn($this->getMockIdentity());
+
+        $this->mockedSmServices[UserInterface::class]
+            ->shouldReceive('updateUser')
+            ->once()
+            ->with('pid', 'login_id', 'test1@test.me', true)
+            ->shouldReceive('resetPassword')
+            ->never();
 
         /** @var ContactDetailsEntity|m\Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -393,6 +390,22 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($loggedInUser);
 
+        $this->mockedSmServices[UserInterface::class]
+            ->shouldReceive('updateUser')
+            ->once()
+            ->with('pid', 'login_id', 'test1@test.me', false)
+            ->shouldReceive('resetPassword')
+            ->once()
+            ->with('pid', m::type('callable'))
+            ->andReturnUsing(
+                function ($pid, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
+
         /** @var ContactDetailsEntity|m\Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('update')
@@ -462,9 +475,6 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('generatePassword')
             ->andReturn('password');
 
-        $this->mockedSmServices[ValidatableAdapterInterface::class]
-            ->shouldReceive('resetPassword');
-
         $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
 
@@ -521,22 +531,27 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($loggedInUser);
 
-        $this->mockedSmServices[ValidatableAdapterInterface::class]
-            ->shouldReceive('changeAttribute')
-            ->with('login_id', 'email', 'test1@test.me')
-            ->once();
-
-        $this->mockedSmServices[PasswordService::class]
-            ->shouldReceive('generatePassword')
-            ->andReturn('password');
-
-        $this->mockedSmServices[ValidatableAdapterInterface::class]
-            ->shouldReceive('resetPassword');
+        $this->mockedSmServices[UserInterface::class]
+            ->shouldReceive('updateUser')
+            ->once()
+            ->with('pid', 'login_id', 'test1@test.me', false)
+            ->shouldReceive('resetPassword')
+            ->once()
+            ->with('pid', m::type('callable'))
+            ->andReturnUsing(
+                function ($pid, $callback) {
+                    $params = [
+                        'password' => 'GENERATED_PASSWORD'
+                    ];
+                    $callback($params);
+                }
+            );
 
         /** @var ContactDetailsEntity|m\Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('ssetId');
         $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
+
 
         $licId = 123;
         /** @var LicenceEntity $licence */
@@ -562,7 +577,7 @@ class UpdateUserTest extends CommandHandlerTestCase
         $user->setOrganisationUsers(new ArrayCollection([$orgUser]));
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
         $user->shouldReceive('getContactDetails')->twice()->andReturnNull();
-        $user->shouldReceive('getContactDetails')->times(3)->andReturn($contactDetails);
+        $user->shouldReceive('getContactDetails')->once()->andReturn($contactDetails);
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -706,6 +721,13 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->andReturn(true)
             ->shouldReceive('getIdentity')
             ->andReturn($this->getMockIdentity());
+
+        $this->mockedSmServices[UserInterface::class]
+            ->shouldReceive('updateUser')
+            ->once()
+            ->with('pid', 'login_id', 'test1@test.me', false)
+            ->shouldReceive('resetPassword')
+            ->never();
 
         /** @var ContactDetailsEntity|Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
@@ -992,143 +1014,6 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandDisablesUser(): void
-    {
-        $userId = 111;
-        $licenceNumber = 'LIC123';
-
-        $data = [
-            'id' => 111,
-            'version' => 1,
-            'userType' => UserEntity::USER_TYPE_OPERATOR,
-            'team' => 1,
-            'licenceNumber' => $licenceNumber,
-            'loginId' => 'login_id',
-            'contactDetails' => [
-                'emailAddress' => 'test1@test.me',
-                'person' => [
-                    'title' => m::mock(RefData::class),
-                    'forename' => 'updated forename',
-                    'familyName' => 'updated familyName',
-                    'birthDate' => '1975-12-12',
-                ],
-                'address' => [
-                    'addressLine1' => 'a12',
-                    'addressLine2' => 'a23',
-                    'addressLine3' => 'a34',
-                    'addressLine4' => 'a45',
-                    'town' => 'town',
-                    'postcode' => 'LS1 2AB',
-                    'countryCode' => m::mock(Country::class),
-                ],
-                'phoneContacts' => [
-                    [
-                        'phoneContactType' => m::mock(RefData::class),
-                        'phoneNumber' => '111',
-                    ],
-                    [
-                        'id' => 999,
-                        'phoneContactType' => m::mock(RefData::class),
-                        'phoneNumber' => '222',
-                    ]
-                ],
-            ],
-            'accountDisabled' => 'Y',
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true)
-            ->shouldReceive('getIdentity')
-            ->andReturn($this->getMockIdentity());
-
-        $this->mockedSmServices[ValidatableAdapterInterface::class]
-            ->shouldReceive('disableUser')
-            ->with('login_id')
-            ->once();
-
-        /** @var ContactDetailsEntity|m\Mock $contactDetails */
-        $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
-        $contactDetails->shouldReceive('update')
-            ->once()
-            ->with($data['contactDetails'])
-            ->andReturnSelf();
-
-        $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
-
-        /** @var TeamEntity $user */
-        $team = m::mock(Team::class)->makePartial();
-
-        /** @var UserEntity|m\Mock $user */
-        $user = m::mock(UserEntity::class)->makePartial();
-        $user->initCollections();
-        $user->setId($userId);
-        $user->setPid('pid');
-        $user->setLoginId($data['loginId']);
-        $user->setTeam($team);
-        $user->setContactDetails($contactDetails);
-        $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
-        $user->shouldReceive('isDisabled')->once()->andReturnFalse();
-        $user->shouldReceive('isDisabled')->once()->andReturnTrue();
-
-        $this->repoMap['User']->shouldReceive('fetchById')
-            ->once()
-            ->with($userId, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($user)
-            ->shouldReceive('populateRefDataReference')
-            ->once()
-            ->andReturn($data);
-
-        $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
-            ->once()
-            ->with($data['contactDetails'])
-            ->andReturn($data['contactDetails']);
-
-        /** @var LicenceEntity $licence */
-        $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->shouldReceive('getOrganisation')
-            ->once();
-
-        $this->repoMap['Licence']->shouldReceive('fetchByLicNo')
-            ->once()
-            ->with($licenceNumber)
-            ->andReturn($licence);
-
-        /** @var UserEntity $savedUser */
-        $savedUser = null;
-
-        $this->repoMap['User']->shouldReceive('save')
-            ->once()
-            ->with(m::type(UserEntity::class))
-            ->andReturnUsing(
-                function (UserEntity $user) use (&$savedUser) {
-                    $savedUser = $user;
-                }
-            );
-
-        $this->expectedUserCacheClear([$userId]);
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'user' => $userId,
-            ],
-            'messages' => [
-                'User updated successfully'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
-
-        $this->assertSame(
-            $contactDetails,
-            $savedUser->getContactDetails()
-        );
     }
 
     private function getMockIdentity()

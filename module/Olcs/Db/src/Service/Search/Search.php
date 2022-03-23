@@ -2,7 +2,13 @@
 
 namespace Olcs\Db\Service\Search;
 
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SysParamRepo;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter as SysParamEntity;
 use Elastica\Aggregation\Terms;
+use Elastica\Client;
+use Elastica\Query\BoolQuery;
+use Elastica\Query\MatchQuery;
 use Elastica\Query;
 use Elastica\ResultSet;
 use Olcs\Db\Exceptions\SearchDateFilterParseException;
@@ -10,6 +16,7 @@ use Laminas\Filter\Word\CamelCaseToUnderscore;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Class Search
@@ -23,9 +30,14 @@ class Search implements AuthAwareInterface
     const MAX_NUMBER_OF_RESULTS = 10000;
 
     /**
-     * @var \Elastica\Client
+     * @var Client
      */
     protected $client;
+
+    /**
+     * @var SysParamRepo
+     */
+    protected $sysParamRepo;
 
     /**
      * @var array
@@ -47,24 +59,24 @@ class Search implements AuthAwareInterface
      */
     protected $order = '';
 
-
-
     /**
-     * Elastic client to use for making requests
+     * Search constructor.
+     * @param Client $client
+     * @param AuthorizationService $authService
+     * @param SysParamRepo $sysParamRepo
      *
-     * @param \Elastica\Client $client Client
-     *
-     * @return void
      */
-    public function setClient(\Elastica\Client $client)
+    public function __construct(Client $client, AuthorizationService $authService, SysParamRepo $sysParamRepo)
     {
         $this->client = $client;
+        $this->authService = $authService;
+        $this->sysParamRepo = $sysParamRepo;
     }
 
     /**
      * Get the Elastic client
      *
-     * @return \Elastica\Client
+     * @return Client
      */
     public function getClient()
     {
@@ -135,6 +147,13 @@ class Search implements AuthAwareInterface
 
         if (!empty($this->getSort()) && !empty($this->getOrder())) {
             $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
+        }
+
+        if ($this->isInternalUser() && $indexes[0] !== 'irfo') {
+            $exemptTeams = str_getcsv($this->sysParamRepo->fetchValue(SysParamEntity::DATA_SEPARATION_TEAMS_EXEMPT));
+            if (!in_array($this->getCurrentUser()->getTeam()->getId(), $exemptTeams)) {
+                $elasticaQuery->setPostFilter($this->getInternalUserTAPostFilter());
+            }
         }
 
         $elasticaQuery->setSize($limit);
@@ -376,5 +395,21 @@ class Search implements AuthAwareInterface
         }
 
         return $bulk->send()->isOk();
+    }
+
+    /**
+     * @return BoolQuery
+     */
+    protected function getInternalUserTAPostFilter()
+    {
+        $postFilter = new BoolQuery();
+        $trafficAreaIds = in_array($this->getCurrentUser()->getTeam()->getTrafficArea()->getId(), TrafficArea::NI_TA_IDS)
+            ? TrafficArea::NI_TA_IDS
+            : TrafficArea::GB_TA_IDS;
+        foreach ($trafficAreaIds as $taId) {
+            $postFilter->addShould(new MatchQuery('ta_id', $taId));
+        }
+        $postFilter->setMinimumShouldMatch(1);
+        return $postFilter;
     }
 }

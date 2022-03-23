@@ -7,6 +7,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
 use Dvsa\Olcs\Api\Domain\Command\Auth\ResetPasswordOpenAm;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ResetPassword;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Transfer\Command\Auth\ResetPassword as ResetPasswordCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -21,7 +22,8 @@ class ResetPasswordOpenAmRedirectTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $adapter = m::mock(OpenAm::class);
-        $this->sut = new ResetPassword($adapter);
+        $eventHistoryCreator = m::mock(EventHistoryCreator::class);
+        $this->sut = new ResetPassword($adapter, $eventHistoryCreator);
 
         parent::setUp();
     }

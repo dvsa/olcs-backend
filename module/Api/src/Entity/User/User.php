@@ -199,12 +199,13 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     public function update(array $data)
     {
-        if ($data['loginId'] === static::ANON_USERNAME) {
+        if (isset($data['loginId']) && $data['loginId'] === static::ANON_USERNAME) {
             throw new ValidationException(['username' => [self::ERR_ANON_USERNAME]]);
         }
 
-        // update common data
-        $this->loginId = $data['loginId'];
+        if (isset($data['loginId'])) {
+            $this->loginId = $data['loginId'];
+        }
 
         if (isset($data['userType'])) {
             $this->updateUserType($data['userType']);

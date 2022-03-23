@@ -6,6 +6,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
 
 use Dvsa\Olcs\Api\Domain\Command\Auth\ResetPasswordOpenAm as ResetPasswordOpenAmCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ResetPasswordOpenAm;
+use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Http\Response;
@@ -17,6 +21,7 @@ use Mockery as m;
 class ResetPasswordOpenAmTest extends CommandHandlerTestCase
 {
     private m\MockInterface $adapter;
+    private m\MockInterface $eventHistoryCreator;
     private string $username = 'username';
     private string $password = 'password';
     private string $realm = 'realm';
@@ -28,9 +33,12 @@ class ResetPasswordOpenAmTest extends CommandHandlerTestCase
     {
         $this->adapter = m::mock(ValidatableAdapterInterface::class);
         $this->adapter->expects('setRealm')->with($this->realm);
+        $this->eventHistoryCreator = m::mock(EventHistoryCreator::class);
+
+        $this->mockRepo('User', UserRepo::class);
 
         $this->command = $this->getCommand();
-        $this->sut = new ResetPasswordOpenAm($this->adapter);
+        $this->sut = new ResetPasswordOpenAm($this->adapter, $this->eventHistoryCreator);
 
         parent::setUp();
     }
@@ -65,6 +73,16 @@ class ResetPasswordOpenAmTest extends CommandHandlerTestCase
     {
         $this->adapterCheckValid(Response::STATUS_CODE_200);
         $this->adapterResetAttempt(Response::STATUS_CODE_200);
+
+        $user = m::mock(User::class);
+
+        $this->repoMap['User']->expects('fetchEnabledIdentityByLoginId')
+            ->with($this->username)
+            ->andReturn($user);
+
+        $this->eventHistoryCreator->expects('create')
+            ->with($user, EventHistoryType::EVENT_CODE_PASSWORD_RESET);
+
         $expectedResult = $this->expectedResult(ResetPasswordOpenAm::MSG_GENERIC_SUCCESS, false, true);
         $this->assertEquals($expectedResult, $this->sut->handleCommand($this->command)->toArray());
     }

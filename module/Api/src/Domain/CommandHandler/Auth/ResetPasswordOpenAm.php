@@ -7,6 +7,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 use Dvsa\Olcs\Api\Domain\Command\Auth\ResetPasswordOpenAm as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Http\Response;
@@ -15,6 +18,8 @@ use Olcs\Logging\Log\Logger;
 class ResetPasswordOpenAm extends AbstractCommandHandler
 {
     private ValidatableAdapterInterface $adapter;
+    private EventHistoryCreator $eventHistoryCreator;
+    protected $repoServiceName = 'User';
 
     const MSG_EXPIRED_LINK = 'auth.forgot-password-expired';
     const MSG_GENERIC_FAIL = 'auth.reset-password.fail';
@@ -22,9 +27,10 @@ class ResetPasswordOpenAm extends AbstractCommandHandler
     const MSG_FAIL_DEBUG_LOG = '%s failed to reset password: %s';
     const MSG_EXCEPTION_ERROR_LOG = 'Reset password exception for %s: %s';
 
-    public function __construct(ValidatableAdapterInterface $adapter)
+    public function __construct(ValidatableAdapterInterface $adapter, EventHistoryCreator $eventHistoryCreator)
     {
         $this->adapter = $adapter;
+        $this->eventHistoryCreator = $eventHistoryCreator;
     }
 
     public function handleCommand(CommandInterface $command): Result
@@ -49,6 +55,13 @@ class ResetPasswordOpenAm extends AbstractCommandHandler
             $result = $this->adapter->resetPassword($username, $confirmationId, $tokenId, $command->getPassword());
 
             if ($result['status'] === Response::STATUS_CODE_200) {
+                $userRepo = $this->getRepo('User');
+                assert($userRepo instanceof UserRepo);
+                $user = $userRepo->fetchEnabledIdentityByLoginId($username);
+
+                //create event history record
+                $this->eventHistoryCreator->create($user, EventHistoryTypeEntity::EVENT_CODE_PASSWORD_RESET);
+
                 $this->updateResult(true, self::MSG_GENERIC_SUCCESS);
                 return $this->result;
             }

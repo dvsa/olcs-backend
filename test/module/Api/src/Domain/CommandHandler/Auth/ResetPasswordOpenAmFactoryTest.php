@@ -6,6 +6,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ResetPasswordOpenAm;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ResetPasswordOpenAmFactory;
+use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\Repository\MocksUserRepositoryTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
@@ -55,6 +56,7 @@ class ResetPasswordOpenAmFactoryTest extends MockeryTestCase
         $this->setUpAbstractCommandHandlerServices();
         $this->getMockService(ValidatableAdapterInterface::class);
         $this->getMockService(AuthorizationService::class);
+        $this->getMockServiceWithName(EventHistoryCreator::class, 'EventHistoryCreator');
         $this->userRepository();
     }
 }
