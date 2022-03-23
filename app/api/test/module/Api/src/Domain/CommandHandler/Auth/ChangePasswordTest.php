@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ChangePassword;
 use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
 use Dvsa\Olcs\Transfer\Command\Auth\ChangePassword as ChangePasswordCmd;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Transfer\Result\Auth\ChangePasswordResult;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Http\Response;
@@ -29,7 +30,6 @@ class ChangePasswordTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->adapter = m::mock(ValidatableAdapterInterface::class);
-        $this->adapter->expects('setRealm')->with($this->realm);
 
         $this->mockedSmServices = [
             ValidatableAdapterInterface::class => $this->adapter,
@@ -58,55 +58,41 @@ class ChangePasswordTest extends CommandHandlerTestCase
 
     public function testHandleCommandSuccess(): void
     {
-        $changeResult = [
-            'status' => Response::STATUS_CODE_200
-        ];
-
-        $this->adapterResult($changeResult);
+        $this->adapterResult(new ChangePasswordResult(ChangePasswordResult::SUCCESS));
 
         $result = $this->sut->handleCommand($this->command);
-        $this->assertEquals(ChangePassword::MSG_GENERIC_SUCCESS, $result->getMessages()[0]);
-        $this->assertTrue($result->getFlag('success'));
+        $this->assertEquals(ChangePasswordResult::SUCCESS, $result->getFlag('code'));
     }
 
     /**
      * @dataProvider dpChangeResult
      */
-    public function testHandleCommandFail(array $changeResult, string $failMessage): void
+    public function testHandleCommandFail(ChangePasswordResult $changeResult): void
     {
         $this->adapterResult($changeResult);
 
         $result = $this->sut->handleCommand($this->command);
-        $this->assertEquals($failMessage, $result->getMessages()[0]);
-        $this->assertFalse($result->getFlag('success'));
+
+        $this->assertEquals($changeResult->getCode(), $result->getFlag('code'));
+        $this->assertEquals($changeResult->getMessage(), $result->getFlag('message'));
     }
 
     public function dpChangeResult(): array
     {
-        $withReason = [
-            'status' => Response::STATUS_CODE_500,
-            'reason' => 'reason',
-        ];
-
-        $withoutReason = [
-            'status' => Response::STATUS_CODE_500,
-        ];
-
         return [
-            [$withReason, 'reason'],
-            [$withoutReason, ChangePassword::MSG_GENERIC_FAIL],
+            'Generic failure' => [
+                new ChangePasswordResult(ChangePasswordResult::FAILURE, 'generic failure'),
+            ],
+            'Password invalid' => [
+                new ChangePasswordResult(ChangePasswordResult::FAILURE_NEW_PASSWORD_INVALID, 'invalid password failure'),
+            ],
+            'Client error' => [
+                new ChangePasswordResult(ChangePasswordResult::FAILURE_CLIENT_ERROR, 'client failure')
+            ],
+            'Not authorised' => [
+                new ChangePasswordResult(ChangePasswordResult::FAILURE_NOT_AUTHORIZED, 'not authorised failure')
+            ]
         ];
-    }
-
-    public function testHandleCommandHandlesException(): void
-    {
-        $this->adapter->expects('changePassword')
-            ->with($this->username, $this->oldPassword, $this->newPassword)
-            ->andThrow(ChangePasswordException::class);
-
-        $result = $this->sut->handleCommand($this->command);
-        $this->assertEquals(ChangePassword::MSG_GENERIC_FAIL, $result->getMessages()[0]);
-        $this->assertFalse($result->getFlag('success'));
     }
 
     private function adapterResult($changeResult): void
@@ -121,8 +107,7 @@ class ChangePasswordTest extends CommandHandlerTestCase
         $cmdData = [
             'username' => $this->username,
             'password' => $this->oldPassword,
-            'newPassword' => $this->newPassword,
-            'realm' => $this->realm,
+            'newPassword' => $this->newPassword
         ];
 
         return ChangePasswordCmd::create($cmdData);

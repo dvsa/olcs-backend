@@ -2,6 +2,7 @@
 
 namespace OlcsTest\Db\Service\Search;
 
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Elastica\Request;
 use Olcs\Db\Exceptions\SearchDateFilterParseException;
 use Olcs\Db\Service\Search\Search as SearchService;
@@ -20,6 +21,8 @@ class SearchTest extends MockeryTestCase
 
     /** @var  m\MockInterface | AuthorizationService */
     private $mockAuthSrv;
+    /** @var  m\MockInterface | SystemParameter */
+    private $mockSPRepo;
     /** @var  m\MockInterface | \Elastica\Client */
     private $mockClient;
     /** @var  m\MockInterface | \Dvsa\Olcs\Api\Entity\User\User */
@@ -27,17 +30,15 @@ class SearchTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new SearchService();
-
-        $this->mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
-        $this->mockUser->shouldReceive('getUser')->andReturnSelf();
-
-        $this->mockAuthSrv = m::mock(AuthorizationService::class);
-        $this->mockAuthSrv->shouldReceive('getIdentity->getUser')->andReturn($this->mockUser);
-        $this->sut->setAuthService($this->mockAuthSrv);
-
         $this->mockClient = m::mock(\Elastica\Client::class);
-        $this->sut->setClient($this->mockClient);
+        $this->mockAuthSrv = m::mock(AuthorizationService::class);
+        $this->mockSPRepo = m::mock(SystemParameter::class);
+        $this->mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
+
+        $this->sut = new SearchService($this->mockClient, $this->mockAuthSrv, $this->mockSPRepo);
+
+        $this->mockAuthSrv->shouldReceive('getIdentity->getUser')->andReturn($this->mockUser);
+        $this->mockUser->shouldReceive('getUser')->andReturnSelf();
 
         $this->mockedSmServices = [
             AuthorizationService::class => $this->mockAuthSrv,
@@ -163,18 +164,33 @@ class SearchTest extends MockeryTestCase
             ->with('vehicle_current,vehicle_removed/_search', 'GET', $expectedQuery, [])->once()
             ->andReturn($searchResponse);
 
-        $this->sut->setClient($this->mockClient);
-
         $this->sut->updateVehicleSection26($ids, $section26Value);
     }
 
-    public function testSearchIndexInternal()
+    public function internalSearchDataProvider()
+    {
+        return
+            [
+                [ '1,112', 1, 17, 'C'],
+                [ '1,112', 1, 17, 'N'],
+                [ '1,112,17', 0, 17, 'N']
+            ];
+    }
+
+    /**
+     * @dataProvider internalSearchDataProvider
+     */
+    public function testSearchIndexInternal($excludedTeamIds, $taCheckTimes, $teamId, $trafficAreaId)
     {
         $this->mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
 
         $this->mockAuthSrv
             ->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(true)
             ->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(false);
+
+        $this->mockSPRepo->shouldReceive('fetchValue')->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::DATA_SEPARATION_TEAMS_EXEMPT)->once()->andReturn($excludedTeamIds);
+        $this->mockUser->shouldReceive('getTeam->getId')->once()->andReturn($teamId);
+        $this->mockUser->shouldReceive('getTeam->getTrafficArea->getId')->times($taCheckTimes)->andReturn($trafficAreaId);
 
         $this->mockClient->shouldReceive('request')->once()->andReturnUsing(
             function ($path, $method, $query, $params) {
@@ -193,7 +209,6 @@ class SearchTest extends MockeryTestCase
             }
         );
 
-        $this->sut->setClient($this->mockClient);
         $this->sut->setSort('foo');
         $this->sut->setOrder('desc');
 

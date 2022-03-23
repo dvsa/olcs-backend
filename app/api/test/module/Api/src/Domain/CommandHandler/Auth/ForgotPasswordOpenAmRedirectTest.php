@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
@@ -8,9 +7,11 @@ use Dvsa\Olcs\Api\Domain\Command\Auth\ForgotPasswordOpenAm;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ForgotPassword;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
+use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\Auth\ForgotPassword as ForgotPasswordCmd;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 
 /**
@@ -32,7 +33,7 @@ class ForgotPasswordOpenAmRedirectTest extends CommandHandlerTestCase
         ];
 
         $this->command = $this->getCommand();
-        $this->sut = new ForgotPassword();
+        $this->sut = new ForgotPassword(m::mock(ValidatableAdapterInterface::class)->shouldIgnoreMissing(), m::mock(PasswordService::class)->shouldIgnoreMissing());
 
         parent::setUp();
     }

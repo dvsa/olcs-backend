@@ -28,7 +28,6 @@ class UpdateMyAccountInternalTest extends CommandHandlerTestCase
             'id' => 111,
             'version' => 1,
             'team' => 1,
-            'loginId' => 'login_id',
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
                 'person' => [

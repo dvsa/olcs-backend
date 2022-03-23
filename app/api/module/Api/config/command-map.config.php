@@ -17,7 +17,7 @@ return [
     TransferCommand\Auth\RefreshTokens::class => CommandHandler\Auth\RefreshTokensFactory::class,
     TransferCommand\Auth\ChangeExpiredPassword::class => CommandHandler\Auth\ChangeExpiredPasswordFactory::class,
     TransferCommand\Auth\ResetPassword::class => CommandHandler\Auth\ResetPasswordFactory::class,
-    TransferCommand\Auth\ForgotPassword::class => CommandHandler\Auth\ForgotPassword::class,
+    TransferCommand\Auth\ForgotPassword::class => CommandHandler\Auth\ForgotPasswordFactory::class,
     Command\Auth\ForgotPasswordOpenAm::class => CommandHandler\Auth\ForgotPasswordOpenAmFactory::class,
     Command\Auth\ResetPasswordOpenAm::class => CommandHandler\Auth\ResetPasswordOpenAmFactory::class,
 
@@ -366,7 +366,7 @@ return [
     TransferCommand\User\RegisterUserSelfserve::class => CommandHandler\User\RegisterUserSelfserveFactory::class,
     TransferCommand\User\RemindUsernameSelfserve::class => CommandHandler\User\RemindUsernameSelfserve::class,
     TransferCommand\User\CreateUserSelfserve::class => CommandHandler\User\CreateUserSelfServeFactory::class,
-    TransferCommand\User\UpdateUserSelfserve::class => CommandHandler\User\UpdateUserSelfserve::class,
+    TransferCommand\User\UpdateUserSelfserve::class => CommandHandler\User\UpdateUserSelfserveFactory::class,
     TransferCommand\User\DeleteUserSelfserve::class => CommandHandler\User\DeleteUserSelfserve::class,
     TransferCommand\User\CreatePartner::class => CommandHandler\User\CreatePartner::class,
     TransferCommand\User\UpdatePartner::class => CommandHandler\User\UpdatePartner::class,

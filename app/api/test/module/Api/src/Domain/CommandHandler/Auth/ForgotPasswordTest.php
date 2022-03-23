@@ -9,10 +9,13 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\ForgotPassword;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Domain\Repository\UserPasswordReset as UserPasswordResetRepo;
+use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\Auth\ForgotPassword as ForgotPasswordCmd;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\UserPasswordReset as UserPasswordResetEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 
 /**
@@ -34,7 +37,7 @@ class ForgotPasswordTest extends CommandHandlerTestCase
         ];
 
         $this->command = $this->getCommand();
-        $this->sut = new ForgotPassword();
+        $this->sut = new ForgotPassword(m::mock(ValidatableAdapterInterface::class)->shouldIgnoreMissing(), m::mock(PasswordService::class)->shouldIgnoreMissing());
 
         parent::setUp();
     }
@@ -60,12 +63,17 @@ class ForgotPasswordTest extends CommandHandlerTestCase
         $this->assertFalse($result->getFlag('success'));
     }
 
-    public function testHandleCommandSuccess(): void
+    public function testHandleCommandSuccessWithUserCreate(): void
     {
+        $id = 111;
+
+        $contactDetails = m::mock(ContactDetailsEntity::class);
+        $contactDetails->expects('getEmailAddress')->withNoArgs()->andReturn('test@example.com');
+
         $user = m::mock(UserEntity::class);
         $user->expects('canResetPassword')->withNoArgs()->andReturnTrue();
-
-        $id = 111;
+        $user->expects('getLoginId')->withNoArgs()->andReturn($id);
+        $user->expects('getContactDetails')->withNoArgs()->andReturn($contactDetails);
 
         $this->repoMap['User']->expects('fetchEnabledIdentityByLoginId')->with($this->username)->andReturn($user);
 

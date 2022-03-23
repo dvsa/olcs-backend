@@ -29,6 +29,7 @@
       <directory>../module/Olcs/Db/src/Service/CHXmlGateway</directory>
       <directory>../module/Queue/config</directory>
       <directory>../module/**/config</directory>
+      <directory>../module/**/test/</directory>
     </exclude>
   </coverage>
   <testsuites>

@@ -34,5 +34,6 @@ return [
     CommandHandler\User\CreateUserSelfServeFactory::class                       => CanManageUser::class,
     CommandHandler\User\DeleteUserSelfserve::class                              => CanManageUser::class,
     CommandHandler\User\UpdateUserSelfserve::class                              => CanManageUser::class,
+    CommandHandler\User\UpdateUserSelfserveFactory::class                       => CanManageUser::class,
     CommandHandler\User\UpdateUserLastLoginAt::class                            => NotIsAnonymousUser::class,
 ];

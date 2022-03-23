@@ -10,14 +10,20 @@ use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
+use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
+use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
+use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -26,33 +32,34 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
     TransactionedInterface,
     CacheAwareInterface,
-    OpenAmUserAwareInterface
+    OpenAmUserAwareInterface,
+    ConfigAwareInterface
 {
-    use OpenAmUserAwareTrait;
-    use CacheAwareTrait;
+    use CacheAwareTrait,
+        ConfigAwareTrait,
+        OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['ContactDetails'];
 
-
-    /** @var EventHistoryCreator */
-    private $eventHistoryCreator;
+    private EventHistoryCreator $eventHistoryCreator;
+    /**
+     * @var ValidatableAdapterInterface | CognitoAdapter
+     */
+    private ValidatableAdapterInterface $authAdapter;
+    private PasswordService $passwordService;
 
     /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
+     * @var mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    private string $provider;
+
+    public function __construct(ValidatableAdapterInterface $authAdapter, PasswordService $passwordService, EventHistoryCreator $eventHistoryCreator)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
-
-        return parent::createService($serviceLocator);
+        $this->authAdapter = $authAdapter;
+        $this->passwordService = $passwordService;
+        $this->eventHistoryCreator = $eventHistoryCreator;
     }
 
     /**
@@ -61,17 +68,16 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
      * @param CommandInterface $command command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Contracts\Auth\Exceptions\ClientException
      */
     public function handleCommand(CommandInterface $command)
     {
+        $this->provider = $this->getConfig()['auth']['identity_provider'];
 
         /** @var User $user */
         $user = $this->getRepo()->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
 
         $data = $command->getArrayCopy();
-
-        // validate username
-        $this->validateUsername($data['loginId'], $user->getLoginId());
 
         // populate roles based on the user type and permission
         $data['roles'] = User::getRolesByUserType($user->getUserType(), $data['permission']);
@@ -105,6 +111,16 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
         }
 
         $this->getRepo()->save($user);
+
+        //TODO:VOL-2661 Remove instance check
+        if ($this->provider === JWTIdentityProvider::class) {
+            // $created is unused at this point. Will be used later on when we move the update call to cognito from OpenAM
+            $created = $this->authAdapter->registerIfNotPresent(
+                $user->getLoginId(),
+                $this->passwordService->generatePassword(),
+                $user->getContactDetails()->getEmailAddress()
+            );
+        }
 
         $this->getOpenAmUser()->updateUser(
             $user->getPid(),

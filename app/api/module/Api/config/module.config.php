@@ -521,6 +521,7 @@ return [
 
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
+            ApiSrv\EventHistory\Creator::class => ApiSrv\EventHistory\CreatorFactory::class
         ],
     ],
     'view_manager' => [

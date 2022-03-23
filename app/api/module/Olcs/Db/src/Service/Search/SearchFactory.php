@@ -2,6 +2,8 @@
 
 namespace Olcs\Db\Service\Search;
 
+use ElasticSearch\Client;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -13,17 +15,30 @@ use ZfcRbac\Service\AuthorizationService;
 class SearchFactory implements FactoryInterface
 {
     /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Search
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Search
+    {
+        return new Search(
+            $container->get(Client::class),
+            $container->get(AuthorizationService::class),
+            $container->get('RepositoryServiceManager')->get('SystemParameter')
+        );
+    }
+
+    /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @return Search
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): Search
     {
-        $service = new Search();
-        $service->setClient($serviceLocator->get('ElasticSearch\Client'));
-        $service->setAuthService($serviceLocator->get(AuthorizationService::class));
-
-        return $service;
+        return $this->__invoke($serviceLocator, null);
     }
 }

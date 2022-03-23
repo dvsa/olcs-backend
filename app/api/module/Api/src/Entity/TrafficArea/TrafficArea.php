@@ -30,6 +30,21 @@ class TrafficArea extends AbstractTrafficArea
     const SCOTTISH_TRAFFIC_AREA_CODE         = 'M';
     const NORTHERN_IRELAND_TRAFFIC_AREA_CODE = 'N';
 
+    const GB_TA_IDS = [
+        self::NORTH_EASTERN_TRAFFIC_AREA_CODE,
+        self::NORTH_WESTERN_TRAFFIC_AREA_CODE,
+        self::WEST_MIDLANDS_TRAFFIC_AREA_CODE,
+        self::EASTERN_TRAFFIC_AREA_CODE,
+        self::WELSH_TRAFFIC_AREA_CODE,
+        self::WESTERN_TRAFFIC_AREA_CODE,
+        self::SE_MET_TRAFFIC_AREA_CODE,
+        self::SCOTTISH_TRAFFIC_AREA_CODE
+    ];
+
+    const NI_TA_IDS = [
+        self::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+    ];
+
     /**
      * Gets the recipients for a publication, formatted ready for Laminas mail
      *
