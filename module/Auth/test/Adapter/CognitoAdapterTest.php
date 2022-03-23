@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Auth\Test\Adapter;
 
 use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
-use Aws\CommandInterface;
 use Aws\Exception\AwsException;
 use Dvsa\Authentication\Cognito\Client;
+use Dvsa\Contracts\Auth\AbstractResourceOwner;
 use Dvsa\Contracts\Auth\AccessTokenInterface;
 use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
@@ -14,8 +14,8 @@ use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
 use Dvsa\Contracts\Auth\ResourceOwnerInterface;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
-use Dvsa\Olcs\Auth\Exception\ResetPasswordException;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
+use Dvsa\Olcs\Transfer\Result\Auth\ChangePasswordResult;
 use Laminas\Authentication\Result;
 use Mockery as m;
 use Olcs\TestHelpers\MockeryTestCase;
@@ -80,24 +80,20 @@ class CognitoAdapterTest extends MockeryTestCase
 
     /**
      * @test
+     * @dataProvider authenticateCognitoIdentityProviderExceptionDataProvider
      */
-    public function authenticate_ReturnsFailureIdentityNotFoundResult_WhenClientExceptionIsThrown_WithUserNotFound()
-    {
+    public function authenticate_ReturnsExpectedFailureResult_WhenCognitoIdentityProviderExceptionIsThrown(
+        string $awsErrorCode,
+        string $awsErrorMessage,
+        int $expectedResultCode
+    ) {
         // Setup
+        $previousException = m::mock(CognitoIdentityProviderException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn($awsErrorCode);
+
+
         $mockClient = m::mock(Client::class);
-        $mockClient->shouldReceive('authenticate')->andThrow(
-            new ClientException(
-                '',
-                0,
-                new CognitoIdentityProviderException(
-                    '',
-                    m::mock(CommandInterface::class),
-                    [
-                        'code' => CognitoAdapter::USER_NOT_FOUND
-                    ]
-                )
-            )
-        );
+        $mockClient->shouldReceive('authenticate')->andThrow(new ClientException($awsErrorMessage, 0, $previousException));
 
         $sut = new CognitoAdapter($mockClient);
         $sut->setIdentity('identity');
@@ -107,71 +103,28 @@ class CognitoAdapterTest extends MockeryTestCase
         $result = $sut->authenticate();
 
         // Assert
-        static::assertEquals(Result::FAILURE_IDENTITY_NOT_FOUND, $result->getCode());
+        static::assertEquals($expectedResultCode, $result->getCode());
     }
 
-    /**
-     * @test
-     */
-    public function authenticate_ReturnsFailureCredentialInvalidResult_WhenClientExceptionIsThrown_WithInvalidPassword()
+    public function authenticateCognitoIdentityProviderExceptionDataProvider(): array
     {
-        // Setup
-        $mockClient = m::mock(Client::class);
-        $mockClient->shouldReceive('authenticate')->andThrow(
-            new ClientException(
+        return [
+            'User not found' => [
+                CognitoAdapter::EXCEPTION_USER_NOT_FOUND,
+                'message',
+                Result::FAILURE_IDENTITY_NOT_FOUND
+            ],
+            'Incorrect credentials' => [
+                CognitoAdapter::EXCEPTION_NOT_AUTHORIZED,
                 CognitoAdapter::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD,
-                0,
-                new CognitoIdentityProviderException(
-                    '',
-                    m::mock(CommandInterface::class),
-                    [
-                        'code' => CognitoAdapter::AWS_ERROR_NOT_AUTHORIZED,
-                    ]
-                )
-            )
-        );
-
-        $sut = new CognitoAdapter($mockClient);
-        $sut->setIdentity('identity');
-        $sut->setCredential('credential');
-
-        // Execute
-        $result = $sut->authenticate();
-
-        // Assert
-        static::assertEquals(Result::FAILURE_CREDENTIAL_INVALID, $result->getCode());
-    }
-
-    /**
-     * @test
-     */
-    public function authenticate_ReturnsFailureAccountDisabledResult_WhenClientExceptionIsThrown_WithDisabledAccount()
-    {
-        // Setup
-        $mockClient = m::mock(Client::class);
-        $mockClient->shouldReceive('authenticate')->andThrow(
-            new ClientException(
+                Result::FAILURE_CREDENTIAL_INVALID
+            ],
+            'User disabled' => [
+                CognitoAdapter::EXCEPTION_NOT_AUTHORIZED,
                 CognitoAdapter::MESSAGE_USER_IS_DISABLED,
-                0,
-                new CognitoIdentityProviderException(
-                    '',
-                    m::mock(CommandInterface::class),
-                    [
-                        'code' => CognitoAdapter::AWS_ERROR_NOT_AUTHORIZED,
-                    ]
-                )
-            )
-        );
-
-        $sut = new CognitoAdapter($mockClient);
-        $sut->setIdentity('identity');
-        $sut->setCredential('credential');
-
-        // Execute
-        $result = $sut->authenticate();
-
-        // Assert
-        static::assertEquals(CognitoAdapter::FAILURE_ACCOUNT_DISABLED, $result->getCode());
+                CognitoAdapter::FAILURE_ACCOUNT_DISABLED
+            ]
+        ];
     }
 
     /**
@@ -216,6 +169,11 @@ class CognitoAdapterTest extends MockeryTestCase
         $mockClient->shouldReceive('getResourceOwner')
             ->andReturn(m::mock(ResourceOwnerInterface::class));
 
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn(CognitoAdapter::EXCEPTION_NOT_AUTHORIZED);
+        $previousException->expects('getAwsErrorMessage')->andReturn(CognitoAdapter::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD);
+        $mockClient->shouldReceive('authenticate')->andThrow(new ClientException('', 0, $previousException));
+
         $sut = new CognitoAdapter($mockClient);
 
         // Execute
@@ -238,6 +196,11 @@ class CognitoAdapterTest extends MockeryTestCase
         $mockClient = m::mock(Client::class);
         $mockClient->shouldReceive('responseToAuthChallenge')
             ->andThrow(InvalidTokenException::class);
+
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn(CognitoAdapter::EXCEPTION_NOT_AUTHORIZED);
+        $previousException->expects('getAwsErrorMessage')->andReturn(CognitoAdapter::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD);
+        $mockClient->shouldReceive('authenticate')->andThrow(new ClientException('', 0, $previousException));
 
         $sut = new CognitoAdapter($mockClient);
 
@@ -262,6 +225,11 @@ class CognitoAdapterTest extends MockeryTestCase
         $mockClient = m::mock(Client::class);
         $mockClient->shouldReceive('responseToAuthChallenge')->andThrow($exception);
 
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn(CognitoAdapter::EXCEPTION_NOT_AUTHORIZED);
+        $previousException->expects('getAwsErrorMessage')->andReturn(CognitoAdapter::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD);
+        $mockClient->shouldReceive('authenticate')->andThrow(new ClientException('', 0, $previousException));
+
         $sut = new CognitoAdapter($mockClient);
 
         // Execute
@@ -275,7 +243,7 @@ class CognitoAdapterTest extends MockeryTestCase
      * @param string $awsErrorCode
      * @param int $expectedResultCode
      * @test
-     * @dataProvider clientExceptionDataProvider
+     * @dataProvider changedExpiredPasswordClientExceptionDataProvider
      */
     public function changedExpiredPassword_ReturnsExpectedResult_WhenClientExceptionIsThrown(string $awsErrorCode, int $expectedResultCode)
     {
@@ -287,6 +255,11 @@ class CognitoAdapterTest extends MockeryTestCase
         $mockClient->shouldReceive('responseToAuthChallenge')
             ->andThrow(new ClientException('null', 0, $previousException));
 
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn(CognitoAdapter::EXCEPTION_NOT_AUTHORIZED);
+        $previousException->expects('getAwsErrorMessage')->andReturn(CognitoAdapter::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD);
+        $mockClient->shouldReceive('authenticate')->andThrow(new ClientException('', 0, $previousException));
+
         $sut = new CognitoAdapter($mockClient);
 
         // Execute
@@ -296,117 +269,211 @@ class CognitoAdapterTest extends MockeryTestCase
         static::assertEquals($expectedResultCode, $result->getCode());
     }
 
-    public function clientExceptionDataProvider(): array
+    public function changedExpiredPasswordClientExceptionDataProvider(): array
     {
         return [
-            'Invalid Password' => [CognitoAdapter::AWS_ERROR_INVALID_PASSWORD, ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID],
-            'Unauthorised' => [CognitoAdapter::AWS_ERROR_NOT_AUTHORIZED, ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED],
+            'Invalid Password' => [CognitoAdapter::EXCEPTION_INVALID_PASSWORD, ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID],
+            'Unauthorised' => [CognitoAdapter::EXCEPTION_NOT_AUTHORIZED, ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED],
             'Generic' => ['generic', ChangeExpiredPasswordResult::FAILURE]
         ];
     }
 
     /**
      * @test
-     * @dataProvider dpChangePasswordException
      */
-    public function resetPasswordWithException(string $exceptionClass): void
+    public function changedExpiredPassword_ReturnsFailureNewPasswordIsExistingResult_WhenNewPasswordIsSameAsExisting()
     {
-        $exceptionMessage = 'exception message';
-        $this->expectException(ResetPasswordException::class);
-        $this->expectExceptionMessage($exceptionMessage);
-
-        $identifier = 'identifier';
-        $newPassword = 'new password';
+        // Setup
+        $exception = new ChallengeException();
+        $exception->setChallengeName('NEW_PASSWORD_REQUIRED');
+        $exception->setParameters([]);
+        $exception->setSession('session');
 
         $mockClient = m::mock(Client::class);
-        $mockClient->expects('changePassword')
-            ->with($identifier, $newPassword, true)
-            ->andThrow($exceptionClass, $exceptionMessage);
+        $mockClient->shouldReceive('authenticate')->andThrow($exception);
 
         $sut = new CognitoAdapter($mockClient);
 
-        $sut->resetPassword($identifier, $newPassword);
-    }
-
-    /**
-     * @test
-     * @dataProvider dpChangePasswordException
-     */
-    public function changePasswordWithException(string $exceptionClass): void
-    {
-        $exceptionMessage = 'exception message';
-        $this->expectException(ChangePasswordException::class);
-        $this->expectExceptionMessage($exceptionMessage);
-
-        $identifier = 'identifier';
-        $oldPassword = 'old password';
-        $newPassword = 'new password';
-
-        $mockClient = m::mock(Client::class);
-        $mockClient->expects('changePassword')
-            ->with($identifier, $newPassword)
-            ->andThrow($exceptionClass, $exceptionMessage);
-
-        $sut = new CognitoAdapter($mockClient);
-
-        $sut->changePassword($identifier, $oldPassword, $newPassword);
-    }
-
-    public function dpChangePasswordException(): array
-    {
-        return [
-            [ClientException::class],
-            [\Exception::class]
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function resetPasswordNoException(): void
-    {
-        $identifier = 'identifier';
-        $newPassword = 'new password';
-        $expectedResult = true;
-
-        $mockClient = m::mock(Client::class);
-        $mockClient->expects('changePassword')
-            ->with($identifier, $newPassword, true)
-            ->andReturn($expectedResult);
-
-        $sut = new CognitoAdapter($mockClient);
-
-        static::assertEquals($expectedResult, $sut->resetPassword($identifier, $newPassword));
-    }
-
-    /**
-     * @test
-     * @dataProvider dpChangePasswordNoException
-     */
-    public function changePasswordNoException(bool $changeResult, int $statusCode): void
-    {
-        $identifier = 'identifier';
-        $oldPassword = 'old password';
-        $newPassword = 'new password';
-        $expectedResult = ['status' => $statusCode];
-
-        $mockClient = m::mock(Client::class);
-        $mockClient->expects('changePassword')
-            ->with($identifier, $newPassword)
-            ->andReturn($changeResult);
-
-        $sut = new CognitoAdapter($mockClient);
+        // Execute
+        $result = $sut->changeExpiredPassword('newPassword', 'challengeSession', 'username');
 
         // Assert
-        static::assertEquals($expectedResult, $sut->changePassword($identifier, $oldPassword, $newPassword));
+        static::assertInstanceOf(ChangeExpiredPasswordResult::class, $result);
+        static::assertEquals(ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_MATCHES_OLD, $result->getCode());
     }
 
-    public function dpChangePasswordNoException(): array
+    /**
+     * @test
+     */
+    public function changedExpiredPassword_ReturnsGeneralFailureResult_WhenAuthenticateThrowsClientError()
+    {
+        // Setup
+        $exception = new ClientException('', 0, m::mock(AwsException::class)->shouldIgnoreMissing());
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('authenticate')->andThrow($exception);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->changeExpiredPassword('newPassword', 'challengeSession', 'username');
+
+        // Assert
+        static::assertInstanceOf(ChangeExpiredPasswordResult::class, $result);
+        static::assertEquals(ChangeExpiredPasswordResult::FAILURE_CLIENT_ERROR, $result->getCode());
+    }
+
+    /**
+     * @test
+     * @dataProvider changedPasswordClientExceptionDataProvider
+     */
+    public function changePassword_ReturnsExpectedResult_WhenClientExceptionIsThrown_OnPasswordChange(string $awsErrorCode, int $expectedResultCode): void
+    {
+        // Setup
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn($awsErrorCode);
+
+        $identifier = 'identifier';
+        $previousPassword = 'previous password';
+        $newPassword = 'new password';
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('authenticate');
+        $mockClient->shouldReceive('changePassword')
+            ->andThrow(new ClientException('null', 0, $previousException));
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $result = $sut->changePassword($identifier, $previousPassword, $newPassword);
+
+        // Assert
+        static::assertEquals($expectedResultCode, $result->getCode());
+    }
+
+    public function changedPasswordClientExceptionDataProvider(): array
     {
         return [
-            [true, 200],
-            [false, 500],
+            'Invalid Password' => [CognitoAdapter::EXCEPTION_INVALID_PASSWORD, ChangePasswordResult::FAILURE_NEW_PASSWORD_INVALID],
+            'Unauthorised' => [CognitoAdapter::EXCEPTION_NOT_AUTHORIZED, ChangePasswordResult::FAILURE_NOT_AUTHORIZED],
+            'Generic' => ['generic', ChangePasswordResult::FAILURE]
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider changedPasswordAuthClientExceptionDataProvider
+     */
+    public function changePassword_ReturnsExpectedResult_WhenClientExceptionIsThrown_OnAuth(string $awsErrorCode, string $awsErrorMessage, int $expectedResultCode): void
+    {
+        // Setup
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn($awsErrorCode);
+        $previousException->expects('getAwsErrorMessage')->andReturn($awsErrorMessage);
+
+        $identifier = 'identifier';
+        $previousPassword = 'previous password';
+        $newPassword = 'new password';
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('authenticate')
+            ->andThrow(new ClientException('null', 0, $previousException));
+        $mockClient->shouldNotReceive('changePassword');
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $result = $sut->changePassword($identifier, $previousPassword, $newPassword);
+
+        // Assert
+        static::assertEquals($expectedResultCode, $result->getCode());
+    }
+
+    /**
+     * @test
+     */
+    public function changePassword_ReturnsExpectedResult_WhenPasswordIsReused(): void
+    {
+        $identifier = 'identifier';
+        $previousPassword = 'previous password';
+        $newPassword = 'previous password';
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->expects('authenticate');
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $result = $sut->changePassword($identifier, $previousPassword, $newPassword);
+
+        // Assert
+        static::assertEquals(ChangePasswordResult::FAILURE_PASSWORD_REUSE, $result->getCode());
+    }
+
+    public function changedPasswordAuthClientExceptionDataProvider(): array
+    {
+        return [
+            'Invalid previous Password' => [
+                CognitoAdapter::EXCEPTION_NOT_AUTHORIZED,
+                CognitoAdapter::MESSAGE_INCORRECT_USERNAME_OR_PASSWORD,
+                ChangePasswordResult::FAILURE_OLD_PASSWORD_INVALID
+            ],
+            'Client error' => [
+                CognitoAdapter::EXCEPTION_NOT_AUTHORIZED,
+                'Generic error',
+                ChangePasswordResult::FAILURE_CLIENT_ERROR
+            ],
+            'Generic' => [
+                'generic',
+                'Generic error',
+                ChangePasswordResult::FAILURE_CLIENT_ERROR
+            ]
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function changePasswordReturnsSuccessResult_WhenNoExceptions(): void
+    {
+        $identifier = 'identifier';
+        $previousPassword = 'previous password';
+        $newPassword = 'new password';
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->expects('authenticate');
+        $mockClient->expects('changePassword')
+            ->with($identifier, $newPassword, true)
+            ->andReturnTrue();
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $result = $sut->changePassword($identifier, $previousPassword, $newPassword);
+
+        // Assert
+        static::assertEquals(ChangePasswordResult::SUCCESS, $result->getCode());
+    }
+
+    /**
+     * @test
+     */
+    public function changePasswordReturnsSuccessResult_WhenAuthThrowsChallengeException(): void
+    {
+        // Setup
+        $identifier = 'identifier';
+        $previousPassword = 'previous password';
+        $newPassword = 'new password';
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('authenticate')
+            ->andThrow(new ChallengeException('null', 0));
+        $mockClient->expects('changePassword')
+            ->with($identifier, $newPassword, true)
+            ->andReturnTrue();
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $result = $sut->changePassword($identifier, $previousPassword, $newPassword);
+
+        // Assert
+        static::assertEquals(ChangePasswordResult::SUCCESS, $result->getCode());
     }
 
     /**
@@ -509,5 +576,119 @@ class CognitoAdapterTest extends MockeryTestCase
             [InvalidTokenException::class],
             [ClientException::class]
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function getUserByIdentifier_ReturnsUser()
+    {
+        // Setup
+        $id = '1001';
+        $username = 'user4574';
+
+        $mockUser = m::mock(ResourceOwnerInterface::class);
+        $mockUser->shouldReceive('getId')->andReturn($id);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('getUserByIdentifier')
+            ->with($username)
+            ->once()
+            ->andReturn($mockUser);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->getUserByIdentifier($username);
+
+        // Assert
+        static::assertInstanceOf(ResourceOwnerInterface::class, $result);
+        static::assertEquals($id, $result->getId());
+    }
+
+    /**
+     * @test
+     */
+    public function registerIfNotPresent_ReturnsFalse_AndDoesNotRegistersUser_WhenUserExists()
+    {
+        $id = '1001';
+        $username = 'user4574';
+        $password = 'P@s5w0rD!';
+        $email = 'test@test.localdomain';
+
+        // Setup
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('getUserByIdentifier')->with($username)->once()->andReturn(
+            new class(['id' => $id]) extends AbstractResourceOwner implements ResourceOwnerInterface {
+                public function getId(): string
+                {
+                    return $this->get('id');
+                }
+            }
+        );
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->registerIfNotPresent($username, $password, $email);
+
+        // Assert
+        static::assertFalse($result);
+    }
+
+    /**
+     * @test
+     */
+    public function registerIfNotPresent_ReturnsTrue_AndRegistersUser_WhenUserNotExists()
+    {
+        $username = 'user4574';
+        $password = 'P@s5w0rD!';
+        $email = 'test@test.localdomain';
+        $attributes = [];
+
+        // Setup
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn(CognitoAdapter::EXCEPTION_USER_NOT_FOUND);
+        $exception = new ClientException('null', 0, $previousException);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('getUserByIdentifier')->with($username)->once()->andThrow($exception);
+
+        $compiledAttributes = array_merge(['email' => $email], $attributes);
+        $mockClient->shouldReceive('register')->with($username, $password, $compiledAttributes)->once();
+
+        $sut = new CognitoAdapter($mockClient);
+
+        // Execute
+        $result = $sut->registerIfNotPresent($username, $password, $email, $attributes);
+
+        // Assert
+        static::assertTrue($result);
+    }
+
+    /**
+     * @test
+     */
+    public function registerIfNotPresent_BubblesUnexpectedException_WhenClientThrowsUnexpectedException()
+    {
+        $username = 'user4574';
+        $password = 'P@s5w0rD!';
+        $email = 'test@test.localdomain';
+        $attributes = [];
+
+        // Setup
+        $previousException = m::mock(AwsException::class);
+        $previousException->expects('getAwsErrorCode')->andReturn('SomeOtherThing');
+        $exception = new ClientException('null', 0, $previousException);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->shouldReceive('getUserByIdentifier')->with($username)->once()->andThrow($exception);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $this->expectException(ClientException::class);
+
+        // Execute
+        $sut->registerIfNotPresent($username, $password, $email, $attributes);
     }
 }

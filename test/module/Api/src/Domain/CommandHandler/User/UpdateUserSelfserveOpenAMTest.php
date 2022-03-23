@@ -8,6 +8,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Service\PasswordService;
@@ -28,7 +29,7 @@ use ZfcRbac\Service\AuthorizationService;
 /**
  * Update User Selfserve Test
  */
-class UpdateUserSelfserveTest extends CommandHandlerTestCase
+class UpdateUserSelfserveOpenAMTest extends CommandHandlerTestCase
 {
     public function setUp(): void
     {
@@ -37,30 +38,23 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
 
         $mockConfig = [
             'auth' => [
-                'identity_provider' => JWTIdentityProvider::class
+                'identity_provider' => PidIdentityProvider::class
             ]
         ];
-
-        $mockPasswordService = m::mock(PasswordService::class)
-            ->shouldReceive('generatePassword')
-            ->andReturn('GENERATED_PASSWORD')
-            ->getMock();
-
-        $mockAuthAdapter = m::mock(ValidatableAdapterInterface::class)
-            ->shouldReceive('registerIfNotPresent')
-            ->getMock();
 
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class),
             'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
+            ValidatableAdapterInterface::class => m::mock(ValidatableAdapterInterface::class),
+            PasswordService::class => m::mock(PasswordService::class),
             'Config' => $mockConfig
         ];
 
         $this->sut = new Sut(
-            $mockAuthAdapter,
-            $mockPasswordService,
+            $this->mockedSmServices[ValidatableAdapterInterface::class],
+            $this->mockedSmServices[PasswordService::class],
             $this->mockedSmServices['EventHistoryCreator']
         );
 

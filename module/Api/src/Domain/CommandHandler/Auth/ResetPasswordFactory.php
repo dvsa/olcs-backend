@@ -25,7 +25,8 @@ class ResetPasswordFactory implements FactoryInterface
     {
         $sl = $container->getServiceLocator();
         $adapter = $sl->get(ValidatableAdapterInterface::class);
-        $instance = new ResetPassword($adapter);
+        $eventHistoryCreator = $sl->get('EventHistoryCreator');
+        $instance = new ResetPassword($adapter, $eventHistoryCreator);
         return $instance->createService($container);
     }
 

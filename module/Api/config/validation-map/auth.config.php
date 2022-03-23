@@ -10,6 +10,7 @@ return [
     CommandHandler\Auth\ChangePassword::class => NotIsAnonymousUser::class,
     CommandHandler\Auth\ChangePasswordFactory::class => NotIsAnonymousUser::class,
     CommandHandler\Auth\ForgotPassword::class => NoValidationRequired::class,
+    CommandHandler\Auth\ForgotPasswordFactory::class => NoValidationRequired::class,
     CommandHandler\Auth\ForgotPasswordOpenAm::class => NoValidationRequired::class,
     CommandHandler\Auth\ForgotPasswordOpenAmFactory::class => NoValidationRequired::class,
     CommandHandler\Auth\ResetPassword::class => NoValidationRequired::class,
