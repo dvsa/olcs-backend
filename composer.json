@@ -16,6 +16,10 @@
         {
             "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/league",
             "type": "composer"
+        },
+        {
+            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-transfer.git",
+            "type": "vcs"
         }
     ],
     "require": {
@@ -61,7 +65,7 @@
         "olcs/olcs-cpms": "~4.206.0",
         "olcs/olcs-dvla-search": "~1.0.0",
         "olcs/olcs-logging": "~4.206.0",
-        "olcs/olcs-transfer": "~4.206.0",
+        "olcs/olcs-transfer": "dev-VOL-2781",
         "olcs/olcs-utils": "~4.206.0",
         "olcs/olcs-xmltools": "~4.206.0",
         "oro/doctrine-extensions": "^1.2",
