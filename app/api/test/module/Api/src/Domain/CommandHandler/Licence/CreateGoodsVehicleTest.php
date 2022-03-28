@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as  LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateGoodsVehicle;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateGoodsVehicle as Cmd;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
@@ -14,6 +15,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as VehicleCmd;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs as CreateGoodsDiscsCmd;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create Goods Vehicle Test
@@ -29,6 +31,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
+            AuthorizationService::class => m::mock(AuthorizationService::class)
         ];
 
         parent::setUp();
@@ -66,6 +69,10 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $this->mockedSmServices[AuthorizationService::class]->expects('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturnTrue();
+
         $data = [
             'id' => 111,
             'vrm' => 'ABC123',
