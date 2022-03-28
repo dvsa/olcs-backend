@@ -104,8 +104,8 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
         $correspondenceCd = $licence->getCorrespondenceCd();
 
-        $correspondenceCd->setFao($command->getCorrespondence()['fao']);
-        $correspondenceCd->setEmailAddress($command->getContact()['email']);
+        $correspondenceCd->setFao($command->getCorrespondence()['fao'] ?? null);
+        $correspondenceCd->setEmailAddress($command->getContact()['email'] ?? null);
 
         $version = $correspondenceCd->getVersion();
         $this->getRepo('ContactDetails')->save($correspondenceCd);
