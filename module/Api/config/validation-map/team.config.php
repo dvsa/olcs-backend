@@ -12,4 +12,5 @@ return [
     QueryHandler\Team\Team::class                                           => IsInternalUser::class,
     QueryHandler\Team\TeamList::class                                       => IsInternalUser::class,
     QueryHandler\Team\TeamListData::class                                   => IsInternalUser::class,
+    QueryHandler\Team\TeamListByTrafficArea::class                          => IsInternalUser::class,
 ];

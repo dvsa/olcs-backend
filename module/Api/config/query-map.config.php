@@ -301,6 +301,7 @@ return [
     TransferQuery\Team\Team::class => QueryHandler\Team\Team::class,
     TransferQuery\Team\TeamList::class => QueryHandler\Team\TeamList::class,
     TransferQuery\Team\TeamListData::class => QueryHandler\Team\TeamListData::class,
+    Query\Team\TeamListByTrafficArea::class => QueryHandler\Team\TeamListByTrafficArea::class,
 
     // TeamPrinter
     TransferQuery\TeamPrinter\TeamPrinterExceptionsList::class =>

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Traffic Area list
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TrafficArea;
 
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
@@ -14,11 +9,6 @@ use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\TrafficArea\TrafficAreaInternalList as Qry;
 
-/**
- * Traffic Area list
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class TrafficAreaInternalList extends AbstractQueryHandler implements CacheAwareInterface
 {
     use CacheAwareTrait;
