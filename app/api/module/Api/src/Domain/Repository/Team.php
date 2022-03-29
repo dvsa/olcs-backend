@@ -1,19 +1,11 @@
 <?php
 
-/**
- * Team
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\User\Team as Entity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-/**
- * Team
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class Team extends AbstractRepository
 {
     protected $entity = Entity::class;
@@ -52,5 +44,21 @@ class Team extends AbstractRepository
             ->with('tp.subCategory', 'ps');
 
         return $qb->getQuery()->getSingleResult($type);
+    }
+
+    /**
+     * Applies filters to list queries
+     *
+     * @param QueryBuilder   $qb    doctrine query builder
+     * @param QueryInterface $query the query
+     *
+     * @return void
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if (method_exists($query, 'getTrafficAreas')) {
+            $qb->andWhere($qb->expr()->in($this->alias . '.trafficArea', ':byTrafficAreas'))
+                ->setParameter('byTrafficAreas', $query->getTrafficAreas());
+        }
     }
 }
