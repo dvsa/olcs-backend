@@ -29,11 +29,10 @@ class ById extends AbstractQueryHandler implements CacheAwareInterface
         CacheEncryption::TRANSLATION_KEY_IDENTIFIER => Cache\TranslationKey::class,
         CacheEncryption::SYS_PARAM_IDENTIFIER => Cache\Single::class,
         CacheEncryption::SYS_PARAM_LIST_IDENTIFIER => Cache\RecordList::class,
-        CacheEncryption::TRAFFIC_AREA_GB_LIST_IDENTIFIER => Cache\RecordList::class,
-        CacheEncryption::TRAFFIC_AREA_NI_LIST_IDENTIFIER => Cache\RecordList::class,
     ];
 
     private $anonAllowedMap = [
+        CacheEncryption::SYS_PARAM_IDENTIFIER,
         CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER,
         CacheEncryption::TRANSLATION_KEY_IDENTIFIER,
     ];
