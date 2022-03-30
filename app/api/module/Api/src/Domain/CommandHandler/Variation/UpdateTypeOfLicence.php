@@ -92,6 +92,9 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
         // update application completion - typeOfLicence section
         $result->merge($this->updateApplicationCompletion($command->getId(), 'typeOfLicence'));
 
+        // update operating centres section if the application has changed vehicle or trailer authorisation
+        $updateOperatingCentresSection = $application->hasAuthChanged();
+
         // check if the new type of licence requires OCs to be removed
         if (!$application->canHaveOperatingCentre()
             && (!$application->getOperatingCentres()->isEmpty() || !$licence->getOperatingCentres()->isEmpty())
@@ -114,6 +117,10 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
             }
 
             // update application completion - operatingCentres section
+            $updateOperatingCentresSection = true;
+        }
+
+        if ($updateOperatingCentresSection) {
             $result->merge($this->updateApplicationCompletion($command->getId(), 'operatingCentres'));
         }
 
