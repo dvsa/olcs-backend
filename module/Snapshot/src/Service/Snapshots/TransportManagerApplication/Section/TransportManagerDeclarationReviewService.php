@@ -29,13 +29,25 @@ class TransportManagerDeclarationReviewService extends AbstractReviewService
             $markup .= '-external';
         }
 
+        $application = $tma->getApplication();
+
         // append flag for ni/gb
-        if ($tma->getApplication()->getNiFlag() === 'Y') {
+        if ($application->getNiFlag() === 'Y') {
             $markup .= '-ni';
         } else {
             $markup .= '-gb';
         }
 
-        return ['markup' => $this->translate($markup)];
+        $goodsOrPsvId = $application->getGoodsOrPsv()->getId();
+
+        $markup = $this->translateReplace(
+            $markup,
+            [
+                $this->translate('tma-declaration.residency-clause.' . $goodsOrPsvId),
+                $this->translate('tma-declaration.role-clause.' . $goodsOrPsvId)
+            ]
+        );
+
+        return ['markup' => $markup];
     }
 }
