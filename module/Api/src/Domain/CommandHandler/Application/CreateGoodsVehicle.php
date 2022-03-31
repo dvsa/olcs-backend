@@ -2,11 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -15,8 +18,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface
+final class CreateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
     protected $repoServiceName = 'Application';
 
     /**
@@ -45,6 +49,10 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
         }
 
         $dtoData = $command->getArrayCopy();
+        if ($this->isInternalUser() && $command->getUnvalidatedVrm()) {
+            $dtoData['vrm'] = $dtoData['unvalidatedVrm'];
+            unset($dtoData['unvalidatedVrm']);
+        }
         $dtoData['licence'] = $application->getLicence()->getId();
         $dtoData['applicationId'] = $application->getId();
 

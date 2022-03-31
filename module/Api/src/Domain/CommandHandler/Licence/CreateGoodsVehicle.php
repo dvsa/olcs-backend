@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
@@ -9,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -18,9 +21,9 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
+final class CreateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface, AuthAwareInterface
 {
-    use CacheAwareTrait;
+    use AuthAwareTrait, CacheAwareTrait;
 
     protected $repoServiceName = 'Licence';
 
@@ -51,6 +54,10 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
 
         //  create vehicle
         $dtoData = $command->getArrayCopy();
+        if ($this->isInternalUser() && $command->getUnvalidatedVrm()) {
+            $dtoData['vrm'] = $dtoData['unvalidatedVrm'];
+            unset($dtoData['unvalidatedVrm']);
+        }
         $dtoData['licence'] = $command->getId();
         if ($command->getSpecifiedDate() === null) {
             $dtoData['specifiedDate'] = (new DateTime('now'))->format(\DateTime::ISO8601);

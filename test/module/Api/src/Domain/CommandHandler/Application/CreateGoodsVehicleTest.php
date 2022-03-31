@@ -9,9 +9,11 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Application\CreateGoodsVehicle as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateGoodsVehicle
@@ -30,6 +32,10 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->sut = new CreateGoodsVehicle();
 
         $this->mockRepo('Application', Repository\Application::class);
+
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)
+        ];
 
         parent::setUp();
     }
@@ -56,6 +62,10 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $this->mockedSmServices[AuthorizationService::class]->expects('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturnTrue();
+
         $data = [
             'id' => self::APP_ID,
             'vrm' => 'ABC123',
