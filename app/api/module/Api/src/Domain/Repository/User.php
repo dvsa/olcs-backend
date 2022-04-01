@@ -118,6 +118,12 @@ class User extends AbstractRepository
                 ->setParameter('team', (int)$query->getTeam());
         }
 
+        // filter users by traffic area (this is for internal users and based on their team traffic area)
+        if (method_exists($query, 'getTrafficAreas')) {
+            $qb->andWhere($qb->expr()->in('t.trafficArea', ':trafficAreas'))
+                ->setParameter('trafficAreas', $query->getTrafficAreas());
+        }
+
         if (method_exists($query, 'getIsInternal') && $query->getIsInternal() == true) {
             $qb->andWhere($qb->expr()->isNotNull($this->alias . '.team'));
         }

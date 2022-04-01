@@ -10,6 +10,8 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\User\UserList as UserListQry;
+use Dvsa\Olcs\Api\Domain\Query\User\UserListByTrafficArea;
 use Doctrine\ORM\Query;
 
 /**
@@ -30,6 +32,20 @@ class UserList extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
+        assert($query instanceof UserListQry);
+
+        $userInfo = $this->getUserData();
+
+        //if the user is internal and can't access all data
+        if ($userInfo['isInternal'] && !$userInfo['dataAccess']['canAccessAll']) {
+            $queryData = $query->getArrayCopy();
+            $queryData['trafficAreas'] = $userInfo['dataAccess']['trafficAreas'];
+            $queryWithTa = UserListByTrafficArea::create($queryData);
+
+            return $this->getQueryHandler()->handleQuery($queryWithTa);
+        }
+
+
         /** @var User $repo */
         $repo = $this->getRepo();
 

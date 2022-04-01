@@ -17,7 +17,9 @@ return [
     QueryHandler\User\PartnerList::class                                        => IsInternalUser::class,
     QueryHandler\User\RoleList::class                                           => NoValidationRequired::class,
     QueryHandler\User\UserList::class                                           => CanAccessUserList::class,
+    QueryHandler\User\UserListByTrafficArea::class                              => CanAccessUserList::class,
     QueryHandler\User\UserListInternal::class                                   => IsInternalUser::class,
+    QueryHandler\User\UserListInternalByTrafficArea::class                      => IsInternalUser::class,
     QueryHandler\User\UserListSelfserve::class                                  => CanManageUser::class,
     QueryHandler\User\UserSelfserve::class                                      => CanReadUser::class,
 
