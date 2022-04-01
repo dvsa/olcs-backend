@@ -292,10 +292,12 @@ return [
     TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
     TransferQuery\User\User::class => QueryHandler\User\User::class,
     TransferQuery\User\UserList::class => QueryHandler\User\UserList::class,
+    Query\User\UserListByTrafficArea::class => QueryHandler\User\UserListByTrafficArea::class,
     TransferQuery\User\UserSelfserve::class => QueryHandler\User\UserSelfserve::class,
     TransferQuery\User\UserListSelfserve::class => QueryHandler\User\UserListSelfserve::class,
     TransferQuery\User\RoleList::class => QueryHandler\User\RoleList::class,
     TransferQuery\User\UserListInternal::class => QueryHandler\User\UserListInternal::class,
+    Query\User\UserListInternalByTrafficArea::class => QueryHandler\User\UserListInternalByTrafficArea::class,
 
     // User
     TransferQuery\Team\Team::class => QueryHandler\Team\Team::class,
