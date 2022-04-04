@@ -5,8 +5,6 @@ namespace Dvsa\Olcs\Api\Domain;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
 use ZfcRbac\Service\AuthorizationService;

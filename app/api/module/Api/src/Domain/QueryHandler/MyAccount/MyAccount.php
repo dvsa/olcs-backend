@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SysParamRepo;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Olcs\Logging\Log\Logger;
@@ -17,6 +19,8 @@ use Olcs\Logging\Log\Logger;
 class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
 {
     use CacheAwareTrait;
+
+    protected $extraRepos = ['SystemParameter'];
 
     /**
      * Handle my account query
@@ -38,7 +42,7 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
         $userId = $user->getId();
 
         if ($userId === null) {
-            $userId = 'anon';
+            $userId = User::USER_TYPE_ANON;
         }
 
         if ($this->cacheService->hasCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $userId)) {
@@ -71,16 +75,14 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
                 'canAccessNi' => $team->canAccessNiData($teamsExcluded),
                 'trafficAreas' => $team->getAllowedTrafficAreas($teamsExcluded),
             ];
-        } else {
+        } elseif ($userId !== User::USER_TYPE_ANON) {
             $isEligibleForPermits = $user->isEligibleForPermits();
 
             if ($isEligibleForPermits) {
-                $selfservePrompt = $this->getCacheById(
-                    CacheEncryption::SYS_PARAM_IDENTIFIER,
-                    SystemParameter::ENABLE_SELFSERVE_PROMPT
-                );
-
-                $isEligibleForPrompt = $selfservePrompt->getObject()->getParamValue();
+                //for now we need to leave this, as selfserve users don't have access to system param query
+                $systemParameterRepo = $this->getRepo('SystemParameter');
+                assert($systemParameterRepo instanceof SysParamRepo);
+                $isEligibleForPrompt = $systemParameterRepo->isSelfservePromptEnabled();
             }
 
             $hasActivePsv = $user->hasActivePsvLicence();
