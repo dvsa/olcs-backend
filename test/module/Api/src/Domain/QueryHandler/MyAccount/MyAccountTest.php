@@ -6,12 +6,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Entity\System\SystemParameter;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter as SysParamEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\User\User;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SysParamRepo;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount as Qry;
 use Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount\MyAccount;
@@ -30,6 +31,8 @@ class MyAccountTest extends QueryHandlerTestCase
             AuthorizationService::class => m::mock(AuthorizationService::class),
             CacheEncryption::class => m::mock(CacheEncryption::class),
         ];
+
+        $this->mockRepo('SystemParameter', SysParamRepo::class);
 
         parent::setUp();
     }
@@ -80,14 +83,15 @@ class MyAccountTest extends QueryHandlerTestCase
         $userId = 1;
 
         /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId($userId);
+        $mockUser = m::mock(User::class);
+        $mockUser->expects('getId')->withNoArgs()->andReturn($userId);
         $mockUser->expects('isInternal')->withNoArgs()->andReturnFalse();
         $mockUser->shouldReceive('serialize')->andReturn(['foo']);
         $mockUser->shouldReceive('hasActivePsvLicence')->andReturn(false);
         $mockUser->shouldReceive('getNumberOfVehicles')->andReturn(2);
         $mockUser->shouldReceive('hasOrganisationSubmittedLicenceApplication')->andReturn(true);
         $mockUser->expects('isEligibleForPermits')->withNoArgs()->andReturn($isEligibleForPermits);
+        $mockUser->expects('getTeam')->never();
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
@@ -98,20 +102,11 @@ class MyAccountTest extends QueryHandlerTestCase
 
         $numCacheCalls = $isEligibleForPermits ? 1 : 0;
 
-        $mockSystemParam = m::mock(SystemParameter::class);
-        $mockSystemParam->expects('getParamValue')
+        $mockSystemParameter = $this->repoMap['SystemParameter'];
+        $mockSystemParameter->shouldReceive('isSelfservePromptEnabled')
+            ->times($isEligibleForPermits ? 1 : 0)
             ->withNoArgs()
-            ->times($numCacheCalls)
             ->andReturn($isSelfservePromptEnabled);
-
-        $sysParamResult = new Result($mockSystemParam);
-
-        $this->expectedCacheCall(
-            CacheEncryption::SYS_PARAM_IDENTIFIER,
-            SystemParameter::ENABLE_SELFSERVE_PROMPT,
-            $sysParamResult,
-            $numCacheCalls
-        );
 
         $query = Qry::create([]);
 
@@ -154,14 +149,14 @@ class MyAccountTest extends QueryHandlerTestCase
         $excludedTeamsString = '1, 2, 3';
         $excludedTeamsArray = [1, 2, 3];
 
-        $mockSystemParam = m::mock(SystemParameter::class);
+        $mockSystemParam = m::mock(SysParamEntity::class);
         $mockSystemParam->expects('getParamValue')->andReturn($excludedTeamsString);
 
         $sysParamResult = new Result($mockSystemParam);
 
         $this->expectedCacheCall(
             CacheEncryption::SYS_PARAM_IDENTIFIER,
-            SystemParameter::DATA_SEPARATION_TEAMS_EXEMPT,
+            SysParamEntity::DATA_SEPARATION_TEAMS_EXEMPT,
             $sysParamResult
         );
 
@@ -172,8 +167,8 @@ class MyAccountTest extends QueryHandlerTestCase
         $mockTeam->expects('getAllowedTrafficAreas')->with($excludedTeamsArray)->andReturn($trafficAreas);
 
         /** @var User $mockUser */
-        $mockUser = m::mock(User::class)->makePartial();
-        $mockUser->setId($userId);
+        $mockUser = m::mock(User::class);
+        $mockUser->expects('getId')->withNoArgs()->andReturn($userId);
         $mockUser->expects('isInternal')->withNoArgs()->andReturnTrue();
         $mockUser->shouldReceive('serialize')->andReturn(['foo']);
         $mockUser->shouldReceive('hasActivePsvLicence')->never();
@@ -231,6 +226,51 @@ class MyAccountTest extends QueryHandlerTestCase
                 'expectedEligibleForPrompt' => true,
             ],
         ];
+    }
+
+    public function testHandleQueryAnon()
+    {
+        $userId = User::USER_TYPE_ANON;
+
+        /** @var User $mockUser */
+        $mockUser = m::mock(User::class);
+        $mockUser->expects('getId')->withNoArgs()->andReturnNull();
+        $mockUser->expects('isInternal')->withNoArgs()->andReturnFalse();
+        $mockUser->shouldReceive('serialize')->andReturn(['foo']);
+        $mockUser->shouldReceive('hasActivePsvLicence')->never();
+        $mockUser->shouldReceive('getNumberOfVehicles')->never();
+        $mockUser->shouldReceive('hasOrganisationSubmittedLicenceApplication')->never();
+        $mockUser->expects('isEligibleForPermits')->never();
+        $mockUser->expects('getTeam')->never();
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
+        $this->mockedSmServices[CacheEncryption::class]->expects('hasCustomItem')
+            ->with(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $userId)
+            ->andReturnFalse();
+
+        $query = Qry::create([]);
+
+        $expectedResult = [
+            'foo',
+            'hasActivePsvLicence' => false,
+            'numberOfVehicles' => 0,
+            'hasOrganisationSubmittedLicenceApplication' => false,
+            'eligibleForPermits' => false,
+            'eligibleForPrompt' => false,
+            'dataAccess' => [],
+            'isInternal' => false,
+        ];
+
+        $this->mockedSmServices[CacheEncryption::class]->expects('setCustomItem')
+            ->with(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $expectedResult, $userId);
+
+        $result = $this->sut->handleQuery($query);
+        $this->assertEquals(
+            $expectedResult,
+            $result->serialize()
+        );
     }
 
     public function testHandleQueryThrowsNotFoundException()
