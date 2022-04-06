@@ -1015,6 +1015,7 @@ return [
 
     // Domain - Variation
     Command\Variation\EndInterim::class => CommandHandler\Variation\EndInterim::class,
+    Command\Variation\ResetVariation::class => CommandHandler\Variation\ResetVariation::class,
     TransferCommand\Variation\GrantDirectorChange::class => CommandHandler\Variation\GrantDirectorChange::class,
     TransferCommand\Variation\DeleteVariation::class => CommandHandler\Variation\DeleteVariation::class,
 

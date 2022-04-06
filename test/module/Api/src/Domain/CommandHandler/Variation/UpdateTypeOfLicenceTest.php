@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateApplicationFeeCm
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Variation\ResetVariation as ResetVariationCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\UpdateTypeOfLicence;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresVariationException;
@@ -55,10 +56,12 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->refData = [
             LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
             LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            LicenceEntity::LICENCE_TYPE_RESTRICTED,
             LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
             LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
             LicenceEntity::LICENCE_CATEGORY_PSV,
             RefData::APP_VEHICLE_TYPE_HGV,
+            RefData::APP_VEHICLE_TYPE_PSV,
             RefData::APP_VEHICLE_TYPE_LGV,
             RefData::APP_VEHICLE_TYPE_MIXED,
         ];
@@ -187,20 +190,155 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    public function testHandleCommand()
-    {
-        $data = [
-            'id' => 111,
-            'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
-            'version' => 1
-        ];
-        $command = Cmd::create($data);
+    /**
+     * @dataProvider dpHandleCommandWithReset
+     */
+    public function testHandleCommandWithReset(
+        $existingLicenceType,
+        $existingVehicleType,
+        $applicationLicenceType,
+        $applicationVehicleType,
+        $commandData,
+        $expectedResetData
+    ) {
+        $command = Cmd::create($commandData);
 
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
-        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $licence->setLicenceType($this->refData[$existingLicenceType]);
+        $licence->setVehicleType($this->refData[$existingVehicleType]);
         $licence->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setLicenceType($this->refData[$applicationLicenceType]);
+        $application->setVehicleType($this->refData[$applicationVehicleType]);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence)
+            ->andReturn(true);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application);
+
+        $this->setupIsInternalUser(false);
+
+        $resetResult = new Result();
+        $this->expectedSideEffect(ResetVariationCommand::class, $expectedResetData, $resetResult);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame($resetResult, $result);
+    }
+
+    public function dpHandleCommandWithReset()
+    {
+        return [
+            'change from mixed fleet to lgv, then to goods sn, not confirmed' => [
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_LGV,
+                [
+                    'id' => 111,
+                    'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                    'version' => 1,
+                ],
+                [
+                    'id' => 111,
+                    'confirm' => false
+                ]
+            ],
+            'change from mixed fleet to lgv, then to goods sn, confirmed' => [
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_LGV,
+                [
+                    'id' => 111,
+                    'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                    'version' => 1,
+                    'confirm' => true
+                ],
+                [
+                    'id' => 111,
+                    'confirm' => true
+                ]
+            ],
+            'change from goods sn to mixed fleet, then to lgv, not confirmed' => [
+                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_HGV,
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                [
+                    'id' => 111,
+                    'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                    'version' => 1,
+                ],
+                [
+                    'id' => 111,
+                    'confirm' => false
+                ]
+            ],
+            'change from goods restricted to goods sn, then to mixed fleet' => [
+                LicenceEntity::LICENCE_TYPE_RESTRICTED,
+                RefData::APP_VEHICLE_TYPE_HGV,
+                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_HGV,
+                [
+                    'id' => 111,
+                    'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                    'version' => 1,
+                ],
+                [
+                    'id' => 111,
+                    'confirm' => false
+                ]
+            ],
+            'change from lgv to mixed fleet, then back again, not confirmed' => [
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_LGV,
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                [
+                    'id' => 111,
+                    'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                    'version' => 1,
+                ],
+                [
+                    'id' => 111,
+                    'confirm' => false
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpHandleCommand
+     */
+    public function testHandleCommand(
+        $existingLicenceType,
+        $existingVehicleType,
+        $existingGoodsOrPsv,
+        $applicationLicenceType,
+        $applicationVehicleType,
+        $applicationGoodsOrPsv,
+        $commandData,
+        $isInternalUser
+    ) {
+        $command = Cmd::create($commandData);
+
+        /** @var LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setLicenceType($this->refData[$existingLicenceType]);
+        $licence->setVehicleType($this->refData[$existingVehicleType]);
+        $licence->setGoodsOrPsv($this->refData[$existingGoodsOrPsv]);
 
         $fee = m::mock(Fee::class)
             ->shouldReceive('getId')
@@ -214,8 +352,9 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setLicence($licence);
-        $application->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL]);
-        $application->setGoodsOrPsv($this->refData[LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE]);
+        $application->setLicenceType($this->refData[$applicationLicenceType]);
+        $application->setVehicleType($this->refData[$applicationVehicleType]);
+        $application->setGoodsOrPsv($this->refData[$applicationGoodsOrPsv]);
         $application->setFees([$fee]);
         $application->setId(111);
         $application->shouldReceive('hasAuthChanged')
@@ -252,6 +391,8 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
         ];
         $this->expectedSideEffect(CreateApplicationFeeCmd::class, $createFeeData, $result3);
 
+        $this->setupIsInternalUser($isInternalUser);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -266,10 +407,63 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
 
+        $expectedLicenceType = $commandData['licenceType'];
+
         $this->assertSame(
-            $this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL],
+            $this->refData[$expectedLicenceType],
             $application->getLicenceType()
         );
+    }
+
+    public function dpHandleCommand()
+    {
+        return [
+            'change from standard national goods to mixed fleet' => [
+                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_HGV,
+                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_HGV,
+                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+                [
+                    'id' => 111,
+                    'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_MIXED,
+                    'version' => 1
+                ],
+                false
+            ],
+            'change from mixed fleet to lgv, then to goods sn, internal' => [
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_LGV,
+                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+                [
+                    'id' => 111,
+                    'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                    'version' => 1,
+                ],
+                true
+            ],
+            'change from restricted, then to sn, then to si, psv' => [
+                LicenceEntity::LICENCE_TYPE_RESTRICTED,
+                RefData::APP_VEHICLE_TYPE_PSV,
+                LicenceEntity::LICENCE_CATEGORY_PSV,
+                LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_PSV,
+                LicenceEntity::LICENCE_CATEGORY_PSV,
+                [
+                    'id' => 111,
+                    'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
+                    'version' => 1,
+                ],
+                false
+            ],
+        ];
     }
 
     public function testHandleCommandWhenAuthHasChanged()
@@ -343,6 +537,8 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             'feeTypeFeeType' => FeeType::FEE_TYPE_VAR,
         ];
         $this->expectedSideEffect(CreateApplicationFeeCmd::class, $createFeeData, $result3);
+
+        $this->setupIsInternalUser();
 
         $result = $this->sut->handleCommand($command);
 
@@ -477,6 +673,8 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
             ],
             (new Result())->addMessage('fee 333 created')
         );
+
+        $this->setupIsInternalUser();
 
         $result = $this->sut->handleCommand($command);
 
