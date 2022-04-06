@@ -15,6 +15,7 @@ return array(
         'DoctrineModule',
         'DoctrineORMModule',
         'Olcs\Db',
+        'Dvsa\Olcs\AcquiredRights',
         'Dvsa\Olcs\Api',
         'Dvsa\Olcs\Cli',
         'Dvsa\Olcs\Scanning',
