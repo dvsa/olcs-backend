@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Variation\ResetVariation as ResetVariationCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\DerivedTypeOfLicenceParamsTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -28,6 +29,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Command\Variation\UpdateTypeOfLicence as Cmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -70,6 +72,12 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
                         Licence::ERROR_CANT_BE_SR => 'You are not able to change licence type to special restricted'
                     ]
                 ]
+            );
+        }
+
+        if ($this->changeRequiresConfirmation($application, $command)) {
+            return $this->handleSideEffect(
+                $this->createResetVariationCommand($command)
             );
         }
 
@@ -206,5 +214,55 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
                 )
             ]
         );
+    }
+
+    /**
+     * Return a command prompting the frontend to reset the variation
+     *
+     * @param Cmd $command
+     *
+     * @return ResetVariationCmd
+     */
+    private function createResetVariationCommand(Cmd $command): ResetVariationCmd
+    {
+        return ResetVariationCmd::create(
+            $command->getArrayCopy()
+        );
+    }
+
+    /**
+     * Whether the changes require confirmation
+     *
+     * @param Application $application
+     * @param Cmd $command
+     *
+     * @return bool
+     */
+    private function changeRequiresConfirmation(Application $application, Cmd $command): bool
+    {
+        // no confirmation required for internal users
+        if ($this->isInternalUser()) {
+            return false;
+        }
+
+        // no confirmation required for psv changes
+        if ($application->getVehicleType() == RefData::APP_VEHICLE_TYPE_PSV) {
+            return false;
+        }
+
+        // determine if the licence type or vehicle type of the variation has already been changed from the
+        // corresponding values in the licence prior to this attempt
+        $licence = $application->getLicence();
+        $existingLicenceType = $licence->getLicenceType();
+        $existingVehicleType = $licence->getVehicleType();
+
+        $variationLicenceType = $application->getLicenceType();
+        $variationVehicleType = $application->getVehicleType();
+
+        if (($existingLicenceType == $variationLicenceType) && ($existingVehicleType == $variationVehicleType)) {
+            return false;
+        }
+
+        return true;
     }
 }

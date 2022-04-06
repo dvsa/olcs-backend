@@ -11,6 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\ApplicationResetTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
@@ -29,6 +30,8 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 final class ResetApplication extends AbstractCommandHandler implements TransactionedInterface
 {
+    use ApplicationResetTrait;
+
     /**
      * @var LicenceRepo
      */
@@ -86,35 +89,11 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
         $data = $command->getArrayCopy();
         $data['organisation'] = $organisation->getId();
         $data['appliedVia'] = $appliedVia->getId();
-
-        if ($receivedDate !== null) {
-            if ($receivedDate instanceof \DateTime) {
-                $receivedDate = $receivedDate->format('Y-m-d');
-            }
-
-            $data['receivedDate'] = $receivedDate;
-        }
+        $data['receivedDate'] = $this->processReceivedDate($receivedDate);
 
         return $this->handleSideEffect(
             CreateApplicationCommand::create($data)
         );
-    }
-
-    private function closeTasks(Application $application)
-    {
-        $count = 0;
-
-        /** @var Task $task */
-        foreach ($application->getTasks() as $task) {
-            if ($task->getIsClosed() === 'N') {
-                $count++;
-                $task->setIsClosed('Y');
-            }
-        }
-
-        $this->getRepo()->save($application);
-
-        return $count;
     }
 
     private function validate(Cmd $command, Application $application)
