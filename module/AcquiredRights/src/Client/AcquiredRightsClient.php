@@ -1,0 +1,73 @@
+<?php
+
+namespace Dvsa\Olcs\AcquiredRights\Client;
+
+use Dvsa\Olcs\AcquiredRights\Exception\MapperParseException;
+use Dvsa\Olcs\AcquiredRights\Exception\ReferenceNotFoundException;
+use Dvsa\Olcs\AcquiredRights\Exception\ServiceException;
+use Dvsa\Olcs\AcquiredRights\Client\Mapper\ApplicationReferenceMapper;
+use Dvsa\Olcs\AcquiredRights\Model\ApplicationReference;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
+use \InvalidArgumentException;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
+use Ramsey\Uuid\Uuid;
+
+class AcquiredRightsClient
+{
+    protected const URI_BY_REFERENCE_PATTERN = '/ref-vol-lookup/%s';
+
+    protected Client $httpClient;
+
+    public function __construct(Client $httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
+
+    /**
+     * @param string $reference
+     * @return ApplicationReference
+     * @throws ReferenceNotFoundException
+     * @throws ServiceException
+     * @throws MapperParseException
+     */
+    public function fetchByReference(string $reference): ApplicationReference
+    {
+        try {
+            $response = $this->httpClient->get($this->generateUri($reference));
+            $data = json_decode($response->getBody(), true);
+            return ApplicationReferenceMapper::createFromResponseArray($data);
+        } catch (ClientException $clientException) {
+            if ($clientException->getCode() === 404) {
+                throw new ReferenceNotFoundException();
+            }
+            throw $clientException;
+        } catch (ConnectException|RequestException $exception) {
+            throw new ServiceException(
+                'There was an error when communicating with the Acquired Rights API',
+                0,
+                $exception
+            );
+        } catch (InvalidArgumentException $invalidArgumentException) {
+            throw new ServiceException(
+                'There was an error when JSON decoding the response from Acquired Rights API',
+                0,
+                $invalidArgumentException
+            );
+        } catch (MapperParseException $mapperParseException) {
+            throw new MapperParseException(
+                'There was an error mapping the response to ApplicationReferenceModel',
+                0,
+                $mapperParseException
+            );
+        }
+    }
+
+    protected function generateUri(string $reference): UriInterface
+    {
+        return new Uri(sprintf(static::URI_BY_REFERENCE_PATTERN, $reference));
+    }
+}

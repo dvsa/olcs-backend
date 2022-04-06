@@ -6,6 +6,7 @@
     </include>
     <exclude>
       <file>../module/Olcs/Db/Module.php</file>
+      <file>../module/AcquiredRights/src/Module.php</file>
       <file>../module/Api/src/Module.php</file>
       <file>../module/Cli/src/Module.php</file>
       <file>../module/AwsSdk/src/Module.php</file>
@@ -25,6 +26,7 @@
       <directory>../module/Snapshot/config</directory>
       <directory>../module/Address/config</directory>
       <directory>../module/Olcs/Db/config</directory>
+      <directory>../module/AcquiredRights/config</directory>
       <directory>../module/Api/config</directory>
       <directory>../module/Olcs/Db/src/Service/CHXmlGateway</directory>
       <directory>../module/Queue/config</directory>

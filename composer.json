@@ -87,6 +87,7 @@
         ],
         "psr-4": {
             "Olcs\\Db\\": "module/Olcs/Db/src",
+            "Dvsa\\Olcs\\AcquiredRights\\": "module/AcquiredRights/src",
             "Dvsa\\Olcs\\Api\\": "module/Api/src",
             "Dvsa\\Olcs\\DocumentShare\\": "module/DocumentShare/src",
             "Dvsa\\Olcs\\Cli\\": "module/Cli/src",
