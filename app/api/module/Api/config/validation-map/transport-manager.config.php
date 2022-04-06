@@ -38,6 +38,7 @@ return [
     CommandHandler\TransportManagerApplication\UpdateStatus::class  => Misc\CanAccessTmaWithId::class,
     CommandHandler\TransportManagerApplication\Submit::class        => Misc\CanAccessTmaWithId::class,
     CommandHandler\TransportManagerApplication\UpdateDetails::class => Misc\CanAccessTmaWithId::class,
+    CommandHandler\TransportManagerApplication\UpdateDetailsFactory::class => Misc\CanAccessTmaWithId::class,
     CommandHandler\Variation\TransportManagerDeleteDelta::class     => Misc\CanAccessApplicationWithId::class,
 
     CommandHandler\Tm\CreateNewUser::class                          => Misc\CanAccessApplicationWithApplication::class,

@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
+use Dvsa\Olcs\AcquiredRights\Model\ApplicationReference;
+use Dvsa\Olcs\AcquiredRights\Service\AcquiredRightsService;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TmQualification as TmQualificationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
@@ -32,9 +34,13 @@ class UpdateDetailsTest extends CommandHandlerTestCase
     /** @var  CommandHandler\TransportManagerApplication\UpdateDetails */
     protected $sut;
 
+    /** @var AcquiredRightsService|m\Mock */
+    protected $acquiredRightsServiceMock;
+
     public function setUp(): void
     {
-        $this->sut = new CommandHandler\TransportManagerApplication\UpdateDetails();
+        $this->acquiredRightsServiceMock = m::mock(AcquiredRightsService::class)->shouldIgnoreMissing();
+        $this->sut = new CommandHandler\TransportManagerApplication\UpdateDetails($this->acquiredRightsServiceMock);
         $this->mockRepo('TransportManagerApplication', TransportManagerApplicationRepo::class);
         $this->mockRepo('ContactDetails', ContactDetailsRepo::class);
         $this->mockRepo('TmQualification', TmQualificationRepo::class);
@@ -387,6 +393,114 @@ class UpdateDetailsTest extends CommandHandlerTestCase
         $commandData = [
             'id' => 863,
             'version' => 234,
+            'dob' => '01 Aug 1990',
+            'lgvAcquiredRightsReferenceNumber' => 'ABC1234',
+            'homeAddress' => [
+                'addressLine1' => 'LINE_1',
+                'addressLine2' => 'LINE_2',
+                'addressLine3' => 'LINE_3',
+                'addressLine4' => 'LINE_4',
+                'town' => 'TOWN',
+                'postcode' => 'POSTCODE',
+                'countryCode' => Country::ID_UNITED_KINGDOM,
+            ],
+            'workAddress' => [
+                'addressLine1' => 'W_LINE_1',
+                'addressLine2' => 'W_LINE_2',
+                'addressLine3' => 'W_LINE_3',
+                'addressLine4' => 'W_LINE_4',
+                'town' => 'W_TOWN',
+                'postcode' => 'W_POSTCODE',
+                'countryCode' => Country::ID_GERMANY,
+            ],
+            'submit' => 'N',
+        ];
+
+        $command = Command::create($commandData);
+
+        $tm = m::mock(TransportManager::class)->makePartial();
+        $tm->shouldReceive('hasLgvAcquiredRightsQualification')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->shouldReceive('isNi')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($isNi);
+
+        $tma = new TransportManagerApplication();
+        $tma->setId(863);
+        $tma->setTransportManager($tm);
+        $tma->getTransportManager()->setHomeCd(
+            new ContactDetails(
+                m::mock(RefData::class)
+            )
+        );
+        $tma->getTransportManager()->getHomeCd()->setPerson(new Person());
+        $tma->setApplication($application);
+
+        $statusUpdateOn = new \DateTimeImmutable();
+
+        $this->repoMap['TmQualification']
+            ->shouldReceive('save')
+            ->withArgs(function ($tmQualification) use ($tm, $expectedQualificationType, $statusUpdateOn) {
+                $this->assertSame(
+                    $tm,
+                    $tmQualification->getTransportManager()
+                );
+                $this->assertSame(
+                    $this->references[Country::class][Country::ID_UNITED_KINGDOM],
+                    $tmQualification->getCountryCode()
+                );
+                $this->assertSame(
+                    $this->refData[$expectedQualificationType],
+                    $tmQualification->getQualificationType()
+                );
+                $this->assertEquals(
+                    $statusUpdateOn,
+                    $tmQualification->getIssuedDate()
+                );
+                $this->assertEquals('ABC1234', $tmQualification->getSerialNo());
+                return true;
+            })
+            ->once();
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)
+            ->andReturn($tma);
+
+        $this->repoMap['Address']->shouldReceive('save')->once();
+        $this->repoMap['ContactDetails']->shouldReceive('save')->once();
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
+
+        $this->acquiredRightsServiceMock->shouldReceive('isCheckEnabled')->once()->andReturn(true);
+        $this->acquiredRightsServiceMock->shouldReceive('verifyAcquiredRightsByReference')->andReturn(new ApplicationReference(
+            '6fcf9551-ade4-4b48-b078-6db59559a182',
+            'ABC1234',
+            ApplicationReference::APPLICATION_STATUS_SUBMITTED,
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable(),
+            $statusUpdateOn,
+        ));
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Transport Manager Application ID 863 updated'], $result->getMessages());
+    }
+
+    /**
+     * @dataProvider dpHandleCommandWithLgvAcquiredRightsReferenceNumber
+     */
+    public function testHandleCommandWithLgvAcquiredRightsReferenceNumberWithCheckDisabled($isNi, $expectedQualificationType)
+    {
+        $commandData = [
+            'id' => 863,
+            'version' => 234,
+            'dob' => '01 Aug 1990',
             'lgvAcquiredRightsReferenceNumber' => 'ABC1234',
             'homeAddress' => [
                 'addressLine1' => 'LINE_1',
@@ -449,6 +563,7 @@ class UpdateDetailsTest extends CommandHandlerTestCase
                     $this->refData[$expectedQualificationType],
                     $tmQualification->getQualificationType()
                 );
+                $this->assertNull($tmQualification->getIssuedDate());
                 $this->assertEquals('ABC1234', $tmQualification->getSerialNo());
                 return true;
             })
@@ -463,6 +578,111 @@ class UpdateDetailsTest extends CommandHandlerTestCase
         $this->repoMap['ContactDetails']->shouldReceive('save')->once();
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
+
+        $this->acquiredRightsServiceMock->shouldReceive('isCheckEnabled')->andReturn(false);
+        $this->acquiredRightsServiceMock->shouldNotReceive('verifyAcquiredRightsByReference');
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Transport Manager Application ID 863 updated'], $result->getMessages());
+    }
+
+    /**
+     * @dataProvider dpHandleCommandWithLgvAcquiredRightsReferenceNumber
+     */
+    public function testHandleCommandWithLgvAcquiredRightsReferenceNumberWithMissingStatusUpdateOn($isNi, $expectedQualificationType)
+    {
+        $commandData = [
+            'id' => 863,
+            'version' => 234,
+            'dob' => '01 Aug 1990',
+            'lgvAcquiredRightsReferenceNumber' => 'ABC1234',
+            'homeAddress' => [
+                'addressLine1' => 'LINE_1',
+                'addressLine2' => 'LINE_2',
+                'addressLine3' => 'LINE_3',
+                'addressLine4' => 'LINE_4',
+                'town' => 'TOWN',
+                'postcode' => 'POSTCODE',
+                'countryCode' => Country::ID_UNITED_KINGDOM,
+            ],
+            'workAddress' => [
+                'addressLine1' => 'W_LINE_1',
+                'addressLine2' => 'W_LINE_2',
+                'addressLine3' => 'W_LINE_3',
+                'addressLine4' => 'W_LINE_4',
+                'town' => 'W_TOWN',
+                'postcode' => 'W_POSTCODE',
+                'countryCode' => Country::ID_GERMANY,
+            ],
+            'submit' => 'N',
+        ];
+
+        $command = Command::create($commandData);
+
+        $tm = m::mock(TransportManager::class)->makePartial();
+        $tm->shouldReceive('hasLgvAcquiredRightsQualification')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->shouldReceive('isNi')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($isNi);
+
+        $tma = new TransportManagerApplication();
+        $tma->setId(863);
+        $tma->setTransportManager($tm);
+        $tma->getTransportManager()->setHomeCd(
+            new ContactDetails(
+                m::mock(RefData::class)
+            )
+        );
+        $tma->getTransportManager()->getHomeCd()->setPerson(new Person());
+        $tma->setApplication($application);
+
+        $this->repoMap['TmQualification']
+            ->shouldReceive('save')
+            ->withArgs(function ($tmQualification) use ($tm, $expectedQualificationType) {
+                $this->assertSame(
+                    $tm,
+                    $tmQualification->getTransportManager()
+                );
+                $this->assertSame(
+                    $this->references[Country::class][Country::ID_UNITED_KINGDOM],
+                    $tmQualification->getCountryCode()
+                );
+                $this->assertSame(
+                    $this->refData[$expectedQualificationType],
+                    $tmQualification->getQualificationType()
+                );
+                $this->assertNull($tmQualification->getIssuedDate());
+                $this->assertEquals('ABC1234', $tmQualification->getSerialNo());
+                return true;
+            })
+            ->once();
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)
+            ->andReturn($tma);
+
+        $this->repoMap['Address']->shouldReceive('save')->once();
+        $this->repoMap['ContactDetails']->shouldReceive('save')->once();
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
+
+        $this->acquiredRightsServiceMock->shouldReceive('isCheckEnabled')->andReturn(false);
+        $this->acquiredRightsServiceMock->shouldReceive('verifyAcquiredRightsByReference')->andReturn(new ApplicationReference(
+            '6fcf9551-ade4-4b48-b078-6db59559a182',
+            'ABC1234',
+            ApplicationReference::APPLICATION_STATUS_SUBMITTED,
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable(),
+            null,
+        ));
 
         $result = $this->sut->handleCommand($command);
 
