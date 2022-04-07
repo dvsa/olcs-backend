@@ -48,7 +48,11 @@ class AcquiredRightsClient
             if ($clientException->getCode() === 404) {
                 throw new ReferenceNotFoundException();
             }
-            throw $clientException;
+            throw new ServiceException(
+                'There was a client exception when communicating with the Acquired Rights API',
+                0,
+                $clientException
+            );
         } catch (ConnectException|RequestException $exception) {
             throw new ServiceException(
                 'There was an error when communicating with the Acquired Rights API',
