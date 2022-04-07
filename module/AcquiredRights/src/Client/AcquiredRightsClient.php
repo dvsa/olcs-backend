@@ -18,7 +18,11 @@ use Ramsey\Uuid\Uuid;
 
 class AcquiredRightsClient
 {
-    protected const URI_BY_REFERENCE_PATTERN = '/ref-vol-lookup/%s';
+    /**
+     * Important:
+     * If the base_uri contains a resource (domain.com/ci/ for example) must not prefix this variable with a /.
+     */
+    protected const URI_BY_REFERENCE_PATTERN = 'ref-vol-lookup/%s';
 
     protected Client $httpClient;
 
