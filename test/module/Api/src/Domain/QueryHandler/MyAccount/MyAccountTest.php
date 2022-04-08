@@ -1,8 +1,7 @@
 <?php
 
-/**
- * MyAccount Test
- */
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
@@ -19,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount\MyAccount;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
 /**
- * MyAccount Test
+ * @see MyAccount
  */
 class MyAccountTest extends QueryHandlerTestCase
 {
@@ -40,7 +39,7 @@ class MyAccountTest extends QueryHandlerTestCase
     /**
      * @dataProvider dpUserIdProvider
      */
-    public function testHandleQueryFromCache($userId, $searchUserId)
+    public function testHandleQueryFromCache($userId, $searchUserId): void
     {
         $cacheResult = ['result'];
 
@@ -67,7 +66,7 @@ class MyAccountTest extends QueryHandlerTestCase
         );
     }
 
-    public function dpUserIdProvider()
+    public function dpUserIdProvider(): array
     {
         return [
             [999, 999],
@@ -78,7 +77,7 @@ class MyAccountTest extends QueryHandlerTestCase
     /**
      * @dataProvider dpHandleQuery
      */
-    public function testHandleQuery($isSelfservePromptEnabled, $isEligibleForPermits, $expectedEligibleForPrompt)
+    public function testHandleQuery($isSelfservePromptEnabled, $isEligibleForPermits, $expectedEligibleForPrompt): void
     {
         $userId = 1;
 
@@ -131,7 +130,7 @@ class MyAccountTest extends QueryHandlerTestCase
         );
     }
 
-    public function testHandleQueryInternal()
+    public function testHandleQueryInternal(): void
     {
         $userId = 1;
         $canAccessAll = true;
@@ -207,7 +206,7 @@ class MyAccountTest extends QueryHandlerTestCase
         );
     }
 
-    public function dpHandleQuery()
+    public function dpHandleQuery(): array
     {
         return [
             [
@@ -228,7 +227,7 @@ class MyAccountTest extends QueryHandlerTestCase
         ];
     }
 
-    public function testHandleQueryAnon()
+    public function testHandleQueryAnon(): void
     {
         $userId = User::USER_TYPE_ANON;
 
@@ -273,7 +272,7 @@ class MyAccountTest extends QueryHandlerTestCase
         );
     }
 
-    public function testHandleQueryThrowsNotFoundException()
+    public function testHandleQueryThrowsNotFoundException(): void
     {
         $this->expectException(NotFoundException::class);
 

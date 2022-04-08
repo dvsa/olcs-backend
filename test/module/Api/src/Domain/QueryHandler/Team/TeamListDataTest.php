@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Team as TeamRepo;
 use Mockery as m;
 
 /**
- * Team List Data Test
+ * @see QueryHandler
  */
 class TeamListDataTest extends QueryHandlerTestCase
 {

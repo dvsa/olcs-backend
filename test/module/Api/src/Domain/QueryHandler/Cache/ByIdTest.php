@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cache;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -15,7 +17,7 @@ use ZfcRbac\Service\AuthorizationService;
 /**
  * Tests the cache handler calls the correct query (uses the translation key query as an example)
  *
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ * @see Handler
  */
 class ByIdTest extends QueryHandlerTestCase
 {
@@ -37,7 +39,7 @@ class ByIdTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function testHandleQuery(): void
     {
         $cacheId = CacheEncryption::TRANSLATION_KEY_IDENTIFIER;
         $uniqueId = 'uniqueId';
@@ -73,7 +75,7 @@ class ByIdTest extends QueryHandlerTestCase
         $this->assertEquals($cacheValue, $this->sut->handleQuery($query));
     }
 
-    public function testHandleQueryCacheExists()
+    public function testHandleQueryCacheExists(): void
     {
         $cacheId = CacheEncryption::TRANSLATION_KEY_IDENTIFIER;
         $uniqueId = 'uniqueId';
@@ -98,7 +100,7 @@ class ByIdTest extends QueryHandlerTestCase
         $this->assertEquals($cacheValue, $this->sut->handleQuery($query));
     }
 
-    public function testHandleQueryNoPermission()
+    public function testHandleQueryNoPermission(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage(Handler::MSG_PERMISSION_ERROR);

@@ -1,10 +1,7 @@
 <?php
 
-/**
- * Team List Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Team;
 
 use Dvsa\Olcs\Api\Domain\Query\Team\TeamListByTrafficArea;
@@ -17,9 +14,7 @@ use Mockery as m;
 use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
- * Team List Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @see QueryHandler
  */
 class TeamListTest extends QueryHandlerTestCase
 {
@@ -31,7 +26,7 @@ class TeamListTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function testHandleQuery(): void
     {
         $query = Query::create(['id' => 1]);
 
