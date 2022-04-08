@@ -105,4 +105,26 @@ class TeamEntityTest extends EntityTester
             'NI User' => [true, TrafficArea::NI_TA_IDS],
         ];
     }
+
+    /**
+     * @dataProvider dpTestIsIrfo
+     */
+    public function testisIrfo($isIrfo, $teamId): void
+    {
+        $excludedTeams = [112];
+
+        $entity = new Entity();
+        $entity->setId($teamId);
+
+        $this->assertEquals($isIrfo, $entity->getIsIrfo($excludedTeams));
+    }
+
+    public function dpTestIsIrfo(): array
+    {
+        return [
+            'Not IRFO' => [false, 100],
+            'IRFO' => [true, 1004],
+            'Not Irfo, but in excluded' => [true, 112]
+        ];
+    }
 }
