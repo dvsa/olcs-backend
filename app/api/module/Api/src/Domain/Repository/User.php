@@ -17,11 +17,6 @@ use Dvsa\Olcs\Api\Entity\User\User as Entity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-/**
- * User
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class User extends AbstractRepository
 {
     const USERNAME_GEN_TRY_COUNT = 100;

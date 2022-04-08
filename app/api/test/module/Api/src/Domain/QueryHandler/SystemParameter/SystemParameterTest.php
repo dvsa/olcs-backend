@@ -13,6 +13,9 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Mockery as m;
 
+/**
+ * @see QueryHandler
+ */
 class SystemParameterTest extends QueryHandlerTestCase
 {
     public function setUp(): void

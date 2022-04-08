@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\SystemParameter;
 
+use Dvsa\Olcs\Api\Domain\CommandHandler\SystemParameter\Update;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as Repo;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter as Entity;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\SystemParameter\UpdateSystemParameter as Cmd;
 use Mockery as m;
 
+/**
+ * @see Update
+ */
 class UpdateTest extends CommandHandlerTestCase
 {
     public function setUp(): void
     {
-        $this->sut = new \Dvsa\Olcs\Api\Domain\CommandHandler\SystemParameter\Update();
-        $this->mockRepo('SystemParameter', \Dvsa\Olcs\Api\Domain\Repository\SystemParameter::class);
+        $this->sut = new Update();
+        $this->mockRepo('SystemParameter', Repo::class);
         $this->mockedSmServices[CacheEncryption::class] = m::mock(CacheEncryption::class);
 
         parent::setUp();
@@ -29,7 +35,7 @@ class UpdateTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
-        $systemParameter = new \Dvsa\Olcs\Api\Entity\System\SystemParameter();
+        $systemParameter = new Entity();
         $this->repoMap['SystemParameter']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($systemParameter);
 

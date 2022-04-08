@@ -1,22 +1,16 @@
 <?php
 
-/**
- * Team repo test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
+declare (strict_types = 1);
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Query\Team\TeamListByTrafficArea;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Team as TeamRepo;
 
 /**
- * Team repo test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @see TeamRepo
  */
 class TeamTest extends RepositoryTestCase
 {
@@ -25,7 +19,23 @@ class TeamTest extends RepositoryTestCase
         $this->setUpSut(TeamRepo::class);
     }
 
-    public function testFetchByName()
+    public function testApplyTrafficAreaListFilterApplied(): void
+    {
+        $this->setUpSut(TeamRepo::class, true);
+        $trafficAreas = ['A', 'B'];
+        $queryData = ['trafficAreas' => $trafficAreas];
+        $query = TeamListByTrafficArea::create($queryData);
+
+        $expression = 'expr';
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $queryBuilder->expects('expr->in')->with('m.trafficArea', ':byTrafficAreas')->andReturn($expression);
+        $queryBuilder->expects('setParameter')->with('byTrafficAreas', $trafficAreas);
+        $queryBuilder->expects('andWhere')->with($expression)->andReturnSelf();
+
+        $this->sut->applyListFilters($queryBuilder, $query);
+    }
+
+    public function testFetchByName(): void
     {
         $name = 'foo';
 
@@ -46,7 +56,7 @@ class TeamTest extends RepositoryTestCase
         $this->assertSame(['result'], $this->sut->fetchByName($name));
     }
 
-    public function testFetchWithPrinters()
+    public function testFetchWithPrinters(): void
     {
         $id = 1;
 
