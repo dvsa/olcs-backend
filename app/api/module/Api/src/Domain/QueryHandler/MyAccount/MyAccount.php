@@ -74,6 +74,7 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
                 'canAccessGb' => $team->canAccessGbData($teamsExcluded),
                 'canAccessNi' => $team->canAccessNiData($teamsExcluded),
                 'trafficAreas' => $team->getAllowedTrafficAreas($teamsExcluded),
+                'isIrfo' => $team->getIsIrfo($teamsExcluded),
             ];
         } elseif ($userId !== User::USER_TYPE_ANON) {
             $isEligibleForPermits = $user->isEligibleForPermits();
