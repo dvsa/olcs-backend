@@ -2,9 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
+use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepoService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -124,6 +126,23 @@ trait AuthAwareTrait
     public function getUser()
     {
         return $this->authService->getIdentity()->getUser();
+    }
+
+    /**
+     * gets a copy of the user account data - majority of the time this will come straight from the myaccount cache
+     * if the cache doesn't exist we'll have a query handler result instead that will need to be serialized
+     *
+     * @return array
+     */
+    public function getUserData(): array
+    {
+        $accountInfo = $this->getQueryHandler()->handleQuery(MyAccount::create([]));
+
+        if ($accountInfo instanceof Result) {
+            return $accountInfo->serialize();
+        }
+
+        return $accountInfo;
     }
 
     /**

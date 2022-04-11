@@ -1,12 +1,11 @@
 <?php
 
-/**
- * Team List Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Team;
 
+use Dvsa\Olcs\Api\Domain\Query\Team\TeamListByTrafficArea;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Team\TeamList as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Team\TeamList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -15,9 +14,7 @@ use Mockery as m;
 use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
- * Team List Test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @see QueryHandler
  */
 class TeamListTest extends QueryHandlerTestCase
 {
@@ -29,9 +26,17 @@ class TeamListTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function testHandleQuery(): void
     {
         $query = Query::create(['id' => 1]);
+
+        $userData = [
+            'dataAccess' => [
+                'canAccessAll' => true,
+            ],
+        ];
+
+        $this->expectedUserDataCacheCall($userData);
 
         $mockTeam = m::mock();
         $mockTeam->shouldReceive('serialize')->once()->andReturn('foo');
@@ -54,5 +59,37 @@ class TeamListTest extends QueryHandlerTestCase
             ],
             $this->sut->handleQuery($query)
         );
+    }
+
+    public function testRedirectWhenNotFullAccess(): void
+    {
+        $trafficAreas = ['B','C'];
+
+        $initialQueryData = [
+            'sort' => 'id',
+            'order' => 'ASC',
+            'sortWhitelist' => [],
+        ];
+
+        $teamByTaQueryData = [
+            'sort' => 'id',
+            'order' => 'ASC',
+            'sortWhitelist' => [],
+            'trafficAreas' => $trafficAreas,
+        ];
+
+        $query = Query::create($initialQueryData);
+
+        $userData = [
+            'dataAccess' => [
+                'canAccessAll' => false,
+                'trafficAreas' => $trafficAreas,
+            ],
+        ];
+
+        $queryResult = new Result();
+        $this->expectedUserDataCacheCall($userData);
+        $this->expectedQuery(TeamListByTrafficArea::class, $teamByTaQueryData, $queryResult);
+        $this->assertSame($queryResult, $this->sut->handleQuery($query));
     }
 }

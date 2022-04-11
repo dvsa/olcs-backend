@@ -17,11 +17,6 @@ use Dvsa\Olcs\Api\Entity\User\User as Entity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-/**
- * User
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class User extends AbstractRepository
 {
     const USERNAME_GEN_TRY_COUNT = 100;
@@ -116,6 +111,12 @@ class User extends AbstractRepository
         if (method_exists($query, 'getTeam') && !empty($query->getTeam())) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.team', ':team'))
                 ->setParameter('team', (int)$query->getTeam());
+        }
+
+        // filter users by traffic area (this is for internal users and based on their team traffic area)
+        if (method_exists($query, 'getTrafficAreas')) {
+            $qb->andWhere($qb->expr()->in('t.trafficArea', ':trafficAreas'))
+                ->setParameter('trafficAreas', $query->getTrafficAreas());
         }
 
         if (method_exists($query, 'getIsInternal') && $query->getIsInternal() == true) {

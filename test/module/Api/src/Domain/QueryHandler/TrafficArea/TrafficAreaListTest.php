@@ -7,6 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TrafficArea;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Transfer\Query\TrafficArea\TrafficAreaInternalList;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\TrafficArea\TrafficAreaList as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as Repo;
@@ -33,6 +35,9 @@ class TrafficAreaListTest extends QueryHandlerTestCase
     {
         $query = Query::create(['QUERY']);
 
+        $userData = ['isInternal' => false];
+        $this->expectedUserDataCacheCall($userData);
+
         $trafficArea = m::mock(TrafficAreaEntity::class);
         $trafficArea->shouldReceive('serialize')->once()->andReturn('SERIALIZED');
 
@@ -44,5 +49,22 @@ class TrafficAreaListTest extends QueryHandlerTestCase
 
         $this->assertSame(['SERIALIZED'], $result['result']);
         $this->assertSame('COUNT', $result['count']);
+    }
+
+    public function testRedirectForInternalUser()
+    {
+        $query = Query::create([]);
+        $trafficAreas = ['B','C'];
+        $userData = [
+            'isInternal' => true,
+            'dataAccess' => [
+                'trafficAreas' => $trafficAreas
+            ]
+        ];
+
+        $queryResult = new Result();
+        $this->expectedUserDataCacheCall($userData);
+        $this->expectedQuery(TrafficAreaInternalList::class, ['trafficAreas' => $trafficAreas], $queryResult);
+        $this->assertSame($queryResult, $this->sut->handleQuery($query));
     }
 }

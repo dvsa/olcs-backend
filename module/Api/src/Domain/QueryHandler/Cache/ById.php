@@ -27,9 +27,12 @@ class ById extends AbstractQueryHandler implements CacheAwareInterface
     private $map = [
         CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER => Cache\Replacements::class,
         CacheEncryption::TRANSLATION_KEY_IDENTIFIER => Cache\TranslationKey::class,
+        CacheEncryption::SYS_PARAM_IDENTIFIER => Cache\Single::class,
+        CacheEncryption::SYS_PARAM_LIST_IDENTIFIER => Cache\RecordList::class,
     ];
 
     private $anonAllowedMap = [
+        CacheEncryption::SYS_PARAM_IDENTIFIER,
         CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER,
         CacheEncryption::TRANSLATION_KEY_IDENTIFIER,
     ];
@@ -60,6 +63,10 @@ class ById extends AbstractQueryHandler implements CacheAwareInterface
         }
 
         $uniqueId = $query->getUniqueId();
+
+        if ($this->cacheService->hasCustomItem($cacheId, $uniqueId)) {
+            return $this->cacheService->getCustomItem($cacheId, $uniqueId);
+        }
 
         $queryDto = $this->map[$cacheId];
         $childQuery = $queryDto::create($query->getArrayCopy());

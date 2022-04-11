@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\EntityManager;
+use Dvsa\Olcs\Api\Domain\Query\User\UserListInternalByTrafficArea;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -16,8 +19,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
- * @covers \Dvsa\Olcs\Api\Domain\Repository\User
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @see Repo
  */
 class UserTest extends RepositoryTestCase
 {
@@ -40,7 +42,7 @@ class UserTest extends RepositoryTestCase
         $this->sut->initService($sm);
     }
 
-    public function testBuildDefaultQuery()
+    public function testBuildDefaultQuery(): void
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
 
@@ -61,7 +63,7 @@ class UserTest extends RepositoryTestCase
     /**
      * Had to mock SUT as the fetchList method uses Paginator which has proving time consuming to mock
      */
-    public function testApplyListFilters()
+    public function testApplyListFilters(): void
     {
         $sut = m::mock(Repo::class);
 
@@ -99,7 +101,7 @@ class UserTest extends RepositoryTestCase
     /**
      * Had to mock SUT as the fetchList method uses Paginator which has proving time consuming to mock
      */
-    public function testApplyListFiltersUserList()
+    public function testApplyListFiltersUserList(): void
     {
         $sut = m::mock(Repo::class);
 
@@ -136,13 +138,16 @@ class UserTest extends RepositoryTestCase
         $sut->applyListFilters($mockQb, $query);
     }
 
-    public function testApplyListFiltersUserListExcludeLimitedReadOnly()
+    public function testApplyListFiltersUserListExcludeLimitedReadOnly(): void
     {
         $sut = m::mock(Repo::class);
 
         $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
-        $query = \Dvsa\Olcs\Transfer\Query\User\UserListInternal::create(
+        $trafficAreas = ['A', 'B'];
+
+        $query = UserListInternalByTrafficArea::create(
             [
+                'trafficAreas' => $trafficAreas,
                 'team' => 112,
                 'isInternal' => true,
                 'excludeLimitedReadOnly' => true
@@ -159,6 +164,13 @@ class UserTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->neq')->with('u.id', ':systemUser')->once()->andReturn('systemUser');
         $mockQb->shouldReceive('andWhere')->with('systemUser')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('systemUser', IdentityProviderInterface::SYSTEM_USER)->once();
+
+        $trafficAreaExpr = 'trafficAreaExpr';
+        $mockQb->expects('expr->in')
+            ->with('t.trafficArea', ':trafficAreas')
+            ->andReturn($trafficAreaExpr);
+        $mockQb->expects('andWhere')->with($trafficAreaExpr)->andReturnSelf();
+        $mockQb->expects('setParameter')->with('trafficAreas', $trafficAreas);
 
         $em = m::mock(EntityManager::class);
         $mockQb->shouldReceive('getEntityManager')->andReturn($em);
@@ -177,7 +189,7 @@ class UserTest extends RepositoryTestCase
     /**
      * Had to mock SUT as the fetchList method uses Paginator which has proving time consuming to mock
      */
-    public function testBuildDefaultListQuery()
+    public function testBuildDefaultListQuery(): void
     {
         $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -196,7 +208,7 @@ class UserTest extends RepositoryTestCase
         $sut->buildDefaultListQuery($mockQb, $mockQi);
     }
 
-    public function testFetchForTma()
+    public function testFetchForTma(): void
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
 
@@ -214,7 +226,7 @@ class UserTest extends RepositoryTestCase
         $this->assertSame('RESULT', $this->sut->fetchForTma(1));
     }
 
-    public function testFetchByPid()
+    public function testFetchByPid(): void
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
 
@@ -237,7 +249,7 @@ class UserTest extends RepositoryTestCase
         $this->assertSame('RESULT', $this->sut->fetchByPid('123456'));
     }
 
-    public function testPopulateRefDataReference()
+    public function testPopulateRefDataReference(): void
     {
         $teamId = 1;
         $transportManagerId = 2;
@@ -297,7 +309,7 @@ class UserTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchForRemindUsername()
+    public function testFetchForRemindUsername(): void
     {
         $qb = $this->createMockQb('[QUERY]');
 
@@ -319,7 +331,7 @@ class UserTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testFetchUsersCountByTeam()
+    public function testFetchUsersCountByTeam(): void
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
@@ -333,7 +345,7 @@ class UserTest extends RepositoryTestCase
         $this->assertSame('result', $this->sut->fetchUsersCountByTeam(1));
     }
 
-    public function testFindUserNameAvailable()
+    public function testFindUserNameAvailable(): void
     {
         /** @var Repo | m\MockInterface $sut */
         $sut = m::mock(Repo::class)->makePartial();
@@ -351,7 +363,7 @@ class UserTest extends RepositoryTestCase
         static::assertEquals('unitLogin3', $actual);
     }
 
-    public function testFindUserNameCantGenerateSpecifiedTimes()
+    public function testFindUserNameCantGenerateSpecifiedTimes(): void
     {
         /** @var Repo | m\MockInterface $sut */
         $sut = m::mock(Repo::class)->makePartial();
@@ -366,7 +378,7 @@ class UserTest extends RepositoryTestCase
         static::assertNull($sut->findUserNameAvailable('unitLogin', null, 10));
     }
 
-    public function testFindUserNameCustomSfxGen()
+    public function testFindUserNameCustomSfxGen(): void
     {
         /** @var Repo | m\MockInterface $sut */
         $sut = m::mock(Repo::class)->makePartial();
@@ -388,7 +400,7 @@ class UserTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchByLoginId()
+    public function testFetchByLoginId(): void
     {
         $userName = 'unitUserName';
 
@@ -403,7 +415,7 @@ class UserTest extends RepositoryTestCase
         static::assertEquals('EXPECT', $actual);
     }
 
-    public function testFetchUsersCountByRole()
+    public function testFetchUsersCountByRole(): void
     {
         $qb = $this->createMockQb('QUERY');
         $qb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn('EXPECT');
