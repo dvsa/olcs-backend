@@ -9,9 +9,13 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
-use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
+use Dvsa\Olcs\Transfer\Query\Cache\ById as CacheByIdQry;
+use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -23,7 +27,6 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Repository\ValidateMockRepoTypeTrait;
-use Qandidate\Toggle\ToggleManager;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
 
 /**
@@ -76,6 +79,8 @@ class QueryHandlerTestCase extends MockeryTestCase
 
     /** @var array  */
     protected $commands = [];
+
+    protected array $sideEffectQueries = [];
 
     public function setUp(): void
     {
@@ -192,6 +197,7 @@ class QueryHandlerTestCase extends MockeryTestCase
     public function tearDown(): void
     {
         $this->assertCommandData();
+        $this->assertQueryData();
 
         parent::tearDown();
 
@@ -201,6 +207,7 @@ class QueryHandlerTestCase extends MockeryTestCase
             $this->repoManager,
             $this->repoMap,
             $this->commands,
+            $this->sideEffectQueries,
             $this->refData,
             $this->references,
             $this->categoryReferences,
@@ -272,6 +279,59 @@ class QueryHandlerTestCase extends MockeryTestCase
 
             $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');
         }
+    }
+
+    /**
+     * @NOTE must be called after the tested method has been executed
+     */
+    private function assertQueryData()
+    {
+        foreach ($this->sideEffectQueries as $query) {
+            /** @var QueryInterface $qry */
+            list($qry, $data) = $query;
+
+            $qryData = $qry->getArrayCopy();
+            $qryDataToMatch = [];
+
+            foreach ($data as $key => $value) {
+                //unset($value);
+                $qryDataToMatch[$key] = $qryData[$key] ?? null;
+            }
+
+            $this->assertEquals($data, $qryDataToMatch, get_class($qry) . ' has unexpected data');
+        }
+    }
+
+    public function expectedQuery($class, $data = [], $result = null, $times = 1)
+    {
+        if ($result === null) {
+            $result = new Result();
+        }
+
+        $this->queryHandler->expects('handleQuery')
+            ->times($times)
+            ->with(m::type($class))
+            ->andReturnUsing(
+                function ($query) use ($class, $data, $result) {
+                    $this->sideEffectQueries[] = [$query, $data];
+                    return $result;
+                }
+            );
+    }
+
+    public function expectedCacheCall($cacheId, $uniqueId = null, $result = null, $times = 1)
+    {
+        $data = [
+            'id' => $cacheId,
+            'uniqueId' => $uniqueId,
+        ];
+
+        $this->expectedQuery(CacheByIdQry::class, $data, $result, $times);
+    }
+
+    public function expectedUserDataCacheCall($result = null, $times = 1)
+    {
+        $this->expectedQuery(MyAccount::class, [], $result, $times);
     }
 
     /**

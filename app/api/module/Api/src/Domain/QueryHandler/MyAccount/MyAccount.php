@@ -4,9 +4,11 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SysParamRepo;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Olcs\Logging\Log\Logger;
@@ -40,7 +42,7 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
         $userId = $user->getId();
 
         if ($userId === null) {
-            $userId = 'anon';
+            $userId = User::USER_TYPE_ANON;
         }
 
         if ($this->cacheService->hasCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $userId)) {
@@ -48,9 +50,45 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
             return $this->cacheService->getCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $userId);
         }
 
-        /** @var SystemParameter $systemParameterRepo */
-        $systemParameterRepo = $this->getRepo('SystemParameter');
-        $isEligibleForPermits = $user->isEligibleForPermits();
+        $isEligibleForPermits = false;
+        $isEligibleForPrompt = false;
+        $hasActivePsv = false;
+        $hasSubmittedLicenceApplication = false;
+        $numVehicles = 0;
+
+        $dataAccess = [];
+        $isInternal = $user->isInternal();
+
+        if ($isInternal) {
+            $teamDataExclusionsParam = $this->getCacheById(
+                CacheEncryption::SYS_PARAM_IDENTIFIER,
+                SystemParameter::DATA_SEPARATION_TEAMS_EXEMPT
+            );
+
+            $teamsExcluded = explode(",", $teamDataExclusionsParam->getObject()->getParamValue());
+
+            $team = $user->getTeam();
+
+            $dataAccess = [
+                'canAccessAll' => $team->canAccessAllData($teamsExcluded),
+                'canAccessGb' => $team->canAccessGbData($teamsExcluded),
+                'canAccessNi' => $team->canAccessNiData($teamsExcluded),
+                'trafficAreas' => $team->getAllowedTrafficAreas($teamsExcluded),
+            ];
+        } elseif ($userId !== User::USER_TYPE_ANON) {
+            $isEligibleForPermits = $user->isEligibleForPermits();
+
+            if ($isEligibleForPermits) {
+                //for now we need to leave this, as selfserve users don't have access to system param query
+                $systemParameterRepo = $this->getRepo('SystemParameter');
+                assert($systemParameterRepo instanceof SysParamRepo);
+                $isEligibleForPrompt = $systemParameterRepo->isSelfservePromptEnabled();
+            }
+
+            $hasActivePsv = $user->hasActivePsvLicence();
+            $numVehicles = $user->getNumberOfVehicles();
+            $hasSubmittedLicenceApplication = $user->hasOrganisationSubmittedLicenceApplication();
+        }
 
         $result = $this->result(
             $user,
@@ -70,11 +108,13 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
                 'roles' => ['role']
             ],
             [
-                'hasActivePsvLicence' => $user->hasActivePsvLicence(),
-                'numberOfVehicles' => $user->getNumberOfVehicles(),
-                'hasOrganisationSubmittedLicenceApplication' => $user->hasOrganisationSubmittedLicenceApplication(),
+                'hasActivePsvLicence' => $hasActivePsv,
+                'numberOfVehicles' => $numVehicles,
+                'hasOrganisationSubmittedLicenceApplication' => $hasSubmittedLicenceApplication,
                 'eligibleForPermits' => $isEligibleForPermits,
-                'eligibleForPrompt' => $isEligibleForPermits && $systemParameterRepo->isSelfservePromptEnabled(),
+                'eligibleForPrompt' => $isEligibleForPrompt,
+                'dataAccess' => $dataAccess,
+                'isInternal' => $isInternal,
             ]
         );
 

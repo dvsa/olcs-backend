@@ -292,15 +292,18 @@ return [
     TransferQuery\User\PartnerList::class => QueryHandler\User\PartnerList::class,
     TransferQuery\User\User::class => QueryHandler\User\User::class,
     TransferQuery\User\UserList::class => QueryHandler\User\UserList::class,
+    Query\User\UserListByTrafficArea::class => QueryHandler\User\UserListByTrafficArea::class,
     TransferQuery\User\UserSelfserve::class => QueryHandler\User\UserSelfserve::class,
     TransferQuery\User\UserListSelfserve::class => QueryHandler\User\UserListSelfserve::class,
     TransferQuery\User\RoleList::class => QueryHandler\User\RoleList::class,
     TransferQuery\User\UserListInternal::class => QueryHandler\User\UserListInternal::class,
+    Query\User\UserListInternalByTrafficArea::class => QueryHandler\User\UserListInternalByTrafficArea::class,
 
     // User
     TransferQuery\Team\Team::class => QueryHandler\Team\Team::class,
     TransferQuery\Team\TeamList::class => QueryHandler\Team\TeamList::class,
     TransferQuery\Team\TeamListData::class => QueryHandler\Team\TeamListData::class,
+    Query\Team\TeamListByTrafficArea::class => QueryHandler\Team\TeamListByTrafficArea::class,
 
     // TeamPrinter
     TransferQuery\TeamPrinter\TeamPrinterExceptionsList::class =>
@@ -526,6 +529,7 @@ return [
     TransferQuery\ContactDetail\ContactDetailsList::class => QueryHandler\ContactDetail\ContactDetailsList::class,
     TransferQuery\ContactDetail\PhoneContact\Get::class => QueryHandler\ContactDetail\PhoneContact\Get::class,
     TransferQuery\ContactDetail\PhoneContact\GetList::class => QueryHandler\ContactDetail\PhoneContact\GetList::class,
+    TransferQuery\TrafficArea\TrafficAreaInternalList::class => QueryHandler\TrafficArea\TrafficAreaInternalList::class,
     TransferQuery\TrafficArea\TrafficAreaList::class => QueryHandler\TrafficArea\TrafficAreaList::class,
     TransferQuery\TrafficArea\Get::class => QueryHandler\TrafficArea\Get::class,
 
@@ -719,4 +723,6 @@ return [
     TransferQuery\Cache\ById::class => QueryHandler\Cache\ById::class,
     Query\Cache\Replacements::class => QueryHandler\Cache\Replacements::class,
     Query\Cache\TranslationKey::class => QueryHandler\Cache\TranslationKey::class,
+    Query\Cache\Single::class => QueryHandler\Cache\Single::class,
+    Query\Cache\RecordList::class => QueryHandler\Cache\RecordList::class,
 ];

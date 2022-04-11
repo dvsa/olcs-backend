@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
 /**
  * Team Entity
@@ -46,6 +47,77 @@ class Team extends AbstractTeam
         } else {
             $teamPrinter = new TeamPrinter($this, $newDefaultPrinter);
             $this->addTeamPrinters($teamPrinter);
+        }
+    }
+
+    /**
+     * Work out the traffic areas that the team is allowed to access - some teams are excluded based on a system param
+     * (works off param DATA_SEPARATION_TEAMS_EXEMPT)
+     *
+     * @param array $excludedTeams
+     *
+     * @return array
+     */
+    public function canAccessAllData(array $excludedTeams = []): bool
+    {
+        return $this->canAccessGbData($excludedTeams) && $this->canAccessNiData($excludedTeams);
+    }
+
+    /**
+     * Work out the traffic areas that the team is allowed to access - some teams are excluded based on a system param
+     * (works off param DATA_SEPARATION_TEAMS_EXEMPT)
+     *
+     * @param array $excludedTeams
+     *
+     * @return array
+     */
+    public function canAccessGbData(array $excludedTeams = []): bool
+    {
+        if (in_array($this->id, $excludedTeams)) {
+            return true;
+        }
+
+        return !$this->trafficArea->getIsNi();
+    }
+
+    /**
+     * Work out the traffic areas that the team is allowed to access - some teams are excluded based on a system param
+     * (works off param DATA_SEPARATION_TEAMS_EXEMPT)
+     *
+     * @param array $excludedTeams
+     *
+     * @return array
+     */
+    public function canAccessNiData(array $excludedTeams = []): bool
+    {
+        if (in_array($this->id, $excludedTeams)) {
+            return true;
+        }
+
+        return $this->trafficArea->getIsNi();
+    }
+
+    /**
+     * Work out the traffic areas that the team is allowed to access - some teams are excluded based on a system param
+     * (works off param DATA_SEPARATION_TEAMS_EXEMPT)
+     *
+     * @param array $excludedTeams
+     *
+     * @throws \Exception
+     * @return array
+     */
+    public function getAllowedTrafficAreas(array $excludedTeams = []): array
+    {
+        if ($this->canAccessAllData($excludedTeams)) {
+            return array_merge(TrafficArea::GB_TA_IDS, TrafficArea::NI_TA_IDS);
+        }
+
+        if ($this->canAccessGbData($excludedTeams)) {
+            return TrafficArea::GB_TA_IDS;
+        }
+
+        if ($this->canAccessNiData($excludedTeams)) {
+            return TrafficArea::NI_TA_IDS;
         }
     }
 }

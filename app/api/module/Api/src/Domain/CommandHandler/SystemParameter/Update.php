@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\SystemParameter;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -12,14 +14,16 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-final class Update extends AbstractCommandHandler implements TransactionedInterface
+final class Update extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
+
     protected $repoServiceName = 'SystemParameter';
 
     /**
      * @return Result
      */
-    public function handleCommand(CommandInterface $command)
+    public function handleCommand(CommandInterface $command): Result
     {
         /* @var $systemParameter \Dvsa\Olcs\Api\Entity\System\SystemParameter */
         $systemParameter = $this->getRepo()->fetchUsingId($command);
@@ -34,6 +38,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         }
         $this->getRepo()->save($systemParameter);
 
+        $this->clearSystemParamCache($command->getId());
         $this->result->addMessage("SystemParameter '{$command->getId()}' updated");
         return $this->result;
     }

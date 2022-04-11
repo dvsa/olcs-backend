@@ -1,27 +1,28 @@
 <?php
 
-/**
- * Traffic Area list
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TrafficArea;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Transfer\Query\TrafficArea\TrafficAreaInternalList;
 
-/**
- * Traffic Area list
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class TrafficAreaList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'TrafficArea';
 
     public function handleQuery(QueryInterface $query)
     {
+        $userInfo = $this->getUserData();
+
+        if ($userInfo['isInternal']) {
+            $queryData = [
+                'trafficAreas' => $userInfo['dataAccess']['trafficAreas']
+            ];
+            $query = TrafficAreaInternalList::create($queryData);
+            return $this->getQueryHandler()->handleQuery($query);
+        }
+
         $repo = $this->getRepo();
 
         return [

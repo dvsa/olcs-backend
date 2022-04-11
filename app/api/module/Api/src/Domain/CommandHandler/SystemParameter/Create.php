@@ -1,34 +1,31 @@
 <?php
 
-/**
- * Create a SystemParameter
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\SystemParameter;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 
-/**
- * Create a SystemParameter
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
-final class Create extends AbstractCommandHandler
+final class Create extends AbstractCommandHandler implements CacheAwareInterface
 {
+    use CacheAwareTrait;
+
     protected $repoServiceName = 'SystemParameter';
 
     /**
      * @return Result
      */
-    public function handleCommand(CommandInterface $command)
+    public function handleCommand(CommandInterface $command): Result
     {
         $systemParameter = new SystemParameter();
         $systemParameter->setId($command->getId());
         $systemParameter->setParamValue($command->getParamValue());
         $systemParameter->setDescription($command->getDescription());
+
+        $this->clearSystemParamListCache();
         $this->getRepo()->save($systemParameter);
 
         $this->result->addId('systemParameter', $systemParameter->getId());
