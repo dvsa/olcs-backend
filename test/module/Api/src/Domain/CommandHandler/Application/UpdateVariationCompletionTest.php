@@ -699,6 +699,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 $this->updateHelper
                     ->shouldReceive('validatePsv')
                     ->with($application, m::type(UpdateOperatingCentresCmd::class))
+                    ->once()
                     ->getMock();
 
                 $this->vocHelper
@@ -710,6 +711,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 $this->updateHelper
                     ->shouldReceive('validateTotalAuthTrailers')
                     ->with($application, m::type(UpdateOperatingCentresCmd::class), $totals)
+                    ->once()
                     ->getMock();
 
                 $this->vocHelper
@@ -721,6 +723,9 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
             $this->updateHelper
                 ->shouldReceive('validateTotalAuthHgvVehicles')
                 ->with($application, m::type(UpdateOperatingCentresCmd::class), $totals)
+                ->once()
+                ->shouldReceive('validateTotalAuthLgvVehicles')
+                ->with($application, m::type(UpdateOperatingCentresCmd::class))
                 ->once()
                 ->shouldReceive('getMessages')
                 ->andReturn(['foo'])

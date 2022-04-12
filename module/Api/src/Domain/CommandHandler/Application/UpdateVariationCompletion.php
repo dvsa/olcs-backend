@@ -710,6 +710,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     {
         $data = [
             'totAuthHgvVehicles' => $this->application->getTotAuthHgvVehicles(),
+            'totAuthLgvVehicles' => $this->application->getTotAuthLgvVehicles(),
             'totAuthTrailers' => $this->application->getTotAuthTrailers(),
         ];
         $command = UpdateOperatingCentresCmd::create($data);
@@ -721,6 +722,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         }
 
         $this->updateHelper->validateTotalAuthHgvVehicles($this->application, $command, $totals);
+        $this->updateHelper->validateTotalAuthLgvVehicles($this->application, $command);
 
         return $this->updateHelper->getMessages();
     }
