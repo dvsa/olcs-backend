@@ -404,10 +404,10 @@ class Search implements AuthAwareInterface
     {
         $postFilter = new BoolQuery();
         $trafficAreaIds = in_array($this->getCurrentUser()->getTeam()->getTrafficArea()->getId(), TrafficArea::NI_TA_IDS)
-            ? TrafficArea::NI_TA_IDS
-            : TrafficArea::GB_TA_IDS;
+            ? TrafficArea::GB_TA_IDS
+            : TrafficArea::NI_TA_IDS;
         foreach ($trafficAreaIds as $taId) {
-            $postFilter->addShould(new MatchQuery('ta_id', $taId));
+            $postFilter->addMustNot(new MatchQuery('ta_id', $taId));
         }
         $postFilter->setMinimumShouldMatch(1);
         return $postFilter;
