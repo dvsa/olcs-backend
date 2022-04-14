@@ -134,6 +134,21 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 'N',
                 []
             ],
+            'Change Vehicle Type to something which can have Trailer' => [
+                'typeOfLicence',
+                $this->getApplicationState2(RefData::APP_VEHICLE_TYPE_MIXED),
+                $this->getLicenceState2(RefData::APP_VEHICLE_TYPE_LGV),
+                [
+                    'TypeOfLicence' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'Safety' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                ],
+                [
+                    'TypeOfLicence' => UpdateVariationCompletion::STATUS_UPDATED,
+                    'Safety' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
+                ],
+                'N',
+                []
+            ],
             'Unchanged Type Of Licence' => [
                 'typeOfLicence',
                 $this->getApplicationState2(),

@@ -651,6 +651,12 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         ) {
             $this->markSectionRequired('operating_centres');
         }
+
+        if ($this->application->canHaveTrailer() && $this->licence->getSafetyInsTrailers() === null) {
+            // can have trailer but safety inspections on trailers is not set
+            // mark the safety section as required
+            $this->markSectionRequired('safety');
+        }
     }
 
     /**
