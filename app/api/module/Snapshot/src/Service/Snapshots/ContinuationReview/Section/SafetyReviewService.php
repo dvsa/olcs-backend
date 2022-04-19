@@ -55,7 +55,6 @@ class SafetyReviewService extends AbstractReviewService
                 ['value' => implode(', ', [$address->getAddressLine1(), $address->getTown()])]
             ];
             $config[] = $row;
-
         }
         usort(
             $config,
@@ -105,7 +104,7 @@ class SafetyReviewService extends AbstractReviewService
             ]
         ];
 
-        if ($licence->isGoods()) {
+        if ($licence->canHaveTrailer()) {
             $safetyInsTrailers = null;
             if (!empty($licence->getSafetyInsTrailers())) {
                 $safetyInsTrailers = $licence->getSafetyInsTrailers()
@@ -130,6 +129,11 @@ class SafetyReviewService extends AbstractReviewService
             ];
         }
 
+        $variesKey = 'continuations.safety-section.table.varies';
+        if (!$licence->canHaveTrailer()) {
+            $variesKey .= '.no-trailers';
+        }
+
         $safetyInsVaries = null;
         if ($licence->getSafetyInsVaries() !== null) {
             $safetyInsVaries = ($licence->getSafetyInsVaries() === 'Y')
@@ -139,7 +143,7 @@ class SafetyReviewService extends AbstractReviewService
 
         $summary[] = [
             [
-                'value' => $this->translate('continuations.safety-section.table.varies'),
+                'value' => $this->translate($variesKey),
                 'header' => true
             ],
             [
@@ -181,7 +185,6 @@ class SafetyReviewService extends AbstractReviewService
         }
 
         return $summary;
-
     }
 
     /**
