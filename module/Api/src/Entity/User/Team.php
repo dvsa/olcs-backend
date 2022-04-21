@@ -27,6 +27,7 @@ class Team extends AbstractTeam
     const ERROR_TEAM_LINKED_TO_USERS = 'err_team_linked_to_users';
     const ERROR_TEAM_LINKED_TO_PRINTER_SETTINGS = 'err_team_linked_to_printer_settings';
     const ERROR_TEAM_LINKED_TO_TASK_ALLOCATION_RULES = 'err_team_linked_to_task_allocation_rules';
+    const IRFO_TEAM_IDS = [1004];
 
     public function getDefaultTeamPrinter()
     {
@@ -119,5 +120,19 @@ class Team extends AbstractTeam
         if ($this->canAccessNiData($excludedTeams)) {
             return TrafficArea::NI_TA_IDS;
         }
+    }
+
+    /**
+    * is the team allowed to access IRFO related menus/records
+    *
+    * @return bool
+    */
+    public function getIsIrfo(array $excludedTeams = []): bool
+    {
+        if (in_array($this->id, $excludedTeams)) {
+            return true;
+        }
+
+        return in_array($this->id, self::IRFO_TEAM_IDS);
     }
 }

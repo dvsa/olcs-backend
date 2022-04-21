@@ -99,8 +99,6 @@ class MyAccountTest extends QueryHandlerTestCase
             ->with(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $userId)
             ->andReturnFalse();
 
-        $numCacheCalls = $isEligibleForPermits ? 1 : 0;
-
         $mockSystemParameter = $this->repoMap['SystemParameter'];
         $mockSystemParameter->shouldReceive('isSelfservePromptEnabled')
             ->times($isEligibleForPermits ? 1 : 0)
@@ -136,6 +134,7 @@ class MyAccountTest extends QueryHandlerTestCase
         $canAccessAll = true;
         $canAccessGb = true;
         $canAccessNi = true;
+        $isIrfo = false;
         $trafficAreas = ['B', 'C'];
 
         $dataAccess = [
@@ -143,6 +142,7 @@ class MyAccountTest extends QueryHandlerTestCase
             'canAccessGb' => $canAccessGb,
             'canAccessNi' => $canAccessNi,
             'trafficAreas' => $trafficAreas,
+            'isIrfo' => $isIrfo
         ];
 
         $excludedTeamsString = '1, 2, 3';
@@ -164,6 +164,7 @@ class MyAccountTest extends QueryHandlerTestCase
         $mockTeam->expects('canAccessGbData')->with($excludedTeamsArray)->andReturn($canAccessGb);
         $mockTeam->expects('canAccessNiData')->with($excludedTeamsArray)->andReturn($canAccessNi);
         $mockTeam->expects('getAllowedTrafficAreas')->with($excludedTeamsArray)->andReturn($trafficAreas);
+        $mockTeam->expects('getIsIrfo')->with($excludedTeamsArray)->andReturn($isIrfo);
 
         /** @var User $mockUser */
         $mockUser = m::mock(User::class);
