@@ -63,7 +63,7 @@ class ResetPassword extends AbstractCommandHandler
             $logMessage = sprintf(self::MSG_FAIL_MISSING_CONFIRMATION, $username, $confirmationId);
             Logger::debug($logMessage);
             $this->result->setFlag('success', false);
-            $this->result->addMessage($logMessage);
+            $this->result->addMessage(self::MSG_EXPIRED_LINK);
             return $this->result;
         }
 

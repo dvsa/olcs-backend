@@ -15,7 +15,6 @@ use Dvsa\Olcs\Transfer\Command\Auth\ChangeExpiredPassword as ChangeExpiredPasswo
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Laminas\Authentication\Result as AuthResult;
 
 /**
  * @see ChangeExpiredPasswordFactory
@@ -23,6 +22,12 @@ use Laminas\Authentication\Result as AuthResult;
 class ChangeExpiredPassword extends AbstractCommandHandler
 {
     public const ERROR_USER_NOT_FOUND = 'Updating lastLoginAt failed: loginId is not found in User table';
+
+    //seems sensible to use the same keys as the regular change password
+    const MSG_GENERIC_FAIL = 'auth.change-password.fail';
+    const MSG_GENERIC_SUCCESS = 'auth.change-password.success';
+    const MSG_NOT_AUTHORIZED = 'auth.change-password.not-authorized';
+    const MSG_INVALID = 'auth.change-password.invalid';
 
     /**
      * @var ValidatableAdapterInterface|OpenAm|CognitoAdapter
@@ -56,12 +61,30 @@ class ChangeExpiredPassword extends AbstractCommandHandler
 
         $this->updateUserLastLoginAt($changeResult, $command->getUsername());
 
-        $this->result->setFlag('isValid', $changeResult->isValid());
+        $isValid = $changeResult->isValid();
+        $this->result->setFlag('isValid', $isValid);
         $this->result->setFlag('code', $changeResult->getCode());
         $this->result->setFlag('identity', $changeResult->getIdentity());
-        $this->result->setFlag('messages', $changeResult->getMessages());
         $this->result->setFlag('options', $changeResult->getOptions());
 
+        $message = self::MSG_GENERIC_SUCCESS;
+
+        if (!$isValid) {
+            $code = $changeResult->getCode();
+
+            switch ($code) {
+                case ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID:
+                    $message = self::MSG_INVALID;
+                    break;
+                case ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED:
+                    $message = self::MSG_NOT_AUTHORIZED;
+                    break;
+                default:
+                    $message = self::MSG_GENERIC_FAIL;
+            }
+        }
+
+        $this->result->setFlag('messages', [$message]);
         return $this->result;
     }
 
