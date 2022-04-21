@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
+use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -27,24 +27,26 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
 
     const GB_GV_TEMPLATE = [
         'identifier' => 'GV_letter_to_op_regarding_no_TM_specified',
-        'id'         => 919
+        'id' => 919
     ];
     const GB_PSV_TEMPLATE = [
         'identifier' => 'PSV_letter_to_op_regarding_no_TM_specified',
-        'id'         => 920
+        'id' => 920
     ];
     const NI_GV_TEMPLATE = [
         'identifier' => 'GV_letter_to_op_regarding_no_TM_specified_NI',
-        'id'         => 918
+        'id' => 918
     ];
-
 
     /**
      * @var string
      */
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['User','Document','DocTemplate','TransportManagerLicence'];
+    /**
+     * @var array
+     */
+    protected $extraRepos = ['User', 'Document', 'DocTemplate', 'TransportManagerLicence', 'SystemParameter'];
 
     /**
      * Handle command
@@ -72,6 +74,10 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
         return $this->result;
     }
 
+    /**
+     * @param LicenceEntity $licence
+     * @return void
+     */
     private function sendEmailToOperator(LicenceEntity $licence)
     {
         if (is_null($contactDetails = $licence->getCorrespondenceCd()) ||
@@ -143,7 +149,7 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
             'trafficArea',
         ];
 
-        $createTaskResult = $this->handleSideEffect($this->createTaskSideEffect($licence->getId()));
+        $createTaskResult = $this->handleSideEffect($this->createTaskSideEffect($licence));
         $this->result->merge($createTaskResult);
 
         $userRepo = $this->getRepo('User');
@@ -275,17 +281,28 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
             $metadata['details']['allowEmail'] === 'Y';
     }
 
-    private function createTaskSideEffect($licenceId)
+    /**
+     * @param $licence LicenceEntity
+     * @return CreateTask
+     */
+    private function createTaskSideEffect($licence)
     {
         $params = [
             'category' => Category::CATEGORY_APPLICATION,
             'subCategory' => SubCategory::TM_SUB_CATEGORY_TM1_REMOVAL,
             'description' => TmlEntity::DESC_TM_REMOVED_LAST_RESPONSE,
             'actionDate' => (new DateTime())->add(new \DateInterval('P21D'))->format('Y-m-d'),
-            'licence' => $licenceId,
+            'licence' => $licence->getId(),
             'urgent' => 'Y'
         ];
 
+        $sysParamRepo = $this->getRepo('SystemParameter');
+        $assignToUserId = $licence->isNi()
+            ? $sysParamRepo->fetchValue(SystemParameter::LAST_TM_NI_TASK_OWNER)
+            : $sysParamRepo->fetchValue(SystemParameter::LAST_TM_GB_TASK_OWNER);
+        if ($assignToUserId) {
+            $params['assignedToUser'] = $assignToUserId;
+        }
         return CreateTask::create($params);
     }
 

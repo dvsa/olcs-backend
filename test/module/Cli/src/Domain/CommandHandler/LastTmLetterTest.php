@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\LastTmLetter;
 use Dvsa\Olcs\Email\Data\Message;
@@ -33,6 +34,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
         $this->mockRepo('User', Repository\User::class);
         $this->mockRepo('Document', Repository\Document::class);
         $this->mockRepo('DocTemplate', Repository\DocTemplate::class);
+        $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
         $this->mockRepo('TransportManagerLicence', Repository\TransportManagerLicence::class);
 
         $this->mockedSmServices = [
@@ -355,6 +357,12 @@ class LastTmLetterTest extends CommandHandlerTestCase
      */
     public function testHandleCommand($dataProvider, $expectedResult)
     {
+        if (array_key_exists('isNi', $dataProvider['licence'])) {
+            $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
+                ->with($dataProvider['licence']['isNi'] ? SystemParameter::LAST_TM_NI_TASK_OWNER : SystemParameter::LAST_TM_GB_TASK_OWNER)
+                ->andReturn(1)
+                ->once();
+        }
 
         $licenceRepo = $this->repoMap['Licence'];
 
