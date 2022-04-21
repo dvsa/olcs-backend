@@ -32,8 +32,8 @@ class ForgotPassword extends AbstractCommandHandler implements ConfigAwareInterf
     protected $extraRepos = ['User'];
 
     const OPENAM_ADAPTER_CONFIG_VALUE = 'openam';
-    const MSG_USER_NOT_FOUND = 'User not found'; //preserves existing behaviour, translation key + new message needed
-    const MSG_USER_NOT_ALLOWED_RESET = 'account-not-active'; //preserves existing behaviour, review needed
+    const MSG_USER_NOT_FOUND = 'auth.forgot-password.user-not-found';
+    const MSG_USER_NOT_ALLOWED_RESET = 'auth.forgot-password.not-eligible';
 
     /**
      * @var ValidatableAdapterInterface|CognitoAdapter

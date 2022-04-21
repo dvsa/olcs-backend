@@ -14,6 +14,9 @@ use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Authentication\Result;
 use Mockery as m;
 
+/**
+ * @see ChangeExpiredPassword
+ */
 class ChangeExpiredPasswordTest extends CommandHandlerTestCase
 {
     private m\MockInterface $adapter;
@@ -40,16 +43,32 @@ class ChangeExpiredPasswordTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand(): void
+    /**
+     * @dataProvider dpHandleCommand
+     */
+    public function testHandleCommand(int $code, array $messages, $isSuccess): void
     {
-        $changeResult = new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::SUCCESS, $identity = [], $messages = ['example']);
+        $identity = ['identity'];
+        $changeResult = new ChangeExpiredPasswordResult($code, $identity, ['aws-messages']);
         $this->adapterResult($changeResult);
 
         $result = $this->sut->handleCommand($this->command);
-        $this->assertTrue($result->getFlag('isValid'));
-        $this->assertEquals(Result::SUCCESS, $result->getFlag('code'));
+        $this->assertEquals($isSuccess, $result->getFlag('isValid'));
+        $this->assertEquals($code, $result->getFlag('code'));
         $this->assertSame($identity, $result->getFlag('identity'));
         $this->assertSame($messages, $result->getFlag('messages'));
+    }
+
+    public function dpHandleCommand()
+    {
+        return [
+            [ChangeExpiredPasswordResult::SUCCESS, [0 => ChangeExpiredPassword::MSG_GENERIC_SUCCESS], true],
+            [ChangeExpiredPasswordResult::SUCCESS_WITH_CHALLENGE, [0 => ChangeExpiredPassword::MSG_GENERIC_SUCCESS], true],
+            [ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID, [0 => ChangeExpiredPassword::MSG_INVALID], false],
+            [ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED, [0 => ChangeExpiredPassword::MSG_NOT_AUTHORIZED], false],
+            [ChangeExpiredPasswordResult::FAILURE, [0 => ChangeExpiredPassword::MSG_GENERIC_FAIL], false],
+            [ChangeExpiredPasswordResult::FAILURE_CLIENT_ERROR, [0 => ChangeExpiredPassword::MSG_GENERIC_FAIL], false],
+        ];
     }
 
     public function testHandleCommandUpdatesUserLastLoginAtOnSuccessResult(): void
