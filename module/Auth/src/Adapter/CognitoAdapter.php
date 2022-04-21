@@ -110,18 +110,18 @@ class CognitoAdapter extends AbstractAdapter
 
         try {
             $this->client->changePassword($identifier, $newPassword, $permanent);
-            return new ChangePasswordResult(ChangePasswordResult::SUCCESS);
+            return new ChangePasswordResult(ChangePasswordResult::SUCCESS, ChangePasswordResult::MESSAGE_GENERIC_SUCCESS);
         } catch (ClientException $e) {
             Logger::debug('Cognito client: change password ClientException: ' . $e->getMessage());
             $previousException = $e->getPrevious();
             assert($previousException instanceof AwsException);
             switch ($previousException->getAwsErrorCode()) {
                 case 'InvalidPasswordException':
-                    return new ChangePasswordResult(ChangePasswordResult::FAILURE_NEW_PASSWORD_INVALID, $e->getMessage());
+                    return new ChangePasswordResult(ChangePasswordResult::FAILURE_NEW_PASSWORD_INVALID, ChangePasswordResult::MESSAGE_NEW_PASSWORD_INVALID);
                 case 'NotAuthorizedException':
-                    return new ChangePasswordResult(ChangePasswordResult::FAILURE_NOT_AUTHORIZED, $e->getMessage());
+                    return new ChangePasswordResult(ChangePasswordResult::FAILURE_NOT_AUTHORIZED, ChangePasswordResult::MESSAGE_GENERIC_FAIL);
                 default:
-                    return new ChangePasswordResult(ChangePasswordResult::FAILURE, $e->getMessage());
+                    return new ChangePasswordResult(ChangePasswordResult::FAILURE, ChangePasswordResult::MESSAGE_GENERIC_FAIL);
             }
         }
     }
