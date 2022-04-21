@@ -55,13 +55,7 @@ class ResetPasswordTest extends CommandHandlerTestCase
             ->with([$this->confirmationId])
             ->andThrow(new NotFoundException());
 
-        $expectedMessage = sprintf(
-            ResetPassword::MSG_FAIL_MISSING_CONFIRMATION,
-            $this->username,
-            $this->confirmationId
-        );
-
-        $expectedResult = $this->expectedFailureResult($expectedMessage);
+        $expectedResult = $this->expectedFailureResult(ResetPassword::MSG_EXPIRED_LINK);
         $this->assertEquals($expectedResult, $this->sut->handleCommand($this->command)->toArray());
     }
 
