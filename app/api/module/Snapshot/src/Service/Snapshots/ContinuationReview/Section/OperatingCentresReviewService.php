@@ -27,6 +27,10 @@ class OperatingCentresReviewService extends AbstractReviewService
         $licence = $continuationDetail->getLicence();
 
         $locs = $licence->getOperatingCentres();
+        if (count($locs) == 0) {
+            return [];
+        }
+
         $canHaveTrailers = $licence->canHaveTrailer();
 
         $vehiclesColumnSuffix = 'vehicles';

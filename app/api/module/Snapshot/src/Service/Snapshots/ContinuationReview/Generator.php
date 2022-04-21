@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
 use Laminas\View\Model\ViewModel;
@@ -24,6 +25,7 @@ class Generator extends AbstractGenerator
     const FINANCE_SECTION = 'finance';
     const DECLARATION_SECTION = 'declaration';
     const CONDITIONS_UNDERTAKINGS_SECTION = 'conditions_undertakings';
+    const OPERATING_CENTRES_SECTION = 'operating_centres';
 
     /**
      * Generate
@@ -129,6 +131,10 @@ class Generator extends AbstractGenerator
 
         if ($section === self::PEOPLE_SECTION) {
             $header .= '-' . $continuationDetail->getLicence()->getOrganisation()->getType()->getId();
+        } elseif ($section == self::OPERATING_CENTRES_SECTION) {
+            if ($continuationDetail->getLicence()->getVehicleType()->getId() == RefData::APP_VEHICLE_TYPE_LGV) {
+                $header .= '.lgv';
+            }
         }
 
         return $header;
