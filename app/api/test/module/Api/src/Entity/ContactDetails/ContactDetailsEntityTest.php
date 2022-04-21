@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Dvsa\OlcsTest\Api\Entity\ContactDetails;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -186,6 +188,38 @@ class ContactDetailsEntityTest extends EntityTester
     }
 
     /**
+     * make sure only tm email address is updated and other details remain the same
+     */
+    public function testTmUserUpdateSelfserve(): void
+    {
+        $emailAddress = 'email@email.com';
+        $contactParams = [
+            'emailAddress' => $emailAddress,
+        ];
+
+        $contactType = m::mock(RefData::class);
+        $contactType->expects('getId')->withNoArgs()->andReturn(Entity::CONTACT_TYPE_TRANSPORT_MANAGER);
+
+        $sut = new ContactDetails($contactType);
+
+        $address = m::mock(Address::class);
+        $sut->setAddress($address);
+
+        $person = m::mock(Person::class);
+        $sut->setPerson($person);
+
+        $phoneContacts = m::mock(ArrayCollection::class);
+        $sut->setPhoneContacts($phoneContacts);
+
+        $sut->update($contactParams, false);
+
+        static::assertEquals($emailAddress, $sut->getEmailAddress());
+        static::assertEquals($address, $sut->getAddress());
+        static::assertEquals($person, $sut->getPerson());
+        static::assertEquals($phoneContacts, $sut->getPhoneContacts());
+    }
+
+    /**
      * @dataProvider dpTestUpdate
      */
     public function testUpdate($contactType, $data, $expect, $fromInternal)
@@ -196,8 +230,7 @@ class ContactDetailsEntityTest extends EntityTester
         $sut->setAddress((new Address())->setId(self::DEF_ADDRESS_ID));
         $sut->setPerson((new Person())->setId(self::DEF_PERSON_ID));
 
-        /** @var \Doctrine\Common\Collections\ArrayCollection $mockPhoneCollection */
-        $mockPhoneCollection = new \Doctrine\Common\Collections\ArrayCollection;
+        $mockPhoneCollection = new ArrayCollection;
         $mockPhoneCollection->offsetSet(
             self::DEF_PHONE_ID,
             (new PhoneContact(new RefData(self::DEF_PHONE_TYPE)))
@@ -539,6 +572,53 @@ class ContactDetailsEntityTest extends EntityTester
                 ],
                 true
             ],
+            'TM from internal' => [
+                'contactType' => ContactDetails::CONTACT_TYPE_TRANSPORT_MANAGER,
+                'data' => [
+                    'emailAddress' => 'unit_Email',
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => (new Country())->setId('unit_CountryCodeUser'),
+                    ],
+                    'phoneContacts' => [
+                        [
+                            'id' => null,
+                            'phoneContactType' => new RefData('unit_PhoneContactType1'),
+                            'phoneNumber' => 'unit_Phone1',
+                        ],
+                        [
+                            'id' => self::DEF_PHONE_ID,
+                            'phoneContactType' => new RefData('unit_Other_PhoneContactType'),
+                            'phoneNumber' => '',
+                        ],
+                    ],
+                ],
+                'expect' => [
+                    'email' => 'unit_Email',
+                    'address' => [
+                        'addressLine1' => 'unit_Addr1',
+                        'addressLine2' => 'unit_Addr2',
+                        'addressLine3' => null,
+                        'addressLine4' => null,
+                        'town' => null,
+                        'postcode' => 'unit_PostCode',
+                        'countryCode' => 'unit_CountryCodeUser',
+                    ],
+                    'phones' => [
+                        [
+                            'id' => null,
+                            'type' => 'unit_PhoneContactType1',
+                            'number' => 'unit_Phone1',
+                        ],
+                    ],
+                ],
+                true
+            ],
             //  test update of CONTACT_TYPE_COMPLAINANT
             [
                 'contactType' => ContactDetails::CONTACT_TYPE_COMPLAINANT,
@@ -644,7 +724,7 @@ class ContactDetailsEntityTest extends EntityTester
     {
         $sut = new ContactDetails(m::mock(RefData::class));
 
-        $mockPhoneCollection = new \Doctrine\Common\Collections\ArrayCollection();
+        $mockPhoneCollection = new ArrayCollection;
         $mockPhoneCollection->offsetSet(
             self::DEF_PHONE_ID,
             (new PhoneContact(new RefData(self::DEF_PHONE_TYPE)))
@@ -660,7 +740,7 @@ class ContactDetailsEntityTest extends EntityTester
     {
         $sut = new ContactDetails(m::mock(RefData::class));
 
-        $mockPhoneCollection = new \Doctrine\Common\Collections\ArrayCollection();
+        $mockPhoneCollection = new ArrayCollection;
         $sut->setPhoneContacts($mockPhoneCollection);
 
         $this->assertNull($sut->getPhoneContactNumber('foo'));

@@ -100,6 +100,7 @@ class ContactDetails extends AbstractContactDetails
             case self::CONTACT_TYPE_STATEMENT_REQUESTOR:
                 $this->updateStatementRequestor($contactParams);
                 break;
+            case self::CONTACT_TYPE_TRANSPORT_MANAGER:
             case self::CONTACT_TYPE_USER:
                 $this->updateUser($contactParams, $allowUpdatePerson);
                 break;
