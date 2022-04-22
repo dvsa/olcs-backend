@@ -91,6 +91,16 @@ trait TotAuthVehiclesTrait
      */
     public function mustHaveLgv(): bool
     {
+        return $this->isLgv();
+    }
+
+    /**
+     * Is this LGV only entity
+     *
+     * @return bool
+     */
+    public function isLgv(): bool
+    {
         return (RefData::APP_VEHICLE_TYPE_LGV === (string)$this->vehicleType);
     }
 
