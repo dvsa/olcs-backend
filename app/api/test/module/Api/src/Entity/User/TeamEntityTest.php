@@ -127,4 +127,31 @@ class TeamEntityTest extends EntityTester
             'Not Irfo, but in excluded' => [true, 112]
         ];
     }
+
+    /**
+     * @dataProvider dpTestGetAllowedSearchIndexes
+     */
+    public function testGetAllowedSearchIndexes($expectedIndexes, $teamId, $niTimes, $isNi): void
+    {
+        $excludedTeams = [112];
+
+        $trafficArea = m::mock(TrafficArea::class);
+        $trafficArea->expects('getIsNi')->times($niTimes)->andReturn($isNi);
+
+        $entity = new Entity();
+        $entity->setId($teamId);
+        $entity->setTrafficArea($trafficArea);
+
+        $this->assertEquals($expectedIndexes, $entity->getAllowedSearchIndexes($excludedTeams));
+    }
+
+    public function dpTestGetAllowedSearchIndexes(): array
+    {
+        return [
+            'IRFO' => [Entity::ALL_ELASTICSEARCH_INDEXES, 1004, 2, false],
+            'Not IRFO' => [array_diff_key(Entity::ALL_ELASTICSEARCH_INDEXES, ['irfo' => 1]), 100, 3, false],
+            'Not Irfo, but in excluded' => [Entity::ALL_ELASTICSEARCH_INDEXES, 112, 0, false],
+            'NI' => [Entity::NI_SEARCH_INDEXES, 450, 2, true]
+        ];
+    }
 }
