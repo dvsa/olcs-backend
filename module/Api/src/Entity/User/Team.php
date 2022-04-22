@@ -28,6 +28,29 @@ class Team extends AbstractTeam
     const ERROR_TEAM_LINKED_TO_PRINTER_SETTINGS = 'err_team_linked_to_printer_settings';
     const ERROR_TEAM_LINKED_TO_TASK_ALLOCATION_RULES = 'err_team_linked_to_task_allocation_rules';
     const IRFO_TEAM_IDS = [1004];
+    const ALL_ELASTICSEARCH_INDEXES = [
+        'licence'     => 'licence',
+        'application' => 'search-result-section-applications',
+        'case'        => 'internal-navigation-operator-cases',
+        'psv_disc'    => 'search.index.psv_disc',
+        'vehicle'     => 'search.vehicle-external',
+        'address'     => 'search-result-label-address',
+        'bus_reg'     => 'search.bus',
+        'people'      => 'internal-navigation-operator-people',
+        'user'        => 'internal-navigation-operator-users',
+        'publication' => 'search.result.publication',
+        'irfo'        => 'internal-navigation-operator-irfo'
+    ];
+    const NI_SEARCH_INDEXES = [
+        'licence'     => 'licence',
+        'application' => 'search-result-section-applications',
+        'case'        => 'internal-navigation-operator-cases',
+        'vehicle'     => 'search.vehicle-external',
+        'address'     => 'search-result-label-address',
+        'people'      => 'internal-navigation-operator-people',
+        'user'        => 'internal-navigation-operator-users',
+        'publication' => 'search.result.publication',
+    ];
 
     public function getDefaultTeamPrinter()
     {
@@ -134,5 +157,26 @@ class Team extends AbstractTeam
         }
 
         return in_array($this->id, self::IRFO_TEAM_IDS);
+    }
+
+    /**
+     * Return the elasticsearch indexes internal users may access.
+     *
+     * @param array $excludedTeams
+     *
+     * @throws \Exception
+     * @return array
+     */
+    public function getAllowedSearchIndexes(array $excludedTeams = []): array
+    {
+        if ($this->canAccessAllData($excludedTeams) || $this->getIsIrfo($excludedTeams)) {
+            return self::ALL_ELASTICSEARCH_INDEXES;
+        }
+
+        if ($this->canAccessNiData($excludedTeams)) {
+            return self::NI_SEARCH_INDEXES;
+        }
+
+        return array_diff_key(self::ALL_ELASTICSEARCH_INDEXES, ['irfo' => 1]);
     }
 }

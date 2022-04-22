@@ -136,13 +136,15 @@ class MyAccountTest extends QueryHandlerTestCase
         $canAccessNi = true;
         $isIrfo = false;
         $trafficAreas = ['B', 'C'];
+        $allowedSearchIndexes = Team::ALL_ELASTICSEARCH_INDEXES;
 
         $dataAccess = [
             'canAccessAll' => $canAccessAll,
             'canAccessGb' => $canAccessGb,
             'canAccessNi' => $canAccessNi,
             'trafficAreas' => $trafficAreas,
-            'isIrfo' => $isIrfo
+            'isIrfo' => $isIrfo,
+            'allowedSearchIndexes' => $allowedSearchIndexes
         ];
 
         $excludedTeamsString = '1, 2, 3';
@@ -165,6 +167,7 @@ class MyAccountTest extends QueryHandlerTestCase
         $mockTeam->expects('canAccessNiData')->with($excludedTeamsArray)->andReturn($canAccessNi);
         $mockTeam->expects('getAllowedTrafficAreas')->with($excludedTeamsArray)->andReturn($trafficAreas);
         $mockTeam->expects('getIsIrfo')->with($excludedTeamsArray)->andReturn($isIrfo);
+        $mockTeam->expects('getAllowedSearchIndexes')->with($excludedTeamsArray)->andReturn($allowedSearchIndexes);
 
         /** @var User $mockUser */
         $mockUser = m::mock(User::class);
