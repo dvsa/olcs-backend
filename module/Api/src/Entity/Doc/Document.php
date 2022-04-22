@@ -33,6 +33,8 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
 {
     const GV_CONTINUATION_CHECKLIST = 'GVChecklist';
     const GV_CONTINUATION_CHECKLIST_NI = 'GVChecklist';
+    const GV_LGV_CONTINUATION_CHECKLIST = 'GVLGVChecklist';
+    const GV_LGV_CONTINUATION_CHECKLIST_NI = 'GVLGVChecklist';
     const PSV_CONTINUATION_CHECKLIST = 'PSVChecklist';
     const PSV_CONTINUATION_CHECKLIST_SR = 'PSVSRChecklist';
 

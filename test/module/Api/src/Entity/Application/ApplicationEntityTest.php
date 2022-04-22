@@ -2793,6 +2793,30 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpIsLgv
+     */
+    public function testIsLgv($vehicleType, $expected)
+    {
+        $application = m::mock(Entity::class)->makePartial();
+        $application->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $application->isLgv()
+        );
+    }
+
+    public function dpIsLgv()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, false],
+            [RefData::APP_VEHICLE_TYPE_LGV, true],
+            [RefData::APP_VEHICLE_TYPE_MIXED, false],
+            [RefData::APP_VEHICLE_TYPE_PSV, false],
+        ];
+    }
+
+    /**
      * @dataProvider dpCanHaveHgv
      */
     public function testCanHaveHgv($vehicleType, $expected)
