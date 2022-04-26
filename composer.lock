@@ -4839,12 +4839,12 @@
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "4.206.10",
+            "version": "4.206.11",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.10/olcs-olcs-logging-4.206.10.zip",
-                "reference": "b58826a274e0159c9ac45ff9a450124ab21d6647",
-                "shasum": "b58826a274e0159c9ac45ff9a450124ab21d6647"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-logging/4.206.11/olcs-olcs-logging-4.206.11.zip",
+                "reference": "33f59411ef21113c88b8d468183ef204aec049ee",
+                "shasum": "33f59411ef21113c88b8d468183ef204aec049ee"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4898,16 +4898,16 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2022-01-13T10:15:22+00:00"
+            "time": "2022-04-25T09:34:00+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.149",
+            "version": "4.206.152",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.149/olcs-olcs-transfer-4.206.149.zip",
-                "reference": "c6e24daefb5ce9adfaa2a618445c45b19ee16e13",
-                "shasum": "c6e24daefb5ce9adfaa2a618445c45b19ee16e13"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.152/olcs-olcs-transfer-4.206.152.zip",
+                "reference": "137bab63185706cdaa5d76c89c12e70846c593a2",
+                "shasum": "137bab63185706cdaa5d76c89c12e70846c593a2"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -4967,7 +4967,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2022-03-31T09:30:54+00:00"
+            "time": "2022-04-21T13:19:52+00:00"
         },
         {
             "name": "olcs/olcs-utils",
