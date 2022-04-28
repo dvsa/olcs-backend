@@ -59,6 +59,7 @@ class LoginTest extends CommandHandlerTestCase
         $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
             'username' => $testUsername,
             'password' => $testPassword,
+            'realm' => 'internal'
         ]));
     }
 
@@ -75,7 +76,7 @@ class LoginTest extends CommandHandlerTestCase
         $this->sut = new Login($this->authenticationService(), $openAMAdapter);
         parent::setUp();
 
-        $this->authenticationService()->expects('authenticate')->andReturns(
+        $this->authenticationService()->allows('authenticate')->andReturns(
             new \Laminas\Authentication\Result(\Laminas\Authentication\Result::FAILURE, false)
         );
 
@@ -97,7 +98,13 @@ class LoginTest extends CommandHandlerTestCase
     public function handleCommand_UpdatesUserLastLoginAtWhenAuthenticationIsSuccessful()
     {
         // Expectations
-        $user = m::mock(User::class);
+        $user = m::mock(User::class)->shouldIgnoreMissing()->byDefault();
+        $user->expects('isInternal')
+            ->andReturn(true);
+        $user->expects('getDeletedDate')
+            ->andReturn(null);
+        $user->expects('isDisabled')
+            ->andReturn(false);
         $this->userRepository()
             ->expects('fetchByLoginId')
             ->withArgs(['testUsername'])
@@ -112,6 +119,7 @@ class LoginTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
             'username' => 'testUsername',
             'password' => 'testPassword',
+            'realm' => 'internal',
         ]));
 
         // Assert
@@ -126,31 +134,22 @@ class LoginTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_UpdatesUserLastLoginAtWhenAuthenticationIsSuccessful
      */
-    public function handleCommand_WhenAuthenticationIsSuccessfulWhenFetchByLoginIdReturnsEmptyThrowsException()
-    {
-        // Expectations
-        $this->userRepository()
-            ->expects('fetchByLoginId')
-            ->withArgs(['testUsername'])
-            ->andReturns([]);
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Updating lastLoginAt failed: loginId is not found in User table');
-
-        // Execute
-        $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
-            'username' => 'testUsername',
-            'password' => 'testPassword',
-        ]));
-    }
-
-    /**
-     * @test
-     * @depends handleCommand_UpdatesUserLastLoginAtWhenAuthenticationIsSuccessful
-     */
     public function handleCommand_DoesNotUpdateLastLoginAtWhenAuthenticationIsNotSuccessful()
     {
         // Expectations
+        $user = m::mock(User::class);
+        $user->expects('getDeletedDate')
+            ->andReturn(null);
+        $user->expects('isDisabled')
+            ->andReturn(false);
+        $user->expects('isInternal')
+            ->andReturn(true);
+        $user->expects('setLastLoginAt')->never();
+        $this->userRepository()
+            ->expects('fetchByLoginId')
+            ->withArgs(['testUsername'])
+            ->andReturns([$user]);
+
         $this->authenticationService()
             ->expects('authenticate')
             ->andReturns(
@@ -160,12 +159,11 @@ class LoginTest extends CommandHandlerTestCase
                 )
             );
 
-        $this->userRepository()->shouldNotHaveReceived('fetchByLoginId');
-
         // Execute
         $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
             'username' => 'testUsername',
             'password' => 'testPassword',
+            'realm' => 'internal'
         ]));
 
         // Assert
@@ -187,6 +185,7 @@ class LoginTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
             'username' => 'testUsername',
             'password' => 'testPassword',
+            'realm' => 'internal',
         ]));
 
         // Assert
@@ -195,6 +194,150 @@ class LoginTest extends CommandHandlerTestCase
         $this->assertNotNull($result->getFlag('code'));
         $this->assertNotNull($result->getFlag('identity'));
         $this->assertNotNull($result->getFlag('messages'));
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
+     * @dataProvider returnsExpectedResultWhenUserCannotAccessRealmProvider
+     */
+    public function handleCommand_ReturnsExpectedResultWhenUserCannotAccessRealm(bool $isInternal, string $realm)
+    {
+        // Expectations
+        $user = m::mock(User::class);
+        $user->expects('isInternal')
+            ->andReturn($isInternal);
+        $user->expects('getDeletedDate')
+            ->andReturn(null);
+        $user->expects('isDisabled')
+            ->andReturn(false);
+        $user->expects('getLoginId')
+            ->andReturn('testUsername');
+        $this->userRepository()
+            ->expects('fetchByLoginId')
+            ->withArgs(['testUsername'])
+            ->andReturns([$user]);
+
+        // Execute
+        $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
+            'username' => 'testUsername',
+            'password' => 'testPassword',
+            'realm' => $realm
+        ]));
+
+        // Assert
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->getFlag('isValid'));
+        $this->assertEquals(\Laminas\Authentication\Result::FAILURE_CREDENTIAL_INVALID, $result->getFlag('code'));
+        $this->assertEmpty($result->getFlag('identity'));
+
+        $userRealm = $isInternal ? 'internal': 'selfserve';
+        $expectedMessage = sprintf('User with login_id "%s" with realm "%s" is attempting to log in to realm "%s"', 'testUsername', $userRealm, $realm);
+        $this->assertEquals([$expectedMessage], $result->getFlag('messages'));
+    }
+
+    public function returnsExpectedResultWhenUserCannotAccessRealmProvider()
+    {
+        return [
+            'Internal user accessing selfserve' => [true, 'selfserve'],
+            'Selfserve user accessing internal' => [false, 'internal'],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function handleCommand_UserNotFoundInDatabase_ReturnsNotFoundResult()
+    {
+        // Expectations
+        $this->userRepository()
+            ->expects('fetchByLoginId')
+            ->withArgs(['testUsername'])
+            ->andReturns([]);
+
+        // Execute
+        $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
+            'username' => 'testUsername',
+            'password' => 'testPassword',
+            'realm' => 'internal'
+        ]));
+
+        // Assert
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->getFlag('isValid'));
+        $this->assertEquals(\Laminas\Authentication\Result::FAILURE_IDENTITY_NOT_FOUND, $result->getFlag('code'));
+        $this->assertEmpty($result->getFlag('identity'));
+
+        $expectedMessage = sprintf('User with login_id "%s" does not exist in the database.', 'testUsername');
+        $this->assertEquals([$expectedMessage], $result->getFlag('messages'));
+    }
+
+    /**
+     * @test
+     */
+    public function handleCommand_UserSoftDeletedInDatabase_ReturnsNotFoundResult()
+    {
+        // Expectations
+        $user = m::mock(User::class);
+        $user->expects('getDeletedDate')
+            ->andReturn(new \DateTime());
+        $user->expects('getLoginId')
+            ->andReturn('testUsername');
+        $this->userRepository()
+            ->expects('fetchByLoginId')
+            ->withArgs(['testUsername'])
+            ->andReturns([$user]);
+
+        // Execute
+        $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
+            'username' => 'testUsername',
+            'password' => 'testPassword',
+            'realm' => 'internal'
+        ]));
+
+        // Assert
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->getFlag('isValid'));
+        $this->assertEquals(\Laminas\Authentication\Result::FAILURE_IDENTITY_NOT_FOUND, $result->getFlag('code'));
+        $this->assertEmpty($result->getFlag('identity'));
+
+        $expectedMessage = sprintf('User with login_id "%s" has been soft-deleted', 'testUsername');
+        $this->assertEquals([$expectedMessage], $result->getFlag('messages'));
+    }
+
+    /**
+     * @test
+     */
+    public function handleCommand_UserDisabledInDatabase_ReturnsDisabledResult()
+    {
+        // Expectations
+        $user = m::mock(User::class);
+        $user->expects('getDeletedDate')
+            ->andReturn(null);
+        $user->expects('isDisabled')
+            ->andReturn(true);
+        $user->expects('getLoginId')
+            ->andReturn('testUsername');
+        $this->userRepository()
+            ->expects('fetchByLoginId')
+            ->withArgs(['testUsername'])
+            ->andReturns([$user]);
+
+        // Execute
+        $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
+            'username' => 'testUsername',
+            'password' => 'testPassword',
+            'realm' => 'internal'
+        ]));
+
+        // Assert
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->getFlag('isValid'));
+        $this->assertEquals(-5, $result->getFlag('code'));
+        $this->assertEmpty($result->getFlag('identity'));
+
+        $expectedMessage = sprintf('User with login_id "%s" is disabled', 'testUsername');
+        $this->assertEquals([$expectedMessage], $result->getFlag('messages'));
     }
 
     public function setUp(): void
@@ -225,6 +368,7 @@ class LoginTest extends CommandHandlerTestCase
         if (!array_key_exists('User', $this->repoMap)) {
             $repoMock = m::mock(UserRepo::class);
             $mockUser = m::mock(User::class)->shouldIgnoreMissing();
+            $mockUser->allows('isDisabled')->andReturn(false)->byDefault();
             $repoMock->allows('fetchByLoginId')->andReturns([$mockUser])->byDefault();
             $repoMock->shouldIgnoreMissing();
             $this->repoMap['User'] = $repoMock;
