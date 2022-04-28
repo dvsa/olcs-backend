@@ -5,8 +5,14 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserIdentityAmbiguousException;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserIsNotEnabledException;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserNotFoundException;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserRealmMismatchException;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserSoftDeletedException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
+use Dvsa\Olcs\Api\Domain\Util\DoctrineExtension\Logger;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
@@ -16,6 +22,11 @@ use Laminas\Authentication\AuthenticationService;
 
 class Login extends AbstractCommandHandler
 {
+    public const FAILURE_ACCOUNT_DISABLED = -5;
+
+    public const REALM_INTERNAL = 'internal';
+    public const REALM_SELFSERVE = 'selfserve';
+
     /** @var AuthenticationServiceInterface */
     protected $authenticationService;
 
@@ -53,8 +64,46 @@ class Login extends AbstractCommandHandler
             $this->adapter->setRealm($command->getRealm());
         }
 
-        $result = $this->authenticationService->authenticate($this->adapter);
-        $this->updateUserLastLoginAt($result, $command->getUsername());
+        try {
+            $user = $this->findUserInDatabaseByLoginIdOrFail($command->getUsername());
+            $this->checkUserIsNotSoftDeletedOrFail($user);
+            $this->checkUserAccountEnabledOrFail($user);
+            $this->checkUserCanAccessRealmOrFail($user, $command->getRealm());
+            $result = $this->authenticationService->authenticate($this->adapter);
+            if ($result->isValid()) {
+                $this->updateUserLastLoginAt($user);
+            }
+        } catch (UserNotFoundException | UserSoftDeletedException $e) {
+            $result = new \Laminas\Authentication\Result(
+                \Laminas\Authentication\Result::FAILURE_IDENTITY_NOT_FOUND, [], [$e->getMessage()]
+            );
+        } catch (UserIdentityAmbiguousException $e) {
+            $result = new \Laminas\Authentication\Result(
+                \Laminas\Authentication\Result::FAILURE_IDENTITY_AMBIGUOUS, [], [$e->getMessage()]
+            );
+        } catch (UserIsNotEnabledException $e) {
+            $result = new \Laminas\Authentication\Result(
+                self::FAILURE_ACCOUNT_DISABLED, [], [$e->getMessage()]
+            );
+        } catch (UserRealmMismatchException $e) {
+            $result = new \Laminas\Authentication\Result(
+                \Laminas\Authentication\Result::FAILURE_CREDENTIAL_INVALID, [], [$e->getMessage()]
+            );
+        }
+
+        if ($result->isValid()) {
+            \Olcs\Logging\Log\Logger::debug(sprintf(
+                'Successful authentication attempt from "%s" with code "%s"',
+                $command->getUsername(),
+                $result->getCode()
+            ));
+        } else {
+            \Olcs\Logging\Log\Logger::info(sprintf(
+                'Unsuccessful authentication attempt from "%s" with message "%s"',
+                $command->getUsername(),
+                implode(' -- ', $result->getMessages())
+            ));
+        }
 
         $this->result->setFlag('isValid', $result->isValid());
         $this->result->setFlag('code', $result->getCode());
@@ -65,27 +114,104 @@ class Login extends AbstractCommandHandler
     }
 
     /**
+     * Updates the last_login_at for a given user to NOW().
+     *
+     * @param User $user
+     * @return User
      * @throws RuntimeException
      */
-    protected function updateUserLastLoginAt(\Laminas\Authentication\Result $result, string $loginId)
+    protected function updateUserLastLoginAt(User $user): User
     {
-        if ($result->getCode() !== \Laminas\Authentication\Result::SUCCESS) {
-            return;
-        }
-
-        $repo = $this->getRepo();
-        assert($repo instanceof UserRepository);
-
-        $user = $repo->fetchByLoginId($loginId);
-        if (empty($user)) {
-            throw new RuntimeException(
-                'Updating lastLoginAt failed: loginId is not found in User table'
-            );
-        }
-        $user = $user[0];
-
-        assert($user instanceof User);
         $user->setLastLoginAt(new \DateTime());
         $this->getRepo()->save($user);
+        return $user;
+    }
+
+    /**
+     * @throws RuntimeException
+     * @throws UserNotFoundException
+     * @throws UserIdentityAmbiguousException
+     */
+    protected function findUserInDatabaseByLoginIdOrFail(string $username): User
+    {
+        $repo = $this->getRepo();
+        assert($repo instanceof UserRepository);
+        $user = $repo->fetchByLoginId($username);
+        switch (count($user)) {
+            case 0:
+                throw new UserNotFoundException(sprintf(
+                    'User with login_id "%s" does not exist in the database.',
+                    $username
+                ));
+            case 1:
+                $user = $user[0];
+                assert($user instanceof User);
+                return $user;
+            default:
+                throw new UserIdentityAmbiguousException(sprintf(
+                    'User with login_id "%s" returns more than 1 user; user identity ambiguous',
+                    $username
+                ));
+        }
+    }
+
+    /**
+     * Checks that the user is enabled.
+     *
+     * @param User $user
+     * @return bool
+     * @throws UserIsNotEnabledException
+     */
+    protected function checkUserAccountEnabledOrFail(User $user): bool
+    {
+        if ($user->isDisabled()) {
+            throw new UserIsNotEnabledException(sprintf(
+                'User with login_id "%s" is disabled',
+                $user->getLoginId()
+            ));
+        }
+        return true;
+    }
+
+    /**
+     * Checks that the user is not soft-deleted.
+     *
+     * @param User $user
+     * @return bool
+     * @throws UserSoftDeletedException
+     */
+    protected function checkUserIsNotSoftDeletedOrFail(User $user): bool
+    {
+        if (!empty($user->getDeletedDate())) {
+            throw new UserSoftDeletedException(sprintf(
+                'User with login_id "%s" has been soft-deleted',
+                $user->getLoginId()
+            ));
+        }
+        return true;
+    }
+
+    /**
+     * Performs a user realm check.
+     *
+     * A user can ONLY log into a realm (SelfServe or Internal) they are assigned as.
+     *
+     * @param User $user
+     * @param string $realm
+     * @return bool
+     * @throws UserRealmMismatchException
+     */
+    protected function checkUserCanAccessRealmOrFail(User $user, string $realm): bool
+    {
+        $userRealm = $user->isInternal() ? static::REALM_INTERNAL: static::REALM_SELFSERVE;
+        if ($userRealm !== $realm) {
+            throw new UserRealmMismatchException(sprintf(
+                'User with login_id "%s" with realm "%s" is attempting to log in to realm "%s"',
+                $user->getLoginId(),
+                $userRealm,
+                $realm
+            ));
+        }
+        return true;
     }
 }
