@@ -300,7 +300,7 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
         $assignToUserId = $licence->isNi()
             ? $sysParamRepo->fetchValue(SystemParameter::LAST_TM_NI_TASK_OWNER)
             : $sysParamRepo->fetchValue(SystemParameter::LAST_TM_GB_TASK_OWNER);
-        if ($assignToUserId) {
+        if ($assignToUserId && $assignToUserId != 0) {
             $params['assignedToUser'] = $assignToUserId;
         }
         return CreateTask::create($params);
