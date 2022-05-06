@@ -304,6 +304,18 @@ class CognitoAdapter extends AbstractAdapter
     }
 
     /**
+     * @return mixed|string
+     */
+    public function getIdentity()
+    {
+        $identity = parent::getIdentity();
+        if (!empty($identity) && is_string($identity)) {
+            $identity = strtolower($identity);
+        }
+        return $identity;
+    }
+
+    /**
      * @param AccessTokenInterface $token
      * @return array
      * @throws InvalidTokenException

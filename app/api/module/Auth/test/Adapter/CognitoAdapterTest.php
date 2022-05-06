@@ -765,4 +765,28 @@ class CognitoAdapterTest extends MockeryTestCase
         // Execute
         $sut->doesUserExist($username);
     }
+
+    /**
+     * @test
+     * @dataProvider dataProvider_getIdentityStrings
+     * @param string $identity
+     */
+    public function getIdentity_resultDoesNotContainUppercaseAndCaseConvertsToLowercase(string $identity): void
+    {
+        $mockClient = m::mock(Client::class);
+        $sut = new CognitoAdapter($mockClient);
+        $sut->setIdentity($identity);
+
+        $this->assertDoesNotMatchRegularExpression('/[A-Z]+/', $sut->getIdentity());
+    }
+
+    public function dataProvider_getIdentityStrings(): array
+    {
+        return [
+            'Lowercase' => ['testing'],
+            'Mixed Case' => ['tEsTiNG'],
+            'Uppercase' => ['TESTING'],
+            'Uppercase With Special Characters' => ['TESTING@"'],
+        ];
+    }
 }
