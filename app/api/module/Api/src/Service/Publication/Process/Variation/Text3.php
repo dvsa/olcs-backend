@@ -89,7 +89,9 @@ final class Text3 implements ProcessInterface
                 $this->addCorrespondanceAddress($context);
             }
 
-            $this->addText($context->offsetGet('authorisation'));
+            foreach ($context->offsetGet('authorisation') as $authorisationLine) {
+                $this->addText($authorisationLine);
+            }
         }
     }
 
