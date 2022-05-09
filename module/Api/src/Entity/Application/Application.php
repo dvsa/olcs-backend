@@ -2002,6 +2002,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                 return true;
             }
 
+            // The HGV authorisation has increased
+            if ($this->hasHgvAuthorisationIncreased()) {
+                return true;
+            }
+
+            // The trailer authorisation has increased
+            if ($this->hasAuthTrailersIncrease()) {
+                return true;
+            }
+
             // An operating centre has been added;
             if ($this->hasNewOperatingCentre()) {
                 return true;

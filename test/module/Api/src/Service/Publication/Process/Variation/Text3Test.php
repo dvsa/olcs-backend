@@ -110,7 +110,7 @@ class Text3Test extends MockeryTestCase
      */
     public function testAuthorisationsWhereNoOperatingCentres($contextArray)
     {
-        $authorisationText = 'AUTHORISATION_TEXT';
+        $authorisationText = "AUTHORISATION_TEXT1\nAUTHORISATION_TEXT2";
 
         $publicationLink = $this->getPublicationLink(Organisation::ORG_TYPE_LLP);
         $context = new ImmutableArrayObject($contextArray);
@@ -128,18 +128,27 @@ class Text3Test extends MockeryTestCase
         return [
             [
                 [
-                    'authorisation' => 'AUTHORISATION_TEXT',
+                    'authorisation' => [
+                        'AUTHORISATION_TEXT1',
+                        'AUTHORISATION_TEXT2',
+                    ],
                 ],
             ],
             [
                 [
-                    'authorisation' => 'AUTHORISATION_TEXT',
+                    'authorisation' => [
+                        'AUTHORISATION_TEXT1',
+                        'AUTHORISATION_TEXT2',
+                    ],
                     'operatingCentres' => null,
                 ],
             ],
             [
                 [
-                    'authorisation' => 'AUTHORISATION_TEXT',
+                    'authorisation' => [
+                        'AUTHORISATION_TEXT1',
+                        'AUTHORISATION_TEXT2',
+                    ],
                     'operatingCentres' => [],
                 ],
             ],
@@ -156,7 +165,7 @@ class Text3Test extends MockeryTestCase
         $publicationLink = $this->getPublicationLink(Organisation::ORG_TYPE_LLP);
         $context = new ImmutableArrayObject(
             [
-                'authorisation' => 'AUTHORISATION_TEXT',
+                'authorisation' => ['AUTHORISATION_TEXT1', 'AUTHORISATION_TEXT2'],
                 'operatingCentres' => $operatingCentres,
                 'licenceAddress' => 'LICENCE_ADDRESS',
             ]
@@ -175,11 +184,11 @@ class Text3Test extends MockeryTestCase
         return [
             [
                 ['OC_LINE1'],
-                "LICENCE_ADDRESS\nOC_LINE1\nLICENCE_ADDRESS\nAUTHORISATION_TEXT",
+                "LICENCE_ADDRESS\nOC_LINE1\nLICENCE_ADDRESS\nAUTHORISATION_TEXT1\nAUTHORISATION_TEXT2",
             ],
             [
                 ['OC_LINE1', 'OC_LINE2'],
-                "LICENCE_ADDRESS\nOC_LINE1\nOC_LINE2\nLICENCE_ADDRESS\nAUTHORISATION_TEXT",
+                "LICENCE_ADDRESS\nOC_LINE1\nOC_LINE2\nLICENCE_ADDRESS\nAUTHORISATION_TEXT1\nAUTHORISATION_TEXT2",
             ],
         ];
     }
