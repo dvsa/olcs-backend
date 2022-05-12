@@ -20,6 +20,8 @@ class InterimRefunds extends AbstractQueryHandler
          */
         $repo = $this->getRepo();
 
+        $query = $this->modifyTrafficAreaQueryBasedOnUser($query);
+
         $after = $query->getStartDate();
         $before = $query->getEndDate();
         $sort = $query->getSort();

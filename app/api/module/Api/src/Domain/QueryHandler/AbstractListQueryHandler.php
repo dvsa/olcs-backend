@@ -14,6 +14,7 @@ use Doctrine\ORM\Query;
 class AbstractListQueryHandler extends AbstractQueryHandler
 {
     protected $bundle = [];
+    protected bool $modifyTrafficAreasForRbac = false;
 
     /**
      * handle list query
@@ -24,6 +25,10 @@ class AbstractListQueryHandler extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
+        if ($this->modifyTrafficAreasForRbac) {
+            $query = $this->modifyTrafficAreaQueryBasedOnUser($query);
+        }
+
         $repo = $this->getRepo();
 
         return [

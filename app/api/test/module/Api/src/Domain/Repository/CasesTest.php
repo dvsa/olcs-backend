@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -41,7 +42,7 @@ class CasesTest extends RepositoryTestCase
      *
      * @return m\MockInterface
      */
-    public function getMockRepo($qb)
+    public function getMockRepo($qb): m\MockInterface
     {
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
@@ -51,7 +52,7 @@ class CasesTest extends RepositoryTestCase
         return $repo;
     }
 
-    public function testApplyListFiltersTm()
+    public function testApplyListFiltersTm(): void
     {
         $sut = m::mock(Repository\Cases::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -71,7 +72,7 @@ class CasesTest extends RepositoryTestCase
         $sut->applyListFilters($mockQb, $mockQuery);
     }
 
-    public function testApplyListFiltersLicence()
+    public function testApplyListFiltersLicence(): void
     {
         $sut = m::mock(Repository\Cases::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -91,7 +92,7 @@ class CasesTest extends RepositoryTestCase
         $sut->applyListFilters($mockQb, $mockQuery);
     }
 
-    public function testForReportOpenListQry()
+    public function testForReportOpenListQry(): void
     {
         /** @var \Dvsa\Olcs\Transfer\Query\QueryInterface |m\MockInterface $mockQry */
         $mockQry = m::mock(TransferQry\Cases\Report\OpenList::class)->makePartial();
@@ -99,7 +100,7 @@ class CasesTest extends RepositoryTestCase
             ->shouldReceive('getCaseType')->twice()->andReturn('unit_CaseType')
             ->shouldReceive('getApplicationStatus')->twice()->andReturn('unit_AppStatus')
             ->shouldReceive('getLicenceStatus')->twice()->andReturn('unit_LicStatus')
-            ->shouldReceive('getTrafficArea')->once()->andReturn('unit_TA');
+            ->shouldReceive('getTrafficAreas')->once()->andReturn(['unit_TA']);
 
         $qb = $this->createMockQb('{{QUERY}}');
         $this->mockCreateQueryBuilder($qb);
@@ -123,16 +124,18 @@ class CasesTest extends RepositoryTestCase
             ' AND m.closedDate IS NULL' .
             ' AND a.status = [[unit_AppStatus]]' .
             ' AND l.status = [[unit_LicStatus]]' .
-            ' AND ta.id = [[unit_TA]]';
+            ' AND ta.id IN [[["unit_TA"]]]';
 
         static::assertEquals($expected, $this->query);
     }
 
-    public function testForReportOpenListQryOtherTa()
+    public function testForReportOpenListQryOtherTa(): void
     {
+        $trafficAreas = ['other', 'A', 'B'];
+
         /** @var \Dvsa\Olcs\Transfer\Query\QueryInterface |m\MockInterface $mockQry */
         $mockQry = m::mock(TransferQry\Cases\Report\OpenList::class)->makePartial();
-        $mockQry->shouldReceive('getTrafficArea')->once()->andReturn('OTHER');
+        $mockQry->shouldReceive('getTrafficAreas')->once()->andReturn($trafficAreas);
 
         $qb = $this->createMockQb('{{QUERY}}');
         $this->mockCreateQueryBuilder($qb);
@@ -150,12 +153,12 @@ class CasesTest extends RepositoryTestCase
         $expected = '{{QUERY}}' .
             ' SELECT CONCAT(ct.description, m.id) as HIDDEN caseType' .
             ' AND m.closedDate IS NULL' .
-            ' AND ta.id IS NULL';
+            ' AND (ta.id IS NULL OR ta.id IN [[{"1":"A","2":"B"}]])';
 
         static::assertEquals($expected, $this->query);
     }
 
-    public function testFetchWithLicenceUsingId()
+    public function testFetchWithLicenceUsingId(): void
     {
         $this->mockQi->shouldReceive('getId')->andReturn(24);
 
@@ -190,7 +193,7 @@ class CasesTest extends RepositoryTestCase
         $this->sut->fetchWithLicenceUsingId($this->mockQi, Query::HYDRATE_OBJECT, 1);
     }
 
-    public function testFetchWithLicence()
+    public function testFetchWithLicence(): void
     {
         $caseId = 1;
 
@@ -237,7 +240,7 @@ class CasesTest extends RepositoryTestCase
         $this->sut->fetchExtended($caseId);
     }
 
-    public function testFetchWithLicenceNotFound()
+    public function testFetchWithLicenceNotFound(): void
     {
         $caseId = 1;
 
@@ -282,7 +285,7 @@ class CasesTest extends RepositoryTestCase
         $this->sut->fetchExtended($caseId);
     }
 
-    public function testBuildDefaultListQuery()
+    public function testBuildDefaultListQuery(): void
     {
         $this->sut->shouldReceive('getQueryBuilder')->with()->andReturn($this->mockDqb);
 
@@ -298,7 +301,7 @@ class CasesTest extends RepositoryTestCase
         $this->sut->buildDefaultListQuery($this->mockDqb, $this->mockQi);
     }
 
-    public function testFetchOpenCasesForSurrender()
+    public function testFetchOpenCasesForSurrender(): void
     {
         $qb = $this->createMockQb('BLAH');
 
@@ -326,7 +329,7 @@ class CasesTest extends RepositoryTestCase
         $this->sut->fetchOpenCasesForSurrender($this->mockQi);
     }
 
-    public function testFetchOpenCasesForApplication()
+    public function testFetchOpenCasesForApplication(): void
     {
         $qb = $this->createMockQb('BLAH');
 
@@ -349,7 +352,7 @@ class CasesTest extends RepositoryTestCase
         $this->assertEquals('RESULTS', $result);
     }
 
-    public function testFetchOpenCasesForApplicationThrowsException()
+    public function testFetchOpenCasesForApplicationThrowsException(): void
     {
         $qb = $this->createMockQb('BLAH');
 
