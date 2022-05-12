@@ -98,19 +98,23 @@ class Cases extends AbstractRepository
                     ->setParameter('LIC_STATUS', $query->getLicenceStatus());
             }
 
-            // filter by traffic area
-            $trafficArea = $query->getTrafficArea();
+            $trafficAreas = $query->getTrafficAreas();
 
-            if ($trafficArea === 'OTHER') {
+            if (($key = array_search('other', $trafficAreas)) !== false) {
+                //remove 'other' from the list
+                unset($trafficAreas[$key]);
+
                 $qb->andWhere(
-                    $expr->isNull(self::$aliasTa . '.id')
+                    $qb->expr()->orX(
+                        $qb->expr()->isNull(self::$aliasTa . '.id'),
+                        $qb->expr()->in(self::$aliasTa . '.id', ':trafficAreas')
+                    )
                 );
-            } elseif (!empty($trafficArea)) {
-                $qb->andWhere(
-                    $expr->eq(self::$aliasTa . '.id', ':TRAFFIC_AREA')
-                )
-                    ->setParameter('TRAFFIC_AREA', $trafficArea);
+            } else {
+                $qb->andWhere($qb->expr()->in(self::$aliasTa . '.id', ':trafficAreas'));
             }
+
+            $qb->setParameter('trafficAreas', $trafficAreas);
         }
     }
 

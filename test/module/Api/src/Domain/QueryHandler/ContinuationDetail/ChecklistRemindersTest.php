@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ContinuationDetail;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
@@ -27,7 +29,7 @@ class ChecklistRemindersTest extends QueryHandlerTestCase
     /**
      * Test handleQuery
      */
-    public function test()
+    public function test(): void
     {
         $data = [
             'month' => 'unit_Month',
@@ -45,10 +47,19 @@ class ChecklistRemindersTest extends QueryHandlerTestCase
         $reminders = new ArrayCollection();
         $reminders->add($reminder);
 
+        $trafficAreas = ['A', 'B'];
+
+        $userData = [
+            'dataAccess' => [
+                'trafficAreas' => $trafficAreas,
+            ],
+        ];
+
+        $this->expectedUserDataCacheCall($userData);
+
         $this->repoMap['ContinuationDetail']
-            ->shouldReceive('fetchChecklistReminders')
-            ->with('unit_Month', 'unit_Year', ['unit_Ids'])
-            ->once()
+            ->expects('fetchChecklistReminders')
+            ->with($trafficAreas, 'unit_Month', 'unit_Year', ['unit_Ids'])
             ->andReturn($reminders);
 
         $actual = $this->sut->handleQuery($query);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -22,7 +24,7 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
         $this->setUpSut(Repository\CompaniesHouseAlert::class, true);
     }
 
-    public function testFetchListDefault()
+    public function testFetchListDefault(): void
     {
         $mockQb = $this->createMockQb('{QUERY}');
         $this->mockCreateQueryBuilder($mockQb);
@@ -30,6 +32,7 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
         $data = [
             'includeClosed' => '',
             'typeOfChange' => '',
+            'trafficAreas' => ['A', 'B'],
         ];
 
         $query = AlertListQry::create($data);
@@ -43,12 +46,12 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
 
-        $expected = '{QUERY} SELECT cha_o, cha_o_ls, cha_o_lst INNER JOIN cha.organisation cha_o INNER JOIN cha_o.licences cha_o_ls WITH cha_o_ls.status IN ([[["lsts_curtailed","lsts_valid","lsts_suspended"]]]) INNER JOIN cha_o_ls.licenceType cha_o_lst AND cha.isClosed = 0';
+        $expected = '{QUERY} SELECT cha_o, cha_o_ls, cha_o_lst INNER JOIN cha.organisation cha_o INNER JOIN cha_o.licences cha_o_ls WITH cha_o_ls.status IN ([[["lsts_curtailed","lsts_valid","lsts_suspended"]]]) INNER JOIN cha_o_ls.licenceType cha_o_lst AND cha.isClosed = 0 AND cha_o_ls.trafficArea IN [[["A","B"]]]';
 
         $this->assertEquals($expected, $this->query);
     }
 
-    public function testFetchListIncludeClosedAndFilterType()
+    public function testFetchListIncludeClosedAndFilterType(): void
     {
         $mockQb = $this->createMockQb('{QUERY}');
         $this->mockCreateQueryBuilder($mockQb);
@@ -56,6 +59,7 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
         $data = [
             'includeClosed' => 1,
             'typeOfChange' => 'some_type',
+            'trafficAreas' => ['A', 'B'],
         ];
 
         $query = AlertListQry::create($data);
@@ -69,12 +73,12 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
 
-        $expected = '{QUERY} SELECT cha_o, cha_o_ls, cha_o_lst INNER JOIN cha.organisation cha_o INNER JOIN cha_o.licences cha_o_ls WITH cha_o_ls.status IN ([[["lsts_curtailed","lsts_valid","lsts_suspended"]]]) INNER JOIN cha_o_ls.licenceType cha_o_lst INNER JOIN cha.reasons r WITH r.reasonType = [[some_type]]';
+        $expected = '{QUERY} SELECT cha_o, cha_o_ls, cha_o_lst INNER JOIN cha.organisation cha_o INNER JOIN cha_o.licences cha_o_ls WITH cha_o_ls.status IN ([[["lsts_curtailed","lsts_valid","lsts_suspended"]]]) INNER JOIN cha_o_ls.licenceType cha_o_lst INNER JOIN cha.reasons r WITH r.reasonType = [[some_type]] AND cha_o_ls.trafficArea IN [[["A","B"]]]';
 
         $this->assertEquals($expected, $this->query);
     }
 
-    public function testGetReasonValueOptions()
+    public function testGetReasonValueOptions(): void
     {
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);

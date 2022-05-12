@@ -334,6 +334,15 @@ class QueryHandlerTestCase extends MockeryTestCase
         $this->expectedQuery(MyAccount::class, [], $result, $times);
     }
 
+    public function expectedTrafficAreaRbacOverride()
+    {
+        $userData = [
+            'dataAccess' => [
+                'trafficAreas' => ["A", "B"],
+            ],
+        ];
+    }
+
     /**
      * Initializes a query handler.
      *
