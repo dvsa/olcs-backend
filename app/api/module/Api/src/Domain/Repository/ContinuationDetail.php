@@ -141,7 +141,7 @@ class ContinuationDetail extends AbstractRepository
     /**
      * Fetch a list of continuation details for that are require reminders
      *
-     * @param array $trafficAreas   List of continuation details IDs
+     * @param array $trafficAreas   List of traffic area ids
      * @param int   $month          Month of the continuation
      * @param int   $year           Year of the continuation
      * @param array $ids            List of continuation details IDs

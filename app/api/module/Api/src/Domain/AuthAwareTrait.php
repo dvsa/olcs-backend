@@ -135,7 +135,7 @@ trait AuthAwareTrait
      * Note this is only intended for internal users, selfserve users don't have these access permissions
      *
      * Takes an array of traffic areas that will have come from a transfer object.
-     * It empty or "all" is selected then return all traffic areas the user has access to
+     * If empty or "all" is selected then return all traffic areas the user has access to
      *
      * @see TrafficAreas
      * @see TrafficAreasOptional
