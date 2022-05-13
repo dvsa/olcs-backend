@@ -3809,16 +3809,35 @@ class ApplicationEntityTest extends EntityTester
         static::assertTrue($sut->isPublishable());
     }
 
-    public function testIsPublishableHgvAuthorisationIncreased()
+    public function testIsPublishableGoodsHgvAuthorisationIncreased()
     {
         /** @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods()
             ->shouldReceive('isNew')->with()->once()->andReturn(false)
             ->shouldReceive('hasLgvAuthorisationIncreased')->with()->once()->andReturn(false)
             ->shouldReceive('hasHgvAuthorisationIncreased')->with()->once()->andReturn(true)
+            ->shouldReceive('isGoods')->with()->once()->andReturn(true)
             ->getMock();
 
         static::assertTrue($sut->isPublishable());
+    }
+
+    public function testIsPublishablePsvHgvAuthorisationIncreased()
+    {
+        /** @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('isNew')->with()->once()->andReturn(false)
+            ->shouldReceive('hasLgvAuthorisationIncreased')->with()->once()->andReturn(false)
+            ->shouldReceive('hasHgvAuthorisationIncreased')->with()->once()->andReturn(true)
+            ->shouldReceive('isGoods')->with()->once()->andReturn(false)
+            ->shouldReceive('hasAuthTrailersIncrease')->with()->once()->andReturn(false)
+            ->shouldReceive('hasNewOperatingCentre')->with()->once()->andReturn(false)
+            ->shouldReceive('hasIncreaseInOperatingCentre')->once()->andReturn(false)
+            ->shouldReceive('isRealUpgrade')->once()->andReturn(false)
+            ->shouldReceive('getConditionUndertakings')->once()->andReturn(new ArrayCollection())
+            ->getMock();
+
+        static::assertFalse($sut->isPublishable());
     }
 
     public function testIsPublishableTrailerAuthorisationIncreased()
