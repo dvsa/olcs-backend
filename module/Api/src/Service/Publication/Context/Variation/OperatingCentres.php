@@ -99,7 +99,7 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
         if ((int) $aoc->getNoOfVehiclesRequired() > 0) {
             $suffix = ' vehicle(s)';
             if ($aoc->getApplication()->isVehicleTypeMixedWithLgv()) {
-                $suffix = ' Heavy Goods Vehicle(s)';
+                $suffix = ' Heavy goods vehicle(s)';
             }
             $text[] = $aoc->getNoOfVehiclesRequired() . $suffix;
         }
