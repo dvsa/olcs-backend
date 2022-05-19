@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\CompaniesHouse;
 
 use Doctrine\ORM\Query;
@@ -24,7 +26,7 @@ class AlertListTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function testHandleQuery(): void
     {
         $query = Qry::create([]);
         $mockOrganisation = m::mock(Organisation::class);
@@ -40,6 +42,14 @@ class AlertListTest extends QueryHandlerTestCase
             ->andReturn($mockOrganisation);
         $alert2->shouldReceive('getOrganisation')
             ->andReturn($mockOrganisation);
+
+        $userData = [
+            'dataAccess' => [
+                'trafficAreas' => ['A', 'B'],
+            ],
+        ];
+
+        $this->expectedUserDataCacheCall($userData);
 
         $this->repoMap['CompaniesHouseAlert']
             ->shouldReceive('fetchList')

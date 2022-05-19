@@ -62,6 +62,11 @@ class CompaniesHouseAlert extends AbstractRepository
                 )
                 ->setParameter('reasonType', $query->getTypeOfChange());
         }
+
+        if (method_exists($query, 'getTrafficAreas')) {
+            $qb->andWhere($qb->expr()->in('cha_o_ls.trafficArea', ':trafficAreas'));
+            $qb->setParameter('trafficAreas', $query->getTrafficAreas());
+        }
     }
 
     /**

@@ -57,7 +57,6 @@ class Fee extends AbstractRepository
     {
         $doctrineQb = $this->createQueryBuilder();
 
-
         $this->getQueryBuilder()
             ->modifyQuery($doctrineQb)
             ->withRefdata()
