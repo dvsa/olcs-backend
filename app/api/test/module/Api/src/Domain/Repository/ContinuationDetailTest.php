@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -27,7 +29,7 @@ class ContinuationDetailTest extends RepositoryTestCase
         $this->setUpSut(Repo::class);
     }
 
-    public function testFetchForLicence()
+    public function testFetchForLicence(): void
     {
         $qb = $this->createMockQb('BLAH');
 
@@ -73,7 +75,7 @@ EOT;
         static::assertEquals($expectedQuery, $this->query);
     }
 
-    public function testFetchOngoingForLicence()
+    public function testFetchOngoingForLicence(): void
     {
         $qb = $this->createMockQb('BLAH');
 
@@ -101,7 +103,7 @@ EOT;
     /**
      * Test fetchChecklistReminders
      */
-    public function testFetchChecklistReminders()
+    public function testFetchChecklistReminders(): void
     {
         $mockQb = m::mock(QueryBuilder::class);
 
@@ -164,6 +166,10 @@ EOT;
             ->with('year', 2016)
             ->once()
             ->andReturnSelf();
+
+        $mockQb->expects('expr->in')->with('l.trafficArea', ':trafficAreas')->andReturn('conditionTa');
+        $mockQb->expects('andWhere')->with('conditionTa');
+        $mockQb->expects('setParameter')->with('trafficAreas', ['A', 'B']);
 
         $this->em
             ->shouldReceive('getRepository->createQueryBuilder')
@@ -250,13 +256,13 @@ EOT;
             ->once()
             ->andReturn([$mockEntity1, $mockEntity2]);
 
-        static::assertEquals($expected, $this->sut->fetchChecklistReminders(1, 2016, [1]));
+        static::assertEquals($expected, $this->sut->fetchChecklistReminders(['A', 'B'], 1, 2016, [1]));
     }
 
     /**
      * @dataProvider statusProvider
      */
-    public function testFetchDetails($method, $allowEmail)
+    public function testFetchDetails($method, $allowEmail): void
     {
         $mockQb = m::mock(QueryBuilder::class);
 
@@ -308,7 +314,7 @@ EOT;
         );
     }
 
-    public function statusProvider()
+    public function statusProvider(): array
     {
         return [
             [Entity::METHOD_EMAIL, 1],
@@ -316,7 +322,7 @@ EOT;
         ];
     }
 
-    public function testFetchWithLicence()
+    public function testFetchWithLicence(): void
     {
         $mockQb = m::mock(QueryBuilder::class);
 
@@ -344,7 +350,7 @@ EOT;
         );
     }
 
-    public function testFetchLicenceIdsForContinuationAndLicences()
+    public function testFetchLicenceIdsForContinuationAndLicences(): void
     {
         $mockQb = m::mock(QueryBuilder::class);
 
@@ -377,7 +383,7 @@ EOT;
         );
     }
 
-    public function testCreateContinuationDetails()
+    public function testCreateContinuationDetails(): void
     {
         $query = m::mock();
         $query->shouldReceive('executeInsert')->once()->with([1], false, 'status', 2);
@@ -387,7 +393,7 @@ EOT;
         $this->sut->createContinuationDetails([1], false, 'status', 2);
     }
 
-    public function testFetchListForDigitalReminders()
+    public function testFetchListForDigitalReminders(): void
     {
         $qb = $this->createMockQb('BLAH');
 

@@ -26,6 +26,8 @@ class AlertList extends AbstractQueryHandler
         /** @var Repository\CompaniesHouseAlert $repo */
         $repo = $this->getRepo();
 
+        $query = $this->modifyTrafficAreaQueryBasedOnUser($query);
+
         /** @var CompaniesHouseAlert[] $companiesHouseAlerts */
         $companiesHouseAlerts = $repo->fetchList($query, Query::HYDRATE_OBJECT);
 

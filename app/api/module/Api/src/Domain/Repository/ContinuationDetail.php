@@ -141,13 +141,14 @@ class ContinuationDetail extends AbstractRepository
     /**
      * Fetch a list of continuation details for that are require reminders
      *
-     * @param int   $month Month of the continuation
-     * @param int   $year  Year of the continuation
-     * @param array $ids   List of continuation details IDs
+     * @param array $trafficAreas   List of traffic area ids
+     * @param int   $month          Month of the continuation
+     * @param int   $year           Year of the continuation
+     * @param array $ids            List of continuation details IDs
      *
      * @return ArrayCollection of ContinuationDetail
      */
-    public function fetchChecklistReminders($month, $year, array $ids = [])
+    public function fetchChecklistReminders(array $trafficAreas, $month, $year, array $ids = [])
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
@@ -204,6 +205,9 @@ class ContinuationDetail extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('c.year', ':year'))
                 ->setParameter('year', $year);
         }
+
+        $qb->andWhere($qb->expr()->in('l.trafficArea', ':trafficAreas'));
+        $qb->setParameter('trafficAreas', $trafficAreas);
 
         //  check continuation details status
         $qb->andWhere(

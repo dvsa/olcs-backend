@@ -27,6 +27,7 @@ class ChecklistReminders extends AbstractQueryHandler
         $repo = $this->getRepo();
 
         $reminders = $repo->fetchChecklistReminders(
+            $this->getInternalUserTrafficAreas(),
             $query->getMonth(),
             $query->getYear(),
             $query->getIds()

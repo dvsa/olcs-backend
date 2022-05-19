@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
 
 use Doctrine\ORM\Query;
@@ -24,6 +26,8 @@ abstract class AbstractListQueryHandlerTest extends QueryHandlerTestCase
     /** @var  string */
     protected $sutRepo;
 
+    protected bool $modifiesTrafficAreasForRbac = false;
+
     /** @var QueryHandler\QueryHandlerInterface */
     protected $sut;
 
@@ -36,7 +40,7 @@ abstract class AbstractListQueryHandlerTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function testHandleQuery(): void
     {
         /**
          * @var TransferQry\QueryInterface $qry
@@ -46,6 +50,16 @@ abstract class AbstractListQueryHandlerTest extends QueryHandlerTestCase
          */
         $qry = $this->qryClass;
         $query = $qry::create([]);
+
+        if ($this->modifiesTrafficAreasForRbac) {
+            $userData = [
+                'dataAccess' => [
+                    'trafficAreas' => ['A', 'B'],
+                ],
+            ];
+
+            $this->expectedUserDataCacheCall($userData);
+        }
 
         $mockResult = m::mock();
         $mockResult->shouldReceive('serialize')->once()->andReturn('EXPECT');

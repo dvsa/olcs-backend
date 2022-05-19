@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 final class ReportList extends AbstractListQueryHandler
 {
     protected $repoServiceName = 'PiHearing';
+    protected bool $modifyTrafficAreasForRbac = true;
 
     protected $bundle = [
         'pi' => [

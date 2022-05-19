@@ -6,7 +6,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
+use Dvsa\Olcs\Transfer\FieldType\Traits\TrafficAreas;
+use Dvsa\Olcs\Transfer\FieldType\Traits\TrafficAreasOptional;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepoService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -126,6 +129,44 @@ trait AuthAwareTrait
     public function getUser()
     {
         return $this->authService->getIdentity()->getUser();
+    }
+
+    /**
+     * Note this is only intended for internal users, selfserve users don't have these access permissions
+     *
+     * Takes an array of traffic areas that will have come from a transfer object.
+     * If empty or "all" is selected then return all traffic areas the user has access to
+     *
+     * @see TrafficAreas
+     * @see TrafficAreasOptional
+     */
+    public function modifyTrafficAreaQueryBasedOnUser(QueryInterface $query): QueryInterface
+    {
+        $trafficAreas = $query->getTrafficAreas();
+
+        if (empty($trafficAreas) || in_array('all', $trafficAreas)) {
+            /**
+             * reports have an "other" field which we will need to preserve
+             * this will be ignored by anything which doesn't support it via an "in" query
+             */
+            $additional = ['other'];
+
+            $newData = [
+                'trafficAreas' => array_merge($this->getInternalUserTrafficAreas(), $additional),
+            ];
+
+            $query->exchangeArray($newData);
+        }
+
+        return $query;
+    }
+
+    /**
+     * get user traffic areas (this data exists for internal users only)
+     */
+    public function getInternalUserTrafficAreas(): array
+    {
+        return $this->getUserData()['dataAccess']['trafficAreas'];
     }
 
     /**

@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 class OpenList extends AbstractListQueryHandler
 {
     protected $repoServiceName = 'Cases';
+    protected bool $modifyTrafficAreasForRbac = true;
 
     protected $bundle = [
         'licence' => [
