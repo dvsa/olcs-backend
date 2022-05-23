@@ -9,10 +9,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Trailer;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Entity\Licence\Trailer;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\Trailer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Trailer
@@ -23,8 +22,6 @@ final class CreateTrailer extends AbstractCommandHandler
 {
     protected $repoServiceName = 'Trailer';
 
-    protected $licenceRepo = null;
-
     public function handleCommand(CommandInterface $command)
     {
         $licence = $this->getRepo()
@@ -32,6 +29,7 @@ final class CreateTrailer extends AbstractCommandHandler
 
         $trailer = new Trailer();
         $trailer->setTrailerNo($command->getTrailerNo());
+        $trailer->setIsLongerSemiTrailer($command->getIsLongerSemiTrailer() == 'Y');
         $trailer->setSpecifiedDate(new \DateTime($command->getSpecifiedDate()));
         $trailer->setLicence($licence);
 
