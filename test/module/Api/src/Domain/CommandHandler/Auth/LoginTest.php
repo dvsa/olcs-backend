@@ -100,6 +100,7 @@ class LoginTest extends CommandHandlerTestCase
         // Expectations
         $user = m::mock(User::class)->shouldIgnoreMissing()->byDefault();
         $user->expects('isInternal')
+            ->twice()
             ->andReturn(true);
         $user->expects('getDeletedDate')
             ->andReturn(null);
@@ -143,6 +144,7 @@ class LoginTest extends CommandHandlerTestCase
         $user->expects('isDisabled')
             ->andReturn(false);
         $user->expects('isInternal')
+            ->twice()
             ->andReturn(true);
         $user->expects('setLastLoginAt')->never();
         $this->userRepository()
@@ -242,6 +244,88 @@ class LoginTest extends CommandHandlerTestCase
             'Internal user accessing selfserve' => [true, 'selfserve'],
             'Selfserve user accessing internal' => [false, 'internal'],
         ];
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
+     */
+    public function handleCommand_ReturnsExpectedResultWhenUserIsSelfServeWithMonitoredRolesAndHasNoOrg()
+    {
+        // Expectations
+        $user = m::mock(User::class);
+        $user->expects('isInternal')
+            ->twice()
+            ->andReturn(false);
+        $user->expects('hasRoles')
+            ->andReturn(true);
+        $user->expects('getRelatedOrganisation')
+            ->andReturn(null);
+        $user->expects('getDeletedDate')
+            ->andReturn(null);
+        $user->expects('isDisabled')
+            ->andReturn(false);
+        $user->expects('getLoginId')
+            ->andReturn('testUsername');
+        $this->userRepository()
+            ->expects('fetchByLoginId')
+            ->withArgs(['testUsername'])
+            ->andReturns([$user]);
+
+        // Execute
+        $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
+            'username' => 'testUsername',
+            'password' => 'testPassword',
+            'realm' => 'selfserve'
+        ]));
+
+        // Assert
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->getFlag('isValid'));
+        $this->assertEquals(\Laminas\Authentication\Result::FAILURE_CREDENTIAL_INVALID, $result->getFlag('code'));
+        $this->assertEmpty($result->getFlag('identity'));
+
+        $expectedMessage = sprintf('User with login_id "%s" with selfserve realm has no organisation attached', 'testUsername');
+        $this->assertEquals([$expectedMessage], $result->getFlag('messages'));
+    }
+
+    /**
+     * @test
+     * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
+     */
+    public function handleCommand_ReturnsExpectedResultWhenUserIsSelfServeWithoutMonitoredRolesAndHasNoOrg()
+    {
+        // Expectations
+        $user = m::mock(User::class);
+        $user->expects('isInternal')
+            ->twice()
+            ->andReturn(false);
+        $user->expects('hasRoles')
+            ->andReturn(false);
+        $user->expects('getRelatedOrganisation')
+            ->never();
+        $user->expects('getDeletedDate')
+            ->andReturn(null);
+        $user->expects('isDisabled')
+            ->andReturn(false);
+        $user->expects('setLastLoginAt');
+        $this->userRepository()
+            ->expects('fetchByLoginId')
+            ->withArgs(['testUsername'])
+            ->andReturns([$user]);
+
+        // Execute
+        $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
+            'username' => 'testUsername',
+            'password' => 'testPassword',
+            'realm' => 'selfserve'
+        ]));
+
+        // Assert
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertTrue($result->getFlag('isValid'));
+        $this->assertEquals(\Laminas\Authentication\Result::SUCCESS, $result->getFlag('code'));
+        $this->assertNotEmpty($result->getFlag('identity'));
     }
 
     /**
