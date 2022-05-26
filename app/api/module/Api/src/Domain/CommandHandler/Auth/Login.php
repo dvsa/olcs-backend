@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserHasNoOrganisationException;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserIdentityAmbiguousException;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserIsNotEnabledException;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserNotFoundException;
@@ -13,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserSoftDeletedException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Dvsa\Olcs\Api\Domain\Util\DoctrineExtension\Logger;
+use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
@@ -26,6 +28,12 @@ class Login extends AbstractCommandHandler
 
     public const REALM_INTERNAL = 'internal';
     public const REALM_SELFSERVE = 'selfserve';
+
+    public const SELFSERVE_ROLE_ORG_CHECK = [
+        Role::ROLE_OPERATOR_ADMIN,
+        Role::ROLE_OPERATOR_USER,
+        Role::ROLE_OPERATOR_TM
+    ];
 
     /** @var AuthenticationServiceInterface */
     protected $authenticationService;
@@ -69,6 +77,7 @@ class Login extends AbstractCommandHandler
             $this->checkUserIsNotSoftDeletedOrFail($user);
             $this->checkUserAccountEnabledOrFail($user);
             $this->checkUserCanAccessRealmOrFail($user, $command->getRealm());
+            $this->checkUserIfServeServeHasOrganisationOrFail($user);
             $result = $this->authenticationService->authenticate($this->adapter);
             if ($result->isValid()) {
                 $this->updateUserLastLoginAt($user);
@@ -85,7 +94,7 @@ class Login extends AbstractCommandHandler
             $result = new \Laminas\Authentication\Result(
                 self::FAILURE_ACCOUNT_DISABLED, [], [$e->getMessage()]
             );
-        } catch (UserRealmMismatchException $e) {
+        } catch (UserRealmMismatchException | UserHasNoOrganisationException $e) {
             $result = new \Laminas\Authentication\Result(
                 \Laminas\Authentication\Result::FAILURE_CREDENTIAL_INVALID, [], [$e->getMessage()]
             );
@@ -210,6 +219,30 @@ class Login extends AbstractCommandHandler
                 $user->getLoginId(),
                 $userRealm,
                 $realm
+            ));
+        }
+        return true;
+    }
+
+    /**
+     * Performs a user org check.
+     *
+     * A user can ONLY log into a self-serve realm if they have a related organisation.
+     *
+     * @param User $user
+     * @return bool
+     * @throws UserHasNoOrganisationException
+     */
+    protected function checkUserIfServeServeHasOrganisationOrFail(User $user): bool
+    {
+        if ($user->isInternal() || !$user->hasRoles(self::SELFSERVE_ROLE_ORG_CHECK)) {
+            return true;
+        }
+
+        if ($user->getRelatedOrganisation() === null) {
+            throw new UserHasNoOrganisationException(sprintf(
+                'User with login_id "%s" with selfserve realm has no organisation attached',
+                $user->getLoginId()
             ));
         }
         return true;

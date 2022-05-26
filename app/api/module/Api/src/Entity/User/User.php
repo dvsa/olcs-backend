@@ -562,7 +562,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
      *
      * @return bool
      */
-    private function hasRoles(array $roles)
+    public function hasRoles(array $roles)
     {
         return !$this->roles->isEmpty() && !empty(
             array_intersect(
