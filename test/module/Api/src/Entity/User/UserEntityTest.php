@@ -938,6 +938,46 @@ class UserEntityTest extends EntityTester
         $this->assertNull($user->getPermission());
     }
 
+    /**
+     * @dataProvider dataProviderHasRoles
+     */
+    public function testHasRoles(array $roles, bool $expectedResult)
+    {
+        $adminRole = m::mock(RoleEntity::class)->makePartial();
+        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
+
+        $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
+        $nonAdminRole->setRole(RoleEntity::ROLE_OPERATOR_USER);
+
+        $user = new Entity('pid', Entity::USER_TYPE_PARTNER);
+        $user->setRoles(new ArrayCollection([$adminRole, $nonAdminRole]));
+
+        $result = $user->hasRoles($roles);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    public function dataProviderHasRoles(): array
+    {
+        return [
+            'User has no roles' => [
+                [],
+                false
+            ],
+            'User has role' => [
+                [RoleEntity::ROLE_OPERATOR_ADMIN],
+                true
+            ],
+            'User does not have role' => [
+                [RoleEntity::ROLE_OPERATOR_TM],
+                false
+            ],
+            'User has two of roles' => [
+                [RoleEntity::ROLE_OPERATOR_ADMIN, RoleEntity::ROLE_OPERATOR_USER],
+                true
+            ]
+        ];
+    }
+
     public function testUpdateOperatorWithOrganisationUsers()
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
