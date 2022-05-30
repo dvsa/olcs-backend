@@ -5,18 +5,15 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Trailer;
 
-use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
-use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Trailer\UpdateTrailer;
-
+use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Trailer;
-
 use Dvsa\Olcs\Transfer\Command\Trailer\UpdateTrailer as Cmd;
+use Mockery as m;
 
 /**
  * Class UpdateTrailer
@@ -35,37 +32,56 @@ class UpdateTrailerTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpIsLongerSemiTrailer
+     */
+    public function testHandleCommand($isLongerSemiTrailer, $expectedIsLongerSemiTrailer)
     {
+        $trailerId = 1;
+        $trailerNo = 'A1000';
+        $version = 3;
+
         $data = [
-            'id' => 1,
-            'trailerNo' => 'A1000',
-            'licence' => '7',
-            'specifiedDate' => '2015-01-01'
+            'id' => $trailerId,
+            'trailerNo' => $trailerNo,
+            'isLongerSemiTrailer' => $isLongerSemiTrailer,
+            'version' => $version
         ];
 
         $command = Cmd::create($data);
 
-        $this->repoMap['Trailer']
-            ->shouldReceive('fetchById')
+        $trailer = m::mock(Trailer::class);
+        $trailer->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($trailerId);
+
+        $this->repoMap['Trailer']->shouldReceive('fetchById')
+            ->with($trailerId, Query::HYDRATE_OBJECT, $version)
             ->once()
-            ->andReturn(
-                m::mock(Trailer::class)
-                    ->shouldReceive('setTrailerNo')
-                    ->once()
-                    ->shouldReceive('getId')
-                    ->once()
-                    ->getMock()
-            )
-            ->shouldReceive('save')
+            ->andReturn($trailer)
+            ->globally()
+            ->ordered();
+        $trailer->shouldReceive('setTrailerNo')
+            ->with($trailerNo)
             ->once()
-            ->with(m::type(Trailer::class));
+            ->globally()
+            ->ordered();
+        $trailer->shouldReceive('setIsLongerSemiTrailer')
+            ->with($expectedIsLongerSemiTrailer)
+            ->once()
+            ->globally()
+            ->ordered();
+        $this->repoMap['Trailer']->shouldReceive('save')
+            ->with($trailer)
+            ->once()
+            ->globally()
+            ->ordered();
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
-                'trailer' => null
+                'trailer' => $trailerId
             ],
             'messages' => [
                 'Trailer updated successfully'
@@ -73,6 +89,13 @@ class UpdateTrailerTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
 
+    public function dpIsLongerSemiTrailer()
+    {
+        return [
+            ['Y', true],
+            ['N', false],
+        ];
     }
 }
