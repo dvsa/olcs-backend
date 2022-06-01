@@ -13,9 +13,9 @@ use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
 use Dvsa\Contracts\Auth\ResourceOwnerInterface;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
-use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangePasswordResult;
+use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
 use Laminas\Authentication\Result;
 use Mockery as m;
 use Olcs\TestHelpers\MockeryTestCase;
@@ -764,6 +764,66 @@ class CognitoAdapterTest extends MockeryTestCase
 
         // Execute
         $sut->doesUserExist($username);
+    }
+
+    /**
+     * @test
+     */
+    public function deleteUserSuccess(): void
+    {
+        $identifier = 'user4574';
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->expects('deleteUser')->with($identifier);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $deleteUserResult = $sut->deleteUser($identifier);
+
+        $this->assertInstanceOf(DeleteUserResult::class, $deleteUserResult);
+        $this->assertEquals(DeleteUserResult::SUCCESS, $deleteUserResult->getCode());
+        $this->assertEquals(DeleteUserResult::MESSAGE_SUCCESS, $deleteUserResult->getMessage());
+    }
+
+    /**
+     * @test
+     * @dataProvider dpDeleteException
+     */
+    public function deleteUserException($exceptionType, $expectedCode, $expectedMessage): void
+    {
+        $identifier = 'user4574';
+
+        $awsException = m::mock(AwsException::class);
+        $awsException->expects('getAwsErrorCode')->andReturn($exceptionType);
+
+        $clientException = new ClientException('null', 0, $awsException);
+
+        $mockClient = m::mock(Client::class);
+        $mockClient->expects('deleteUser')->with($identifier)->andThrow($clientException);
+
+        $sut = new CognitoAdapter($mockClient);
+
+        $deleteUserResult = $sut->deleteUser($identifier);
+
+        $this->assertInstanceOf(DeleteUserResult::class, $deleteUserResult);
+        $this->assertEquals($expectedCode, $deleteUserResult->getCode());
+        $this->assertEquals($expectedMessage, $deleteUserResult->getMessage());
+    }
+
+    public function dpDeleteException(): array
+    {
+        return [
+            'User not in Cognito' => [
+                'UserNotFoundException',
+                DeleteUserResult::FAILURE_USER_NOT_FOUND,
+                DeleteUserResult::MESSAGE_FAILURE_NOT_FOUND,
+            ],
+            'Any other failure' => [
+                'AnyOtherException',
+                DeleteUserResult::FAILURE,
+                DeleteUserResult::MESSAGE_FAILURE,
+            ],
+        ];
     }
 
     /**
