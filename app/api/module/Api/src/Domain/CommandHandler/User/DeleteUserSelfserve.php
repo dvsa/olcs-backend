@@ -10,9 +10,10 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
+use Dvsa\Olcs\Auth\Exception\DeleteUserException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 
 /**
  * Delete User Selfserve
@@ -20,21 +21,28 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 final class DeleteUserSelfserve extends AbstractCommandHandler implements
     TransactionedInterface,
     AuthAwareInterface,
-    CacheAwareInterface,
-    OpenAmUserAwareInterface
+    CacheAwareInterface
 {
-    use OpenAmUserAwareTrait;
     use AuthAwareTrait;
     use CacheAwareTrait;
 
     protected $repoServiceName = 'User';
 
-    protected $extraRepos = ['Task', 'OrganisationUser'];
+    protected $extraRepos = ['OrganisationUser'];
+
+    private ValidatableAdapterInterface $adapter;
+
+    public function __construct(ValidatableAdapterInterface $adapter)
+    {
+        $this->adapter = $adapter;
+    }
 
     /**
      * Handle command
      *
      * @param \Dvsa\Olcs\Transfer\Command\User\DeleteUserSelfserve $command command
+     * @throws BadRequestException
+     * @throws DeleteUserException
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
@@ -47,17 +55,15 @@ final class DeleteUserSelfserve extends AbstractCommandHandler implements
         /** @var \Dvsa\Olcs\Api\Entity\User\User $user */
         $user = $this->getRepo()->fetchUsingId($command);
 
-        if (!empty($this->getRepo('Task')->fetchByUser($user->getId(), true))) {
-            // the user still has some open tasks
-            throw new BadRequestException('The user still has some open tasks');
-        }
-
         $this->getRepo('OrganisationUser')->deleteByUserId($user->getId());
         $this->getRepo()->delete($user);
 
-        $this->getOpenAmUser()->disableUser(
-            $user->getPid()
-        );
+        $cognitoDeleteResult = $this->adapter->deleteUser($user->getLoginId());
+        assert($cognitoDeleteResult instanceof DeleteUserResult);
+
+        if (!$cognitoDeleteResult->isValid() && !$cognitoDeleteResult->isUserNotPresent()) {
+            throw new DeleteUserException('Could not delete user');
+        }
 
         $userId = $user->getId();
         $this->clearUserCaches([$userId]);

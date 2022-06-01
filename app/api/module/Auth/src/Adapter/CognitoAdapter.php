@@ -14,6 +14,7 @@ use Dvsa\Contracts\Auth\ResourceOwnerInterface;
 use Dvsa\Olcs\Auth\Exception\ResetPasswordException;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangePasswordResult;
+use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
 use Laminas\Authentication\Adapter\AbstractAdapter;
 use Laminas\Authentication\Result;
 use Olcs\Logging\Log\Logger;
@@ -28,6 +29,7 @@ class CognitoAdapter extends AbstractAdapter
 
     public const MESSAGE_INCORRECT_USERNAME_OR_PASSWORD = 'Incorrect username or password.';
     public const MESSAGE_USER_IS_DISABLED = 'User is disabled.';
+    public const MESSAGE_USER_DELETE_FAILED = 'Cognito client: failed to delete user %s: %s';
 
     public const EXCEPTION_INVALID_PASSWORD = 'InvalidPasswordException';
     public const EXCEPTION_NOT_AUTHORIZED = 'NotAuthorizedException';
@@ -249,6 +251,32 @@ class CognitoAdapter extends AbstractAdapter
     public function changeAttribute(string $identifier, string $key, string $value): void
     {
         $this->client->changeAttribute($identifier, $key, $value);
+    }
+
+    public function deleteUser(string $identifier): DeleteUserResult
+    {
+        try{
+            $this->client->deleteUser($identifier);
+            $code = DeleteUserResult::SUCCESS;
+            $message = DeleteUserResult::MESSAGE_SUCCESS;
+        } catch (ClientException $e) {
+            $previousException = $e->getPrevious();
+            assert($previousException instanceof AwsException);
+            $previous = $previousException->getAwsErrorCode();
+
+            switch ($previous) {
+                case'UserNotFoundException':
+                    $code = DeleteUserResult::FAILURE_USER_NOT_FOUND;
+                    $message = DeleteUserResult::MESSAGE_FAILURE_NOT_FOUND;
+                    break;
+                default:
+                    Logger::err(sprintf(self::MESSAGE_USER_DELETE_FAILED, $identifier, $e->getMessage()));
+                    $code = DeleteUserResult::FAILURE;
+                    $message = DeleteUserResult::MESSAGE_FAILURE;
+            }
+        }
+
+        return new DeleteUserResult($code, $message);
     }
 
     /**
