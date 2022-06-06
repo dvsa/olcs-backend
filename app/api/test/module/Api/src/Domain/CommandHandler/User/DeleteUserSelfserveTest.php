@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUserSelfserve;
@@ -8,7 +10,10 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
+use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
+use Dvsa\Olcs\Auth\Exception\DeleteUserException;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUserSelfserve as Cmd;
+use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -20,6 +25,7 @@ use ZfcRbac\Service\AuthorizationService;
 class DeleteUserSelfserveTest extends CommandHandlerTestCase
 {
     const USER_ID = 8888;
+    const LOGIN_ID = 'usr8888';
     const ADMIN_USER_ID = 8880;
 
     /** @var  DeleteUserSelfserve */
@@ -27,11 +33,13 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
     /** @var  m\MockInterface */
     private $mockAuth;
 
+    private $adapter;
+
     public function setUp(): void
     {
-        $this->sut = new DeleteUserSelfserve();
+        $this->adapter = m::mock(CognitoAdapter::class);
+        $this->sut = new DeleteUserSelfserve($this->adapter);
         $this->mockRepo('User', Repository\User::class);
-        $this->mockRepo('Task', Repository\Task::class);
         $this->mockRepo('OrganisationUser', Repository\OrganisationUser::class);
 
         $this->mockAuth = m::mock(AuthorizationService::class);
@@ -50,27 +58,25 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommand(): void
     {
         $data = [
             'id' => self::USER_ID,
         ];
-        $tasks = [];
 
         $command = Cmd::create($data);
 
-        $userEntity = new UserEntity(9999, new RefData());
+        $userEntity = new UserEntity(self::USER_ID, new RefData());
         $userEntity->setId(self::USER_ID);
-        $userEntity->setPid('pid');
+        $userEntity->setLoginId(self::LOGIN_ID);
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')->once()->with('pid');
+        $cognitoResult = m::mock(DeleteUserResult::class);
+        $cognitoResult->expects('isValid')->withNoArgs()->andReturnTrue();
+        $this->adapter->expects('deleteUser')->with(self::LOGIN_ID)->andReturn($cognitoResult);
 
         $this->repoMap['User']
             ->shouldReceive('fetchUsingId')->once()->andReturn($userEntity)
             ->shouldReceive('delete')->once();
-
-        $this->repoMap['Task']
-            ->shouldReceive('fetchByUser')->with(self::USER_ID, true)->once()->andReturn($tasks);
 
         $this->repoMap['OrganisationUser']
             ->shouldReceive('deleteByUserId')->with(self::USER_ID)->once();
@@ -90,7 +96,34 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandDeleteHimself()
+    public function testHandleCommandCognitoError(): void
+    {
+        $this->expectException(DeleteUserException::class);
+
+        $data = [
+            'id' => self::USER_ID,
+        ];
+
+        $command = Cmd::create($data);
+
+        $userEntity = m::mock(UserEntity::class);
+        $userEntity->expects('getId')->withNoArgs()->andReturn(self::USER_ID);
+        $userEntity->expects('getLoginId')->withNoArgs()->andReturn(self::LOGIN_ID);
+
+        $cognitoResult = m::mock(DeleteUserResult::class);
+        $cognitoResult->expects('isValid')->withNoArgs()->andReturnFalse();
+        $cognitoResult->expects('isUserNotPresent')->withNoArgs()->andReturnFalse();
+        $this->adapter->expects('deleteUser')->with(self::LOGIN_ID)->andReturn($cognitoResult);
+
+        $this->repoMap['User']->expects('fetchUsingId')->with($command)->andReturn($userEntity);
+        $this->repoMap['User']->expects('delete')->with($userEntity);
+
+        $this->repoMap['OrganisationUser']->expects('deleteByUserId')->with(self::USER_ID);
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandDeleteHimself(): void
     {
         $this->expectException(BadRequestException::class, 'You can not delete yourself');
 
@@ -99,35 +132,6 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
                 'id' => self::ADMIN_USER_ID,
             ]
         );
-
-        $this->sut->handleCommand($command);
-    }
-
-    public function testHandleCommandForUserWithTasks()
-    {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
-
-        $data = [
-            'id' => self::USER_ID,
-        ];
-        $command = Cmd::create($data);
-
-        $userEntity = new UserEntity(9999, new RefData());
-        $userEntity->setId(self::USER_ID);
-        $userEntity->setLoginId('login_id');
-
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')->never();
-
-        $this->repoMap['User']
-            ->shouldReceive('fetchUsingId')->once()->andReturn($userEntity)
-            ->shouldReceive('delete')->never();
-
-        $tasks = [
-            ['id' => 100]
-        ];
-
-        $this->repoMap['Task']
-            ->shouldReceive('fetchByUser')->with(self::USER_ID, true)->once()->andReturn($tasks);
 
         $this->sut->handleCommand($command);
     }

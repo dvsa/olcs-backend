@@ -11,16 +11,16 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository\OrganisationUser as OrganisationUserRepository;
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepository;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
+use Dvsa\Olcs\Auth\Exception\DeleteUserException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUser as DeleteUserCommand;
+use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 
 /**
  * Delete User
@@ -28,23 +28,28 @@ use Dvsa\Olcs\Transfer\Command\User\DeleteUser as DeleteUserCommand;
 final class DeleteUser extends AbstractCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
-    CacheAwareInterface,
-    OpenAmUserAwareInterface
+    CacheAwareInterface
 {
     use AuthAwareTrait,
-        CacheAwareTrait,
-        OpenAmUserAwareTrait;
+        CacheAwareTrait;
 
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['Task', 'OrganisationUser'];
+
+    private ValidatableAdapterInterface $adapter;
+
+    public function __construct(ValidatableAdapterInterface $adapter)
+    {
+        $this->adapter = $adapter;
+    }
 
     /**
      * @param CommandInterface|DeleteUserCommand $command command
      *
      * @return Result result
      * @throws BadRequestException
-     * @throws FailedRequestException
+     * @throws DeleteUserException
      * @throws ForbiddenException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      * @throws \Exception
@@ -97,7 +102,7 @@ final class DeleteUser extends AbstractCommandHandler implements
      * @param User $user user
      *
      * @return void
-     * @throws FailedRequestException
+     * @throws DeleteUserException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      * @throws \Exception
      */
@@ -111,13 +116,11 @@ final class DeleteUser extends AbstractCommandHandler implements
         $organisationUserRepository = $this->getRepo('OrganisationUser');
         $organisationUserRepository->deleteByUserId($user->getId());
 
-        try {
-            $this->getOpenAmUser()->disableUser($user->getPid());
-        } catch (FailedRequestException $exception) {
-            // if the OpenAM user is already gone (i.e. 404) then we don't need to delete. Otherwise this is an error
-            if ($exception->getResponse()->getStatusCode() !== 404) {
-                throw $exception;
-            }
+        $cognitoDeleteResult = $this->adapter->deleteUser($user->getLoginId());
+        assert($cognitoDeleteResult instanceof DeleteUserResult);
+
+        if (!$cognitoDeleteResult->isValid() && !$cognitoDeleteResult->isUserNotPresent()) {
+            throw new DeleteUserException('Could not delete user from user pool');
         }
     }
 

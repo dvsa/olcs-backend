@@ -172,6 +172,7 @@ return [
     CommandHandler\User\CreateUser::class => IsInternalUser::class,
     CommandHandler\User\CreateUserFactory::class => IsInternalUser::class,
     CommandHandler\User\DeleteUser::class => IsInternalUser::class,
+    CommandHandler\User\DeleteUserFactory::class => IsInternalUser::class,
     CommandHandler\User\UpdateUser::class => IsInternalUser::class,
     CommandHandler\Variation\RestoreListConditionUndertaking::class => IsInternalUser::class,
     CommandHandler\Variation\UpdateInterim::class => IsInternalUser::class,
