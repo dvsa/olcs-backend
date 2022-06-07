@@ -184,11 +184,11 @@ class Text3Test extends MockeryTestCase
         return [
             [
                 ['OC_LINE1'],
-                "LICENCE_ADDRESS\nOC_LINE1\nLICENCE_ADDRESS\nAUTHORISATION_TEXT1\nAUTHORISATION_TEXT2",
+                "LICENCE_ADDRESS\nOC_LINE1\nAUTHORISATION_TEXT1\nAUTHORISATION_TEXT2",
             ],
             [
                 ['OC_LINE1', 'OC_LINE2'],
-                "LICENCE_ADDRESS\nOC_LINE1\nOC_LINE2\nLICENCE_ADDRESS\nAUTHORISATION_TEXT1\nAUTHORISATION_TEXT2",
+                "LICENCE_ADDRESS\nOC_LINE1\nOC_LINE2\nAUTHORISATION_TEXT1\nAUTHORISATION_TEXT2",
             ],
         ];
     }
