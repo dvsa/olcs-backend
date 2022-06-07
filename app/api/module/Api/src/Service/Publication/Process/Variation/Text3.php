@@ -85,10 +85,6 @@ final class Text3 implements ProcessInterface
     private function addAuthorisationText(ImmutableArrayObject $context)
     {
         if ($context->offsetExists('authorisation')) {
-            if ($this->hasOneOrMoreOperatingCentreLines($context)) {
-                $this->addCorrespondanceAddress($context);
-            }
-
             foreach ($context->offsetGet('authorisation') as $authorisationLine) {
                 $this->addText($authorisationLine);
             }
