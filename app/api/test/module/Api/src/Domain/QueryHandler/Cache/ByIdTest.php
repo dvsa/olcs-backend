@@ -39,7 +39,10 @@ class ByIdTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery(): void
+    /**
+     * @dataProvider shouldRegenProvider
+     */
+    public function testHandleQuery(bool $shouldRegen): void
     {
         $cacheId = CacheEncryption::TRANSLATION_KEY_IDENTIFIER;
         $uniqueId = 'uniqueId';
@@ -47,7 +50,8 @@ class ByIdTest extends QueryHandlerTestCase
 
         $queryParams = [
             'id' => $cacheId,
-            'uniqueId' => $uniqueId
+            'uniqueId' => $uniqueId,
+            'shouldRegen' => $shouldRegen,
         ];
 
         $queryHandler = m::mock(AbstractQueryHandler::class);
@@ -62,9 +66,11 @@ class ByIdTest extends QueryHandlerTestCase
 
         $this->sut->expects('getQueryHandler')->withNoArgs()->andReturn($queryHandler);
 
+        //cache isn't checked if $shouldRegen is true
         $this->mockedSmServices[CacheEncryption::class]
             ->expects('hasCustomItem')
             ->with($cacheId, $uniqueId)
+            ->times($shouldRegen ? 0 : 1)
             ->andReturnFalse();
 
         $this->mockedSmServices[CacheEncryption::class]
@@ -75,6 +81,14 @@ class ByIdTest extends QueryHandlerTestCase
         $this->assertEquals($cacheValue, $this->sut->handleQuery($query));
     }
 
+    public function shouldRegenProvider(): array
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
     public function testHandleQueryCacheExists(): void
     {
         $cacheId = CacheEncryption::TRANSLATION_KEY_IDENTIFIER;
@@ -83,7 +97,8 @@ class ByIdTest extends QueryHandlerTestCase
 
         $queryParams = [
             'id' => $cacheId,
-            'uniqueId' => $uniqueId
+            'uniqueId' => $uniqueId,
+            'shouldRegen' => false,
         ];
 
         $this->mockedSmServices[CacheEncryption::class]
