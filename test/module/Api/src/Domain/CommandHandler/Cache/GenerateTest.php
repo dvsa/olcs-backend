@@ -40,6 +40,7 @@ class GenerateTest extends CommandHandlerTestCase
             ->andReturnUsing(function ($query) use ($cacheId, $uniqueId) {
                 $this->assertEquals($cacheId, $query->getId());
                 $this->assertEquals($uniqueId, $query->getUniqueId());
+                $this->assertTrue($query->getShouldRegen());
             });
 
         $result = $this->sut->handleCommand($command);
