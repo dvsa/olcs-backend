@@ -63,8 +63,9 @@ class ById extends AbstractQueryHandler implements CacheAwareInterface
         }
 
         $uniqueId = $query->getUniqueId();
+        $shouldRegen = $query->getShouldRegen();
 
-        if ($this->cacheService->hasCustomItem($cacheId, $uniqueId)) {
+        if (!$shouldRegen && $this->cacheService->hasCustomItem($cacheId, $uniqueId)) {
             return $this->cacheService->getCustomItem($cacheId, $uniqueId);
         }
 

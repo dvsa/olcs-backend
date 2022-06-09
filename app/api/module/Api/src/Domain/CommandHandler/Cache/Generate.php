@@ -36,7 +36,8 @@ class Generate extends AbstractCommandHandler
 
         $queryParams = [
             'id' => $cacheId,
-            'uniqueId' => $uniqueId
+            'uniqueId' => $uniqueId,
+            'shouldRegen' => true,
         ];
 
         $cacheQuery = ById::create($queryParams);
