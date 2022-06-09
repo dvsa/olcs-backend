@@ -149,7 +149,7 @@ class Search implements AuthAwareInterface
             $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
         }
 
-        if (!$this->isAnonymousUser() && $this->isInternalUser() && $indexes[0] !== 'irfo') {
+        if (!$this->isAnonymousUser() && $this->isInternalUser() && !in_array($indexes[0], ['irfo', 'user'])) {
             $exemptTeams = str_getcsv($this->sysParamRepo->fetchValue(SysParamEntity::DATA_SEPARATION_TEAMS_EXEMPT));
             if (!in_array($this->getCurrentUser()->getTeam()->getId(), $exemptTeams)) {
                 $elasticaQuery->setPostFilter($this->getInternalUserTAPostFilter());
@@ -404,10 +404,13 @@ class Search implements AuthAwareInterface
     {
         $postFilter = new BoolQuery();
         $trafficAreaIds = in_array($this->getCurrentUser()->getTeam()->getTrafficArea()->getId(), TrafficArea::NI_TA_IDS)
-            ? TrafficArea::GB_TA_IDS
-            : TrafficArea::NI_TA_IDS;
+            ? TrafficArea::NI_TA_IDS
+            : TrafficArea::GB_TA_IDS;
+        $niFlag = $this->getCurrentUser()->getTeam()->getTrafficArea()->getIsNi() ? 1 : 0;
+
         foreach ($trafficAreaIds as $taId) {
-            $postFilter->addMustNot(new MatchQuery('ta_id', $taId));
+            $postFilter->addShould(new MatchQuery('ta_id', $taId));
+            $postFilter->addShould(new MatchQuery('ni_flag', $niFlag));
         }
         $postFilter->setMinimumShouldMatch(1);
         return $postFilter;
