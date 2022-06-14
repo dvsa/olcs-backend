@@ -53,8 +53,7 @@ class DeclarationReviewService extends AbstractReviewService
                 'items' => $items
             ]
         ];
-        if (
-            $continuationDetail->getSignatureType() !== null
+        if ($continuationDetail->getSignatureType() !== null
             && $continuationDetail->getSignatureType()->getId() === RefData::SIG_PHYSICAL_SIGNATURE
         ) {
             $mainItems[] = [
@@ -65,7 +64,6 @@ class DeclarationReviewService extends AbstractReviewService
         return [
             'mainItems' => $mainItems
         ];
-
     }
 
     /**
@@ -99,16 +97,26 @@ class DeclarationReviewService extends AbstractReviewService
      */
     public function getDeclarationMarkup(ContinuationDetail $continuationDetail)
     {
+        $additional = [];
+
         $licence = $continuationDetail->getLicence();
         if ($licence->isGoods()) {
             // Goods
             if ($licence->isNi()) {
                 $markupKey = 'markup-continuation-declaration-goods-ni';
                 $markupStandard = 'markup-continuation-declaration-goods-ni-standard';
+                $markupOperatingCentres = 'markup-continuation-declaration-goods-ni-operating-centres-not-lgv';
             } else {
                 $markupKey = 'markup-continuation-declaration-goods-gb';
                 $markupStandard = 'markup-continuation-declaration-goods-gb-standard';
+                $markupOperatingCentres = 'markup-continuation-declaration-goods-gb-operating-centres-not-lgv';
             }
+
+            if ($licence->isLgv()) {
+                $markupOperatingCentres = 'markup-continuation-declaration-goods-operating-centres-lgv';
+            }
+
+            $additional[] = $this->translate($markupOperatingCentres);
         } else {
             // PSV
             if ($licence->isSpecialRestricted()) {
@@ -119,11 +127,11 @@ class DeclarationReviewService extends AbstractReviewService
             }
         }
 
-        if ($licence->isStandardNational() || $licence->isStandardInternational() ) {
+        if ($licence->isStandardNational() || $licence->isStandardInternational()) {
             // add extra bullets if licence is a stanard
-            $additional = [$this->translate($markupStandard)];
+            $additional[] = $this->translate($markupStandard);
         } else {
-            $additional = [''];
+            $additional[] = '';
         }
         $markup = $this->translateReplace($markupKey, $additional);
 

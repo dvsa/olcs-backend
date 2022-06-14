@@ -91,15 +91,25 @@ trait TotAuthVehiclesTrait
      */
     public function mustHaveLgv(): bool
     {
+        return $this->isLgv();
+    }
+
+    /**
+     * Is this LGV only entity
+     *
+     * @return bool
+     */
+    public function isLgv(): bool
+    {
         return (RefData::APP_VEHICLE_TYPE_LGV === (string)$this->vehicleType);
     }
 
     /**
-     * Must this entity have operating centre
+     * Can this entity have HGV
      *
      * @return bool
      */
-    public function mustHaveOperatingCentre(): bool
+    public function canHaveHgv(): bool
     {
         return in_array(
             (string)$this->vehicleType,
@@ -109,6 +119,28 @@ trait TotAuthVehiclesTrait
                 RefData::APP_VEHICLE_TYPE_PSV,
             ]
         );
+    }
+
+    /**
+     * Can this entity have operating centre
+     *
+     * @return bool
+     */
+    public function canHaveOperatingCentre(): bool
+    {
+        // if it can have HGV it can have an Operating Centre
+        return $this->canHaveHgv();
+    }
+
+    /**
+     * Must this entity have operating centre
+     *
+     * @return bool
+     */
+    public function mustHaveOperatingCentre(): bool
+    {
+        // if it can have HGV it must have an Operating Centre
+        return $this->canHaveHgv();
     }
 
     /**

@@ -88,30 +88,6 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpCanBecomeStandardInternational
-     */
-    public function testCanBecomeStandardInternational($goodsOrPsv, $expected)
-    {
-        $goodsOrPsvRefData = new RefData($goodsOrPsv);
-
-        $licence = $this->instantiate(Entity::class);
-        $licence->setGoodsOrPsv($goodsOrPsvRefData);
-
-        $this->assertEquals(
-            $expected,
-            $licence->canBecomeStandardInternational()
-        );
-    }
-
-    public function dpCanBecomeStandardInternational()
-    {
-        return [
-            [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
-            [Entity::LICENCE_CATEGORY_PSV, true],
-        ];
-    }
-
-    /**
      * @dataProvider updateSafetyDetails
      */
     public function testUpdateSafetyDetails(
@@ -618,6 +594,78 @@ class LicenceEntityTest extends EntityTester
             [RefData::APP_VEHICLE_TYPE_LGV, true],
             [RefData::APP_VEHICLE_TYPE_MIXED, false],
             [RefData::APP_VEHICLE_TYPE_PSV, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsLgv
+     */
+    public function testIsLgv($vehicleType, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $licence->isLgv()
+        );
+    }
+
+    public function dpIsLgv()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, false],
+            [RefData::APP_VEHICLE_TYPE_LGV, true],
+            [RefData::APP_VEHICLE_TYPE_MIXED, false],
+            [RefData::APP_VEHICLE_TYPE_PSV, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanHaveHgv
+     */
+    public function testCanHaveHgv($vehicleType, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $licence->canHaveHgv()
+        );
+    }
+
+    public function dpCanHaveHgv()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, true],
+            [RefData::APP_VEHICLE_TYPE_PSV, true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanHaveOperatingCentre
+     */
+    public function testCanHaveOperatingCentre($vehicleType, $expected)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->setVehicleType(new RefData($vehicleType));
+
+        $this->assertEquals(
+            $expected,
+            $licence->canHaveOperatingCentre()
+        );
+    }
+
+    public function dpCanHaveOperatingCentre()
+    {
+        return [
+            [RefData::APP_VEHICLE_TYPE_HGV, true],
+            [RefData::APP_VEHICLE_TYPE_LGV, false],
+            [RefData::APP_VEHICLE_TYPE_MIXED, true],
+            [RefData::APP_VEHICLE_TYPE_PSV, true],
         ];
     }
 

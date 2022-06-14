@@ -63,7 +63,7 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                     ],
                     'licence' => [
                         'safetyInsVehicles' => 1,
-                        'safetyInsTrailers' => 0,
+                        'safetyInsTrailers' => null,
                         'safetyInsVaries' => 'Y',
                         'tachographIns' => [
                             'id' => 'tach_external'
@@ -224,6 +224,120 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
                                                 'label' => 'application-review-safety-safetyInsTrailers',
                                                 'value' => 'N/A-translated'
                                             ]
+                                        ],
+                                        'safetyInsVaries' => [
+                                            [
+                                                'label' => 'application-review-safety-safetyInsVaries',
+                                                'value' => 'Yes'
+                                            ]
+                                        ],
+                                        [
+                                            [
+                                                'label' => 'application-review-safety-tachographIns',
+                                                'value' => 'tachograph_analyser.tach_external-translated'
+                                            ],
+                                            [
+                                                'label' => 'application-review-safety-tachographInsName-snapshot',
+                                                'value' => 'Bob'
+                                            ]
+                                        ],
+                                        [
+                                            [
+                                                'label' => 'application-review-safety-additional-information',
+                                                'noEscape' => true,
+                                                'value' => 'file'
+                                            ]
+                                        ],
+                                        [
+                                            [
+                                                'label' => 'application-review-safety-safetyConfirmation',
+                                                'value' => 'Confirmed'
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            'title' => 'application-review-safety-workshop-title',
+                            'mainItems' => [
+                                [
+                                    'header' => '123, Footown',
+                                    'multiItems' => [
+                                        [
+                                            [
+                                                'label' => 'application-review-safety-workshop-isExternal',
+                                                'value' => 'application-review-safety-workshop-isExternal-Y-translated'
+                                            ],
+                                            [
+                                                'label' => 'application-review-safety-workshop-name',
+                                                'value' => 'Bob Smith'
+                                            ],
+                                            [
+                                                'label' => 'application-review-safety-workshop-address',
+                                                'value' => '123, Foo street, Footown'
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            'Goods which cannot have trailers' => [
+                [
+                    'safetyConfirmation' => 'Y',
+                    'isGoods' => true,
+                    'goodsOrPsv' => [
+                        'id' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+                    ],
+                    'totAuthTrailers' => null,
+                    'licence' => [
+                        'safetyInsVehicles' => 2,
+                        'safetyInsTrailers' => null,
+                        'safetyInsVaries' => 'Y',
+                        'tachographIns' => [
+                            'id' => 'tach_external'
+                        ],
+                        'tachographInsName' => 'Bob',
+                        'workshops' => [
+                            [
+                                'isExternal' => 'Y',
+                                'contactDetails' => [
+                                    'fao' => 'Bob Smith',
+                                    'address' => [
+                                        'addressLine1' => '123',
+                                        'addressLine2' => 'Foo street',
+                                        'town' => 'Footown'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    'documents' => [
+                        [
+                            'description' => 'file',
+                            'category' => [
+                                'id' => Category::CATEGORY_APPLICATION,
+                            ],
+                            'subCategory' => [
+                                'id' => SubCategory::DOC_SUB_CATEGORY_MAINT_OTHER_DIGITAL
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    'subSections' => [
+                        [
+                            'mainItems' => [
+                                [
+                                    'multiItems' => [
+                                        'safetyIns' => [
+                                            [
+                                                'label' => 'application-review-safety-safetyInsVehicles',
+                                                'value' => 'no.of.weeks-translated'
+                                            ],
                                         ],
                                         'safetyInsVaries' => [
                                             [

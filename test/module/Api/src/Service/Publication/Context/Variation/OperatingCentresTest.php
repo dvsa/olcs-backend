@@ -89,11 +89,11 @@ class OperatingCentresTest extends MockeryTestCase
                 [
                     'operatingCentres' => [
                         "New operating centre: ADDRESS43_FORMATTED\n".
-                            "New authorisation at this operating centre will be: 12 Heavy Goods Vehicle(s), 3 trailer(s)",
+                            "New authorisation at this operating centre will be: 12 Heavy goods vehicle(s), 3 trailer(s)",
                         "New operating centre: ADDRESS82_FORMATTED\n".
                             "New authorisation at this operating centre will be: 2 trailer(s)",
                         "New operating centre: ADDRESS653_FORMATTED\n".
-                            "New authorisation at this operating centre will be: 4234 Heavy Goods Vehicle(s)",
+                            "New authorisation at this operating centre will be: 4234 Heavy goods vehicle(s)",
                     ]
                 ],
             ],
@@ -154,9 +154,9 @@ class OperatingCentresTest extends MockeryTestCase
                 [
                     'operatingCentres' => [
                         "New operating centre: ADDRESS43_FORMATTED\n".
-                            "New authorisation at this operating centre will be: 12 Heavy Goods Vehicle(s), 3 trailer(s)",
+                            "New authorisation at this operating centre will be: 12 Heavy goods vehicle(s), 3 trailer(s)",
                         "New operating centre: ADDRESS653_FORMATTED\n".
-                            "New authorisation at this operating centre will be: 4234 Heavy Goods Vehicle(s)",
+                            "New authorisation at this operating centre will be: 4234 Heavy goods vehicle(s)",
                     ]
                 ],
             ],
@@ -223,11 +223,11 @@ class OperatingCentresTest extends MockeryTestCase
                 [
                     'operatingCentres' => [
                         "Increase at existing operating centre: ADDRESS43_FORMATTED\n".
-                            "New authorisation at this operating centre will be: 12 Heavy Goods Vehicle(s), 3 trailer(s)",
+                            "New authorisation at this operating centre will be: 12 Heavy goods vehicle(s), 3 trailer(s)",
                         "Decrease at existing operating centre: ADDRESS82_FORMATTED\n".
-                            "New authorisation at this operating centre will be: 10 Heavy Goods Vehicle(s), 2 trailer(s)",
+                            "New authorisation at this operating centre will be: 10 Heavy goods vehicle(s), 2 trailer(s)",
                         "Increase at existing operating centre: ADDRESS653_FORMATTED\n".
-                            "New authorisation at this operating centre will be: 4234 Heavy Goods Vehicle(s)",
+                            "New authorisation at this operating centre will be: 4234 Heavy goods vehicle(s)",
                     ]
                 ],
             ],

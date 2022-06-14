@@ -208,7 +208,6 @@ return [
     TransferCommand\Bus\PrintLetter::class => CommandHandler\Bus\PrintLetter::class,
 
     // Transfer - Licence
-    TransferCommand\Licence\UpdateTypeOfLicence::class => CommandHandler\Licence\UpdateTypeOfLicence::class,
     TransferCommand\Licence\UpdateAddresses::class => CommandHandler\Licence\UpdateAddresses::class,
     TransferCommand\Licence\UpdateBusinessDetails::class => CommandHandler\Licence\UpdateBusinessDetails::class,
     TransferCommand\Licence\UpdateCompanySubsidiary::class => CommandHandler\Licence\UpdateCompanySubsidiary::class,
@@ -1016,6 +1015,7 @@ return [
 
     // Domain - Variation
     Command\Variation\EndInterim::class => CommandHandler\Variation\EndInterim::class,
+    Command\Variation\ResetVariation::class => CommandHandler\Variation\ResetVariation::class,
     TransferCommand\Variation\GrantDirectorChange::class => CommandHandler\Variation\GrantDirectorChange::class,
     TransferCommand\Variation\DeleteVariation::class => CommandHandler\Variation\DeleteVariation::class,
 

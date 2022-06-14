@@ -196,7 +196,8 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
      */
     protected function hasUpdatedTypeOfLicence()
     {
-        return $this->application->getLicenceType() !== $this->licence->getLicenceType();
+        return $this->application->getLicenceType() !== $this->licence->getLicenceType() ||
+            $this->application->getVehicleType() != $this->licence->getVehicleType();
     }
 
     /**
@@ -643,8 +644,18 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
             }
         }
 
-        if ($this->application->isPsvDowngrade() && $this->isUnchanged('operating_centres')) {
+        if (($this->application->isPsvDowngrade() && $this->isUnchanged('operating_centres'))
+            || ($this->application->isLicenceChangeWhichRequiresOperatingCentre()
+                && $this->application->getOperatingCentres()->isEmpty()
+            )
+        ) {
             $this->markSectionRequired('operating_centres');
+        }
+
+        if ($this->application->canHaveTrailer() && $this->licence->getSafetyInsTrailers() === null) {
+            // can have trailer but safety inspections on trailers is not set
+            // mark the safety section as required
+            $this->markSectionRequired('safety');
         }
     }
 
@@ -705,6 +716,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     {
         $data = [
             'totAuthHgvVehicles' => $this->application->getTotAuthHgvVehicles(),
+            'totAuthLgvVehicles' => $this->application->getTotAuthLgvVehicles(),
             'totAuthTrailers' => $this->application->getTotAuthTrailers(),
         ];
         $command = UpdateOperatingCentresCmd::create($data);
@@ -716,6 +728,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         }
 
         $this->updateHelper->validateTotalAuthHgvVehicles($this->application, $command, $totals);
+        $this->updateHelper->validateTotalAuthLgvVehicles($this->application, $command);
 
         return $this->updateHelper->getMessages();
     }

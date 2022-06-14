@@ -135,9 +135,9 @@ class SafetyReviewServiceTest extends MockeryTestCase
             ->shouldReceive('getSafetyInsVehicles')
             ->andReturn(2)
             ->times(3)
-            ->shouldReceive('isGoods')
+            ->shouldReceive('canHaveTrailer')
             ->andReturn(true)
-            ->once()
+            ->twice()
             ->shouldReceive('getSafetyInsTrailers')
             ->andReturn(3)
             ->times(3)
@@ -182,6 +182,81 @@ class SafetyReviewServiceTest extends MockeryTestCase
             [
                 [
                     'value' => 'continuations.safety-section.table.varies_translated',
+                    'header' => true
+                ],
+                [
+                    'value' => 'Yes_translated',
+                ]
+            ],
+            [
+                [
+                    'value' => 'continuations.safety-section.table.tachographs_translated',
+                    'header' => true
+                ],
+                [
+                    'value' => 'continuations.safety-section.table.' . Licence::TACH_EXT . '_translated',
+                ]
+            ],
+            [
+                [
+                    'value' => 'continuations.safety-section.table.tachographInsName_translated',
+                    'header' => true
+                ],
+                [
+                    'value' => 'foo',
+                ]
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->sut->getSummaryFromData($continuationDetail));
+    }
+
+    public function testGetSummaryFromDataNoTrailers()
+    {
+        $continuationDetail = new ContinuationDetail();
+
+        $mockLicence = m::mock(Licence::class)
+            ->shouldReceive('getSafetyInsVehicles')
+            ->withNoArgs()
+            ->andReturn(2)
+            ->shouldReceive('canHaveTrailer')
+            ->withNoArgs()
+            ->andReturn(false)
+            ->shouldReceive('getSafetyInsTrailers')
+            ->withNoArgs()
+            ->andReturn(3)
+            ->shouldReceive('getSafetyInsVaries')
+            ->withNoArgs()
+            ->andReturn('Y')
+            ->shouldReceive('getTachographIns')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(Licence::TACH_EXT)
+                ->once()
+                ->getMock()
+            )
+            ->shouldReceive('getTachographInsName')
+            ->withNoArgs()
+            ->andReturn('foo')
+            ->twice()
+            ->getMock();
+
+        $continuationDetail->setLicence($mockLicence);
+
+        $expected = [
+            [
+                [
+                    'value' => 'continuations.safety-section.table.max-time-vehicles_translated',
+                    'header' => true
+                ],
+                [
+                    'value' => '2 ' . 'continuations.safety-section.table.weeks_translated',
+                ]
+            ],
+            [
+                [
+                    'value' => 'continuations.safety-section.table.varies.no-trailers_translated',
                     'header' => true
                 ],
                 [

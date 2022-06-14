@@ -141,6 +141,7 @@ return [
     CommandHandler\CompaniesHouse\CreateAlert::class                                  => IsSideEffect::class,
     CommandHandler\Discs\CreatePsvVehicleListForDiscs::class                          => IsSideEffect::class,
     CommandHandler\Variation\EndInterim::class                                        => IsSideEffect::class,
+    CommandHandler\Variation\ResetVariation::class                                    => IsSideEffect::class,
     CommandHandler\MyAccount\UpdateMyAccount::class                                   => IsSideEffect::class,
     CommandHandler\System\GenerateSlaTargetDate::class                                => IsSideEffect::class,
     CommandHandler\Bus\Ebsr\CreateTxcInbox::class                                     => IsSideEffect::class,

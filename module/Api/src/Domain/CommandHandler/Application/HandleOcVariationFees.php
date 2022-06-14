@@ -104,16 +104,30 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
      */
     private function feeApplies($applicationOcs, $licenceOcs, $application)
     {
-        if ($application->hasLgvAuthorisationIncreased()) {
-            // if there's an increase in LGV authorisation, fee applies
-            return true;
+        $isGoods = $application->isGoods();
+
+        if ($isGoods) {
+            if ($application->hasHgvAuthorisationIncreased()) {
+                // if there's an increase in HGV authorisation, fee applies
+                return true;
+            }
+
+            if ($application->hasLgvAuthorisationIncreased()) {
+                // if there's an increase in LGV authorisation, fee applies
+                return true;
+            }
+
+            if ($application->hasAuthTrailersIncrease()) {
+                // if there's an increase in trailers authorisation, fee applies
+                return true;
+            }
         }
 
         foreach ($applicationOcs as $aoc) {
             switch ($aoc->getAction()) {
                 case 'A':
                     // operating centre added, fee applies if this is a goods application
-                    return $application->isGoods();
+                    return $isGoods;
                 case 'U':
                     // if there's an increase in auth. at a centre, fee applies
                     if ($this->hasIncreasedAuth($aoc, $licenceOcs)) {

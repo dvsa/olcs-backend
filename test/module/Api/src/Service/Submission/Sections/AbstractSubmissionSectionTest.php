@@ -316,10 +316,11 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
 
     protected function generateLicence(Organisation $organisation, $id = null)
     {
-        $licence = new Licence(
-            $organisation,
-            $this->generateRefDataEntity($this->licenceStatus)
-        );
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->initCollections();
+        $licence->setOrganisation($organisation);
+        $licence->setStatus($this->generateRefDataEntity($this->licenceStatus));
+
         $licence->setId($id);
         $licence->setVersion($id);
         $licence->setLicenceType($this->generateRefDataEntity($this->licenceType));
@@ -554,11 +555,12 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
 
     protected function generateApplication($id, Licence $licence, $status, $isVariation = false)
     {
-        $application = new Application(
-            $licence,
-            $this->generateRefDataEntity($status),
-            $isVariation
-        );
+        $application = m::mock(Application::class)->makePartial();
+        $application->initCollections();
+        $application->setLicence($licence);
+        $application->setStatus($this->generateRefDataEntity($status));
+        $application->setIsVariation($isVariation);
+
         $application->setId($id);
         $application->setVersion(($id*2));
         $application->setReceivedDate(new \DateTime('2014-05-05'));

@@ -342,7 +342,11 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
     {
         return [
             'niFlag changed' => [
-                $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
+                $this->getCommand(
+                    'Y',
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+                ),
                 [
                     'N',
                     Licence::LICENCE_TYPE_STANDARD_NATIONAL,
@@ -380,34 +384,34 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
                 ]
             ],
             'to SR' => [
-                $this->getCommand('Y', Licence::LICENCE_TYPE_SPECIAL_RESTRICTED, Licence::LICENCE_CATEGORY_PSV),
+                $this->getCommand('N', Licence::LICENCE_TYPE_SPECIAL_RESTRICTED, Licence::LICENCE_CATEGORY_PSV),
                 [
-                    'Y',
+                    'N',
                     Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                     Licence::LICENCE_CATEGORY_PSV
                 ],
                 [
                     'id' => 111,
-                    'niFlag' => 'Y',
-                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    'niFlag' => 'N',
+                    'operatorType' => Licence::LICENCE_CATEGORY_PSV,
                     'licenceType' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
-                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
                     'confirm' => false
                 ]
             ],
             'from SR' => [
-                $this->getCommand('Y', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
+                $this->getCommand('N', Licence::LICENCE_TYPE_STANDARD_NATIONAL, Licence::LICENCE_CATEGORY_PSV),
                 [
-                    'Y',
+                    'N',
                     Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
                     Licence::LICENCE_CATEGORY_PSV
                 ],
                 [
                     'id' => 111,
-                    'niFlag' => 'Y',
-                    'operatorType' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                    'niFlag' => 'N',
+                    'operatorType' => Licence::LICENCE_CATEGORY_PSV,
                     'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                    'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
+                    'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
                     'confirm' => false
                 ]
             ],

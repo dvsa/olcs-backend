@@ -47,48 +47,270 @@ class AuthorisationsTest extends MockeryTestCase
     }
 
     /**
-     * @dataProvider dpSetContextWhenAuthorisationIncreasedOrChangedFromNullToNumeric
+     * @dataProvider dpSetContext
      */
-    public function testSetContextWhenAuthorisationIncreasedOrChangedFromNullToNumeric(
-        $increased,
-        $changedFromNullToNumeric
+    public function testSetContext(
+        $hgvAuthorisationIncreased,
+        $vehicleTypeMixedWithLgv,
+        $lgvAuthorisationIncreased,
+        $lgvChangedFromNullToNumeric,
+        $totAuthLgvVehicles,
+        $trailerAuthorisationIncreased,
+        $expectedAuthorisationArray
     ) {
-        $totAuthLgvVehicles = 7;
+        $totAuthHgvVehicles = 5;
+        $totAuthTrailers = 3;
 
+        $this->application->shouldReceive('hasHgvAuthorisationIncreased')
+            ->withNoArgs()
+            ->andReturn($hgvAuthorisationIncreased);
+        $this->application->shouldReceive('isVehicleTypeMixedWithLgv')
+            ->withNoArgs()
+            ->andReturn($vehicleTypeMixedWithLgv);
+        $this->application->shouldReceive('getTotAuthHgvVehicles')
+            ->withNoArgs()
+            ->andReturn($totAuthHgvVehicles);
         $this->application->shouldReceive('hasLgvAuthorisationIncreased')
             ->withNoArgs()
-            ->andReturn($increased);
+            ->andReturn($lgvAuthorisationIncreased);
         $this->application->shouldReceive('hasLgvAuthorisationChangedFromNullToNumeric')
             ->withNoArgs()
-            ->andReturn($changedFromNullToNumeric);
+            ->andReturn($lgvChangedFromNullToNumeric);
         $this->application->shouldReceive('getTotAuthLgvVehicles')
             ->withNoArgs()
             ->andReturn($totAuthLgvVehicles);
+        $this->application->shouldReceive('hasAuthTrailersIncrease')
+            ->withNoArgs()
+            ->andReturn($trailerAuthorisationIncreased);
+        $this->application->shouldReceive('getTotAuthTrailers')
+            ->withNoArgs()
+            ->andReturn($totAuthTrailers);
 
         $this->assertSame(
-            [
-                'authorisation' => 'Light goods vehicles authorised on the licence. ' .
-                    'New authorisation will be 7 vehicle(s)'
-            ],
+            ['authorisation' => $expectedAuthorisationArray],
             $this->sut->provide($this->publicationLink, $this->context)->getArrayCopy()
         );
     }
 
-    public function dpSetContextWhenAuthorisationIncreasedOrChangedFromNullToNumeric()
+    public function dpSetContext()
     {
         return [
-            [true, false],
-            [false, true],
-            [true, true],
+            'lgv auth increase only' => [
+                'hgvAuthorisationIncreased' => false,
+                'vehicleTypeMixedWithLgv' => false,
+                'lgvAuthorisationIncreased' => true,
+                'lgvChangedFromNullToNumeric' => false,
+                'totAuthLgvVehicles' => 7,
+                'trailerAuthorisationIncreased' => false,
+                [
+                    'New licence authorisation will be 7 Light goods vehicle(s)'
+                ]
+            ],
+            'lgv auth from null to zero' => [
+                'hgvAuthorisationIncreased' => false,
+                'vehicleTypeMixedWithLgv' => false,
+                'lgvAuthorisationIncreased' => false,
+                'lgvChangedFromNullToNumeric' => true,
+                'totAuthLgvVehicles' => 0,
+                'trailerAuthorisationIncreased' => false,
+                [
+                    'New licence authorisation will be 0 Light goods vehicle(s)'
+                ]
+            ],
+            'lgv auth from null to nonzero' => [
+                'hgvAuthorisationIncreased' => false,
+                'vehicleTypeMixedWithLgv' => false,
+                'lgvAuthorisationIncreased' => true,
+                'lgvChangedFromNullToNumeric' => true,
+                'totAuthLgvVehicles' => 7,
+                'trailerAuthorisationIncreased' => false,
+                [
+                    'New licence authorisation will be 7 Light goods vehicle(s)'
+                ]
+            ],
+            'hgv and lgv auth increase with hgv caption' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => true,
+                'lgvChangedFromNullToNumeric' => false,
+                'totAuthLgvVehicles' => 7,
+                'trailerAuthorisationIncreased' => false,
+                [
+                    'New licence authorisation will be 5 Heavy goods vehicle(s)',
+                    'New licence authorisation will be 7 Light goods vehicle(s)'
+                ]
+            ],
+            'hgv increase and lgv from null to zero with hgv caption' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => false,
+                'lgvChangedFromNullToNumeric' => true,
+                'totAuthLgvVehicles' => 0,
+                'trailerAuthorisationIncreased' => false,
+                [
+                    'New licence authorisation will be 5 Heavy goods vehicle(s)',
+                    'New licence authorisation will be 0 Light goods vehicle(s)'
+                ]
+            ],
+            'hgv increase and lgv from null to nonzero with hgv caption' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => true,
+                'lgvChangedFromNullToNumeric' => true,
+                'totAuthLgvVehicles' => 7,
+                'trailerAuthorisationIncreased' => false,
+                [
+                    'New licence authorisation will be 5 Heavy goods vehicle(s)',
+                    'New licence authorisation will be 7 Light goods vehicle(s)'
+                ]
+            ],
+            'all auths increased' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => true,
+                'lgvChangedFromNullToNumeric' => false,
+                'totAuthLgvVehicles' => 7,
+                'trailerAuthorisationIncreased' => true,
+                [
+                    'New licence authorisation will be 5 Heavy goods vehicle(s)',
+                    'New licence authorisation will be 7 Light goods vehicle(s)',
+                    'New licence authorisation will be 3 trailer(s)'
+                ]
+            ],
+            'hgv and trailer auth increase with vehicle caption' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => false,
+                'lgvAuthorisationIncreased' => false,
+                'lgvChangedFromNullToNumeric' => false,
+                'totAuthLgvVehicles' => null,
+                'trailerAuthorisationIncreased' => true,
+                [
+                    'New licence authorisation will be 5 vehicle(s)',
+                    'New licence authorisation will be 3 trailer(s)'
+                ]
+            ],
+            'hgv and trailer auth increase with hgv caption' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => false,
+                'lgvChangedFromNullToNumeric' => false,
+                'totAuthLgvVehicles' => null,
+                'trailerAuthorisationIncreased' => true,
+                [
+                    'New licence authorisation will be 5 Heavy goods vehicle(s)',
+                    'New licence authorisation will be 3 trailer(s)'
+                ]
+            ],
+            'hgv and trailer auth increase and lgv auth from null to zero' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => false,
+                'lgvChangedFromNullToNumeric' => true,
+                'totAuthLgvVehicles' => 0,
+                'trailerAuthorisationIncreased' => true,
+                [
+                    'New licence authorisation will be 5 Heavy goods vehicle(s)',
+                    'New licence authorisation will be 0 Light goods vehicle(s)',
+                    'New licence authorisation will be 3 trailer(s)'
+                ]
+            ],
+            'hgv and trailer auth increase and lgv auth from null to nonzero' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => true,
+                'lgvChangedFromNullToNumeric' => true,
+                'totAuthLgvVehicles' => 7,
+                'trailerAuthorisationIncreased' => true,
+                [
+                    'New licence authorisation will be 5 Heavy goods vehicle(s)',
+                    'New licence authorisation will be 7 Light goods vehicle(s)',
+                    'New licence authorisation will be 3 trailer(s)'
+                ]
+            ],
+            'lgv auth increase and trailer auth increase' => [
+                'hgvAuthorisationIncreased' => false,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => true,
+                'lgvChangedFromNullToNumeric' => false,
+                'totAuthLgvVehicles' => 7,
+                'trailerAuthorisationIncreased' => true,
+                [
+                    'New licence authorisation will be 7 Light goods vehicle(s)',
+                    'New licence authorisation will be 3 trailer(s)'
+                ]
+            ],
+            'lgv auth from null to zero and trailer auth increase' => [
+                'hgvAuthorisationIncreased' => false,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => false,
+                'lgvChangedFromNullToNumeric' => true,
+                'totAuthLgvVehicles' => 0,
+                'trailerAuthorisationIncreased' => true,
+                [
+                    'New licence authorisation will be 0 Light goods vehicle(s)',
+                    'New licence authorisation will be 3 trailer(s)'
+                ]
+            ],
+            'lgv auth from null to nonzero and trailer auth increase' => [
+                'hgvAuthorisationIncreased' => false,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => true,
+                'lgvChangedFromNullToNumeric' => true,
+                'totAuthLgvVehicles' => 7,
+                'trailerAuthorisationIncreased' => true,
+                [
+                    'New licence authorisation will be 7 Light goods vehicle(s)',
+                    'New licence authorisation will be 3 trailer(s)'
+                ]
+            ],
+            'hgv auth increase only with vehicle caption' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => false,
+                'lgvAuthorisationIncreased' => false,
+                'lgvChangedFromNullToNumeric' => false,
+                'totAuthLgvVehicles' => 0,
+                'trailerAuthorisationIncreased' => false,
+                [
+                    'New licence authorisation will be 5 vehicle(s)',
+                ]
+            ],
+            'hgv auth increase only with hgv caption' => [
+                'hgvAuthorisationIncreased' => true,
+                'vehicleTypeMixedWithLgv' => true,
+                'lgvAuthorisationIncreased' => false,
+                'lgvChangedFromNullToNumeric' => false,
+                'totAuthLgvVehicles' => 0,
+                'trailerAuthorisationIncreased' => false,
+                [
+                    'New licence authorisation will be 5 Heavy goods vehicle(s)',
+                ]
+            ],
+            'trailer auth increase only' => [
+                'hgvAuthorisationIncreased' => false,
+                'vehicleTypeMixedWithLgv' => false,
+                'lgvAuthorisationIncreased' => false,
+                'lgvChangedFromNullToNumeric' => false,
+                'totAuthLgvVehicles' => 0,
+                'trailerAuthorisationIncreased' => true,
+                [
+                    'New licence authorisation will be 3 trailer(s)'
+                ]
+            ],
         ];
     }
 
     public function testDoNothingWhenAuthorisationNotIncreasedAndNotChangedFromNullToNumeric()
     {
+        $this->application->shouldReceive('hasHgvAuthorisationIncreased')
+            ->withNoArgs()
+            ->andReturnFalse();
         $this->application->shouldReceive('hasLgvAuthorisationIncreased')
             ->withNoArgs()
             ->andReturnFalse();
         $this->application->shouldReceive('hasLgvAuthorisationChangedFromNullToNumeric')
+            ->withNoArgs()
+            ->andReturnFalse();
+        $this->application->shouldReceive('hasAuthTrailersIncrease')
             ->withNoArgs()
             ->andReturnFalse();
 

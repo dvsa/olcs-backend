@@ -87,15 +87,19 @@ final class GenerateChecklistDocument extends AbstractCommandHandler implements 
         $licence = $continuationDetail->getLicence();
 
         if ($licence->isGoods()) {
-            $template = ($licence->getNiFlag() === 'N') ?
+            if ($licence->isLgv()) {
+                return ($licence->getNiFlag() === 'N') ?
+                    Document::GV_LGV_CONTINUATION_CHECKLIST :
+                    Document::GV_LGV_CONTINUATION_CHECKLIST_NI;
+            }
+
+            return ($licence->getNiFlag() === 'N') ?
                 Document::GV_CONTINUATION_CHECKLIST :
                 Document::GV_CONTINUATION_CHECKLIST_NI;
-        } else {
-            $template = ($licence->getLicenceType()->getId() === LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) ?
-                Document::PSV_CONTINUATION_CHECKLIST_SR :
-                Document::PSV_CONTINUATION_CHECKLIST;
         }
 
-        return $template;
+        return ($licence->getLicenceType()->getId() === LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) ?
+            Document::PSV_CONTINUATION_CHECKLIST_SR :
+            Document::PSV_CONTINUATION_CHECKLIST;
     }
 }
