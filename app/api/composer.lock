@@ -48,11 +48,11 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.225.0",
+            "version": "3.225.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.225.0/aws-aws-sdk-php-3.225.0.zip",
-                "reference": "5a5f99a528d741820a77f0fc19c54ac7eca72d80",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.225.3/aws-aws-sdk-php-3.225.3.zip",
+                "reference": "ee717ffeb6d7c6bd0278b51b9f070b3571ac4eb0",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2022-06-08T19:56:56+00:00"
+            "time": "2022-06-13T18:56:48+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -1916,11 +1916,11 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.5.6",
+            "version": "6.5.7",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/guzzlehttp/guzzle/6.5.6/guzzlehttp-guzzle-6.5.6.zip",
-                "reference": "f092dd734083473658de3ee4bef093ed77d2689c",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/guzzlehttp/guzzle/6.5.7/guzzlehttp-guzzle-6.5.7.zip",
+                "reference": "724562fa861e21a4071c652c8a159934e4f05592",
                 "shasum": ""
             },
             "require": {
@@ -2017,7 +2017,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-25T13:19:12+00:00"
+            "time": "2022-06-09T21:36:50+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -4553,11 +4553,11 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.27.0",
+            "version": "1.27.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/monolog/monolog/1.27.0/monolog-monolog-1.27.0.zip",
-                "reference": "52ebd235c1f7e0d5e1b16464b695a28335f8e44a",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/monolog/monolog/1.27.1/monolog-monolog-1.27.1.zip",
+                "reference": "904713c5929655dc9b97288b69cfeedad610c9a1",
                 "shasum": ""
             },
             "require": {
@@ -4625,7 +4625,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-13T20:29:46+00:00"
+            "time": "2022-06-09T08:53:42+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
