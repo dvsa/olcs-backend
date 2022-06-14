@@ -173,7 +173,8 @@ class Generator extends AbstractGenerator
     protected $variationBundles = [
         'type_of_licence' => [
             'licence' => [
-                'licenceType'
+                'licenceType',
+                'vehicleType'
             ]
         ],
         'people' => [

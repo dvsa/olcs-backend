@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -38,6 +39,10 @@ class GenerateChecklistDocumentTest extends CommandHandlerTestCase
             Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
             Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            RefData::APP_VEHICLE_TYPE_HGV,
+            RefData::APP_VEHICLE_TYPE_LGV,
+            RefData::APP_VEHICLE_TYPE_MIXED,
+            RefData::APP_VEHICLE_TYPE_PSV,
         ];
 
         $this->references = [
@@ -59,7 +64,7 @@ class GenerateChecklistDocumentTest extends CommandHandlerTestCase
     /**
      * @dataProvider dataProviderTemplates
      */
-    public function testHandleCommand($expectedTemplate, $goodsOrPsv, $licenceType, $trafficArea)
+    public function testHandleCommand($expectedTemplate, $goodsOrPsv, $licenceType, $vehicleType, $trafficArea)
     {
         $command = Command::create(['id' => 54, 'user' => 65]);
 
@@ -70,6 +75,7 @@ class GenerateChecklistDocumentTest extends CommandHandlerTestCase
         $continuationDetail->getLicence()
             ->setGoodsOrPsv($this->mapRefData($goodsOrPsv))
             ->setLicenceType($this->mapRefData($licenceType))
+            ->setVehicleType($this->mapRefData($vehicleType))
             ->setOrganisation($this->mapReference(Organisation::class, 1))
             ->setTrafficArea($this->mapReference(TrafficArea::class, $trafficArea));
 
@@ -121,48 +127,70 @@ class GenerateChecklistDocumentTest extends CommandHandlerTestCase
                 Document::GV_CONTINUATION_CHECKLIST,
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_MIXED,
                 'B'
+            ],
+            [
+                Document::GV_CONTINUATION_CHECKLIST_NI,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_MIXED,
+                'N'
+            ],
+            [
+                Document::GV_LGV_CONTINUATION_CHECKLIST,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_LGV,
+                'B'
+            ],
+            [
+                Document::GV_LGV_CONTINUATION_CHECKLIST_NI,
+                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_LGV,
+                'N'
             ],
             [
                 Document::GV_CONTINUATION_CHECKLIST,
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_HGV,
                 'B'
             ],
             [
                 Document::GV_CONTINUATION_CHECKLIST_NI,
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                'N'
-            ],
-            [
-                Document::GV_CONTINUATION_CHECKLIST_NI,
-                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                RefData::APP_VEHICLE_TYPE_HGV,
                 'N'
             ],
             [
                 Document::PSV_CONTINUATION_CHECKLIST,
                 Licence::LICENCE_CATEGORY_PSV,
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                RefData::APP_VEHICLE_TYPE_PSV,
                 'B'
             ],
             [
                 Document::PSV_CONTINUATION_CHECKLIST,
                 Licence::LICENCE_CATEGORY_PSV,
                 Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                RefData::APP_VEHICLE_TYPE_PSV,
                 'N'
             ],
             [
                 Document::PSV_CONTINUATION_CHECKLIST_SR,
                 Licence::LICENCE_CATEGORY_PSV,
                 Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                RefData::APP_VEHICLE_TYPE_PSV,
                 'B'
             ],
             [
                 Document::PSV_CONTINUATION_CHECKLIST_SR,
                 Licence::LICENCE_CATEGORY_PSV,
                 Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                RefData::APP_VEHICLE_TYPE_PSV,
                 'N'
             ],
         ];

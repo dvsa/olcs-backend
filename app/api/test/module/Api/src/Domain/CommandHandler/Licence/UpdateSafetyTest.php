@@ -41,7 +41,36 @@ class UpdateSafetyTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    public function dpHandleCommand()
+    {
+        return [
+            [
+                'canHaveTrailer' => true,
+                'totAuthTrailers' => 12,
+                'expectedSafetyInsTrailers' => 3,
+            ],
+            [
+                'canHaveTrailer' => true,
+                'totAuthTrailers' => 0,
+                'expectedSafetyInsTrailers' => 0,
+            ],
+            [
+                'canHaveTrailer' => false,
+                'totAuthTrailers' => 12,
+                'expectedSafetyInsTrailers' => null,
+            ],
+            [
+                'canHaveTrailer' => false,
+                'totAuthTrailers' => 0,
+                'expectedSafetyInsTrailers' => null,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpHandleCommand
+     */
+    public function testHandleCommand($canHaveTrailer, $totAuthTrailers, $expectedSafetyInsTrailers)
     {
         $data = [
             'id' => 222,
@@ -57,14 +86,28 @@ class UpdateSafetyTest extends CommandHandlerTestCase
 
         /** @var LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setTotAuthTrailers($totAuthTrailers);
+        $licence->shouldReceive('canHaveTrailer')
+            ->withNoArgs()
+            ->andReturn($canHaveTrailer);
         $licence->shouldReceive('updateSafetyDetails')
-            ->with(
-                2,
-                3,
-                $this->refData[LicenceEntity::TACH_EXT],
-                'Some name',
-                'Y'
-            );
+            ->withArgs(
+                function (
+                    $safetyInsVehicles,
+                    $safetyInsTrailers,
+                    $tachographIns,
+                    $tachographInsName,
+                    $safetyInsVaries
+                ) use ($expectedSafetyInsTrailers) {
+                    $this->assertSame(2, $safetyInsVehicles);
+                    $this->assertSame($expectedSafetyInsTrailers, $safetyInsTrailers);
+                    $this->assertSame($this->refData[LicenceEntity::TACH_EXT], $tachographIns);
+                    $this->assertSame('Some name', $tachographInsName);
+                    $this->assertSame('Y', $safetyInsVaries);
+                    return true;
+                }
+            )
+            ->once();
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)

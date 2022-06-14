@@ -41,6 +41,16 @@ class ApplicationOperatingCentreBuilder implements BuilderInterface
     }
 
     /**
+     * @param string $action
+     * @return self
+     */
+    public function withAction(string $action): self
+    {
+        $this->instance->setAction($action);
+        return $this;
+    }
+
+    /**
      * @return ApplicationOperatingCentre
      */
     public function build(): ApplicationOperatingCentre

@@ -22,13 +22,36 @@ final class Authorisations extends AbstractContext
     public function provide(PublicationLink $publicationLink, ArrayObject $context)
     {
         $variation = $publicationLink->getApplication();
+        $text = [];
+
+        if ($variation->hasHgvAuthorisationIncreased()) {
+            $vehicleCaption = 'vehicle(s)';
+            if ($variation->isVehicleTypeMixedWithLgv()) {
+                $vehicleCaption = 'Heavy goods vehicle(s)';
+            }
+
+            $text[] = sprintf(
+                'New licence authorisation will be %d %s',
+                $variation->getTotAuthHgvVehicles(),
+                $vehicleCaption
+            );
+        }
 
         if ($variation->hasLgvAuthorisationIncreased() || $variation->hasLgvAuthorisationChangedFromNullToNumeric()) {
-            $text = sprintf(
-                'Light goods vehicles authorised on the licence. New authorisation will be %d vehicle(s)',
+            $text[] = sprintf(
+                'New licence authorisation will be %d Light goods vehicle(s)',
                 $variation->getTotAuthLgvVehicles()
             );
+        }
 
+        if ($variation->hasAuthTrailersIncrease()) {
+            $text[] = sprintf(
+                'New licence authorisation will be %d trailer(s)',
+                $variation->getTotAuthTrailers()
+            );
+        }
+
+        if (count($text)) {
             $context->offsetSet('authorisation', $text);
         }
 

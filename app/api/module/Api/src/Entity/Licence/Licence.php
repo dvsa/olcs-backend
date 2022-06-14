@@ -62,7 +62,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     use TotAuthVehiclesTrait;
 
     const ERROR_CANT_BE_SR = 'LIC-TOL-1';
-    const ERROR_CANT_BE_SI = 'LIC-TOL-2';
     const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
     const ERROR_SAFETY_REQUIRES_TACHO_NAME = 'LIC-SAFE-TACH-1';
 
@@ -135,16 +134,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV
             && $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED
         );
-    }
-
-    /**
-     * Whether this licence is permitted to become a goods standard international licence by means of a variation
-     *
-     * @return bool
-     */
-    public function canBecomeStandardInternational()
-    {
-        return (string)$this->getGoodsOrPsv() == self::LICENCE_CATEGORY_PSV;
     }
 
     /**

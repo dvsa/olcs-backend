@@ -204,7 +204,31 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandWithIncreasedLgvAuthWithoutFees()
+    public function dpHandleCommandForGoodsWithIncreasedAuthWithoutFees()
+    {
+        return [
+            'HGV auth increased' => [
+                'hasHgvAuthorisationIncreased' => true,
+                'hasLgvAuthorisationIncreased' => false,
+                'hasAuthTrailersIncrease' => false,
+            ],
+            'LGV auth increased' => [
+                'hasHgvAuthorisationIncreased' => false,
+                'hasLgvAuthorisationIncreased' => true,
+                'hasAuthTrailersIncrease' => false,
+            ],
+            'Trailers auth increased' => [
+                'hasHgvAuthorisationIncreased' => false,
+                'hasLgvAuthorisationIncreased' => false,
+                'hasAuthTrailersIncrease' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpHandleCommandForGoodsWithIncreasedAuthWithoutFees
+     */
+    public function testHandleCommandForGoodsWithIncreasedAuthWithoutFees($hasHgvAuthorisationIncreased, $hasLgvAuthorisationIncreased, $hasAuthTrailersIncrease)
     {
         $data = [];
         $command = Cmd::create($data);
@@ -222,10 +246,18 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
             ->andReturn($application);
 
         $application
+            ->shouldReceive('isGoods')
+            ->withNoArgs()
+            ->andReturnTrue()
+            ->shouldReceive('hasHgvAuthorisationIncreased')
+            ->withNoArgs()
+            ->andReturn($hasHgvAuthorisationIncreased)
             ->shouldReceive('hasLgvAuthorisationIncreased')
             ->withNoArgs()
-            ->once()
-            ->andReturn(true)
+            ->andReturn($hasLgvAuthorisationIncreased)
+            ->shouldReceive('hasAuthTrailersIncrease')
+            ->withNoArgs()
+            ->andReturn($hasAuthTrailersIncrease)
             ->shouldReceive('hasApplicationFee')
             ->andReturn(false);
 
@@ -246,6 +278,71 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
             'messages' => [
                 'CreateApplicationFee'
             ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function dpHandleCommandForPsvWithUpdatedAuthWithoutFees()
+    {
+        return [
+            'HGV auth increased' => [
+                'hasHgvAuthorisationIncreased' => true,
+            ],
+            'HGV auth not increased' => [
+                'hasHgvAuthorisationIncreased' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpHandleCommandForPsvWithUpdatedAuthWithoutFees
+     */
+    public function testHandleCommandForPsvWithUpdatedAuthWithoutFees($hasHgvAuthorisationIncreased)
+    {
+        $data = [];
+        $command = Cmd::create($data);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial();
+        $application->setLicence($licence);
+        $application->setId(111);
+        $application->setOperatingCentres(new ArrayCollection());
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $application
+            ->shouldReceive('isGoods')
+            ->withNoArgs()
+            ->andReturnFalse()
+            ->shouldReceive('hasHgvAuthorisationIncreased')
+            ->withNoArgs()
+            ->andReturn($hasHgvAuthorisationIncreased)
+            ->shouldReceive('hasLgvAuthorisationIncreased')
+            ->withNoArgs()
+            ->andReturnFalse()
+            ->shouldReceive('hasAuthTrailersIncrease')
+            ->withNoArgs()
+            ->andReturnFalse()
+            ->shouldReceive('hasApplicationFee')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $this->repoMap['Fee']->shouldReceive('fetchOutstandingFeesByApplicationId')
+            ->with(111)
+            ->once()
+            ->andReturn([]);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => []
         ];
 
         $this->assertEquals($expected, $result->toArray());

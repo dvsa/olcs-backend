@@ -199,11 +199,38 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             $this->setLicenceType($licenceType);
             $this->setVehicleType($vehicleType);
             $this->setLgvDeclarationConfirmation($lgvDeclarationConfirmation);
+
+            // reset TotAuthVehicles
+            $this->resetTotAuthVehicles();
+
             return true;
         }
         return null;
     }
-    
+
+    /**
+     * Resets TotAuthVehicles based on Vehicle Type
+     *
+     * @return void
+     */
+    private function resetTotAuthVehicles()
+    {
+        if (!$this->canHaveLgv() && $this->totAuthLgvVehicles !== null) {
+            // can't have LGV, reset TotAuthLgvVehicles
+            $this->updateTotAuthLgvVehicles(null);
+        }
+
+        if (!$this->canHaveHgv() && $this->totAuthHgvVehicles !== null) {
+            // can't have HGV, reset TotAuthHgvVehicles
+            $this->updateTotAuthHgvVehicles(null);
+        }
+
+        if (!$this->canHaveTrailer() && $this->totAuthTrailers !== null) {
+            // can't have Trailer, reset TotAuthTrailers
+            $this->setTotAuthTrailers(null);
+        }
+    }
+
     /**
      * Is Type of Licence valid
      *
@@ -610,6 +637,21 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             $this->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED
             && in_array($this->getLicenceType()->getId(), $restrictedUpgrades)
         );
+    }
+
+    /**
+     * Does the application involve a licence change which requires operating centre
+     *
+     * @return bool
+     */
+    public function isLicenceChangeWhichRequiresOperatingCentre(): bool
+    {
+        // only applies to a variation
+        if (!$this->isVariation()) {
+            return false;
+        }
+
+        return $this->mustHaveOperatingCentre() && !$this->getLicence()->mustHaveOperatingCentre();
     }
 
     /**
@@ -1957,6 +1999,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             // It is a Goods or PSV variation
             // The LGV authorisation has increased (only returns true for licence types concerned with LGV)
             if ($this->hasLgvAuthorisationIncreased()) {
+                return true;
+            }
+
+            // The HGV authorisation has increased (goods licence only)
+            if ($this->hasHgvAuthorisationIncreased() && $this->isGoods()) {
+                return true;
+            }
+
+            // The trailer authorisation has increased
+            if ($this->hasAuthTrailersIncrease()) {
                 return true;
             }
 

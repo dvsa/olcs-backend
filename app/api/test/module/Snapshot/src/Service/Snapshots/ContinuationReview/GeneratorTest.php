@@ -9,6 +9,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\View\Model\ViewModel;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\OperatingCentresReviewService;
 
 /**
@@ -55,9 +56,9 @@ class GeneratorTest extends MockeryTestCase
     /**
      * @dataProvider licenceTypeProvider
      */
-    public function testGenerate($isPsv, $isRestricted, $expectedSections)
+    public function testGenerate($isPsv, $licenceType, $vehicleType, $expectedSections)
     {
-        $mockLicence = $this->setUpLicence($isPsv, $isRestricted);
+        $mockLicence = $this->setUpLicence($isPsv, $licenceType, $vehicleType);
         $mockContinuationDetail = $this->setUpContinuationDetail($mockLicence);
         $this->setUpServices($mockLicence, $mockContinuationDetail, $this->getSections());
 
@@ -92,9 +93,9 @@ class GeneratorTest extends MockeryTestCase
         ];
     }
 
-    protected function setUpLicence(bool $isPsv, bool $isRestricted)
+    protected function setUpLicence(bool $isPsv, string $licenceType, string $vehicleType)
     {
-        $licenceType = $isRestricted ? Licence::LICENCE_TYPE_RESTRICTED : Licence::LICENCE_TYPE_STANDARD_NATIONAL;
+        $isRestricted = $licenceType == Licence::LICENCE_TYPE_RESTRICTED;
 
         $mockLicence = m::mock(Licence::class)
             ->shouldReceive('getNiFlag')
@@ -105,6 +106,15 @@ class GeneratorTest extends MockeryTestCase
                 m::mock()
                     ->shouldReceive('getId')
                     ->andReturn($licenceType)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->shouldReceive('getVehicleType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn($vehicleType)
                     ->once()
                     ->getMock()
             )
@@ -142,7 +152,8 @@ class GeneratorTest extends MockeryTestCase
                 ->andReturn($isPsv)
                 ->once();
         }
-            return $mockLicence->getMock();
+
+        return $mockLicence->getMock();
     }
 
     protected function setUpContinuationDetail($mockLicence)
@@ -150,7 +161,7 @@ class GeneratorTest extends MockeryTestCase
         return m::mock(ContinuationDetail::class)
             ->shouldReceive('getLicence')
             ->andReturn($mockLicence)
-            ->times(4)
+            ->times(5)
             ->getMock();
     }
 
@@ -202,7 +213,8 @@ class GeneratorTest extends MockeryTestCase
         return [
             'NotPsvAndNotRestricted' => [
                 'isPsv' => false,
-                'isRestricted' => false,
+                'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
                 'expectedSections' => [
                     [
                         'header' => 'continuation-review-type_of_licence',
@@ -230,7 +242,8 @@ class GeneratorTest extends MockeryTestCase
             ],
             'IsPsvAndNotRestricted' => [
                 'isPsv' => true,
-                'isRestricted' => false,
+                'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
                 'expectedSections' => [
                     [
                         'header' => 'continuation-review-type_of_licence',
@@ -258,7 +271,8 @@ class GeneratorTest extends MockeryTestCase
             ],
             'NotPsvAndIsRestricted' => [
                 'isPsv' => false,
-                'isRestricted' => true,
+                'licenceType' => Licence::LICENCE_TYPE_RESTRICTED,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_HGV,
                 'expectedSections' => [
                     [
                         'header' => 'continuation-review-type_of_licence',
@@ -286,7 +300,8 @@ class GeneratorTest extends MockeryTestCase
             ],
             'IsPsvAndIsRestricted' => [
                 'isPsv' => true,
-                'isRestricted' => true,
+                'licenceType' => Licence::LICENCE_TYPE_RESTRICTED,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_PSV,
                 'expectedSections' => [
                     [
                         'header' => 'continuation-review-type_of_licence',
@@ -308,6 +323,35 @@ class GeneratorTest extends MockeryTestCase
                     ],
                     [
                         'header' => 'continuation-review-conditions_undertakings',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-declaration',
+                        'config' => ''
+                    ],
+                ]
+            ],
+            'IsStandardInternationalLgv' => [
+                'isPsv' => true,
+                'licenceType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                'vehicleType' => RefData::APP_VEHICLE_TYPE_LGV,
+                'expectedSections' => [
+                    [
+                        'header' => 'continuation-review-type_of_licence',
+                        'config' => 'type-of-licence'
+                    ],
+                    [
+                        'header' => 'continuation-review-operating_centres.lgv',
+                        'config' => 'operating-centres',
+                        'summary' => 'operating-centres-summary',
+                        'summaryHeader' => 'operating-centres-summary-header',
+                    ],
+                    [
+                        'header' => 'continuation-review-people-org_typ_rc',
+                        'config' => ''
+                    ],
+                    [
+                        'header' => 'continuation-review-finance',
                         'config' => ''
                     ],
                     [
