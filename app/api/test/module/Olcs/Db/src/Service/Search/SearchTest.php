@@ -191,6 +191,7 @@ class SearchTest extends MockeryTestCase
         $this->mockSPRepo->shouldReceive('fetchValue')->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::DATA_SEPARATION_TEAMS_EXEMPT)->once()->andReturn($excludedTeamIds);
         $this->mockUser->shouldReceive('getTeam->getId')->once()->andReturn($teamId);
         $this->mockUser->shouldReceive('getTeam->getTrafficArea->getId')->times($taCheckTimes)->andReturn($trafficAreaId);
+        $this->mockUser->shouldReceive('getTeam->getTrafficArea->getIsNi')->times($taCheckTimes)->andReturn(false);
 
         $this->mockClient->shouldReceive('request')->once()->andReturnUsing(
             function ($path, $method, $query, $params) {
