@@ -54,6 +54,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         'safety' => [],
         'conditions_undertakings' => [],
         'financial_history' => [],
+        'licence_history' => [],
         'convictions_penalties' => [],
         //'undertakings' => [] We don't want this as there is bespoke rules around setting this status
     ];
@@ -75,8 +76,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         'safety' => 'hasUpdatedSafetySection',
         'conditions_undertakings' => 'hasUpdatedConditionsUndertakings',
         'financial_history' => 'hasUpdatedFinancialHistory',
-        // @NOTE Not sure if we need this just yet
-        //'licence_history' => 'hasUpdatedLicenceHistory',
+        'licence_history' => 'hasSavedSection',
         'convictions_penalties' => 'hasUpdatedConvictionsPenalties',
         'undertakings' => 'hasUpdatedUndertakings',
         'declarations_internal' => 'hasUpdateDeclarationsInternal',
@@ -796,6 +796,9 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         if ($markRequired) {
             if (!$this->isUpdated('financial_history')) {
                 $this->markSectionRequired('financial_history');
+            }
+            if (!$this->isUpdated('licence_history')) {
+                $this->markSectionRequired('licence_history');
             }
             if (!$this->isUpdated('convictions_penalties')) {
                 $this->markSectionRequired('convictions_penalties');
