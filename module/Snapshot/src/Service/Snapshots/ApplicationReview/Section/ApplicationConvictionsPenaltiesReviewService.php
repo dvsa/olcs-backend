@@ -50,7 +50,6 @@ class ApplicationConvictionsPenaltiesReviewService extends AbstractReviewService
         $mainItems = [];
 
         foreach ($data['previousConvictions'] as $conviction) {
-
             $mainItems[] = [
                 'header' => $conviction['forename'] . ' ' . $conviction['familyName'],
                 'multiItems' => [

@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class SignatureReviewService extends AbstractReviewService
 {
-
     /**
      * Format the readonly config from the given record
      *

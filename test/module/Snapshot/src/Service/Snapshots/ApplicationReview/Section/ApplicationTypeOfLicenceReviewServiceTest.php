@@ -7,22 +7,33 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationTypeOfLicenceReviewService;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Application Type Of Licence Review Service Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ApplicationTypeOfLicenceReviewServiceTest extends \PHPUnit\Framework\TestCase
+class ApplicationTypeOfLicenceReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
 
     public function setUp(): void
     {
-        $this->sut = new ApplicationTypeOfLicenceReviewService();
+        $mockTranslator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new ApplicationTypeOfLicenceReviewService($abstractReviewServiceServices);
     }
 
     /**

@@ -95,7 +95,6 @@ class ConditionsUndertakingsReviewService extends AbstractReviewService
         $licConds = $licUnds = $ocConds = $ocUnds = [];
 
         foreach ($data['conditionUndertakings'] as $condition) {
-
             if ($filterByAction) {
                 $index = $condition['action'];
             } else {

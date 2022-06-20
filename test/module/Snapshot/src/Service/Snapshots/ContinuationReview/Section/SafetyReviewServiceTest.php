@@ -3,13 +3,13 @@
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\SafetyReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use OlcsTest\Bootstrap;
-use Laminas\I18n\View\Helper\Translate;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Safety review service test
@@ -21,11 +21,9 @@ class SafetyReviewServiceTest extends MockeryTestCase
     /** @var SafetyReviewService review service */
     protected $sut;
 
-    protected $mockTranslator;
-
     public function setUp(): void
     {
-        $this->mockTranslator = m::mock(Translate::class)
+        $mockTranslator = m::mock(TranslatorInterface::class)
             ->shouldReceive('translate')
             ->andReturnUsing(
                 function ($arg) {
@@ -34,10 +32,12 @@ class SafetyReviewServiceTest extends MockeryTestCase
             )
             ->getMock();
 
-        $this->sut = new SafetyReviewService();
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
-        $this->sm->setService('translator', $this->mockTranslator);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new SafetyReviewService($abstractReviewServiceServices);
     }
 
     public function testGetConfigFromData()

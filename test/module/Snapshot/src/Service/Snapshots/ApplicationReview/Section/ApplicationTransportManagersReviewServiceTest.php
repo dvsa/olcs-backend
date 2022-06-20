@@ -9,8 +9,10 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationTransportManagersReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TransportManagersReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Application Transport Managers Review Service Test
@@ -20,14 +22,25 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationTr
 class ApplicationTransportManagersReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+    
+    /** @var TransportManagersReviewService */
+    protected $mockTm;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sut = new ApplicationTransportManagersReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->mockTm = m::mock(TransportManagersReviewService::class);
+
+        $this->sut = new ApplicationTransportManagersReviewService(
+            $abstractReviewServiceServices,
+            $this->mockTm
+        );
     }
 
     public function testGetConfigFromData()
@@ -42,10 +55,7 @@ class ApplicationTransportManagersReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        $mockTm = m::mock();
-        $this->sm->setService('Review\TransportManagers', $mockTm);
-
-        $mockTm->shouldReceive('getConfigFromData')
+        $this->mockTm->shouldReceive('getConfigFromData')
             ->with(['bar' => 'foo'])
             ->andReturn(['foo' => 'bar']);
 

@@ -9,9 +9,8 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\FormatReviewDataTrait;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Abstract Review Service
@@ -21,13 +20,28 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractReviewService implements ReviewServiceInterface, ServiceLocatorAwareInterface
+abstract class AbstractReviewService implements ReviewServiceInterface
 {
     const SIGNATURE = 'markup-application_undertakings_signature';
     const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
     const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
 
-    use ServiceLocatorAwareTrait, FormatReviewDataTrait;
+    use FormatReviewDataTrait;
+
+    /** @var TranslatorInterface */
+    protected $translator;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     *
+     * @return AbstractReviewService
+     */
+    public function __construct(AbstractReviewServiceServices $abstractReviewServiceServices)
+    {
+        $this->translator = $abstractReviewServiceServices->getTranslator();
+    }
 
     protected function formatText($text)
     {

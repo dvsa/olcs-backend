@@ -5,9 +5,11 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender\Section;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class OperatorLicenceReviewServiceTest extends MockeryTestCase
 {
@@ -16,9 +18,15 @@ class OperatorLicenceReviewServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new OperatorLicenceReviewService();
-    }
+        $mockTranslator = m::mock(TranslatorInterface::class);
 
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new OperatorLicenceReviewService($abstractReviewServiceServices);
+    }
 
     /**
      * @dataProvider dpTestGetConfigFromData

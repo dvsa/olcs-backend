@@ -6,11 +6,12 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\DeclarationReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
-use OlcsTest\Bootstrap;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * DeclarationReviewServiceTest
@@ -25,8 +26,6 @@ class DeclarationReviewServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $serviceManager = Bootstrap::getServiceManager();
-
         /** @var var Organisation $organisation */
         $organisation = new Organisation();
         $organisation->setType(new RefData(Organisation::ORG_TYPE_REGISTERED_COMPANY));
@@ -40,7 +39,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
         $this->continuationDetail = new ContinuationDetail();
         $this->continuationDetail->setLicence($mockLicence);
 
-        $mockTranslator = m::mock()->shouldReceive('translate')->andReturnUsing(
+        $mockTranslator = m::mock(TranslatorInterface::class)->shouldReceive('translate')->andReturnUsing(
             function ($message) {
                 if ($message == 'markup-continuation-declaration-goods-gb' ||
                     $message == 'markup-continuation-declaration-goods-ni'
@@ -51,10 +50,13 @@ class DeclarationReviewServiceTest extends MockeryTestCase
                 return $message . '_translated(%s)';
             }
         )->getMock();
-        $serviceManager->setService('translator', $mockTranslator);
 
-        $this->sut = new DeclarationReviewService();
-        $this->sut->setServiceLocator($serviceManager);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new DeclarationReviewService($abstractReviewServiceServices);
     }
 
     public function testGetConfigFromDataNullSignature()

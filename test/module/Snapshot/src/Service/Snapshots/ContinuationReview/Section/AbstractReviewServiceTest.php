@@ -4,33 +4,37 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceManager;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\AbstractReviewServiceServices;
 use Dvsa\OlcsTest\Snapshot\Service\Snapshots\ContinuationReview\Section\Stub\AbstractReviewServiceStub;
-use OlcsTest\Bootstrap;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class AbstractReviewServiceTest extends MockeryTestCase
 {
     private $sut;
 
-    /** @var  ServiceManager|\Mockery\MockInterface */
-    protected $sm;
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut = new AbstractReviewServiceStub();
-        $this->sut->setServiceLocator($this->sm);
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new AbstractReviewServiceStub($abstractReviewServiceServices);
     }
 
     public function testTranslate()
     {
-        $mockTranslator = m::mock()
+        $this->mockTranslator
             ->shouldReceive('translate')
             ->with('foo')
             ->andReturn('foo_translated')
             ->once()
             ->getMock();
-        $this->sm->setService('translator', $mockTranslator);
 
         $this->assertEquals('foo_translated', $this->sut->translate('foo'));
     }

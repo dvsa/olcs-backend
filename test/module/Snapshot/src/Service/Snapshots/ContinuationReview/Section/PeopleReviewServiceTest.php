@@ -3,11 +3,12 @@
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\PeopleReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
-use OlcsTest\Bootstrap;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * People review service test
@@ -19,13 +20,9 @@ class PeopleReviewServiceTest extends MockeryTestCase
     /** @var PeopleReviewService review service */
     protected $sut;
 
-    protected $mockTranslator;
-
     public function setUp(): void
     {
-        $this->sut = new PeopleReviewService();
-
-        $this->mockTranslator = m::mock(Translate::class)
+        $mockTranslator = m::mock(TranslatorInterface::class)
             ->shouldReceive('translate')
             ->andReturnUsing(
                 function ($arg) {
@@ -34,9 +31,12 @@ class PeopleReviewServiceTest extends MockeryTestCase
             )
             ->getMock();
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
-        $this->sm->setService('translator', $this->mockTranslator);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new PeopleReviewService($abstractReviewServiceServices);
     }
 
     public function testGetConfigFromData()

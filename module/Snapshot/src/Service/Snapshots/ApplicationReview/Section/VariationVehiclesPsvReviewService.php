@@ -14,6 +14,25 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class VariationVehiclesPsvReviewService extends AbstractReviewService
 {
+    /** @var VehiclesPsvReviewService */
+    private $vehiclesPsvReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param VehiclesPsvReviewService $vehiclesPsvReviewService
+     *
+     * @return VariationVehiclesPsvReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        VehiclesPsvReviewService $vehiclesPsvReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->vehiclesPsvReviewService = $vehiclesPsvReviewService;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -25,8 +44,7 @@ class VariationVehiclesPsvReviewService extends AbstractReviewService
         return [
             'subSections' => [
                 [
-                    'mainItems' => $this->getServiceLocator()->get('Review\VehiclesPsv')
-                        ->getConfigFromData($data, [])
+                    'mainItems' => $this->vehiclesPsvReviewService->getConfigFromData($data, [])
                 ]
             ]
         ];

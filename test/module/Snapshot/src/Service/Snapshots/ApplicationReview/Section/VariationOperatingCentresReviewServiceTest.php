@@ -9,10 +9,15 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\GoodsOperatingCentreReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\PsvOperatingCentreReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationGoodsOcTotalAuthReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationOperatingCentresReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationPsvOcTotalAuthReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Variation Operating Centres Review Service Test
@@ -22,21 +27,59 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationOper
 class VariationOperatingCentresReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
+    /** @var PsvOperatingCentreReviewService */
+    private $psvOperatingCentreReviewService;
+
+    /** @var VariationPsvOcTotalAuthReviewService */
+    private $variationPsvOcTotalAuthReviewService;
+
+    /** @var GoodsOperatingCentreReviewService */
+    private $goodsOperatingCentreReviewService;
+
+    /** @var VariationGoodsOcTotalAuthReviewService */
+    private $variationGoodsOcTotalAuthReviewService;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sut = new VariationOperatingCentresReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->psvOperatingCentreReviewService = m::mock(PsvOperatingCentreReviewService::class);
+
+        $this->variationPsvOcTotalAuthReviewService = m::mock(VariationPsvOcTotalAuthReviewService::class);
+
+        $this->goodsOperatingCentreReviewService = m::mock(GoodsOperatingCentreReviewService::class);
+
+        $this->variationGoodsOcTotalAuthReviewService = m::mock(VariationGoodsOcTotalAuthReviewService::class);
+
+        $this->sut = new VariationOperatingCentresReviewService(
+            $abstractReviewServiceServices,
+            $this->psvOperatingCentreReviewService,
+            $this->variationPsvOcTotalAuthReviewService,
+            $this->goodsOperatingCentreReviewService,
+            $this->variationGoodsOcTotalAuthReviewService
+        );
     }
 
     /**
      * @dataProvider psvProvider
      */
-    public function testGetConfigFromDataWithEmptyOcList($isGoods, $expectedOcService, $expectedTaService)
-    {
+    public function testGetConfigFromDataWithEmptyOcList(
+        $isGoods,
+        $expectedOcServiceProperty,
+        $expectedTaServiceProperty
+    ) {
+        $expectedOcService = $this->{$expectedOcServiceProperty};
+        $expectedTaService = $this->{$expectedTaServiceProperty};
+
         $data = [
             'isGoods' => $isGoods,
             'operatingCentres' => []
@@ -51,14 +94,8 @@ class VariationOperatingCentresReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        // Mocks
-        $mockOcService = m::mock();
-        $mockTotalAuthService = m::mock();
-        $this->sm->setService('Review\\' . $expectedOcService, $mockOcService);
-        $this->sm->setService('Review\\' . $expectedTaService, $mockTotalAuthService);
-
         // Expectations
-        $mockTotalAuthService->shouldReceive('getConfigFromData')
+        $expectedTaService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn('TOTAL_AUTH_CONFIG');
 
@@ -68,8 +105,14 @@ class VariationOperatingCentresReviewServiceTest extends MockeryTestCase
     /**
      * @dataProvider psvProvider
      */
-    public function testGetConfigFromDataWithOcList($isGoods, $expectedOcService, $expectedTaService)
-    {
+    public function testGetConfigFromDataWithOcList(
+        $isGoods,
+        $expectedOcServiceProperty,
+        $expectedTaServiceProperty
+    ) {
+        $expectedOcService = $this->{$expectedOcServiceProperty};
+        $expectedTaService = $this->{$expectedTaServiceProperty};
+
         $data = [
             'isGoods' => $isGoods,
             'operatingCentres' => [
@@ -120,18 +163,12 @@ class VariationOperatingCentresReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        // Mocks
-        $mockOcService = m::mock();
-        $mockTotalAuthService = m::mock();
-        $this->sm->setService('Review\\' . $expectedOcService, $mockOcService);
-        $this->sm->setService('Review\\' . $expectedTaService, $mockTotalAuthService);
-
         // Expectations
-        $mockTotalAuthService->shouldReceive('getConfigFromData')
+        $expectedTaService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn('TOTAL_AUTH_CONFIG');
 
-        $mockOcService->shouldReceive('getConfigFromData')
+        $expectedOcService->shouldReceive('getConfigFromData')
             ->with(['action' => 'A', 'foo' => 'bar'])
             ->andReturn('foobar')
             ->shouldReceive('getConfigFromData')
@@ -152,13 +189,13 @@ class VariationOperatingCentresReviewServiceTest extends MockeryTestCase
         return [
             [
                 true,
-                'GoodsOperatingCentre',
-                'VariationGoodsOcTotalAuth'
+                'goodsOperatingCentreReviewService',
+                'variationGoodsOcTotalAuthReviewService'
             ],
             [
                 false,
-                'PsvOperatingCentre',
-                'VariationPsvOcTotalAuth'
+                'psvOperatingCentreReviewService',
+                'variationPsvOcTotalAuthReviewService'
             ]
         ];
     }

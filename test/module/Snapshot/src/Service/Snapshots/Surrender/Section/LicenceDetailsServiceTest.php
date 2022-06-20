@@ -7,9 +7,11 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class LicenceDetailsServiceTest extends MockeryTestCase
 {
@@ -18,7 +20,14 @@ class LicenceDetailsServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new LicenceDetailsService();
+        $mockTranslator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new LicenceDetailsService($abstractReviewServiceServices);
     }
 
     public function testGetConfigFromData()

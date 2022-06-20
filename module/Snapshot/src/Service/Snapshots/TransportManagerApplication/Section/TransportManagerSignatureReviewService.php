@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class TransportManagerSignatureReviewService extends AbstractReviewService
 {
-
     const SIGNATURE = 'markup-tma-declaration-signature';
     const SIGNATURE_DIGITAL = 'markup-tma-declaration-signature-digital';
     const SIGNATURE_DIGITAL_BOTH = 'markup-tma-declaration-signature-digital-both';

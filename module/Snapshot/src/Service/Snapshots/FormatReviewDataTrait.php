@@ -60,7 +60,7 @@ trait FormatReviewDataTrait
         if ($string === null) {
             return '';
         }
-        return $this->getServiceLocator()->get('translator')->translate($string);
+        return $this->translator->translate($string);
     }
 
     /**
@@ -106,6 +106,9 @@ trait FormatReviewDataTrait
      */
     protected function translateReplace($translationKey, array $arguments)
     {
-        return vsprintf($this->translate($translationKey), $arguments);
+        return vsprintf(
+            $this->translator->translate($translationKey),
+            $arguments
+        );
     }
 }

@@ -8,11 +8,12 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationPsvOcTotalAuthReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Variation Psv Oc Total Auth Review Service Test
@@ -22,13 +23,10 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationPsvO
 class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
-
-        $mockTranslator = m::mock();
+        $mockTranslator = m::mock(TranslatorInterface::class);
         $mockTranslator->shouldReceive('translate')
             ->with('review-value-decreased')
             ->andReturn('decreased from %s to %s')
@@ -36,10 +34,12 @@ class VariationPsvOcTotalAuthReviewServiceTest extends MockeryTestCase
             ->with('review-value-increased')
             ->andReturn('increased from %s to %s');
 
-        $this->sm->setService('translator', $mockTranslator);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
 
-        $this->sut = new VariationPsvOcTotalAuthReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationPsvOcTotalAuthReviewService($abstractReviewServiceServices);
     }
 
     /**

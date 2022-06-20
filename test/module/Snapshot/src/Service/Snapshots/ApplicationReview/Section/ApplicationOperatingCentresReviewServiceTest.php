@@ -9,10 +9,16 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationGoodsOcTotalAuthReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationOperatingCentresReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationPsvOcTotalAuthReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\GoodsOperatingCentreReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\PsvOperatingCentreReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TrafficAreaReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Application Operating Centres Review Service Test
@@ -22,21 +28,59 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationOp
 class ApplicationOperatingCentresReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var PsvOperatingCentreReviewService */
+    private $psvOperatingCentreReviewService;
+
+    /** @var ApplicationPsvOcTotalAuthReviewService */
+    private $applicationPsvOcTotalAuthReviewService;
+
+    /** @var GoodsOperatingCentreReviewService */
+    private $goodsOperatingCentreReviewService;
+
+    /** @var ApplicationGoodsOcTotalAuthReviewService */
+    private $applicationGoodsOcTotalAuthReviewService;
+
+    /** @var TrafficAreaReviewService */
+    private $trafficAreaReviewService;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sut = new ApplicationOperatingCentresReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->psvOperatingCentreReviewService = m::mock(PsvOperatingCentreReviewService::class);
+
+        $this->applicationPsvOcTotalAuthReviewService = m::mock(ApplicationPsvOcTotalAuthReviewService::class);
+
+        $this->goodsOperatingCentreReviewService = m::mock(GoodsOperatingCentreReviewService::class);
+
+        $this->applicationGoodsOcTotalAuthReviewService = m::mock(ApplicationGoodsOcTotalAuthReviewService::class);
+
+        $this->trafficAreaReviewService = m::mock(TrafficAreaReviewService::class);
+
+        $this->sut = new ApplicationOperatingCentresReviewService(
+            $abstractReviewServiceServices,
+            $this->psvOperatingCentreReviewService,
+            $this->applicationPsvOcTotalAuthReviewService,
+            $this->goodsOperatingCentreReviewService,
+            $this->applicationGoodsOcTotalAuthReviewService,
+            $this->trafficAreaReviewService
+        );
     }
 
     /**
      * @dataProvider psvProvider
      */
-    public function testGetConfigFromDataWithEmptyOcList($isGoods, $expectedOcService, $expectedTaService)
+    public function testGetConfigFromDataWithEmptyOcList($isGoods, $expectedOcServiceProperty, $expectedTaServiceProperty)
     {
+        $expectedOcService = $this->{$expectedOcServiceProperty};
+        $expectedTaService = $this->{$expectedTaServiceProperty};
+
         $data = [
             'isGoods' => $isGoods,
             'operatingCentres' => []
@@ -52,20 +96,12 @@ class ApplicationOperatingCentresReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        // Mocks
-        $mockOcService = m::mock();
-        $mockTotalAuthService = m::mock();
-        $mockTaService = m::mock();
-        $this->sm->setService('Review\\' . $expectedOcService, $mockOcService);
-        $this->sm->setService('Review\\' . $expectedTaService, $mockTotalAuthService);
-        $this->sm->setService('Review\TrafficArea', $mockTaService);
-
         // Expectations
-        $mockTaService->shouldReceive('getConfigFromData')
+        $this->trafficAreaReviewService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn('TACONFIG');
 
-        $mockTotalAuthService->shouldReceive('getConfigFromData')
+        $expectedTaService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn('TOTAL_AUTH_CONFIG');
 
@@ -75,8 +111,11 @@ class ApplicationOperatingCentresReviewServiceTest extends MockeryTestCase
     /**
      * @dataProvider psvProvider
      */
-    public function testGetConfigFromDataWithOcList($isGoods, $expectedOcService, $expectedTaService)
+    public function testGetConfigFromDataWithOcList($isGoods, $expectedOcServiceProperty, $expectedTaServiceProperty)
     {
+        $expectedOcService = $this->{$expectedOcServiceProperty};
+        $expectedTaService = $this->{$expectedTaServiceProperty};
+
         $data = [
             'isGoods' => $isGoods,
             'operatingCentres' => [
@@ -101,24 +140,16 @@ class ApplicationOperatingCentresReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        // Mocks
-        $mockOcService = m::mock();
-        $mockTotalAuthService = m::mock();
-        $mockTaService = m::mock();
-        $this->sm->setService('Review\\' . $expectedOcService, $mockOcService);
-        $this->sm->setService('Review\\' . $expectedTaService, $mockTotalAuthService);
-        $this->sm->setService('Review\TrafficArea', $mockTaService);
-
         // Expectations
-        $mockTaService->shouldReceive('getConfigFromData')
+        $this->trafficAreaReviewService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn('TACONFIG');
 
-        $mockTotalAuthService->shouldReceive('getConfigFromData')
+        $expectedTaService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn('TOTAL_AUTH_CONFIG');
 
-        $mockOcService->shouldReceive('getConfigFromData')
+        $expectedOcService->shouldReceive('getConfigFromData')
             ->with(['foo' => 'bar'])
             ->andReturn('foobar')
             ->shouldReceive('getConfigFromData')
@@ -133,13 +164,13 @@ class ApplicationOperatingCentresReviewServiceTest extends MockeryTestCase
         return [
             [
                 true,
-                'GoodsOperatingCentre',
-                'ApplicationGoodsOcTotalAuth'
+                'goodsOperatingCentreReviewService',
+                'applicationGoodsOcTotalAuthReviewService'
             ],
             [
                 false,
-                'PsvOperatingCentre',
-                'ApplicationPsvOcTotalAuth'
+                'psvOperatingCentreReviewService',
+                'applicationPsvOcTotalAuthReviewService'
             ]
         ];
     }

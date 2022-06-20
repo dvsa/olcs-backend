@@ -13,10 +13,18 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Generator;
-use OlcsTest\Bootstrap;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerMainReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerResponsibilityReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerOtherEmploymentReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerPreviousConvictionReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerPreviousLicenceReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerDeclarationReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerSignatureReviewService;
+use Dvsa\Olcs\Utils\Translation\NiTextTranslation;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * Generator Test
@@ -26,36 +34,85 @@ use Laminas\View\Model\ViewModel;
 class GeneratorTest extends MockeryTestCase
 {
     /**
+     * @var \Mockery\MockInterface|PhpRenderer
+     */
+    protected $viewRenderer;
+
+    /**
+     * @var \Mockery\MockInterface|NiTextTranslation
+     */
+    protected $niTextTranslation;
+
+    /**
+     * @var \Mockery\MockInterface|TransportManagerMainReviewService
+     */
+    protected $transportManagerMainReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|TransportManagerResponsibilityReviewService
+     */
+    protected $transportManagerResponsibilityReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|TransportManagerOtherEmploymentReviewService
+     */
+    protected $transportManagerOtherEmploymentReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|TransportManagerPreviousConvictionReviewService
+     */
+    protected $transportManagerPreviousConvictionReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|TransportManagerPreviousLicenceReviewService
+     */
+    protected $transportManagerPreviousLicenceReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|TransportManagerDeclarationReviewService
+     */
+    protected $transportManagerDeclarationReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|TransportManagerSignatureReviewService
+     */
+    protected $transportManagerSignatureReviewService;
+
+    /**
      * @var Generator
      */
     protected $sut;
 
-    protected $services;
-
     public function setUp(): void
     {
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $this->viewRenderer = m::mock(PhpRenderer::class);
 
-        $this->services = [
-            'Utils\NiTextTranslation' => m::mock(),
-            'Review\TransportManagerMain' => m::mock(),
-            'Review\TransportManagerResponsibility' => m::mock(),
-            'Review\TransportManagerOtherEmployment' => m::mock(),
-            'Review\TransportManagerPreviousConviction' => m::mock(),
-            'Review\TransportManagerPreviousLicence' => m::mock(),
-            'Review\TransportManagerDeclaration' => m::mock(),
-            'Review\TransportManagerSignature' => m::mock(),
-            'ViewRenderer' => m::mock()
-        ];
+        $abstractGeneratorServices = m::mock(AbstractGeneratorServices::class);
+        $abstractGeneratorServices->shouldReceive('getRenderer')
+            ->withNoArgs()
+            ->andReturn($this->viewRenderer);
 
-        $sm->shouldReceive('get')->andReturnUsing(
-            function ($key) {
-                return $this->services[$key];
-            }
+        $this->niTextTranslation = m::mock(NiTextTranslation::class);
+
+        $this->transportManagerMainReviewService = m::mock(TransportManagerMainReviewService::class);
+        $this->transportManagerResponsibilityReviewService = m::mock(TransportManagerResponsibilityReviewService::class);
+        $this->transportManagerOtherEmploymentReviewService = m::mock(TransportManagerOtherEmploymentReviewService::class);
+        $this->transportManagerPreviousConvictionReviewService = m::mock(TransportManagerPreviousConvictionReviewService::class);
+        $this->transportManagerPreviousLicenceReviewService = m::mock(TransportManagerPreviousLicenceReviewService::class);
+        $this->transportManagerDeclarationReviewService = m::mock(TransportManagerDeclarationReviewService::class);
+        $this->transportManagerSignatureReviewService = m::mock(TransportManagerSignatureReviewService::class);
+
+        $this->sut = new Generator(
+            $abstractGeneratorServices,
+            $this->niTextTranslation,
+            $this->transportManagerMainReviewService,
+            $this->transportManagerResponsibilityReviewService,
+            $this->transportManagerOtherEmploymentReviewService,
+            $this->transportManagerPreviousConvictionReviewService,
+            $this->transportManagerPreviousLicenceReviewService,
+            $this->transportManagerDeclarationReviewService,
+            $this->transportManagerSignatureReviewService
         );
-
-        $this->sut = new Generator();
-        $this->sut->setServiceLocator($sm);
     }
 
     public function testGenerate()
@@ -74,7 +131,7 @@ class GeneratorTest extends MockeryTestCase
 
         $this->setMainServicesExpectations($tma);
 
-        $this->services['ViewRenderer']->shouldReceive('render')
+        $this->viewRenderer->shouldReceive('render')
             ->once()
             ->with(m::type(ViewModel::class))
             ->andReturnUsing(
@@ -140,13 +197,13 @@ class GeneratorTest extends MockeryTestCase
 
         $this->setMainServicesExpectations($tma);
 
-        $this->services['Review\TransportManagerDeclaration']
+        $this->transportManagerDeclarationReviewService
             ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmDeclaration');
 
-        $this->services['Review\TransportManagerSignature']
-            ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmSignature');
+        $this->transportManagerSignatureReviewService
+            ->shouldReceive('getConfig')->once()->with($tma)->andReturn(['tmSignature']);
 
-        $this->services['ViewRenderer']->shouldReceive('render')
+        $this->viewRenderer->shouldReceive('render')
             ->once()
             ->with(m::type(ViewModel::class))
             ->andReturnUsing(
@@ -191,13 +248,13 @@ class GeneratorTest extends MockeryTestCase
 
         $this->setMainServicesExpectations($tma);
 
-        $this->services['Review\TransportManagerDeclaration']
+        $this->transportManagerDeclarationReviewService
             ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmDeclaration');
 
-        $this->services['Review\TransportManagerSignature']
-            ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmSignature');
+        $this->transportManagerSignatureReviewService
+            ->shouldReceive('getConfig')->once()->with($tma)->andReturn(['tmSignature']);
 
-        $this->services['ViewRenderer']->shouldReceive('render')
+        $this->viewRenderer->shouldReceive('render')
             ->once()
             ->with(m::type(ViewModel::class))
             ->andReturnUsing(
@@ -266,22 +323,22 @@ class GeneratorTest extends MockeryTestCase
      */
     private function setMainServicesExpectations($tma): void
     {
-        $this->services['Utils\NiTextTranslation']
+        $this->niTextTranslation
             ->shouldReceive('setLocaleForNiFlag')->once()->with('N');
 
-        $this->services['Review\TransportManagerMain']
+        $this->transportManagerMainReviewService
             ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmMain');
 
-        $this->services['Review\TransportManagerResponsibility']
+        $this->transportManagerResponsibilityReviewService
             ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmResponsibility');
 
-        $this->services['Review\TransportManagerOtherEmployment']
+        $this->transportManagerOtherEmploymentReviewService
             ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmEmployment');
 
-        $this->services['Review\TransportManagerPreviousConviction']
+        $this->transportManagerPreviousConvictionReviewService
             ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmConviction');
 
-        $this->services['Review\TransportManagerPreviousLicence']
+        $this->transportManagerPreviousLicenceReviewService
             ->shouldReceive('getConfig')->once()->with($tma)->andReturn('tmPreviousLicence');
     }
 
@@ -316,7 +373,7 @@ class GeneratorTest extends MockeryTestCase
                 'config' => 'tmDeclaration'
             ],
             [
-                'config' => 'tmSignature'
+                'config' => ['tmSignature']
             ],
         ];
     }

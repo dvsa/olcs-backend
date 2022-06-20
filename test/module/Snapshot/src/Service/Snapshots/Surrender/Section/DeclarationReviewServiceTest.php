@@ -3,10 +3,11 @@
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender\Section;
 
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use OlcsTest\Bootstrap;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class DeclarationReviewServiceTest extends MockeryTestCase
 {
@@ -15,12 +16,19 @@ class DeclarationReviewServiceTest extends MockeryTestCase
     /** @var DeclarationReviewService */
     protected $sut;
 
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
     public function setUp(): void
     {
-        $this->sut = new DeclarationReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new DeclarationReviewService($abstractReviewServiceServices);
     }
 
     public function testGetConfigFromData()
@@ -29,10 +37,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
 
         $mockEntity->shouldReceive('getLicence->getLicNo')->andReturn(7)->once();
 
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
                 function ($expected) {
                     return $expected . '-translated';

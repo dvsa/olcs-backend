@@ -7,10 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationConvictionsPenaltiesReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationConvictionsPenaltiesReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Variation Convictions Penalties Review Service Test
@@ -20,14 +22,28 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationConv
 class VariationConvictionsPenaltiesReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
+    /** @var ApplicationConvictionsPenaltiesReviewService */
+    protected $mockApplicationService;
 
     public function setUp(): void
     {
-        $this->sut = new VariationConvictionsPenaltiesReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->mockApplicationService = m::mock(ApplicationConvictionsPenaltiesReviewService::class);
+
+        $this->sut = new VariationConvictionsPenaltiesReviewService(
+            $abstractReviewServiceServices,
+            $this->mockApplicationService
+        );
     }
 
     public function testGetConfigFromData()
@@ -36,9 +52,7 @@ class VariationConvictionsPenaltiesReviewServiceTest extends MockeryTestCase
             'foo' => 'bar'
         ];
 
-        $mockApplicationService = m::mock();
-        $this->sm->setService('Review\ApplicationConvictionsPenalties', $mockApplicationService);
-        $mockApplicationService->shouldReceive('getConfigFromData')
+        $this->mockApplicationService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn('CONFIG');
 

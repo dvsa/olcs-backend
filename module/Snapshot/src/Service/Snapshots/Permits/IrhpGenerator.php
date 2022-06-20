@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Permits;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\SnapshotGeneratorInterface;
 
 /**
@@ -23,12 +24,16 @@ class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterf
     /**
      * Create service instance
      *
+     * @param AbstractGeneratorServices $abstractGeneratorServices
      * @param AnswersSummaryGenerator $answersSummaryGenerator
      *
      * @return IrhpGenerator
      */
-    public function __construct(AnswersSummaryGenerator $answersSummaryGenerator)
-    {
+    public function __construct(
+        AbstractGeneratorServices $abstractGeneratorServices,
+        AnswersSummaryGenerator $answersSummaryGenerator
+    ) {
+        parent::__construct($abstractGeneratorServices);
         $this->answersSummaryGenerator = $answersSummaryGenerator;
     }
 
