@@ -54,8 +54,8 @@ class TransportManagersReviewService extends AbstractReviewService
                 ['value' => $birthDate !== null ? $birthDate->format('d/m/Y') : '']
             ];
             $config[] = $row;
-
         }
+
         usort(
             $config,
             function ($a, $b) {

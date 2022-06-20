@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\AbstractReviewServiceServices;
 use Dvsa\OlcsTest\Snapshot\Service\Snapshots\TransportManagerApplication\Section\Stub\AbstractReviewServiceStub;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -20,9 +21,19 @@ class AbstractReviewServiceTest extends MockeryTestCase
     /** @var AbstractReviewServiceStub */
     private $sut;
 
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
     public function setUp(): void
     {
-        $this->sut = m::mock(AbstractReviewServiceStub::class)->makePartial();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new AbstractReviewServiceStub($abstractReviewServiceServices);
     }
 
     public function testFormatPersonFullName()
@@ -143,13 +154,7 @@ class AbstractReviewServiceTest extends MockeryTestCase
         $translationKey = 'translation.key';
         $translated = 'translated';
 
-        $translator = m::mock(TranslatorInterface::class);
-
-        $this->sut->shouldReceive('getServiceLocator->get')
-            ->with('translator')
-            ->andReturn($translator);
-
-        $translator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with($translationKey)
             ->andReturn($translated);
 
@@ -167,7 +172,7 @@ class AbstractReviewServiceTest extends MockeryTestCase
 
         $expected = 'the fox jumped over the brown hare';
 
-        $this->sut->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with($translationKey)
             ->andReturn($translated);
 

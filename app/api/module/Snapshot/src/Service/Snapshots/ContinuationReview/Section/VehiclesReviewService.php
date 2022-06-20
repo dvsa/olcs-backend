@@ -55,8 +55,8 @@ class VehiclesReviewService extends AbstractReviewService
                 ];
             }
             $config[] = $row;
-
         }
+
         usort(
             $config,
             function ($a, $b) {

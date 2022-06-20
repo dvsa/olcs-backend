@@ -7,10 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ConditionsUndertakingsReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\LicenceConditionsUndertakingsReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Licence Conditions Undertakings Review Service Test
@@ -21,14 +23,27 @@ class LicenceConditionsUndertakingsReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
 
-    protected $sm;
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
+    /** @var ConditionsUndertakingsReviewService */
+    protected $mockConditionsUndertakings;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sut = new LicenceConditionsUndertakingsReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->mockConditionsUndertakings = m::mock(ConditionsUndertakingsReviewService::class);
+
+        $this->sut = new LicenceConditionsUndertakingsReviewService(
+            $abstractReviewServiceServices,
+            $this->mockConditionsUndertakings
+        );
     }
 
     public function testGetConfigFromData()
@@ -66,15 +81,8 @@ class LicenceConditionsUndertakingsReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        // Mocks
-        $mockConditionsUndertakings = m::mock();
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $this->sm->setService('Review\ConditionsUndertakings', $mockConditionsUndertakings);
-
         // Expectations
-        $mockConditionsUndertakings->shouldReceive('splitUpConditionsAndUndertakings')
+        $this->mockConditionsUndertakings->shouldReceive('splitUpConditionsAndUndertakings')
             ->with($inputData, false)
             ->andReturn($data)
             ->shouldReceive('formatLicenceSubSection')
@@ -90,7 +98,7 @@ class LicenceConditionsUndertakingsReviewServiceTest extends MockeryTestCase
             ->with(['foo' => 'bar4'], 'application', 'undertakings', 'added')
             ->andReturn('BAR4');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
                 function ($string) {
                     return $string . '-translated';

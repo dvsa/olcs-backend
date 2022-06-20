@@ -25,7 +25,6 @@ class TransportManagersReviewService extends AbstractReviewService
         $mainItems = [];
 
         foreach ($data as $transportManagerApplication) {
-
             $mainItems[] = $this->getTmConfig($transportManagerApplication);
         }
 

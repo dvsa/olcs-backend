@@ -11,6 +11,25 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
  */
 class GoodsOperatingCentreReviewService extends AbstractReviewService
 {
+    /** @var PsvOperatingCentreReviewService */
+    private $psvOperatingCentreReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param PsvOperatingCentreReviewService $psvOperatingCentreReviewService
+     *
+     * @return GoodsOperatingCentreReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        PsvOperatingCentreReviewService $psvOperatingCentreReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->psvOperatingCentreReviewService = $psvOperatingCentreReviewService;
+    }
+
     /**
      * Format the OC config
      *
@@ -20,7 +39,7 @@ class GoodsOperatingCentreReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array())
     {
-        $config = $this->getServiceLocator()->get('Review\PsvOperatingCentre')->getConfigFromData($data);
+        $config = $this->psvOperatingCentreReviewService->getConfigFromData($data);
 
         $useHgvLabel = !is_null($data['application']['totAuthLgvVehicles']);
 

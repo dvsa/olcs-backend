@@ -9,7 +9,9 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TransportManagersReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Transport Managers Review Service Test
@@ -20,9 +22,19 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
 
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
     public function setUp(): void
     {
-        $this->sut = new TransportManagersReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new TransportManagersReviewService($abstractReviewServiceServices);
     }
 
     public function testGetConfigFromData()

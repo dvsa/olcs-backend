@@ -7,8 +7,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerDeclarationReviewService;
-use OlcsTest\Bootstrap;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * TransportManagerDeclarationReviewServiceTest
@@ -19,14 +20,19 @@ class TransportManagerDeclarationReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
 
-    protected $sm;
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
 
     public function setUp(): void
     {
-        $this->sut = new TransportManagerDeclarationReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
+        
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new TransportManagerDeclarationReviewService($abstractReviewServiceServices);
     }
 
     /**
@@ -40,19 +46,16 @@ class TransportManagerDeclarationReviewServiceTest extends MockeryTestCase
         $expectedResidencyClauseKey,
         $expectedRoleClauseKey
     ) {
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
         $translatedResidencyClauseKey = 'translated residency clause key';
         $translatedRoleClauseKey = 'translated role clause key';
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with($expectedResidencyClauseKey)
             ->andReturn($translatedResidencyClauseKey);
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with($expectedRoleClauseKey)
             ->andReturn($translatedRoleClauseKey);
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with($expectedMarkupTranslationKey)
             ->andReturn('translated and replaced [%s] [%s]');
 

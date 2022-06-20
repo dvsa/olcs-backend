@@ -16,6 +16,25 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class VariationPeopleReviewService extends AbstractReviewService
 {
+    /** @var PeopleReviewService */
+    private $peopleReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param PeopleReviewService $peopleReviewService
+     *
+     * @return VariationPeopleReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        PeopleReviewService $peopleReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->peopleReviewService = $peopleReviewService;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -28,18 +47,15 @@ class VariationPeopleReviewService extends AbstractReviewService
             return ['freetext' => $this->translate('variation-review-people-change')];
         }
 
-        $peopleService = $this->getServiceLocator()->get('Review\People');
-
         $peopleList = $this->splitPeopleUp($data);
 
-        $showPosition = $peopleService->shouldShowPosition($data);
+        $showPosition = $this->peopleReviewService->shouldShowPosition($data);
 
         $sections = [];
 
         foreach ($peopleList as $action => $people) {
-
             if (!empty($people)) {
-                $sections[] = $this->formatSection($people, $action, $peopleService, $showPosition);
+                $sections[] = $this->formatSection($people, $action, $showPosition);
             }
         }
 
@@ -79,11 +95,11 @@ class VariationPeopleReviewService extends AbstractReviewService
         return $peopleList;
     }
 
-    private function formatSection($people, $action, $peopleService, $showPosition)
+    private function formatSection($people, $action, $showPosition)
     {
         $mainItems = [];
         foreach ($people as $person) {
-            $mainItems[] = $peopleService->getConfigFromData($person, $showPosition);
+            $mainItems[] = $this->peopleReviewService->getConfigFromData($person, $showPosition);
         }
 
         return [

@@ -14,6 +14,25 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class ApplicationPeopleReviewService extends AbstractReviewService
 {
+    /** @var PeopleReviewService */
+    private $peopleReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param PeopleReviewService $peopleReviewService
+     *
+     * @return ApplicationPeopleReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        PeopleReviewService $peopleReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->peopleReviewService = $peopleReviewService;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -29,12 +48,10 @@ class ApplicationPeopleReviewService extends AbstractReviewService
             $data['licence']['organisation']['organisationPersons']
         );
 
-        $peopleService = $this->getServiceLocator()->get('Review\People');
-
-        $showPosition = $peopleService->shouldShowPosition($data);
+        $showPosition = $this->peopleReviewService->shouldShowPosition($data);
 
         foreach ($people as $person) {
-            $mainItems[] = $peopleService->getConfigFromData($person, $showPosition);
+            $mainItems[] = $this->peopleReviewService->getConfigFromData($person, $showPosition);
         }
 
         return [

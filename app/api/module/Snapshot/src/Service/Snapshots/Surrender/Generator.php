@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService;
@@ -14,6 +15,55 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewServic
 
 class Generator extends AbstractGenerator
 {
+    /** @var LicenceDetailsService */
+    private $licenceDetailsService;
+
+    /** @var CurrentDiscsReviewService */
+    private $currentDiscsReviewService;
+
+    /** @var OperatorLicenceReviewService */
+    private $operatorLicenceReviewService;
+
+    /** @var CommunityLicenceReviewService */
+    private $communityLicenceReviewService;
+
+    /** @var DeclarationReviewService */
+    private $declarationReviewService;
+
+    /** @var SignatureReviewService */
+    private $signatureReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractGeneratorServices $abstractGeneratorServices
+     * @param LicenceDetailsService $licenceDetailsService
+     * @param CurrentDiscsReviewService $currentDiscsReviewService
+     * @param OperatorLicenceReviewService $operatorLicenceReviewService
+     * @param CommunityLicenceReviewService $communityLicenceReviewService
+     * @param DeclarationReviewService $declarationReviewService
+     * @param SignatureReviewService $signatureReviewService
+     *
+     * @return Generator
+     */
+    public function __construct(
+        AbstractGeneratorServices $abstractGeneratorServices,
+        LicenceDetailsService $licenceDetailsService,
+        CurrentDiscsReviewService $currentDiscsReviewService,
+        OperatorLicenceReviewService $operatorLicenceReviewService,
+        CommunityLicenceReviewService $communityLicenceReviewService,
+        DeclarationReviewService $declarationReviewService,
+        SignatureReviewService $signatureReviewService
+    ) {
+        parent::__construct($abstractGeneratorServices);
+        $this->licenceDetailsService = $licenceDetailsService;
+        $this->currentDiscsReviewService = $currentDiscsReviewService;
+        $this->operatorLicenceReviewService = $operatorLicenceReviewService;
+        $this->communityLicenceReviewService = $communityLicenceReviewService;
+        $this->declarationReviewService = $declarationReviewService;
+        $this->signatureReviewService = $signatureReviewService;
+    }
+
     public function generate(Surrender $surrender)
     {
         $sections = [
@@ -43,7 +93,7 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'surrender-review-licence',
-            'config' => $this->getServiceLocator()->get(LicenceDetailsService::class)->getConfigFromData($surrender)
+            'config' => $this->licenceDetailsService->getConfigFromData($surrender)
         ];
     }
 
@@ -51,7 +101,7 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'surrender-review-current-discs',
-            'config' => $this->getServiceLocator()->get(CurrentDiscsReviewService::class)->getConfigFromData($surrender)
+            'config' => $this->currentDiscsReviewService->getConfigFromData($surrender)
         ];
     }
 
@@ -59,16 +109,15 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'surrender-review-operator-licence',
-            'config' => $this->getServiceLocator()->get(OperatorLicenceReviewService::class)->getConfigFromData($surrender)
+            'config' => $this->operatorLicenceReviewService->getConfigFromData($surrender)
         ];
     }
 
     protected function getCommunityLicenceSection(Surrender $surrender)
     {
-
         return [
             'header' => 'surrender-review-community-licence',
-            'config' => $this->getServiceLocator()->get(CommunityLicenceReviewService::class)->getConfigFromData($surrender)
+            'config' => $this->communityLicenceReviewService->getConfigFromData($surrender)
         ];
     }
 
@@ -77,14 +126,14 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'surrender-review-declaration',
-            'config' => $this->getServiceLocator()->get(DeclarationReviewService::class)->getConfigFromData($surrender)
+            'config' => $this->declarationReviewService->getConfigFromData($surrender)
         ];
     }
 
     protected function getSignatureSection(Surrender $surrender)
     {
         return [
-            'config' => $this->getServiceLocator()->get(SignatureReviewService::class)->getConfigFromData($surrender)
+            'config' => $this->signatureReviewService->getConfigFromData($surrender)
         ];
     }
 }

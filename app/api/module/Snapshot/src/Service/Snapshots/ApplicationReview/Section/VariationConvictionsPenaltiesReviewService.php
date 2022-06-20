@@ -14,6 +14,25 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class VariationConvictionsPenaltiesReviewService extends AbstractReviewService
 {
+    /** @var ApplicationConvictionsPenaltiesReviewService */
+    private $applicationConvictionsPenaltiesReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param ApplicationConvictionsPenaltiesReviewService $applicationConvictionsPenaltiesReviewService
+     *
+     * @return VariationConvictionsPenaltiesReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        ApplicationConvictionsPenaltiesReviewService $applicationConvictionsPenaltiesReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->applicationConvictionsPenaltiesReviewService = $applicationConvictionsPenaltiesReviewService;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -22,6 +41,6 @@ class VariationConvictionsPenaltiesReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array())
     {
-        return $this->getServiceLocator()->get('Review\ApplicationConvictionsPenalties')->getConfigFromData($data);
+        return $this->applicationConvictionsPenaltiesReviewService->getConfigFromData($data);
     }
 }
