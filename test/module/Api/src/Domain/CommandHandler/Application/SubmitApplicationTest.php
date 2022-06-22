@@ -10,13 +10,17 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\SubmitApplication;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Repository\Sla;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Util\SlaCalculator;
+use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -52,6 +56,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             'TransportManagerApplication',
             Repository\TransportManagerApplication::class
         );
+        $this->mockRepo('Sla', Sla::class);
 
         $trafficArea = new Entity\TrafficArea\TrafficArea();
         $trafficArea->setId(self::TRAFFIC_AREA);
@@ -68,7 +73,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
 
         $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class),
+            SlaCalculatorInterface::class => m::mock(SlaCalculator::class),
         ];
 
         parent::setUp();
@@ -118,6 +124,13 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ]
         );
 
+        $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
+
+        $this->repoMap['Sla']
+            ->expects('fetchByCategoryFieldAndCompareTo')
+            ->with('application', 'receivedDate', 'targetCompletionDate')
+            ->andReturn($mockedSlaEntity);
+
         $this->mockApp
             ->setIsVariation($isVariation)
             ->setS4s(new \Doctrine\Common\Collections\ArrayCollection())
@@ -138,6 +151,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $expectedTargetCompletionDate = clone $now;
         $expectedTargetCompletionDate->modify('+8 week');
+
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->expects('applySla')
+            ->with(m::type(\DateTimeInterface::class), $mockedSlaEntity, m::type(TrafficArea::class))
+            ->andReturn($expectedTargetCompletionDate);
 
         // licence status should be updated if application is not a variation
         if ($isVariation) {
@@ -347,6 +365,13 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ]
         );
 
+        $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
+
+        $this->repoMap['Sla']
+            ->expects('fetchByCategoryFieldAndCompareTo')
+            ->with('application', 'receivedDate', 'targetCompletionDate')
+            ->andReturn($mockedSlaEntity);
+
         /* @var $application ApplicationEntity | m\MockInterface */
         $application = $this->mapReference(ApplicationEntity::class, self::APP_ID);
         $application->setIsVariation(true);
@@ -362,6 +387,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $expectedTargetCompletionDate = clone $now;
         $expectedTargetCompletionDate->modify('+8 week');
+
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->expects('applySla')
+            ->with(m::type(\DateTimeInterface::class), $mockedSlaEntity, m::type(TrafficArea::class))
+            ->andReturn($expectedTargetCompletionDate);
 
         // licence status should be updated if application is not a variation
         $this->mockLic
@@ -461,6 +491,13 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ]
         );
 
+        $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
+
+        $this->repoMap['Sla']
+            ->expects('fetchByCategoryFieldAndCompareTo')
+            ->with('application', 'receivedDate', 'targetCompletionDate')
+            ->andReturn($mockedSlaEntity);
+
         /** @var ApplicationEntity | m\MockInterface $application */
         $application = $this->mapReference(ApplicationEntity::class, self::APP_ID);
         $application->setIsVariation(false);
@@ -477,6 +514,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $expectedTargetCompletionDate = clone $now;
         $expectedTargetCompletionDate->modify('+8 week');
+
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->expects('applySla')
+            ->with(m::type(\DateTimeInterface::class), $mockedSlaEntity, m::type(TrafficArea::class))
+            ->andReturn($expectedTargetCompletionDate);
 
         // licence status should be updated if application is not a variation
         $this->mockLic
@@ -568,6 +610,13 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $this->mockLic->shouldReceive('getOrganisation->isLtd')->with()->andReturn($isLtd);
 
+        $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
+
+        $this->repoMap['Sla']
+            ->expects('fetchByCategoryFieldAndCompareTo')
+            ->with('application', 'receivedDate', 'targetCompletionDate')
+            ->andReturn($mockedSlaEntity);
+
         /** @var ApplicationEntity | m\MockInterface $application */
         $application = $this->mapReference(ApplicationEntity::class, self::APP_ID);
         $application->setIsVariation(true);
@@ -585,6 +634,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $expectedTargetCompletionDate = clone $now;
         $expectedTargetCompletionDate->modify('+8 week');
+
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->expects('applySla')
+            ->with(m::type(\DateTimeInterface::class), $mockedSlaEntity, m::type(TrafficArea::class))
+            ->andReturn($expectedTargetCompletionDate);
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')

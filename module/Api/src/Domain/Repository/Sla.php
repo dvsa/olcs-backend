@@ -27,4 +27,17 @@ class Sla extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function fetchByCategoryFieldAndCompareTo(string $category, string $field, string $compareTo): Entity
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere(
+            $qb->expr()->eq($this->alias . '.category', ':category'),
+            $qb->expr()->eq($this->alias . '.field', ':field'),
+            $qb->expr()->eq($this->alias . '.compare_to', ':compareTo')
+        );
+        $qb->setParameters(compact('category', 'field', 'compareTo'));
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }
