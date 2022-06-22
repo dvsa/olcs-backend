@@ -11,7 +11,7 @@ use Olcs\Logging\Log\Logger;
  * Class SlaCalculator
  * @package Dvsa\Olcs\Api\Domain\Util
  */
-final class SlaCalculator implements SlaCalculatorInterface
+class SlaCalculator implements SlaCalculatorInterface
 {
     /**
      * @var TimeProcessorBuilderInterface
