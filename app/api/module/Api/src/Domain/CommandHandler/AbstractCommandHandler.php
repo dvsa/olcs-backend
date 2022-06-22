@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
+use Dvsa\Olcs\Api\Domain\SlaCalculatorAwareInterface;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
@@ -24,6 +25,7 @@ use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
 use Dvsa\Olcs\Api\Domain\TranslationLoaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
@@ -265,6 +267,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         if ($this instanceof TranslatorAwareInterface) {
             $translator = $mainServiceLocator->get('translator');
             $this->setTranslator($translator);
+        }
+
+        if ($this instanceof SlaCalculatorAwareInterface) {
+            $slaCalculator = $mainServiceLocator->get(SlaCalculatorInterface::class);
+            $this->setSlaCalculator($slaCalculator);
         }
     }
 

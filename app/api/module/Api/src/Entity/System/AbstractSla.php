@@ -15,7 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
- * @ORM\Table(name="sla")
+ * @ORM\Table(name="sla",
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uniqueCategoryFieldCompare", columns={"category","field","compare_to"})
+ *    }
+ * )
  */
 abstract class AbstractSla implements BundleSerializableInterface, JsonSerializable
 {
