@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\DerivedTypeOfLicenceParamsTrait;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\SlaCalculatorAwareInterface;
+use Dvsa\Olcs\Api\Domain\SlaCalculatorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -31,11 +33,13 @@ use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateApplication extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class CreateApplication extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface, SlaCalculatorAwareInterface
 {
-    use AuthAwareTrait, DerivedTypeOfLicenceParamsTrait;
+    use AuthAwareTrait, DerivedTypeOfLicenceParamsTrait, SlaCalculatorAwareTrait;
 
     protected $repoServiceName = 'Application';
+
+    protected $extraRepos = ['Sla'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -179,8 +183,9 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
         $application = new Application($licence, $this->getApplicationStatus(), false);
 
         if ($command->getReceivedDate() !== null) {
-            $application->setReceivedDate(new \DateTime($command->getReceivedDate()));
-            $application->setTargetCompletionDateFromReceivedDate();
+            $receivedDate = new \DateTime($command->getReceivedDate());
+            $application->setReceivedDate($receivedDate);
+            $this->setTargetCompletionDateForApplication($application);
         }
         if ($this->isGranted(Permission::SELFSERVE_USER)) {
             $application->setAppliedVia($this->getRepo()->getRefdataReference(Application::APPLIED_VIA_SELFSERVE));
