@@ -32,6 +32,7 @@ class ApplicationCompletion extends AbstractApplicationCompletion
 
     const SECTION_PEOPLE = 'people';
     const SECTION_TRANSPORT_MANAGER = 'transport_managers';
+    const SECTION_LICENCE_HISTORY = 'licence_history';
     const SECTION_FINANCIAL_HISTORY = 'financial_history';
     const SECTION_DECLARATION_INTERNAL = 'declarations_internal';
     const SECTION_CONVICTIONS_AND_PENALTIES = 'convictions_penalties';

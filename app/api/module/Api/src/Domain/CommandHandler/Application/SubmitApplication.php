@@ -244,6 +244,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             ApplicationCompletion::SECTION_DECLARATION,
             ApplicationCompletion::SECTION_DECLARATION_INTERNAL,
             ApplicationCompletion::SECTION_FINANCIAL_HISTORY,
+            ApplicationCompletion::SECTION_LICENCE_HISTORY,
             ApplicationCompletion::SECTION_CONVICTIONS_AND_PENALTIES,
         ];
         $completionStatuses = $application->getVariationCompletion();

@@ -189,6 +189,11 @@ class Generator extends AbstractGenerator
                 ]
             ]
         ],
+        'licence_history' => [
+            'otherLicences' => [
+                'previousLicenceType'
+            ]
+        ],
         'conditions_undertakings' => [
             'conditionUndertakings' => [
                 'licConditionVariation'
