@@ -306,6 +306,11 @@ class SectionConfig
                 [$this, 'isNotUnchanged']
             ];
 
+            $this->sections['licence_history']['restricted'][] = [
+                'variation',
+                [$this, 'isNotUnchanged']
+            ];
+
             $this->sections['convictions_penalties']['restricted'][] = [
                 'variation',
                 [$this, 'isNotUnchanged']
