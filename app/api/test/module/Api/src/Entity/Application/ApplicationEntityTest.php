@@ -2455,6 +2455,81 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
+     * HGV authorisation increased
+     */
+    public function testGetOutOfOppositionDateWhenHgvAuthorisationIncreased()
+    {
+        $this->entity->setIsVariation(true);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->updateTotAuthHgvVehicles(10);
+
+        $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection1->setId(17);
+
+        /** @var Entities\Publication\Publication $publication1 */
+        $publication1 = m::mock(Entities\Publication\Publication::class)->makePartial();
+        $publication1->setPubDate('2015-10-05');
+
+        $publicationLink1 = new Entities\Publication\PublicationLink();
+        $publicationLink1->setPublicationSection($publicationSection1)
+            ->setPublication($publication1);
+
+        $this->entity->addPublicationLinks($publicationLink1);
+
+        $this->assertEquals(new \DateTime('2015-10-27'), $this->entity->getOutOfOppositionDate());
+    }
+
+    /**
+     * LGV authorisation increased
+     */
+    public function testGetOutOfOppositionDateWhenLgvAuthorisationIncreased()
+    {
+        $this->entity->setIsVariation(true);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->updateTotAuthLgvVehicles(10);
+
+        $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection1->setId(17);
+
+        /** @var Entities\Publication\Publication $publication1 */
+        $publication1 = m::mock(Entities\Publication\Publication::class)->makePartial();
+        $publication1->setPubDate('2015-10-05');
+
+        $publicationLink1 = new Entities\Publication\PublicationLink();
+        $publicationLink1->setPublicationSection($publicationSection1)
+            ->setPublication($publication1);
+
+        $this->entity->addPublicationLinks($publicationLink1);
+
+        $this->assertEquals(new \DateTime('2015-10-27'), $this->entity->getOutOfOppositionDate());
+    }
+
+    /**
+     * Trailers authorisation increased
+     */
+    public function testGetOutOfOppositionDateWhenTrailersAuthorisationIncreased()
+    {
+        $this->entity->setIsVariation(true);
+        $this->entity->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $this->entity->setTotAuthTrailers(10);
+
+        $publicationSection1 = new \Dvsa\Olcs\Api\Entity\Publication\PublicationSection();
+        $publicationSection1->setId(17);
+
+        /** @var Entities\Publication\Publication $publication1 */
+        $publication1 = m::mock(Entities\Publication\Publication::class)->makePartial();
+        $publication1->setPubDate('2015-10-05');
+
+        $publicationLink1 = new Entities\Publication\PublicationLink();
+        $publicationLink1->setPublicationSection($publicationSection1)
+            ->setPublication($publication1);
+
+        $this->entity->addPublicationLinks($publicationLink1);
+
+        $this->assertEquals(new \DateTime('2015-10-27'), $this->entity->getOutOfOppositionDate());
+    }
+
+    /**
      * It test NOT REACHABLE condition, added for coverage
      */
     public function testGetOutOfOppositionDateGoodsVarNotAppl()
@@ -2468,7 +2543,9 @@ class ApplicationEntityTest extends EntityTester
             ->shouldReceive('hasApprovedTrueS4')->once()->andReturn(false)
             ->shouldReceive('hasIncreaseInOperatingCentre')->once()->andReturn(false)
             ->shouldReceive('isRealUpgrade')->once()->andReturn(false)
+            ->shouldReceive('hasHgvAuthorisationIncreased')->once()->andReturn(false)
             ->shouldReceive('hasLgvAuthorisationIncreased')->once()->andReturn(false)
+            ->shouldReceive('hasAuthTrailersIncrease')->once()->andReturn(false)
             ->getMock();
         $sut->shouldReceive('getOperatingCentresAdded->count')->andReturn(0);
 

@@ -1405,7 +1405,9 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             if ($this->getOperatingCentresAdded()->count() === 0 &&
                 !$this->hasIncreaseInOperatingCentre() &&
                 !$this->isRealUpgrade() &&
-                !$this->hasLgvAuthorisationIncreased()
+                !$this->hasHgvAuthorisationIncreased() &&
+                !$this->hasLgvAuthorisationIncreased() &&
+                !$this->hasAuthTrailersIncrease()
             ) {
                 return self::NOT_APPLICABLE;
             }
