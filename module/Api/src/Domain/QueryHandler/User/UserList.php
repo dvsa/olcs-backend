@@ -35,10 +35,14 @@ class UserList extends AbstractQueryHandler
         assert($query instanceof UserListQry);
 
         $userInfo = $this->getUserData();
+        $queryData = $query->getArrayCopy();
 
-        //if the user is internal and can't access all data
-        if ($userInfo['isInternal'] && !$userInfo['dataAccess']['canAccessAll']) {
-            $queryData = $query->getArrayCopy();
+        // if the user is internal and can't access all data filter list by ta,
+        // Unless the request has an operator id, in which case all users for org are needed.
+        if ($userInfo['isInternal']
+            && !$userInfo['dataAccess']['canAccessAll']
+            && empty($queryData['organisation'])
+        ) {
             $queryData['trafficAreas'] = $userInfo['dataAccess']['trafficAreas'];
             $queryWithTa = UserListByTrafficArea::create($queryData);
 
