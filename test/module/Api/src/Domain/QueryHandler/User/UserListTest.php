@@ -28,7 +28,7 @@ class UserListTest extends QueryHandlerTestCase
     /**
      * @dataProvider handleQueryProvider
      */
-    public function testHandleQuery($isInternal, $canAccessAll): void
+    public function testHandleQuery($isInternal, $canAccessAll, $queryData): void
     {
         $userData = [
             'isInternal' => $isInternal,
@@ -39,7 +39,7 @@ class UserListTest extends QueryHandlerTestCase
 
         $this->expectedUserDataCacheCall($userData);
 
-        $query = Query::create(['QUERY']);
+        $query = Query::create($queryData);
 
         $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $user->setId(74);
@@ -57,8 +57,9 @@ class UserListTest extends QueryHandlerTestCase
     public function handleQueryProvider(): array
     {
         return [
-            'not internal and does not have full access' => [false, false],
-            'is internal and does have full access' => [true, true],
+            'not internal and does not have full access' => [false, false, ['QUERY']],
+            'is internal and does have full access' => [true, true, ['QUERY']],
+            'is internal and has an org id' => [true, true, ['organisation' => 888]],
         ];
     }
 
@@ -70,7 +71,7 @@ class UserListTest extends QueryHandlerTestCase
             'sort' => 'sort-field',
             'order' => 'ASC',
             'team' => 999,
-            'organisation' => 888,
+            'organisation' => null,
             'isInternal' => true
         ];
 
