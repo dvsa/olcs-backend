@@ -6,12 +6,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Transfer\Command\LoggerOmitContentInterface;
+use Dvsa\Olcs\Utils\Traits\PluginManagerTrait;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
-use Laminas\ServiceManager\Exception\RuntimeException;
 
 /**
  * Command Handler Manager
@@ -20,6 +20,10 @@ use Laminas\ServiceManager\Exception\RuntimeException;
  */
 class CommandHandlerManager extends AbstractPluginManager
 {
+    use PluginManagerTrait;
+
+    protected $instanceOf = CommandHandlerInterface::class;
+
     public function __construct(ConfigInterface $config = null)
     {
         $this->setShareByDefault(false);
@@ -75,13 +79,6 @@ class CommandHandlerManager extends AbstractPluginManager
         );
 
         return $response;
-    }
-
-    public function validatePlugin($plugin)
-    {
-        if (!($plugin instanceof CommandHandlerInterface)) {
-            throw new RuntimeException('Command handler does not implement CommandHandlerInterface');
-        }
     }
 
     /**

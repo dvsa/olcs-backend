@@ -1,29 +1,22 @@
 <?php
 
-/**
- * Validation Handler Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain;
 
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Domain\ValidationHandlerManager;
+use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
+use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\Exception\RuntimeException;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * Validation Handler Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * FormControlServiceManagerTest
  */
-class ValidationHandlerManagerTest extends MockeryTestCase
+class FormControlServiceManagerTest extends MockeryTestCase
 {
     /**
-     * @var ValidationHandlerManager
+     * @var FormControlServiceManager
      */
     protected $sut;
 
@@ -31,24 +24,15 @@ class ValidationHandlerManagerTest extends MockeryTestCase
     {
         $config = m::mock(ConfigInterface::class);
         $config->shouldReceive('configureServiceManager')
-            ->with(m::type(ValidationHandlerManager::class))
+            ->with(m::type(FormControlServiceManager::class))
             ->once();
 
-        $this->sut = new ValidationHandlerManager($config);
-    }
-
-    public function testGet()
-    {
-        $mock = m::mock(HandlerInterface::class);
-
-        $this->sut->setService('Foo', $mock);
-
-        $this->assertSame($mock, $this->sut->get('Foo'));
+        $this->sut = new FormControlServiceManager($config);
     }
 
     public function testValidate()
     {
-        $plugin = m::mock(HandlerInterface::class);
+        $plugin = m::mock(FormControlStrategyInterface::class);
 
         $this->assertNull($this->sut->validate($plugin));
     }
@@ -65,7 +49,7 @@ class ValidationHandlerManagerTest extends MockeryTestCase
      */
     public function testValidatePlugin()
     {
-        $plugin = m::mock(HandlerInterface::class);
+        $plugin = m::mock(FormControlStrategyInterface::class);
 
         $this->assertNull($this->sut->validatePlugin($plugin));
     }

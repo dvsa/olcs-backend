@@ -41,4 +41,17 @@ class DbQueryServiceManagerTest extends MockeryTestCase
 
         $this->assertSame($mock, $this->sut->get('Foo'));
     }
+
+    public function testValidate()
+    {
+        $this->assertNull($this->sut->validate(null));
+    }
+
+    /**
+     * @todo To be removed as part of OLCS-28149
+     */
+    public function testValidatePlugin()
+    {
+        $this->assertNull($this->sut->validatePlugin(null));
+    }
 }

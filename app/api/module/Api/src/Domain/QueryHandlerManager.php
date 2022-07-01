@@ -14,8 +14,8 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
-use Laminas\ServiceManager\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandlerInterface;
+use Dvsa\Olcs\Utils\Traits\PluginManagerTrait;
 
 /**
  * Query Handler Manager
@@ -24,6 +24,10 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandl
  */
 class QueryHandlerManager extends AbstractPluginManager
 {
+    use PluginManagerTrait;
+
+    protected $instanceOf = QueryHandlerInterface::class;
+
     public function __construct(ConfigInterface $config = null)
     {
         $this->setShareByDefault(false);
@@ -76,13 +80,6 @@ class QueryHandlerManager extends AbstractPluginManager
         );
 
         return $response;
-    }
-
-    public function validatePlugin($plugin)
-    {
-        if (!($plugin instanceof QueryHandlerInterface)) {
-            throw new RuntimeException('Query handler does not implement QueryHandlerInterface');
-        }
     }
 
     protected function validateDto($dto, $queryHandlerFqcl)

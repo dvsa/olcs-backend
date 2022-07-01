@@ -17,6 +17,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Laminas\ServiceManager\Exception\RuntimeException;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
@@ -120,5 +121,39 @@ class CommandHandlerManagerTest extends MockeryTestCase
         $this->sut->setService(get_class($command), $mockService);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function testValidate()
+    {
+        $plugin = m::mock(CommandHandlerInterface::class);
+
+        $this->assertNull($this->sut->validate($plugin));
+    }
+
+    public function testValidateInvalid()
+    {
+        $this->expectException(InvalidServiceException::class);
+
+        $this->sut->validate(null);
+    }
+
+    /**
+     * @todo To be removed as part of OLCS-28149
+     */
+    public function testValidatePlugin()
+    {
+        $plugin = m::mock(CommandHandlerInterface::class);
+
+        $this->assertNull($this->sut->validatePlugin($plugin));
+    }
+
+    /**
+     * @todo To be removed as part of OLCS-28149
+     */
+    public function testValidatePluginInvalid()
+    {
+        $this->expectException(RuntimeException::class);
+
+        $this->sut->validatePlugin(null);
     }
 }
