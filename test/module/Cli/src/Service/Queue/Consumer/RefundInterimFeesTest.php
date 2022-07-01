@@ -14,38 +14,53 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\RefundInterimFees;
 use Dvsa\Olcs\Transfer\Command\Fee\RefundFee;
 use Mockery as m;
-use OlcsTest\Bootstrap;
 
 class RefundInterimFeesTest extends AbstractConsumerTestCase
 {
-    /**
-     * @var RefundInterimFees
-     */
-    protected $sut;
+    const QUEUE_ITEM_ENTITY_ID = 17;
 
     /**
      * @var QueueEntity
      */
     private $item;
 
+    /**
+     * @var FeeEntity
+     */
+    private $fee;
+
+    /**
+     * @var FeeRepo
+     */
+    private $feeRepo;
+
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
-
-        $this->chm = m::mock();
-        $this->sm->setService('CommandHandlerManager', $this->chm);
-
-        $this->qhm = m::mock();
-        $this->sm->setService('QueryHandlerManager', $this->qhm);
-
         $this->item = new QueueEntity();
         $this->item->setId(1);
-        $this->item->setEntityId(17);
+        $this->item->setEntityId(self::QUEUE_ITEM_ENTITY_ID);
+
+        $this->fee = m::mock(FeeEntity::class);
+
+        parent::setUp();
+    }
+
+    protected function instantiate()
+    {
+        $this->feeRepo = m::mock(FeeRepo::class);
+        $this->feeRepo->shouldReceive('fetchById')
+            ->with(self::QUEUE_ITEM_ENTITY_ID)
+            ->andReturn($this->fee);
+
+        $this->sut = new RefundInterimFees(
+            $this->abstractConsumerServices,
+            $this->feeRepo
+        );
     }
 
     public function testGetCommandData()
     {
-        $this->makeSut(true);
+        $this->setupFee(true);
         $this->assertSame(
             [
                 'id' => $this->item->getEntityId()
@@ -56,7 +71,7 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
 
     public function testProcessMessageCanRefund()
     {
-        $this->makeSut(true);
+        $this->setupFee(true);
 
         $this->expectCommand(
             RefundFee::class,
@@ -97,7 +112,7 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
 
     public function testProcessMessageCanNotRefund()
     {
-        $this->makeSut(false);
+        $this->setupFee(false);
 
         $this->expectCommand(
             Failed::class,
@@ -129,7 +144,7 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
 
     public function testProcessMessageException()
     {
-        $this->makeSut(true);
+        $this->setupFee(true);
 
         $this->expectCommandException(
             RefundFee::class,
@@ -167,7 +182,7 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
 
     public function testProcessMessageFailed()
     {
-        $this->makeSut(true);
+        $this->setupFee(true);
 
         $this->expectCommandException(
             RefundFee::class,
@@ -204,18 +219,10 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
         $this->sut->processMessage($this->item);
     }
 
-    protected function makeSut(bool $canRefund)
+    protected function setupFee(bool $canRefund)
     {
-        $fee = m::mock(FeeEntity::class);
-        $fee->shouldReceive('canRefund')
-            ->andReturn($canRefund)
-            ->getMock();
-
-        $feeRepo = m::mock(FeeRepo::class);
-        $feeRepo->shouldReceive('fetchById')
-            ->andReturn($fee);
-
-        $this->sut = new RefundInterimFees($feeRepo);
-        $this->sut->setServiceLocator($this->sm);
+        $this->fee->shouldReceive('canRefund')
+            ->withNoArgs()
+            ->andReturn($canRefund);
     }
 }

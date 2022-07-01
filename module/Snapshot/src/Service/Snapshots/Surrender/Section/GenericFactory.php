@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section;
 
-use Dvsa\Olcs\Snapshot\Service\Snapshots\GenericFactoryCreateServiceTrait;
+use Dvsa\Olcs\Api\Service\Traits\GenericFactoryCreateServiceTrait;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
 

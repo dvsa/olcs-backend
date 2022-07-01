@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Snapshot\Service\Snapshots;
+namespace Dvsa\Olcs\Api\Service\Traits;
 
 use Laminas\ServiceManager\ServiceLocatorInterface;
 

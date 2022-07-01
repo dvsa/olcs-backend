@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory;
 
-use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumerServices;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\RefundInterimFees;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Laminas\ServiceManager\FactoryInterface;
@@ -25,8 +25,9 @@ class RefundInterimFeesFactory implements FactoryInterface
         /** @var \Laminas\ServiceManager\ServiceManager $sl */
         $sl = $serviceLocator->getServiceLocator();
 
-        $feeRepo = $sl->get('RepositoryServiceManager')->get('Fee');
-
-        return new RefundInterimFees($feeRepo);
+        return new RefundInterimFees(
+            $sl->get(AbstractConsumerServices::class),
+            $sl->get('RepositoryServiceManager')->get('Fee')
+        );
     }
 }
