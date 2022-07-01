@@ -3,10 +3,13 @@
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\Cpms;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
+use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload
@@ -14,10 +17,21 @@ use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
  */
 class ReportDownloadTest extends AbstractConsumerTestCase
 {
-    protected $consumerClass = ReportDownload::class;
-
     /** @var ReportDownload */
     protected $sut;
+
+    /** @var m\MockInterface */
+    protected $qhm;
+
+    protected function instantiate()
+    {
+        $this->qhm = m::mock(QueryHandlerManager::class);
+
+        $this->sut = new ReportDownload(
+            $this->abstractConsumerServices,
+            $this->qhm
+        );
+    }
 
     public function testProcessMessageSuccess()
     {
@@ -228,5 +242,59 @@ class ReportDownloadTest extends AbstractConsumerTestCase
             'Failed to process message: 99 {"reference":"OLCS-1234-ABCD", "name": "FILENAME"} backend fail',
             $result
         );
+    }
+
+    /**
+     * @param string $class expected Query class name
+     * @param array $expectedDtoData
+     * @param array $result to be returned by $response->getResult()
+     */
+    protected function expectQuery($class, $expectedDtoData, $result)
+    {
+        $this->qhm
+            ->shouldReceive('handleQuery')
+            ->with(
+                m::on(
+                    function (QueryInterface $qry) use ($expectedDtoData, $class) {
+                        $matched = (
+                            is_a($qry, $class)
+                            &&
+                            $qry->getArrayCopy() == $expectedDtoData
+                        );
+                        return $matched;
+                    }
+                )
+            )
+            ->once()
+            ->andReturn($result);
+    }
+ 
+    /**
+     * @param string $class
+     * @param array $expectedDtoData
+     * @param string|\Exception $exception
+     */
+    protected function expectQueryException($class, $expectedDtoData, $exception, $exceptionMsg = '')
+    {
+        if (is_string($exception)) {
+            $exception = new $exception($exceptionMsg);
+        }
+
+        $this->qhm
+            ->shouldReceive('handleQuery')
+            ->with(
+                m::on(
+                    function (QueryInterface $qry) use ($expectedDtoData, $class) {
+                        $matched = (
+                            is_a($qry, $class)
+                            &&
+                            $qry->getArrayCopy() == $expectedDtoData
+                        );
+                        return $matched;
+                    }
+                )
+            )
+            ->once()
+            ->andThrow($exception);
     }
 }

@@ -2,11 +2,12 @@
 
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumerServices;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
 
 /**
  * Abstract Queue Consumer Test
@@ -17,26 +18,31 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
 {
     /** @var  \Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumer */
     protected $sut;
-    protected $sm;
-    /** @var  m\MockInterface */
-    protected $qhm;
+
     /** @var  m\MockInterface */
     protected $chm;
+
+    /** @var  m\MockInterface */
+    protected $abstractConsumerServices;
+
     protected $consumerClass = 'override_me';
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $this->chm = m::mock(CommandHandlerManager::class);
 
-        $this->chm = m::mock();
-        $this->sm->setService('CommandHandlerManager', $this->chm);
+        $this->abstractConsumerServices = m::mock(AbstractConsumerServices::class);
+        $this->abstractConsumerServices->shouldReceive('getCommandHandlerManager')
+            ->withNoArgs()
+            ->andReturn($this->chm);
 
-        $this->qhm = m::mock();
-        $this->sm->setService('QueryHandlerManager', $this->qhm);
+        $this->instantiate();
+    }
 
+    protected function instantiate()
+    {
         $consumerClass = $this->consumerClass;
-        $this->sut = new $consumerClass();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new $consumerClass($this->abstractConsumerServices);
     }
 
     /**
@@ -142,59 +148,5 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
                 ->once()
                 ->andThrow($exception);
         }
-    }
-
-    /**
-     * @param string $class expected Query class name
-     * @param array $expectedDtoData
-     * @param array $result to be returned by $response->getResult()
-     */
-    protected function expectQuery($class, $expectedDtoData, $result)
-    {
-        $this->qhm
-            ->shouldReceive('handleQuery')
-            ->with(
-                m::on(
-                    function (QueryInterface $qry) use ($expectedDtoData, $class) {
-                        $matched = (
-                            is_a($qry, $class)
-                            &&
-                            $qry->getArrayCopy() == $expectedDtoData
-                        );
-                        return $matched;
-                    }
-                )
-            )
-            ->once()
-            ->andReturn($result);
-    }
-
-    /**
-     * @param string $class
-     * @param array $expectedDtoData
-     * @param string|\Exception $exception
-     */
-    protected function expectQueryException($class, $expectedDtoData, $exception, $exceptionMsg = '')
-    {
-        if (is_string($exception)) {
-            $exception = new $exception($exceptionMsg);
-        }
-
-        $this->qhm
-            ->shouldReceive('handleQuery')
-            ->with(
-                m::on(
-                    function (QueryInterface $qry) use ($expectedDtoData, $class) {
-                        $matched = (
-                            is_a($qry, $class)
-                            &&
-                            $qry->getArrayCopy() == $expectedDtoData
-                        );
-                        return $matched;
-                    }
-                )
-            )
-            ->once()
-            ->andThrow($exception);
     }
 }
