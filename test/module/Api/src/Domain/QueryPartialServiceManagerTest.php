@@ -1,26 +1,19 @@
 <?php
 
-/**
- * Validator Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain;
 
+use Dvsa\Olcs\Api\Domain\QueryPartialServiceManager;
+use Laminas\ServiceManager\ConfigInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Domain\ValidatorManager;
-use Laminas\ServiceManager\ConfigInterface;
 
 /**
- * Validator Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * QueryPartialServiceManagerTest
  */
-class ValidatorManagerTest extends MockeryTestCase
+class QueryPartialServiceManagerTest extends MockeryTestCase
 {
     /**
-     * @var ValidatorManager
+     * @var QueryPartialServiceManager
      */
     protected $sut;
 
@@ -28,19 +21,10 @@ class ValidatorManagerTest extends MockeryTestCase
     {
         $config = m::mock(ConfigInterface::class);
         $config->shouldReceive('configureServiceManager')
-            ->with(m::type(ValidatorManager::class))
+            ->with(m::type(QueryPartialServiceManager::class))
             ->once();
 
-        $this->sut = new ValidatorManager($config);
-    }
-
-    public function testGet()
-    {
-        $mock = m::mock();
-
-        $this->sut->setService('Foo', $mock);
-
-        $this->assertSame($mock, $this->sut->get('Foo'));
+        $this->sut = new QueryPartialServiceManager($config);
     }
 
     public function testValidate()

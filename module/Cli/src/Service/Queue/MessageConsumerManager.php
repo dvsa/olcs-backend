@@ -8,8 +8,8 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
+use Dvsa\Olcs\Utils\Traits\PluginManagerTrait;
 use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\Exception\RuntimeException;
 use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 
@@ -20,6 +20,10 @@ use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
  */
 class MessageConsumerManager extends AbstractPluginManager
 {
+    use PluginManagerTrait;
+
+    protected $instanceOf = MessageConsumerInterface::class;
+
     public function __construct(ConfigInterface $config = null)
     {
         if ($config) {
@@ -29,12 +33,5 @@ class MessageConsumerManager extends AbstractPluginManager
         $this->addInitializer(
             new ServiceLocatorInitializer()
         );
-    }
-
-    public function validatePlugin($plugin)
-    {
-        if (!$plugin instanceof MessageConsumerInterface) {
-            throw new RuntimeException('Message consumer service does not implement MessageConsumerInterface');
-        }
     }
 }
