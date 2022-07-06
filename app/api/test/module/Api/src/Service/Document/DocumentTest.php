@@ -2,9 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document;
 
+use Dvsa\Olcs\Api\Service\Date as DateService;
 use Dvsa\Olcs\Api\Service\Document\Document;
-use Dvsa\Olcs\DocumentShare\Data\object\File;
-use Dvsa\Olcs\DocumentShare\Service\DocManClient;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
@@ -16,19 +17,35 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class DocumentTest extends TestCase
 {
-    protected $docManClient;
+    /** @var DateService */
+    private $dateService;
 
-    /** @var  Document */
+    /** @var DocumentStoreInterface */
+    private $documentStore;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var Document */
     private $sut;
 
     public function setUp(): void
     {
-        $this->sut = new Document();
+        $this->dateService = m::mock(DateService::class);
+
+        $this->documentStore = m::mock(DocumentStoreInterface::class);
+
+        $this->translator = m::mock(TranslatorInterface::class);
+
+        $this->sut = new Document(
+            $this->dateService,
+            $this->documentStore,
+            $this->translator
+        );
     }
 
     public function testGetBookmarkQueriesForNoBookmarks()
     {
-        $this->setServiceManager();
         $file = new File();
         $file->setContent('');
 
@@ -167,17 +184,6 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $helperMock = $this->createMock(\Dvsa\Olcs\Api\Service\Date::class);
-
-        /** @var \Laminas\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
-        $serviceLocator = $this->createMock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
-        $serviceLocator->expects($this->once())
-            ->method('get')
-            ->with('DateService')
-            ->willReturn($helperMock);
-
-        $this->sut->setServiceLocator($serviceLocator);
-
         $replaced = $this->sut->populateBookmarks(
             $file,
             []
@@ -191,7 +197,6 @@ TXT;
     public function testPopulateBookmarksWithDynamicBookmarksImplementingFileStoreAwareInterface()
     {
         $content = "Bookmark 1: {\*\bkmkstart TC_SIGNATURE} {\*\bkmkend TC_SIGNATURE}.";
-        $this->setServiceManager();
         $file = new File();
         $file->setContent($content);
 
@@ -212,17 +217,6 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $translatorMock = $this->createMock(TranslatorInterface::class);
-
-        /** @var \Laminas\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-        $serviceLocator->expects($this->once())
-            ->method('get')
-            ->with('translator')
-            ->willReturn($translatorMock);
-
-        $this->sut->setServiceLocator($serviceLocator);
-
         $replaced = $this->sut->populateBookmarks(
             $file,
             []
@@ -231,15 +225,5 @@ TXT;
             $content,
             $replaced
         );
-    }
-
-    private function setServiceManager(): void
-    {
-        $this->docManClient = m::mock(DocManClient::class);
-        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)
-            ->shouldReceive('get')->with('ContentStore')->andReturn(
-                $this->docManClient
-            )->getMock();
-        $this->sut->setServiceLocator($sm);
     }
 }
