@@ -9,12 +9,12 @@
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
 use Doctrine\DBAL\DBALException;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as NextQueueItemQry;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 use Olcs\Logging\Log\Logger;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Queue Processor
@@ -22,9 +22,29 @@ use Laminas\ServiceManager\ServiceLocatorAwareTrait;
  * @author Rob Caiger <rob@clocal.co.uk>
  * @note ported from olcs-internal Cli\Service\Queue
  */
-class QueueProcessor implements ServiceLocatorAwareInterface
+class QueueProcessor
 {
-    use ServiceLocatorAwareTrait;
+    /** @var QueryHandlerManager */
+    private $queryHandlerManager;
+
+    /** @var MessageConsumerManager */
+    private $messageConsumerManager;
+
+    /**
+     * Create service instance
+     *
+     * @param QueryHandlerManager $queryHandlerManager
+     * @param MessageConsumerManager $messageConsumerManager
+     *
+     * @return QueueProcessor
+     */
+    public function __construct(
+        QueryHandlerManager $queryHandlerManager,
+        MessageConsumerManager $messageConsumerManager
+    ) {
+        $this->queryHandlerManager = $queryHandlerManager;
+        $this->messageConsumerManager = $messageConsumerManager;
+    }
 
     /**
      * Process next item
@@ -83,7 +103,7 @@ class QueueProcessor implements ServiceLocatorAwareInterface
     protected function getNextItem(array $includeTypes, array $excludeTypes)
     {
         $query = NextQueueItemQry::create(['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes]);
-        return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($query);
+        return $this->queryHandlerManager->handleQuery($query);
     }
 
     /**
@@ -95,7 +115,6 @@ class QueueProcessor implements ServiceLocatorAwareInterface
      */
     protected function getMessageConsumer($item)
     {
-        return $this->getServiceLocator()->get('MessageConsumerManager')
-            ->get($item->getType()->getId());
+        return $this->messageConsumerManager->get($item->getType()->getId());
     }
 }
