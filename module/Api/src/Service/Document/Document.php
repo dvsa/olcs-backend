@@ -3,22 +3,49 @@
 namespace Dvsa\Olcs\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
+use Dvsa\Olcs\Api\Service\Date as DateService;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\DateHelperAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\FileStoreAwareInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
+use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Document generation service
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class Document implements ServiceLocatorAwareInterface
+class Document
 {
-    use ServiceLocatorAwareTrait;
-
     const DOCUMENT_TIMESTAMP_FORMAT = 'YmdHi';
+
+    /** @var DateService */
+    private $dateSrvHlpr;
+
+    /** @var DocumentStoreInterface */
+    private $documentStore;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /**
+     * Create service instance
+     *
+     * @param DateService $dateSrvHlpr
+     * @param DocumentStoreInterface $documentStore
+     * @param TranslatorInterface $translator
+     *
+     * @return Document
+     */
+    public function __construct(
+        DateService $dateSrvHlpr,
+        DocumentStoreInterface $documentStore,
+        TranslatorInterface $translator
+    ) {
+        $this->dateSrvHlpr = $dateSrvHlpr;
+        $this->documentStore = $documentStore;
+        $this->translator = $translator;
+    }
 
     /**
      * Get Bookmark Queries
@@ -144,18 +171,15 @@ class Document implements ServiceLocatorAwareInterface
             $bookmark = $factory->locate($token);
 
             if ($bookmark instanceof DateHelperAwareInterface) {
-                /** @var \Dvsa\Olcs\Api\Service\Date $dateSrvHlpr */
-                $dateSrvHlpr = $this->getServiceLocator()->get('DateService');
-                $bookmark->setDateHelper($dateSrvHlpr);
+                $bookmark->setDateHelper($this->dateSrvHlpr);
             }
 
-
             if ($bookmark instanceof FileStoreAwareInterface) {
-                $bookmark->setFileStore($this->getServiceLocator()->get('ContentStore'));
+                $bookmark->setFileStore($this->documentStore);
             }
 
             if ($bookmark instanceof TranslatorAwareInterface) {
-                $bookmark->setTranslator($this->getServiceLocator()->get('translator'));
+                $bookmark->setTranslator($this->translator);
             }
 
             $bookmarks[$token] = $bookmark;
