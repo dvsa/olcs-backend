@@ -333,12 +333,10 @@ return [
         'alias' => [
             'NysiisService' => 'Dvsa\Olcs\Api\Service\Data\Nysiis'
         ],
-        'invokables' => [
-            'Queue' => Dvsa\Olcs\Cli\Service\Queue\QueueProcessor::class,
-        ],
         'factories' => [
             'MessageConsumerManager' => \Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory::class,
             'Dvsa\Olcs\Api\Service\Data\Nysiis' => Dvsa\Olcs\Api\Service\Data\NysiisFactory::class,
+            'Queue' => Dvsa\Olcs\Cli\Service\Queue\QueueProcessorFactory::class,
         ],
     ],
     'message_consumer_manager' => [
