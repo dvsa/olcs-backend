@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
  */
 class ApplicationLicenceHistoryReviewService extends AbstractReviewService
 {
-
     /**
      * Format the readonly config from the given data
      *
@@ -30,19 +29,26 @@ class ApplicationLicenceHistoryReviewService extends AbstractReviewService
         $previousLicences = $this->splitLicencesUp($data['otherLicences']);
 
         $mainItems[] = $this->formatCurrentLicences(
-            $previousLicences[OtherLicence::TYPE_CURRENT], $data['prevHasLicence']
+            $previousLicences[OtherLicence::TYPE_CURRENT],
+            $data['prevHasLicence']
         );
 
         $mainItems[] = $this->formatLicences(
-            $previousLicences[OtherLicence::TYPE_APPLIED], $data['prevHadLicence'], 'applied'
+            $previousLicences[OtherLicence::TYPE_APPLIED],
+            $data['prevHadLicence'],
+            'applied'
         );
 
         $mainItems[] = $this->formatLicences(
-            $previousLicences[OtherLicence::TYPE_REFUSED], $data['prevBeenRefused'], 'refused'
+            $previousLicences[OtherLicence::TYPE_REFUSED],
+            $data['prevBeenRefused'],
+            'refused'
         );
 
         $mainItems[] = $this->formatLicences(
-            $previousLicences[OtherLicence::TYPE_REVOKED], $data['prevBeenRevoked'], 'revoked'
+            $previousLicences[OtherLicence::TYPE_REVOKED],
+            $data['prevBeenRevoked'],
+            'revoked'
         );
 
         $mainItems[] = $this->formatLicences(
@@ -52,11 +58,13 @@ class ApplicationLicenceHistoryReviewService extends AbstractReviewService
         );
 
         $mainItems[] = $this->formatDisqualifiedLicences(
-            $previousLicences[OtherLicence::TYPE_DISQUALIFIED], $data['prevBeenDisqualifiedTc']
+            $previousLicences[OtherLicence::TYPE_DISQUALIFIED],
+            $data['prevBeenDisqualifiedTc']
         );
 
         $mainItems[] = $this->formatHeldLicences(
-            $previousLicences[OtherLicence::TYPE_HELD], $data['prevPurchasedAssets']
+            $previousLicences[OtherLicence::TYPE_HELD],
+            $data['prevPurchasedAssets']
         );
 
         return [
@@ -81,7 +89,6 @@ class ApplicationLicenceHistoryReviewService extends AbstractReviewService
         ];
 
         foreach (array_keys($previousLicenceList) as $type) {
-
             foreach ($previousLicences as $previousLicence) {
                 if ($previousLicence['previousLicenceType']['id'] === $type) {
                     $previousLicenceList[$type][] = $previousLicence;

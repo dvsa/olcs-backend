@@ -3,11 +3,13 @@
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\OperatingCentresReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * OperatingCentres review service test
@@ -21,7 +23,14 @@ class OperatingCentresReviewServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new OperatingCentresReviewService();
+        $mockTranslator = m::mock(TranslatorInterface::class);
+        
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new OperatingCentresReviewService($abstractReviewServiceServices);
     }
 
     /**

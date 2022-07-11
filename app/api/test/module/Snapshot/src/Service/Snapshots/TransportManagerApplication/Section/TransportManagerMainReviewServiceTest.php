@@ -13,10 +13,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerMainReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
 
 /**
  * Transport Manager Main Review Service Test
@@ -26,15 +27,19 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
     /** @var  TransportManagerMainReviewService */
     protected $sut;
 
-    /** @var  \Laminas\ServiceManager\ServiceManager */
-    protected $sm;
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sut = new TransportManagerMainReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new TransportManagerMainReviewService($abstractReviewServiceServices);
     }
 
     /**
@@ -42,10 +47,7 @@ class TransportManagerMainReviewServiceTest extends MockeryTestCase
      */
     public function testGetConfig($tma, $expected)
     {
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
                 function ($string) {
                     return $string . '-translated';

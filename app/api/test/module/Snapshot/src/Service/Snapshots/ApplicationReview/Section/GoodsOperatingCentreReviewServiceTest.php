@@ -4,9 +4,11 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\GoodsOperatingCentreReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\PsvOperatingCentreReviewService;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Goods Operating Centre Review Service Test
@@ -16,14 +18,28 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
+    /** @var PsvOperatingCentreReviewService */
+    protected $mockPsvService;
 
     public function setUp(): void
     {
-        $this->sut = new GoodsOperatingCentreReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->mockPsvService = m::mock(PsvOperatingCentreReviewService::class);
+
+        $this->sut = new GoodsOperatingCentreReviewService(
+            $abstractReviewServiceServices,
+            $this->mockPsvService
+        );
     }
 
     /**
@@ -108,14 +124,8 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
         ];
 
         // Mocks
-        $mockPsvService = m::mock();
-        $this->sm->setService('Review\PsvOperatingCentre', $mockPsvService);
-
         if ($needToMockTranslator) {
-            $mockTranslator = m::mock();
-            $this->sm->setService('translator', $mockTranslator);
-
-            $mockTranslator->shouldReceive('translate')
+            $this->mockTranslator->shouldReceive('translate')
                 ->with('no-files-uploaded')
                 ->andReturn('no-files-uploaded-translated')
                 ->shouldReceive('translate')
@@ -124,7 +134,7 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
         }
 
         // Expectations
-        $mockPsvService->shouldReceive('getConfigFromData')
+        $this->mockPsvService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn($psvConfig);
 

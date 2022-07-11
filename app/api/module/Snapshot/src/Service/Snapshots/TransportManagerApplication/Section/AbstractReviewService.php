@@ -5,17 +5,29 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Secti
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Abstract Review Service
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractReviewService implements ReviewServiceInterface, ServiceLocatorAwareInterface
+abstract class AbstractReviewService implements ReviewServiceInterface
 {
-    use ServiceLocatorAwareTrait;
+    /** @var TranslatorInterface */
+    protected $translator;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     *
+     * @return AbstractReviewService
+     */
+    public function __construct(AbstractReviewServiceServices $abstractReviewServiceServices)
+    {
+        $this->translator = $abstractReviewServiceServices->getTranslator();
+    }
 
     /**
      * Format Full name
@@ -108,7 +120,7 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
      */
     protected function translate($string)
     {
-        return $this->getServiceLocator()->get('translator')->translate($string);
+        return $this->translator->translate($string);
     }
 
     /**

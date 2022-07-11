@@ -11,6 +11,15 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerMainReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerResponsibilityReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerOtherEmploymentReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerPreviousConvictionReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerPreviousLicenceReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerDeclarationReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerSignatureReviewService;
+use Dvsa\Olcs\Utils\Translation\NiTextTranslation;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
 use Laminas\View\Model\ViewModel;
 
@@ -21,6 +30,67 @@ use Laminas\View\Model\ViewModel;
  */
 class Generator extends AbstractGenerator
 {
+    /** @var NiTextTranslation */
+    private $niTextTranslation;
+
+    /** @var TransportManagerMainReviewService */
+    private $transportManagerMainReviewService;
+
+    /** @var TransportManagerResponsibilityReviewService */
+    private $transportManagerResponsibilityReviewService;
+
+    /** @var TransportManagerOtherEmploymentReviewService */
+    private $transportManagerOtherEmploymentReviewService;
+
+    /** @var TransportManagerPreviousConvictionReviewService */
+    private $transportManagerPreviousConvictionReviewService;
+
+    /** @var TransportManagerPreviousLicenceReviewService */
+    private $transportManagerPreviousLicenceReviewService;
+
+    /** @var TransportManagerDeclarationReviewService */
+    private $transportManagerDeclarationReviewService;
+
+    /** @var TransportManagerSignatureReviewService */
+    private $transportManagerSignatureReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractGeneratorServices $abstractGeneratorServices
+     * @param NiTextTranslation $niTextTranslation
+     * @param TransportManagerMainReviewService $transportManagerMainReviewService
+     * @param TransportManagerResponsibilityReviewService $transportManagerResponsibilityReviewService
+     * @param TransportManagerOtherEmploymentReviewService $transportManagerOtherEmploymentReviewService
+     * @param TransportManagerPreviousConvictionReviewService $transportManagerPreviousConvictionReviewService
+     * @param TransportManagerPreviousLicenceReviewService $transportManagerPreviousLicenceReviewService
+     * @param TransportManagerDeclarationReviewService $transportManagerDeclarationReviewService
+     * @param TransportManagerSignatureReviewService $transportManagerSignatureReviewService
+     *
+     * @return Generator
+     */
+    public function __construct(
+        AbstractGeneratorServices $abstractGeneratorServices,
+        NiTextTranslation $niTextTranslation,
+        TransportManagerMainReviewService $transportManagerMainReviewService,
+        TransportManagerResponsibilityReviewService $transportManagerResponsibilityReviewService,
+        TransportManagerOtherEmploymentReviewService $transportManagerOtherEmploymentReviewService,
+        TransportManagerPreviousConvictionReviewService $transportManagerPreviousConvictionReviewService,
+        TransportManagerPreviousLicenceReviewService $transportManagerPreviousLicenceReviewService,
+        TransportManagerDeclarationReviewService $transportManagerDeclarationReviewService,
+        TransportManagerSignatureReviewService $transportManagerSignatureReviewService
+    ) {
+        parent::__construct($abstractGeneratorServices);
+        $this->niTextTranslation = $niTextTranslation;
+        $this->transportManagerMainReviewService = $transportManagerMainReviewService;
+        $this->transportManagerResponsibilityReviewService = $transportManagerResponsibilityReviewService;
+        $this->transportManagerOtherEmploymentReviewService = $transportManagerOtherEmploymentReviewService;
+        $this->transportManagerPreviousConvictionReviewService = $transportManagerPreviousConvictionReviewService;
+        $this->transportManagerPreviousLicenceReviewService = $transportManagerPreviousLicenceReviewService;
+        $this->transportManagerDeclarationReviewService = $transportManagerDeclarationReviewService;
+        $this->transportManagerSignatureReviewService = $transportManagerSignatureReviewService;
+    }
+
     public function generate(TransportManagerApplication $tma, $isInternalUser = false)
     {
         $application = $tma->getApplication();
@@ -28,7 +98,7 @@ class Generator extends AbstractGenerator
         $organisation = $licence->getOrganisation();
 
         // Set the NI Locale
-        $this->getServiceLocator()->get('Utils\NiTextTranslation')->setLocaleForNiFlag($application->getNiFlag());
+        $this->niTextTranslation->setLocaleForNiFlag($application->getNiFlag());
 
         $subTitle = sprintf(
             '%s %s/%s',
@@ -70,7 +140,7 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'tm-review-main',
-            'config' => $this->getServiceLocator()->get('Review\TransportManagerMain')->getConfig($tma)
+            'config' => $this->transportManagerMainReviewService->getConfig($tma)
         ];
     }
 
@@ -78,7 +148,7 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'tm-review-responsibility',
-            'config' => $this->getServiceLocator()->get('Review\TransportManagerResponsibility')->getConfig($tma)
+            'config' => $this->transportManagerResponsibilityReviewService->getConfig($tma)
         ];
     }
 
@@ -86,7 +156,7 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'tm-review-other-employment',
-            'config' => $this->getServiceLocator()->get('Review\TransportManagerOtherEmployment')->getConfig($tma)
+            'config' => $this->transportManagerOtherEmploymentReviewService->getConfig($tma)
         ];
     }
 
@@ -94,7 +164,7 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'tm-review-previous-conviction',
-            'config' => $this->getServiceLocator()->get('Review\TransportManagerPreviousConviction')->getConfig($tma)
+            'config' => $this->transportManagerPreviousConvictionReviewService->getConfig($tma)
         ];
     }
 
@@ -102,7 +172,7 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'tm-review-previous-licence',
-            'config' => $this->getServiceLocator()->get('Review\TransportManagerPreviousLicence')->getConfig($tma)
+            'config' => $this->transportManagerPreviousLicenceReviewService->getConfig($tma)
         ];
     }
 
@@ -110,14 +180,14 @@ class Generator extends AbstractGenerator
     {
         return [
             'header' => 'tm-review-declaration',
-            'config' => $this->getServiceLocator()->get('Review\TransportManagerDeclaration')->getConfig($tma)
+            'config' => $this->transportManagerDeclarationReviewService->getConfig($tma)
         ];
     }
 
     protected function getSignatureReviewSection(TransportManagerApplication $tma)
     {
         return [
-            'config' => $this->getServiceLocator()->get('Review\TransportManagerSignature')->getConfig($tma)
+            'config' => $this->transportManagerSignatureReviewService->getConfig($tma)
         ];
     }
 }

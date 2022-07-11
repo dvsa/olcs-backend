@@ -14,6 +14,25 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class VariationLicenceHistoryReviewService extends AbstractReviewService
 {
+    /** @var ApplicationLicenceHistoryReviewService */
+    private $applicationLicenceHistoryReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param ApplicationLicenceHistoryReviewService $applicationLicenceHistoryReviewService
+     *
+     * @return VariationLicenceHistoryReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        ApplicationLicenceHistoryReviewService $applicationLicenceHistoryReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->applicationLicenceHistoryReviewService = $applicationLicenceHistoryReviewService;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -22,6 +41,6 @@ class VariationLicenceHistoryReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array())
     {
-        return $this->getServiceLocator()->get('Review\ApplicationLicenceHistory')->getConfigFromData($data);
+        return $this->applicationLicenceHistoryReviewService->getConfigFromData($data);
     }
 }

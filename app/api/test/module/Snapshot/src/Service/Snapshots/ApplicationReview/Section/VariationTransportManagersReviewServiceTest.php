@@ -9,8 +9,10 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TransportManagersReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationTransportManagersReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Variation Transport Managers Review Service Test
@@ -20,14 +22,25 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationTran
 class VariationTransportManagersReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var TransportManagersReviewService */
+    protected $mockTm;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sut = new VariationTransportManagersReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->mockTm = m::mock(TransportManagersReviewService::class);
+
+        $this->sut = new VariationTransportManagersReviewService(
+            $abstractReviewServiceServices,
+            $this->mockTm
+        );
     }
 
     public function testGetConfigFromDataOneOfEach()
@@ -70,10 +83,7 @@ class VariationTransportManagersReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        $mockTm = m::mock();
-        $this->sm->setService('Review\TransportManagers', $mockTm);
-
-        $mockTm->shouldReceive('getConfigFromData')
+        $this->mockTm->shouldReceive('getConfigFromData')
             ->once()
             ->with([$tm1])
             ->andReturn(['foo' => 'bar'])
@@ -125,10 +135,7 @@ class VariationTransportManagersReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        $mockTm = m::mock();
-        $this->sm->setService('Review\TransportManagers', $mockTm);
-
-        $mockTm->shouldReceive('getConfigFromData')
+        $this->mockTm->shouldReceive('getConfigFromData')
             ->once()
             ->with([$tm1, $tm2])
             ->andReturn(['foo' => 'bar'])

@@ -7,12 +7,13 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationUndertakingsReviewService;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Variation Undertakings Review Service Test
@@ -22,14 +23,20 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 class VariationUndertakingsReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
 
     public function setUp(): void
     {
-        $this->sut = new VariationUndertakingsReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new VariationUndertakingsReviewService($abstractReviewServiceServices);
     }
 
     /**
@@ -37,86 +44,83 @@ class VariationUndertakingsReviewServiceTest extends MockeryTestCase
      */
     public function testGetConfigFromData($data, $expected)
     {
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_PSV430')
             ->andReturn('PSV430-translated [%s] [%s] [%s]');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_PSV430-Standard')
             ->andReturn('PSV430-standard-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_PSV430-declare')
             ->andReturn('PSV430-declare-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_signature')
             ->andReturn('signature-translated [%s] [%s]');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_signature_address_gb')
             ->andReturn('signature-address-gb-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_signature_address_ni')
             ->andReturn('signature-address-ni-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('undertakings_directors_signature')
             ->andReturn('undertakings-directors-signature-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV80A')
             ->andReturn('GV80A-translated [%s] [%s]');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV80A-NI')
             ->andReturn('GV80A-NI-translated [%s] [%s]');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV80A-declare')
             ->andReturn('GV80A-declare-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV80A-NI-declare')
             ->andReturn('GV80A-NI-declare-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV81')
             ->andReturn('GV81-translated [%s] [%s] [%s] [%s]');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV81-NI')
             ->andReturn('GV81-NI-translated [%s] [%s] [%s] [%s]');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV81-auth-lgv')
             ->andReturn('GV81-auth-lgv-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV81-auth-other')
             ->andReturn('GV81-auth-other-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV81-NI-auth-other')
             ->andReturn('GV81-NI-auth-other-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV81-Standard')
             ->andReturn('GV81-standard-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV81-declare')
             ->andReturn('GV81-declare-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV81-NI-Standard')
             ->andReturn('GV81-NI-standard-translated');
 
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV81-NI-declare')
             ->andReturn('GV81-NI-declare-translated');
 

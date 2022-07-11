@@ -5,10 +5,11 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender\Section;
 use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class SignatureReviewServiceTest extends MockeryTestCase
 {
@@ -17,33 +18,38 @@ class SignatureReviewServiceTest extends MockeryTestCase
      */
     protected $sut;
 
-    protected $sm;
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
 
     public function setUp(): void
     {
-        $this->sut = new SignatureReviewService();
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->translator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->translator);
+
+        $this->sut = new SignatureReviewService($abstractReviewServiceServices);
     }
 
     public function testPhysicalSignature()
     {
         $surrender = $this->mockSurrender(RefData::SIG_PHYSICAL_SIGNATURE);
 
-        $translator = $this->mockTranslator();
-        
-        $translator->shouldReceive('translate')
+        $this->translator->shouldReceive('translate')
             ->with('markup-signature-physical')
             ->andReturn('%s__%s__translated');
 
-        $translator->shouldReceive('translate')
+        $this->translator->shouldReceive('translate')
             ->with('directors-signature')
             ->andReturn('directors-signature-translated');
 
-        $translator->shouldReceive('translate')
+        $this->translator->shouldReceive('translate')
             ->with('return-address')
             ->andReturn('return-address-translated');
-
 
         $markup = $this->sut->getConfigFromData($surrender);
         $expected = [
@@ -64,8 +70,7 @@ class SignatureReviewServiceTest extends MockeryTestCase
         $surrender = $this->mockSurrender(RefData::SIG_DIGITAL_SIGNATURE);
         $surrender->shouldReceive('getDigitalSignature')->andReturn($signature);
 
-        $translator = $this->mockTranslator();
-        $translator->shouldReceive('translate')
+        $this->translator->shouldReceive('translate')
             ->with('markup-signature-digital')
             ->andReturn('%s__%s__%s__translated');
 
@@ -83,12 +88,5 @@ class SignatureReviewServiceTest extends MockeryTestCase
         $surrender->shouldReceive('getSignatureType')->andReturn($refData);
 
         return $surrender;
-    }
-
-    protected function mockTranslator()
-    {
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-        return $mockTranslator;
     }
 }

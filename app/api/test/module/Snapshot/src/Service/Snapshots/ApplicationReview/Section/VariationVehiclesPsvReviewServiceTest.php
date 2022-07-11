@@ -7,11 +7,13 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationVehiclesPsvReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VehiclesPsvReviewService;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Variation Vehicles Psv Review Service Test
@@ -22,14 +24,27 @@ class VariationVehiclesPsvReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
 
-    protected $sm;
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
+    /** @var VehiclesPsvReviewService */
+    protected $mockVehiclesPsv;
 
     public function setUp(): void
     {
-        $this->sut = new VariationVehiclesPsvReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->mockVehiclesPsv = m::mock(VehiclesPsvReviewService::class);
+
+        $this->sut = new VariationVehiclesPsvReviewService(
+            $abstractReviewServiceServices,
+            $this->mockVehiclesPsv
+        );
     }
 
     /**
@@ -37,19 +52,14 @@ class VariationVehiclesPsvReviewServiceTest extends MockeryTestCase
      */
     public function testGetConfigFromData($data, $expected)
     {
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
                 function ($string) {
                     return $string . '-translated';
                 }
             );
 
-        $mockVehiclesPsv = m::mock();
-        $this->sm->setService('Review\VehiclesPsv', $mockVehiclesPsv);
-        $mockVehiclesPsv->shouldReceive('getConfigFromData')
+        $this->mockVehiclesPsv->shouldReceive('getConfigFromData')
             ->with($data, [])
             ->andReturn('MAINITEMS');
 

@@ -12,9 +12,13 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService;
+use Dvsa\Olcs\Utils\Translation\NiTextTranslation;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Application Review
@@ -219,8 +223,45 @@ class Generator extends AbstractGenerator
 
     protected $lva;
 
-    public function __construct()
-    {
+    /** @var SectionAccessService */
+    private $sectionAccessService;
+
+    /** @var NiTextTranslation */
+    private $niTextTranslation;
+
+    /** @var SignatureReviewService */
+    private $signatureReviewService;
+
+    /** @var ServiceLocatorInterface */
+    private $services;
+
+    /**
+     * Create service instance
+     *
+     * TODO - refactor such that the buildReadonlyConfigForSections method is not dependent upon the service
+     * container being passed into the constructor
+     *
+     * @param AbstractGeneratorServices $abstractGeneratorServices
+     * @param SectionAccessService $sectionAccessService
+     * @param NiTextTranslation $niTextTranslation
+     * @param SignatureReviewService $signatureReviewService
+     * @param ServiceLocatorInterface $services
+     *
+     * @return Generator
+     */
+    public function __construct(
+        AbstractGeneratorServices $abstractGeneratorServices,
+        SectionAccessService $sectionAccessService,
+        NiTextTranslation $niTextTranslation,
+        SignatureReviewService $signatureReviewService,
+        ServiceLocatorInterface $services
+    ) {
+        parent::__construct($abstractGeneratorServices);
+        $this->sectionAccessService = $sectionAccessService;
+        $this->niTextTranslation = $niTextTranslation;
+        $this->signatureReviewService = $signatureReviewService;
+        $this->services = $services;
+
         $notRemovedCriteria = Criteria::create();
         $notRemovedCriteria->andWhere(
             $notRemovedCriteria->expr()->isNull('removalDate')
@@ -232,13 +273,13 @@ class Generator extends AbstractGenerator
 
     public function generate(Application $application, $isInternal = true)
     {
-        $sections = $this->getServiceLocator()->get('SectionAccessService')->getAccessibleSections($application);
+        $sections = $this->sectionAccessService->getAccessibleSections($application);
         $sections = array_keys($sections);
 
         $sections = $this->mapSections($sections);
 
         // Set the NI Locale
-        $this->getServiceLocator()->get('Utils\NiTextTranslation')->setLocaleForNiFlag($application->getNiFlag());
+        $this->niTextTranslation->setLocaleForNiFlag($application->getNiFlag());
 
         if ($application->isVariation()) {
             $this->lva = 'variation';
@@ -312,8 +353,8 @@ class Generator extends AbstractGenerator
 
             // @NOTE this check is in place while we implement each section
             // eventually we should be able to remove the if
-            if ($this->getServiceLocator()->has($serviceName)) {
-                $service = $this->getServiceLocator()->get($serviceName);
+            if ($this->services->has($serviceName)) {
+                $service = $this->services->get($serviceName);
                 $header = $service->getHeaderTranslationKey($reviewData, $section);
                 $config = $service->getConfigFromData($reviewData);
             }
@@ -422,7 +463,6 @@ class Generator extends AbstractGenerator
      */
     private function buildSignatureSection(Application $application): array
     {
-        $service = $this->getServiceLocator()->get(SignatureReviewService::class);
         $data = [
             'organisation' => $application->getLicence()->getOrganisation(),
             'signatureType' => $application->getSignatureType(),
@@ -432,7 +472,7 @@ class Generator extends AbstractGenerator
 
         return [
             'hide-count' => true,
-            'config' => $service->getConfigFromData($data)
+            'config' => $this->signatureReviewService->getConfigFromData($data)
         ];
     }
 }

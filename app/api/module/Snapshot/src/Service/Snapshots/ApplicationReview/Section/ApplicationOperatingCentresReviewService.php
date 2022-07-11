@@ -14,6 +14,49 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class ApplicationOperatingCentresReviewService extends AbstractOperatingCentresReviewService
 {
+    /** @var PsvOperatingCentreReviewService */
+    private $psvOperatingCentreReviewService;
+
+    /** @var ApplicationPsvOcTotalAuthReviewService */
+    private $applicationPsvOcTotalAuthReviewService;
+
+    /** @var GoodsOperatingCentreReviewService */
+    private $goodsOperatingCentreReviewService;
+
+    /** @var ApplicationGoodsOcTotalAuthReviewService */
+    private $applicationGoodsOcTotalAuthReviewService;
+
+    /** @var TrafficAreaReviewService */
+    private $trafficAreaReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param PsvOperatingCentreReviewService $psvOperatingCentreReviewService
+     * @param ApplicationPsvOcTotalAuthReviewService $applicationPsvOcTotalAuthReviewService
+     * @param GoodsOperatingCentreReviewService $goodsOperatingCentreReviewService
+     * @param ApplicationGoodsOcTotalAuthReviewService $applicationGoodsOcTotalAuthReviewService
+     * @param TrafficAreaReviewService $trafficAreaReviewService
+     *
+     * @return ApplicationOperatingCentresReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        PsvOperatingCentreReviewService $psvOperatingCentreReviewService,
+        ApplicationPsvOcTotalAuthReviewService $applicationPsvOcTotalAuthReviewService,
+        GoodsOperatingCentreReviewService $goodsOperatingCentreReviewService,
+        ApplicationGoodsOcTotalAuthReviewService $applicationGoodsOcTotalAuthReviewService,
+        TrafficAreaReviewService $trafficAreaReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->psvOperatingCentreReviewService = $psvOperatingCentreReviewService;
+        $this->applicationPsvOcTotalAuthReviewService = $applicationPsvOcTotalAuthReviewService;
+        $this->goodsOperatingCentreReviewService = $goodsOperatingCentreReviewService;
+        $this->applicationGoodsOcTotalAuthReviewService = $applicationGoodsOcTotalAuthReviewService;
+        $this->trafficAreaReviewService = $trafficAreaReviewService;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -27,11 +70,11 @@ class ApplicationOperatingCentresReviewService extends AbstractOperatingCentresR
         $isPsv = $this->isPsv($data);
 
         if ($isPsv) {
-            $ocService = $this->getServiceLocator()->get('Review\PsvOperatingCentre');
-            $authService = $this->getServiceLocator()->get('Review\ApplicationPsvOcTotalAuth');
+            $ocService = $this->psvOperatingCentreReviewService;
+            $authService = $this->applicationPsvOcTotalAuthReviewService;
         } else {
-            $ocService = $this->getServiceLocator()->get('Review\GoodsOperatingCentre');
-            $authService = $this->getServiceLocator()->get('Review\ApplicationGoodsOcTotalAuth');
+            $ocService = $this->goodsOperatingCentreReviewService;
+            $authService = $this->applicationGoodsOcTotalAuthReviewService;
         }
 
         $added = [];
@@ -46,7 +89,7 @@ class ApplicationOperatingCentresReviewService extends AbstractOperatingCentresR
 
         $config['subSections'][] = [
             'mainItems' => [
-                $this->getServiceLocator()->get('Review\TrafficArea')->getConfigFromData($data),
+                $this->trafficAreaReviewService->getConfigFromData($data),
                 $authService->getConfigFromData($data)
             ]
         ];

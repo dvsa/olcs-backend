@@ -7,8 +7,11 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationVehiclesReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Application Vehicles Review Service Test
@@ -21,7 +24,14 @@ class ApplicationVehiclesReviewServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new ApplicationVehiclesReviewService();
+        $mockTranslator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new ApplicationVehiclesReviewService($abstractReviewServiceServices);
     }
 
     /**
