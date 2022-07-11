@@ -8,18 +8,14 @@
 namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\AddDays;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Date Service
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Date implements ServiceLocatorAwareInterface
+class Date
 {
-    use ServiceLocatorAwareTrait;
-
     public function getDate($format = 'Y-m-d')
     {
         return date($format);
