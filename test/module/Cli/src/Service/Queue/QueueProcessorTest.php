@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
 use Doctrine\DBAL\DBALException;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as NextQueueItemQry;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -16,7 +17,6 @@ use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
 
 /**
  * Queue Processor Test
@@ -26,14 +26,18 @@ use OlcsTest\Bootstrap;
 class QueueProcessorTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+    
+    private $mockQueryHandlerManager;
+
+    private $mockMsm;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $this->mockQueryHandlerManager = m::mock(QueryHandlerManager::class);
 
-        $this->sut = new QueueProcessor();
-        $this->sut->setServiceLocator($this->sm);
+        $this->mockMsm = m::mock(MessageConsumerManager::class)->makePartial();
+
+        $this->sut = new QueueProcessor($this->mockQueryHandlerManager, $this->mockMsm);
     }
 
     public function testProcessNextItemWithoutItem()
@@ -41,13 +45,8 @@ class QueueProcessorTest extends MockeryTestCase
         $includeTypes = ['foo'];
         $excludeTypes = ['bar'];
 
-        // Mocks
-        $mockQueryHandlerManager = m::mock();
-        $this->sm->setService('QueryHandlerManager', $mockQueryHandlerManager);
-
         // Expectations
         $this->expectQuery(
-            $mockQueryHandlerManager,
             NextQueueItemQry::class,
             ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
             null
@@ -66,16 +65,11 @@ class QueueProcessorTest extends MockeryTestCase
         $item = new QueueEntity($type);
 
         // Mocks
-        $mockQueryHandlerManager = m::mock();
-        $mockMsm = m::mock(MessageConsumerManager::class)->makePartial();
-        $this->sm->setService('QueryHandlerManager', $mockQueryHandlerManager);
-        $this->sm->setService('MessageConsumerManager', $mockMsm);
         $mockConsumer = m::mock(MessageConsumerInterface::class);
-        $mockMsm->setService('foo', $mockConsumer);
+        $this->mockMsm->setService('foo', $mockConsumer);
 
         // Expectations
         $this->expectQuery(
-            $mockQueryHandlerManager,
             NextQueueItemQry::class,
             ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
             $item
@@ -99,16 +93,11 @@ class QueueProcessorTest extends MockeryTestCase
         $item = new QueueEntity($type);
 
         // Mocks
-        $mockQueryHandlerManager = m::mock();
-        $mockMsm = m::mock(MessageConsumerManager::class)->makePartial();
-        $this->sm->setService('QueryHandlerManager', $mockQueryHandlerManager);
-        $this->sm->setService('MessageConsumerManager', $mockMsm);
         $mockConsumer = m::mock(MessageConsumerInterface::class);
-        $mockMsm->setService('foo', $mockConsumer);
+        $this->mockMsm->setService('foo', $mockConsumer);
 
         // Expectations
         $this->expectQuery(
-            $mockQueryHandlerManager,
             NextQueueItemQry::class,
             ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
             $item
@@ -137,16 +126,11 @@ class QueueProcessorTest extends MockeryTestCase
         $item = new QueueEntity($type);
 
         // Mocks
-        $mockQueryHandlerManager = m::mock();
-        $mockMsm = m::mock(MessageConsumerManager::class)->makePartial();
-        $this->sm->setService('QueryHandlerManager', $mockQueryHandlerManager);
-        $this->sm->setService('MessageConsumerManager', $mockMsm);
         $mockConsumer = m::mock(MessageConsumerInterface::class);
-        $mockMsm->setService('foo', $mockConsumer);
+        $this->mockMsm->setService('foo', $mockConsumer);
 
         // Expectations
         $this->expectQuery(
-            $mockQueryHandlerManager,
             NextQueueItemQry::class,
             ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
             $item
@@ -172,16 +156,11 @@ class QueueProcessorTest extends MockeryTestCase
         $item = new QueueEntity($type);
 
         // Mocks
-        $mockQueryHandlerManager = m::mock();
-        $mockMsm = m::mock(MessageConsumerManager::class)->makePartial();
-        $this->sm->setService('QueryHandlerManager', $mockQueryHandlerManager);
-        $this->sm->setService('MessageConsumerManager', $mockMsm);
         $mockConsumer = m::mock(MessageConsumerInterface::class);
-        $mockMsm->setService('foo', $mockConsumer);
+        $this->mockMsm->setService('foo', $mockConsumer);
 
         // Expectations
         $this->expectQuery(
-            $mockQueryHandlerManager,
             NextQueueItemQry::class,
             ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
             $item
@@ -199,14 +178,13 @@ class QueueProcessorTest extends MockeryTestCase
     }
 
     /**
-     * @param QueryHandlerManager $queryHandlerManager service mock
      * @param string $class expected Query/Command class name
      * @param array $expectedDtoData
      * @param array $result to be returned by $response->getResult()
      */
-    private function expectQuery($queryHandlerManager, $class, $expectedDtoData, $result)
+    private function expectQuery($class, $expectedDtoData, $result)
     {
-        $queryHandlerManager
+        $this->mockQueryHandlerManager
             ->shouldReceive('handleQuery')
             ->with(
                 m::on(
