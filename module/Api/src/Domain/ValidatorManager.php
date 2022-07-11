@@ -7,9 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain;
 
+use Dvsa\Olcs\Utils\Traits\PluginManagerTrait;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ConfigInterface;
-use Laminas\ServiceManager\Exception\RuntimeException;
 
 /**
  * Validator Manager
@@ -18,14 +18,14 @@ use Laminas\ServiceManager\Exception\RuntimeException;
  */
 class ValidatorManager extends AbstractPluginManager
 {
+    use PluginManagerTrait;
+
+    protected $instanceOf = null;
+
     public function __construct(ConfigInterface $config = null)
     {
         if ($config) {
             $config->configureServiceManager($this);
         }
-    }
-
-    public function validatePlugin($plugin)
-    {
     }
 }
