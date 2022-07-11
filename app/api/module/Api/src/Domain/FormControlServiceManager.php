@@ -11,6 +11,7 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
+use Dvsa\Olcs\Utils\Traits\PluginManagerTrait;
 
 /**
  * Form Control Service Manager
@@ -19,6 +20,10 @@ use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
  */
 class FormControlServiceManager extends AbstractPluginManager
 {
+    use PluginManagerTrait;
+
+    protected $instanceOf = FormControlStrategyInterface::class;
+
     /**
      * {@inheritdoc}
      */
@@ -26,16 +31,6 @@ class FormControlServiceManager extends AbstractPluginManager
     {
         if ($config) {
             $config->configureServiceManager($this);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validatePlugin($plugin)
-    {
-        if (!($plugin instanceof FormControlStrategyInterface)) {
-            throw new RuntimeException('Form control service does not implement FormControlStrategyInterface');
         }
     }
 

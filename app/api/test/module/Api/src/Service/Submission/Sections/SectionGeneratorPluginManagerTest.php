@@ -6,7 +6,8 @@ use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\Exception\RuntimeException;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager
@@ -18,30 +19,40 @@ class SectionGeneratorPluginManagerTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $mockCfg = m::mock(ConfigInterface::class)
-            ->shouldReceive('configureServiceManager')
-            ->getMock();
-
-        $this->sut = new SectionGeneratorPluginManager($mockCfg);
+        $this->sut = new SectionGeneratorPluginManager();
     }
 
-    public function testValidatePluginFail()
-    {
-        $invalidPlugin = new \stdClass();
-
-        //  expect
-        $this->expectException(
-            \Laminas\ServiceManager\Exception\RuntimeException::class,
-            'stdClass should implement: ' . SectionGeneratorInterface::class
-        );
-
-        //  call
-        $this->sut->validatePlugin($invalidPlugin);
-    }
-
-    public function testValidatePluginOk()
+    public function testValidate()
     {
         $plugin = m::mock(SectionGeneratorInterface::class);
-        $this->sut->validatePlugin($plugin);
+
+        $this->assertNull($this->sut->validate($plugin));
+    }
+
+    public function testValidateInvalid()
+    {
+        $this->expectException(InvalidServiceException::class);
+
+        $this->sut->validate(null);
+    }
+
+    /**
+     * @todo To be removed as part of OLCS-28149
+     */
+    public function testValidatePlugin()
+    {
+        $plugin = m::mock(SectionGeneratorInterface::class);
+
+        $this->assertNull($this->sut->validatePlugin($plugin));
+    }
+
+    /**
+     * @todo To be removed as part of OLCS-28149
+     */
+    public function testValidatePluginInvalid()
+    {
+        $this->expectException(RuntimeException::class);
+
+        $this->sut->validatePlugin(null);
     }
 }
