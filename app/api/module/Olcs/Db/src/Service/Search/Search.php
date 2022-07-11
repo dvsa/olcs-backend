@@ -152,7 +152,7 @@ class Search implements AuthAwareInterface
         if (!$this->isAnonymousUser() && $this->isInternalUser() && $indexes[0] !== 'irfo') {
             $exemptTeams = str_getcsv($this->sysParamRepo->fetchValue(SysParamEntity::DATA_SEPARATION_TEAMS_EXEMPT));
             if (!in_array($this->getCurrentUser()->getTeam()->getId(), $exemptTeams)) {
-                $elasticaQuery->setPostFilter($this->getInternalUserTAPostFilter());
+                $elasticaQuery->setPostFilter($this->getInternalUserTAPostFilter($indexes[0]));
             }
         }
 
@@ -400,16 +400,19 @@ class Search implements AuthAwareInterface
     /**
      * @return BoolQuery
      */
-    protected function getInternalUserTAPostFilter()
+    protected function getInternalUserTAPostFilter($searchIndex)
     {
         $postFilter = new BoolQuery();
-        $trafficAreaIds = in_array($this->getCurrentUser()->getTeam()->getTrafficArea()->getId(), TrafficArea::NI_TA_IDS)
-            ? TrafficArea::GB_TA_IDS
-            : TrafficArea::NI_TA_IDS;
-        foreach ($trafficAreaIds as $taId) {
+        $isNi = in_array($this->getCurrentUser()->getTeam()->getTrafficArea()->getId(), TrafficArea::NI_TA_IDS);
+        $disallowedTrafficAreaIds = $isNi ? TrafficArea::GB_TA_IDS : TrafficArea::NI_TA_IDS;
+        foreach ($disallowedTrafficAreaIds as $taId) {
             $postFilter->addMustNot(new MatchQuery('ta_id', $taId));
         }
-        $postFilter->setMinimumShouldMatch(1);
+
+        if($searchIndex === 'application') {
+            $postFilter->addMust(new MatchQuery('ni_flag', $isNi) );
+        }
+
         return $postFilter;
     }
 }
