@@ -23,7 +23,6 @@ return [
             'PublicationProcessPlugin' => \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class,
         ],
         'invokables' => [
-            'Document' => \Dvsa\Olcs\Api\Service\Document\Document::class,
             'DateService' => \Dvsa\Olcs\Api\Service\Date::class,
             'RestrictionService' => \Dvsa\Olcs\Api\Service\Lva\RestrictionService::class,
             'SectionConfig' =>  \Dvsa\Olcs\Api\Service\Lva\SectionConfig::class,
@@ -154,6 +153,7 @@ return [
             \Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger::class => \Dvsa\Olcs\Api\Domain\Logger\EntityAccessLoggerFactory::class,
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
+            'Document' => \Dvsa\Olcs\Api\Service\Document\DocumentFactory::class,
             'DocumentGenerator' => \Dvsa\Olcs\Api\Service\Document\DocumentGenerator::class,
             'DocumentNamingService' => \Dvsa\Olcs\Api\Service\Document\NamingService::class,
             'UpdateOperatingCentreHelper' => \Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper::class,
