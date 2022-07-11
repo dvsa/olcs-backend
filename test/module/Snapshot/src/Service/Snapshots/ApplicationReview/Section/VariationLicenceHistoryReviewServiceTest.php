@@ -7,10 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationLicenceHistoryReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationLicenceHistoryReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Variation LicenceHistory Review Service Test
@@ -20,14 +22,25 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationLice
 class VariationLicenceHistoryReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var ApplicationLicenceHistoryReviewService */
+    protected $mockApplicationService;
 
     public function setUp(): void
     {
-        $this->sut = new VariationLicenceHistoryReviewService();
+        $mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->mockApplicationService = m::mock(ApplicationLicenceHistoryReviewService::class);
+
+        $this->sut = new VariationLicenceHistoryReviewService(
+            $abstractReviewServiceServices,
+            $this->mockApplicationService
+        );
     }
 
     public function testGetConfigFromData()
@@ -36,9 +49,7 @@ class VariationLicenceHistoryReviewServiceTest extends MockeryTestCase
             'foo' => 'bar'
         ];
 
-        $mockApplicationService = m::mock();
-        $this->sm->setService('Review\ApplicationLicenceHistory', $mockApplicationService);
-        $mockApplicationService->shouldReceive('getConfigFromData')
+        $this->mockApplicationService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn('CONFIG');
 

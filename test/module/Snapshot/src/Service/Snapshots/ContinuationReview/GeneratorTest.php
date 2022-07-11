@@ -7,10 +7,14 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Generator;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\OperatingCentresReviewService;
+use Dvsa\Olcs\Utils\Translation\NiTextTranslation;
 
 /**
  * Generator Test
@@ -19,6 +23,21 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\OperatingCen
  */
 class GeneratorTest extends MockeryTestCase
 {
+    /**
+     * @var \Mockery\MockInterface|AbstractGeneratorServices
+     */
+    protected $abstractGeneratorServices;
+
+    /**
+     * @var \Mockery\MockInterface|SectionAccessService
+     */
+    protected $sectionAccessService;
+
+    /**
+     * @var \Mockery\MockInterface|NiTextTranslation
+     */
+    protected $niTextTranslation;
+
     /**
      * @var Generator
      */
@@ -31,8 +50,6 @@ class GeneratorTest extends MockeryTestCase
         $sm = m::mock(ServiceLocatorInterface::class);
 
         $this->services = [
-            'Utils\NiTextTranslation' => m::mock(),
-            'SectionAccessService' => m::mock(),
             'ContinuationReview\TypeOfLicence' => m::mock(),
             'ContinuationReview\OperatingCentres' => m::mock(OperatingCentresReviewService::class)->makePartial(),
             'ViewRenderer' => m::mock()
@@ -49,8 +66,23 @@ class GeneratorTest extends MockeryTestCase
             }
         );
 
-        $this->sut = new Generator();
-        $this->sut->setServiceLocator($sm);
+        $this->viewRenderer = m::mock(PhpRenderer::class);
+
+        $abstractGeneratorServices = m::mock(AbstractGeneratorServices::class);
+        $abstractGeneratorServices->shouldReceive('getRenderer')
+            ->withNoArgs()
+            ->andReturn($this->viewRenderer);
+
+        $this->sectionAccessService = m::mock(SectionAccessService::class);
+
+        $this->niTextTranslation = m::mock(NiTextTranslation::class);
+
+        $this->sut = new Generator(
+            $abstractGeneratorServices,
+            $this->sectionAccessService,
+            $this->niTextTranslation,
+            $sm
+        );
     }
 
     /**
@@ -167,12 +199,12 @@ class GeneratorTest extends MockeryTestCase
 
     protected function setUpServices($mockLicence, $mockContinuationDetail, $sections)
     {
-        $this->services['Utils\NiTextTranslation']
+        $this->niTextTranslation
             ->shouldReceive('setLocaleForNiFlag')
             ->with('N')
             ->once();
 
-        $this->services['SectionAccessService']
+        $this->sectionAccessService
             ->shouldReceive('getAccessibleSectionsForLicenceContinuation')
             ->with($mockLicence)
             ->andReturn($sections)
@@ -198,7 +230,7 @@ class GeneratorTest extends MockeryTestCase
             ->andReturn('operating-centres-summary-header')
             ->once();
 
-        $this->services['ViewRenderer']->shouldReceive('render')
+        $this->viewRenderer->shouldReceive('render')
             ->once()
             ->with(m::type(ViewModel::class))
             ->andReturnUsing(

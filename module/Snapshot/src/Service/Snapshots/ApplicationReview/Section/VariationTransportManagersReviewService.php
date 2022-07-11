@@ -14,6 +14,25 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class VariationTransportManagersReviewService extends AbstractReviewService
 {
+    /** @var TransportManagersReviewService */
+    private $transportManagersReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param TransportManagersReviewService $transportManagersReviewService
+     *
+     * @return VariationTransportManagersReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        TransportManagersReviewService $transportManagersReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->transportManagersReviewService = $transportManagersReviewService;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -22,38 +41,32 @@ class VariationTransportManagersReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array())
     {
-        $tmService = $this->getServiceLocator()->get('Review\TransportManagers');
-
         $actions = [];
 
         foreach ($data['transportManagers'] as $transportManagerApplication) {
-
             $actions[$transportManagerApplication['action']][] = $transportManagerApplication;
         }
 
         $subSections = [];
 
         if (isset($actions['A'])) {
-
             $subSections[] = [
                 'title' => 'review-transport-manager-added-title',
-                'mainItems' => $tmService->getConfigFromData($actions['A'])
+                'mainItems' => $this->transportManagersReviewService->getConfigFromData($actions['A'])
             ];
         }
 
         if (isset($actions['U'])) {
-
             $subSections[] = [
                 'title' => 'review-transport-manager-updated-title',
-                'mainItems' => $tmService->getConfigFromData($actions['U'])
+                'mainItems' => $this->transportManagersReviewService->getConfigFromData($actions['U'])
             ];
         }
 
         if (isset($actions['D'])) {
-
             $subSections[] = [
                 'title' => 'review-transport-manager-deleted-title',
-                'mainItems' => $tmService->getConfigFromData($actions['D'])
+                'mainItems' => $this->transportManagersReviewService->getConfigFromData($actions['D'])
             ];
         }
 

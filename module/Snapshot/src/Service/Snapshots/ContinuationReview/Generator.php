@@ -6,8 +6,12 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
+use Dvsa\Olcs\Utils\Translation\NiTextTranslation;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\View\Model\ViewModel;
 
 /**
@@ -27,6 +31,40 @@ class Generator extends AbstractGenerator
     const CONDITIONS_UNDERTAKINGS_SECTION = 'conditions_undertakings';
     const OPERATING_CENTRES_SECTION = 'operating_centres';
 
+    /** @var SectionAccessService */
+    private $sectionAccessService;
+
+    /** @var NiTextTranslation */
+    private $niTextTranslation;
+
+    /** @var ServiceLocatorInterface */
+    private $services;
+
+    /**
+     * Create service instance
+     *
+     * TODO - refactor such that the buildReadonlyConfigForSections method is not dependent upon the service
+     * container being passed into the constructor
+     *
+     * @param AbstractGeneratorServices $abstractGeneratorServices
+     * @param SectionAccessService $sectionAccessService
+     * @param NiTextTranslation $niTextTranslation
+     * @param ServiceLocatorInterface $services
+     *
+     * @return Generator
+     */
+    public function __construct(
+        AbstractGeneratorServices $abstractGeneratorServices,
+        SectionAccessService $sectionAccessService,
+        NiTextTranslation $niTextTranslation,
+        ServiceLocatorInterface $services
+    ) {
+        parent::__construct($abstractGeneratorServices);
+        $this->sectionAccessService = $sectionAccessService;
+        $this->niTextTranslation = $niTextTranslation;
+        $this->services = $services;
+    }
+
     /**
      * Generate
      *
@@ -36,13 +74,12 @@ class Generator extends AbstractGenerator
      */
     public function generate(ContinuationDetail $continuationDetail)
     {
-        $sl = $this->getServiceLocator();
         $licence = $continuationDetail->getLicence();
 
-        $sections = $sl->get('SectionAccessService')->getAccessibleSectionsForLicenceContinuation($licence);
+        $sections = $this->sectionAccessService->getAccessibleSectionsForLicenceContinuation($licence);
         $sections = $this->alterSections(array_keys($sections), $licence);
 
-        $sl->get('Utils\NiTextTranslation')->setLocaleForNiFlag($licence->getNiFlag());
+        $this->niTextTranslation->setLocaleForNiFlag($licence->getNiFlag());
 
         $config = $this->buildReadonlyConfigForSections($sections, $continuationDetail);
 
@@ -71,8 +108,8 @@ class Generator extends AbstractGenerator
 
             // @NOTE this check is in place while we implement each section
             // eventually we should be able to remove the if
-            if ($this->getServiceLocator()->has($serviceName)) {
-                $service = $this->getServiceLocator()->get($serviceName);
+            if ($this->services->has($serviceName)) {
+                $service = $this->services->get($serviceName);
                 $config = $service->getConfigFromData($continuationDetail);
                 if (method_exists($service, 'getSummaryFromData')) {
                     $summary = $service->getSummaryFromData($continuationDetail);

@@ -3,9 +3,11 @@
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender\Section;
 
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class CurrentDiscsReviewServiceTest extends MockeryTestCase
 {
@@ -14,7 +16,14 @@ class CurrentDiscsReviewServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new CurrentDiscsReviewService();
+        $mockTranslator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new CurrentDiscsReviewService($abstractReviewServiceServices);
     }
 
     /**

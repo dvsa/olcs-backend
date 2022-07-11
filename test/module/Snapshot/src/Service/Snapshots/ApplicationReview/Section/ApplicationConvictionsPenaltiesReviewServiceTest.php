@@ -8,9 +8,12 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationConvictionsPenaltiesReviewService;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Application Convictions Penalties Review Service Test
@@ -23,7 +26,14 @@ class ApplicationConvictionsPenaltiesReviewServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new ApplicationConvictionsPenaltiesReviewService();
+        $mockTranslator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new ApplicationConvictionsPenaltiesReviewService($abstractReviewServiceServices);
     }
 
     /**

@@ -6,8 +6,10 @@ use Dvsa\Olcs\Api\Entity\Surrender;
 use \Mockery as m;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 class CommunityLicenceReveiwServiceTest extends MockeryTestCase
 {
@@ -16,7 +18,14 @@ class CommunityLicenceReveiwServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new CommunityLicenceReviewService();
+        $mockTranslator = m::mock(TranslatorInterface::class);
+
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new CommunityLicenceReviewService($abstractReviewServiceServices);
     }
 
     /**

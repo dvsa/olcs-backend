@@ -25,7 +25,6 @@ class VehiclesPsvReviewService extends AbstractReviewService
     public function getConfigFromData(array $data = array(), $mainItems = array())
     {
         if ($data['isVariation'] || $data['hasEnteredReg'] == 'Y') {
-
             $mainItems[] = $this->formatVehicles($data['licenceVehicles']);
         }
 

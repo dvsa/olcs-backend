@@ -2,11 +2,13 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationFinancialEvidenceReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Application Financial Evidence Review Service Test
@@ -16,14 +18,28 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationFi
 class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
+    /** @var QueryHandlerManager */
+    protected $qhManager;
 
     public function setUp(): void
     {
-        $this->sut = new ApplicationFinancialEvidenceReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->qhManager = m::mock(QueryHandlerManager::class);
+
+        $this->sut = new ApplicationFinancialEvidenceReviewService(
+            $abstractReviewServiceServices,
+            $this->qhManager
+        );
     }
 
     /**
@@ -56,8 +72,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        $qhManager = m::mock();
-        $qhManager->shouldReceive('handleQuery->serialize')
+        $this->qhManager->shouldReceive('handleQuery->serialize')
             ->andReturn(
                 [
                     'financialEvidence' => [
@@ -69,12 +84,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
                 ]
             );
 
-        $this->sm->setService('QueryHandlerManager', $qhManager);
-
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
                 function ($string) {
                     return $string . '-translated';
@@ -132,8 +142,7 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
             'description' => 'bar.txt'
         ];
 
-        $qhManager = m::mock();
-        $qhManager->shouldReceive('handleQuery->serialize')
+        $this->qhManager->shouldReceive('handleQuery->serialize')
             ->andReturn(
                 [
                     'financialEvidence' => [
@@ -148,8 +157,6 @@ class ApplicationFinancialEvidenceReviewServiceTest extends MockeryTestCase
                     ]
                 ]
             );
-
-        $this->sm->setService('QueryHandlerManager', $qhManager);
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));
     }

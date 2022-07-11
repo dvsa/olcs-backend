@@ -9,8 +9,9 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationBusinessDetailsReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Variation Business Details Review Service Test
@@ -20,24 +21,27 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationBusi
 class VariationBusinessDetailsReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sut = new VariationBusinessDetailsReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new VariationBusinessDetailsReviewService($abstractReviewServiceServices);
     }
 
     public function testGetConfigFromData()
     {
         $data = [];
 
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->with('variation-review-business-details-change')
             ->andReturn('variation-review-business-details-change-translated');
 

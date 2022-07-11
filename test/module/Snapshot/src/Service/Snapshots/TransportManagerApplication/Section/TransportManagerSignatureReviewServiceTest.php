@@ -9,10 +9,11 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerSignatureReviewService;
-use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * TransportManagerSignatureReviewServiceTest
@@ -21,18 +22,22 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 {
-    /** @var TransportMan
-     * agerSignatureReviewService */
+    /** @var TransportManagerSignatureReviewService */
     protected $sut;
 
-    protected $sm;
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
 
     public function setUp(): void
     {
-        $this->sut = new TransportManagerSignatureReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new TransportManagerSignatureReviewService($abstractReviewServiceServices);
     }
 
     /**
@@ -40,21 +45,17 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
      */
     public function testGetConfig($data, $expected)
     {
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-
-        $mockTranslator
+        $this->mockTranslator
             ->shouldReceive('translate')
             ->with(TransportManagerSignatureReviewService::ADDRESS)
             ->once()
             ->andReturn('ADDRESS');
 
-        $mockTranslator->shouldReceive('translate')->with($expected['label'])->once()
+        $this->mockTranslator->shouldReceive('translate')->with($expected['label'])->once()
             ->andReturn($expected['label'] . 'translated');
 
         if (empty($data['TmDigitalSignature'])) {
-            $mockTranslator->shouldReceive('translate')->with($expected['markup'])->once()->
+            $this->mockTranslator->shouldReceive('translate')->with($expected['markup'])->once()->
             andReturn(
                 '%s_%s'
             );
@@ -77,7 +78,7 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
             $birthDate = (new DateTime('1980-01-01'))->format('d M Y');
             $signatureName = 'Name';
 
-            $mockTranslator
+            $this->mockTranslator
                 ->shouldReceive('translate')
                 ->with(TransportManagerSignatureReviewService::SIGNATURE_DIGITAL_BOTH)
                 ->once()
@@ -184,22 +185,16 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
      */
     public function notestAppropriateTemplateUsedForDigitalSignatures($conditions, $expected)
     {
-
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator
+        $this->mockTranslator
             ->shouldReceive('translate')
             ->with(TransportManagerSignatureReviewService::ADDRESS)
             ->once()
             ->andReturn('ADDRESS');
 
-        $mockTranslator->shouldReceive('translate')->with($expected['label'])->once()
+        $this->mockTranslator->shouldReceive('translate')->with($expected['label'])->once()
             ->andReturn($expected['label'] . 'translated');
 
-
         $tma = m::mock(TransportManagerApplication::class);
-
 
         $tma->shouldReceive('getOpDigitalSignature')->times($conditions['opTimes'])->andReturn($conditions['OpSignature']);
         $tma->shouldReceive('getIsOwner')->once()->andReturn($conditions['isOwner']);
@@ -207,7 +202,7 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getType->getId')->with()->once()
             ->andReturn(Organisation::ORG_TYPE_SOLE_TRADER);
 
-        $mockTranslator
+        $this->mockTranslator
             ->shouldReceive('translate')
             ->with($conditions['markup'])
             ->once()

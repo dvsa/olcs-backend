@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
-use Dvsa\Olcs\Api\Domain\Repository\Document;
+use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepository;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 
@@ -11,6 +11,31 @@ use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
  */
 class FinanceReviewService extends AbstractReviewService
 {
+    /** @var FinancialStandingHelperService */
+    private $financialStandingHelperService;
+
+    /** @var DocumentRepository */
+    private $documentRepo;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param FinancialStandingHelperService $financialStandingHelperService
+     * @param DocumentRepository $documentRepo
+     *
+     * @return FinanceReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        FinancialStandingHelperService $financialStandingHelperService,
+        DocumentRepository $documentRepo
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->financialStandingHelperService = $financialStandingHelperService;
+        $this->documentRepo = $documentRepo;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -110,10 +135,7 @@ class FinanceReviewService extends AbstractReviewService
      */
     private function getFinancesRequiredAmount(ContinuationDetail $continuationDetail)
     {
-        /** @var FinancialStandingHelperService $service */
-        $service = $this->getServiceLocator()->get('FinancialStandingHelperService');
-
-        return (float)$service->getFinanceCalculationForOrganisation(
+        return (float)$this->financialStandingHelperService->getFinanceCalculationForOrganisation(
             $continuationDetail->getLicence()->getOrganisation()->getId()
         );
     }
@@ -127,10 +149,7 @@ class FinanceReviewService extends AbstractReviewService
      */
     private function getUploadedFiles(ContinuationDetail $continuationDetail)
     {
-        /** @var Document $repo */
-        $repo = $this->getServiceLocator()->get('RepositoryServiceManager')->get('Document');
-
-        $documents = $repo->fetchListForContinuationDetail($continuationDetail->getId());
+        $documents = $this->documentRepo->fetchListForContinuationDetail($continuationDetail->getId());
 
         $files = [];
         /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $document */

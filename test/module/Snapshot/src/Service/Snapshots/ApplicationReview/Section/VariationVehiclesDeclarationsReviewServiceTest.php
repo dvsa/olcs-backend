@@ -7,10 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationVehiclesDeclarationsReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationVehiclesDeclarationsReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Variation Vehicles Declarations Review Service Test
@@ -20,14 +22,25 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationVehi
 class VariationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var ApplicationVehiclesDeclarationsReviewService */
+    private $mockApplicationService;
 
     public function setUp(): void
     {
-        $this->sut = new VariationVehiclesDeclarationsReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->mockApplicationService = m::mock(ApplicationVehiclesDeclarationsReviewService::class);
+
+        $this->sut = new VariationVehiclesDeclarationsReviewService(
+            $abstractReviewServiceServices,
+            $this->mockApplicationService
+        );
     }
 
     public function testGetConfigFromData()
@@ -36,9 +49,7 @@ class VariationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
             'foo' => 'bar'
         ];
 
-        $mockApplicationService = m::mock();
-        $this->sm->setService('Review\ApplicationVehiclesDeclarations', $mockApplicationService);
-        $mockApplicationService->shouldReceive('getConfigFromData')
+        $this->mockApplicationService->shouldReceive('getConfigFromData')
             ->with($data)
             ->andReturn('CONFIG');
 

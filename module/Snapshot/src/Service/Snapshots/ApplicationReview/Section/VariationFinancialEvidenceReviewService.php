@@ -14,6 +14,25 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class VariationFinancialEvidenceReviewService extends AbstractReviewService
 {
+    /** @var ApplicationFinancialEvidenceReviewService */
+    private $applicationFinancialEvidenceReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param ApplicationFinancialEvidenceReviewService $applicationFinancialEvidenceReviewService
+     *
+     * @return VariationFinancialEvidenceReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        ApplicationFinancialEvidenceReviewService $applicationFinancialEvidenceReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->applicationFinancialEvidenceReviewService = $applicationFinancialEvidenceReviewService;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -22,8 +41,6 @@ class VariationFinancialEvidenceReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array())
     {
-        $applicationService = $this->getServiceLocator()->get('Review\ApplicationFinancialEvidence');
-
-        return $applicationService->getConfigFromData($data);
+        return $this->applicationFinancialEvidenceReviewService->getConfigFromData($data);
     }
 }

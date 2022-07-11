@@ -2,11 +2,13 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\BusinessTypeReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Business type review service test
@@ -18,7 +20,14 @@ class BusinessTypeReviewServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new BusinessTypeReviewService();
+        $mockTranslator = m::mock(TranslatorInterface::class);
+        
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->sut = new BusinessTypeReviewService($abstractReviewServiceServices);
     }
 
     public function testGetConfigFromData()

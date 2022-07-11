@@ -14,7 +14,24 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class ApplicationConditionsUndertakingsReviewService extends AbstractReviewService
 {
+    /** @var ConditionsUndertakingsReviewService */
     protected $helper;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param ComditionsUndertakingsReviewService $helper
+     *
+     * @return ApplicationConditionsUndertakingsReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        ConditionsUndertakingsReviewService $helper
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->helper = $helper;
+    }
 
     /**
      * Format the readonly config from the given data
@@ -24,8 +41,6 @@ class ApplicationConditionsUndertakingsReviewService extends AbstractReviewServi
      */
     public function getConfigFromData(array $data = array())
     {
-        $this->helper = $this->getServiceLocator()->get('Review\ConditionsUndertakings');
-
         list($licConds, $licUnds, $ocConds, $ocUnds) = $this->helper->splitUpConditionsAndUndertakings($data);
 
         $subSections = array_merge(

@@ -6,10 +6,10 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummary;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 
@@ -39,12 +39,17 @@ class IrhpGeneratorTest extends MockeryTestCase
     {
         $this->answersSummaryGenerator = m::mock(AnswersSummaryGenerator::class);
 
-        $this->sut = new IrhpGenerator($this->answersSummaryGenerator);
         $this->viewRenderer = m::mock(PhpRenderer::class);
 
-        $sm = Bootstrap::getServiceManager();
-        $sm->setService('ViewRenderer', $this->viewRenderer);
-        $this->sut->setServiceLocator($sm);
+        $abstractGeneratorServices = m::mock(AbstractGeneratorServices::class);
+        $abstractGeneratorServices->shouldReceive('getRenderer')
+            ->withNoArgs()
+            ->andReturn($this->viewRenderer);
+
+        $this->sut = new IrhpGenerator(
+            $abstractGeneratorServices,
+            $this->answersSummaryGenerator
+        );
     }
 
     public function testGenerateWithNoPermitApplication()

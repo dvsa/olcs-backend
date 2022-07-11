@@ -12,8 +12,8 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication;
-use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Entity;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Transport Manager Previous Conviction Review Service Test
@@ -24,14 +24,23 @@ class TransportManagerPreviousConvictionReviewServiceTest extends MockeryTestCas
 {
     protected $sut;
 
-    protected $sm;
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
 
     public function setUp(): void
     {
-        $this->sut = new TransportManagerApplication\Section\TransportManagerPreviousConvictionReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(
+            TransportManagerApplication\Section\AbstractReviewServiceServices::class
+        );
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new TransportManagerApplication\Section\TransportManagerPreviousConvictionReviewService(
+            $abstractReviewServiceServices
+        );
     }
 
     /**
@@ -39,10 +48,7 @@ class TransportManagerPreviousConvictionReviewServiceTest extends MockeryTestCas
      */
     public function testGetConfig($tma, $expected)
     {
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
                 function ($string) {
                     return $string . '-translated';

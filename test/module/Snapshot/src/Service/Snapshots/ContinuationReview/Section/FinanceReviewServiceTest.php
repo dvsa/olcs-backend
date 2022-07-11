@@ -2,14 +2,16 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
+use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepository;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\FinanceReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
-use OlcsTest\Bootstrap;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * FinanceReviewServiceTest
@@ -22,13 +24,11 @@ class FinanceReviewServiceTest extends MockeryTestCase
     /** @var ContinuationDetail */
     private $continuationDetail;
 
-    /** @var  ServiceLocatorInterface */
-    private $serviceManager;
+    /** @var DocumentRepository */
+    private $mockDocumentRepo;
 
     public function setUp(): void
     {
-        $this->serviceManager = Bootstrap::getServiceManager();
-
         $mockLicence = m::mock();
         $mockLicence->shouldReceive('getOrganisation->getId')->once()->with()->andReturn(123);
 
@@ -36,20 +36,28 @@ class FinanceReviewServiceTest extends MockeryTestCase
         $this->continuationDetail->setId(99);
         $this->continuationDetail->setLicence($mockLicence);
 
-        $mockFinancialService = m::mock();
+        $mockFinancialService = m::mock(FinancialStandingHelperService::class);
         $mockFinancialService->shouldReceive('getFinanceCalculationForOrganisation')->once()->with(123)->andReturn(100);
-        $this->serviceManager->setService('FinancialStandingHelperService', $mockFinancialService);
 
-        $mockTranslator = m::mock();
+        $mockTranslator = m::mock(TranslatorInterface::class);
         $mockTranslator->shouldReceive('translate')->andReturnUsing(
             function ($message) {
                 return $message . '_translated';
             }
         );
-        $this->serviceManager->setService('translator', $mockTranslator);
 
-        $this->sut = new FinanceReviewService();
-        $this->sut->setServiceLocator($this->serviceManager);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($mockTranslator);
+
+        $this->mockDocumentRepo = m::mock(DocumentRepository::class);
+
+        $this->sut = new FinanceReviewService(
+            $abstractReviewServiceServices,
+            $mockFinancialService,
+            $this->mockDocumentRepo
+        );
     }
 
     public function testGetConfigFrom()
@@ -245,15 +253,9 @@ class FinanceReviewServiceTest extends MockeryTestCase
         $document2 = new Document(2);
         $document2->setDescription('document2');
 
-        $mockDocumentRepo = m::mock();
-        $mockDocumentRepo->shouldReceive('fetchListForContinuationDetail')->with(99)->once()->andReturn(
+        $this->mockDocumentRepo->shouldReceive('fetchListForContinuationDetail')->with(99)->once()->andReturn(
             [$document1, $document2]
         );
-
-        $mockRepository = m::mock();
-        $mockRepository->shouldReceive('get')->with('Document')->once()->andReturn($mockDocumentRepo);
-
-        $this->serviceManager->setService('RepositoryServiceManager', $mockRepository);
 
         $this->continuationDetail->setFinancialEvidenceUploaded(true);
         $result = $this->sut->getConfigFromData($this->continuationDetail);

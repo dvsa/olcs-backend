@@ -7,10 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\AbstractReviewServiceServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationPeopleReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\PeopleReviewService;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Application People Review Service Test
@@ -20,14 +22,28 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationPe
 class ApplicationPeopleReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    protected $sm;
+
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
+
+    /** @var PeopleReviewService */
+    private $mockPeopleReview;
 
     public function setUp(): void
     {
-        $this->sut = new ApplicationPeopleReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->mockPeopleReview = m::mock(PeopleReviewService::class);
+
+        $this->sut = new ApplicationPeopleReviewService(
+            $abstractReviewServiceServices,
+            $this->mockPeopleReview
+        );
     }
 
     public function testGetConfigFromData()
@@ -98,10 +114,7 @@ class ApplicationPeopleReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        $mockPeopleReview = m::mock();
-        $this->sm->setService('Review\People', $mockPeopleReview);
-
-        $mockPeopleReview->shouldReceive('shouldShowPosition')
+        $this->mockPeopleReview->shouldReceive('shouldShowPosition')
             ->with($data)
             ->andReturn(true)
             ->shouldReceive('getConfigFromData')

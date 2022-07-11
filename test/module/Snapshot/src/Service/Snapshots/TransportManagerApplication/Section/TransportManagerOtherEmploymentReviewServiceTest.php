@@ -11,8 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication;
-use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Entity;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Transport Manager Other Employment Review Service Test
@@ -23,14 +23,23 @@ class TransportManagerOtherEmploymentReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
 
-    protected $sm;
+    /** @var TranslatorInterface */
+    protected $mockTranslator;
 
     public function setUp(): void
     {
-        $this->sut = new TransportManagerApplication\Section\TransportManagerOtherEmploymentReviewService();
+        $this->mockTranslator = m::mock(TranslatorInterface::class);
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $abstractReviewServiceServices = m::mock(
+            TransportManagerApplication\Section\AbstractReviewServiceServices::class
+        );
+        $abstractReviewServiceServices->shouldReceive('getTranslator')
+            ->withNoArgs()
+            ->andReturn($this->mockTranslator);
+
+        $this->sut = new TransportManagerApplication\Section\TransportManagerOtherEmploymentReviewService(
+            $abstractReviewServiceServices
+        );
     }
 
     /**
@@ -38,10 +47,7 @@ class TransportManagerOtherEmploymentReviewServiceTest extends MockeryTestCase
      */
     public function testGetConfig($tma, $expected)
     {
-        $mockTranslator = m::mock();
-        $this->sm->setService('translator', $mockTranslator);
-
-        $mockTranslator->shouldReceive('translate')
+        $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
                 function ($string) {
                     return $string . '-translated';

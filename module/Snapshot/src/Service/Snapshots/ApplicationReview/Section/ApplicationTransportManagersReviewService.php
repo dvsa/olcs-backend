@@ -14,6 +14,25 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class ApplicationTransportManagersReviewService extends AbstractReviewService
 {
+    /** @var TransportManagersReviewService */
+    private $transportManagersReviewService;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param TransportManagersReviewService $transportManagersReviewService
+     *
+     * @return ApplicationTransportManagersReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        TransportManagersReviewService $transportManagersReviewService
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->transportManagersReviewService = $transportManagersReviewService;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -22,12 +41,10 @@ class ApplicationTransportManagersReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array())
     {
-        $tmService = $this->getServiceLocator()->get('Review\TransportManagers');
-
         return [
             'subSections' => [
                 [
-                    'mainItems' => $tmService->getConfigFromData($data['transportManagers'])
+                    'mainItems' => $this->transportManagersReviewService->getConfigFromData($data['transportManagers'])
                 ]
             ]
         ];

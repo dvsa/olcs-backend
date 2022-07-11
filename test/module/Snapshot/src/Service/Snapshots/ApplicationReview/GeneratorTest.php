@@ -17,7 +17,9 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
+use Dvsa\Olcs\Utils\Translation\NiTextTranslation;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Renderer\PhpRenderer;
 
@@ -33,8 +35,6 @@ class GeneratorTest extends MockeryTestCase
      */
     protected $sut;
 
-    protected $sm;
-
     /**
      * @var \Mockery\MockInterface|SectionAccessService
      */
@@ -46,26 +46,46 @@ class GeneratorTest extends MockeryTestCase
     protected $viewRenderer;
 
     /**
+     * @var \Mockery\MockInterface|SignatureReviewService
+     */
+    protected $mockSignature;
+
+    /**
      * @var Application
      */
     protected $application;
 
+    /**
+     * @var \Mockery\MockInterface|NiTextTranslation
+     */
     protected $niTranslation;
 
     public function setUp(): void
     {
-        $this->sut = new Generator();
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
 
-        $this->niTranslation = m::mock();
+        $this->niTranslation = m::mock(NiTextTranslation::class);
 
         $this->sectionAccessService = m::mock(SectionAccessService::class);
+
         $this->viewRenderer = m::mock(PhpRenderer::class);
-        $this->sm->setService('SectionAccessService', $this->sectionAccessService);
-        $this->sm->setService('ViewRenderer', $this->viewRenderer);
-        $this->sm->setService('Utils\NiTextTranslation', $this->niTranslation);
+
+        $abstractGeneratorServices = m::mock(AbstractGeneratorServices::class);
+        $abstractGeneratorServices->shouldReceive('getRenderer')
+            ->withNoArgs()
+            ->andReturn($this->viewRenderer);
+
+        $this->mockSignature = m::mock(SignatureReviewService::class);
+
         $this->application = m::mock(Application::class)->makePartial();
+
+        $this->sut = new Generator(
+            $abstractGeneratorServices,
+            $this->sectionAccessService,
+            $this->niTranslation,
+            $this->mockSignature,
+            $this->sm
+        );
     }
 
     public function testGenerateVariation()
@@ -373,8 +393,7 @@ class GeneratorTest extends MockeryTestCase
         $this->application->setDigitalSignature(null);
         $this->application->setLicence($licence);
 
-        $mockSignature = m::mock(SignatureReviewService::class);
-        $mockSignature->shouldReceive('getConfigFromData')
+        $this->mockSignature->shouldReceive('getConfigFromData')
             ->with([
                 'signatureType' => $signatureType,
                 'digitalSignature' => null,
@@ -382,6 +401,5 @@ class GeneratorTest extends MockeryTestCase
                 'isNi' => true
             ])
             ->andReturn(['signature' => 'foo']);
-        $this->sm->setService(SignatureReviewService::class, $mockSignature);
     }
 }

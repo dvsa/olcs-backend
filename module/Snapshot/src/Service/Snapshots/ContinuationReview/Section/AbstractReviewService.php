@@ -2,17 +2,29 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
  * Abstract Review Service
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-abstract class AbstractReviewService implements ReviewServiceInterface, ServiceLocatorAwareInterface
+abstract class AbstractReviewService implements ReviewServiceInterface
 {
-    use ServiceLocatorAwareTrait;
+    /** @var TranslatorInterface */
+    protected $translator;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     *
+     * @return AbstractReviewService
+     */
+    public function __construct(AbstractReviewServiceServices $abstractReviewServiceServices)
+    {
+        $this->translator = $abstractReviewServiceServices->getTranslator();
+    }
 
     /**
      * Translate
@@ -23,7 +35,7 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
      */
     public function translate($string)
     {
-        return $this->getServiceLocator()->get('translator')->translate($string);
+        return $this->translator->translate($string);
     }
 
     /**

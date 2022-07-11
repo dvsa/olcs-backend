@@ -2,18 +2,30 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots;
 
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\RendererInterface;
 
 /**
  * Abstract Generator
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractGenerator implements ServiceLocatorAwareInterface
+abstract class AbstractGenerator
 {
-    use ServiceLocatorAwareTrait;
+    /** @var RendererInterface */
+    private $renderer;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractGeneratorServices $abstractGeneratorServices
+     *
+     * @return AbstractGenerator
+     */
+    public function __construct(AbstractGeneratorServices $abstractGeneratorServices)
+    {
+        $this->renderer = $abstractGeneratorServices->getRenderer();
+    }
 
     protected function generateReadonly(array $config, $template = 'review')
     {
@@ -21,7 +33,6 @@ abstract class AbstractGenerator implements ServiceLocatorAwareInterface
         $model->setTerminal(true);
         $model->setTemplate('layout/' . $template);
 
-        $renderer = $this->getServiceLocator()->get('ViewRenderer');
-        return $renderer->render($model);
+        return $this->renderer->render($model);
     }
 }

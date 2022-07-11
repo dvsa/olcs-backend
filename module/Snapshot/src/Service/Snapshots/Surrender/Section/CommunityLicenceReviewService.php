@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class CommunityLicenceReviewService extends AbstractReviewService
 {
-
     /**
      * Format the readonly config from the given record
      *

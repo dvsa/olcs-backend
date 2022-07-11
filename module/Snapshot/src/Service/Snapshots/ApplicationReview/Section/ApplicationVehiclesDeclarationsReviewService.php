@@ -79,7 +79,6 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
         }
 
         if ($psvWhichVehicleSize === Application::PSV_VEHICLE_SIZE_MEDIUM_LARGE) {
-
             $subSections[] = [
                 'title' => 'application-review-vehicles-declarations-medium-title',
                 'mainItems' => [
@@ -95,8 +94,8 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
         }
 
         if ($data['licenceType']['id'] === Licence::LICENCE_TYPE_RESTRICTED &&
-            $psvWhichVehicleSize !== Application::PSV_VEHICLE_SIZE_SMALL) {
-
+            $psvWhichVehicleSize !== Application::PSV_VEHICLE_SIZE_SMALL
+        ) {
             $subSections[] = [
                 'title' => 'application-review-vehicles-declarations-business-title',
                 'mainItems' => [

@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Query\Application\FinancialEvidence;
 
@@ -17,6 +18,25 @@ use Dvsa\Olcs\Transfer\Query\Application\FinancialEvidence;
  */
 class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
 {
+    /** @var QueryHandlerManager */
+    private $queryHandlerManager;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     * @param QueryHandlerManager $queryHandlerManager
+     *
+     * @return ApplicationFinancialEvidenceReviewService
+     */
+    public function __construct(
+        AbstractReviewServiceServices $abstractReviewServiceServices,
+        QueryHandlerManager $queryHandlerManager
+    ) {
+        parent::__construct($abstractReviewServiceServices);
+        $this->queryHandlerManager = $queryHandlerManager;
+    }
+
     /**
      * Format the readonly config from the given data
      *
@@ -27,7 +47,7 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
     public function getConfigFromData(array $data = array())
     {
         // @NOTE Tmp solution during migration
-        $feData = $this->getServiceLocator()->get('QueryHandlerManager')
+        $feData = $this->queryHandlerManager
             ->handleQuery(FinancialEvidence::create(['id' => $data['id']]))
             ->serialize();
 

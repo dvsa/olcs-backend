@@ -3,10 +3,24 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section;
 
 use Dvsa\Olcs\Snapshot\Service\Snapshots\FormatReviewDataTrait;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\I18n\Translator\TranslatorInterface;
 
-abstract class AbstractReviewService implements ReviewServiceInterface, ServiceLocatorAwareInterface
+abstract class AbstractReviewService implements ReviewServiceInterface
 {
-    use ServiceLocatorAwareTrait, FormatReviewDataTrait;
+    use FormatReviewDataTrait;
+
+    /** @var TranslatorInterface */
+    protected $translator;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractReviewServiceServices $abstractReviewServiceServices
+     *
+     * @return AbstractReviewService
+     */
+    public function __construct(AbstractReviewServiceServices $abstractReviewServiceServices)
+    {
+        $this->translator = $abstractReviewServiceServices->getTranslator();
+    }
 }

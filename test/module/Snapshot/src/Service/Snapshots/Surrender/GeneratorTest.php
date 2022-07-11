@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService;
@@ -13,11 +14,46 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\PhpRenderer;
 
 class GeneratorTest extends MockeryTestCase
 {
+    /**
+     * @var \Mockery\MockInterface|PhpRenderer
+     */
+    private $viewRenderer;
+
+    /**
+     * @var \Mockery\MockInterface|LicenceDetailsService
+     */
+    private $licenceDetailsService;
+
+    /**
+     * @var \Mockery\MockInterface|CurrentDiscsReviewService
+     */
+    protected $currentDiscsReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|OperatorLicenceReviewService
+     */
+    protected $operatorLicenceReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|CommunityLicenceReviewService
+     */
+    protected $communityLicenceReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|DeclarationReviewService
+     */
+    protected $declarationReviewService;
+
+    /**
+     * @var \Mockery\MockInterface|SignatureReviewService
+     */
+    protected $signatureReviewService;
+
     /**
      * @var Generator
      */
@@ -30,25 +66,29 @@ class GeneratorTest extends MockeryTestCase
 
     protected function setUp(): void
     {
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $this->viewRenderer = m::mock(PhpRenderer::class);
 
-        $this->services = [
-            LicenceDetailsService::class => m::mock(),
-            CurrentDiscsReviewService::class => m::mock(),
-            OperatorLicenceReviewService::class => m::mock(),
-            CommunityLicenceReviewService::class => m::mock(),
-            DeclarationReviewService::class => m::mock(),
-            SignatureReviewService::class => m::mock(),
-            'ViewRenderer' => m::mock()
-        ];
+        $abstractGeneratorServices = m::mock(AbstractGeneratorServices::class);
+        $abstractGeneratorServices->shouldReceive('getRenderer')
+            ->withNoArgs()
+            ->andReturn($this->viewRenderer);
 
-        $sm->shouldReceive('get')->andReturnUsing(
-            function ($key) {
-                return $this->services[$key];
-            }
+        $this->licenceDetailsService = m::mock(LicenceDetailsService::class);
+        $this->currentDiscsReviewService = m::mock(CurrentDiscsReviewService::class);
+        $this->operatorLicenceReviewService = m::mock(OperatorLicenceReviewService::class);
+        $this->communityLicenceReviewService = m::mock(CommunityLicenceReviewService::class);
+        $this->declarationReviewService = m::mock(DeclarationReviewService::class);
+        $this->signatureReviewService = m::mock(SignatureReviewService::class);
+
+        $this->sut = new Generator(
+            $abstractGeneratorServices,
+            $this->licenceDetailsService,
+            $this->currentDiscsReviewService,
+            $this->operatorLicenceReviewService,
+            $this->communityLicenceReviewService,
+            $this->declarationReviewService,
+            $this->signatureReviewService
         );
-        $this->sut = new Generator();
-        $this->sut->setServiceLocator($sm);
     }
 
     /**
@@ -63,10 +103,9 @@ class GeneratorTest extends MockeryTestCase
         $surrender = m::mock(Surrender::class);
         $surrender->shouldReceive('getLicence')->andReturn($licence);
 
-
         $this->setServices($surrender);
 
-        $this->services['ViewRenderer']->shouldReceive('render')
+        $this->viewRenderer->shouldReceive('render')
             ->once()
             ->with(m::type(ViewModel::class))
             ->andReturnUsing(
@@ -88,22 +127,22 @@ class GeneratorTest extends MockeryTestCase
 
     protected function setServices($surrender)
     {
-        $this->services[LicenceDetailsService::class]->shouldReceive('getConfigFromData')
+        $this->licenceDetailsService->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('licenceDetails');
 
-        $this->services[CurrentDiscsReviewService::class]->shouldReceive('getConfigFromData')
+        $this->currentDiscsReviewService->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('currentDiscs');
 
-        $this->services[OperatorLicenceReviewService::class]->shouldReceive('getConfigFromData')
+        $this->operatorLicenceReviewService->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('Operator licence');
 
-        $this->services[CommunityLicenceReviewService::class]->shouldReceive('getConfigFromData')
+        $this->communityLicenceReviewService->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('Community licence');
 
-        $this->services[DeclarationReviewService::class]->shouldReceive('getConfigFromData')
+        $this->declarationReviewService->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('declaration');
 
-        $this->services[SignatureReviewService::class]->shouldReceive('getConfigFromData')
+        $this->signatureReviewService->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('signature');
     }
 
