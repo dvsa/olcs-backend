@@ -409,8 +409,8 @@ class Search implements AuthAwareInterface
             $postFilter->addMustNot(new MatchQuery('ta_id', $taId));
         }
 
-        if($searchIndex === 'application') {
-            $postFilter->addMust(new MatchQuery('ni_flag', $isNi) );
+        if ($searchIndex === 'application') {
+            $postFilter->addMust(new MatchQuery('ni_flag', $isNi));
         }
 
         return $postFilter;
