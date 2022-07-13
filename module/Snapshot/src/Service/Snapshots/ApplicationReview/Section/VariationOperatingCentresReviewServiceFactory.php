@@ -13,9 +13,9 @@ class VariationOperatingCentresReviewServiceFactory implements FactoryInterface
         return new VariationOperatingCentresReviewService(
             $container->get(AbstractReviewServiceServices::class),
             $container->get('Review\PsvOperatingCentre'),
-            $container->get('Review\ApplicationPsvOcTotalAuth'),
+            $container->get('Review\VariationPsvOcTotalAuth'),
             $container->get('Review\GoodsOperatingCentre'),
-            $container->get('Review\ApplicationGoodsOcTotalAuth'),
+            $container->get('Review\VariationGoodsOcTotalAuth'),
         );
     }
 

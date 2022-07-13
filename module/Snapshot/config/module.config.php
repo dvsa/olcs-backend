@@ -56,7 +56,7 @@ return [
             Review\VariationOperatingCentresReviewService::class => Review\VariationOperatingCentresReviewServiceFactory::class,
             Review\ApplicationFinancialHistoryReviewService::class => Review\GenericFactory::class,
             Review\VariationDiscsReviewService::class => Review\GenericFactory::class,
-            Review\VariationTransportManagersReviewService::class => Review\GenericFactory::class,
+            Review\VariationTransportManagersReviewService::class => Review\VariationTransportManagersReviewServiceFactory::class,
             Review\PsvOperatingCentreReviewService::class => Review\GenericFactory::class,
             Review\VariationConvictionsPenaltiesReviewService::class => Review\VariationConvictionsPenaltiesReviewServiceFactory::class,
             Review\ApplicationLicenceHistoryReviewService::class => Review\GenericFactory::class,
