@@ -45,7 +45,7 @@ return [
             Review\ApplicationBusinessDetailsReviewService::class => Review\GenericFactory::class,
             Review\ApplicationTypeOfLicenceReviewService::class => Review\GenericFactory::class,
             Review\GoodsOperatingCentreReviewService::class => Review\GoodsOperatingCentreReviewServiceFactory::class,
-            Review\ApplicationConditionsUndertakingsReviewService::class => Review\GenericFactory::class,
+            Review\ApplicationConditionsUndertakingsReviewService::class => Review\ApplicationConditionsUndertakingsReviewServiceFactory::class,
             Review\ConditionsUndertakingsReviewService::class => Review\GenericFactory::class,
             Review\ApplicationGoodsOcTotalAuthReviewService::class => Review\GenericFactory::class,
             Review\VariationPeopleReviewService::class => Review\VariationPeopleReviewServiceFactory::class,
