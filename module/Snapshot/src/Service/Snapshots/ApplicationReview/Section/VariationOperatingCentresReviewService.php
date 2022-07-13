@@ -31,9 +31,9 @@ class VariationOperatingCentresReviewService extends AbstractOperatingCentresRev
      *
      * @param AbstractReviewServiceServices $abstractReviewServiceServices
      * @param PsvOperatingCentreReviewService $psvOperatingCentreReviewService
-     * @param ApplicationPsvOcTotalAuthReviewService $applicationPsvOcTotalAuthReviewService
+     * @param VariationPsvOcTotalAuthReviewService $variationPsvOcTotalAuthReviewService
      * @param GoodsOperatingCentreReviewService $goodsOperatingCentreReviewService
-     * @param ApplicationGoodsOcTotalAuthReviewService $applicationGoodsOcTotalAuthReviewService
+     * @param VariationGoodsOcTotalAuthReviewService $variationGoodsOcTotalAuthReviewService
      *
      * @return VariationOperatingCentresReviewService
      */
