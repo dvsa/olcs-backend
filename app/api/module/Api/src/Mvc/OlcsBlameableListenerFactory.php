@@ -2,8 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Mvc;
 
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Class OlcsBlameableListenerFactory
@@ -13,16 +16,27 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class OlcsBlameableListenerFactory implements FactoryInterface
 {
     /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return OlcsBlameableListener
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): OlcsBlameableListener
+    {
+        return new OlcsBlameableListener($container);
+    }
+
+    /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param ServiceLocatorInterface $services
+     *
+     * @return OlcsBlameableListener
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $services): OlcsBlameableListener
     {
-        $listener = new OlcsBlameableListener($serviceLocator);
-        $listener->setServiceLocator($serviceLocator);
-
-        return $listener;
+        return $this($services, OlcsBlameableListener::class);
     }
 }
