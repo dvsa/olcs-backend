@@ -19,12 +19,9 @@ class OlcsBlameableListenerFactoryTest extends MockeryTestCase
     public function testCreateService()
     {
         $mockSl = m::mock(ServiceLocatorInterface::class);
-
         $sut = new OlcsBlameableListenerFactory();
-
         $listener = $sut->createService($mockSl);
 
         $this->assertInstanceOf(OlcsBlameableListener::class, $listener);
-        $this->assertSame($mockSl, $listener->getServiceLocator());
     }
 }

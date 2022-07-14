@@ -18,6 +18,27 @@ use ZfcRbac\Service\AuthorizationService;
 class OlcsBlameableListenerTest extends MockeryTestCase
 {
     /**
+     * Holds the SUT
+     *
+     * @var OlcsBlameableListener
+     */
+    private $sut;
+
+    /**
+     * @var ServiceLocatorInterface
+     */
+    private $serviceLocator;
+
+    /**
+     * Setup the sut
+     */
+    protected function setUp(): void
+    {
+        $this->serviceLocator = m::mock(ServiceLocatorInterface::class);
+        $this->sut = new OlcsBlameableListener($this->serviceLocator);
+    }
+
+    /**
      * @dataProvider getFieldValueDataProvider
      */
     public function testGetFieldValue($currentUser, $expected)
@@ -28,7 +49,7 @@ class OlcsBlameableListenerTest extends MockeryTestCase
 
         $mockUserRepo = m::mock(UserRepository::class);
 
-        $mockSl = m::mock(ServiceLocatorInterface::class)
+        $this->serviceLocator
             ->shouldReceive('get')
             ->with(AuthorizationService::class)
             ->andReturn($mockAuth)
@@ -56,29 +77,14 @@ class OlcsBlameableListenerTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $meta = new \stdClass;
+        $meta = m::mock(\stdClass::class);
+        $meta->shouldReceive('hasAssociation')->once()->andReturn(true);
         $field = 'field';
         $eventAdapter = m::mock(AdapterInterface::class);
 
-        $sut = m::mock(OlcsBlameableListener::class)->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $sut->setServiceLocator($mockSl);
-
-        $sut->shouldReceive('setUserValue')
-            ->with($expected)
-            ->once()
-            ->globally()
-            ->ordered();
-        $sut->shouldReceive('callParentGetFieldValue')
-            ->with($meta, $field, $eventAdapter)
-            ->once()
-            ->andReturn($expected)
-            ->globally()
-            ->ordered();
-
         $this->assertSame(
             $expected,
-            $sut->getFieldValue($meta, $field, $eventAdapter)
+            $this->sut->getFieldValue($meta, $field, $eventAdapter)
         );
     }
 
@@ -100,7 +106,7 @@ class OlcsBlameableListenerTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $mockSl = m::mock(ServiceLocatorInterface::class)
+        $this->serviceLocator
             ->shouldReceive('get')
             ->with(AuthorizationService::class)
             ->andReturn($mockAuth)
@@ -128,29 +134,14 @@ class OlcsBlameableListenerTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $meta = new \stdClass;
+        $meta = m::mock(\stdClass::class);
+        $meta->shouldReceive('hasAssociation')->once()->andReturn(true);
         $field = 'field';
         $eventAdapter = m::mock(AdapterInterface::class);
 
-        $sut = m::mock(OlcsBlameableListener::class)->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $sut->setServiceLocator($mockSl);
-
-        $sut->shouldReceive('setUserValue')
-            ->with($mockUser)
-            ->once()
-            ->globally()
-            ->ordered();
-        $sut->shouldReceive('callParentGetFieldValue')
-            ->with($meta, $field, $eventAdapter)
-            ->once()
-            ->andReturn($mockUser)
-            ->globally()
-            ->ordered();
-
         $this->assertSame(
             $mockUser,
-            $sut->getFieldValue($meta, $field, $eventAdapter)
+            $this->sut->getFieldValue($meta, $field, $eventAdapter)
         );
     }
 

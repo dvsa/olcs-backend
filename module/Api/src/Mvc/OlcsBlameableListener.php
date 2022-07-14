@@ -1,11 +1,12 @@
 <?php
+
 namespace Dvsa\Olcs\Api\Mvc;
 
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Gedmo\Blameable\BlameableListener as GedmoBlameableListener;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
@@ -17,7 +18,20 @@ use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareInterface
 {
     use AuthAwareTrait;
-    use ServiceLocatorAwareTrait;
+
+    /** @var ServiceLocatorInterface */
+    private $serviceLocator;
+
+    /**
+     * Injecting instances of AuthService and RepoServiceManager did not work here due to some deeper co-dependency
+     * when the app instantiated part of the Doctrine ORM, so ServiceLocator had to be injected instead.
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function __construct(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
 
     /**
      * {@inheritdoc}
@@ -38,17 +52,18 @@ class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareI
      */
     protected function getUserValue()
     {
-        $serviceLocator = $this->getServiceLocator();
         if (!$this->getAuthService()) {
             // set the Auth Service, if not yet set
-            $this->setAuthService($serviceLocator->get(AuthorizationService::class));
+            $this->setAuthService($this->serviceLocator->get(AuthorizationService::class));
         }
         if (!$this->getUserRepository()) {
             // set the User repository service, if not yet set
-            $this->setUserRepository($serviceLocator->get('RepositoryServiceManager')->get('User'));
+            $this->setUserRepository($this->serviceLocator->get('RepositoryServiceManager')->get('User'));
         }
 
-        $masquaradedAsSystemUser = $serviceLocator->get(IdentityProviderInterface::class)->getMasqueradedAsSystemUser();
+        $masquaradedAsSystemUser = $this->serviceLocator->get(IdentityProviderInterface::class)
+            ->getMasqueradedAsSystemUser();
+
         if ($masquaradedAsSystemUser) {
             $currentUser = $this->getSystemUser();
         } else {
