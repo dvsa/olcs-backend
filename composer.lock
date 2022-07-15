@@ -48,11 +48,11 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.231.0",
+            "version": "3.231.6",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.231.0/aws-aws-sdk-php-3.231.0.zip",
-                "reference": "6222f9e77df8142ec1cbf60337871ef73859bea9",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.231.6/aws-aws-sdk-php-3.231.6.zip",
+                "reference": "54c5fe6667c73010d954ce4c4d657d093f0bdcbf",
                 "shasum": ""
             },
             "require": {
@@ -125,7 +125,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2022-07-06T18:15:37+00:00"
+            "time": "2022-07-14T18:20:54+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -2498,19 +2498,19 @@
         },
         {
             "name": "laminas/laminas-dependency-plugin",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/laminas/laminas-dependency-plugin/2.2.0/laminas-laminas-dependency-plugin-2.2.0.zip",
-                "reference": "73cfb63ddca9d6bfedad5e0a038f6d55063975a3",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/laminas/laminas-dependency-plugin/2.3.0/laminas-laminas-dependency-plugin-2.3.0.zip",
+                "reference": "12737a58c1a73ea441c77a560b5d6d6ebd6d1503",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.1 || ^2.0",
+                "composer-plugin-api": ">=1.1.0 <2.3.0",
                 "php": "^7.3 || ~8.0.0 || ~8.1.0"
             },
             "require-dev": {
-                "composer/composer": "^1.9 || ^2.0",
+                "composer/composer": ">=1.9.0 <2.3.0",
                 "laminas/laminas-coding-standard": "^2.2.1",
                 "mikey179/vfsstream": "^1.6.10@alpha",
                 "phpunit/phpunit": "^9.5.5",
@@ -2537,7 +2537,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-09-08T17:51:35+00:00"
+            "time": "2022-07-14T14:37:37+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -4196,11 +4196,11 @@
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/laminas/laminas-zendframework-bridge/1.5.0/laminas-laminas-zendframework-bridge-1.5.0.zip",
-                "reference": "7f049390b756d34ba5940a8fb47634fbb51f79ab",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/laminas/laminas-zendframework-bridge/1.6.0/laminas-laminas-zendframework-bridge-1.6.0.zip",
+                "reference": "d74d2da21beae5aceff1e8c07b901066b0e1b719",
                 "shasum": ""
             },
             "require": {
@@ -4242,7 +4242,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-02-22T22:17:01+00:00"
+            "time": "2022-07-14T16:30:30+00:00"
         },
         {
             "name": "league/flysystem",
@@ -5981,11 +5981,11 @@
         },
         {
             "name": "sabre/http",
-            "version": "5.1.4",
+            "version": "5.1.5",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/http/5.1.4/sabre-http-5.1.4.zip",
-                "reference": "84a83642c3b877da9d0e265fba7258157c0bdc37",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/http/5.1.5/sabre-http-5.1.5.zip",
+                "reference": "164725c2d2e248384e5b6115510c545e9c47cff9",
                 "shasum": ""
             },
             "require": {
@@ -6029,7 +6029,7 @@
             "keywords": [
                 "http"
             ],
-            "time": "2022-06-24T08:39:23+00:00"
+            "time": "2022-07-09T08:38:22+00:00"
         },
         {
             "name": "sabre/uri",
