@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepository;
+use Dvsa\Olcs\Api\Domain\SlaCalculatorAwareInterface;
+use Dvsa\Olcs\Api\Domain\SlaCalculatorAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
@@ -31,13 +33,13 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateVariation extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
+final class CreateVariation extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface, SlaCalculatorAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait, SlaCalculatorAwareTrait;
 
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['Application'];
+    protected $extraRepos = ['Application', 'Sla'];
 
     /**
      * @param CommandInterface|Cmd $command The command
@@ -82,7 +84,7 @@ final class CreateVariation extends AbstractCommandHandler implements AuthAwareI
 
         if ($this->isGranted(Permission::INTERNAL_USER) && $command->getReceivedDate() !== null) {
             $variation->setReceivedDate(new DateTime($command->getReceivedDate()));
-            $variation->setTargetCompletionDateFromReceivedDate();
+            $this->setTargetCompletionDateForApplication($variation);
         }
 
         if ($command->getVariationType() !== null) {

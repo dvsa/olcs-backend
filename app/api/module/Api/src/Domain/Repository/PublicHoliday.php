@@ -1,29 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\System\PublicHoliday as Entity;
 
-/**
- * PublicHoliday
- */
 class PublicHoliday extends AbstractRepository
 {
     protected $entity = Entity::class;
     protected $alias = 'p';
 
-    /**
-     * Returns an array of dates between $startDate and $endDate
-     *
-     * @param \DateTime $startDate
-     * @param \DateTime $endDate
-     * @return array
-     */
-    public function fetchBetweenByTa(\DateTime $startDate, \DateTime $endDate, TrafficAreaEntity $trafficArea = null)
+    public function fetchBetweenByTa(\DateTime $startDate, \DateTime $endDate, ?TrafficAreaEntity $trafficArea = null): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('p.publicHolidayDate')->from($this->entity, $this->alias);
@@ -33,7 +22,7 @@ class PublicHoliday extends AbstractRepository
         $qb->setParameter('start', $startDate, Type::DATE);
         $qb->setParameter('end', $endDate, Type::DATE);
 
-        if ($trafficArea !== null) {
+        if (!is_null($trafficArea)) {
             switch (true) {
                 case $trafficArea->getIsEngland():
                     $qb->andWhere($qb->expr()->eq('p.isEngland', 1));
@@ -48,6 +37,8 @@ class PublicHoliday extends AbstractRepository
                     $qb->andWhere($qb->expr()->eq('p.isWales', 1));
                     break;
             }
+        } else {
+            $qb->andWhere($qb->expr()->eq('p.isEngland', 1));
         }
 
         return $qb->getQuery()->getArrayResult();
