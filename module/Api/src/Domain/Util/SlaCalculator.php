@@ -1,38 +1,22 @@
 <?php
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\Util;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\System\Sla;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Olcs\Logging\Log\Logger;
 
-/**
- * Class SlaCalculator
- * @package Dvsa\Olcs\Api\Domain\Util
- */
-final class SlaCalculator implements SlaCalculatorInterface
+class SlaCalculator implements SlaCalculatorInterface
 {
-    /**
-     * @var TimeProcessorBuilderInterface
-     */
-    private $timeProcessorBuilder;
+    private TimeProcessorBuilderInterface $timeProcessorBuilder;
 
-    /**
-     * @param TimeProcessorBuilderInterface $timeProcessorBuilder
-     */
     public function __construct(TimeProcessorBuilderInterface $timeProcessorBuilder)
     {
         $this->timeProcessorBuilder = $timeProcessorBuilder;
     }
 
-    /**
-     * @param \DateTime $date the starting reference date (the SLA compareTo)
-     * @param Sla $sla SLA to process
-     * @param $trafficArea
-     * @return \DateTime
-     */
-    public function applySla(\DateTime $date, Sla $sla, TrafficArea $trafficArea)
+    public function applySla(\DateTime $date, Sla $sla, ?TrafficArea $trafficArea = null): \DateTime
     {
         Logger::debug(
             'BEGIN SLA for ' . $sla->getField() . ' ' . $sla->getDays() . ' days from ' .

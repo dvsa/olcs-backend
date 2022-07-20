@@ -11,11 +11,15 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateVariation;
+use Dvsa\Olcs\Api\Domain\Repository\Sla;
+use Dvsa\Olcs\Api\Domain\Util\SlaCalculator;
+use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -33,8 +37,10 @@ class CreateVariationTest extends CommandHandlerTestCase
         $this->sut = new CreateVariation();
         $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
+        $this->mockRepo('Sla', Sla::class);
 
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
+        $this->mockedSmServices[SlaCalculatorInterface::class] = m::mock(SlaCalculator::class);
 
         parent::setUp();
     }
@@ -75,10 +81,24 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
+        $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
+        $this->repoMap['Sla']
+            ->expects('fetchByCategoryFieldAndCompareTo')
+            ->with('application', 'receivedDate', 'targetCompletionDate')
+            ->andReturn($mockedSlaEntity);
+
+        $expectedTargetCompletionDate = new \DateTime();
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->expects('applySla')
+            ->with(m::type(\DateTimeInterface::class), $mockedSlaEntity, null)
+            ->andReturn($expectedTargetCompletionDate);
+
         /** @var m\Mock|LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
-
+        $trafficArea = m::mock(TrafficArea::class)->makePartial();
+        $trafficArea->expects('getIsNi')->withNoArgs()->andReturn(false);
+        $licence->shouldReceive('getTrafficArea')->withNoArgs()->andReturn($trafficArea);
         $licence->shouldReceive('canHaveVariation')->andReturn(true);
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
@@ -88,10 +108,10 @@ class CreateVariationTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('save')
             ->with(m::type(ApplicationEntity::class))
             ->andReturnUsing(
-                function (ApplicationEntity $app) {
+                function (ApplicationEntity $app) use ($expectedTargetCompletionDate) {
                     $app->setId(222);
                     $this->assertEquals('2015-01-01', $app->getReceivedDate()->format('Y-m-d'));
-                    $this->assertEquals('2015-02-26', $app->getTargetCompletionDate()->format('Y-m-d'));
+                    $this->assertEquals($expectedTargetCompletionDate, $app->getTargetCompletionDate());
                     $this->assertSame(
                         $this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION],
                         $app->getStatus()
@@ -199,9 +219,23 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
+        $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
+        $this->repoMap['Sla']
+            ->expects('fetchByCategoryFieldAndCompareTo')
+            ->with('application', 'receivedDate', 'targetCompletionDate')
+            ->andReturn($mockedSlaEntity);
+
+        $expectedTargetCompletionDate = new \DateTime();
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->expects('applySla')
+            ->andReturn($expectedTargetCompletionDate);
+
         /** @var m\Mock|LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+        $trafficArea = m::mock(TrafficArea::class)->makePartial();
+        $trafficArea->expects('getIsNi')->withNoArgs()->andReturn(false);
+        $licence->shouldReceive('getTrafficArea')->withNoArgs()->andReturn($trafficArea);
 
         $licence->shouldReceive('canHaveVariation')->andReturn(true);
 
@@ -261,9 +295,24 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
+        $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
+        $this->repoMap['Sla']
+            ->expects('fetchByCategoryFieldAndCompareTo')
+            ->with('application', 'receivedDate', 'targetCompletionDate')
+            ->andReturn($mockedSlaEntity);
+
+        $expectedTargetCompletionDate = new \DateTime();
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->expects('applySla')
+            ->with(m::type(\DateTimeInterface::class), $mockedSlaEntity, null)
+            ->andReturn($expectedTargetCompletionDate);
+
         /** @var m\Mock|LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+        $trafficArea = m::mock(TrafficArea::class)->makePartial();
+        $trafficArea->expects('getIsNi')->withNoArgs()->andReturn(false);
+        $licence->shouldReceive('getTrafficArea')->withNoArgs()->andReturn($trafficArea);
 
         $licence->shouldReceive('canHaveVariation')->andReturn(true);
 
@@ -313,6 +362,9 @@ class CreateVariationTest extends CommandHandlerTestCase
             ->once()
             ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(false);
+
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->shouldNotReceive('applySla');
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
@@ -376,6 +428,9 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $licence->shouldReceive('canHaveVariation')->andReturn(true);
 
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->shouldNotReceive('applySla');
+
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($licence);
@@ -427,6 +482,9 @@ class CreateVariationTest extends CommandHandlerTestCase
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
         $licence->shouldReceive('canHaveVariation')->andReturn(false);
+
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->shouldNotReceive('applySla');
 
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')
             ->with($command)
