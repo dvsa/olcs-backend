@@ -1,16 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
 use Olcs\Logging\Log\Logger;
 
-/**
- * AddDaysExcludingDates
- */
 class AddDaysExcludingDates implements DateTimeCalculatorInterface
 {
-    private $wrapped;
-    private $excluded;
+    private DateTimeCalculatorInterface $wrapped;
+    private DateProviderInterface $excluded;
 
     public function __construct(DateTimeCalculatorInterface $wrapped, DateProviderInterface $excluded)
     {
@@ -18,14 +16,7 @@ class AddDaysExcludingDates implements DateTimeCalculatorInterface
         $this->excluded = $excluded;
     }
 
-    /**
-     * Calculates a date that is $days before/after $date. Takes into account weekends and holidays.
-     *
-     * @param \DateTime $date Should be
-     * @param integer $days The number of days to offset (can be a negative number)
-     * @return \DateTime
-     */
-    public function calculateDate(\DateTime $date, $days)
+    public function calculateDate(\DateTime $date, int $days): \DateTime
     {
         Logger::debug('AddDaysExcludingDates : Calculating SLA date ' . $days . ' days from ' . $date->format('d-m-Y'));
 

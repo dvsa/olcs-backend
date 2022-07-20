@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\SlaCalculatorAwareInterface;
+use Dvsa\Olcs\Api\Domain\SlaCalculatorAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -25,12 +27,12 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class SubmitApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class SubmitApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface, SlaCalculatorAwareInterface
 {
-    use AuthAwareTrait;
+    use AuthAwareTrait, SlaCalculatorAwareTrait;
 
     protected $repoServiceName = 'Application';
-    protected $extraRepos = ['TransportManagerApplication'];
+    protected $extraRepos = ['TransportManagerApplication', 'Sla'];
 
     /**
      * Handle Command
@@ -106,7 +108,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             ->setStatus($status)
             ->setReceivedDate($now);
 
-        $application->setTargetCompletionDateFromReceivedDate();
+        $this->setTargetCompletionDateForApplication($application);
 
         if (!$application->isVariation()) {
             // update licence status for new apps only, will cascade persist on save
