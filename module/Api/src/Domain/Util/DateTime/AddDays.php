@@ -1,22 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 
 use Olcs\Logging\Log\Logger;
 
-/**
- * Add Days
- */
 class AddDays implements DateTimeCalculatorInterface
 {
-    /**
-     * Calculates a date that is $days before/after $date.
-     *
-     * @param \DateTime $date Should be
-     * @param integer $days The number of days to offset (can be a negative number)
-     * @return \DateTime
-     */
-    public function calculateDate(\DateTime $date, $days)
+    public function calculateDate(\DateTime $date, int $days): \DateTime
     {
         // ensure date is set to midnight to avoid date discrepancies
         $date->setTime(0, 0, 0);

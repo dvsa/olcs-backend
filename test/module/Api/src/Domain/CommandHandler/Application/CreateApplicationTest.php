@@ -11,6 +11,9 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\Sla;
+use Dvsa\Olcs\Api\Domain\Util\SlaCalculator;
+use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -38,9 +41,11 @@ class CreateApplicationTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateApplication();
         $this->mockRepo('Application', Application::class);
+        $this->mockRepo('Sla', Sla::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            SlaCalculatorInterface::class => m::mock(SlaCalculator::class),
         ];
 
         parent::setUp();
@@ -84,6 +89,8 @@ class CreateApplicationTest extends CommandHandlerTestCase
             ->twice()
             ->with(Permission::SELFSERVE_USER, null)
             ->andReturn(true);
+
+        $this->repoMap['Sla']->expects('fetchByCategoryFieldAndCompareTo')->never();
 
         $command = Cmd::create(['organisation' => 11]);
         /** @var ApplicationEntity $app */
@@ -156,6 +163,19 @@ class CreateApplicationTest extends CommandHandlerTestCase
                 'appliedVia' => ApplicationEntity::APPLIED_VIA_PHONE
             ]
         );
+
+        $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
+
+        $this->repoMap['Sla']
+            ->expects('fetchByCategoryFieldAndCompareTo')
+            ->with('application', 'receivedDate', 'targetCompletionDate')
+            ->andReturn($mockedSlaEntity);
+
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->expects('applySla')
+            ->with(m::type(\DateTimeInterface::class), $mockedSlaEntity, null)
+            ->andReturn(\DateTime::createFromFormat('Y-m-d', '2015-02-26'));
+
         /** @var ApplicationEntity $app */
         $app = null;
 
@@ -252,6 +272,18 @@ class CreateApplicationTest extends CommandHandlerTestCase
             ->twice()
             ->with(Permission::SELFSERVE_USER, null)
             ->andReturn($isExternal);
+
+        $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
+
+        $this->repoMap['Sla']
+            ->expects('fetchByCategoryFieldAndCompareTo')
+            ->with('application', 'receivedDate', 'targetCompletionDate')
+            ->andReturn($mockedSlaEntity);
+
+        $this->mockedSmServices[SlaCalculatorInterface::class]
+            ->expects('applySla')
+            ->with(m::type(\DateTimeInterface::class), $mockedSlaEntity, null)
+            ->andReturn(\DateTime::createFromFormat('Y-m-d', '2015-02-26'));
 
         $command = Cmd::create(
             [

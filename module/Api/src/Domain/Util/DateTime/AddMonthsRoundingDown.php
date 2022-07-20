@@ -16,7 +16,7 @@ class AddMonthsRoundingDown
      * @param integer $months The number of months to offset (can be a negative number)
      * @return \DateTime
      */
-    public function calculateDate(\DateTime $date, $months)
+    public function calculateDate(\DateTime $date, int $months): \DateTime
     {
         $result = clone $date;
 
