@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 use Doctrine\DBAL\Driver\PDOStatement;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain as DomainCmd;
-use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
@@ -22,21 +21,19 @@ class CpidOrganisationExport extends AbstractConsumer
 {
     /** @var Repository\Organisation */
     private $organisationRepo;
-    /** @var CommandHandlerManager */
-    private $commandHandlerMng;
 
     /**
      * CpidOrganisationExport constructor.
      *
+     * @param AbstractConsumerServices $abstractConsumerServices
      * @param Repository\Organisation $organisation   Repository
-     * @param CommandHandlerManager   $commandHandler Handler Manager
      */
     public function __construct(
-        Repository\Organisation $organisation,
-        CommandHandlerManager $commandHandler
+        AbstractConsumerServices $abstractConsumerServices,
+        Repository\Organisation $organisation
     ) {
+        parent::__construct($abstractConsumerServices);
         $this->organisationRepo = $organisation;
-        $this->commandHandlerMng = $commandHandler;
     }
 
     /**
@@ -79,12 +76,11 @@ class CpidOrganisationExport extends AbstractConsumer
         unset($content);
 
         try {
-            $this->commandHandlerMng->handleCommand(
+            $this->commandHandlerManager->handleCommand(
                 TransferCmd\Document\Upload::create($dtoData)
             );
 
             return $this->success($item, 'Organisation list exported.');
-
         } catch (\Exception $ex) {
             return $this->failed($item, 'Unable to export list. ' . $ex->getMessage());
         }

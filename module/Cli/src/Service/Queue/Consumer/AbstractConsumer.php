@@ -5,19 +5,31 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete as CompleteCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Olcs\Logging\Log\Logger;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Abstract Queue Consumer
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLocatorAwareInterface
+abstract class AbstractConsumer implements MessageConsumerInterface
 {
-    use ServiceLocatorAwareTrait;
+    /** @var CommandHandlerManager */
+    protected $commandHandlerManager;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractConsumerServices $abstractConsumerServices
+     *
+     * @return AbstractConsumer
+     */
+    public function __construct(AbstractConsumerServices $abstractConsumerServices)
+    {
+        $this->commandHandlerManager = $abstractConsumerServices->getCommandHandlerManager();
+    }
 
     /**
      * Called when processing the message was successful
@@ -109,7 +121,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
      */
     protected function handleSideEffectCommand(\Dvsa\Olcs\Transfer\Command\CommandInterface $command)
     {
-        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command, false);
+        return $this->commandHandlerManager->handleCommand($command, false);
     }
 
     /**
@@ -121,6 +133,6 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
      */
     protected function handleCommand(\Dvsa\Olcs\Transfer\Command\CommandInterface $command)
     {
-        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($command);
+        return $this->commandHandlerManager->handleCommand($command);
     }
 }
