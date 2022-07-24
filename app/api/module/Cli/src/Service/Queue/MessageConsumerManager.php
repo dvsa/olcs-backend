@@ -29,9 +29,5 @@ class MessageConsumerManager extends AbstractPluginManager
         if ($config) {
             $config->configureServiceManager($this);
         }
-
-        $this->addInitializer(
-            new ServiceLocatorInitializer()
-        );
     }
 }

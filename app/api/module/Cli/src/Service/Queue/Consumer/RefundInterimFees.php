@@ -12,10 +12,20 @@ class RefundInterimFees extends AbstractCommandConsumer
 {
     protected $commandName = RefundFee::class;
 
+    /** @var Fee */
     protected $feeRepo;
 
-    public function __construct(Fee $feeRepo)
-    {
+    /**
+     * RefundInterimFees constructor.
+     *
+     * @param AbstractConsumerServices $abstractConsumerServices
+     * @param Fee $feeRepo
+     */
+    public function __construct(
+        AbstractConsumerServices $abstractConsumerServices,
+        Fee $feeRepo
+    ) {
+        parent::__construct($abstractConsumerServices);
         $this->feeRepo = $feeRepo;
     }
 

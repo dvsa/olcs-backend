@@ -337,10 +337,84 @@ return [
             'MessageConsumerManager' => \Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory::class,
             'Dvsa\Olcs\Api\Service\Data\Nysiis' => Dvsa\Olcs\Api\Service\Data\NysiisFactory::class,
             'Queue' => Dvsa\Olcs\Cli\Service\Queue\QueueProcessorFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumerServices::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\AbstractConsumerServicesFactory::class,
         ],
     ],
     'message_consumer_manager' => [
-        'invokables' => [
+        'factories' => [
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklistReminderGenerateLetter::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\Snapshot::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownloadFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\ProcessPack::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\ProcessPackFailed::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\PrintDiscs::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreateGoodsVehicleList::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreatePsvVehicleList::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Nr\SendMsiResponse::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\UpdateTmNysiisName::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Licence\ProcessContinuationNotSought::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Licence\SendContinuationNotSought::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\CreateForLicence::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\RemoveDeleteDocuments::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationSnapshot::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AllocateIrhpApplicationPermits::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\RunScoring::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AcceptScoring::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\GeneratePermits::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\GenerateReport::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\ReportingBulkReprint::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\BulkSend\Letter::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\BulkSend\Email::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\PostScoringEmail::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\PostSubmitTasks::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\CreateTask::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\RefundInterimFees::class
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\RefundInterimFeesFactory::class,
+        ],
+        'aliases' => [
             Queue::TYPE_COMPANIES_HOUSE_COMPARE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class,
             Queue::TYPE_CONT_CHECKLIST
@@ -409,12 +483,11 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\PostSubmitTasks::class,
             Queue::TYPE_CREATE_TASK
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CreateTask::class,
-        ],
-        'factories' => [
-            Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
+            Queue::TYPE_CPID_EXPORT_CSV
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport::class,
             Queue::TYPE_REFUND_INTERIM_FEES
-            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\RefundInterimFeesFactory::class
-        ]
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\RefundInterimFees::class,
+        ],
     ],
     'queue' => [
         //'isLongRunningProcess' => true,

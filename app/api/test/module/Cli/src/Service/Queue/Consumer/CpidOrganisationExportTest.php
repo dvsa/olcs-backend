@@ -16,9 +16,12 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 /**
  * @covers Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport
  */
-class CpidOrganisationExportTest extends MockeryTestCase
+class CpidOrganisationExportTest extends AbstractConsumerTestCase
 {
     protected $queueEntity = null;
+
+    /** @var Repository\Organisation */
+    private $organisationRepo;
 
     public function setUp(): void
     {
@@ -30,18 +33,11 @@ class CpidOrganisationExportTest extends MockeryTestCase
             ->setStatus(new RefData(Queue::STATUS_QUEUED))
             ->setCreatedBy($user)
             ->setOptions(json_encode(['status' => 'unit_Status']));
-    }
 
-    /**
-     * @dataProvider dpTestMessageProvider
-     */
-    public function testProcessMessage($shouldThrowException)
-    {
         $row = ['A1', 'B1', 'C1'];
 
-        /** @var Repository\Organisation $organisation */
-        $organisation = m::mock(Repository\Organisation::class)
-            ->shouldReceive('fetchAllByStatusForCpidExport')
+        $this->organisationRepo = m::mock(Repository\Organisation::class);
+        $this->organisationRepo->shouldReceive('fetchAllByStatusForCpidExport')
             ->with('unit_Status')
             ->andReturn(
                 m::mock(IterableResult::class)
@@ -50,30 +46,41 @@ class CpidOrganisationExportTest extends MockeryTestCase
                     ->twice()
                     ->andReturn([$row], false)
                     ->getMock()
-            )
-            ->getMock();
+            );
 
-        /** @var m\MockInterface $mockCmdHandlerMngr */
-        $mockCmdHandlerMngr = m::mock(CommandHandlerManager::class);
+        parent::setUp();
+    }
 
+    protected function instantiate()
+    {
+        $this->sut = m::mock(
+            CpidOrganisationExport::class . '[success, failed]',
+            [
+                $this->abstractConsumerServices,
+                $this->organisationRepo
+            ]
+        )->shouldAllowMockingProtectedMethods();
+    }
+
+    /**
+     * @dataProvider dpTestMessageProvider
+     */
+    public function testProcessMessage($shouldThrowException)
+    {
         /** @var m\MockInterface $sut */
-        $sut = m::mock(CpidOrganisationExport::class . '[success, failed]', [$organisation, $mockCmdHandlerMngr])
-            ->shouldAllowMockingProtectedMethods();
-
         if ($shouldThrowException) {
-            $mockCmdHandlerMngr->shouldReceive('handleCommand')
+            $this->chm->shouldReceive('handleCommand')
                 ->once()
                 ->andThrow(new \Exception('AN EXCEPTION'));
 
             $expectResult = 'failed';
 
-            $sut->shouldReceive('failed')
+            $this->sut->shouldReceive('failed')
                 ->once()
                 ->with($this->queueEntity, 'Unable to export list. AN EXCEPTION')
                 ->andReturn($expectResult);
-
         } else {
-            $mockCmdHandlerMngr->shouldReceive('handleCommand')
+            $this->chm->shouldReceive('handleCommand')
                 ->once()
                 ->andReturnUsing(
                     function (TransferCmd\Document\Upload $cmd) {
@@ -83,14 +90,14 @@ class CpidOrganisationExportTest extends MockeryTestCase
 
             $expectResult = 'success';
 
-            $sut->shouldReceive('success')
+            $this->sut->shouldReceive('success')
                 ->once()
                 ->with($this->queueEntity, 'Organisation list exported.')
                 ->andReturn($expectResult);
         }
 
         static::assertEquals(
-            $sut->processMessage($this->queueEntity),
+            $this->sut->processMessage($this->queueEntity),
             $expectResult
         );
     }

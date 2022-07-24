@@ -9,8 +9,10 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms;
 
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumer;
+use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumerServices;
 use Dvsa\Olcs\Transfer\Command\Cpms\DownloadReport as DownloadReportCmd;
 use Dvsa\Olcs\Transfer\Query\Cpms\ReportStatus as ReportStatusQry;
 
@@ -22,6 +24,25 @@ use Dvsa\Olcs\Transfer\Query\Cpms\ReportStatus as ReportStatusQry;
 class ReportDownload extends AbstractConsumer
 {
     const MAX_ATTEMPTS = 10;
+
+    /** @var QueryHandlerManager */
+    protected $queryHandlerManager;
+
+    /**
+     * Create service instance
+     *
+     * @param AbstractConsumerServices $abstractConsumerServices
+     * @param QueryHandlerManager $queryHandlerManager
+     *
+     * @return ReportDownload
+     */
+    public function __construct(
+        AbstractConsumerServices $abstractConsumerServices,
+        QueryHandlerManager $queryHandlerManager
+    ) {
+        parent::__construct($abstractConsumerServices);
+        $this->queryHandlerManager = $queryHandlerManager;
+    }
 
     /**
      * Process the message item
@@ -42,7 +63,7 @@ class ReportDownload extends AbstractConsumer
         $query = ReportStatusQry::create(['reference' => $reference]);
 
         try {
-            $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($query);
+            $result = $this->queryHandlerManager->handleQuery($query);
         } catch (\Exception $e) {
             return $this->handleException($e, $item);
         }

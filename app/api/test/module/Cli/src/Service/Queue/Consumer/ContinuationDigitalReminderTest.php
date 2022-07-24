@@ -4,21 +4,18 @@ namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
 /**
  * Class ContinuationDigitalReminderTest
  * @package Dvsa\OlcsTest\Cli\Service\Queue\Consumer
  */
-class ContinuationDigitalReminderTest extends MockeryTestCase
+class ContinuationDigitalReminderTest extends AbstractConsumerTestCase
 {
-    protected $queueEntity = null;
+    protected $consumerClass = ContinuationDigitalReminder::class;
 
     public function testGetCommandData()
     {
-        $sut = new ContinuationDigitalReminder();
-
         $queue = new Queue();
         $queue->setEntityId(87);
         $queue->setCreatedBy(
@@ -30,7 +27,7 @@ class ContinuationDigitalReminderTest extends MockeryTestCase
                 'id' => 87,
                 'user' => 9,
             ],
-            $sut->getCommandData($queue)
+            $this->sut->getCommandData($queue)
         );
     }
 }
