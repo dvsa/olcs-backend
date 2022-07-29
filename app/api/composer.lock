@@ -48,11 +48,11 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.231.6",
+            "version": "3.231.15",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.231.6/aws-aws-sdk-php-3.231.6.zip",
-                "reference": "54c5fe6667c73010d954ce4c4d657d093f0bdcbf",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.231.15/aws-aws-sdk-php-3.231.15.zip",
+                "reference": "ba379285d24b609a997bd8b40933d3e0a3826dfb",
                 "shasum": ""
             },
             "require": {
@@ -125,7 +125,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2022-07-14T18:20:54+00:00"
+            "time": "2022-07-27T18:59:36+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -897,29 +897,26 @@
         },
         {
             "name": "doctrine/event-manager",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/doctrine/event-manager/1.1.1/doctrine-event-manager-1.1.1.zip",
-                "reference": "41370af6a30faa9dc0368c4a6814d596e81aba7f",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/doctrine/event-manager/1.1.2/doctrine-event-manager-1.1.2.zip",
+                "reference": "eb2ecf80e3093e8f3c2769ac838e27d8ede8e683",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0"
             },
             "conflict": {
-                "doctrine/common": "<2.9@dev"
+                "doctrine/common": "<2.9"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^6.0",
-                "phpunit/phpunit": "^7.0"
+                "doctrine/coding-standard": "^9",
+                "phpstan/phpstan": "~1.4.10 || ^1.5.4",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
+                "vimeo/psalm": "^4.22"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Doctrine\\Common\\": "lib/Doctrine/Common"
@@ -977,7 +974,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-29T18:28:51+00:00"
+            "time": "2022-07-27T22:18:11+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -5981,11 +5978,11 @@
         },
         {
             "name": "sabre/http",
-            "version": "5.1.5",
+            "version": "5.1.6",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/http/5.1.5/sabre-http-5.1.5.zip",
-                "reference": "164725c2d2e248384e5b6115510c545e9c47cff9",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/http/5.1.6/sabre-http-5.1.6.zip",
+                "reference": "9976ac34ced206bd6579b7b37b401de9fac98dae",
                 "shasum": ""
             },
             "require": {
@@ -6029,7 +6026,7 @@
             "keywords": [
                 "http"
             ],
-            "time": "2022-07-09T08:38:22+00:00"
+            "time": "2022-07-15T14:51:14+00:00"
         },
         {
             "name": "sabre/uri",
@@ -6079,11 +6076,11 @@
         },
         {
             "name": "sabre/vobject",
-            "version": "4.4.2",
+            "version": "4.4.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/vobject/4.4.2/sabre-vobject-4.4.2.zip",
-                "reference": "b8a44ea1610d9b7012e42a7ff6f1cb66f0b757dd",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/sabre/vobject/4.4.3/sabre-vobject-4.4.3.zip",
+                "reference": "2a043b994fa8d8a655c3d50d73c1ad443d31d677",
                 "shasum": ""
             },
             "require": {
@@ -6168,7 +6165,7 @@
                 "xCal",
                 "xCard"
             ],
-            "time": "2022-06-24T11:36:21+00:00"
+            "time": "2022-07-15T15:21:17+00:00"
         },
         {
             "name": "sabre/xml",
@@ -7726,11 +7723,11 @@
         },
         {
             "name": "mikey179/vfsstream",
-            "version": "v1.6.10",
+            "version": "v1.6.11",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/mikey179/vfsstream/v1.6.10/mikey179-vfsstream-v1.6.10.zip",
-                "reference": "250c0825537d501e327df879fb3d4cd751933b85",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/mikey179/vfsstream/v1.6.11/mikey179-vfsstream-v1.6.11.zip",
+                "reference": "17d16a85e6c26ce1f3e2fa9ceeacdc2855db1e9f",
                 "shasum": ""
             },
             "require": {
@@ -7762,7 +7759,7 @@
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
             "homepage": "http://vfs.bovigo.org/",
-            "time": "2021-09-25T08:05:01+00:00"
+            "time": "2022-02-23T02:02:42+00:00"
         },
         {
             "name": "mockery/mockery",
