@@ -86,7 +86,7 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
                 ],
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
-                'isExternal' => false,
+                'isExternal' => true,
                 'description' => $document->getDescription()
             ],
             'addressBookmark' => 'ptr_correspondent_address',
