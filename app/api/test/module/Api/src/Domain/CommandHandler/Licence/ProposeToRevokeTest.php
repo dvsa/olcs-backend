@@ -97,7 +97,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
                 ],
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
-                'isExternal' => true,
+                'isExternal' => false,
                 'description' => 'Test Document'
             ],
             'addressBookmark' => 'ptr_correspondent_address',
@@ -216,7 +216,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
                 ],
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
-                'isExternal' => true,
+                'isExternal' => false,
                 'description' => 'Test Document'
             ],
             'addressBookmark' => 'ptr_correspondent_address',
@@ -311,7 +311,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
                 ],
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
-                'isExternal' => true,
+                'isExternal' => false,
                 'description' => 'Test Document'
             ],
             'addressBookmark' => 'ptr_correspondent_address',
@@ -410,7 +410,7 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
                 ],
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
-                'isExternal' => true,
+                'isExternal' => false,
                 'description' => 'Test Document'
             ],
             'addressBookmark' => 'ptr_correspondent_address',
