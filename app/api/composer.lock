@@ -4747,15 +4747,17 @@
         },
         {
             "name": "olcs/olcs-cpms",
-            "version": "4.206.6",
+            "version": "4.206.7",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.6/olcs-olcs-cpms-4.206.6.zip",
-                "reference": "630b041cf6be2660b52bcb48799308a0185e4035",
-                "shasum": "630b041cf6be2660b52bcb48799308a0185e4035"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-cpms/4.206.7/olcs-olcs-cpms-4.206.7.zip",
+                "reference": "a87fded96d48f050c4bb792e896f45b6ae92045a",
+                "shasum": "a87fded96d48f050c4bb792e896f45b6ae92045a"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
+                "ext-iconv": "*",
+                "ext-mbstring": "*",
                 "guzzlehttp/guzzle": "^6.3",
                 "monolog/monolog": "^1.24",
                 "php": ">=7.4"
@@ -4808,7 +4810,7 @@
                 "proprietary"
             ],
             "description": "CPMS Module",
-            "time": "2022-01-18T08:10:09+00:00"
+            "time": "2022-08-08T10:41:09+00:00"
         },
         {
             "name": "olcs/olcs-dvla-search",
