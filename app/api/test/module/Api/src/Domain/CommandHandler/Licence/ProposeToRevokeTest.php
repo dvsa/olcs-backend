@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocument;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetters;
 use Dvsa\Olcs\Transfer\Command\Licence\ProposeToRevoke as ProposeToRevokeCmd;
@@ -98,7 +99,16 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
                 'isExternal' => false,
-                'description' => 'Test Document'
+                'description' => 'Test Document',
+                'metadata' => json_encode([
+                    'details' => [
+                        'category' => Category::CATEGORY_COMPLIANCE,
+                        'documentSubCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
+                        'documentTemplate' => 818,
+                        'allowEmail' => true
+                    ]
+                ]),
+
             ],
             'addressBookmark' => 'ptr_correspondent_address',
             'bookmarkBundle' => [
@@ -124,6 +134,14 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
         $result->addId('correspondenceAddress', 102);
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, $expectedAddressData, $result);
         $this->expectedSideEffect(PrintLetters::class, $expectedPrintLettersData, $result);
+        $this->expectedSideEffect(
+            PrintLetter::class,
+            [
+                'id' => 100,
+                'method' => PrintLetter::METHOD_EMAIL
+            ],
+            new Result()
+        );
 
         $cmd = ProposeToRevokeCmd::create(['licence' => 7, 'document' => 10]);
         $result = $this->sut->handleCommand($cmd);
@@ -217,7 +235,15 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
                 'isExternal' => false,
-                'description' => 'Test Document'
+                'description' => 'Test Document',
+                'metadata' => json_encode([
+                    'details' => [
+                        'category' => Category::CATEGORY_COMPLIANCE,
+                        'documentSubCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
+                        'documentTemplate' => 818,
+                        'allowEmail' => true
+                    ]
+                ]),
             ],
             'addressBookmark' => 'ptr_correspondent_address',
             'bookmarkBundle' => [
@@ -240,6 +266,14 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
         $result->addId('documents', 100, true);
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, $expectedAddressData, $result);
         $this->expectedSideEffect(PrintLetters::class, $expectedPrintLettersData, $result);
+        $this->expectedSideEffect(
+            PrintLetter::class,
+            [
+                'id' => 100,
+                'method' => PrintLetter::METHOD_EMAIL
+            ],
+            new Result()
+        );
 
         $cmd = ProposeToRevokeCmd::create(['licence' => 7, 'document' => 10]);
         $result = $this->sut->handleCommand($cmd);
@@ -312,7 +346,15 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
                 'isExternal' => false,
-                'description' => 'Test Document'
+                'description' => 'Test Document',
+                'metadata' => json_encode([
+                    'details' => [
+                        'category' => Category::CATEGORY_COMPLIANCE,
+                        'documentSubCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
+                        'documentTemplate' => 818,
+                        'allowEmail' => true
+                    ]
+                ]),
             ],
             'addressBookmark' => 'ptr_correspondent_address',
             'bookmarkBundle' => [
@@ -411,7 +453,15 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
                 'isExternal' => false,
-                'description' => 'Test Document'
+                'description' => 'Test Document',
+                'metadata' => json_encode([
+                    'details' => [
+                        'category' => Category::CATEGORY_COMPLIANCE,
+                        'documentSubCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
+                        'documentTemplate' => 818,
+                        'allowEmail' => true
+                    ]
+                ]),
             ],
             'addressBookmark' => 'ptr_correspondent_address',
             'bookmarkBundle' => [
@@ -436,6 +486,14 @@ class ProposeToRevokeTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(GenerateAndStoreWithMultipleAddresses::class, $expectedAddressData, $result);
         $this->expectedSideEffect(PrintLetters::class, $expectedPrintLettersData, $result);
+        $this->expectedSideEffect(
+            PrintLetter::class,
+            [
+                'id' => 100,
+                'method' => PrintLetter::METHOD_EMAIL
+            ],
+            new Result()
+        );
 
         $cmd = ProposeToRevokeCmd::create(['licence' => 7, 'document' => 10]);
         $result = $this->sut->handleCommand($cmd);

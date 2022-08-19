@@ -83,10 +83,14 @@ class PrintLetterTest extends MockeryTestCase
         static::assertFalse($this->sut->canEmail($this->mockDocE));
     }
 
-    public function testCanEmailTrue()
+    /**
+     * @dataProvider dpTestCanEmailTrue
+     */
+    public function testCanEmailTrue($emailPref, $forceEmailCorrespondence)
     {
+        // If Org has email correspondence allowed, or
         $this->mockOrgE
-            ->shouldReceive('getAllowEmail')->once()->andReturn(true)
+            ->shouldReceive('getAllowEmail')->once()->andReturn($emailPref)
             ->shouldReceive('hasAdminEmailAddresses')->once()->andReturn(true);
 
         $this->mockDocE
@@ -106,7 +110,15 @@ class PrintLetterTest extends MockeryTestCase
 
         $this->sut->createService($this->mockSm);
 
-        static::assertTrue($this->sut->canEmail($this->mockDocE));
+        static::assertTrue($this->sut->canEmail($this->mockDocE, $forceEmailCorrespondence));
+    }
+
+    public function dpTestCanEmailTrue()
+    {
+        return [
+            'email correspondence preference true, force false' => [true, false],
+            'email correspondence preference false, force true' => [false, true]
+        ];
     }
 
     public function testCanPrintTrue()

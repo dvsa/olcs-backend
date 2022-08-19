@@ -70,7 +70,7 @@ class PrintLetterTest extends CommandHandlerTestCase
 
         $this->mockPrintSrv
             ->shouldReceive('canPrint')->with($this->mockDocE)->andReturn($canDo['print'])
-            ->shouldReceive('canEmail')->with($this->mockDocE)->andReturn($canDo['email']);
+            ->shouldReceive('canEmail')->with($this->mockDocE, false)->andReturn($canDo['email']);
 
         foreach ($expect['assert'] as $assert) {
             switch ($assert) {
