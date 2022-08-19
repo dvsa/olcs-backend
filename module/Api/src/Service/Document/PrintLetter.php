@@ -23,18 +23,23 @@ class PrintLetter implements FactoryInterface
      *
      * @return bool
      */
-    public function canEmail(Entity\Doc\Document $document)
+    public function canEmail(Entity\Doc\Document $document, $forceCorrespondence = false)
     {
         $licence = $document->getRelatedLicence();
         if ($licence === null) {
             return false;
         }
 
-        // if the allow email preference is off
+        // if the allow email preference is off and this correspondence isnt being force sent
         $org = $licence->getOrganisation();
         if (!ValueHelper::isOn($org->getAllowEmail())
-            || !$org->hasAdminEmailAddresses()
+            && $forceCorrespondence === false
         ) {
+            return false;
+        }
+
+        // Cant send email if there are no email addresses attached to the org
+        if (!$org->hasAdminEmailAddresses()) {
             return false;
         }
 

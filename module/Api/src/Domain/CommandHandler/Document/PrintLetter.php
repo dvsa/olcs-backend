@@ -35,7 +35,7 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
         $document = $this->getRepo()->fetchUsingId($command);
 
         $canPrint = $this->srvPrintLetter->canPrint($document);
-        $canEmail = $this->srvPrintLetter->canEmail($document);
+        $canEmail = $this->srvPrintLetter->canEmail($document, $command->getForceCorrespondence());
 
         // We always want a translation task if the translateToWelsh flag is on
         if (!$canPrint) {

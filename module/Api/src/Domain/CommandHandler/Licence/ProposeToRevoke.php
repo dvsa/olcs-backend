@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocument;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetters;
+use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 
 class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
@@ -35,6 +36,8 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
     protected $licenceEntity;
 
     protected $licenceId;
+
+    const PTR_DOCUMENT_TEMPLATE_ID = 818;
 
     /**
      * @inheritDoc
@@ -87,7 +90,15 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
                 'category' => Category::CATEGORY_COMPLIANCE,
                 'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
                 'isExternal' => false,
-                'description' => $document->getDescription()
+                'description' => $document->getDescription(),
+                'metadata' => json_encode([
+                    'details' => [
+                        'category' => Category::CATEGORY_COMPLIANCE,
+                        'documentSubCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
+                        'documentTemplate' => self::PTR_DOCUMENT_TEMPLATE_ID,
+                        'allowEmail' => true
+                    ]
+                ]),
             ],
             'addressBookmark' => 'ptr_correspondent_address',
             'bookmarkBundle' => [
@@ -145,6 +156,16 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
         foreach ($selfServeUserEmailCommands as $selfServeUserEmailCommand) {
             $this->result->merge($this->handleSideEffect($selfServeUserEmailCommand));
         }
+
+        // Set-up CorrespondenceInBbox record so Document shows up in Self Serve Documents Tab
+        $docId = is_array($this->result->getId('documents')) ? $this->result->getId('documents')[0] : $this->result->getId('documents');
+        $this->result->merge($this->handleSideEffect(PrintLetter::create(
+            [
+                'id' => $docId,
+                'method' => PrintLetter::METHOD_EMAIL,
+                'forceCorrespondence' => true
+            ]
+        )));
     }
 
     private function sendCorrespondenceEmail(string $email, string $translateToWelsh, bool $isRegistered): void
