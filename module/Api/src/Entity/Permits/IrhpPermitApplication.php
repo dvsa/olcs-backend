@@ -475,6 +475,12 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
             );
         }
 
+        if ($this->irhpApplication->getIrhpPermitType()->isEcmtShortTerm()) {
+            return new DateTime(
+                $this->irhpApplication->getAnswerValueByQuestionId(Question::QUESTION_ID_SHORT_TERM_EARLIEST_PERMIT_START_DATE)
+            );
+        }
+
         return new DateTime();
     }
 
