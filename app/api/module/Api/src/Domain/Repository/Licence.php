@@ -684,17 +684,6 @@ class Licence extends AbstractRepository
                 )
         );
 
-        //  Upon the last Transport Manager being removed online by a self service user where that removal was >1 day from current date/time
-        $qb->andWhere(
-            $qb->expr()->andX(
-                $qb->expr()->isNotNull('tml.deletedDate'),
-                $qb->expr()->lte(
-                    'tml.deletedDate',
-                    ':yesterday'
-                )
-            )
-        );
-
         //  Letter has not been sent already for that TM
         $qb->andWhere(
             $qb->expr()->isNull('tml.lastTmLetterDate')
@@ -720,16 +709,6 @@ class Licence extends AbstractRepository
         /* @var \Doctrine\Orm\QueryBuilder $appQb */
         $appQb = $this->getEntityManager()->getRepository(ApplicationEntity::class)->createQueryBuilder('a');
         $appQb->select('IDENTITY(a.licence)');
-
-        //  Where there are no TM's being updated/added via a variation application for the licence.
-        $appQb->andWhere(
-            $appQb->expr()
-                ->eq(
-                    'a.status',
-                    ':applicationStatus'
-                )
-        );
-        $qb->setParameter('applicationStatus', ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION);
 
         $appQb->innerJoin(
             TMApplicationEntity::class,
@@ -815,12 +794,6 @@ class Licence extends AbstractRepository
             ->setTime(0, 0, 0, 0)
             ->format('Y-m-d H:i:s');
         $qb->setParameter('tomorrow', $tomorrow);
-
-        $yesterday = (new DateTime())
-            ->sub(new \DateInterval('P1D'))
-            ->setTime(0, 0, 0, 0)
-            ->format('Y-m-d H:i:s');
-        $qb->setParameter('yesterday', $yesterday);
 
         return $qb->getQuery()->getResult();
     }
