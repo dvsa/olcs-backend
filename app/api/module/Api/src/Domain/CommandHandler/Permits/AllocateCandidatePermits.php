@@ -42,15 +42,17 @@ class AllocateCandidatePermits extends AbstractCommandHandler
         $irhpPermitType = $irhpPermitApplication->getIrhpApplication()->getIrhpPermitType();
 
         $expiryDate = null;
+        $issueDate = null;
 
         //for short term permits only, we add an expiry date on the permit
         if ($irhpPermitType->isEcmtShortTerm()) {
             $expiryDate = $irhpPermitApplication->generateExpiryDate();
+            $issueDate = $irhpPermitApplication->generateIssueDate();
         }
 
         $candidatePermits = $irhpPermitApplication->getSuccessfulIrhpCandidatePermits(null, true);
         foreach ($candidatePermits as $candidatePermit) {
-            $this->addIrhpPermit($candidatePermit, $expiryDate);
+            $this->addIrhpPermit($candidatePermit, $expiryDate, $issueDate);
         }
 
         $this->result->addId('irhpPermitApplication', $irhpPermitApplicationId);
@@ -63,17 +65,17 @@ class AllocateCandidatePermits extends AbstractCommandHandler
      * Derive an IrhpPermit entity from the IrhpCandidatePermit entity and save it to the repository
      *
      * @param IrhpCandidatePermit $candidatePermit
-     * @param DateTime|null       $expiryDate
+     * @param DateTime|null $expiryDate
+     * @param DateTime|null $issueDate
      *
      * @return void
      */
-    private function addIrhpPermit(IrhpCandidatePermit $candidatePermit, ?DateTime $expiryDate): void
+    private function addIrhpPermit(IrhpCandidatePermit $candidatePermit, ?DateTime $expiryDate, ?DateTime $issueDate): void
     {
         $range = $candidatePermit->getIrhpPermitRange();
-
         $irhpPermit = IrhpPermit::createNew(
             $candidatePermit,
-            new DateTime(),
+            $issueDate ?: new DateTime(),
             $this->refData(IrhpPermit::STATUS_PENDING),
             $this->getNextPermitNumber($range),
             $expiryDate

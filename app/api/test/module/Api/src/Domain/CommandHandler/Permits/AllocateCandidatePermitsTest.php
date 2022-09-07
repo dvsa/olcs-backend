@@ -37,7 +37,7 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
     /**
      * @dataProvider dpHandleCommand
      */
-    public function testHandleCommand($isShortTerm, $expectedExpiryDate)
+    public function testHandleCommand($isShortTerm, $expectedExpiryDate, $expectedIssueDate)
     {
         $irhpPermitApplicationId = 472;
 
@@ -57,6 +57,11 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->times($isShortTerm ? 1 : 0)
             ->andReturn($expectedExpiryDate);
+
+        $irhpPermitApplication->expects('generateIssueDate')
+            ->withNoArgs()
+            ->times($isShortTerm ? 1 : 0)
+            ->andReturn($expectedIssueDate);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('fetchById')
             ->with($irhpPermitApplicationId)
@@ -99,13 +104,14 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
         $expectedStatus = $this->refData[IrhpPermit::STATUS_PENDING];
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
-            ->with(m::on(function ($irhpPermit) use (&$permitSaveExpectations, &$permitSaveCount, $expectedExpiryDate, $expectedStatus) {
+            ->with(m::on(function ($irhpPermit) use (&$permitSaveExpectations, &$permitSaveCount, $expectedExpiryDate, $expectedStatus, $expectedIssueDate) {
                 foreach ($permitSaveExpectations as &$expectation) {
                     if (($irhpPermit->getIrhpCandidatePermit() === $expectation[0]) &&
                         ($irhpPermit->getIrhpPermitRange() === $expectation[1]) &&
                         ($irhpPermit->getIrhpPermitApplication() === $expectation[2]) &&
                         ($irhpPermit->getPermitNumber() == $expectation[3]) &&
                         ($irhpPermit->getExpiryDate() == $expectedExpiryDate) &&
+                        ($expectedIssueDate === null || $irhpPermit->getIssueDate() == $expectedIssueDate) &&
                         ($irhpPermit->getStatus() == $expectedStatus)) {
                         $expectation[4] = true;
                     }
@@ -134,9 +140,11 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
 
     public function dpHandleCommand()
     {
+        $expectedIssueDate = new \DateTime();
+        $expectedIssueDate->add(new \DateInterval('P10D'));
         return [
-            [true, new \DateTime()], //short term permit type, generates expiry date
-            [false, null], //not short term so no expiry date generated
+            [true, new \DateTime(), $expectedIssueDate], //short term permit type, generates expiry date
+            [false, null, null], //not short term so no expiry date generated
         ];
     }
 

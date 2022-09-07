@@ -789,12 +789,40 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         );
     }
 
+    public function testGenerateIssueDateForEcmtShortTerm()
+    {
+        $issueDateAsString = '2020-05-15';
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtRemoval')
+            ->withNoArgs()
+            ->andReturnFalse();
+        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturnTrue();
+        $irhpApplication->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_SHORT_TERM_EARLIEST_PERMIT_START_DATE)
+            ->andReturn($issueDateAsString);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $issueDateAsString,
+            $entity->generateIssueDate()->format('Y-m-d')
+        );
+    }
+
     public function testGenerateIssueDateForOther()
     {
         $currentDateAsString = (new DateTime())->format('Y-m-d');
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtRemoval')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
             ->withNoArgs()
             ->andReturnFalse();
 
