@@ -847,7 +847,7 @@ class LicenceTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
 
         $this->em->shouldReceive('getFilters->isEnabled')->with('soft-deleteable')->andReturn(false);
-        $qb->shouldReceive('getDQL')->times(3);
+        $qb->shouldReceive('getDQL')->times(2);
         $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
 
         $this->sut->fetchForLastTmAutoLetter();
@@ -870,16 +870,12 @@ class LicenceTest extends RepositoryTestCase
             'AND m.optOutTmLetter = 0 ' .
             'AND m.totAuthVehicles >= 1 ' .
             'INNER JOIN Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence tml WITH m.id = tml.licence ' .
-            'SELECT IDENTITY(a.licence) ' .
-            'INNER JOIN Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication tma WITH a.id = tma.application ' .
-            'AND tma.action != [[D]] ' .
-            'AND m.id NOT IN  ' .
             'SELECT IDENTITY(gp.licence) ' .
             'AND (gp.startDate <= [[' . $today . ']] ' .
             'AND gp.endDate >= [[' . $today . ']]) ' .
             'AND m.id NOT IN  ' .
             'SELECT IDENTITY(tml2.licence) ' .
-            'AND (tml2.deletedDate >= [[' . $today . ']] ' .
+            'AND (tml2.deletedDate >= [[' . $tomorrow . ']] ' .
             'OR tml2.deletedDate IS NULL) ' .
             'AND tml2.licence = m.id ' .
             'AND m.id NOT IN ';
