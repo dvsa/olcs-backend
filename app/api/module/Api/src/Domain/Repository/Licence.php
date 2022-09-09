@@ -706,33 +706,6 @@ class Licence extends AbstractRepository
             $qb->expr()->eq($this->alias . '.id', 'tml.licence')
         );
 
-        /* @var \Doctrine\Orm\QueryBuilder $appQb */
-        $appQb = $this->getEntityManager()->getRepository(ApplicationEntity::class)->createQueryBuilder('a');
-        $appQb->select('IDENTITY(a.licence)');
-
-        $appQb->innerJoin(
-            TMApplicationEntity::class,
-            'tma',
-            Join::WITH,
-            $appQb->expr()->eq('a.id', 'tma.application')
-        );
-        $appQb->andWhere(
-            $appQb->expr()
-                ->neq(
-                    'tma.action',
-                    ':tmApplicationAction'
-                )
-        );
-        $qb->setParameter('tmApplicationAction', TMApplicationEntity::ACTION_DELETE);
-
-        $qb->andWhere(
-            $qb->expr()
-                ->notIn(
-                    $this->alias . '.id',
-                    $appQb->getDQL()
-                )
-        );
-
         /* @var \Doctrine\Orm\QueryBuilder $graceQb */
         $graceQb = $this->getEntityManager()->getRepository(GracePeriodEntity::class)->createQueryBuilder('gp');
         $graceQb->select('IDENTITY(gp.licence)');
@@ -767,7 +740,7 @@ class Licence extends AbstractRepository
             $tmlQb->expr()->orX(
                 $tmlQb->expr()->gte(
                     'tml2.deletedDate',
-                    ':today'
+                    ':tomorrow'
                 ),
                 $tmlQb->expr()->isNull('tml2.deletedDate')
             )
