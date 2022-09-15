@@ -173,6 +173,12 @@ return [
     TransferCommand\Cases\Si\CreateResponse::class => CommandHandler\Cases\Si\CreateResponse::class,
     TransferCommand\Cases\Si\ComplianceEpisode::class => CommandHandler\Cases\Si\ComplianceEpisodeDocument::class,
 
+    // Transfer - Cases - Presiding TM
+
+    TransferCommand\Cases\PresidingTc\Create::class => CommandHandler\Cases\PresidingTc\Create::class,
+    TransferCommand\Cases\PresidingTc\Update::class => CommandHandler\Cases\PresidingTc\Update::class,
+    TransferCommand\Cases\PresidingTc\Delete::class => CommandHandler\Cases\PresidingTc\Delete::class,
+
     // Transfer - Bus
     TransferCommand\Bus\CreateBus::class => CommandHandler\Bus\CreateBus::class,
     TransferCommand\Bus\CreateNoticePeriod::class => CommandHandler\Bus\CreateNoticePeriod::class,

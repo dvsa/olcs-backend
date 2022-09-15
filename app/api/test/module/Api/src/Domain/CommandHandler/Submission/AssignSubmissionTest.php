@@ -124,8 +124,8 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'id' => 1,
             'version' => 1,
             'recipientUser' => 4,
-            'urgent' => 'Y',
-            'assignedDate' => '2015-01-02'
+            'tcOrOther' => 'other',
+            'urgent' => 'Y'
         ];
 
         /** @var User $mockUser */
@@ -235,8 +235,8 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'id' => 1,
             'version' => 1,
             'recipientUser' => 4,
-            'urgent' => 'Y',
-            'assignedDate' => '2015-01-02'
+            'tcOrOther' => 'other',
+            'urgent' => 'Y'
         ];
 
         /** @var User $mockUser */
@@ -346,8 +346,8 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'id' => 1,
             'version' => 1,
             'recipientUser' => 4,
-            'urgent' => 'Y',
-            'assignedDate' => '2014-01-01'
+            'tcOrOther' => 'other',
+            'urgent' => 'Y'
         ];
 
         $command = Cmd::create($data);
@@ -374,8 +374,8 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'id' => $submissionId,
             'version' => 1,
             'recipientUser' => 4,
-            'urgent' => 'Y',
-            'assignedDate' => '2015-01-01'
+            'tcOrOther' => 'other',
+            'urgent' => 'Y'
         ];
 
         /** @var User $mockUser */
@@ -512,8 +512,8 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'id' => 1,
             'version' => 1,
             'recipientUser' => 4,
-            'urgent' => 'Y',
-            'assignedDate' => '2015-01-13'
+            'tcOrOther' => 'other',
+            'urgent' => 'Y'
         ];
 
         /** @var User $mockUser */
@@ -614,46 +614,6 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testIsValidThrowsExceptionWhenDateLessThanInformationCompleteDate()
-    {
-
-        $this->expectException(ValidationException::class);
-
-
-        $data = [
-            'id' => 1,
-            'version' => 1,
-            'recipientUser' => 4,
-            'urgent' => 'Y',
-            'assignedDate' => '2016-01-01'
-        ];
-
-        $command = Cmd::create($data);
-
-        $mockUser = m::mock(UserEntity::class)->makePartial();
-        $mockUser->setId(1);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($mockUser);
-
-        /** @var SubmissionEntity $savedSubmission */
-        $submission = m::mock(SubmissionEntity::class)->makePartial();
-        $submission->setId(1);
-
-        $submission->shouldReceive('getCase->getId')->andReturn(12)->getMock();
-        $submission->shouldReceive('getCase->getTransportManager->getId')->andReturn(577)->getMock();
-        $submission->shouldReceive('getInformationCompleteDate')->andReturn('2017-12-31')->getMock();
-        $submission->shouldReceive('getCase->isTm')->andReturn(true)->getMock();
-
-        $this->repoMap['Submission']->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command, Query::HYDRATE_OBJECT, 1)
-            ->andReturn($submission)
-            ->getMock();
-
-        $this->sut->handleCommand($command);
-    }
-
     public function informationCompleteDateDataProvider()
     {
         return [
@@ -671,8 +631,8 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'id' => 1,
             'version' => 1,
             'recipientUser' => 4,
-            'urgent' => 'Y',
-            'assignedDate' => '2018-01-31'
+            'tcOrOther' => 'other',
+            'urgent' => 'Y'
         ];
 
         $command = Cmd::create($data);
@@ -772,37 +732,39 @@ class AssignSubmissionTest extends CommandHandlerTestCase
     }
 
     /**
-     * @dataProvider  nullEmptyAssignedDate
-     * testNullOrEmptyAssignedDate
-     *
-     * @param $value
+     * @dataProvider  assignToTcDataProvider
      */
-    public function testNullOrEmptyAssignedDate($value)
+    public function testHandleCommandAssignToTc($tcSlaStarted, $assignDateTimes)
     {
         $data = [
             'id' => 1,
             'version' => 1,
-            'recipientUser' => 4,
+            'presidingTcUser' => 6,
+            'tcOrOther' => 'tc',
             'urgent' => 'Y',
-            'assignedDate' => $value
         ];
 
-        $command = Cmd::create($data);
-
+        /** @var User $mockUser */
         $mockUser = m::mock(UserEntity::class)->makePartial();
         $mockUser->setId(1);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
+        $command = Cmd::create($data);
+
         /** @var SubmissionEntity $savedSubmission */
         $submission = m::mock(SubmissionEntity::class)->makePartial();
         $submission->setId(1);
 
         $submission->shouldReceive('getCase->getId')->andReturn(12)->getMock();
-        $submission->shouldReceive('getCase->getTransportManager->getId')->andReturn(577)->getMock();
-        $submission->shouldReceive('getInformationCompleteDate')->andReturn('2017-12-31')->getMock();
-        $submission->shouldReceive('getCase->isTm')->andReturn(true)->getMock();
+        $submission->shouldReceive('getCase->getLicence->getId')->andReturn(121)->getMock();
+        $submission->shouldReceive('getCase->getLicence->getLicNo')->andReturn('AB123456')->getMock();
+        $submission->shouldReceive('getTcSlaStarted')->andReturn($tcSlaStarted)->getMock();
+        $submission->shouldReceive('setTcSlaStarted')->with(1)->getMock();
+        $submission->shouldReceive('getInformationCompleteDate')->andReturn('2015-01-01')->getMock();
+        $submission->shouldReceive('setAssignedDate')->times($assignDateTimes)->getMock();
+        $submission->shouldReceive('getCase->isTm')->andReturn(false)->getMock();
 
         $this->repoMap['Task']->shouldReceive('fetchAssignedToSubmission')
             ->once()
@@ -833,7 +795,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $team->setId(5);
         $mockRecipientUser = m::mock()
             ->shouldReceive('getId')
-            ->andReturn(4)
+            ->andReturn(6)
             ->once()
             ->shouldReceive('getTeam')
             ->andReturn(
@@ -842,7 +804,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->repoMap['User']->shouldReceive('fetchById')
-            ->with(4)
+            ->with(6)
             ->andReturn($mockRecipientUser);
 
         $createTaskResult = new Result();
@@ -852,21 +814,24 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $params = [
             'category' => TaskEntity::CATEGORY_SUBMISSION,
             'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
-            'description' => 'Transport Manager 577 Case 12 Submission 1',
+            'description' => 'Licence AB123456 Case 12 Submission 1',
             'actionDate' => date('Y-m-d'),
-            'assignedToUser' => 4,
+            'assignedToUser' => 6,
             'assignedToTeam' => 5,
             'assignedByUser' => 1,
             'case' => 12,
             'submission' => 1,
+            'licence' => 121,
             'urgent' => 'Y',
             'isClosed' => 0,
             'application' => null,
             'busReg' => null,
-            'transportManager' => 577,
+            'transportManager' => null,
             'irfoOrganisation' => null
         ];
         $this->expectedSideEffect(CreateTaskCmd::class, $params, $createTaskResult);
+
+        $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
@@ -879,17 +844,14 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             ]
         ];
 
-        $result = $this->sut->handleCommand($command);
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function nullEmptyAssignedDate()
+    public function assignToTcDataProvider()
     {
         return [
-            [
-                null,
-                ''
-            ]
+            [0, 1],
+            [1, 0],
         ];
     }
 }

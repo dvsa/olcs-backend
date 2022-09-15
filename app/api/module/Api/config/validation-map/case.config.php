@@ -3,6 +3,7 @@
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 
 /**
  * @NOTE All Case related queries and commands have been moved here and assigned the isInternalUser handler
@@ -65,6 +66,9 @@ return [
     CommandHandler\Cases\Si\CreateSi::class                                 => IsInternalUser::class,
     CommandHandler\Cases\Si\DeleteSi::class                                 => IsInternalUser::class,
     CommandHandler\Cases\Si\UpdateSi::class                                 => IsInternalUser::class,
+    CommandHandler\Cases\PresidingTc\Create::class                          => IsSystemAdmin::class,
+    CommandHandler\Cases\PresidingTc\Update::class                          => IsSystemAdmin::class,
+    CommandHandler\Cases\PresidingTc\Delete::class                          => IsSystemAdmin::class,
 
     //  queries
     QueryHandler\TmCaseDecision\GetByCase::class                            => IsInternalUser::class,
@@ -105,6 +109,7 @@ return [
     QueryHandler\Cases\Si\Si::class                                         => IsInternalUser::class,
     QueryHandler\Cases\Si\SiList::class                                     => IsInternalUser::class,
     QueryHandler\Cases\PresidingTc\GetList::class                           => IsInternalUser::class,
+    QueryHandler\Cases\PresidingTc\ById::class                              => IsSystemAdmin::class,
     QueryHandler\Cases\Report\OpenList::class                               => IsInternalUser::class,
     QueryHandler\Venue\VenueList::class                                     => IsInternalUser::class,
 ];
