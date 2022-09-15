@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Pi;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\DeletableInterface;
+use Dvsa\Olcs\Api\Entity\User\User;
 
 /**
  * PresidingTc Entity
@@ -10,7 +12,40 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="presiding_tc")
  */
-class PresidingTc extends AbstractPresidingTc
+class PresidingTc extends AbstractPresidingTc implements DeletableInterface
 {
+    /**
+     * @param string $name
+     * @param User $user
+     * @return PresidingTc
+     */
+    public static function create(string $name, User $user)
+    {
+        $instance = new self;
+        $instance->name = $name;
+        $instance->user = $user;
+        return $instance;
+    }
 
+    /**
+     * @param string $name
+     * @param User $user
+     * @return $this
+     */
+    public function update(string $name, User $user)
+    {
+        $this->name = $name;
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * Can presiding tc be deleted?
+     *
+     * @return boolean
+     */
+    public function canDelete()
+    {
+        return true;
+    }
 }
