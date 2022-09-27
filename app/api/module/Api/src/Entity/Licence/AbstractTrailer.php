@@ -64,6 +64,18 @@ abstract class AbstractTrailer implements BundleSerializableInterface, JsonSeria
     protected $id;
 
     /**
+     * Is longer semi trailer
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="is_longer_semi_trailer",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $isLongerSemiTrailer = 0;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -167,6 +179,30 @@ abstract class AbstractTrailer implements BundleSerializableInterface, JsonSeria
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the is longer semi trailer
+     *
+     * @param boolean $isLongerSemiTrailer new value being set
+     *
+     * @return Trailer
+     */
+    public function setIsLongerSemiTrailer($isLongerSemiTrailer)
+    {
+        $this->isLongerSemiTrailer = $isLongerSemiTrailer;
+
+        return $this;
+    }
+
+    /**
+     * Get the is longer semi trailer
+     *
+     * @return boolean
+     */
+    public function getIsLongerSemiTrailer()
+    {
+        return $this->isLongerSemiTrailer;
     }
 
     /**
