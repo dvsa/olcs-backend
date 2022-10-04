@@ -388,7 +388,6 @@ class Search implements AuthAwareInterface
 
             $action = new \Elastica\Bulk\Action(\Elastica\Bulk\Action::OP_TYPE_UPDATE);
             $action->setId($result->getId());
-            $action->setType($result->getType());
             $action->setIndex($result->getIndex());
             $action->setSource(['doc' => ['section_26' => $section26Value ? 1 : 0]]);
             $bulk->addAction($action);
