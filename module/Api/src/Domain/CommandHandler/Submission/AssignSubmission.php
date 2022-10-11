@@ -38,6 +38,8 @@ final class AssignSubmission extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Submission';
 
+    protected $assignedToUserId = null;
+
     protected $extraRepos = ['User', 'Task'];
 
     /**
@@ -80,16 +82,24 @@ final class AssignSubmission extends AbstractCommandHandler implements
             );
         }
 
+        switch ($command->getTcOrOther()) {
+            case 'tc':
+                $this->assignedToUserId = $command->getPresidingTcUser();
+                $submission->setTcSlaStarted(1);
+                break;
+            case 'other':
+                $this->assignedToUserId = $command->getRecipientUser();
+                break;
+        }
 
         $submission->setRecipientUser(
-            $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
+            $this->getRepo()->getReference(UserEntity::class, $this->assignedToUserId)
         );
 
-
-        if (!$this->isValid($command, $submission->getInformationCompleteDate())) {
-            throw  new ValidationException(['First assigned date must be after or same as information complete date']);
+        // Only allow assigned date to be changed if the SLA hasnt started already.
+        if (!$submission->getTcSlaStarted()) {
+            $submission->setAssignedDate(new DateTime());
         }
-        $submission->setAssignedDate($command->getAssignedDate());
 
         $currentUser = $this->getCurrentUser();
 
@@ -119,7 +129,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
         $task = $this->getRepo('Task')->fetchAssignedToSubmission($submission);
 
         /** @var UserEntity $recipientUser */
-        $recipientUser = $this->getRepo('User')->fetchById($command->getRecipientUser());
+        $recipientUser = $this->getRepo('User')->fetchById($this->assignedToUserId);
 
         $teamId = null;
         if ($recipientUser->getTeam() instanceof TeamEntity) {
@@ -164,17 +174,5 @@ final class AssignSubmission extends AbstractCommandHandler implements
         }
 
         return CreateTaskCmd::create($data);
-    }
-
-    private function isValid($command, $informationCompleteDate)
-    {
-        $assignedDate = $command->getAssignedDate();
-        if (empty($assignedDate)) {
-            return true;
-        }
-        $format = 'Y-m-d';
-        $assignedDate = DateTime::createFromFormat($format, $assignedDate);
-        $informationCompleteDate = DateTime::createFromFormat($format, $informationCompleteDate);
-        return $assignedDate >= $informationCompleteDate;
     }
 }

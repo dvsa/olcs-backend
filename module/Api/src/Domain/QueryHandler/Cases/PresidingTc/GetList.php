@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\PresidingTc;
 
 use Doctrine\ORM\Query;
@@ -28,7 +29,11 @@ final class GetList extends AbstractQueryHandler
         return [
             'result' => $this->resultList(
                 $repo->fetchList($query, Query::HYDRATE_OBJECT),
-                []
+                ['user' => [
+                    'contactDetails' => [
+                        'person'
+                    ]
+                ]]
             ),
             'count' => $repo->fetchCount($query)
         ];

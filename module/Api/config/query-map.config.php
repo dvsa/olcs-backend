@@ -193,6 +193,7 @@ return [
     TransferQuery\Cases\Si\Si::class => QueryHandler\Cases\Si\Si::class,
     TransferQuery\Cases\Si\SiList::class => QueryHandler\Cases\Si\SiList::class,
     TransferQuery\Cases\PresidingTc\GetList::class => QueryHandler\Cases\PresidingTc\GetList::class,
+    TransferQuery\Cases\PresidingTc\ById::class => QueryHandler\Cases\PresidingTc\ById::class,
 
     TransferQuery\Cases\Report\OpenList::class => QueryHandler\Cases\Report\OpenList::class,
 
