@@ -26,9 +26,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="document",
  *    indexes={
  *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
-     *     columns={"continuation_detail_id"}),
+ *     columns={"continuation_detail_id"}),
  *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
-     *     columns={"irhp_application_id"}),
+ *     columns={"irhp_application_id"}),
  *        @ORM\Index(name="ix_document_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_document_case_id", columns={"case_id"}),

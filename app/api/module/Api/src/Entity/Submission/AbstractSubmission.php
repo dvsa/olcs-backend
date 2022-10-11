@@ -153,6 +153,15 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     protected $submissionType;
 
     /**
+     * Tc sla started
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="tc_sla_started", nullable=false, options={"default": 0})
+     */
+    protected $tcSlaStarted = 0;
+
+    /**
      * Urgent
      *
      * @var string
@@ -522,6 +531,30 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     public function getSubmissionType()
     {
         return $this->submissionType;
+    }
+
+    /**
+     * Set the tc sla started
+     *
+     * @param boolean $tcSlaStarted new value being set
+     *
+     * @return Submission
+     */
+    public function setTcSlaStarted($tcSlaStarted)
+    {
+        $this->tcSlaStarted = $tcSlaStarted;
+
+        return $this;
+    }
+
+    /**
+     * Get the tc sla started
+     *
+     * @return boolean
+     */
+    public function getTcSlaStarted()
+    {
+        return $this->tcSlaStarted;
     }
 
     /**

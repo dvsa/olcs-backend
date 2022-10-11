@@ -18,7 +18,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\MappedSuperclass
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
- * @ORM\Table(name="presiding_tc")
+ * @ORM\Table(name="presiding_tc",
+ *    indexes={
+ *        @ORM\Index(name="fk_presiding_tc_user_id_user_id", columns={"user_id"})
+ *    }
+ * )
  */
 abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonSerializable
 {
@@ -46,6 +50,16 @@ abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="string", name="name", length=70, nullable=false)
      */
     protected $name;
+
+    /**
+     * User
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     */
+    protected $user;
 
     /**
      * Set the id
@@ -93,5 +107,29 @@ abstract class AbstractPresidingTc implements BundleSerializableInterface, JsonS
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set the user
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $user entity being set as the value
+     *
+     * @return PresidingTc
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the user
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
