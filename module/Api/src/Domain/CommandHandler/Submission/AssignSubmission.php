@@ -82,6 +82,11 @@ final class AssignSubmission extends AbstractCommandHandler implements
             );
         }
 
+        // Only allow assigned date to be changed if the SLA hasnt started already.
+        if (!$submission->getTcSlaStarted()) {
+            $submission->setAssignedDate(new DateTime());
+        }
+
         switch ($command->getTcOrOther()) {
             case 'tc':
                 $this->assignedToUserId = $command->getPresidingTcUser();
@@ -95,11 +100,6 @@ final class AssignSubmission extends AbstractCommandHandler implements
         $submission->setRecipientUser(
             $this->getRepo()->getReference(UserEntity::class, $this->assignedToUserId)
         );
-
-        // Only allow assigned date to be changed if the SLA hasnt started already.
-        if (!$submission->getTcSlaStarted()) {
-            $submission->setAssignedDate(new DateTime());
-        }
 
         $currentUser = $this->getCurrentUser();
 
