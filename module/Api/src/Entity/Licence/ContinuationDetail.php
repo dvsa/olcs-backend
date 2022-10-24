@@ -3,7 +3,9 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
@@ -43,6 +45,16 @@ class ContinuationDetail extends AbstractContinuationDetail implements
     const METHOD_POST  = 'post';
 
     const RESULT_LICENCE_CONTINUED = 'licence_continued';
+
+    /**
+     * Updates the digital signature for the continuation, runs as a side effect of govuk signin
+     */
+    public function updateDigitalSignature(RefData $signatureType, DigitalSignature $signature): void
+    {
+        $this->signatureType = $signatureType;
+        $this->digitalSignature = $signature;
+        $this->isDigital = true;
+    }
 
     /**
      * Get Orgainsation owner

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\EventHistory;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\User\User;
 
 /**

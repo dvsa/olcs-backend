@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Entity\Tm;
 
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\DigitalSignature;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as Entity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
  * @covers Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication
@@ -29,7 +34,29 @@ class TransportManagerApplicationEntityTest extends EntityTester
         parent::setUp();
     }
 
-    public function testUpdateTransportManagerApplication()
+    public function testUpdateOperatorDigitalSignature(): void
+    {
+        $signatureType = m::mock(RefData::class);
+        $signature = m::mock(DigitalSignature::class);
+
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->updateOperatorDigitalSignature($signatureType, $signature);
+        $this->assertEquals($signatureType, $sut->getOpSignatureType());
+        $this->assertEquals($signature, $sut->getOpDigitalSignature());
+    }
+
+    public function testUpdateTmDigitalSignature(): void
+    {
+        $signatureType = m::mock(RefData::class);
+        $signature = m::mock(DigitalSignature::class);
+
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->updateTmDigitalSignature($signatureType, $signature);
+        $this->assertEquals($signatureType, $sut->getTmSignatureType());
+        $this->assertEquals($signature, $sut->getTmDigitalSignature());
+    }
+
+    public function testUpdateTransportManagerApplication(): void
     {
         $this->sut->updateTransportManagerApplication(1, 2, 'A', 'st');
         $this->assertEquals($this->sut->getApplication(), 1);
@@ -38,7 +65,7 @@ class TransportManagerApplicationEntityTest extends EntityTester
         $this->assertEquals($this->sut->getTmApplicationStatus(), 'st');
     }
 
-    public function testUpdateTransportManagerApplicationFull()
+    public function testUpdateTransportManagerApplicationFull(): void
     {
         $this->sut->updateTransportManagerApplicationFull(
             'tmt',
@@ -68,7 +95,7 @@ class TransportManagerApplicationEntityTest extends EntityTester
         $this->assertEquals($this->sut->getTmApplicationStatus(), 'tmas');
     }
 
-    public function testUpdateTransportManagerApplicationFullInvalid()
+    public function testUpdateTransportManagerApplicationFullInvalid(): void
     {
         try {
             $this->sut->updateTransportManagerApplicationFull(
@@ -115,7 +142,7 @@ class TransportManagerApplicationEntityTest extends EntityTester
         }
     }
 
-    public function testGetTotalWeeklyHours()
+    public function testGetTotalWeeklyHours(): void
     {
         $this->sut->updateTransportManagerApplicationFull(
             'tmt',
