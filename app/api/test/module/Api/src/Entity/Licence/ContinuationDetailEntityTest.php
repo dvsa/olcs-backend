@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Entity\Licence;
 
+use Dvsa\Olcs\Api\Entity\DigitalSignature;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as Entity;
 use Mockery as m;
@@ -18,7 +22,23 @@ class ContinuationDetailEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    public function testGetRelatedOrganisation()
+    public function testUpdateDigitalSignature(): void
+    {
+        $signatureType = m::mock(RefData::class);
+        $signature = m::mock(DigitalSignature::class);
+
+        $sut = m::mock(Entity::class)->makePartial();
+
+        //this will be set to true later
+        $this->assertNotTrue($sut->getIsDigital());
+
+        $sut->updateDigitalSignature($signatureType, $signature);
+        $this->assertEquals($signatureType, $sut->getSignatureType());
+        $this->assertEquals($signature, $sut->getDigitalSignature());
+        $this->assertTrue($sut->getIsDigital());
+    }
+
+    public function testGetRelatedOrganisation(): void
     {
         /** @var Entity $continuationDetail */
         $continuationDetail = m::mock(Entity::class)->makePartial();
@@ -27,7 +47,7 @@ class ContinuationDetailEntityTest extends EntityTester
         $this->assertEquals('ORG', $continuationDetail->getRelatedOrganisation());
     }
 
-    public function dpGetAmountDeclaredDataProvider()
+    public function dpGetAmountDeclaredDataProvider(): array
     {
         return [
             [0.00, null, null, null, null],
@@ -50,7 +70,8 @@ class ContinuationDetailEntityTest extends EntityTester
         $overdraftAmount,
         $factoringAmount,
         $otherFinancesAmount
-    ) {
+    ): void
+    {
         $continuationDetail = new Entity();
         $continuationDetail->setAverageBalanceAmount($averageBalanceAmount);
         $continuationDetail->setOverdraftAmount($overdraftAmount);
@@ -60,7 +81,7 @@ class ContinuationDetailEntityTest extends EntityTester
         $this->assertEqualsWithDelta($expected, $continuationDetail->getAmountDeclared(), 0.01);
     }
 
-    public function testGetContextValue()
+    public function testGetContextValue(): void
     {
         $continuationDetail = new Entity();
         $continuationDetail->setId(87);
