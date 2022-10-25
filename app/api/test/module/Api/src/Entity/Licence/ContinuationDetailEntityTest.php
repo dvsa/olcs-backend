@@ -57,7 +57,7 @@ class ContinuationDetailEntityTest extends EntityTester
         $continuationDetail->setFactoringAmount($factoringAmount);
         $continuationDetail->setOtherFinancesAmount($otherFinancesAmount);
 
-        $this->assertEquals($expected, $continuationDetail->getAmountDeclared());
+        $this->assertEqualsWithDelta($expected, $continuationDetail->getAmountDeclared(), 0.01);
     }
 
     public function testGetContextValue()
