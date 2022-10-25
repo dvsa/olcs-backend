@@ -1461,7 +1461,7 @@ class FeeEntityTest extends EntityTester
         $this->sut->setVatAndGrossAmountsFromNetAmountUsingRate($rate);
 
         $this->assertEquals($expectedVatAmount, $this->sut->getVatAmount());
-        $this->assertEquals($expectedGrossAmount, $this->sut->getGrossAmount());
+        $this->assertEqualsWithDelta($expectedGrossAmount, $this->sut->getGrossAmount(), 0.01);
     }
 
     public function vatProvider()
