@@ -1139,6 +1139,10 @@ return [
     TransferCommand\GdsVerify\ProcessSignatureResponse::class =>
         CommandHandler\GdsVerify\ProcessSignatureResponse::class,
 
+    // GovUkAccount
+    TransferCommand\GovUkAccount\GetGovUkAccountRedirect::class =>
+        CommandHandler\GovUkAccount\GetGovUkAccountRedirectFactory::class,
+
     // Digital Signatures
     Command\DigitalSignature\UpdateApplication::class => CommandHandler\DigitalSignature\UpdateApplication::class,
     Command\DigitalSignature\UpdateContinuationDetail::class => CommandHandler\DigitalSignature\UpdateContinuationDetail::class,
