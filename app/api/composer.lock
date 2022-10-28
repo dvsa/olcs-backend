@@ -48,11 +48,11 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.239.1",
+            "version": "3.240.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.239.1/aws-aws-sdk-php-3.239.1.zip",
-                "reference": "47aa3e427371af4449cd9cb07af7209376a535bb",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.240.3/aws-aws-sdk-php-3.240.3.zip",
+                "reference": "2080f747489b2d4ca291dcfb8078db60dbb6c255",
                 "shasum": ""
             },
             "require": {
@@ -127,7 +127,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2022-10-19T18:15:49+00:00"
+            "time": "2022-10-26T18:17:08+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -1629,18 +1629,18 @@
         },
         {
             "name": "ezimuel/guzzlestreams",
-            "version": "3.0.1",
+            "version": "3.1.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/ezimuel/guzzlestreams/3.0.1/ezimuel-guzzlestreams-3.0.1.zip",
-                "reference": "abe3791d231167f14eb80d413420d1eab91163a8",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/ezimuel/guzzlestreams/3.1.0/ezimuel-guzzlestreams-3.1.0.zip",
+                "reference": "b4b5a025dfee70d6cd34c780e07330eb93d5b997",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "~9.0"
             },
             "type": "library",
             "extra": {
@@ -1669,15 +1669,15 @@
                 "Guzzle",
                 "stream"
             ],
-            "time": "2020-02-14T23:11:50+00:00"
+            "time": "2022-10-24T12:58:50+00:00"
         },
         {
             "name": "ezimuel/ringphp",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/ezimuel/ringphp/1.2.0/ezimuel-ringphp-1.2.0.zip",
-                "reference": "92b8161404ab1ad84059ebed41d9f757e897ce74",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/ezimuel/ringphp/1.2.1/ezimuel-ringphp-1.2.1.zip",
+                "reference": "8d00384f9e5c04713ef8448adf47824265791b50",
                 "shasum": ""
             },
             "require": {
@@ -1717,7 +1717,7 @@
                 }
             ],
             "description": "Fork of guzzle/RingPHP (abandoned) to be used with elasticsearch-php",
-            "time": "2021-11-16T11:51:30+00:00"
+            "time": "2022-10-25T12:54:22+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -5287,11 +5287,11 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.38",
+            "version": "2.0.39",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpseclib/phpseclib/2.0.38/phpseclib-phpseclib-2.0.38.zip",
-                "reference": "b03536539f43a4f9aa33c4f0b2f3a1c752088fcd",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpseclib/phpseclib/2.0.39/phpseclib-phpseclib-2.0.39.zip",
+                "reference": "f3a0e2b715c40cf1fd270d444901b63311725d63",
                 "shasum": ""
             },
             "require": {
@@ -5383,7 +5383,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-02T17:04:26+00:00"
+            "time": "2022-10-24T10:49:03+00:00"
         },
         {
             "name": "psr/cache",
@@ -8554,11 +8554,11 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.17",
+            "version": "9.2.18",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-code-coverage/9.2.17/phpunit-php-code-coverage-9.2.17.zip",
-                "reference": "aa94dc41e8661fe90c7316849907cba3007b10d8",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/phpunit/php-code-coverage/9.2.18/phpunit-php-code-coverage-9.2.18.zip",
+                "reference": "12fddc491826940cf9b7e88ad9664cf51f0f6d0a",
                 "shasum": ""
             },
             "require": {
@@ -8617,7 +8617,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-08-30T12:24:04+00:00"
+            "time": "2022-10-27T13:35:33+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
