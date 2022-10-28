@@ -482,7 +482,7 @@ class BatchControllerTest extends MockeryTestCase
     {
         $this->mockConsole->shouldReceive('writeLine');
 
-        $this->pm->shouldReceive('get')->with('params', null)->andReturn('NAME', 'VALUE');
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn('NAME', 'PARAM_VALUE');
 
         $this->mockCommandHandler
             ->shouldReceive('handleCommand')
@@ -491,7 +491,7 @@ class BatchControllerTest extends MockeryTestCase
             ->andReturnUsing(
                 function (Command\SystemParameter\Update $dto) {
                     static::assertSame('NAME', $dto->getId());
-                    static::assertSame('VALUE', $dto->getParamValue());
+                    static::assertSame('PARAM_VALUE', $dto->getParamValue());
 
                     return new Command\Result();
                 }
