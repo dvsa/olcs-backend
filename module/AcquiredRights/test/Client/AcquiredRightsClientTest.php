@@ -68,7 +68,7 @@ class AcquiredRightsClientTest extends MockeryTestCase
     {
         $this->expectException(ServiceException::class);
 
-        $exception = ConnectException::create(
+        $exception = new ConnectException("Oops",
             new Request('get', '')
         );
 
