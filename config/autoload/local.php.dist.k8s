@@ -81,7 +81,7 @@ return [
 
     'olcs-doctrine' => [
         // The encryption key used for storing encrypted data in the database
-        'encryption_key' => ''
+        'encryption_key' => 'encryption_key'
     ],
 
     // Companies house XML gateway credentials
@@ -420,13 +420,13 @@ return [
             ],
         ],
         // Entity identifier
-        'entity_identifier' => 'https://olcs-selfserve.olcs.gov.uk',
+        'entity_identifier' => 'https://olcs-selfserve',
         // Key used to sign authentication requests
-        'signature_key' => '/var/www/dvsa/gds-verify/certs/gds_verify_sign.pem',
+        'signature_key' => __DIR__ . '/../../module/GdsVerify/data/compliance-tool/signing.key',
         // Key used to decrypt data from hub
         'encryption_keys' => [
             // Array of encryption keys, they will be tried in order
-            '/opt/dvsa/gds-verify/certs/gds_verify_enc.pem'
+            __DIR__ . '/../../module/GdsVerify/data/compliance-tool/enc.key',
         ],
     ],
 
