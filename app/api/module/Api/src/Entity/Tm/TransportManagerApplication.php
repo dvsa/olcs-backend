@@ -4,7 +4,9 @@ namespace Dvsa\Olcs\Api\Entity\Tm;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * TransportManagerApplication Entity
@@ -102,6 +104,18 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
         $this->setHoursSun($hoursSun);
         $this->setAdditionalInformation($additionalInformation);
         $this->setTmApplicationStatus($tmApplicationStatus);
+    }
+
+    public function updateOperatorDigitalSignature(RefData $signatureType, DigitalSignature $signature): void
+    {
+        $this->opDigitalSignature = $signature;
+        $this->opSignatureType = $signatureType;
+    }
+
+    public function updateTmDigitalSignature(RefData $signatureType, DigitalSignature $signature): void
+    {
+        $this->tmDigitalSignature = $signature;
+        $this->tmSignatureType = $signatureType;
     }
 
     protected function validateTransportManagerApplication(

@@ -306,6 +306,16 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $this->expectedSideEffect(CreateQueueCmd::class, $emailData, $result, $times);
     }
 
+    /**
+     * Shortcut to checking side effect result messages are being merged into the main command handler result
+     */
+    protected function sideEffectResult(string $message): Result
+    {
+        $result = new Result();
+        $result->addMessage($message);
+        return $result;
+    }
+
     public function expectedSideEffect($class, $data, $result, $times = 1)
     {
         $this->commandHandler->shouldReceive('handleCommand')

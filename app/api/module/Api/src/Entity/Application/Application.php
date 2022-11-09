@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Util\SlaCalculator;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -2250,6 +2251,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();
+    }
+
+    /**
+     * Updates the digital signature for the application, runs as a side effect of govuk signin
+     */
+    public function updateDigitalSignature(RefData $signatureType, DigitalSignature $signature): void
+    {
+        $this->signatureType = $signatureType;
+        $this->digitalSignature = $signature;
     }
 
     /**

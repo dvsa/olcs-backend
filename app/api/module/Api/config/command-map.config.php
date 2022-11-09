@@ -1139,6 +1139,12 @@ return [
     TransferCommand\GdsVerify\ProcessSignatureResponse::class =>
         CommandHandler\GdsVerify\ProcessSignatureResponse::class,
 
+    // Digital Signatures
+    Command\DigitalSignature\UpdateApplication::class => CommandHandler\DigitalSignature\UpdateApplication::class,
+    Command\DigitalSignature\UpdateContinuationDetail::class => CommandHandler\DigitalSignature\UpdateContinuationDetail::class,
+    Command\DigitalSignature\UpdateSurrender::class => CommandHandler\DigitalSignature\UpdateSurrenderFactory::class,
+    Command\DigitalSignature\UpdateTmApplication::class => CommandHandler\DigitalSignature\UpdateTmApplication::class,
+
     // DataRetention
     Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
     Command\DataRetention\DeleteEntities::class => CommandHandler\DataRetention\DeleteEntities::class,
