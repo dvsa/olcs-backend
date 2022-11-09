@@ -23,7 +23,6 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEnt
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Entity\Traits\TotAuthVehiclesTraitTest;
-use Dvsa\Olcs\Api\Entity\Organisation\AbstractOrganisation;
 use RuntimeException;
 
 /**
@@ -77,6 +76,17 @@ class ApplicationEntityTest extends EntityTester
 
         $sut->setPublishedDate('unit_PublDate');
         static::assertEquals('unit_PublDate', $sut->getPublishedDate());
+    }
+
+    public function testUpdateDigitalSignature(): void
+    {
+        $signatureType = m::mock(RefData::class);
+        $signature = m::mock(Entities\DigitalSignature::class);
+
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->updateDigitalSignature($signatureType, $signature);
+        $this->assertEquals($signatureType, $sut->getSignatureType());
+        $this->assertEquals($signature, $sut->getDigitalSignature());
     }
 
     public function testUpdateTypeOfLicenceTrue()

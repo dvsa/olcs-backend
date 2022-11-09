@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
@@ -42,6 +43,19 @@ class Surrender extends AbstractSurrender implements ContextProviderInterface
     const SURRENDER_DOC_STATUS_LOST='doc_sts_lost';
     const SURRENDER_DOC_STATUS_STOLEN='doc_sts_stolen';
     const SURRENDER_STATUS_WITHDRAWN='surr_sts_withdrawn';
+
+    public function updateDigitalSignature(
+        RefData $licenceStatus,
+        RefData $surrenderStatus,
+        RefData $signatureType,
+        DigitalSignature $signature
+    ): void
+    {
+        $this->signatureType = $signatureType;
+        $this->digitalSignature = $signature;
+        $this->status = $surrenderStatus;
+        $this->licence->setStatus($licenceStatus);
+    }
 
     public function getContextValue()
     {

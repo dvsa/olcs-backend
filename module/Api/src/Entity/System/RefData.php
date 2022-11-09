@@ -135,6 +135,13 @@ class RefData extends AbstractRefData
     const APP_VEHICLE_TYPE_PSV = 'app_veh_type_psv';
 
     /**
+     * Transport Manager Application
+     */
+    const TMA_SIGN_AS_TM = 'tma_sign_as_tm';
+    const TMA_SIGN_AS_OP = 'tma_sign_as_op';
+    const TMA_SIGN_AS_TM_OP = 'tma_sign_as_top';
+
+    /**
      * RefData constructor.
      *
      * @param string $id Refdata ID

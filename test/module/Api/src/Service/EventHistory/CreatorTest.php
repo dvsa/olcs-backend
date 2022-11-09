@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\EventHistory;
 
 use Dvsa\Olcs\Api\Domain\Repository\EventHistory as EventHistoryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistoryType as EventHistoryTypeRepo;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator;
@@ -46,7 +49,41 @@ class CreatorTest extends MockeryTestCase
         );
     }
 
-    public function testCreateForIrhpApplication()
+    public function testCreateForLicence(): void
+    {
+        $entityId = 100;
+        $entityVersion = 1;
+        $eventHistoryType = EventHistoryTypeEntity::EVENT_CODE_SURRENDER_UNDER_CONSIDERATION;
+
+        $entity = m::mock(LicenceEntity::class);
+        $entity->expects('getId')
+            ->withNoArgs()
+            ->andReturn($entityId);
+        $entity->expects('getVersion')
+            ->withNoArgs()
+            ->andReturn($entityVersion);
+
+        $eventHistoryTypeEntity = m::mock(EventHistoryTypeEntity::class);
+
+        $this->eventHistoryTypeRepo->expects('fetchOneByEventCode')
+            ->with($eventHistoryType)
+            ->andReturn($eventHistoryTypeEntity);
+
+        $this->eventHistoryRepo->expects('save')
+            ->with(m::type(EventHistoryEntity::class))
+            ->andReturnUsing(
+                function (EventHistoryEntity $eventHistory) use ($entity, $entityId, $entityVersion) {
+                    $this->assertSame($entity, $eventHistory->getLicence());
+                    $this->assertSame('licence', $eventHistory->getEntityType());
+                    $this->assertSame($entityId, $eventHistory->getEntityPk());
+                    $this->assertSame($entityVersion, $eventHistory->getEntityVersion());
+                }
+            );
+
+        $this->sut->create($entity, $eventHistoryType);
+    }
+
+    public function testCreateForIrhpApplication(): void
     {
         $entityId = 100;
         $entityVersion = 1;
@@ -81,7 +118,7 @@ class CreatorTest extends MockeryTestCase
         $this->sut->create($entity, $eventHistoryType);
     }
 
-    public function testCreateForUpdateUser()
+    public function testCreateForUpdateUser(): void
     {
         $entityId = 612;
         $entityVersion = 2;
@@ -118,7 +155,7 @@ class CreatorTest extends MockeryTestCase
         $this->sut->create($entity, $eventHistoryType, $eventData);
     }
 
-    public function testCreateForUndefinedEntity()
+    public function testCreateForUndefinedEntity(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Cannot create event history for the entity');
