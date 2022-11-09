@@ -12,10 +12,6 @@
         {
             "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
             "type": "composer"
-        },
-        {
-            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/league",
-            "type": "composer"
         }
     ],
     "require": {
@@ -54,7 +50,7 @@
         "laminas/laminas-validator": "^2.5",
         "laminas/laminas-view": "^2.5",
         "league/flysystem": "^1.0",
-        "league/flysystem-webdav": "2.0.0",
+        "league/flysystem-webdav": "1.0.10",
         "lm-commons/lmc-rbac-mvc": "^2.6",
         "olcs/olcs-companies-house": "~4.206.0",
         "olcs/olcs-cpms": "~4.206.0",
