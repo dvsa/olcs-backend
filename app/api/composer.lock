@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0641cc68a30ca6a3525417e79284d77c",
+    "content-hash": "f4c5172537074acad0b316d6a712137b",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1624,6 +1624,62 @@
                 "source": "https://github.com/dvsa/contracts/tree/v1.2.0"
             },
             "time": "2021-07-23T13:20:39+00:00"
+        },
+        {
+            "name": "dvsa/php-govuk-account",
+            "version": "1.0.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dvsa/php-govuk-account/1.0.1/dvsa-php-govuk-account-1.0.1.zip",
+                "reference": "06be4f348665d0d838d1f19d2c89e9a2880ed339",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "firebase/php-jwt": "^6.3",
+                "guzzlehttp/guzzle": "^7.5",
+                "guzzlehttp/psr7": "^2.0",
+                "illuminate/collections": "^8.0",
+                "league/oauth2-client": "^2.6",
+                "paragonie/random_compat": "^9.99",
+                "php": "^7.4 || ^8.0",
+                "psr/cache": "^1.0",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/log": "^1.1"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.4",
+                "mockery/mockery": "^1.5",
+                "phpunit/phpunit": "^9.5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dvsa\\GovUkAccount\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Wragg",
+                    "email": "james.wragg@dvsa.gov.uk"
+                }
+            ],
+            "description": "A league/oauth2-client provider for GOV.UK Account",
+            "keywords": [
+                "dvsa",
+                "govuk",
+                "sdk",
+                "signin"
+            ],
+            "support": {
+                "issues": "https://github.com/dvsa/php-govuk-account/issues",
+                "source": "https://github.com/dvsa/php-govuk-account/tree/1.0.1"
+            },
+            "time": "2022-11-11T16:57:18+00:00"
         },
         {
             "name": "elasticsearch/elasticsearch",
