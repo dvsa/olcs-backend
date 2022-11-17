@@ -76,4 +76,49 @@ class GovUkAccountServiceTest extends TestCase
         $this->assertEquals('some_nonce', $result->getNonce());
 
     }
+
+    /**
+     * @dataProvider dataProviderMeetsVectorOfTrust
+     */
+    public function testMeetsVectorOfTrust($actual, $minimumConfidence, $shouldPass): void
+    {
+        $result = GovUkAccountService::meetsVectorOfTrust($actual, $minimumConfidence);
+
+        $this->assertEquals($shouldPass, $result);
+    }
+
+    public function dataProviderMeetsVectorOfTrust(): array
+    {
+        return [
+            'P0 meets P0' => ['P0', 'P0', true],
+            'P1 meets P0' => ['P1', 'P0', true],
+            'P2 meets P0' => ['P2', 'P0', true],
+            'P0 does not meet P1' => ['P0', 'P1', false],
+            'P1 meets P1' => ['P1', 'P1', true],
+            'P2 meets P1' => ['P2', 'P1', true],
+            'P0 does not meet P2' => ['P0', 'P2', false],
+            'P1 does not meet P2' => ['P1', 'P2', false],
+            'P2 meets P2' => ['P2', 'P2', true],
+        ];
+    }
+
+    /**
+     * @depends testMeetsVectorOfTrust
+     */
+    public function testMeetsVectorOfTrustIsNotCaseSensitive(): void
+    {
+        $this->assertTrue(GovUkAccountService::meetsVectorOfTrust('p1', 'P1'));
+        $this->assertTrue(GovUkAccountService::meetsVectorOfTrust('P1', 'p1'));
+    }
+
+    public function testMeetsVectorOfTrustUnsupportedMinimumConfidenceThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        GovUkAccountService::meetsVectorOfTrust('p1', 'P9000');
+    }
+
+    public function testMeetsVectorOfTrustUnsupportedActualReturnsFalse(): void
+    {
+        $this->assertFalse(GovUkAccountService::meetsVectorOfTrust('P9000', 'P0'));
+    }
 }
