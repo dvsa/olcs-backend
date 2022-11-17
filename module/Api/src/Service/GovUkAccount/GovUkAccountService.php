@@ -105,4 +105,39 @@ class GovUkAccountService
     {
         $this->provider->validateIdToken($token->getIdToken(), $nonce);
     }
+
+    /**
+     * Checks to see if the $actual vector of trust meets the $minimumConfidence required.
+     *
+     * Supports ONLY the vectors of trust supported by GOV.UK Account service.
+     *
+     * @see https://docs.sign-in.service.gov.uk/integrate-with-integration-environment/choose-the-level-of-identity-confidence/
+     * @see https://datatracker.ietf.org/doc/html/rfc8485#appendix-A.1
+     * @param string $actual
+     * @param string $minimumConfidence
+     * @return bool
+     */
+    static function meetsVectorOfTrust(string $actual, string $minimumConfidence): bool
+    {
+        $actual = strtoupper($actual);
+        $minimumConfidence = strtoupper($minimumConfidence);
+        $vectorsOfTrust = ['P0', 'P1', 'P2'];
+
+        if (!in_array($minimumConfidence, $vectorsOfTrust)) {
+            throw new \InvalidArgumentException("The minimumConfidence specified is not a valid value; supported values are: " . implode(',', $vectorsOfTrust));
+        }
+
+        if (!in_array($actual, $vectorsOfTrust)) {
+            return false;
+        }
+
+        $actualIndex = array_search($actual, $vectorsOfTrust);
+        $minimumConfidenceIndex = array_search($minimumConfidence, $vectorsOfTrust);
+
+        if ($actualIndex >= $minimumConfidenceIndex) {
+            return true;
+        }
+
+        return false;
+    }
 }
