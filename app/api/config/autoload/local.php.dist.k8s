@@ -530,6 +530,7 @@ return [
         'discovery_endpoint' => 'https://oidc.integration.account.gov.uk/.well-known/openid-configuration',
         'client_id' => '',
         'keys' => [
+            'algorithm' => 'RS256',
             'private_key' => '',
             'public_key' => '',
             'identity_assurance_public_key' => (array)json_decode('{"kty":"EC","use":"sig","crv":"P-256","x":"NPGA7cyIKtH1nz2CJIH14s9_CtC93NwdCQcEi-ADvxg=","y":"2cTdmHAmZjighly34lXcxEw50cbKFV7FTOdZKhOG7ps=","alg":"ES256"}'),
