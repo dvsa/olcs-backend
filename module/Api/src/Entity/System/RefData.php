@@ -142,6 +142,15 @@ class RefData extends AbstractRefData
     const TMA_SIGN_AS_TM_OP = 'tma_sign_as_top';
 
     /**
+     * Journeys
+     */
+    const JOURNEY_NEW_APPLICATION = 'jrny_new_application';
+    const JOURNEY_CONTINUATION = 'jrny_continuation';
+    const JOURNEY_VARIATION = 'jrny_variation';
+    const JOURNEY_TM_APPLICATION = 'jrny_tm_application';
+    const JOURNEY_SURRENDER = 'jrny_surrender';
+
+    /**
      * RefData constructor.
      *
      * @param string $id Refdata ID
