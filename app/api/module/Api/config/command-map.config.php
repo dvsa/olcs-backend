@@ -1142,6 +1142,8 @@ return [
     // GovUkAccount
     TransferCommand\GovUkAccount\GetGovUkAccountRedirect::class =>
         CommandHandler\GovUkAccount\GetGovUkAccountRedirectFactory::class,
+    TransferCommand\GovUkAccount\ProcessAuthResponse::class =>
+        CommandHandler\GovUkAccount\ProcessAuthResponseFactory::class,
 
     // Digital Signatures
     Command\DigitalSignature\UpdateApplication::class => CommandHandler\DigitalSignature\UpdateApplication::class,

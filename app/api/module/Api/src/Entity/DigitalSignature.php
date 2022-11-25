@@ -3,7 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\GdsVerify\Data\Attributes;
+use Dvsa\Olcs\Api\Service\GovUkAccount\Data\Attributes;
+
 
 /**
  * DigitalSignature Entity
@@ -18,6 +19,18 @@ use Dvsa\Olcs\GdsVerify\Data\Attributes;
  */
 class DigitalSignature extends AbstractDigitalSignature
 {
+    const ERR_INVALID_SIG = 'Signature attributes missing name or birth date information';
+
+    public function addSignatureInfo(Attributes $attributes, string $response)
+    {
+        if (!$attributes->isValidSignature()) {
+            throw new \Exception(self::ERR_INVALID_SIG);
+        }
+
+        $this->attributes = json_encode($attributes->getArrayCopy());
+        $this->samlResponse = $response;
+    }
+
     /**
      * Set the attributes
      *

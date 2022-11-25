@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4c5172537074acad0b316d6a712137b",
+    "content-hash": "7b68e5e996877efe9b11779ca288bae2",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1627,11 +1627,11 @@
         },
         {
             "name": "dvsa/php-govuk-account",
-            "version": "1.0.1",
+            "version": "1.0.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dvsa/php-govuk-account/1.0.1/dvsa-php-govuk-account-1.0.1.zip",
-                "reference": "06be4f348665d0d838d1f19d2c89e9a2880ed339",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dvsa/php-govuk-account/1.0.3/dvsa-php-govuk-account-1.0.3.zip",
+                "reference": "26af619c8169bf4fc3958529d4142a9cf47d10c8",
                 "shasum": ""
             },
             "require": {
@@ -1677,9 +1677,9 @@
             ],
             "support": {
                 "issues": "https://github.com/dvsa/php-govuk-account/issues",
-                "source": "https://github.com/dvsa/php-govuk-account/tree/1.0.1"
+                "source": "https://github.com/dvsa/php-govuk-account/tree/1.0.3"
             },
-            "time": "2022-11-11T16:57:18+00:00"
+            "time": "2022-11-24T18:45:13+00:00"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -11112,7 +11112,8 @@
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4",
-        "ext-intl": "*"
+        "ext-intl": "*",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
