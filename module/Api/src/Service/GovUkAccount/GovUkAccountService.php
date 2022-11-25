@@ -13,7 +13,11 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 
 class GovUkAccountService
 {
+    const VOT_P0 = 'P0';
+    const VOT_P1 = 'P1';
+    const VOT_P2 = 'P2';
     const JWT_TIMESTAMP_LEEWAY_SECONDS = 30;
+    const ERR_MISSING_NAMES = 'No name data available to process';
 
     protected GovUkAccount $provider;
     protected array $config;
@@ -31,13 +35,14 @@ class GovUkAccountService
             $scopes = $this->provider::DEFAULT_SCOPES;
         }
 
-        $authorizationUrlParams = [
-            'scope' => $scopes,
-            'redirect_uri' => $this->config['redirect_uri']['logged_in'],
-        ];
-
         $this->provider->setState($state);
         $this->provider->setNonce($nonce);
+
+        $authorizationUrlParams = [
+            'scope' => $scopes,
+            'state' => $this->provider->getState(),
+            'redirect_uri' => $this->config['redirect_uri']['logged_in'],
+        ];
 
         if ($identityAssurance) {
             $authorizationUrlParams['vtr'] = '["P2.Cl.Cm"]';
@@ -121,7 +126,7 @@ class GovUkAccountService
     {
         $actual = strtoupper($actual);
         $minimumConfidence = strtoupper($minimumConfidence);
-        $vectorsOfTrust = ['P0', 'P1', 'P2'];
+        $vectorsOfTrust = [self::VOT_P0, self::VOT_P1, self::VOT_P2];
 
         if (!in_array($minimumConfidence, $vectorsOfTrust)) {
             throw new \InvalidArgumentException("The minimumConfidence specified is not a valid value; supported values are: " . implode(',', $vectorsOfTrust));
@@ -139,5 +144,57 @@ class GovUkAccountService
         }
 
         return false;
+    }
+
+    /**
+     * @see https://docs.sign-in.service.gov.uk/integrate-with-integration-environment/process-identity-information/#check-your-user-s-identity-credential-matches-the-level-of-confidence-needed
+     *
+     * A list showing the names proven by GOV.UK Sign In. This list reflects name changes by using the validFrom and
+     * validUntil metadata properties. If validUntil is null or not present, that name is your user’s current name.
+     * If validFrom is null or not present, your user may have used that name from birth.
+     */
+    public static function processNames(array $names): array
+    {
+        if (empty($names)) {
+            throw new \InvalidArgumentException(self::ERR_MISSING_NAMES);
+        }
+
+        if (count($names) !== 1) {
+            foreach ($names as $name) {
+                if (!isset($name['validUntil'])) {
+                    return self::extractNameData($name);
+                }
+            }
+        }
+
+        //we shouldn't get here, but will try to be as forgiving as possible if we do
+        return self::extractNameData($names[0]);
+    }
+
+    /**
+     * @see https://docs.sign-in.service.gov.uk/integrate-with-integration-environment/process-identity-information/#check-your-user-s-identity-credential-matches-the-level-of-confidence-needed
+     *
+     * Each name is presented as an array in the nameParts property.
+     * Each part of the name is either a GivenName or a FamilyName, identified in its type property.
+     * The value property could be any text string.
+     */
+    private static function extractNameData(array $name): array
+    {
+        $givenNames = [];
+        $familyName = '';
+
+        foreach ($name['nameParts'] as $part) {
+            if ($part['type'] === 'GivenName') {
+                $givenNames[] = $part['value'];
+                continue;
+            }
+
+            $familyName = $part['value'];
+        }
+
+        return[
+            'firstName' => implode(' ', $givenNames),
+            'familyName' => $familyName,
+        ];
     }
 }

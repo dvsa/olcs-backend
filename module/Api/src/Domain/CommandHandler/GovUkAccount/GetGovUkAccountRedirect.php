@@ -36,7 +36,7 @@ class GetGovUkAccountRedirect extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $stateTokenStr = $this->govUkAccountService->createStateToken($command->getArrayCopy());
-        $authorisationUrl = $this->govUkAccountService->getAuthorisationUrl($stateTokenStr);
+        $authorisationUrl = $this->govUkAccountService->getAuthorisationUrl($stateTokenStr, true);
         return $this->result->addMessage($authorisationUrl->getUrl());
     }
 }
