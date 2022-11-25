@@ -41,7 +41,7 @@ class GetGovUkAccountRedirectTest extends CommandHandlerTestCase
             ->with($command->getArrayCopy())
             ->andReturn('stateToken')
             ->shouldReceive('getAuthorisationUrl')
-            ->with('stateToken')
+            ->with('stateToken', true)
             ->andReturn($urlResponse);
 
         $result = $this->sut->handleCommand($command);
