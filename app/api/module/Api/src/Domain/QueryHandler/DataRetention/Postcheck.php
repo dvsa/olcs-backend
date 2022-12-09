@@ -23,7 +23,7 @@ class Postcheck extends AbstractQueryHandler
      *
      * @return AbstractQueryHandler
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         /** @var EntityManager $entityManager */
         $entityManager = $serviceLocator->getServiceLocator()->get('DoctrineOrmEntityManager');

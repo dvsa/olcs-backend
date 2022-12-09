@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class TranslateableTextParameterGeneratorFactory implements FactoryInterface
 {
@@ -14,10 +15,25 @@ class TranslateableTextParameterGeneratorFactory implements FactoryInterface
      *
      * @return TranslateableTextParameterGenerator
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): TranslateableTextParameterGenerator
+    {
+        return $this->__invoke($serviceLocator, TranslateableTextParameterGenerator::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return TranslateableTextParameterGenerator
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TranslateableTextParameterGenerator
     {
         return new TranslateableTextParameterGenerator(
-            $serviceLocator->get('QaTranslateableTextParameterFactory')
+            $container->get('QaTranslateableTextParameterFactory')
         );
     }
 }

@@ -11,12 +11,14 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class CognitoAdapterFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
      * @return CognitoAdapter
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): CognitoAdapter
     {
@@ -27,8 +29,8 @@ class CognitoAdapterFactory implements FactoryInterface
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @deprecated Can be removed following Laminas v3 upgrade
      * @return CognitoAdapter
+     * @deprecated Can be removed following Laminas v3 upgrade
      */
     public function createService(ServiceLocatorInterface $serviceLocator): CognitoAdapter
     {

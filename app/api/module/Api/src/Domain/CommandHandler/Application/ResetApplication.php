@@ -39,7 +39,7 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
 
     protected $repoServiceName = 'Application';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->licenceRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
             ->get('Licence');

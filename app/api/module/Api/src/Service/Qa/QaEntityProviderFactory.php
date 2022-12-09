@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class QaEntityProviderFactory implements FactoryInterface
 {
@@ -14,10 +15,24 @@ class QaEntityProviderFactory implements FactoryInterface
      *
      * @return QaEntityProvider
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): QaEntityProvider
     {
-        $repoServiceManager = $serviceLocator->get('RepositoryServiceManager');
+        return $this->__invoke($serviceLocator, QaEntityProvider::class);
+    }
 
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return QaEntityProvider
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): QaEntityProvider
+    {
+        $repoServiceManager = $container->get('RepositoryServiceManager');
         return new QaEntityProvider(
             $repoServiceManager->get('IrhpApplication'),
             $repoServiceManager->get('IrhpPermitApplication')

@@ -21,12 +21,16 @@ class WithIrhpApplicationFactory implements FactoryInterface
     {
         return $this($serviceLocator, WithIrhpApplication::class);
     }
+
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     *
+     * @param $requestedName
+     * @param array|null $options
      * @return WithIrhpApplication
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): WithIrhpApplication
     {

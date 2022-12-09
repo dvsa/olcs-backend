@@ -37,7 +37,7 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
      *
      * @return TransactioningCommandHandler
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         /** @var ServiceLocatorInterface $mainServiceLocator  */
         $mainServiceLocator = $serviceLocator->getServiceLocator();

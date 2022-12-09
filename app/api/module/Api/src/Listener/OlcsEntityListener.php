@@ -12,6 +12,7 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>
@@ -32,9 +33,7 @@ class OlcsEntityListener implements EventSubscriber, AuthAwareInterface, Factory
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->sl = $serviceLocator;
-
-        return $this;
+        return $this->__invoke($serviceLocator, OlcsEntityListener::class);
     }
 
     /**
@@ -134,5 +133,10 @@ class OlcsEntityListener implements EventSubscriber, AuthAwareInterface, Factory
             ? $currentUser
             : null
         );
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->sl = $container;
+        return $this;
     }
 }

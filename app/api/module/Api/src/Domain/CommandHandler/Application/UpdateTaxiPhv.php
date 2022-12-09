@@ -25,7 +25,7 @@ final class UpdateTaxiPhv extends AbstractCommandHandler implements Transactione
      */
     private $trafficAreaValidator;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
 

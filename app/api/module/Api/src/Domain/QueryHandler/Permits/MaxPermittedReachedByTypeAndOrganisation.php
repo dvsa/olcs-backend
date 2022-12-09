@@ -33,7 +33,7 @@ class MaxPermittedReachedByTypeAndOrganisation extends AbstractQueryHandler
      *
      * @return self
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 

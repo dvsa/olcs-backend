@@ -127,7 +127,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
      */
     private $financialStandingHelper;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->updateHelper = $mainServiceLocator->get('UpdateOperatingCentreHelper');

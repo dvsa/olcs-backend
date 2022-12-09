@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class RefDataSourceFactory implements FactoryInterface
 {
@@ -14,10 +15,25 @@ class RefDataSourceFactory implements FactoryInterface
      *
      * @return RefDataSource
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): RefDataSource
+    {
+        return $this->__invoke($serviceLocator, RefDataSource::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return RefDataSource
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RefDataSource
     {
         return new RefDataSource(
-            $serviceLocator->get('RepositoryServiceManager')->get('RefData')
+            $container->get('RepositoryServiceManager')->get('RefData')
         );
     }
 }

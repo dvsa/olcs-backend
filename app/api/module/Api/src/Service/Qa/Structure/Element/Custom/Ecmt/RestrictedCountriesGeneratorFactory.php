@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class RestrictedCountriesGeneratorFactory implements FactoryInterface
 {
@@ -14,14 +15,29 @@ class RestrictedCountriesGeneratorFactory implements FactoryInterface
      *
      * @return RestrictedCountriesGenerator
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): RestrictedCountriesGenerator
+    {
+        return $this->__invoke($serviceLocator, RestrictedCountriesGenerator::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return RestrictedCountriesGenerator
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RestrictedCountriesGenerator
     {
         return new RestrictedCountriesGenerator(
-            $serviceLocator->get('QaEcmtRestrictedCountriesElementFactory'),
-            $serviceLocator->get('QaEcmtRestrictedCountryFactory'),
-            $serviceLocator->get('RepositoryServiceManager')->get('Country'),
-            $serviceLocator->get('QaGenericAnswerProvider'),
-            $serviceLocator->get('PermitsCommonStockBasedPermitTypeConfigProvider')
+            $container->get('QaEcmtRestrictedCountriesElementFactory'),
+            $container->get('QaEcmtRestrictedCountryFactory'),
+            $container->get('RepositoryServiceManager')->get('Country'),
+            $container->get('QaGenericAnswerProvider'),
+            $container->get('PermitsCommonStockBasedPermitTypeConfigProvider')
         );
     }
 }

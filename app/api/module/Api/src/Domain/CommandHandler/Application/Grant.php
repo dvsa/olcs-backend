@@ -17,6 +17,7 @@ use Dvsa\Olcs\Transfer\Command\Application\Grant as Cmd;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods as GrantGoodsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv as GrantPsvCmd;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Grant
@@ -41,7 +42,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      *
      * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
      */
-    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 

@@ -170,7 +170,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
      *
      * @return GenerateSlaTargetDate
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         parent::createService($serviceLocator);
         $sl = $serviceLocator->getServiceLocator();

@@ -7,6 +7,7 @@ use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 use Laminas\Http\Response;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Content Store File Uploader
@@ -32,8 +33,7 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-          $this->contentStoreClient = $serviceLocator->get('ContentStore');
-          return $this;
+        return $this->__invoke($serviceLocator, ContentStoreFile::class);
     }
 
     /**
@@ -98,5 +98,10 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
     private function write($identifier, ContentStoreFile $file)
     {
         return $this->contentStoreClient->write($identifier, $file);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->contentStoreClient = $container->get('ContentStore');
+        return $this;
     }
 }

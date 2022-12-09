@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class OptionListGeneratorFactory implements FactoryInterface
 {
@@ -14,24 +15,37 @@ class OptionListGeneratorFactory implements FactoryInterface
      *
      * @return OptionListGenerator
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): OptionListGenerator
+    {
+        return $this->__invoke($serviceLocator, OptionListGenerator::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return OptionListGenerator
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): OptionListGenerator
     {
         $optionListGenerator = new OptionListGenerator(
-            $serviceLocator->get('QaOptionListFactory'),
-            $serviceLocator->get('QaOptionFactory')
+            $container->get('QaOptionListFactory'),
+            $container->get('QaOptionFactory')
         );
-
-        $optionListGenerator->registerSource('refData', $serviceLocator->get('QaRefDataOptionsSource'));
+        $optionListGenerator->registerSource('refData', $container->get('QaRefDataOptionsSource'));
         $optionListGenerator->registerSource(
             'ecmtPermitUsageThreeOptionsRefData',
-            $serviceLocator->get('QaEcmtPermitUsageThreeOptionsRefDataOptionsSource')
+            $container->get('QaEcmtPermitUsageThreeOptionsRefDataOptionsSource')
         );
         $optionListGenerator->registerSource(
             'ecmtPermitUsageFourOptionsRefData',
-            $serviceLocator->get('QaEcmtPermitUsageFourOptionsRefDataOptionsSource')
+            $container->get('QaEcmtPermitUsageFourOptionsRefDataOptionsSource')
         );
-        $optionListGenerator->registerSource('repoQuery', $serviceLocator->get('QaRepoQueryOptionsSource'));
-
+        $optionListGenerator->registerSource('repoQuery', $container->get('QaRepoQueryOptionsSource'));
         return $optionListGenerator;
     }
 }

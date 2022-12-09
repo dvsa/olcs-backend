@@ -84,7 +84,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      */
     protected $result;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 

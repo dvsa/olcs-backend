@@ -20,6 +20,7 @@ use Dvsa\Olcs\Cpms\Service\ApiService;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Cpms Version 2 Helper Service
@@ -81,30 +82,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config');
-        if (isset($config['cpms']['invoice_prefix'])) {
-            $this->setInvoicePrefix($config['cpms']['invoice_prefix']);
-        }
-
-        $this->niSchemaId = isset($config['cpms_credentials']['client_id_ni'])
-            ? $config['cpms_credentials']['client_id_ni']
-            : null;
-
-        $this->niClientSecret = isset($config['cpms_credentials']['client_secret_ni'])
-            ? $config['cpms_credentials']['client_secret_ni']
-            : null;
-
-        $this->schemaId = isset($config['cpms_credentials']['client_id'])
-            ? $config['cpms_credentials']['client_id']
-            : null;
-
-        $this->clientSecret = isset($config['cpms_credentials']['client_secret'])
-            ? $config['cpms_credentials']['client_secret']
-            : null;
-
-        $this->cpmsClient = $serviceLocator->get(ApiServiceFactory::class);
-        $this->feesHelper = $serviceLocator->get('FeesHelperService');
-        return $this;
+        return $this->__invoke($serviceLocator, CpmsV2HelperService::class);
     }
 
     /**
@@ -1236,5 +1214,27 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $identity = $this->getClient()->getIdentity();
         $identity->setClientId($schemaId);
         $identity->setClientSecret($clientSecret);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('config');
+        if (isset($config['cpms']['invoice_prefix'])) {
+            $this->setInvoicePrefix($config['cpms']['invoice_prefix']);
+        }
+        $this->niSchemaId = isset($config['cpms_credentials']['client_id_ni'])
+            ? $config['cpms_credentials']['client_id_ni']
+            : null;
+        $this->niClientSecret = isset($config['cpms_credentials']['client_secret_ni'])
+            ? $config['cpms_credentials']['client_secret_ni']
+            : null;
+        $this->schemaId = isset($config['cpms_credentials']['client_id'])
+            ? $config['cpms_credentials']['client_id']
+            : null;
+        $this->clientSecret = isset($config['cpms_credentials']['client_secret'])
+            ? $config['cpms_credentials']['client_secret']
+            : null;
+        $this->cpmsClient = $container->get(ApiServiceFactory::class);
+        $this->feesHelper = $container->get('FeesHelperService');
+        return $this;
     }
 }

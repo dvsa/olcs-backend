@@ -18,11 +18,14 @@ class IdentityProviderFactory implements FactoryInterface
     const MESSAGE_DOES_NOT_IMPLEMENT = 'Requested Identity Provider does not implement: ' . IdentityProviderInterface::class;
 
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     *
+     * @param $requestedName
+     * @param array|null $options
      * @return IdentityProviderInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): IdentityProviderInterface
     {

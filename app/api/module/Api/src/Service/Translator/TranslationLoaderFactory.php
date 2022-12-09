@@ -27,10 +27,11 @@ class TranslationLoaderFactory implements FactoryInterface
     }
 
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     *
+     * @param $requestedName
+     * @param array|null $options
      * @return TranslationLoader
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TranslationLoader

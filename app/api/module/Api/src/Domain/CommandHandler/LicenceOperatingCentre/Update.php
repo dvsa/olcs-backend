@@ -37,7 +37,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
      */
     protected $helper;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 

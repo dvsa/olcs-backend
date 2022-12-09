@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class MultilateralAnswersSummaryRowsAdderFactory implements FactoryInterface
 {
@@ -14,11 +15,26 @@ class MultilateralAnswersSummaryRowsAdderFactory implements FactoryInterface
      *
      * @return MultilateralAnswersSummaryRowsAdder
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): MultilateralAnswersSummaryRowsAdder
+    {
+        return $this->__invoke($serviceLocator, MultilateralAnswersSummaryRowsAdder::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return MultilateralAnswersSummaryRowsAdder
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): MultilateralAnswersSummaryRowsAdder
     {
         return new MultilateralAnswersSummaryRowsAdder(
-            $serviceLocator->get('PermitsAnswersSummaryRowFactory'),
-            $serviceLocator->get('ViewRenderer')
+            $container->get('PermitsAnswersSummaryRowFactory'),
+            $container->get('ViewRenderer')
         );
     }
 }

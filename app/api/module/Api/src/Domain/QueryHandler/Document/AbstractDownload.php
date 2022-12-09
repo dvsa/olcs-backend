@@ -33,7 +33,7 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->config = (array)$serviceLocator->getServiceLocator()->get('config');
 

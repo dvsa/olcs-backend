@@ -26,6 +26,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Transfer\Query\Cache\ById as CacheById;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
+use Interop\Container\ContainerInterface;
 
 abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInterface, AuthAwareInterface
 {
@@ -73,25 +74,9 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        try {
-            $this->applyInterfaces($mainServiceLocator);
-        } catch (LaminasServiceException $e) {
-            $this->logServiceExceptions($e);
-        }
-
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
-
-        $this->extraRepos[] = $this->repoServiceName;
-
-        $this->queryHandler = $serviceLocator;
-
-        $this->commandHandler = $mainServiceLocator->get('CommandHandlerManager');
-
-        return $this;
+        return $this->__invoke($serviceLocator, $requestedName);
     }
 
     /**
@@ -290,5 +275,19 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         } while ($e);
 
         throw $rethrow;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $mainServiceLocator = $container->getServiceLocator();
+        try {
+            $this->applyInterfaces($mainServiceLocator);
+        } catch (LaminasServiceException $e) {
+            $this->logServiceExceptions($e);
+        }
+        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
+        $this->extraRepos[] = $this->repoServiceName;
+        $this->queryHandler = $container;
+        $this->commandHandler = $mainServiceLocator->get('CommandHandlerManager');
+        return $this;
     }
 }

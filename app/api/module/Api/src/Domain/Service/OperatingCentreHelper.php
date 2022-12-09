@@ -24,6 +24,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Interop\Container\ContainerInterface;
 
 /**
  * Operating Centre Helper
@@ -81,13 +82,7 @@ class OperatingCentreHelper implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->addressService = $serviceLocator->get('AddressService');
-        $this->adminAreaTrafficAreaRepo = $serviceLocator->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
-        $this->trafficAreaValidator = $serviceLocator->get('TrafficAreaValidator');
-
-        $this->docRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
-
-        return $this;
+        return $this->__invoke($serviceLocator, OperatingCentreHelper::class);
     }
 
     /**
@@ -388,5 +383,13 @@ class OperatingCentreHelper implements FactoryInterface
         if ($permission !== 'Y') {
             $this->addMessage('permission', self::ERR_OC_PERMISSION);
         }
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->addressService = $container->get('AddressService');
+        $this->adminAreaTrafficAreaRepo = $container->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
+        $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
+        $this->docRepo = $container->get('RepositoryServiceManager')->get('Document');
+        return $this;
     }
 }

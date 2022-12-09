@@ -35,7 +35,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
      */
     private $updateHelper;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->updateHelper = $serviceLocator->getServiceLocator()->get('UpdateOperatingCentreHelper');
 

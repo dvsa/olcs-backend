@@ -44,7 +44,7 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->inrClient = $mainServiceLocator->get(InrClientInterface::class);

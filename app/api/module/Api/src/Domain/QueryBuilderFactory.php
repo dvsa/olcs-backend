@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Query Builder Factory
@@ -23,8 +24,23 @@ class QueryBuilderFactory implements FactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): QueryBuilder
     {
-        return new QueryBuilder($serviceLocator->get('QueryPartialServiceManager'));
+        return $this->__invoke($serviceLocator, QueryBuilder::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return QueryBuilder
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): QueryBuilder
+    {
+        return new QueryBuilder($container->get('QueryPartialServiceManager'));
     }
 }

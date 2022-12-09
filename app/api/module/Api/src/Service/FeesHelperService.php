@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Fees Helper Service
@@ -46,15 +47,7 @@ class FeesHelperService implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $repoManager = $serviceLocator->get('RepositoryServiceManager');
-
-        // inject required repos
-        $this->applicationRepo = $repoManager->get('Application');
-        $this->irhpApplicationRepo = $repoManager->get('IrhpApplication');
-        $this->feeRepo = $repoManager->get('Fee');
-        $this->feeTypeRepo = $repoManager->get('FeeType');
-
-        return $this;
+        return $this->__invoke($serviceLocator, FeesHelperService::class);
     }
 
     /**
@@ -305,5 +298,15 @@ class FeesHelperService implements FactoryInterface
             'irfoGvPermit' => $irfoGvPermitId,
             'irfoPsvAuth'  => $irfoPsvAuthId,
         ];
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $repoManager = $container->get('RepositoryServiceManager');
+        // inject required repos
+        $this->applicationRepo = $repoManager->get('Application');
+        $this->irhpApplicationRepo = $repoManager->get('IrhpApplication');
+        $this->feeRepo = $repoManager->get('Fee');
+        $this->feeTypeRepo = $repoManager->get('FeeType');
+        return $this;
     }
 }
