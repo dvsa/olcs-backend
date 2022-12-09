@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Document Naming Service
@@ -35,15 +36,7 @@ class NamingService implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-
-        if (!isset($config['document_share']['path'])) {
-            throw new \RuntimeException('document_share/path has not been defined in config');
-        }
-
-        $this->pattern = $config['document_share']['path'];
-
-        return $this;
+        return $this->__invoke($serviceLocator, NamingService::class);
     }
 
     /**
@@ -96,5 +89,14 @@ class NamingService implements FactoryInterface
 
         // Only allow alpha-num plus "_()"
         return preg_replace('/[^a-zA-Z0-9_\(\)\-\&]/', '', $input);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
+        if (!isset($config['document_share']['path'])) {
+            throw new \RuntimeException('document_share/path has not been defined in config');
+        }
+        $this->pattern = $config['document_share']['path'];
+        return $this;
     }
 }

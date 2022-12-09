@@ -6,6 +6,7 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Mail\Storage;
 use Laminas\Mail\Exception\RuntimeException as LaminasMailRuntimeException;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class Imap
@@ -28,14 +29,7 @@ class Imap implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-        if (!isset($config['mailboxes'])) {
-            throw new LaminasMailRuntimeException('No mailbox config found');
-        }
-
-        $this->setConfig($config['mailboxes']);
-
-        return $this;
+        return $this->__invoke($serviceLocator, Imap::class);
     }
 
     /**
@@ -160,6 +154,15 @@ class Imap implements FactoryInterface
         $this->store = new Storage\Imap($config[$mailbox]);
         $this->connected = true;
 
+        return $this;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
+        if (!isset($config['mailboxes'])) {
+            throw new LaminasMailRuntimeException('No mailbox config found');
+        }
+        $this->setConfig($config['mailboxes']);
         return $this;
     }
 }

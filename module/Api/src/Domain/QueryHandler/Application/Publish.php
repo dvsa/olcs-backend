@@ -28,7 +28,7 @@ class Publish extends AbstractQueryHandler
     private $variationValidationService;
 
 
-    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->applicationValidationService = $mainServiceLocator->get('ApplicationPublishValidationService');

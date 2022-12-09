@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Template;
 use Twig\Environment;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class TwigEnvironmentFactory implements FactoryInterface
 {
@@ -15,10 +16,14 @@ class TwigEnvironmentFactory implements FactoryInterface
      *
      * @return Environment
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): Environment
+    {
+        return $this->__invoke($serviceLocator, Environment::class);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         return new Environment(
-            $serviceLocator->get('TemplateDatabaseTwigLoader'),
+            $container->get('TemplateDatabaseTwigLoader'),
             [
                 'strict_variables' => true,
                 'cache' => sys_get_temp_dir(),

@@ -7,6 +7,7 @@ use Dvsa\Olcs\Cli\Service\Queue\Consumer\RefundInterimFees;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Refund Interim Fees Factory
@@ -20,11 +21,23 @@ class RefundInterimFeesFactory implements FactoryInterface
      *
      * @return RefundInterimFees
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): RefundInterimFees
+    {
+        return $this->__invoke($serviceLocator, RefundInterimFees::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return RefundInterimFees
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RefundInterimFees
     {
         /** @var \Laminas\ServiceManager\ServiceManager $sl */
-        $sl = $serviceLocator->getServiceLocator();
-
+        $sl = $container->getServiceLocator();
         return new RefundInterimFees(
             $sl->get(AbstractConsumerServices::class),
             $sl->get('RepositoryServiceManager')->get('Fee')

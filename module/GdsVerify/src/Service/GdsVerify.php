@@ -7,6 +7,7 @@ use Laminas\Log\LoggerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use \RobRichards\XMLSecLibs;
 use Dvsa\Olcs\GdsVerify\Data;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class GdsVerify
@@ -59,26 +60,7 @@ class GdsVerify implements \Laminas\ServiceManager\FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = [];
-        $globalConfig = $serviceLocator->get('config');
-        if (isset($globalConfig[self::CONFIG_KEY])) {
-            $config = $globalConfig[self::CONFIG_KEY];
-        }
-
-        $this->config = $config;
-
-        \SAML2\Compat\ContainerSingleton::setContainer(
-            $this->getContainer($serviceLocator->get('logger'))
-        );
-        $this->setMetadataLoader(new Data\Loader($this->getCache()));
-
-        if ($serviceLocator->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {
-            $this->getMetadataLoader()->setHttpClient(
-                $serviceLocator->get(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
-            );
-        }
-
-        return $this;
+        return $this->__invoke($serviceLocator, GdsVerify::class);
     }
 
     /**
@@ -388,5 +370,24 @@ class GdsVerify implements \Laminas\ServiceManager\FactoryInterface
     public function setMetadataLoader(Data\Loader $metadataLoader)
     {
         $this->metadataLoader = $metadataLoader;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = [];
+        $globalConfig = $container->get('config');
+        if (isset($globalConfig[self::CONFIG_KEY])) {
+            $config = $globalConfig[self::CONFIG_KEY];
+        }
+        $this->config = $config;
+        \SAML2\Compat\ContainerSingleton::setContainer(
+            $this->getContainer($container->get('logger'))
+        );
+        $this->setMetadataLoader(new Data\Loader($this->getCache()));
+        if ($container->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {
+            $this->getMetadataLoader()->setHttpClient(
+                $container->get(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
+            );
+        }
+        return $this;
     }
 }

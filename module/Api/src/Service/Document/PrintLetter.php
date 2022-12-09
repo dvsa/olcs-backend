@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Utils\Helper\ValueHelper;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>
@@ -85,7 +86,11 @@ class PrintLetter implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->repoDocTemplate = $serviceLocator->get('RepositoryServiceManager')->get('DocTemplate');
+        return $this->__invoke($serviceLocator, PrintLetter::class);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->repoDocTemplate = $container->get('RepositoryServiceManager')->get('DocTemplate');
         return $this;
     }
 }

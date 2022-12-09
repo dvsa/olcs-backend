@@ -245,7 +245,7 @@ class ImportUsersFromCsv extends AbstractCommandHandler
      *
      * @return AbstractCommandHandler|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler
      */
-    public function createService(ServiceLocatorInterface $sm)
+    public function createService(ServiceLocatorInterface $sm, $name = null, $requestedName = null)
     {
         /** @var ServiceLocatorInterface $sl */
         $sl = $sm->getServiceLocator();

@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\AwsSdk\Factories;
 use Aws\Credentials\CredentialProvider;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class AwsCredentailsProviderFactory
@@ -23,11 +24,7 @@ class AwsCredentialsProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $envCredentialsFlag = $serviceLocator->get('Config')['awsOptions']['useEnvCredentials'] ?? false;
-        $credentialsProvider = $envCredentialsFlag ? $this->getEnvCredentialProvider() : $this->getInstanceProfileCredentialProvider();
-        $provider = CredentialProvider::memoize($credentialsProvider);
-
-        return $provider;
+        return $this->__invoke($serviceLocator, CredentialProvider::class);
     }
 
     protected function getEnvCredentialProvider()
@@ -38,5 +35,12 @@ class AwsCredentialsProviderFactory implements FactoryInterface
     protected function getInstanceProfileCredentialProvider()
     {
         return CredentialProvider::instanceProfile();
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $envCredentialsFlag = $container->get('Config')['awsOptions']['useEnvCredentials'] ?? false;
+        $credentialsProvider = $envCredentialsFlag ? $this->getEnvCredentialProvider() : $this->getInstanceProfileCredentialProvider();
+        $provider = CredentialProvider::memoize($credentialsProvider);
+        return $provider;
     }
 }

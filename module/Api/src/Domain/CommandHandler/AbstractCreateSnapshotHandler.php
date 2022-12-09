@@ -36,7 +36,7 @@ abstract class AbstractCreateSnapshotHandler extends AbstractCommandHandler
      *
      * @return static
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->snapshotService = $serviceLocator->getServiceLocator()->get($this->generatorClass);
         return parent::createService($serviceLocator);

@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Email\Transport;
 use Aws\S3\S3Client;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class S3FileOptionsFactory implements FactoryInterface
 {
@@ -16,18 +17,9 @@ class S3FileOptionsFactory implements FactoryInterface
      *
      * @return mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): S3FileOptions
     {
-        $config = $serviceLocator->get('Config');
-        $s3Client = $serviceLocator->get('S3Client');
-        list($awsOptions, $s3Options, $bucket, $key) = $this->extractConfig($config);
-        $s3fileOptions = new S3FileOptions([
-            'awsOptions' => $awsOptions,
-            's3Options' => $s3Options,
-            's3Bucket' => $bucket,
-            's3Key' => $key
-        ], $s3Client);
-        return $s3fileOptions;
+        return $this->__invoke($serviceLocator, S3FileOptions::class);
     }
 
     /**
@@ -46,5 +38,29 @@ class S3FileOptionsFactory implements FactoryInterface
         $bucket = $config['mail']['options']['transport'][$arraykey]['options']['bucket'];
         $key = $config['mail']['options']['transport'][$arraykey]['options']['key'];
         return array($awsOptions, $s3Options, $bucket, $key);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return S3FileOptions
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): S3FileOptions
+    {
+        $config = $container->get('Config');
+        $s3Client = $container->get('S3Client');
+        list($awsOptions, $s3Options, $bucket, $key) = $this->extractConfig($config);
+        $s3fileOptions = new S3FileOptions([
+            'awsOptions' => $awsOptions,
+            's3Options' => $s3Options,
+            's3Bucket' => $bucket,
+            's3Key' => $key
+        ], $s3Client);
+        return $s3fileOptions;
     }
 }

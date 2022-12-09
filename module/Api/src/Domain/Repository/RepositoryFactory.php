@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Repository Factory
@@ -25,17 +26,18 @@ class RepositoryFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
+        return $this->__invoke($serviceLocator,  $requestedName);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $class = __NAMESPACE__ . '\\' . $requestedName;
-        $sm = $serviceLocator->getServiceLocator();
-
+        $sm = $container->getServiceLocator();
         $repo = new $class(
             $sm->get('doctrine.entitymanager.orm_default'),
             $sm->get('QueryBuilder'),
             $sm->get('DbQueryServiceManager')
         );
-
-        $repo->initService($serviceLocator);
-
+        $repo->initService($container);
         return $repo;
     }
 }

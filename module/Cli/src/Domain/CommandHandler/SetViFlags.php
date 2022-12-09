@@ -25,7 +25,7 @@ final class SetViFlags extends AbstractCommandHandler
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->setDbConnection($mainServiceLocator->get('doctrine.connection.ormdefault'));

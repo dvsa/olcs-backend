@@ -20,7 +20,7 @@ class Vehicle extends AbstractQueryHandler
      */
     protected $dvlaSearchService;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
         $this->dvlaSearchService = $mainServiceLocator->get(DvlaSearchService::class);

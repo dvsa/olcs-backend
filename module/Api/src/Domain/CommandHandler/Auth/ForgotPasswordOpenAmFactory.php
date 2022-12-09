@@ -12,10 +12,11 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class ForgotPasswordOpenAmFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
-     *
      * @return ForgotPasswordOpenAm
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ForgotPasswordOpenAm
@@ -33,7 +34,7 @@ class ForgotPasswordOpenAmFactory implements FactoryInterface
      *
      * @return ForgotPasswordOpenAm
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): ForgotPasswordOpenAm
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): ForgotPasswordOpenAm
     {
         return $this->__invoke($serviceLocator, ForgotPasswordOpenAm::class);
     }

@@ -9,6 +9,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Xml\Specification\NodeValue;
 use Olcs\XmlTools\Xml\Specification\Recursion;
 use Olcs\XmlTools\Xml\Specification\MultiNodeValue;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class MapXmlFileFactory
@@ -22,20 +23,9 @@ class TransExchangeXmlFactory implements FactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @return MapXmlFile
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): Recursion
     {
-        $transXChange = [
-            'Services' => new Recursion($this->getServicesSpecification()),
-            'Operators' => new Recursion($this->getOperators()),
-            'Registrations' => new Recursion($this->getRegistrations()),
-            'Routes' => new Recursion($this->getRoutes()),
-            'StopPoints' => new Recursion($this->getStopPoints()),
-            'SupportingDocuments' => new Recursion($this->getDocuments()),
-        ];
-
-        $mapping = new Recursion($transXChange);
-
-        return $mapping;
+        return $this->__invoke($serviceLocator, Recursion::class);
     }
 
     protected function getDocuments()
@@ -260,5 +250,18 @@ class TransExchangeXmlFactory implements FactoryInterface
             'ReplaceDiscontinuedService' => $replaceDiscontinuedService,
             'SpecialOccasion' => $specialOccasion
         ];
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $transXChange = [
+            'Services' => new Recursion($this->getServicesSpecification()),
+            'Operators' => new Recursion($this->getOperators()),
+            'Registrations' => new Recursion($this->getRegistrations()),
+            'Routes' => new Recursion($this->getRoutes()),
+            'StopPoints' => new Recursion($this->getStopPoints()),
+            'SupportingDocuments' => new Recursion($this->getDocuments()),
+        ];
+        $mapping = new Recursion($transXChange);
+        return $mapping;
     }
 }

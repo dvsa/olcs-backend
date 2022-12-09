@@ -29,7 +29,7 @@ class Review extends AbstractQueryHandler
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->continuationReviewService = $serviceLocator->getServiceLocator()->get('ContinuationReview');
 

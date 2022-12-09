@@ -12,6 +12,7 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceOperatingCentre;
+use Interop\Container\ContainerInterface;
 
 /**
  * Variation Operating Centre Helper
@@ -32,12 +33,7 @@ class VariationOperatingCentreHelper implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $repoSm = $serviceLocator->get('RepositoryServiceManager');
-
-        $this->aocRepo = $repoSm->get('ApplicationOperatingCentre');
-        $this->locRepo = $repoSm->get('LicenceOperatingCentre');
-
-        return $this;
+        return $this->__invoke($serviceLocator, VariationOperatingCentreHelper::class);
     }
 
     public function getListDataForApplication(Application $application, $query = null)
@@ -140,5 +136,12 @@ class VariationOperatingCentreHelper implements FactoryInterface
                 $value = $oc['operatingCentre']['id'];
         }
         return $value;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $repoSm = $container->get('RepositoryServiceManager');
+        $this->aocRepo = $repoSm->get('ApplicationOperatingCentre');
+        $this->locRepo = $repoSm->get('LicenceOperatingCentre');
+        return $this;
     }
 }

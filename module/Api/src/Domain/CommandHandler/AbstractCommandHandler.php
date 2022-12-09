@@ -49,6 +49,7 @@ use ZfcRbac\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Interop\Container\ContainerInterface;
 
 /**
  * Abstract Command Handler
@@ -110,7 +111,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return $this|TransactioningCommandHandler
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->result = new Result();
 
@@ -588,5 +589,27 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             return null;
         }
         return $value === 'Y' ? true : false;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->result = new Result();
+        /** @var ServiceLocatorInterface $mainServiceLocator */
+        $mainServiceLocator = $container->getServiceLocator();
+        try {
+            $this->applyInterfaces($mainServiceLocator);
+        } catch (LaminasServiceException $e) {
+            $this->logServiceExceptions($e);
+        }
+        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
+        if ($this->repoServiceName !== null) {
+            $this->extraRepos[] = $this->repoServiceName;
+        }
+        $this->commandHandler = $container;
+        $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
+        $this->pidIdentityProvider = $mainServiceLocator->get(IdentityProviderInterface::class);
+        if ($this instanceof TransactionedInterface) {
+            return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
+        }
+        return $this;
     }
 }

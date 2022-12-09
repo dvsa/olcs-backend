@@ -20,6 +20,16 @@ class ChangePasswordFactory implements FactoryInterface
      * @param array|null $options
      *
      * @return ChangePassword
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return ChangePassword
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ChangePassword
     {
@@ -36,7 +46,7 @@ class ChangePasswordFactory implements FactoryInterface
      *
      * @return ChangePassword
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): ChangePassword
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): ChangePassword
     {
         return $this($serviceLocator, ChangePassword::class);
     }

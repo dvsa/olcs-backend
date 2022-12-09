@@ -50,7 +50,7 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
      */
     protected ValidatableAdapterInterface $adapter;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->adapter = $serviceLocator->getServiceLocator()->get(ValidatableAdapterInterface::class);
 

@@ -30,7 +30,7 @@ abstract class AbstractCompanySubsidiary extends AbstractCommandHandler implemen
      * @return $this
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    public function createService(ServiceLocatorInterface $sl)
+    public function createService(ServiceLocatorInterface $sl, $name = null, $requestedName = null)
     {
         $this->extraRepos = array_merge(['CompanySubsidiary', 'Licence', 'Application'], $this->extraRepos);
 

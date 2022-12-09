@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Lva\Application;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Interop\Container\ContainerInterface;
 
 /**
  * GrantValidationService
@@ -28,9 +29,7 @@ class GrantValidationService implements \Laminas\ServiceManager\FactoryInterface
 
     public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->sectionAccessService = $serviceLocator->get('SectionAccessService');
-
-        return $this;
+        return $this->__invoke($serviceLocator, GrantValidationService::class);
     }
 
     /**
@@ -233,5 +232,10 @@ class GrantValidationService implements \Laminas\ServiceManager\FactoryInterface
         }
 
         return $errors;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->sectionAccessService = $container->get('SectionAccessService');
+        return $this;
     }
 }

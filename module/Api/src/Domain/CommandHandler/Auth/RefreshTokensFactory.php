@@ -15,10 +15,11 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class RefreshTokensFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
-     *
      * @return RefreshTokens
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RefreshTokens
@@ -36,7 +37,7 @@ class RefreshTokensFactory implements FactoryInterface
      *@deprecated Remove once Laminas v3 upgrade is complete
      *
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): RefreshTokens
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): RefreshTokens
     {
         return $this($serviceLocator, RefreshTokens::class);
     }

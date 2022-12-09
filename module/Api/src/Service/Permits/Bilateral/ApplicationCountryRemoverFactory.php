@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Bilateral;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class ApplicationCountryRemoverFactory implements FactoryInterface
 {
@@ -14,11 +15,24 @@ class ApplicationCountryRemoverFactory implements FactoryInterface
      *
      * @return ApplicationCountryRemover
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): ApplicationCountryRemover
+    {
+        return $this->__invoke($serviceLocator, ApplicationCountryRemover::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return ApplicationCountryRemover
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ApplicationCountryRemover
     {
         return new ApplicationCountryRemover(
-            $serviceLocator->get('CqrsCommandCreator'),
-            $serviceLocator->get('CommandHandlerManager')
+            $container->get('CqrsCommandCreator'),
+            $container->get('CommandHandlerManager')
         );
     }
 }

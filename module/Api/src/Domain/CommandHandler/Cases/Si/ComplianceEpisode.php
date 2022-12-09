@@ -147,7 +147,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      *
      * @return TransactioningCommandHandler
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 

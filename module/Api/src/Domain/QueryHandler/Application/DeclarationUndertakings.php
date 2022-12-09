@@ -27,7 +27,7 @@ class DeclarationUndertakings extends AbstractQueryHandler
      */
     protected $reviewService;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $sm = $serviceLocator->getServiceLocator();
 

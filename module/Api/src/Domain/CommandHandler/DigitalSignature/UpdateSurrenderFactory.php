@@ -13,10 +13,11 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class UpdateSurrenderFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
-     *
      * @return TransactioningCommandHandler
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransactioningCommandHandler
@@ -30,7 +31,7 @@ class UpdateSurrenderFactory implements FactoryInterface
     /**
      * @deprecated Remove once Laminas v3 upgrade is complete
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): TransactioningCommandHandler
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): TransactioningCommandHandler
     {
         return $this($serviceLocator, UpdateSurrender::class);
     }

@@ -68,7 +68,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
     protected PasswordService $passwordService;
     private string $provider;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->authAdapter = $serviceLocator->getServiceLocator()->get(ValidatableAdapterInterface::class);
         $this->passwordService = $serviceLocator->getServiceLocator()->get(PasswordService::class);

@@ -14,6 +14,8 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class DeleteUserSelfServeFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
@@ -34,7 +36,7 @@ class DeleteUserSelfServeFactory implements FactoryInterface
     /**
      * @deprecated Remove following Laminas V3 upgrade
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): TransactioningCommandHandler
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): TransactioningCommandHandler
     {
         return $this->__invoke($serviceLocator, DeleteUserSelfserve::class);
     }

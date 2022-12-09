@@ -15,10 +15,11 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class ResetPasswordFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
-     *
      * @return ResetPassword
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ResetPassword
@@ -37,7 +38,7 @@ class ResetPasswordFactory implements FactoryInterface
      *
      * @return ResetPassword
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): ResetPassword
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): ResetPassword
     {
         return $this($serviceLocator, ResetPassword::class);
     }

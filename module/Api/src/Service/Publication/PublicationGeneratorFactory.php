@@ -6,6 +6,7 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager as ContextPluginManager;
 use Dvsa\Olcs\Api\Service\Publication\Process\PluginManager as ProcessPluginManager;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class PublicationGeneratorFactory
@@ -19,12 +20,27 @@ class PublicationGeneratorFactory implements FactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): PublicationGenerator
+    {
+        return $this->__invoke($serviceLocator, PublicationGenerator::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return PublicationGenerator
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): PublicationGenerator
     {
         return new PublicationGenerator(
-            $serviceLocator->get('Config')['publications'],
-            $serviceLocator->get(ContextPluginManager::class),
-            $serviceLocator->get(ProcessPluginManager::class)
+            $container->get('Config')['publications'],
+            $container->get(ContextPluginManager::class),
+            $container->get(ProcessPluginManager::class)
         );
     }
 }
