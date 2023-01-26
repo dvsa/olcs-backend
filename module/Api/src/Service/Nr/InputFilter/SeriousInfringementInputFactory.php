@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates as SiDateFilter;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted;
 use Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate as ImposedDateValidator;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class SeriousInfringementInputFactory
@@ -21,17 +22,29 @@ class SeriousInfringementInputFactory implements FactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): Input
+    {
+        return $this->__invoke($serviceLocator, Input::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Input
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Input
     {
         $service = new Input('serious_infringement');
-
         $filterChain = $service->getFilterChain();
-        $filterChain->attach($serviceLocator->get('FilterManager')->get(IsExecuted::class));
-        $filterChain->attach($serviceLocator->get('FilterManager')->get(SiDateFilter::class));
-
+        $filterChain->attach($container->get('FilterManager')->get(IsExecuted::class));
+        $filterChain->attach($container->get('FilterManager')->get(SiDateFilter::class));
         $validatorChain = $service->getValidatorChain();
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get(ImposedDateValidator::class));
-
+        $validatorChain->attach($container->get('ValidatorManager')->get(ImposedDateValidator::class));
         return $service;
     }
 }

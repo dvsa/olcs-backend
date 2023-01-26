@@ -22,7 +22,7 @@ class Grant extends AbstractQueryHandler
      */
     private $grantValidationService;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 

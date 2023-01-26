@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Handlers;
 
 use Dvsa\Olcs\Api\Domain\Validation\ValidationHelperTrait;
 use Laminas\ServiceManager\FactoryInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Abstract Handler

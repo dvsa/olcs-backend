@@ -12,6 +12,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Stdlib\ArrayUtils;
+use Interop\Container\ContainerInterface;
 
 /**
  * Document Generator
@@ -66,14 +67,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->setNamingService($serviceLocator->get('DocumentNamingService'));
-        $this->documentService = $serviceLocator->get('Document');
-        $this->queryHandlerManager = $serviceLocator->get('QueryHandlerManager');
-        $this->uploader = $serviceLocator->get('FileUploader');
-        $this->contentStore = $serviceLocator->get('ContentStore');
-        $this->documentRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
-
-        return $this;
+        return $this->__invoke($serviceLocator, DocumentGenerator::class);
     }
 
     /**
@@ -245,5 +239,15 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         }
 
         return null;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->setNamingService($container->get('DocumentNamingService'));
+        $this->documentService = $container->get('Document');
+        $this->queryHandlerManager = $container->get('QueryHandlerManager');
+        $this->uploader = $container->get('FileUploader');
+        $this->contentStore = $container->get('ContentStore');
+        $this->documentRepo = $container->get('RepositoryServiceManager')->get('Document');
+        return $this;
     }
 }

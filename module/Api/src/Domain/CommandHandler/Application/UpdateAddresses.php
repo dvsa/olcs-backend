@@ -35,7 +35,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements Transactio
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
 

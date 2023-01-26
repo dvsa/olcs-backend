@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class FormFragmentGeneratorFactory implements FactoryInterface
 {
@@ -14,12 +15,27 @@ class FormFragmentGeneratorFactory implements FactoryInterface
      *
      * @return FormFragmentGenerator
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): FormFragmentGenerator
+    {
+        return $this->__invoke($serviceLocator, FormFragmentGenerator::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return FormFragmentGenerator
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FormFragmentGenerator
     {
         return new FormFragmentGenerator(
-            $serviceLocator->get('QaFormFragmentFactory'),
-            $serviceLocator->get('QaApplicationStepGenerator'),
-            $serviceLocator->get('QaContextFactory')
+            $container->get('QaFormFragmentFactory'),
+            $container->get('QaApplicationStepGenerator'),
+            $container->get('QaContextFactory')
         );
     }
 }

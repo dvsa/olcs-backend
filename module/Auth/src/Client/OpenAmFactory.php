@@ -17,12 +17,15 @@ class OpenAmFactory implements FactoryInterface
     const MSG_MISSING_COOKIE_NAME = 'OpenAm cookie name missing from config';
 
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
-     *
-     * @return OpenAmClient
+     * @param $requestedName
+     * @param array|null $options
+     * @return OpenAm
      * @throws ClientException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): OpenAmClient
     {

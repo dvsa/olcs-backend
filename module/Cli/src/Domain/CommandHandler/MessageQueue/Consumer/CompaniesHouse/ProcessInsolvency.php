@@ -82,7 +82,7 @@ class ProcessInsolvency extends AbstractConsumer
      */
     protected $companiesHouseApi;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->companiesHouseApi = $serviceLocator->getServiceLocator()->get(CompaniesHouseClient::class);
         return parent::createService($serviceLocator);

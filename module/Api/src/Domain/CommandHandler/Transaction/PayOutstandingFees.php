@@ -428,7 +428,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
         return parent::createService($serviceLocator);

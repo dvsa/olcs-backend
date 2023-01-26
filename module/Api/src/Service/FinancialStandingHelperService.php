@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Financial Standing Helper Service
@@ -46,10 +47,7 @@ class FinancialStandingHelperService implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->ratesRepo = $serviceLocator->get('RepositoryServiceManager')->get('FinancialStandingRate');
-        $this->organisationRepo = $serviceLocator->get('RepositoryServiceManager')->get('Organisation');
-        $this->applicationRepo = $serviceLocator->get('RepositoryServiceManager')->get('Application');
-        return $this;
+        return $this->__invoke($serviceLocator, FinancialStandingHelperService::class);
     }
 
     /**
@@ -525,5 +523,12 @@ class FinancialStandingHelperService implements FactoryInterface
                 return $app->getId() !== $application->getId();
             }
         );
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->ratesRepo = $container->get('RepositoryServiceManager')->get('FinancialStandingRate');
+        $this->organisationRepo = $container->get('RepositoryServiceManager')->get('Organisation');
+        $this->applicationRepo = $container->get('RepositoryServiceManager')->get('Application');
+        return $this;
     }
 }

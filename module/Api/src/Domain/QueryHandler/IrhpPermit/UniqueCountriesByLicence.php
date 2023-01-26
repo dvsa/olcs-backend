@@ -27,7 +27,7 @@ class UniqueCountriesByLicence extends AbstractQueryHandler
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->queryHandlerManager = $serviceLocator->getServiceLocator()->get('QueryHandlerManager');
 

@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Mvc;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Payload Validation Listener Factory
@@ -23,8 +24,23 @@ class PayloadValidationListenerFactory implements FactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): PayloadValidationListener
     {
-        return new PayloadValidationListener($serviceLocator->get('TransferAnnotationBuilder'));
+        return $this->__invoke($serviceLocator, PayloadValidationListener::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return PayloadValidationListener
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): PayloadValidationListener
+    {
+        return new PayloadValidationListener($container->get('TransferAnnotationBuilder'));
     }
 }

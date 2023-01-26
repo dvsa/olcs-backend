@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update a Vehicle Section 26 status
@@ -20,7 +21,7 @@ final class UpdateSection26 extends AbstractCommandHandler implements Transactio
      */
     private $searchService;
 
-    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->searchService = $serviceLocator->getServiceLocator()->get('ElasticSearch\Search');
 

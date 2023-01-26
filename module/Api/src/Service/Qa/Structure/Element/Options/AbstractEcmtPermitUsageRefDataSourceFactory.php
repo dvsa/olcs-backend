@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 abstract class AbstractEcmtPermitUsageRefDataSourceFactory implements FactoryInterface
 {
@@ -17,10 +18,23 @@ abstract class AbstractEcmtPermitUsageRefDataSourceFactory implements FactoryInt
      *
      * @return EcmtPermitUsageRefDataSource
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): EcmtPermitUsageRefDataSource
+    {
+        return $this->__invoke($serviceLocator, EcmtPermitUsageRefDataSource::class);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return EcmtPermitUsageRefDataSource
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): EcmtPermitUsageRefDataSource
     {
         return new EcmtPermitUsageRefDataSource(
-            $serviceLocator->get('QaRefDataOptionsSource'),
+            $container->get('QaRefDataOptionsSource'),
             static::TRANSFORMATIONS
         );
     }

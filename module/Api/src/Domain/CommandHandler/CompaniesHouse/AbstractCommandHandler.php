@@ -31,7 +31,7 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->api = $serviceLocator->getServiceLocator()->get(CompaniesHouseClient::class);
 

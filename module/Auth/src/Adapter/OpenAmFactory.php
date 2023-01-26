@@ -13,11 +13,14 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class OpenAmFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
-     *
-     * @return OpenAmAdapter
+     * @return OpenAm
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): OpenAmAdapter
     {

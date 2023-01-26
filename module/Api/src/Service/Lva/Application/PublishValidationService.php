@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Service\Lva\Application;
 
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Service\FeesHelperService;
+use Interop\Container\ContainerInterface;
 
 /**
  * PublishValidationService
@@ -26,9 +28,7 @@ class PublishValidationService implements \Laminas\ServiceManager\FactoryInterfa
 
     public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->feesHelper = $serviceLocator->get('FeesHelperService');
-
-        return $this;
+        return $this->__invoke($serviceLocator, FeesHelperService::class);
     }
 
     /**
@@ -66,5 +66,10 @@ class PublishValidationService implements \Laminas\ServiceManager\FactoryInterfa
         }
 
         return $errors;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->feesHelper = $container->get('FeesHelperService');
+        return $this;
     }
 }

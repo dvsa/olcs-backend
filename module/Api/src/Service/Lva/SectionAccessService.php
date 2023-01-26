@@ -15,6 +15,7 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Interop\Container\ContainerInterface;
 
 /**
  * Section Access Service
@@ -50,11 +51,7 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->restrictionService = $serviceLocator->get('RestrictionService');
-        $this->sectionConfig = $serviceLocator->get('SectionConfig');
-        $this->setAuthService($serviceLocator->get(AuthorizationService::class));
-
-        return $this;
+        return $this->__invoke($serviceLocator, SectionAccessService::class);
     }
 
     /**
@@ -160,5 +157,12 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
         $restrictions = $sectionDetails['restricted'];
 
         return $this->restrictionService->isRestrictionSatisfied($restrictions, $access, $section);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->restrictionService = $container->get('RestrictionService');
+        $this->sectionConfig = $container->get('SectionConfig');
+        $this->setAuthService($container->get(AuthorizationService::class));
+        return $this;
     }
 }

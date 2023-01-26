@@ -16,12 +16,14 @@ class ValidatableAdapterFactory implements FactoryInterface
     const ADAPTER_CONFIG_ADAPTER = 'adapter';
 
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
      * @return ValidatableAdapterInterface
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ValidatableAdapterInterface
     {

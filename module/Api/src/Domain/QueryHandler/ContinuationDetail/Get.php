@@ -40,7 +40,7 @@ class Get extends AbstractQueryHandler
      *
      * @return $this
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->financialStandingHelper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
         $this->reviewService = $serviceLocator->getServiceLocator()->get('ContinuationReview\Declaration');

@@ -22,6 +22,7 @@ use Laminas\Mail\Exception\InvalidArgumentException as LaminasAddressException;
 use Laminas\Mail\Exception\RuntimeException as LaminasMailRuntimeException;
 use Laminas\Mail\Transport\TransportInterface;
 use Olcs\Logging\Log\Logger;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class Email
@@ -70,27 +71,7 @@ class Email implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-
-        if (!isset($config['mail'])) {
-            throw new LaminasMailRuntimeException('No mail config found');
-        }
-
-        $transport = Factory::create($config['mail']);
-
-        if ($transport instanceof MultiTransport && isset($config['mail']['options'])) {
-            $s3Options = $serviceLocator->get(S3FileOptions::class);
-            $multiTransportOptions = new MultiTransportOptions($config['mail']['options'], $s3Options);
-            $transport->setOptions($multiTransportOptions);
-        }
-
-        if ($transport instanceof S3File && isset($config['mail']['options'])) {
-            $transport->setOptions($serviceLocator->get(S3FileOptions::class));
-        }
-
-        $this->setMailTransport($transport);
-
-        return $this;
+        return $this->__invoke($serviceLocator, Email::class);
     }
 
     /**
@@ -259,5 +240,23 @@ class Email implements FactoryInterface
         $priorityHeader = new GenericHeader('X-Priority', '1');
         $msPriorityHeader = new GenericHeader('X-MSMail-Priority', 'High');
         $headers->addHeaders([$importanceHeader, $priorityHeader, $msPriorityHeader]);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
+        if (!isset($config['mail'])) {
+            throw new LaminasMailRuntimeException('No mail config found');
+        }
+        $transport = Factory::create($config['mail']);
+        if ($transport instanceof MultiTransport && isset($config['mail']['options'])) {
+            $s3Options = $container->get(S3FileOptions::class);
+            $multiTransportOptions = new MultiTransportOptions($config['mail']['options'], $s3Options);
+            $transport->setOptions($multiTransportOptions);
+        }
+        if ($transport instanceof S3File && isset($config['mail']['options'])) {
+            $transport->setOptions($container->get(S3FileOptions::class));
+        }
+        $this->setMailTransport($transport);
+        return $this;
     }
 }

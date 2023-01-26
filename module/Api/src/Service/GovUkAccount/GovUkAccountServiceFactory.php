@@ -12,8 +12,14 @@ use Psr\Container\NotFoundExceptionInterface;
 class GovUkAccountServiceFactory implements FactoryInterface
 {
     /**
-     * @throws NotFoundExceptionInterface
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return GovUkAccountService
      * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): GovUkAccountService
     {

@@ -18,7 +18,7 @@ class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedI
      */
     protected $snapshotService;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->snapshotService = $serviceLocator->getServiceLocator()->get(Generator::class);
 

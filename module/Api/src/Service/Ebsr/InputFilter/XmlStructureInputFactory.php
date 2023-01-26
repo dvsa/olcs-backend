@@ -11,6 +11,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Filter\ParseXml;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class XmlStructureInputFactory
@@ -31,17 +32,29 @@ class XmlStructureInputFactory implements FactoryInterface
      * @return Input
      * @throws \RuntimeException
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): Input
+    {
+        return $this->__invoke($serviceLocator, Input::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Input
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Input
     {
         $inputName = 'xml_structure';
         $service = new Input($inputName);
-        $config = $serviceLocator->get('Config');
-
+        $config = $container->get('Config');
         $filterChain = $service->getFilterChain();
-        $filterChain->attach($serviceLocator->get('FilterManager')->get(ParseXml::class));
-
+        $filterChain->attach($container->get('FilterManager')->get(ParseXml::class));
         $validatorchain = $service->getValidatorChain();
-
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
             if (!isset($config['ebsr']['max_schema_errors'])) {
@@ -57,7 +70,7 @@ class XmlStructureInputFactory implements FactoryInterface
             }
 
             /** @var ServiceLocatorInterface $validatorManager */
-            $validatorManager = $serviceLocator->get('ValidatorManager');
+            $validatorManager = $container->get('ValidatorManager');
 
             /** @var Xsd $xsdValidator */
             $xsdValidator = $validatorManager->get(Xsd::class);
@@ -71,7 +84,6 @@ class XmlStructureInputFactory implements FactoryInterface
             $validatorchain->attach($validatorManager->get(Registration::class));
             $validatorchain->attach($validatorManager->get(SupportingDocuments::class));
         }
-
         return $service;
     }
 }

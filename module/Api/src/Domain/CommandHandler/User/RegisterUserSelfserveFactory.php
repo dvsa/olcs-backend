@@ -15,12 +15,14 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class RegisterUserSelfserveFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
      * @return TransactioningCommandHandler
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransactioningCommandHandler
+public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransactioningCommandHandler
     {
         assert($container instanceof ServiceLocatorAwareInterface);
         $pluginManager = $container;
@@ -43,7 +45,7 @@ class RegisterUserSelfserveFactory implements FactoryInterface
      * @return TransactioningCommandHandler
      * @deprecated Use __invoke
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): TransactioningCommandHandler
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): TransactioningCommandHandler
     {
         return $this->__invoke($serviceLocator, null);
     }

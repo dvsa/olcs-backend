@@ -35,7 +35,7 @@ final class CreateOverpaymentFee extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'FeeType';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
         return parent::createService($serviceLocator);

@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class CabotageOnlyQuestionHandlerFactory implements FactoryInterface
 {
@@ -15,10 +16,25 @@ class CabotageOnlyQuestionHandlerFactory implements FactoryInterface
      *
      * @return FixedAnswerQuestionHandler
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): FixedAnswerQuestionHandler
+    {
+        return $this->__invoke($serviceLocator, FixedAnswerQuestionHandler::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return FixedAnswerQuestionHandler
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FixedAnswerQuestionHandler
     {
         return new FixedAnswerQuestionHandler(
-            $serviceLocator->get('QaGenericAnswerWriter'),
+            $container->get('QaGenericAnswerWriter'),
             Answer::BILATERAL_CABOTAGE_ONLY
         );
     }

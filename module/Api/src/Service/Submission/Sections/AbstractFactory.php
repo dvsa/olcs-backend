@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class AbstractFactory
@@ -23,8 +24,11 @@ class AbstractFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainSl = $serviceLocator->getServiceLocator();
-
+        return $this->__invoke($serviceLocator, $requestedName);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $mainSl = $container->getServiceLocator();
         return new $requestedName($mainSl->get('QueryHandlerManager'), $mainSl->get('viewrenderer'));
     }
 }

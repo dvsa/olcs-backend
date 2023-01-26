@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Interop\Container\ContainerInterface;
 
 /**
  * TrafficAreaValidator
@@ -34,10 +35,7 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\FactoryInterface
 
     public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->addressService = $serviceLocator->get('AddressService');
-        $this->adminAreaTrafficAreaRepo = $serviceLocator->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
-
-        return $this;
+        return $this->__invoke($serviceLocator, TrafficAreaValidator::class);
     }
 
     /**
@@ -267,5 +265,11 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\FactoryInterface
         }
 
         return false;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->addressService = $container->get('AddressService');
+        $this->adminAreaTrafficAreaRepo = $container->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
+        return $this;
     }
 }

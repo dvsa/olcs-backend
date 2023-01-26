@@ -36,7 +36,7 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
      *
      * @return RemoveDeletedDocuments
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         /** @var ServiceLocatorInterface $mainServiceLocator  */
         $mainServiceLocator = $serviceLocator->getServiceLocator();

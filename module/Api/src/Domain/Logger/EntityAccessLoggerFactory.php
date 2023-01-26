@@ -16,11 +16,16 @@ use Psr\Container\ContainerInterface;
  */
 class EntityAccessLoggerFactory implements FactoryInterface
 {
+
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
      * @return EntityAccessLogger
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): EntityAccessLogger
     {
