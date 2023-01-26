@@ -13,12 +13,15 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class JWTIdentityProviderFactory implements FactoryInterface
 {
-
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
      * @return JWTIdentityProvider
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): JWTIdentityProvider
     {
@@ -28,7 +31,6 @@ class JWTIdentityProviderFactory implements FactoryInterface
             $container->get(Client::class)
         );
     }
-
 
     /**
      * Create service

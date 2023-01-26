@@ -11,6 +11,8 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class PasswordServiceFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options

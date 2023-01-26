@@ -24,6 +24,8 @@ class AcquiredRightsServiceFactory implements FactoryInterface
      * @return AcquiredRightsService
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AcquiredRightsService
     {

@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm as VrmFilter;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class ComplianceEpisodeInputFactory
@@ -23,18 +24,30 @@ class ComplianceEpisodeInputFactory implements FactoryInterface
      *
      * @return mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): Input
     {
-        $fm = $serviceLocator->get('FilterManager');
+        return $this->__invoke($serviceLocator, Input::class);
+    }
 
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Input
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Input
+    {
+        $fm = $container->get('FilterManager');
         $service = new Input('compliance_episode');
-
         $filterChain = $service->getFilterChain();
         $filterChain
             ->attach($fm->get(VrmFilter::class))
             ->attach($fm->get(LicenceNumber::class))
             ->attach($fm->get(MemberStateCode::class));
-
         return $service;
     }
 }

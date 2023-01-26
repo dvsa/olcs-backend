@@ -12,6 +12,7 @@ use Doctrine\ORM\Query;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class TransactionManager
@@ -19,8 +20,23 @@ use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
  */
 final class TransactionManagerFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): TransactionManager
     {
-        return new TransactionManager($serviceLocator->get('doctrine.entitymanager.orm_default'));
+        return $this->__invoke($serviceLocator, TransactionManager::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return TransactionManager
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransactionManager
+    {
+        return new TransactionManager($container->get('doctrine.entitymanager.orm_default'));
     }
 }

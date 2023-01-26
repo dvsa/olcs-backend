@@ -23,7 +23,7 @@ class UpdateTemplateSource extends AbstractCommandHandler
     /** @var TwigRenderer */
     private $twigRenderer;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->twigRenderer = $serviceLocator->getServiceLocator()->get('TemplateTwigRenderer');
 

@@ -37,7 +37,7 @@ class UpdateDetailsFactory implements FactoryInterface
      *
      * @return UpdateDetails
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         return $this->__invoke($serviceLocator, UpdateDetails::class);
     }

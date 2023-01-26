@@ -67,7 +67,7 @@ class FinancialEvidence extends AbstractQueryHandler
         );
     }
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         parent::createService($serviceLocator);
         $this->helper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');

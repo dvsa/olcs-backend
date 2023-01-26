@@ -27,7 +27,7 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
 
     private array $config;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
 
         $this->config = $serviceLocator->getServiceLocator()->get('Config');

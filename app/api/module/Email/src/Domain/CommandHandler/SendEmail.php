@@ -62,7 +62,7 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
      */
     private $emailService;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 

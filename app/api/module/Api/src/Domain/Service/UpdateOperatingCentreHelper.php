@@ -10,6 +10,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as UpdateLicenceOp
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateApplicationOperatingCentres;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Interop\Container\ContainerInterface;
 
 /**
  * @see \Dvsa\OlcsTest\Api\Domain\Service\UpdateOperatingCentreHelperTest
@@ -39,9 +40,7 @@ class UpdateOperatingCentreHelper implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->authService = $serviceLocator->get(AuthorizationService::class);
-
-        return $this;
+        return $this->__invoke($serviceLocator, AuthorizationService::class);
     }
 
     public function getMessages()
@@ -158,5 +157,10 @@ class UpdateOperatingCentreHelper implements FactoryInterface
         }
 
         $this->messages[$field][] = [$messageCode => $message];
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->authService = $container->get(AuthorizationService::class);
+        return $this;
     }
 }

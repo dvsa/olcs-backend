@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter as PrintLetterCmd;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Print Letter
@@ -135,7 +136,7 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
      *
      * @return AbstractCommandHandler
      */
-    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         /** @var \Laminas\ServiceManager\ServiceLocatorInterface $sm  */
         $sm = $serviceLocator->getServiceLocator();

@@ -262,7 +262,7 @@ final class DataGovUkExport extends AbstractDataExport
      *
      * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
      */
-    public function createService(ServiceLocatorInterface $sm)
+    public function createService(ServiceLocatorInterface $sm, $name = null, $requestedName = null)
     {
         /** @var ServiceLocatorInterface $sl */
         $sl = $sm->getServiceLocator();

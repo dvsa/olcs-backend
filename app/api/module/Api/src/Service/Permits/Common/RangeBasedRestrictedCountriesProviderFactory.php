@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Common;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class RangeBasedRestrictedCountriesProviderFactory implements FactoryInterface
 {
@@ -14,13 +15,27 @@ class RangeBasedRestrictedCountriesProviderFactory implements FactoryInterface
      *
      * @return RangeBasedRestrictedCountriesProvider
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): RangeBasedRestrictedCountriesProvider
     {
-        $repoServiceManager = $serviceLocator->get('RepositoryServiceManager');
+        return $this->__invoke($serviceLocator, RangeBasedRestrictedCountriesProvider::class);
+    }
 
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return RangeBasedRestrictedCountriesProvider
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RangeBasedRestrictedCountriesProvider
+    {
+        $repoServiceManager = $container->get('RepositoryServiceManager');
         return new RangeBasedRestrictedCountriesProvider(
             $repoServiceManager->get('IrhpPermitRange'),
-            $serviceLocator->get('PermitsCommonTypeBasedPermitTypeConfigProvider'),
+            $container->get('PermitsCommonTypeBasedPermitTypeConfigProvider'),
             $repoServiceManager->get('Country')
         );
     }

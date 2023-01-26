@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\AwsSdk\Factories;
 use Aws\S3\S3Client;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class S3ClientFactory
@@ -22,10 +23,25 @@ class S3ClientFactory implements FactoryInterface
      *
      * @return mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): S3Client
     {
-        $config = $serviceLocator->get('Config');
-        $provider = $serviceLocator->get('AwsCredentialsProvider');
+        return $this->__invoke($serviceLocator, S3Client::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return S3Client
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): S3Client
+    {
+        $config = $container->get('Config');
+        $provider = $container->get('AwsCredentialsProvider');
         $s3Client = new S3Client([
             'region' => $config['awsOptions']['region'],
             'version' => $config['awsOptions']['version'],

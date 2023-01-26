@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\UpdatePrivateHireLicence as Command;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * UpdatePrivateHireLicence
@@ -23,7 +24,7 @@ final class UpdatePrivateHireLicence extends AbstractCommandHandler implements T
      */
     private $trafficAreaValidator;
 
-    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
 

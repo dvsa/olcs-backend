@@ -15,6 +15,8 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class AuthenticationServiceFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options

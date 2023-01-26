@@ -23,6 +23,8 @@ class LoginFactory implements FactoryInterface
     const ADAPTER_CONFIG_ADAPTER = 'adapter';
 
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
@@ -45,7 +47,7 @@ class LoginFactory implements FactoryInterface
      * @return Login
      * @deprecated Use __invoke
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): Login
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): Login
     {
         return $this->__invoke($serviceLocator, null);
     }

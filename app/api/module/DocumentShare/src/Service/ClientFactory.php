@@ -12,6 +12,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Http\Client as HttpClient;
 use Sabre\DAV\Client as SabreClient;
 use ZfcRbac\Service\AuthorizationService;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class ClientFactory
@@ -80,34 +81,7 @@ class ClientFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator): DocumentStoreInterface
     {
-        $clientOptions = $this->getOptions($serviceLocator, 'client');
-        $clientOptions['httpClient'] = $this->getHttpClient($serviceLocator);
-
-        if ($this->getClientType($serviceLocator) === WebDavClient::class) {
-            $this->validateWebDavConfig($clientOptions);
-            $sabreClient = new SabreClient(
-                [
-                    'baseUri' => $clientOptions['webdav_baseuri'],
-                    'username' => $clientOptions['username'],
-                    'password' => $clientOptions['password']
-                ]
-            );
-
-            $adapter = new WebDAVAdapter($sabreClient, $clientOptions['workspace']);
-            $fileSystem = new Filesystem($adapter);
-            return new WebDavClient($fileSystem);
-        } else {
-            $this->validateDocManConfig($clientOptions);
-            $client = new DocManClient(
-                $this->getHttpClient($serviceLocator),
-                $clientOptions['baseuri'],
-                $clientOptions['workspace']
-            );
-            if (isset($clientOptions['uuid'])) {
-                $client->setUuid($clientOptions['uuid']);
-            }
-            return $client;
-        }
+        return $this->__invoke($serviceLocator, DocManClient::class);
     }
 
 
@@ -162,6 +136,36 @@ class ClientFactory implements FactoryInterface
 
         if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
             throw new RuntimeException('Missing required option document_share.client.baseuri');
+        }
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $clientOptions = $this->getOptions($container, 'client');
+        $clientOptions['httpClient'] = $this->getHttpClient($container);
+        if ($this->getClientType($container) === WebDavClient::class) {
+            $this->validateWebDavConfig($clientOptions);
+            $sabreClient = new SabreClient(
+                [
+                    'baseUri' => $clientOptions['webdav_baseuri'],
+                    'username' => $clientOptions['username'],
+                    'password' => $clientOptions['password']
+                ]
+            );
+
+            $adapter = new WebDAVAdapter($sabreClient, $clientOptions['workspace']);
+            $fileSystem = new Filesystem($adapter);
+            return new WebDavClient($fileSystem);
+        } else {
+            $this->validateDocManConfig($clientOptions);
+            $client = new DocManClient(
+                $this->getHttpClient($container),
+                $clientOptions['baseuri'],
+                $clientOptions['workspace']
+            );
+            if (isset($clientOptions['uuid'])) {
+                $client->setUuid($clientOptions['uuid']);
+            }
+            return $client;
         }
     }
 }

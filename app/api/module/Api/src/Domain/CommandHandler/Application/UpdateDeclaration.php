@@ -34,7 +34,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
      */
     protected $feeRepo;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->feeRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
             ->get('Fee');

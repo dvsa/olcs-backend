@@ -27,7 +27,7 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
 
     protected $repoServiceName = 'Application';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $this->licNoGenRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
             ->get('LicenceNoGen');

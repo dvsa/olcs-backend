@@ -8,6 +8,7 @@ use Olcs\Logging\Log\LaminasLogPsr3Adapter;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\Exception;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class ClientFactory
@@ -22,20 +23,32 @@ class ClientFactory implements FactoryInterface
      * @throws \Laminas\ServiceManager\Exception\RuntimeException
      * @return mixed
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): Client
     {
-        $config = $serviceLocator->get('Config');
+        return $this->__invoke($serviceLocator, Client::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Client
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Client
+    {
+        $config = $container->get('Config');
         if (!isset($config['elastic_search'])) {
             throw new Exception\RuntimeException('Elastic search config not found');
         }
-
         $service = new Client($config['elastic_search']);
-
         if (isset($config['elastic_search']['log'])) {
             $log = new LaminasLogPsr3Adapter(Logger::getLogger());
             $service->setLogger($log);
         }
-
         return $service;
     }
 }

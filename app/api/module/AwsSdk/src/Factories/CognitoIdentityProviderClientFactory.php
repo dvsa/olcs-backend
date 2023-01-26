@@ -11,10 +11,14 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class CognitoIdentityProviderClientFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
      * @return CognitoIdentityProviderClient
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): CognitoIdentityProviderClient
     {

@@ -63,7 +63,7 @@ class FeeList extends AbstractQueryHandler
         return true;
     }
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         parent::createService($serviceLocator);
         $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');

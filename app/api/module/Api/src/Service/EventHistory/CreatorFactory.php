@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\EventHistory;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
+use Interop\Container\ContainerInterface;
 
 class CreatorFactory implements FactoryInterface
 {
@@ -15,12 +16,26 @@ class CreatorFactory implements FactoryInterface
      *
      * @return Creator
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): Creator
     {
-        $repoServiceManager = $serviceLocator->get('RepositoryServiceManager');
+        return $this->__invoke($serviceLocator, Creator::class);
+    }
 
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Creator
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Creator
+    {
+        $repoServiceManager = $container->get('RepositoryServiceManager');
         return new Creator(
-            $serviceLocator->get(AuthorizationService::class),
+            $container->get(AuthorizationService::class),
             $repoServiceManager->get('EventHistory'),
             $repoServiceManager->get('EventHistoryType')
         );

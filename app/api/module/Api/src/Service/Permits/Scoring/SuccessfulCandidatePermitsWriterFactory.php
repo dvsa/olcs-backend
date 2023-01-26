@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Scoring;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class SuccessfulCandidatePermitsWriterFactory implements FactoryInterface
 {
@@ -14,10 +15,25 @@ class SuccessfulCandidatePermitsWriterFactory implements FactoryInterface
      *
      * @return SuccessfulCandidatePermitsWriter
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): SuccessfulCandidatePermitsWriter
+    {
+        return $this->__invoke($serviceLocator, SuccessfulCandidatePermitsWriter::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return SuccessfulCandidatePermitsWriter
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): SuccessfulCandidatePermitsWriter
     {
         return new SuccessfulCandidatePermitsWriter(
-            $serviceLocator->get('RepositoryServiceManager')->get('IrhpCandidatePermit')
+            $container->get('RepositoryServiceManager')->get('IrhpCandidatePermit')
         );
     }
 }

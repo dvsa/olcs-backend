@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Fees;
 
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 class DaysToPayIssueFeeProviderFactory implements FactoryInterface
 {
@@ -14,10 +15,25 @@ class DaysToPayIssueFeeProviderFactory implements FactoryInterface
      *
      * @return DaysToPayIssueFeeProvider
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator): DaysToPayIssueFeeProvider
+    {
+        return $this->__invoke($serviceLocator, DaysToPayIssueFeeProvider::class);
+    }
+
+    /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return DaysToPayIssueFeeProvider
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): DaysToPayIssueFeeProvider
     {
         return new DaysToPayIssueFeeProvider(
-            $serviceLocator->get('RepositoryServiceManager')->get('SystemParameter')
+            $container->get('RepositoryServiceManager')->get('SystemParameter')
         );
     }
 }

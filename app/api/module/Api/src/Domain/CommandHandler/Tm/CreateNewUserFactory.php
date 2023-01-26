@@ -15,6 +15,8 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 class CreateNewUserFactory implements FactoryInterface
 {
     /**
+     * invoke method
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
@@ -42,7 +44,7 @@ class CreateNewUserFactory implements FactoryInterface
      * @return TransactioningCommandHandler
      * @deprecated Use __invoke
      */
-    public function createService(ServiceLocatorInterface $serviceLocator): TransactioningCommandHandler
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): TransactioningCommandHandler
     {
         return $this->__invoke($serviceLocator, null);
     }
