@@ -40,7 +40,8 @@ class GetRedirectTest extends CommandHandlerTestCase
         $this->mockedSmServices['Config'] = [
             'top-report-link' => [
                 'targetUrl' => 'apiurl',
-                'apiKey' => '123'
+                'apiKey' => '123',
+                'proxy' => 'http://proxy:123'
             ]
         ];
         parent::setUp();
@@ -76,6 +77,7 @@ class GetRedirectTest extends CommandHandlerTestCase
 
         $identity->shouldReceive('getUser')->with()->once()->andReturn($user);
 
+        $this->mockHttpClient->shouldReceive('setAdapter')->once()->andReturnSelf();
         $this->mockHttpClient->shouldReceive('setUri')->once()->with('apiurl')->andReturnSelf();
         $this->mockHttpClient->shouldReceive('setMethod')->once()->with('POST')->andReturnSelf();
         $this->mockHttpClient->shouldReceive('setRawBody')
