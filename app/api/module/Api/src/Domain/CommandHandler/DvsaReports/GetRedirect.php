@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\Http\Client;
+use Laminas\Http\Client\Adapter\Curl;
 use Laminas\Json\Json;
 
 /**
@@ -51,6 +52,12 @@ class GetRedirect extends AbstractCommandHandler implements AuthAwareInterface, 
         $config =  $this->getConfig();
         $topReportConfig = $config['top-report-link'];
 
+        $adapter = new Curl();
+        if(!empty($topReportConfig['proxy'])) {
+            $adapter->setCurlOption(CURLOPT_PROXY, $topReportConfig['proxy']);
+        }
+
+        $this->httpClient->setAdapter($adapter);
         $this->httpClient->setUri($topReportConfig['targetUrl']);
         $this->httpClient->setMethod('POST');
         $this->httpClient->setRawBody($postDataJson);
@@ -59,6 +66,8 @@ class GetRedirect extends AbstractCommandHandler implements AuthAwareInterface, 
             'x-api-key' => $topReportConfig['apiKey'],
             'Authorization' => 'Bearer '.$command->getJwt()
         ]);
+
+
 
         $edhApiResult = $this->httpClient->send();
         $resultBody = json_decode($edhApiResult->getContent(), true);
