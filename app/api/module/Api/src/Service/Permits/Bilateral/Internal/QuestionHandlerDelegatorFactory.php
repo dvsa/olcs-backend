@@ -49,7 +49,7 @@ class QuestionHandlerDelegatorFactory implements FactoryInterface
             $serviceName = 'PermitsBilateralInternal' . $partialServiceName . 'QuestionHandler';
             $questionHandlerDelegator->registerQuestionHandler(
                 $questionId,
-                $serviceLocator->get($serviceName)
+                $container->get($serviceName)
             );
         }
         return $questionHandlerDelegator;
