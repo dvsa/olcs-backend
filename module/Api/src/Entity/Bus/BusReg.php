@@ -441,7 +441,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     public function isReadOnly()
     {
         return !$this->isLatestVariation() ||
-            in_array($this->status->getId(), [self::STATUS_REGISTERED, self::STATUS_CANCELLED]);
+            in_array($this->status->getId(), [self::STATUS_CANCELLED]);
     }
 
     /**
@@ -476,7 +476,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             'isFromEbsr' => $this->isFromEbsr(),
             'isCancelled' => $this->isCancelled(),
             'isCancellation' => $this->isCancellation(),
-            'canEditEndDate' => $this->canEditEndDate(),
             'canWithdraw' => $this->canWithdraw(),
             'canRefuse' => $this->canRefuse(),
             'canRefuseByShortNotice' => $this->canRefuseByShortNotice(),
@@ -1364,31 +1363,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         }
 
         return $taskIds;
-    }
-
-    /**
-     * @param string $endDate
-     *
-     * @return void
-     * @throws ForbiddenException
-     */
-    public function updateEndDate(string $endDate): void
-    {
-        if (!$this->canEditEndDate()) {
-            throw new ForbiddenException(self::FORBIDDEN_NO_PERMISSION_ERROR);
-        }
-
-        $this->endDate = $endDate;
-    }
-
-    /**
-     * VOL-2677 registered routes can now have the end dates edited
-     *
-     * @return bool
-     */
-    public function canEditEndDate()
-    {
-        return $this->isRegistered();
     }
 
     /**
