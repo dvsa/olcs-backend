@@ -184,7 +184,6 @@ return [
     TransferCommand\Bus\CreateNoticePeriod::class => CommandHandler\Bus\CreateNoticePeriod::class,
     TransferCommand\Bus\CreateVariation::class => CommandHandler\Bus\CreateVariation::class,
     TransferCommand\Bus\CreateCancellation::class => CommandHandler\Bus\CreateCancellation::class,
-    TransferCommand\Bus\UpdateEndDate::class => CommandHandler\Bus\UpdateEndDate::class,
     TransferCommand\Bus\UpdateStops::class => CommandHandler\Bus\UpdateStops::class,
     TransferCommand\Bus\UpdateQualitySchemes::class => CommandHandler\Bus\UpdateQualitySchemes::class,
     TransferCommand\Bus\UpdateTaAuthority::class => CommandHandler\Bus\UpdateTaAuthority::class,

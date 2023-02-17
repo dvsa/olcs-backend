@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\DvsaReports;
 
-
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -53,7 +52,7 @@ class GetRedirect extends AbstractCommandHandler implements AuthAwareInterface, 
         $topReportConfig = $config['top-report-link'];
 
         $adapter = new Curl();
-        if(!empty($topReportConfig['proxy'])) {
+        if (!empty($topReportConfig['proxy'])) {
             $adapter->setCurlOption(CURLOPT_PROXY, $topReportConfig['proxy']);
         }
 
@@ -64,15 +63,13 @@ class GetRedirect extends AbstractCommandHandler implements AuthAwareInterface, 
         $this->httpClient->setHeaders([
             'Content-Type' => 'application/json',
             'x-api-key' => $topReportConfig['apiKey'],
-            'Authorization' => 'Bearer '.$command->getJwt()
+            'Authorization' => 'Bearer ' . $command->getJwt()
         ]);
-
-
 
         $edhApiResult = $this->httpClient->send();
         $resultBody = json_decode($edhApiResult->getContent(), true);
 
-        if(!isset($resultBody['redirectUrl'])) {
+        if (!isset($resultBody['redirectUrl'])) {
             throw new RuntimeException('An Error occurred obtaining a DVSA Reports Redirect Link');
         }
 
