@@ -52,11 +52,11 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.258.8",
+            "version": "3.260.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.258.8/aws-aws-sdk-php-3.258.8.zip",
-                "reference": "3bb42aeb1e11f17b0ca7357385a427a438df35b1",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.260.2/aws-aws-sdk-php-3.260.2.zip",
+                "reference": "de98dc14291ae7f39de5e381ba163c3ba40fd22d",
                 "shasum": ""
             },
             "require": {
@@ -134,9 +134,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.258.8"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.260.2"
             },
-            "time": "2023-02-10T19:22:52+00:00"
+            "time": "2023-02-23T19:35:08+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -1743,11 +1743,11 @@
         },
         {
             "name": "elendev/composer-push",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/elendev/composer-push/1.0.3/elendev-composer-push-1.0.3.zip",
-                "reference": "c2163c3d36e03654a34dade0b1323ca25ea3ba36",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/elendev/composer-push/1.0.4/elendev-composer-push-1.0.4.zip",
+                "reference": "74cd140d8481b68284291628c37d92e4c7caebbe",
                 "shasum": ""
             },
             "require": {
@@ -1792,9 +1792,9 @@
             "description": "Provide a Push command to composer to push to repositories",
             "support": {
                 "issues": "https://github.com/Elendev/composer-push/issues",
-                "source": "https://github.com/Elendev/composer-push/tree/1.0.3"
+                "source": "https://github.com/Elendev/composer-push/tree/1.0.4"
             },
-            "time": "2022-06-27T08:29:14+00:00"
+            "time": "2023-02-21T09:59:18+00:00"
         },
         {
             "name": "ezimuel/guzzlestreams",
