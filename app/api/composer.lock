@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "075be9e0e5ecb7be14553218d70168b0",
+    "content-hash": "4ff356c54060b49411ff67a355a493b2",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -5866,12 +5866,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.173",
+            "version": "4.206.174",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.173/olcs-olcs-transfer-4.206.173.zip",
-                "reference": "00bd416fec0d5e2e25d7d884bda740889642ec9f",
-                "shasum": "00bd416fec0d5e2e25d7d884bda740889642ec9f"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.174/olcs-olcs-transfer-4.206.174.zip",
+                "reference": "6d0764fda7384156586012bbf45d8b3972eb3928",
+                "shasum": "6d0764fda7384156586012bbf45d8b3972eb3928"
             },
             "require": {
                 "elendev/composer-push": "^1.0.3",
@@ -5920,7 +5920,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2023-02-02T10:25:14+00:00"
+            "time": "2023-02-17T18:14:51+00:00"
         },
         {
             "name": "olcs/olcs-utils",
