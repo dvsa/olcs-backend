@@ -113,34 +113,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->result = new Result();
-
-        /** @var ServiceLocatorInterface $mainServiceLocator */
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        try {
-            $this->applyInterfaces($mainServiceLocator);
-        } catch (LaminasServiceException $e) {
-            $this->logServiceExceptions($e);
-        }
-
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
-
-        if ($this->repoServiceName !== null) {
-            $this->extraRepos[] = $this->repoServiceName;
-        }
-
-        $this->commandHandler = $serviceLocator;
-
-        $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
-
-        $this->pidIdentityProvider = $mainServiceLocator->get(IdentityProviderInterface::class);
-
-        if ($this instanceof TransactionedInterface) {
-            return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
-        }
-
-        return $this;
+        return $this->__invoke($serviceLocator, $requestedName);
     }
 
     /**
