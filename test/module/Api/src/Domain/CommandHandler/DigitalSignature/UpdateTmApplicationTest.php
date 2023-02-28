@@ -59,16 +59,19 @@ class UpdateTmApplicationTest extends CommandHandlerTestCase
     /**
      * @dataProvider dpRoleProvider
      */
-    public function testHandleCommand(string $role, string $nextStatus, string $updateMethod): void
+    public function testHandleCommand(string $role, string $nextStatus, array $updateMethods): void
     {
         $applicationId = 666;
         $digitalSignatureId = 999;
 
         $application = m::mock(TmApplicationEntity::class);
-        $application->expects($updateMethod)->with(
-            $this->refData[RefData::SIG_DIGITAL_SIGNATURE],
-            $this->references[DigitalSignatureEntity::class][$digitalSignatureId]
-        );
+
+        foreach ($updateMethods as $updateMethod) {
+            $application->expects($updateMethod)->with(
+                $this->refData[RefData::SIG_DIGITAL_SIGNATURE],
+                $this->references[DigitalSignatureEntity::class][$digitalSignatureId]
+            );
+        }
 
         $this->repoMap['TransportManagerApplication']->expects('fetchById')
             ->with($applicationId)
@@ -94,9 +97,9 @@ class UpdateTmApplicationTest extends CommandHandlerTestCase
     public function dpRoleProvider(): array
     {
         return [
-            [RefData::TMA_SIGN_AS_TM, TmApplicationEntity::STATUS_TM_SIGNED, 'updateTmDigitalSignature'],
-            [RefData::TMA_SIGN_AS_OP, TmApplicationEntity::STATUS_RECEIVED, 'updateOperatorDigitalSignature'],
-            [RefData::TMA_SIGN_AS_TM_OP, TmApplicationEntity::STATUS_RECEIVED, 'updateOperatorDigitalSignature'],
+            [RefData::TMA_SIGN_AS_TM, TmApplicationEntity::STATUS_TM_SIGNED, ['updateTmDigitalSignature']],
+            [RefData::TMA_SIGN_AS_OP, TmApplicationEntity::STATUS_RECEIVED, ['updateOperatorDigitalSignature']],
+            [RefData::TMA_SIGN_AS_TM_OP, TmApplicationEntity::STATUS_RECEIVED, ['updateTmDigitalSignature', 'updateOperatorDigitalSignature']],
         ];
     }
 
