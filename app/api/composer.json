@@ -88,6 +88,7 @@
         "allow-plugins": {
             "elendev/composer-push": true,
             "phpstan/extension-installer": true,
+            "laminas/laminas-component-installer": true,
             "laminas/laminas-dependency-plugin": true
         }
     },
