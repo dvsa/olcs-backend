@@ -41,9 +41,13 @@ final class UpdateTmApplication extends AbstractCommandHandler implements Transa
                 $tmApplication->updateTmDigitalSignature($signatureType, $digitalSignature);
                 break;
             case RefData::TMA_SIGN_AS_OP:
+                $nextStatus = TmApplicationEntity::STATUS_RECEIVED;
+                $tmApplication->updateOperatorDigitalSignature($signatureType, $digitalSignature);
+                break;
             case RefData::TMA_SIGN_AS_TM_OP:
                 $nextStatus = TmApplicationEntity::STATUS_RECEIVED;
                 $tmApplication->updateOperatorDigitalSignature($signatureType, $digitalSignature);
+                $tmApplication->updateTmDigitalSignature($signatureType, $digitalSignature);
                 break;
             default:
                 throw new \Exception('Tm Role is not matched');
