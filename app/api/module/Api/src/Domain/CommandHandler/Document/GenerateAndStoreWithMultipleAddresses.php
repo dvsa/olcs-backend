@@ -6,14 +6,11 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany;
-use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseInsolvencyPractitioner;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
-use \Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses as Cmd;
-use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
-use \Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler implements
     TransactionedInterface,
@@ -27,10 +24,6 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
 
     protected $defaultSendToAddresses = [
         'correspondenceAddress'           => true,
-        'establishmentAddress'            => true,
-        'transportConsultantAddress'      => true,
-        'registeredAddress'               => true,
-        'operatingCentresAddresses'       => true,
         'insolvencyPractitionerAddresses' => false
     ];
 
@@ -76,47 +69,12 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
 
         $addresses = [];
 
-        if ($sendToAddresses['correspondenceAddress'] &&
+        if (
+            $sendToAddresses['correspondenceAddress'] &&
             $licence->getCorrespondenceCd() !== null &&
-            $licence->getCorrespondenceCd()->getAddress() !== null) {
+            $licence->getCorrespondenceCd()->getAddress() !== null
+        ) {
             $addresses['correspondenceAddress'] = $licence->getCorrespondenceCd()->getAddress()->serialize();
-        }
-
-        if ($sendToAddresses['establishmentAddress'] &&
-            $licence->getEstablishmentCd() !== null &&
-            $licence->getEstablishmentCd()->getAddress() !== null) {
-            $addresses['establishmentAddress'] = $licence->getEstablishmentCd()->getAddress()->serialize();
-        }
-
-        if ($sendToAddresses['transportConsultantAddress'] &&
-            $licence->getTransportConsultantCd() !== null &&
-            $licence->getTransportConsultantCd()->getAddress() !== null) {
-            $addresses['transportConsultantAddress'] = $licence->getTransportConsultantCd()->getAddress()->serialize();
-        }
-
-        if ($sendToAddresses['registeredAddress'] &&
-            $licence->getOrganisation()->getContactDetails() !== null &&
-            $licence->getOrganisation()->getContactDetails()->getAddress() !== null) {
-            $addresses['registeredAddress'] = $licence
-                ->getOrganisation()
-                ->getContactDetails()
-                ->getAddress()
-                ->serialize();
-        }
-
-        if ($sendToAddresses['operatingCentresAddresses']) {
-            $n = 0;
-            /** @var LicenceOperatingCentre $licenceOperatingCentre */
-            foreach ($licence->getOperatingCentres() as $licenceOperatingCentre) {
-                if ($licenceOperatingCentre->getOperatingCentre() !== null &&
-                    $licenceOperatingCentre->getOperatingCentre()->getAddress() !== null) {
-                    $n++;
-                    $addresses['operatingCentreAddress' . $n] = $licenceOperatingCentre
-                        ->getOperatingCentre()
-                        ->getAddress()
-                        ->serialize();
-                }
-            }
         }
 
         if ($sendToAddresses['insolvencyPractitionerAddresses']) {
@@ -159,7 +117,8 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
             }
 
             foreach ($validatedAddresses as $validatedAddressKey => $validatedAddressValues) {
-                if ($validatedAddressValues['addressLine1'] === $values['addressLine1'] &&
+                if (
+                    $validatedAddressValues['addressLine1'] === $values['addressLine1'] &&
                     $validatedAddressValues['addressLine2'] === $values['addressLine2'] &&
                     $validatedAddressValues['addressLine3'] === $values['addressLine3'] &&
                     $validatedAddressValues['addressLine4'] === $values['addressLine4'] &&
