@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -51,8 +50,6 @@ class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
         $mockLicence = m::mock(Licence::class);
 
         $this->setUpMockLicence($mockLicence);
-
-
         $this->setUpMockCommand($mockCommand);
 
         $result = new Result();
@@ -61,25 +58,13 @@ class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
             $this->expectedSideEffect(GenerateAndStore::class, [], $result);
         }
 
-
         $this->sut->handleCommand($mockCommand);
     }
 
     protected function getAddresses()
     {
         $addresses = [];
-
-        foreach ([
-                     "correspondenceAddress",
-                     "establishmentAddress",
-                     "transportConsultantAddress",
-                     "registeredAddress",
-                     "operatingCentreAddress"
-                 ] as $addressType) {
-            $addresses[$addressType] = $this->addressProvider($addressType)[$addressType];
-        }
-
-
+        $addresses['correspondenceAddress'] = $this->addressProvider('correspondenceAddress')['correspondenceAddress'];
         return $addresses;
     }
 
@@ -127,10 +112,6 @@ class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
             ])->getMock()
             ->shouldReceive('getSendToAddresses')->andReturn([
                 'correspondenceAddress' => false,
-                'establishmentAddress' => false,
-                'transportConsultantAddress' => false,
-                'registeredAddress' => false,
-                'operatingCentresAddresses' => false,
                 'insolvencyPractitionerAddresses' => true
             ]);
         $mockLicence = m::mock(Licence::class);
