@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\DvlaSearch;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\DvlaSearch\Exception\BadResponseException;
-use Dvsa\Olcs\DvlaSearch\Exception\ServiceException;
-use Dvsa\Olcs\DvlaSearch\Exception\VehicleUnavailableException;
-use Dvsa\Olcs\DvlaSearch\Service\Client as DvlaSearchService;
+use Dvsa\Olcs\Api\Service\DvlaSearch\Exception\BadResponseException;
+use Dvsa\Olcs\Api\Service\DvlaSearch\Exception\ServiceException;
+use Dvsa\Olcs\Api\Service\DvlaSearch\Exception\VehicleUnavailableException;
+use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\DvlaSearch\Vehicle as VehicleQuery;
 use GuzzleHttp\Exception\GuzzleException;

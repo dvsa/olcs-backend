@@ -3,14 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Service\DvlaSearch;
 
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
-use Dvsa\Olcs\DvlaSearch\Service\Client as DvlaSearchServiceClient;
+use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService as DvlaSearchServiceClient;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery as m;
 
 class DvlaSearchServiceFactoryTest extends TestCase
 {
-
     public function testCreateService()
     {
         $config = [
