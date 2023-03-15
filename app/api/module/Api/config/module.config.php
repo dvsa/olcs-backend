@@ -8,10 +8,11 @@ use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service as ApiSrv;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
+use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService;
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
+use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Strategy as QaStrategy;
 use Dvsa\Olcs\Api\Service\Translator;
-use Dvsa\Olcs\DvlaSearch\Service\Client as DvlaSearchService;
 
 return [
     'router' => [
@@ -183,7 +184,7 @@ return [
             'CompaniesHouseService' => \Dvsa\Olcs\Api\Service\CompaniesHouseService::class,
             DvlaSearchService::class => DvlaSearchServiceFactory::class,
 
-            \Dvsa\Olcs\Api\Service\Publication\PublicationGenerator::class =>
+            PublicationGenerator::class =>
                 \Dvsa\Olcs\Api\Service\Publication\PublicationGeneratorFactory::class,
 
             \Dvsa\Olcs\Api\Service\Publication\Context\PluginManager::class =>
@@ -1108,7 +1109,7 @@ return [
             ]
         ],
     ],
-    'xsd_mappings' =>[
+    'xsd_mappings' => [
         'http://www.w3.org/2001/xml.xsd' => __DIR__ . '/../data/ebsr/xsd/xml.xsd',
         'http://www.transxchange.org.uk/schema/2.1/TransXChange_registration.xsd' =>
             __DIR__ . '/../data/ebsr/xsd/TransXChange_schema_2.1/TransXChange_registration.xsd',
