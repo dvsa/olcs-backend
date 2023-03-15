@@ -3,9 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\DvlaSearch;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\DvlaSearch\Vehicle;
-use Dvsa\Olcs\DvlaSearch\Exception\VehicleUnavailableException;
-use Dvsa\Olcs\DvlaSearch\Model\DvlaVehicle;
-use Dvsa\Olcs\DvlaSearch\Service\Client;
+use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService;
+use Dvsa\Olcs\Api\Service\DvlaSearch\Model\DvlaVehicle;
+use Dvsa\Olcs\Api\Service\DvlaSearch\Exception\VehicleUnavailableException;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -20,7 +20,7 @@ class VehicleTest extends QueryHandlerTestCase
          */
         $this->sut = new Vehicle();
 
-        $this->mockedSmServices[Client::class] = m::mock(Client::class);
+        $this->mockedSmServices[DvlaSearchService::class] = m::mock(DvlaSearchService::class);
         parent::setUp();
     }
 
@@ -35,7 +35,7 @@ class VehicleTest extends QueryHandlerTestCase
             ->andReturn([
                 'registrationNumber' => $queryData['vrm']
             ]);
-        $this->mockedSmServices[Client::class]->shouldReceive('getVehicle')
+        $this->mockedSmServices[DvlaSearchService::class]->shouldReceive('getVehicle')
             ->with($queryData['vrm'])
             ->once()
             ->andReturn($vehicle);
@@ -57,7 +57,7 @@ class VehicleTest extends QueryHandlerTestCase
     public function testNoVehicleReturnsEmptyResultSetHandleQuery()
     {
         $queryData = ['vrm' => "ABC123"];
-        $this->mockedSmServices[Client::class]->shouldReceive('getVehicle')
+        $this->mockedSmServices[DvlaSearchService::class]->shouldReceive('getVehicle')
             ->with($queryData['vrm'])
             ->once()
             ->andThrow(new VehicleUnavailableException());

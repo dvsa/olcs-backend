@@ -16,6 +16,8 @@
     ],
     "require": {
         "php": ">=7.4",
+        "guzzlehttp/guzzle": "^7.5",
+        "caseyamcl/guzzle_retry_middleware": "^2.7.1",
         "ext-intl": "*",
         "ext-json": "*",
         "aws/aws-sdk-php": "^3.183",
@@ -31,7 +33,6 @@
         "olcs/olcs-laminas": "~2.5.0",
         "olcs/olcs-companies-house": "~4.206.0",
         "olcs/olcs-cpms": "~4.206.0",
-        "olcs/olcs-dvla-search": "~1.0.0",
         "olcs/olcs-logging": "~4.206.0",
         "olcs/olcs-transfer": "~4.206.0",
         "olcs/olcs-utils": "~4.206.0",
