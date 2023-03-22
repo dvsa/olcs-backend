@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Cli\Controller;
 
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Query;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
 use Laminas\Mvc\Controller\AbstractConsoleController;
@@ -12,6 +13,17 @@ use Laminas\View\Model\ConsoleModel;
 
 class UtilController extends AbstractConsoleController
 {
+    private QueryHandlerManager $queryHandlerManager;
+
+    /**
+     * @param QueryHandlerManager $queryHandlerManager
+     */
+    public function __construct(
+        QueryHandlerManager $queryHandlerManager
+    ) {
+        $this->queryHandlerManager = $queryHandlerManager;
+    }
+
     public function getDbValueAction()
     {
         $params = [
@@ -31,15 +43,15 @@ class UtilController extends AbstractConsoleController
             if (is_object($output)) {
                 $output = $output->getId();
             }
-            $output = ["value"=>$output];
+            $output = ["value" => $output];
             $exitCode = 0;
         } catch (\Exception $e) {
             $exitCode = 1;
-            $output = ["error" =>$e->getMessage()];
+            $output = ["error" => $e->getMessage()];
         }
         $output = json_encode($output);
-        $this->writeMessages([PHP_EOL.'*** OUTPUT ***']);
-        $output .= PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
+        $this->writeMessages([PHP_EOL . '*** OUTPUT ***']);
+        $output .= PHP_EOL . '*** END OF OUTPUT ***' . PHP_EOL;
         return $this->handleExitStatus($exitCode, (string) $output);
     }
 
@@ -69,10 +81,10 @@ class UtilController extends AbstractConsoleController
     protected function handleQuery(QueryInterface $dto, $propagateException = false)
     {
         $result = false;
-        
+
         try {
             $this->writeVerboseMessages("Handle query " . get_class($dto));
-            $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
+            $result = $this->queryHandlerManager->handleQuery($dto);
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Laminas\Log\Logger::WARN);
             if ($propagateException) {
@@ -135,7 +147,7 @@ class UtilController extends AbstractConsoleController
     protected function writeMessages($messages)
     {
         foreach ($messages as $message) {
-            $this->getConsole()->writeLine((new \DateTime())->format(\DateTime::W3C) .' '. $message);
+            $this->getConsole()->writeLine((new \DateTime())->format(\DateTime::W3C) . ' ' . $message);
         }
     }
 }

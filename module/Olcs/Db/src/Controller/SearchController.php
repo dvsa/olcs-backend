@@ -4,6 +4,7 @@ namespace Olcs\Db\Controller;
 
 use Olcs\Db\Exceptions\SearchDateFilterParseException;
 use Laminas\Http\PhpEnvironment\Response;
+use Olcs\Db\Service\Search\Search;
 
 /**
  * Class SearchController
@@ -12,6 +13,16 @@ use Laminas\Http\PhpEnvironment\Response;
  */
 class SearchController extends AbstractController
 {
+    private Search $elasticSearchService;
+
+    /**
+     * @param Search $elasticSearchService
+     */
+    public function __construct(
+        Search $elasticSearchService
+    ) {
+        $this->elasticSearchService = $elasticSearchService;
+    }
     /**
      * Get list from search
      *
@@ -23,14 +34,12 @@ class SearchController extends AbstractController
 
         $indices = explode('|', $params['index']);
 
-        /** @var \Olcs\Db\Service\Search\Search $elastic */
-        $elastic = $this->getServiceLocator()->get('ElasticSearch\Search');
         if (isset($params['filters']) && !empty($params['filters']) && is_array($params['filters'])) {
-            $elastic->setFilters($params['filters']);
+            $this->elasticSearchService->setFilters($params['filters']);
         }
         if (!empty($params['dateRanges']) && is_array($params['dateRanges'])) {
             try {
-                $elastic->setDateRanges($params['dateRanges']);
+                $this->elasticSearchService->setDateRanges($params['dateRanges']);
             } catch (SearchDateFilterParseException $dateException) {
                 return $this->respond(
                     Response::STATUS_CODE_500,
@@ -41,14 +50,14 @@ class SearchController extends AbstractController
         }
 
         if (!empty($params['sort'])) {
-            $elastic->setSort($params['sort']);
+            $this->elasticSearchService->setSort($params['sort']);
         }
 
         if (!empty($params['order'])) {
-            $elastic->setOrder($params['order']);
+            $this->elasticSearchService->setOrder($params['order']);
         }
 
-        $resultSet = $elastic->search(
+        $resultSet = $this->elasticSearchService->search(
             $params['q'],
             $indices,
             $params['page'],

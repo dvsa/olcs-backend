@@ -25,8 +25,11 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'Search' => Olcs\Db\Controller\SearchController::class,
-        ]
+
+        ],
+        'factories' => [
+            'Search' => Olcs\Db\Controller\SearchControllerFactory::class,
+        ],
     ],
     'view_manager' => [
         'display_not_found_reason' => true,

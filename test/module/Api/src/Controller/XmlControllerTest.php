@@ -1,11 +1,10 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Controller;
 
 use Dvsa\Olcs\Api\Controller\XmlController;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\Http\Response as HttpResponse;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
@@ -13,20 +12,26 @@ use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Laminas\Mvc\Controller\Plugin\Params;
 use Laminas\Mvc\Controller\PluginManager;
-use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * Class XmlControllerTest
  */
 class XmlControllerTest extends TestCase
 {
+    protected $commandHandlerManager;
+
+    public function setUp(): void
+    {
+        $this->commandHandlerManager = m::mock(CommandHandlerManager::class);
+    }
+
     /**
      * @param $mockSl
      * @return XmlController
      */
     protected function setupSut($mockSl)
     {
-        $sut = new XmlController();
+        $sut = new XmlController($this->commandHandlerManager);
         $sut->setPluginManager($mockSl);
         $sut->setServiceLocator($mockSl);
         return $sut;
@@ -48,10 +53,9 @@ class XmlControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($command);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')->with($command)->andReturn($result);
+        $this->commandHandlerManager->shouldReceive('handleCommand')->with($command)->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler);
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -75,12 +79,11 @@ class XmlControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($command);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($command)
             ->andThrow('\Dvsa\Olcs\Api\Domain\Exception\Exception');
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler);
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -96,12 +99,11 @@ class XmlControllerTest extends TestCase
      * @param $mockCommandHandler
      * @return m\MockInterface
      */
-    protected function getMockSl($mockResponse, $mockParams, $mockCommandHandler)
+    protected function getMockSl($mockResponse, $mockParams)
     {
         $mockSl = m::mock(PluginManager::class);
         $mockSl->shouldReceive('get')->with('response', null)->andReturn($mockResponse);
         $mockSl->shouldReceive('get')->with('params', null)->andReturn($mockParams);
-        $mockSl->shouldReceive('get')->with('CommandHandlerManager')->andReturn($mockCommandHandler);
         $mockSl->shouldReceive('setController');
 
         return $mockSl;
