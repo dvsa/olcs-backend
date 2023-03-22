@@ -24,6 +24,7 @@ class UtilControllerTest extends MockeryTestCase
     protected $routeMatch;
     protected $event;
     protected $console;
+    protected $mockQueryHandlerManager;
 
     public function setUp(): void
     {
@@ -34,8 +35,9 @@ class UtilControllerTest extends MockeryTestCase
         $this->event->setRouteMatch($this->routeMatch);
         $this->sm = Bootstrap::getServiceManager();
         $this->console = m::mock('Laminas\Console\Adapter\AdapterInterface');
+        $this->mockQueryHandlerManager = m::mock(QueryHandlerManager::class);
 
-        $this->sut = m::mock(new UtilController())->makePartial();
+        $this->sut = m::mock(new UtilController($this->mockQueryHandlerManager))->makePartial();
         $this->sut->setEvent($this->event);
         $this->sut->setServiceLocator($this->sm);
         $this->sut->setConsole($this->console);
@@ -51,11 +53,9 @@ class UtilControllerTest extends MockeryTestCase
         $refData = m::mock(new RefData($statusId))->makePartial();
         $application = new Application($licence, $refData, $isVariation);
 
-        $queryHandler = m::mock(QueryHandlerManager::class);
         $result = new Result($application);
 
-        $queryHandler->shouldReceive('handleQuery')->andReturn($result);
-        $this->sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($queryHandler);
+        $this->mockQueryHandlerManager->shouldReceive('handleQuery')->andReturn($result);
 
         $parameters = [
             'entityName' => 'Application\Application',
@@ -68,7 +68,7 @@ class UtilControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('property-name', $parameters['propertyName']);
         $this->routeMatch->setParam('filter-property', $parameters['filterProperty']);
         $this->routeMatch->setParam('filter-value', $parameters['filterValue']);
-        $expected= json_encode(["value"=>$isVariation]).PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
+        $expected = json_encode(["value" => $isVariation]) . PHP_EOL . '*** END OF OUTPUT ***' . PHP_EOL;
         $this->console->shouldReceive('writeLine');
         $this->assertSame($expected, $this->sut->getDbValueAction()->getResult());
         $this->assertSame(0, $this->sut->getDbValueAction()->getErrorLevel());
@@ -84,11 +84,9 @@ class UtilControllerTest extends MockeryTestCase
         $refData = m::mock(new RefData($statusId))->makePartial();
         $application = new Application($licence, $refData, $isVariation);
         $this->console->shouldReceive('writeLine');
-        $queryHandler = m::mock(QueryHandlerManager::class);
         $result = new Result($application);
 
-        $queryHandler->shouldReceive('handleQuery')->andReturn($result);
-        $this->sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($queryHandler);
+        $this->mockQueryHandlerManager->shouldReceive('handleQuery')->andReturn($result);
 
         $parameters = [
             'entityName' => 'Application\Application',
@@ -101,7 +99,7 @@ class UtilControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('property-name', $parameters['propertyName']);
         $this->routeMatch->setParam('filter-property', $parameters['filterProperty']);
         $this->routeMatch->setParam('filter-value', $parameters['filterValue']);
-        $expected= json_encode(["value"=>$statusId]).PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
+        $expected = json_encode(["value" => $statusId]) . PHP_EOL . '*** END OF OUTPUT ***' . PHP_EOL;
         $this->assertSame($expected, $this->sut->getDbValueAction()->getResult());
         $this->assertSame(0, $this->sut->getDbValueAction()->getErrorLevel());
     }
@@ -111,10 +109,7 @@ class UtilControllerTest extends MockeryTestCase
     */
     public function testIndexActionWithException($exception, $message)
     {
-        $queryHandler = m::mock(QueryHandlerManager::class);
-
-        $queryHandler->shouldReceive('handleQuery')->andThrow($exception, $message);
-        $this->sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($queryHandler);
+        $this->mockQueryHandlerManager->shouldReceive('handleQuery')->andThrow($exception, $message);
 
         $parameters = [
             'entityName' => 'Application\Application',
@@ -128,7 +123,7 @@ class UtilControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('filter-property', $parameters['filterProperty']);
         $this->routeMatch->setParam('filter-value', $parameters['filterValue']);
         $this->console->shouldReceive('writeLine');
-        $expected= json_encode(["error"=>$message]).PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
+        $expected = json_encode(["error" => $message]) . PHP_EOL . '*** END OF OUTPUT ***' . PHP_EOL;
         $this->assertSame($expected, $this->sut->getDbValueAction()->getResult());
         $this->assertSame(1, $this->sut->getDbValueAction()->getErrorLevel());
     }
@@ -144,10 +139,7 @@ class UtilControllerTest extends MockeryTestCase
 
     public function testIndexActionWithVerboseAndException()
     {
-        $queryHandler = m::mock(QueryHandlerManager::class);
-
-        $queryHandler->shouldReceive('handleQuery')->andThrow(\Exception::class, 'Exception Message');
-        $this->sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($queryHandler);
+        $this->mockQueryHandlerManager->shouldReceive('handleQuery')->andThrow(\Exception::class, 'Exception Message');
 
         $parameters = [
             'entityName' => 'Application\Application',
@@ -164,7 +156,7 @@ class UtilControllerTest extends MockeryTestCase
 
         $this->console->shouldReceive('writeLine');
         $this->console->shouldReceive('writeLine')->with('*** OUTPUT ***');
-        $expected= json_encode(["error"=>"Exception Message"]).PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
+        $expected = json_encode(["error" => "Exception Message"]) . PHP_EOL . '*** END OF OUTPUT ***' . PHP_EOL;
         $this->assertSame($expected, $this->sut->getDbValueAction()->getResult());
         $this->assertSame(1, $this->sut->getDbValueAction()->getErrorLevel());
     }

@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Controller;
 
-use Laminas\Log\Logger;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Laminas\Mvc\Controller\AbstractRestfulController;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response as ResponsePlugin;
@@ -13,6 +13,19 @@ use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response as ResponsePlugin;
  */
 class XmlController extends AbstractRestfulController
 {
+    /**
+     * @var CommandHandlerManager
+     */
+    private CommandHandlerManager $commandHandlerManager;
+
+    /**
+     * @param CommandHandlerManager $commandHandlerManager
+     */
+    public function __construct(
+        CommandHandlerManager $commandHandlerManager
+    ) {
+        $this->commandHandlerManager = $commandHandlerManager;
+    }
     /**
      * @inheritdoc
      */
@@ -34,6 +47,6 @@ class XmlController extends AbstractRestfulController
      */
     protected function handleCommand($dto)
     {
-        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
+        return $this->commandHandlerManager->handleCommand($dto);
     }
 }

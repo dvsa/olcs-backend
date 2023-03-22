@@ -5,8 +5,9 @@ namespace Dvsa\OlcsTest\Api\Controller;
 use Doctrine\ORM\OptimisticLockException;
 use Dvsa\Olcs\Api\Controller\GenericController;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
@@ -22,6 +23,15 @@ use Laminas\View\Model\JsonModel;
  */
 class GenericControllerTest extends TestCase
 {
+    protected $commandHandlerManager;
+    protected $queryHandlerManager;
+
+    public function setUp(): void
+    {
+        $this->commandHandlerManager = m::mock(CommandHandlerManager::class);
+        $this->queryHandlerManager = m::mock(QueryHandlerManager::class);
+    }
+
     public function testGet()
     {
         $viewModel = new JsonModel();
@@ -34,10 +44,9 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')->with($application)->andReturn($data);
+        $this->queryHandlerManager->shouldReceive('handleQuery')->with($application)->andReturn($data);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -57,12 +66,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
-                         ->with($application)
-                         ->andThrow(new Exception\NotFoundException());
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->with($application)
+            ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -82,12 +90,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow(new Exception\NotReadyException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -108,12 +115,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -135,12 +141,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -161,12 +166,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -187,12 +191,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -217,19 +220,18 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
-             ->with($application)
-             ->andReturn(
-                 [
-                     'result' => $data,
-                     'count' => $count,
-                     'count-unfiltered' => $countUnfiltered,
-                     'bar' => 'cake'
-                 ]
-             );
+        $this->queryHandlerManager->shouldReceive('handleQuery')
+            ->with($application)
+            ->andReturn(
+                [
+                    'result' => $data,
+                    'count' => $count,
+                    'count-unfiltered' => $countUnfiltered,
+                    'bar' => 'cake'
+                ]
+            );
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -251,11 +253,10 @@ class GenericControllerTest extends TestCase
             ->shouldReceive('__invoke')->with('dto')->andReturn($dto)
             ->getMock();
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class)
-            ->shouldReceive('handleQuery')->with($dto)->andReturn($mockStream)
+        $this->queryHandlerManager->shouldReceive('handleQuery')->with($dto)->andReturn($mockStream)
             ->getMock();
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         //  call & check
         $actual = $this->setupSut($mockSl)->getList();
@@ -275,8 +276,7 @@ class GenericControllerTest extends TestCase
             ->shouldReceive('__invoke')->with('dto')->andReturn($dto)
             ->getMock();
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class)
-            ->shouldReceive('handleQuery')->with($dto)->andReturn($mockResult)
+        $this->queryHandlerManager->shouldReceive('handleQuery')->with($dto)->andReturn($mockResult)
             ->getMock();
 
         $mockResponse = m::mock(Response::class);
@@ -284,7 +284,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = m::mock(PluginManager::class)
             ->shouldReceive('get')->with('params', null)->andReturn($mockParams)
-            ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($mockQueryHandler)
+            ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandlerManager)
             ->shouldReceive('get')->with('response', null)->andReturn($mockResponse)
             ->shouldReceive('setController')
             ->getMock();
@@ -306,12 +306,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -332,12 +331,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -359,12 +357,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -385,12 +382,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -412,12 +408,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
-        $mockQueryHandler->shouldReceive('handleQuery')
+        $this->queryHandlerManager->shouldReceive('handleQuery')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -438,12 +433,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -463,12 +457,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -489,12 +482,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -519,12 +511,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\VersionConflictException('foo'));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -547,12 +538,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new OptimisticLockException('foo', m::mock()));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -574,12 +564,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -601,12 +590,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -628,12 +616,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -654,12 +641,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -679,12 +665,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -705,12 +690,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -735,12 +719,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\VersionConflictException('foo'));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -762,12 +745,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -788,12 +770,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -814,12 +795,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -841,12 +821,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -868,12 +847,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -895,12 +873,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -921,12 +898,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -946,12 +922,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -972,12 +947,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -999,12 +973,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -1026,12 +999,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -1052,12 +1024,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andReturn($result);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -1077,12 +1048,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\NotFoundException());
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -1103,12 +1073,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\ValidationException($errors));
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -1130,12 +1099,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -1157,12 +1125,11 @@ class GenericControllerTest extends TestCase
         $mockParams = m::mock(Params::class);
         $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
 
-        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
-        $mockCommandHandler->shouldReceive('handleCommand')
+        $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow($ex);
 
-        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+        $mockSl = $this->getMockSl($mockResponse, $mockParams);
 
         $sut = $this->setupSut($mockSl);
 
@@ -1177,7 +1144,7 @@ class GenericControllerTest extends TestCase
      */
     protected function setupSut($mockSl)
     {
-        $sut = new GenericController();
+        $sut = new GenericController($this->queryHandlerManager, $this->commandHandlerManager);
         $sut->setPluginManager($mockSl);
         $sut->setServiceLocator($mockSl);
         return $sut;
@@ -1191,14 +1158,11 @@ class GenericControllerTest extends TestCase
      */
     protected function getMockSl(
         $mockResponse,
-        $mockParams,
-        $mockQueryHandler,
-        $handlerType = 'QueryHandlerManager'
+        $mockParams
     ) {
         $mockSl = m::mock(PluginManager::class);
         $mockSl->shouldReceive('get')->with('response', null)->andReturn($mockResponse);
         $mockSl->shouldReceive('get')->with('params', null)->andReturn($mockParams);
-        $mockSl->shouldReceive('get')->with($handlerType)->andReturn($mockQueryHandler);
         $mockSl->shouldReceive('setController');
         return $mockSl;
     }

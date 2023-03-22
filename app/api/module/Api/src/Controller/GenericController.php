@@ -3,8 +3,10 @@
 namespace Dvsa\Olcs\Api\Controller;
 
 use Doctrine\ORM\OptimisticLockException;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Olcs\Logging\Log\Logger;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractRestfulController;
@@ -15,6 +17,28 @@ use Laminas\Mvc\Controller\AbstractRestfulController;
  */
 class GenericController extends AbstractRestfulController
 {
+    /**
+     * @var QueryHandlerManager
+     */
+    private QueryHandlerManager $queryHandlerManager;
+
+    /**
+     * @var CommandHandlerManager
+     */
+    private CommandHandlerManager $commandHandlerManager;
+
+    /**
+     * @param QueryHandlerManager $queryHandlerManager
+     * @param CommandHandlerManager $commandHandlerManager
+     */
+    public function __construct(
+        QueryHandlerManager $queryHandlerManager,
+        CommandHandlerManager $commandHandlerManager
+    ) {
+        $this->queryHandlerManager = $queryHandlerManager;
+        $this->commandHandlerManager = $commandHandlerManager;
+    }
+
     /**
      * Get data by passed Query Fqcl
      *
@@ -231,7 +255,7 @@ class GenericController extends AbstractRestfulController
      */
     protected function handleQuery($dto)
     {
-        return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
+        return $this->queryHandlerManager->handleQuery($dto);
     }
 
     /**
@@ -243,6 +267,6 @@ class GenericController extends AbstractRestfulController
      */
     protected function handleCommand($dto)
     {
-        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
+        return $this->commandHandlerManager->handleCommand($dto);
     }
 }
