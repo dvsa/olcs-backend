@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use DateTime;
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -25,15 +25,15 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
 {
     use EmailAwareTrait;
 
-    protected const GB_GV_TEMPLATE = [
+    const GB_GV_TEMPLATE = [
         'identifier' => 'GV_letter_to_op_regarding_no_TM_specified',
         'id' => 919
     ];
-    protected const GB_PSV_TEMPLATE = [
+    const GB_PSV_TEMPLATE = [
         'identifier' => 'PSV_letter_to_op_regarding_no_TM_specified',
         'id' => 920
     ];
-    protected const NI_GV_TEMPLATE = [
+    const NI_GV_TEMPLATE = [
         'identifier' => 'GV_letter_to_op_regarding_no_TM_specified_NI',
         'id' => 918
     ];
@@ -65,8 +65,8 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
 
         /** @var LicenceEntity $licence */
         foreach ($eligibleLicences as $licence) {
-            $document = $this->generateDocuments($licence);
-            $this->printAndEmailDocument($document);
+            $documents = $this->generateDocuments($licence);
+            $this->printAndEmailDocuments($documents);
             $this->updateLastTmLetterDate($licence);
             $this->sendEmailToOperator($licence);
         }
@@ -80,8 +80,7 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
      */
     private function sendEmailToOperator(LicenceEntity $licence)
     {
-        if (
-            is_null($contactDetails = $licence->getCorrespondenceCd()) ||
+        if (is_null($contactDetails = $licence->getCorrespondenceCd()) ||
             is_null($email = $contactDetails->getEmailAddress())
         ) {
             return;
@@ -103,7 +102,7 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
         $message = new Message($email, 'email.last-tm-operator-notification.subject');
         $message->setTranslateToWelsh($translateToWelsh);
         $message->setHighPriority();
-        $message->setDocs([$this->result->getId('document')]);
+        $message->setDocs([$this->result->getId('correspondenceAddress')]);
 
         $this->sendEmailTemplate(
             $message,
@@ -174,7 +173,6 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
             'category' => Category::CATEGORY_TRANSPORT_MANAGER,
             'subCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
             'isExternal' => false,
-            'dispatch' => true,
             'metadata' => json_encode([
                 'details' => [
                     'category' => Category::CATEGORY_TRANSPORT_MANAGER,
@@ -189,20 +187,30 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
             ]
         ];
 
-        $result = $this->handleSideEffect(GenerateAndStore::create($generateCommandData));
+        $data = [
+            'generateCommandData' => $generateCommandData,
+            'addressBookmark' => 'licence_holder_address',
+            'bookmarkBundle' => [
+                'correspondenceCd' => ['address']
+            ]
+        ];
+
+        $result = $this->handleSideEffect(GenerateAndStoreWithMultipleAddresses::create($data));
         $this->result->merge($result);
 
-        return $result->getId('document');
+        return $result->getId('documents');
     }
 
     /**
-     * @param int $document
+     * @param array $documents (array of document ids)
      * @return void
      */
-    private function printAndEmailDocument($document)
+    private function printAndEmailDocuments($documents)
     {
-        $this->printDocument($document);
-        $this->maybeEmailDocument($document);
+        foreach ($documents as $document) {
+            $this->printDocument($document);
+            $this->maybeEmailDocument($document);
+        }
     }
 
     /**
@@ -235,8 +243,7 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
             $result = $this->handleSideEffect(
                 PrintLetter::create([
                     'id' => $document,
-                    'method' => PrintLetter::METHOD_EMAIL,
-                    'forceCorrespondence' => true
+                    'method' => PrintLetter::METHOD_EMAIL
                 ])
             );
             $this->result->merge($result);
