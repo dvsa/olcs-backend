@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPtrNotificationForRegisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPtrNotificationForUnregisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
@@ -17,12 +17,12 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocument;
+use Dvsa\Olcs\Transfer\Command\Document\PrintLetters;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 
 class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
-    use AuthAwareTrait;
-    use QueueAwareTrait;
+    use AuthAwareTrait, QueueAwareTrait;
 
     protected $repoServiceName = 'Document';
 
@@ -37,7 +37,7 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
 
     protected $licenceId;
 
-    protected const PTR_DOCUMENT_TEMPLATE_ID = 818;
+    const PTR_DOCUMENT_TEMPLATE_ID = 818;
 
     /**
      * @inheritDoc
@@ -80,37 +80,42 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
     {
         $document = $this->getRepo('Document')->fetchById($documentID);
 
-        $commandData = [
-            'template' => $documentID,
-            'licence' => $this->licenceId,
-            'query' => [
-                'licence' => $this->licenceId
+        $data = [
+            'generateCommandData' => [
+                'template' => $documentID,
+                'licence' => $this->licenceId,
+                'query' => [
+                    'licence' => $this->licenceId
+                ],
+                'category' => Category::CATEGORY_COMPLIANCE,
+                'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
+                'isExternal' => false,
+                'description' => $document->getDescription(),
+                'metadata' => json_encode([
+                    'details' => [
+                        'category' => Category::CATEGORY_COMPLIANCE,
+                        'documentSubCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
+                        'documentTemplate' => self::PTR_DOCUMENT_TEMPLATE_ID,
+                        'allowEmail' => true
+                    ]
+                ]),
             ],
-            'category' => Category::CATEGORY_COMPLIANCE,
-            'subCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
-            'isExternal' => false,
-            'dispatch' => true,
-            'description' => $document->getDescription(),
-            'metadata' => json_encode([
-                'details' => [
-                    'category' => Category::CATEGORY_COMPLIANCE,
-                    'documentSubCategory' => SubCategory::DOC_SUB_CATEGORY_IN_OFFICE_REVOCATION,
-                    'documentTemplate' => self::PTR_DOCUMENT_TEMPLATE_ID,
-                    'allowEmail' => true
-                ]
-            ]),
+            'addressBookmark' => 'ptr_correspondent_address',
+            'bookmarkBundle' => [
+                'correspondenceCd' => ['address']
+            ],
         ];
 
-        $this->result->merge($this->handleSideEffect(GenerateAndStore::create($commandData)));
+        $this->result->merge($this->handleSideEffect(GenerateAndStoreWithMultipleAddresses::create($data)));
         $this->result->merge($this->handleSideEffect(DeleteDocument::create(['id' => $documentID])));
     }
 
     private function printLetters(): void
     {
-        $this->result->merge($this->handleSideEffect(PrintLetter::create(
+        $this->result->merge($this->handleSideEffect(PrintLetters::create(
             [
-                'id' => $this->result->getId('document'),
-                'method' => PrintLetter::METHOD_PRINT_AND_POST
+                'ids' => $this->result->getId('documents'),
+                'method' => PrintLetters::METHOD_PRINT_AND_POST
             ]
         )));
     }
@@ -152,9 +157,11 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
             $this->result->merge($this->handleSideEffect($selfServeUserEmailCommand));
         }
 
+        // Set-up CorrespondenceInBbox record so Document shows up in Self Serve Documents Tab
+        $docId = is_array($this->result->getId('documents')) ? $this->result->getId('documents')[0] : $this->result->getId('documents');
         $this->result->merge($this->handleSideEffect(PrintLetter::create(
             [
-                'id' => $this->result->getId('document'),
+                'id' => $docId,
                 'method' => PrintLetter::METHOD_EMAIL,
                 'forceCorrespondence' => true
             ]
@@ -166,7 +173,7 @@ class ProposeToRevoke extends AbstractCommandHandler implements AuthAwareInterfa
         $cmdData = [
             'emailAddress' => $email,
             'translateToWelsh' => $translateToWelsh,
-            'docs' => [$this->result->getId('document')]
+            'docs' => [$this->result->getId('correspondenceAddress')]
         ];
 
         if (!$isRegistered) {
