@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4ff356c54060b49411ff67a355a493b2",
+    "content-hash": "f5815c683a5927f6a7f655a3e2547928",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -5690,71 +5690,6 @@
             ],
             "description": "CPMS Module",
             "time": "2022-11-10T15:38:25+00:00"
-        },
-        {
-            "name": "olcs/olcs-dvla-search",
-            "version": "1.0.8",
-            "dist": {
-                "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-dvla-search/1.0.8/olcs-olcs-dvla-search-1.0.8.zip",
-                "reference": "b4fd86f08d673b5f61a6ec56e68b0bb649072131",
-                "shasum": "b4fd86f08d673b5f61a6ec56e68b0bb649072131"
-            },
-            "require": {
-                "caseyamcl/guzzle_retry_middleware": "^2.7.1",
-                "elendev/composer-push": "^1.0.3",
-                "guzzlehttp/guzzle": "^7.5",
-                "php": ">=7.4",
-                "psr/log": "^1.1"
-            },
-            "require-dev": {
-                "olcs/olcs-devtools": "~4.206.0"
-            },
-            "type": "library",
-            "extra": {
-                "nexus-push": {
-                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-dvla-search/",
-                    "ignore": [
-                        "tests"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Dvsa\\Olcs\\DvlaSearch\\": "src"
-                }
-            },
-            "scripts": {
-                "ut": [
-                    "phpunit test --stop-on-failure"
-                ],
-                "review": [
-                    "review"
-                ],
-                "cs": [
-                    "phpcs --severity=1 --standard=vendor/olcs/coding-standards/Profiles/DVSA/CS/ruleset.xml"
-                ],
-                "coverage": [
-                    "phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html"
-                ],
-                "sonar": [
-                    "phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit"
-                ],
-                "update-syms": [
-                    "composer-update-syms"
-                ],
-                "release": [
-                    "release"
-                ],
-                "sa": [
-                    "phpstan analyse --level 8 src --ansi"
-                ]
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "DVSA Search API client",
-            "time": "2022-10-28T15:37:34+00:00"
         },
         {
             "name": "olcs/olcs-laminas",
