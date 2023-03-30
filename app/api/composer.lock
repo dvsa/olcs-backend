@@ -4,22 +4,26 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f5815c683a5927f6a7f655a3e2547928",
+    "content-hash": "9170693de14878a8382be6200c753ee6",
     "packages": [
         {
             "name": "aws/aws-crt-php",
-            "version": "v1.0.4",
+            "version": "v1.2.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-crt-php/v1.0.4/aws-aws-crt-php-v1.0.4.zip",
-                "reference": "f5c64ee7c5fce196e2519b3d9b7138649efe032d",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-crt-php/v1.2.1/aws-aws-crt-php-v1.2.1.zip",
+                "reference": "1926277fc71d253dfa820271ac5987bdb193ccf5",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35|^5.6.3"
+                "phpunit/phpunit": "^4.8.35||^5.6.3||^9.5",
+                "yoast/phpunit-polyfills": "^1.0"
+            },
+            "suggest": {
+                "ext-awscrt": "Make sure you install awscrt native extension to use any of the functionality."
             },
             "type": "library",
             "autoload": {
@@ -37,7 +41,7 @@
                 }
             ],
             "description": "AWS Common Runtime for PHP",
-            "homepage": "http://aws.amazon.com/sdkforphp",
+            "homepage": "https://github.com/awslabs/aws-crt-php",
             "keywords": [
                 "amazon",
                 "aws",
@@ -46,17 +50,17 @@
             ],
             "support": {
                 "issues": "https://github.com/awslabs/aws-crt-php/issues",
-                "source": "https://github.com/awslabs/aws-crt-php/tree/v1.0.4"
+                "source": "https://github.com/awslabs/aws-crt-php/tree/v1.2.1"
             },
-            "time": "2023-01-31T23:08:25+00:00"
+            "time": "2023-03-24T20:22:19+00:00"
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.262.0",
+            "version": "3.262.4",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.262.0/aws-aws-sdk-php-3.262.0.zip",
-                "reference": "f45eefe4735d5a16ecc44cfd9a6c29421ae1e802",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.262.4/aws-aws-sdk-php-3.262.4.zip",
+                "reference": "2673d06dd47793c87e8d1616720066030676fa1f",
                 "shasum": ""
             },
             "require": {
@@ -134,28 +138,28 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.262.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.262.4"
             },
-            "time": "2023-03-23T18:21:18+00:00"
+            "time": "2023-03-29T18:20:24+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
-            "version": "v1.2.9",
+            "version": "v1.3.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/beberlei/doctrineextensions/v1.2.9/beberlei-doctrineextensions-v1.2.9.zip",
-                "reference": "53a71be2d3a153704d53b68bda24b3207f6a00aa",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/beberlei/doctrineextensions/v1.3.0/beberlei-doctrineextensions-v1.3.0.zip",
+                "reference": "008f162f191584a6c37c03a803f718802ba9dd9a",
                 "shasum": ""
             },
             "require": {
-                "doctrine/orm": "^2.6",
-                "php": "^7.1"
+                "doctrine/orm": "^2.7",
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.14",
                 "nesbot/carbon": "*",
-                "phpunit/phpunit": "^7.0 || ^8.0",
-                "symfony/yaml": "^4.2",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0",
+                "symfony/yaml": "^4.2 || ^5.0",
                 "zf1/zend-date": "^1.12",
                 "zf1/zend-registry": "^1.12"
             },
@@ -178,16 +182,16 @@
                     "email": "steve@steve.ly"
                 }
             ],
-            "description": "A set of extensions to Doctrine 2 that add support for additional query functions available in MySQL and Oracle.",
+            "description": "A set of extensions to Doctrine 2 that add support for additional query functions available in MySQL, Oracle, PostgreSQL and SQLite.",
             "keywords": [
                 "database",
                 "doctrine",
                 "orm"
             ],
             "support": {
-                "source": "https://github.com/beberlei/DoctrineExtensions/tree/v1.2.9"
+                "source": "https://github.com/beberlei/DoctrineExtensions/tree/v1.3.0"
             },
-            "time": "2020-11-02T10:57:56+00:00"
+            "time": "2020-11-29T07:37:23+00:00"
         },
         {
             "name": "behat/transliterator",
@@ -297,6 +301,73 @@
                 }
             ],
             "time": "2022-11-20T21:56:14+00:00"
+        },
+        {
+            "name": "composer/package-versions-deprecated",
+            "version": "1.11.99.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/package-versions-deprecated/1.11.99.5/composer-package-versions-deprecated-1.11.99.5.zip",
+                "reference": "b4f54f74ef3453349c24a845d22392cd31e65f1d",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1.0 || ^2.0",
+                "php": "^7 || ^8"
+            },
+            "replace": {
+                "ocramius/package-versions": "1.11.99"
+            },
+            "require-dev": {
+                "composer/composer": "^1.9.3 || ^2.0@dev",
+                "ext-zip": "^1.13",
+                "phpunit/phpunit": "^6.5 || ^7"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PackageVersions\\Installer",
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PackageVersions\\": "src/PackageVersions"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
+            "support": {
+                "issues": "https://github.com/composer/package-versions-deprecated/issues",
+                "source": "https://github.com/composer/package-versions-deprecated/tree/1.11.99.5"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-01-17T14:14:24+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -1278,28 +1349,35 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.6.6",
+            "version": "2.7.5",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/doctrine/orm/v2.6.6/doctrine-orm-v2.6.6.zip",
-                "reference": "2d9b9351831d1230881c52f006011cbf72fe944e",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/doctrine/orm/2.7.5/doctrine-orm-2.7.5.zip",
+                "reference": "01187c9260cd085529ddd1273665217cae659640",
                 "shasum": ""
             },
             "require": {
-                "doctrine/annotations": "~1.5",
-                "doctrine/cache": "~1.6",
-                "doctrine/collections": "^1.4",
-                "doctrine/common": "^2.7.1",
-                "doctrine/dbal": "^2.6",
-                "doctrine/instantiator": "~1.1",
+                "composer/package-versions-deprecated": "^1.8",
+                "doctrine/annotations": "^1.11.1",
+                "doctrine/cache": "^1.9.1",
+                "doctrine/collections": "^1.5",
+                "doctrine/common": "^2.11 || ^3.0",
+                "doctrine/dbal": "^2.9.3",
+                "doctrine/event-manager": "^1.1",
+                "doctrine/inflector": "^1.0",
+                "doctrine/instantiator": "^1.3",
+                "doctrine/lexer": "^1.0",
+                "doctrine/persistence": "^1.3.3 || ^2.0",
                 "ext-pdo": "*",
                 "php": "^7.1",
-                "symfony/console": "~3.0|~4.0"
+                "symfony/console": "^3.0|^4.0|^5.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^5.0",
-                "phpunit/phpunit": "^7.5",
-                "symfony/yaml": "~3.4|~4.0"
+                "doctrine/coding-standard": "^6.0",
+                "phpstan/phpstan": "^0.12.18",
+                "phpunit/phpunit": "^8.0",
+                "symfony/yaml": "^3.4|^4.0|^5.0",
+                "vimeo/psalm": "^3.11"
             },
             "suggest": {
                 "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
@@ -1310,7 +1388,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6.x-dev"
+                    "dev-master": "2.7.x-dev"
                 }
             },
             "autoload": {
@@ -1344,16 +1422,16 @@
                 }
             ],
             "description": "Object-Relational-Mapper for PHP",
-            "homepage": "http://www.doctrine-project.org",
+            "homepage": "https://www.doctrine-project.org/projects/orm.html",
             "keywords": [
                 "database",
                 "orm"
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/v2.6.6"
+                "source": "https://github.com/doctrine/orm/tree/2.7.5"
             },
-            "time": "2019-11-18T22:01:21+00:00"
+            "time": "2020-12-03T08:52:14+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -2057,42 +2135,56 @@
         },
         {
             "name": "gedmo/doctrine-extensions",
-            "version": "v2.4.42",
+            "version": "v3.2.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/gedmo/doctrine-extensions/v2.4.42/gedmo-doctrine-extensions-v2.4.42.zip",
-                "reference": "b6c4442b4f32ce05673fbdf1fa4a2d5e315cc0a4",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/gedmo/doctrine-extensions/v3.2.0/gedmo-doctrine-extensions-v3.2.0.zip",
+                "reference": "8c02cee09e3dd43799ec3b84b619b19982c47f43",
                 "shasum": ""
             },
             "require": {
                 "behat/transliterator": "~1.2",
-                "doctrine/common": "~2.4",
-                "php": ">=5.3.2"
+                "doctrine/annotations": "^1.13",
+                "doctrine/collections": "^1.0",
+                "doctrine/common": "^2.13 || ^3.0",
+                "doctrine/event-manager": "^1.0",
+                "php": "^7.2 || ^8.0"
             },
             "conflict": {
-                "doctrine/annotations": "<1.2",
-                "doctrine/mongodb-odm": ">=2.0"
+                "doctrine/mongodb": "<1.3",
+                "doctrine/mongodb-odm": "<2.0",
+                "doctrine/orm": ">=2.10",
+                "sebastian/comparator": "<2.0"
+            },
+            "provide": {
+                "ext-mongo": "1.6.12"
             },
             "require-dev": {
-                "doctrine/common": ">=2.5.0",
-                "doctrine/mongodb-odm": ">=1.0.2 <2.0",
-                "doctrine/orm": ">=2.5.0",
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5",
-                "symfony/yaml": "^2.6 || ^3.0 || ^4.0 || ^5.0"
+                "alcaeus/mongo-php-adapter": "^1.1",
+                "doctrine/cache": "^1.11 || ^2.0",
+                "doctrine/dbal": "^2.13",
+                "doctrine/doctrine-bundle": "^2.3",
+                "doctrine/mongodb-odm": "^2.0",
+                "doctrine/orm": "^2.9.6",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpunit/phpunit": "^8.5",
+                "symfony/cache": "^4.4 || ^5.0",
+                "symfony/yaml": "^4.1"
             },
             "suggest": {
                 "doctrine/mongodb-odm": "to use the extensions with the MongoDB ODM",
-                "doctrine/orm": "to use the extensions with the ORM"
+                "doctrine/orm": "to use the extensions with the ORM",
+                "symfony/cache": "to cache parsed annotations"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4.x-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Gedmo\\": "lib/Gedmo"
+                    "Gedmo\\": "src/"
                 }
             },
             "license": [
@@ -2131,11 +2223,11 @@
             ],
             "support": {
                 "email": "gediminas.morkevicius@gmail.com",
-                "issues": "https://github.com/Atlantic18/DoctrineExtensions/issues",
-                "source": "https://github.com/Atlantic18/DoctrineExtensions/tree/v3.0.0-beta",
-                "wiki": "https://github.com/Atlantic18/DoctrineExtensions/tree/master/doc"
+                "issues": "https://github.com/doctrine-extensions/DoctrineExtensions/issues",
+                "source": "https://github.com/doctrine-extensions/DoctrineExtensions/tree/v3.2.0",
+                "wiki": "https://github.com/Atlantic18/DoctrineExtensions/tree/main/doc"
             },
-            "time": "2020-08-21T01:27:20+00:00"
+            "time": "2021-10-05T15:25:14+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -5975,30 +6067,28 @@
         },
         {
             "name": "oro/doctrine-extensions",
-            "version": "1.3.2",
+            "version": "2.0.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/oro/doctrine-extensions/1.3.2/oro-doctrine-extensions-1.3.2.zip",
-                "reference": "529d239d065eb6843025f901d402379bb551cd75",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/oro/doctrine-extensions/2.0.2/oro-doctrine-extensions-2.0.2.zip",
+                "reference": "478101fdb37e7a3bd4efad78b6e36fc49c26055f",
                 "shasum": ""
             },
             "require": {
-                "doctrine/orm": ">=2.2.3",
-                "php": ">=5.4.0"
+                "doctrine/orm": ">=2.6",
+                "php": ">=7.3"
             },
             "require-dev": {
-                "doctrine/common": "<3.0.0",
-                "doctrine/data-fixtures": "^1.0",
-                "doctrine/orm": "<2.5.0",
-                "phpunit/phpunit": "4.*",
-                "squizlabs/php_codesniffer": "2.8.*",
-                "symfony/yaml": "2.*"
+                "doctrine/data-fixtures": "^1.3",
+                "phpunit/phpunit": "9.*",
+                "squizlabs/php_codesniffer": "3.5.*",
+                "symfony/yaml": "5.*"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Oro\\ORM": "src/",
-                    "Oro\\DBAL": "src/"
+                "psr-4": {
+                    "Oro\\ORM\\": "src/Oro/ORM",
+                    "Oro\\DBAL\\": "src/Oro/DBAL"
                 }
             },
             "license": [
@@ -6007,11 +6097,11 @@
             "authors": [
                 {
                     "name": "Oro, Inc",
-                    "homepage": "http://www.orocrm.com"
+                    "homepage": "https://oroinc.com/"
                 }
             ],
             "description": "Doctrine Extensions for MySQL and PostgreSQL.",
-            "homepage": "https://github.com/orocrm/doctrine-extensions/",
+            "homepage": "https://github.com/oroinc/doctrine-extensions/",
             "keywords": [
                 "database",
                 "doctrine",
@@ -6023,9 +6113,9 @@
             ],
             "support": {
                 "issues": "https://github.com/oroinc/doctrine-extensions/issues",
-                "source": "https://github.com/oroinc/doctrine-extensions/tree/1.3.2"
+                "source": "https://github.com/oroinc/doctrine-extensions/tree/2.0.2"
             },
-            "time": "2021-09-02T13:33:38+00:00"
+            "time": "2022-05-10T14:09:20+00:00"
         },
         {
             "name": "phprtflite/phprtflite",
