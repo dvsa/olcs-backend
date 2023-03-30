@@ -841,7 +841,7 @@ return [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array',
                 'paths' => [
-                    'vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity',
+                    'vendor/gedmo/doctrine-extensions/src/Translatable/Entity'
                 ],
             ],
             'orm_default' => [
