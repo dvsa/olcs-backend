@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Cli\Controller;
 
 use Doctrine\ORM\ORMException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfile;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq;
@@ -21,12 +22,28 @@ use Laminas\View\Model\ConsoleModel;
  */
 class SQSController extends AbstractQueueController
 {
-    const VALID_QUEUE_TYPES = [
+    private const VALID_QUEUE_TYPES = [
         'companyProfile',
         'processInsolvency',
         'processInsolvencyDlq',
         'companyProfileDlq'
     ];
+
+    private CommandHandlerManager $commandHandlerManager;
+
+    private array $config;
+
+    /**
+     * @param array $config
+     * @param CommandHandlerManager $commandHandlerManager
+     */
+    public function __construct(
+        array $config,
+        CommandHandlerManager $commandHandlerManager
+    ) {
+        $this->config = $config;
+        $this->commandHandlerManager = $commandHandlerManager;
+    }
 
     /**
      * Index Action
@@ -35,7 +52,7 @@ class SQSController extends AbstractQueueController
      */
     public function indexAction()
     {
-        $config = $this->getServiceLocator()->get('Config')['queue'];
+        $config = $this->config['queue'];
         $queueDuration = $this->getQueueDuration($config);
         $queueType = $this->getQueueType();
         $this->startTime = microtime(true);
@@ -124,6 +141,6 @@ class SQSController extends AbstractQueueController
 
     protected function handleSingleCommand($dto): Result
     {
-        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
+        return $this->commandHandlerManager->handleCommand($dto);
     }
 }
