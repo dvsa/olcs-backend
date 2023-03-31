@@ -2,20 +2,26 @@
 
 namespace Dvsa\Olcs\Cli\Controller;
 
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Query\Diagnostics\CheckFkIntegrity;
 use Dvsa\Olcs\Api\Domain\Query\Diagnostics\GenerateCheckFkIntegritySql;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
+use Dvsa\Olcs\Api\Service\CpmsV2HelperService;
+use Dvsa\Olcs\Api\Service\Nr\InrClient;
+use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
+use Dvsa\Olcs\Email\Service\Imap;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Olcs\Db\Service\Search\Search;
 use Laminas\Console\Response;
 use Laminas\Mvc\Controller\AbstractConsoleController;
-use Laminas\View\Model\ConsoleModel;
+use Dvsa\Olcs\Address\Service\Address;
 use Laminas\Http\Client;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Transfer\Query\Document\DownloadGuide;
 use Dvsa\Olcs\Transfer\Query\Document\Download;
 use Dvsa\Olcs\Transfer\Query\ContactDetail\CountryList;
-use Dvsa\Olcs\Transfer\Query\CompaniesHouse\GetList as ChGetList;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 
 /**
@@ -26,26 +32,26 @@ use Dvsa\Olcs\Email\Domain\Command\SendEmail;
  */
 class DiagnosticController extends AbstractConsoleController
 {
-    const COLOR_FAIL = 10;
-    const COLOR_PASS = 11;
-    const COLOR_SKIP = 12;
-    const TEMPLATE_TO_DOWNLOAD = 'GV_LICENCE_GB';
-    const TEMPLATE_TO_DOWNLOAD_ID = Document::GV_LICENCE_GB;
-    const GUIDE_TO_DOWNLOAD = 'Advert_Template_GB_New.pdf';
-    const SYSTEM_USER_NAME = 'usr291';
-    const POSTCODE_TO_FETCH = 'LS9 6NF';
-    const LICENCE_SEARCH = 'smith';
-    const NYSIIS_FORENAME = 'John';
-    const NYSIIS_FAMILYNAME = 'Smith';
-    const COMPANIES_HOUSE_SEARCH_VALUE = 'next';
-    const COMPANIES_HOUSE_SEARCH_NUMBER = '02275780';
-    const EMAIL_ADDRESS_FOR_TEST_EMAIL = 'terry.valtech@gmail.com';
-    const SUBJECT_FOR_TEST_EMAIL = 'test email';
-    const BODY_FOR_TEST_EMAIL = 'test email sent from the diagnostic command';
-    const NAME_FROM_FOR_TEST_EMAIL = 'System';
-    const EMAIL_FROM_FOR_TEST_EMAIL = 'terry.valtech@gmail.com';
-    const MAILBOX_ID = 'inspection_request';
-    const XML_EXAMPLE = '<?xml version="1.0" encoding="UTF-8"?><foo></foo>';
+    private const COLOR_FAIL = 10;
+    private const COLOR_PASS = 11;
+    private const COLOR_SKIP = 12;
+    private const TEMPLATE_TO_DOWNLOAD = 'GV_LICENCE_GB';
+    private const TEMPLATE_TO_DOWNLOAD_ID = Document::GV_LICENCE_GB;
+    private const GUIDE_TO_DOWNLOAD = 'Advert_Template_GB_New.pdf';
+    private const SYSTEM_USER_NAME = 'usr291';
+    private const POSTCODE_TO_FETCH = 'LS9 6NF';
+    private const LICENCE_SEARCH = 'smith';
+    private const NYSIIS_FORENAME = 'John';
+    private const NYSIIS_FAMILYNAME = 'Smith';
+    private const COMPANIES_HOUSE_SEARCH_VALUE = 'next';
+    private const COMPANIES_HOUSE_SEARCH_NUMBER = '02275780';
+    private const EMAIL_ADDRESS_FOR_TEST_EMAIL = 'terry.valtech@gmail.com';
+    private const SUBJECT_FOR_TEST_EMAIL = 'test email';
+    private const BODY_FOR_TEST_EMAIL = 'test email sent from the diagnostic command';
+    private const NAME_FROM_FOR_TEST_EMAIL = 'System';
+    private const EMAIL_FROM_FOR_TEST_EMAIL = 'terry.valtech@gmail.com';
+    private const MAILBOX_ID = 'inspection_request';
+    private const XML_EXAMPLE = '<?xml version="1.0" encoding="UTF-8"?><foo></foo>';
 
     /**
      * @var array
@@ -75,21 +81,58 @@ class DiagnosticController extends AbstractConsoleController
     ];
 
     private $sections = [
-        'openam' => 'OpenAM',
         'database' => 'Database',
         'print' => 'Print',
         'documentStore' => 'Document Store',
         'cpms' => 'CPMS',
         'elastic' => 'Elastic',
         'transxchange' => 'Transxchange',
-        'nysiis' => 'NYSIIS',
         'address' => 'Address Lookup',
-        'companiesHouseXml' => 'Companies House XML API',
         'companiesHouseRest' => 'Companies House REST API',
         'sendEmail' => 'Send email',
         'checkMailbox' => 'Check inspection request mailbox',
         'nr' => 'NR'
     ];
+
+    private CpmsV2HelperService $cpmsHelperService;
+
+    private Search $elasticSearch;
+
+    private NysiisRestClient $nysiisService;
+
+    private Address $addressService;
+
+    private \Dvsa\Olcs\CompaniesHouse\Service\Client $companiesHouseService;
+
+    private Imap $imapService;
+
+    protected InrClient $inrService;
+
+    private QueryHandlerManager $queryHandlerManager;
+
+    private CommandHandlerManager $commandHandlerManager;
+
+    public function __construct(
+        array $config,
+        CpmsV2HelperService $cpmsHelperService,
+        Search $elasticSearch,
+        $addressService,
+        \Dvsa\Olcs\CompaniesHouse\Service\Client $companiesHouseService,
+        Imap $imapService,
+        InrClient $nrService,
+        QueryHandlerManager $queryHandlerManager,
+        CommandHandlerManager $commandHandlerManager
+    ) {
+        $this->config = $config;
+        $this->cpmsHelperService = $cpmsHelperService;
+        $this->elasticSearch = $elasticSearch;
+        $this->addressService = $addressService;
+        $this->companiesHouseService = $companiesHouseService;
+        $this->imapService = $imapService;
+        $this->inrService = $nrService;
+        $this->queryHandlerManager = $queryHandlerManager;
+        $this->commandHandlerManager = $commandHandlerManager;
+    }
 
     /**
      * Index action
@@ -129,20 +172,6 @@ class DiagnosticController extends AbstractConsoleController
             join(PHP_EOL, $this->handleQuery(GenerateCheckFkIntegritySql::create([]))['queries']) . PHP_EOL
         );
         return $response;
-    }
-
-    /**
-     * Get config
-     *
-     * @return array
-     */
-    private function getConfig()
-    {
-        if ($this->config === null) {
-            $this->config = $this->getServiceLocator()->get('config');
-        }
-
-        return $this->config;
     }
 
     /**
@@ -233,11 +262,9 @@ class DiagnosticController extends AbstractConsoleController
         }
 
         $this->outputMessage('Get Report List : ');
-        /** @var \Dvsa\Olcs\Api\Service\CpmsV2HelperService $cpms */
-        $cpms = $this->getServiceLocator()->get('CpmsHelperService');
 
         try {
-            $response = $cpms->getReportList();
+            $response = $this->cpmsHelperService->getReportList();
             if (isset($response['items']) && isset($response['page'])) {
                 $this->outputPass();
             } else {
@@ -266,9 +293,8 @@ class DiagnosticController extends AbstractConsoleController
         }
 
         $this->outputMessage("Serach licence index for '" . self::LICENCE_SEARCH . "' : ");
-        /** @var \Olcs\Db\Service\Search\Search $es */
-        $es = $this->getServiceLocator()->get('ElasticSearch\Search');
-        $result = $es->search(self::LICENCE_SEARCH, ['licence']);
+
+        $result = $this->elasticSearch->search(self::LICENCE_SEARCH, ['licence']);
 
         if (isset($result['Count']) && $result['Count'] > 1 && isset($result['Results'])) {
             $this->outputPass();
@@ -311,37 +337,12 @@ class DiagnosticController extends AbstractConsoleController
 
         $this->outputMessage('Make request: ');
         try {
-            /** @var \Dvsa\Olcs\Api\Service\Data\Nysiis $nysiisService */
-            $nysiisService = $this->getServiceLocator()->get(\Dvsa\Olcs\Api\Service\Data\Nysiis::class);
-
-            $nysiisService->getNysiisSearchKeys(
+            $this->nysiisService->getNysiisSearchKeys(
                 [
                     'nysiisForename' => self::NYSIIS_FORENAME,
                     'nysiisFamilyname' => self::NYSIIS_FAMILYNAME
                 ]
             );
-
-            $this->outputPass();
-        } catch (\Exception $e) {
-            $this->outputFailEx($e);
-        }
-    }
-
-    /**
-     * OpenAM section
-     *
-     * @return void
-     */
-    private function openamSection()
-    {
-        $user = $this->params('openam-user', '');
-        $userToFetch = $user ? $user : self::SYSTEM_USER_NAME;
-        $this->outputMessage('Fetch ' . $userToFetch . ' user : ');
-        try {
-            /** @var \Dvsa\Olcs\Api\Service\OpenAm\Client $service */
-            $service = $this->getServiceLocator()->get(\Dvsa\Olcs\Api\Service\OpenAm\ClientInterface::class);
-
-            $service->fetchUser(hash('sha256', $userToFetch));
 
             $this->outputPass();
         } catch (\Exception $e) {
@@ -358,41 +359,9 @@ class DiagnosticController extends AbstractConsoleController
     {
         $this->outputMessage('Fetch postcode ' . self::POSTCODE_TO_FETCH . ' : ');
         try {
-            /** @var \Dvsa\Olcs\Address\Service\Address */
-            $service = $this->getServiceLocator()->get('AddressService');
-            $address = $service->fetchByPostcode(self::POSTCODE_TO_FETCH);
+            $address = $this->addressService->fetchByPostcode(self::POSTCODE_TO_FETCH);
             if (count($address) === 0) {
                 $this->outputFail('No results for ' . self::POSTCODE_TO_FETCH);
-            } else {
-                $this->outputPass();
-            }
-        } catch (\Exception $e) {
-            $this->outputFailEx($e);
-        }
-    }
-
-    /**
-     * Companies house XML section
-     *
-     * @return void
-     */
-    private function companiesHouseXmlSection()
-    {
-        if ($this->getValueFromConfig('CH_XML_USERID') === false
-            || $this->getValueFromConfig('CH_XML_PASSWORD') === false
-        ) {
-            return;
-        }
-
-        try {
-            $params = [
-                'type' => 'nameSearch',
-                'value' => self::COMPANIES_HOUSE_SEARCH_VALUE,
-            ];
-            $this->outputMessage('Fetch companies by name contains "' . self::COMPANIES_HOUSE_SEARCH_VALUE . '" : ');
-            $result = $this->handleQuery(ChGetList::create($params));
-            if (!is_array($result) || !array_key_exists('result', $result) || count($result) === 0) {
-                $this->outputFail('No results found for search term: ' . self::COMPANIES_HOUSE_SEARCH_VALUE);
             } else {
                 $this->outputPass();
             }
@@ -408,17 +377,16 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function companiesHouseRestSection()
     {
-        if ($this->getValueFromConfig('CH_REST_URI') === false
-            || $this->getValueFromConfig('CH_REST_USERNAME') === false) {
+        if (
+            $this->getValueFromConfig('CH_REST_URI') === false
+            || $this->getValueFromConfig('CH_REST_USERNAME') === false
+        ) {
             return;
         }
 
         try {
-            /** @var \Dvsa\Olcs\CompaniesHouse\Service\Client $service */
-            $service = $this->getServiceLocator()->get(\Dvsa\Olcs\CompaniesHouse\Service\Client::class);
-
             $this->outputMessage('Fetch company by number ' . self::COMPANIES_HOUSE_SEARCH_NUMBER . ' : ');
-            $result = $service->getCompanyProfile(self::COMPANIES_HOUSE_SEARCH_NUMBER, true);
+            $result = $this->companiesHouseService->getCompanyProfile(self::COMPANIES_HOUSE_SEARCH_NUMBER, true);
             if (!is_array($result) || count($result) === 0) {
                 $this->outputFail('No results found for search term: ' . self::COMPANIES_HOUSE_SEARCH_NAME);
             } else {
@@ -490,11 +458,8 @@ class DiagnosticController extends AbstractConsoleController
         try {
             $this->outputMessage('Connecting to ' . self::MAILBOX_ID . ' mailbox : ');
 
-            /** @var \Dvsa\Olcs\Email\Service\Imap $service */
-            $service = $this->getServiceLocator()->get('ImapService');
-
-            $service->connect(self::MAILBOX_ID);
-            $messages = $service->getMessages();
+            $this->imapService->connect(self::MAILBOX_ID);
+            $messages = $this->imapService->getMessages();
             $total = count($messages);
             $this->outputPass(' (found ' . $total . 'messages)');
         } catch (\Exception $e) {
@@ -520,9 +485,8 @@ class DiagnosticController extends AbstractConsoleController
 
         try {
             $this->outputMessage('Sending empty request to NR service : ');
-            /** @var \Dvsa\Olcs\Api\Service\Nr\InrClientInterface $service */
-            $service = $this->getServiceLocator()->get(\Dvsa\Olcs\Api\Service\Nr\InrClientInterface::class);
-            $responseCode = $service->makeRequest(self::XML_EXAMPLE);
+
+            $responseCode = $this->inrService->makeRequest(self::XML_EXAMPLE);
             $this->outputPass(' response code was ' . $responseCode);
         } catch (\Exception $e) {
             $this->outputFailEx($e);
@@ -642,7 +606,7 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function handleQuery($dto)
     {
-        return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
+        return $this->queryHandlerManager->handleQuery($dto);
     }
 
     /**
@@ -655,7 +619,7 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function handleCommand($dto, $shouldValidate = true)
     {
-        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto, $shouldValidate);
+        return $this->commandHandlerManager->handleCommand($dto, $shouldValidate);
     }
 
     /**
@@ -673,7 +637,7 @@ class DiagnosticController extends AbstractConsoleController
         $path = $this->configKeys[$type];
 
         $keys = explode('->', $path);
-        $value = $this->getConfig();
+        $value = $this->config;
 
         foreach ($keys as $key) {
             if (!isset($value[$key])) {

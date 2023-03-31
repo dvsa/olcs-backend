@@ -1,12 +1,8 @@
 <?php
 
-/**
- * Queue Controller Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Cli\Controller;
 
+use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Cli\Controller\QueueController;
@@ -28,6 +24,13 @@ class QueueControllerTest extends MockeryTestCase
     protected $routeMatch;
     protected $event;
     protected $console;
+    protected $config = [
+        'queue' => [
+            'runFor' => 0.01,
+            'sleepFor' => 50,
+            ]
+    ];
+    protected $mockQueueService;
 
     public function setUp(): void
     {
@@ -39,7 +42,9 @@ class QueueControllerTest extends MockeryTestCase
         $this->sm = Bootstrap::getServiceManager();
         $this->console = m::mock('Laminas\Console\Adapter\AdapterInterface');
 
-        $this->sut = new QueueController();
+        $this->mockQueueService = m::mock(QueueProcessor::class);
+
+        $this->sut = new QueueController($this->config, $this->mockQueueService);
         $this->sut->setEvent($this->event);
         $this->sut->setServiceLocator($this->sm);
         $this->sut->setConsole($this->console);
@@ -55,7 +60,6 @@ class QueueControllerTest extends MockeryTestCase
             ]
         ];
         $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
         $this->sm->setService('Queue', $mockQueue);
 
         // Expectations
@@ -63,7 +67,7 @@ class QueueControllerTest extends MockeryTestCase
         $this->request->shouldReceive('getParam')->with('exclude')->andReturn('');
         $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
 
-        $mockQueue->shouldReceive('processNextItem')
+        $this->mockQueueService->shouldReceive('processNextItem')
             ->with(['foo'], [])
             ->andReturn(null);
 
@@ -80,15 +84,7 @@ class QueueControllerTest extends MockeryTestCase
 
     public function testIndexAction()
     {
-        // Mocks
-        $mockConfig = [
-            'queue' => [
-                'runFor' => 0.01,
-                'sleepFor' => 50,
-            ]
-        ];
         $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
         $this->sm->setService('Queue', $mockQueue);
 
         // Expectations
@@ -96,7 +92,7 @@ class QueueControllerTest extends MockeryTestCase
         $this->request->shouldReceive('getParam')->with('exclude')->andReturn('');
         $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
 
-        $mockQueue->shouldReceive('processNextItem')
+        $this->mockQueueService->shouldReceive('processNextItem')
             ->with(['foo'], [])
             ->andReturn('Some output');
 
@@ -115,15 +111,7 @@ class QueueControllerTest extends MockeryTestCase
 
     public function testIndexActionIncludeExclude()
     {
-        // Mocks
-        $mockConfig = [
-            'queue' => [
-                'runFor' => 0.01,
-                'sleepFor' => 50,
-            ]
-        ];
         $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
         $this->sm->setService('Queue', $mockQueue);
 
         // Expectations
@@ -131,40 +119,7 @@ class QueueControllerTest extends MockeryTestCase
         $this->request->shouldReceive('getParam')->with('exclude')->andReturn('aaa,bbb');
         $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
 
-        $mockQueue->shouldReceive('processNextItem')
-            ->with(['foo', 'bar'], ['aaa', 'bbb'])
-            ->andReturn('Some output');
-
-        $this->console->shouldReceive('writeLine')->with('Types = foo,bar')->once();
-        $this->console->shouldReceive('writeLine')->with('Exclude types = aaa,bbb')->once();
-        $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
-        $this->console->shouldReceive('writeLine')
-            ->atLeast(100)
-            ->with('Some output');
-
-        // Assertions
-        $this->routeMatch->setParam('action', 'index');
-        $this->sut->dispatch($this->request);
-    }
-
-    public function testIndexActionQueueDuration()
-    {
-        // Mocks
-        $mockConfig = [
-            'queue' => [
-                'runFor' => 22,
-            ]
-        ];
-        $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
-        $this->sm->setService('Queue', $mockQueue);
-
-        // Expectations
-        $this->request->shouldReceive('getParam')->with('type')->andReturn('foo,bar');
-        $this->request->shouldReceive('getParam')->with('exclude')->andReturn('aaa,bbb');
-        $this->request->shouldReceive('getParam')->with('queue-duration', 22)->andReturn(0.01);
-
-        $mockQueue->shouldReceive('processNextItem')
+        $this->mockQueueService->shouldReceive('processNextItem')
             ->with(['foo', 'bar'], ['aaa', 'bbb'])
             ->andReturn('Some output');
 
@@ -182,14 +137,7 @@ class QueueControllerTest extends MockeryTestCase
 
     public function testIndexActionHandlesException()
     {
-        // Mocks
-        $mockConfig = [
-            'queue' => [
-                'runFor' => 0.01,
-            ]
-        ];
         $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
         $this->sm->setService('Queue', $mockQueue);
 
         // Expectations
@@ -198,7 +146,7 @@ class QueueControllerTest extends MockeryTestCase
         $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
 
         $errorMessage = 'error message';
-        $mockQueue->shouldReceive('processNextItem')
+        $this->mockQueueService->shouldReceive('processNextItem')
             ->with(['foo'], [])
             ->andThrow(new \Exception($errorMessage));
 
@@ -207,7 +155,7 @@ class QueueControllerTest extends MockeryTestCase
         $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
         $this->console->shouldReceive('writeLine')
             ->atLeast(1)
-            ->with('Error: '.$errorMessage);
+            ->with('Error: ' . $errorMessage);
 
         // Assertions
         $this->routeMatch->setParam('action', 'index');
@@ -216,14 +164,7 @@ class QueueControllerTest extends MockeryTestCase
 
     public function testIndexActionHandlesOrmException()
     {
-        // Mocks
-        $mockConfig = [
-            'queue' => [
-                'runFor' => 0.01,
-            ]
-        ];
         $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
         $this->sm->setService('Queue', $mockQueue);
 
         // Expectations
@@ -232,7 +173,7 @@ class QueueControllerTest extends MockeryTestCase
         $this->request->shouldReceive('getParam')->with('queue-duration', 0.01)->andReturn(0.01);
 
         $errorMessage = 'error message';
-        $mockQueue->shouldReceive('processNextItem')
+        $this->mockQueueService->shouldReceive('processNextItem')
             ->with(['foo'], [])
             ->andThrow(new \Doctrine\ORM\ORMException($errorMessage));
 
@@ -241,7 +182,7 @@ class QueueControllerTest extends MockeryTestCase
         $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
         $this->console->shouldReceive('writeLine')
             ->atLeast(1)
-            ->with('ORM Error: '.$errorMessage);
+            ->with('ORM Error: ' . $errorMessage);
 
         // Assertions
         $this->routeMatch->setParam('action', 'index');

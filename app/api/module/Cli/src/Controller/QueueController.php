@@ -1,14 +1,9 @@
 <?php
 
-/**
- * QueueController
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @note ported from Cli\Controller\QueueController
- */
 namespace Dvsa\Olcs\Cli\Controller;
 
 use Doctrine\ORM\ORMException;
+use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
 use Olcs\Logging\Log\Logger;
 use Laminas\View\Model\ConsoleModel;
 
@@ -20,25 +15,38 @@ use Laminas\View\Model\ConsoleModel;
  */
 class QueueController extends AbstractQueueController
 {
+    private array $config;
+
+    private QueueProcessor $queueService;
+
+    /**
+     * @param array $config
+     * @param QueueProcessor $queueService
+     */
+    public function __construct(
+        array $config,
+        QueueProcessor $queueService
+    ) {
+        $this->config = $config;
+        $this->queueService = $queueService;
+    }
+
     /**
      * Index Action
      *
      */
     public function indexAction()
     {
-        $config = $this->getServiceLocator()->get('Config')['queue'];
+        $config = $this->config['queue'];
 
         // Which message type to process, if null then we process any message type
         $includeTypes = $this->getIncludeTypes();
         $excludeTypes = $this->getExcludeTypes();
         $queueDuration = $this->getQueueDuration($config);
 
-        $this->getConsole()->writeLine('Types = '. implode(',', $includeTypes));
-        $this->getConsole()->writeLine('Exclude types = '. implode(',', $excludeTypes));
-        $this->getConsole()->writeLine('Queue duration = '. $queueDuration);
-
-        /** @var \Dvsa\Olcs\Cli\Service\Queue\QueueProcessor $service */
-        $service = $this->getServiceLocator()->get('Queue');
+        $this->getConsole()->writeLine('Types = ' . implode(',', $includeTypes));
+        $this->getConsole()->writeLine('Exclude types = ' . implode(',', $excludeTypes));
+        $this->getConsole()->writeLine('Queue duration = ' . $queueDuration);
 
         // Then we need to run for a given length of time
         if (empty($config['isLongRunningProcess'])) {
@@ -53,11 +61,11 @@ class QueueController extends AbstractQueueController
         while ($this->shouldRunAgain()) {
             try {
                 // process next item
-                $response = $service->processNextItem($includeTypes, $excludeTypes);
+                $response = $this->queueService->processNextItem($includeTypes, $excludeTypes);
             } catch (ORMException $e) {
                 return $this->handleORMException($e);
             } catch (\Exception $e) {
-                $content = 'Error: '.$e->getMessage();
+                $content = 'Error: ' . $e->getMessage();
 
                 Logger::log(
                     \Laminas\Log\Logger::ERR,

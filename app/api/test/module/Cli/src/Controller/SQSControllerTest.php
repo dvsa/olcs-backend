@@ -27,6 +27,15 @@ class SQSControllerTest extends MockeryTestCase
     protected $event;
     protected $console;
 
+    protected $config = [
+        'queue' => [
+            'runFor' => 0.01, // seconds
+            'sleepFor' => 50, // microseconds
+        ]
+    ];
+
+    protected $mockCommandHandlerManager;
+
     public function setUp(): void
     {
         $this->request = m::mock('Laminas\Console\Request');
@@ -35,9 +44,10 @@ class SQSControllerTest extends MockeryTestCase
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
         $this->sm = Bootstrap::getServiceManager();
+        $this->mockCommandHandlerManager = m::mock(CommandHandlerManager::class);
         $this->console = m::mock('Laminas\Console\Adapter\AdapterInterface');
 
-        $this->sut = new SQSController();
+        $this->sut = new SQSController($this->config, $this->mockCommandHandlerManager);
         $this->sut->setEvent($this->event);
         $this->sut->setServiceLocator($this->sm);
         $this->sut->setConsole($this->console);
@@ -65,15 +75,15 @@ class SQSControllerTest extends MockeryTestCase
 
         $result = new Result();
         $result->setFlag('no_messages', true);
-        $mockCommandHandlerManager = m::mock(CommandHandlerManager::class)
+        $this->mockCommandHandlerManager
             ->shouldReceive('handleCommand')
             ->with(IsEqual::equalTo($expectedCommand))
             ->andReturn($result)
             ->getMock();
 
-        $this->sm->setService('CommandHandlerManager', $mockCommandHandlerManager);
+        $this->sm->setService('CommandHandlerManager', $this->mockCommandHandlerManager);
 
-        $this->console->shouldReceive('writeLine')->with('Queue type = '. $queueType)->once();
+        $this->console->shouldReceive('writeLine')->with('Queue type = ' . $queueType)->once();
         $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
         $this->console->shouldReceive('writeLine')
             ->with('No messages queued, waiting for messages');
@@ -118,15 +128,15 @@ class SQSControllerTest extends MockeryTestCase
 
         $result = new Result();
         $result->addMessage('Email sent');
-        $mockCommandHandlerManager = m::mock(CommandHandlerManager::class)
+        $this->mockCommandHandlerManager
             ->shouldReceive('handleCommand')
             ->with(IsEqual::equalTo($expectedCommand))
             ->andReturn($result)
             ->getMock();
 
-        $this->sm->setService('CommandHandlerManager', $mockCommandHandlerManager);
+        $this->sm->setService('CommandHandlerManager', $this->mockCommandHandlerManager);
 
-        $this->console->shouldReceive('writeLine')->with('Queue type = '. $queueType)->once();
+        $this->console->shouldReceive('writeLine')->with('Queue type = ' . $queueType)->once();
         $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
         $this->console->shouldReceive('writeLine')
             ->with('Processed message: Email sent');
@@ -159,15 +169,15 @@ class SQSControllerTest extends MockeryTestCase
 
         $result = new Result();
         $result->addMessage('Email sent');
-        $mockCommandHandlerManager = m::mock(CommandHandlerManager::class)
+        $this->mockCommandHandlerManager
             ->shouldReceive('handleCommand')
             ->with(IsEqual::equalTo($expectedCommand))
             ->andThrows(new Exception('Something terrible happened'))
             ->getMock();
 
-        $this->sm->setService('CommandHandlerManager', $mockCommandHandlerManager);
+        $this->sm->setService('CommandHandlerManager', $this->mockCommandHandlerManager);
 
-        $this->console->shouldReceive('writeLine')->with('Queue type = '. $queueType)->once();
+        $this->console->shouldReceive('writeLine')->with('Queue type = ' . $queueType)->once();
         $this->console->shouldReceive('writeLine')->with('Queue duration = 0.01')->once();
         $this->console->shouldReceive('writeLine')
             ->with('Error: Something terrible happened');
