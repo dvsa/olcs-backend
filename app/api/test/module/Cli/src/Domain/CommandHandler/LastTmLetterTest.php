@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
+use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
@@ -24,7 +24,6 @@ use Laminas\Mail\Transport\Sendmail;
 
 class LastTmLetterTest extends CommandHandlerTestCase
 {
-
     public function setUp(): void
     {
 
@@ -48,7 +47,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
     public function dpHandleCommand()
     {
         $sideEffectResultsWithAllowEmail = [
-            'GenerateAndStoreWithMultipleAddresses' => [
+            'GenerateAndStore' => [
                 'ids' => [
                     'documents' => [
                         '123' => [
@@ -63,18 +62,6 @@ class LastTmLetterTest extends CommandHandlerTestCase
                             ]),
                             'address' => 'correspondenceAddress'
                         ],
-                        '234' => [
-                            'metadata' => json_encode([
-                                'details' => [
-                                    'category' => Category::CATEGORY_TRANSPORT_MANAGER,
-                                    'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
-                                    'documentTemplate' => 1,
-                                    'allowEmail' => 'Y',
-                                    'sendToAddress' => 'establishmentAddress'
-                                ]
-                            ]),
-                            'address' => 'establishmentAddress'
-                        ]
                     ]
                 ]
             ],
@@ -119,15 +106,13 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234],
+                        'document' => 123,
                         'correspondenceAddress' => '123',
-                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
                         "Correspondence record created",
-                        "Email sent",
-                        "Document id '234', queued for print"
+                        "Email sent"
                     ]
                 ]
             ],
@@ -156,15 +141,13 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234],
+                        'document' => 123,
                         'correspondenceAddress' => '123',
-                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
                         "Correspondence record created",
                         "Email sent",
-                        "Document id '234', queued for print"
                     ]
                 ]
             ],
@@ -194,16 +177,13 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234],
+                        'document' => 123,
                         'correspondenceAddress' => '123',
-                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
                         "Correspondence record created",
-                        "Email sent",
-                        "Document id '234', queued for print"
-                    ]
+                        "Email sent",]
                 ]
             ],
             'licence_with_removed_tm_correspondenceCd_with_email_existing_user' => [
@@ -232,15 +212,13 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234],
+                        'document' => 123,
                         'correspondenceAddress' => '123',
-                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
                         "Correspondence record created",
-                        "Email sent",
-                        "Document id '234', queued for print"
+                        "Email sent"
                     ]
                 ]
             ],
@@ -267,15 +245,13 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234],
+                        'document' => 123,
                         'correspondenceAddress' => '123',
-                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
                         "Correspondence record created",
                         "Email sent",
-                        "Document id '234', queued for print"
                     ]
                 ]
             ],
@@ -297,7 +273,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
                         ]
                     ],
                     'sideEffectResults' => [
-                        'GenerateAndStoreWithMultipleAddresses' => [
+                        'GenerateAndStore' => [
                             'ids' => [
                                 'documents' => [
                                     '123' => [
@@ -312,18 +288,6 @@ class LastTmLetterTest extends CommandHandlerTestCase
                                         ]),
                                         'address' => 'correspondenceAddress'
                                     ],
-                                    '234' => [
-                                        'metadata' => json_encode([
-                                            'details' => [
-                                                'category' => Category::CATEGORY_TRANSPORT_MANAGER,
-                                                'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
-                                                'documentTemplate' => 1,
-                                                'allowEmail' => 'N',
-                                                'sendToAddress' => 'establishmentAddress'
-                                            ]
-                                        ]),
-                                        'address' => 'establishmentAddress'
-                                    ]
                                 ]
                             ]
                         ],
@@ -339,13 +303,11 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 'expect' => [
                     'id' => [
                         'assignedToUser' => 111,
-                        'documents' => [123, 234],
+                        'document' => 123,
                         'correspondenceAddress' => '123',
-                        'establishmentAddress' => '234'
                     ],
                     'messages' => [
                         "Document id '123', queued for print",
-                        "Document id '234', queued for print"
                     ]
                 ]
             ]
@@ -408,13 +370,13 @@ class LastTmLetterTest extends CommandHandlerTestCase
         $licence->shouldReceive('getCorrespondenceCd')->andReturn($mockCorrespondenceCd);
     }
 
-    private function getGenerateAndStoreMultipleAddressesResult($documents)
+    private function getGenerateAndStoreResult($documents)
     {
         $result = new Result();
 
         foreach ($documents as $id => $data) {
             $result->addId($data['address'], $id);
-            $result->addId('documents', $id, true);
+            $result->addId('document', $id);
         }
 
         return $result;
@@ -469,7 +431,6 @@ class LastTmLetterTest extends CommandHandlerTestCase
             ]
         ];
 
-
         $user = m::mock(UserEntity::class);
         $user->shouldReceive('serialize')
             ->with($caseworkerDetailsBundle)
@@ -520,14 +481,14 @@ class LastTmLetterTest extends CommandHandlerTestCase
             $tmlRepo->shouldReceive('save');
         }
 
-        $documentsData = $dataProvider['sideEffectResults']['GenerateAndStoreWithMultipleAddresses']['ids']['documents'];
+        $documentsData = $dataProvider['sideEffectResults']['GenerateAndStore']['ids']['documents'];
 
-        $generateAndStoreMultipleAddressesResult = $this->getGenerateAndStoreMultipleAddressesResult($documentsData);
+        $generateAndStoreResult = $this->getGenerateAndStoreResult($documentsData);
 
         $this->expectedSideEffect(
-            GenerateAndStoreWithMultipleAddresses::class,
+            GenerateAndStore::class,
             [],
-            $generateAndStoreMultipleAddressesResult
+            $generateAndStoreResult
         );
 
         $createTaskResult = $this->getCreateTaskResult($dataProvider);
@@ -540,8 +501,10 @@ class LastTmLetterTest extends CommandHandlerTestCase
             $this->expectedSideEffect(PrintLetter::class, [], $printLetterResult);
 
             $metadata = json_decode($data['metadata'], true);
-            if ($metadata['details']['sendToAddress'] === 'correspondenceAddress' &&
-                $metadata['details']['allowEmail'] === 'Y') {
+            if (
+                $metadata['details']['sendToAddress'] === 'correspondenceAddress' &&
+                $metadata['details']['allowEmail'] === 'Y'
+            ) {
                 $printLetterEmailResult = $this->getPrintLetterEmailResult();
                 $this->expectedSideEffect(PrintLetter::class, [], $printLetterEmailResult);
             }
