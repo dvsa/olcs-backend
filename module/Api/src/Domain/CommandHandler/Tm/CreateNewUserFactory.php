@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Tm;
@@ -24,16 +25,10 @@ class CreateNewUserFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransactioningCommandHandler
     {
-        assert($container instanceof ServiceLocatorAwareInterface);
         $pluginManager = $container;
         $container = $container->getServiceLocator();
 
         $adapter = $container->get(ValidatableAdapterInterface::class);
-
-        // TODO: Remove this once OpenAM has been removed
-        if ($adapter instanceof OpenAm) {
-            $adapter = null;
-        }
 
         $passwordService = $container->get(PasswordService::class);
         return (new CreateNewUser($passwordService, $adapter))->createService($pluginManager);
