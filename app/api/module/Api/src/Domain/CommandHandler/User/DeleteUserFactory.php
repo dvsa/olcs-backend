@@ -13,7 +13,6 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class DeleteUserFactory implements FactoryInterface
 {
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -24,7 +23,6 @@ class DeleteUserFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransactioningCommandHandler
     {
-        assert($container instanceof ServiceLocatorAwareInterface);
         $pluginManager = $container;
         $container = $container->getServiceLocator();
 

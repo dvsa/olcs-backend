@@ -1,13 +1,12 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\AcquiredRights\Service\AcquiredRightsService;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class UpdateDetailsFactory implements FactoryInterface
@@ -21,7 +20,6 @@ class UpdateDetailsFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        assert($container instanceof ServiceLocatorAwareInterface);
         $pluginManager = $container;
         $container = $container->getServiceLocator();
 
