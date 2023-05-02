@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
@@ -17,10 +18,10 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class LoginFactory implements FactoryInterface
 {
-    const CONFIG_NAMESPACE = 'auth';
-    const AUTH_CONFIG_DEFAULT_ADAPTER = 'default_adapter';
-    const AUTH_CONFIG_ADAPTERS = 'adapters';
-    const ADAPTER_CONFIG_ADAPTER = 'adapter';
+    public const CONFIG_NAMESPACE = 'auth';
+    public const AUTH_CONFIG_DEFAULT_ADAPTER = 'default_adapter';
+    public const AUTH_CONFIG_ADAPTERS = 'adapters';
+    public const ADAPTER_CONFIG_ADAPTER = 'adapter';
 
     /**
      * invoke method
@@ -32,7 +33,6 @@ class LoginFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Login
     {
-        assert($container instanceof ServiceLocatorAwareInterface);
         $pluginManager = $container;
         $container = $container->getServiceLocator();
 

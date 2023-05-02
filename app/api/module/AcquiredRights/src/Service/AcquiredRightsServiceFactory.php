@@ -5,9 +5,7 @@ namespace Dvsa\Olcs\AcquiredRights\Service;
 use Dvsa\Olcs\AcquiredRights\Client\AcquiredRightsClient;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use Olcs\Logging\Log\LaminasLogPsr3Adapter;
 use Olcs\Logging\Log\Logger;
 use phpDocumentor\Reflection\Types\Boolean;
 
@@ -29,7 +27,7 @@ class AcquiredRightsServiceFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AcquiredRightsService
     {
-        if ($container instanceof ServiceLocatorAwareInterface) {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
             $container = $container->getServiceLocator();
         }
 
