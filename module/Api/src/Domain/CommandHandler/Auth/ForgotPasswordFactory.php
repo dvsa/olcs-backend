@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
@@ -20,9 +21,8 @@ class ForgotPasswordFactory implements FactoryInterface
      * @param array|null $options
      * @return ForgotPassword
      */
-public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ForgotPassword
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ForgotPassword
     {
-        assert($container instanceof ServiceLocatorAwareInterface);
         $pluginManager = $container;
         $container = $container->getServiceLocator();
 
