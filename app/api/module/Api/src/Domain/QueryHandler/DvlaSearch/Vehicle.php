@@ -24,6 +24,15 @@ class Vehicle extends AbstractQueryHandler
      */
     protected $dvlaSearchService;
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return Vehicle
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         return $this->__invoke($serviceLocator, Vehicle::class);
@@ -60,6 +69,7 @@ class Vehicle extends AbstractQueryHandler
      * @return Vehicle
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Fee
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -66,6 +63,15 @@ class FeeList extends AbstractQueryHandler
         return true;
     }
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return FeeList
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         return $this->__invoke($serviceLocator, FeeList::class);
@@ -78,6 +84,7 @@ class FeeList extends AbstractQueryHandler
      * @return FeeList
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

@@ -35,6 +35,7 @@ class MaxPermittedReachedByTypeAndOrganisation extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return self
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -99,6 +100,7 @@ class MaxPermittedReachedByTypeAndOrganisation extends AbstractQueryHandler
      * @return MaxPermittedReachedByTypeAndOrganisation
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

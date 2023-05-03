@@ -29,6 +29,7 @@ class AvailableYears extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -73,7 +74,7 @@ class AvailableYears extends AbstractQueryHandler
             if ($permitType == IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM) {
                 $includeYear = $this->stockAvailabilityChecker->hasAvailability($irhpPermitStockId);
             }
-            
+
             if ($includeYear) {
                 $availableYears[$irhpPermitStockId] = $irhpPermitStock->getValidityYear();
             }
@@ -95,6 +96,7 @@ class AvailableYears extends AbstractQueryHandler
      * @return AvailableYears
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

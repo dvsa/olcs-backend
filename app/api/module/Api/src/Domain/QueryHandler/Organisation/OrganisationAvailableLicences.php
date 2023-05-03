@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Organisation for Permits
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -23,9 +20,12 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * Organisation for Permits
+ */
 class OrganisationAvailableLicences extends AbstractQueryHandler
 {
-    const ERR_TYPE_MISMATCH = 'Permit type does not match the stock';
+    public const ERR_TYPE_MISMATCH = 'Permit type does not match the stock';
 
     protected $repoServiceName = 'Organisation';
     protected $extraRepos = ['IrhpPermitStock', 'IrhpPermitType', 'IrhpPermitWindow'];
@@ -39,6 +39,7 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -164,6 +165,7 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
      * @return OrganisationAvailableLicences
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

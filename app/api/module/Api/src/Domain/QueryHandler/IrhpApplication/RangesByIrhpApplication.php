@@ -1,9 +1,4 @@
 <?php
-/**
- * IrhpPermitRanges by IrhpApplication
- *
- * @author Andy Newton <andy@vitri.ltd>
- */
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
@@ -16,6 +11,11 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * IrhpPermitRanges by IrhpApplication
+ *
+ * @author Andy Newton <andy@vitri.ltd>
+ */
 class RangesByIrhpApplication extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpApplication';
@@ -30,6 +30,7 @@ class RangesByIrhpApplication extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -67,6 +68,7 @@ class RangesByIrhpApplication extends AbstractQueryHandler
      * @return RangesByIrhpApplication
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

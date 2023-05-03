@@ -1,9 +1,4 @@
 <?php
-/**
- * Retrieve Irhp Permit list
- *
- * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
- */
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermit;
 
@@ -17,6 +12,11 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * Retrieve Irhp Permit list
+ *
+ * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
+ */
 class GetListByLicence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermit';
@@ -43,6 +43,7 @@ class GetListByLicence extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -90,6 +91,7 @@ class GetListByLicence extends AbstractQueryHandler
      * @return GetListByLicence
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

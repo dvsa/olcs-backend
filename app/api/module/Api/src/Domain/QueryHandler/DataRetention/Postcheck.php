@@ -25,6 +25,7 @@ class Postcheck extends AbstractQueryHandler
      * @param ServiceLocatorInterface|QueryHandlerManager $serviceLocator
      *
      * @return AbstractQueryHandler
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -54,6 +55,7 @@ class Postcheck extends AbstractQueryHandler
      * @return Postcheck
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

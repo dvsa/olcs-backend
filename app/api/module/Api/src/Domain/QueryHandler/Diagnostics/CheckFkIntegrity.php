@@ -22,6 +22,7 @@ final class CheckFkIntegrity extends AbstractQueryHandler
      * @param ServiceLocatorInterface|QueryHandlerManager $serviceLocator
      *
      * @return AbstractQueryHandler
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -56,6 +57,7 @@ final class CheckFkIntegrity extends AbstractQueryHandler
      * @return CheckFkIntegrity
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

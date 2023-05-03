@@ -35,6 +35,7 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
      * @param \Dvsa\Olcs\Api\Domain\QueryHandlerManager $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -138,6 +139,7 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
      * @return AbstractDownload
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

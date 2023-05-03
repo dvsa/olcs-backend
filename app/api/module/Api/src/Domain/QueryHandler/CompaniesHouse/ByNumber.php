@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\CompaniesHouse;
 
@@ -16,7 +18,7 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class ByNumber extends AbstractQueryHandler
 {
-    const MAX_COMPANY_NUMBER_LENGTH = 8;
+    private const MAX_COMPANY_NUMBER_LENGTH = 8;
 
     /**
      * @var CompaniesHouseClient
@@ -28,6 +30,7 @@ class ByNumber extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator
      *
      * @return AbstractQueryHandler
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -76,6 +79,7 @@ class ByNumber extends AbstractQueryHandler
      * @return ByNumber
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

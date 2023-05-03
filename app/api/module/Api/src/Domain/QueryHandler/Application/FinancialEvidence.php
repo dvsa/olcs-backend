@@ -49,7 +49,6 @@ class FinancialEvidence extends AbstractQueryHandler
             $financialDocuments = $this->resultList($financialDocuments);
         }
 
-
         // add calculated finance data
         $financialEvidence = $this->getTotalNumberOfAuthorisedVehicles($application);
         $financialEvidence['requiredFinance'] = $this->helper->getRequiredFinance($application);
@@ -70,6 +69,15 @@ class FinancialEvidence extends AbstractQueryHandler
         );
     }
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return FinancialEvidence
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         return $this->__invoke($serviceLocator, FinancialEvidence::class);
@@ -124,6 +132,7 @@ class FinancialEvidence extends AbstractQueryHandler
      * @return FinancialEvidence
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

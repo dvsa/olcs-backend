@@ -1,9 +1,4 @@
 <?php
-/**
- * Retrieve Irhp Permit list by Irhp ID
- *
- * @author Andy Newton <andy@vitri.ltd>
- */
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermit;
 
@@ -17,6 +12,11 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * Retrieve Irhp Permit list by Irhp ID
+ *
+ * @author Andy Newton <andy@vitri.ltd>
+ */
 class GetListByIrhpId extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermit';
@@ -44,6 +44,7 @@ class GetListByIrhpId extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -95,6 +96,7 @@ class GetListByIrhpId extends AbstractQueryHandler
      * @return GetListByIrhpId
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
