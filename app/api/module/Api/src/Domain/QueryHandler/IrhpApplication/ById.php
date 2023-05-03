@@ -7,7 +7,10 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Exception;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Retrieve IRHP application by id
@@ -36,11 +39,7 @@ class ById extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->daysToPayIssueFeeProvider = $mainServiceLocator->get('PermitsFeesDaysToPayIssueFeeProvider');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ById::class);
     }
 
     /**
@@ -80,5 +79,24 @@ class ById extends AbstractQueryHandler
                 'totalPermitsRequired' => $totalPermitsRequired,
             ]
         );
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return ById
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->daysToPayIssueFeeProvider = $container->get('PermitsFeesDaysToPayIssueFeeProvider');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

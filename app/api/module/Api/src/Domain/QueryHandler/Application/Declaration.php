@@ -4,11 +4,14 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Application
@@ -39,13 +42,7 @@ class Declaration extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
-        $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
-        $this->reviewService = $mainServiceLocator->get('Review\ApplicationUndertakings');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Declaration::class);
     }
 
     /**
@@ -155,5 +152,26 @@ class Declaration extends AbstractQueryHandler
         }
 
         return null;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Declaration
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->sectionAccessService = $container->get('SectionAccessService');
+        $this->feesHelper = $container->get('FeesHelperService');
+        $this->reviewService = $container->get('Review\ApplicationUndertakings');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

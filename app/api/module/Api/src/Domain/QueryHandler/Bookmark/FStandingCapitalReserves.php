@@ -9,7 +9,10 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * FStanding Capital Reserves Bookmark
@@ -36,7 +39,6 @@ class FStandingCapitalReserves extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        parent::createService($serviceLocator);
         $this->helper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
         return $this;
     }
@@ -49,5 +51,24 @@ class FStandingCapitalReserves extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         return $this->helper->getFinanceCalculationForOrganisation($query->getOrganisation());
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return FStandingCapitalReserves
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->helper = $container->get('FinancialStandingHelperService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -8,8 +8,11 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\Utils\Helper\FileHelper;
+use Interop\Container\ContainerInterface;
 use Laminas\Http\Response;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Abstract class for download handler
@@ -35,9 +38,7 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->config = (array)$serviceLocator->getServiceLocator()->get('config');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, AbstractDownload::class);
     }
 
     /**
@@ -128,5 +129,23 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
         }
 
         return $file->getMimeType();
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return AbstractDownload
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+        $this->config = (array)$container->get('config');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -6,9 +6,12 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Licence Checklist for continuation
@@ -30,11 +33,7 @@ class LicenceChecklist extends AbstractQueryHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, LicenceChecklist::class);
     }
 
     /**
@@ -157,5 +156,24 @@ class LicenceChecklist extends AbstractQueryHandler
             }
         );
         return $sections;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return LicenceChecklist
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->sectionAccessService = $container->get('SectionAccessService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

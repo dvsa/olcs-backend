@@ -7,7 +7,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Domain\QueryHandler\DataRetention\EscapeMysqlIdentifierTrait;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use PDO;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use RuntimeException;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
@@ -28,11 +31,7 @@ final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $serviceLocator->getServiceLocator()->get('DoctrineOrmEntityManager');
-        $this->databaseName = $entityManager->getConnection()->getParams()['dbname'];
-        $this->pdo = $entityManager->getConnection()->getWrappedConnection();
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, GenerateCheckFkIntegritySql::class);
     }
 
     public function handleQuery(QueryInterface $query)
@@ -128,5 +127,26 @@ final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
         }
 
         return ['queries' => $queries];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return GenerateCheckFkIntegritySql
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get('DoctrineOrmEntityManager');
+        $this->databaseName = $entityManager->getConnection()->getParams()['dbname'];
+        $this->pdo = $entityManager->getConnection()->getWrappedConnection();
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -9,7 +9,10 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Application - Outstanding Fees
@@ -29,10 +32,7 @@ class OutstandingFees extends AbstractQueryHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, OutstandingFees::class);
     }
 
     public function handleQuery(QueryInterface $query)
@@ -59,5 +59,24 @@ class OutstandingFees extends AbstractQueryHandler
                 'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
             ]
         );
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return OutstandingFees
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->feesHelper = $container->get('FeesHelperService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

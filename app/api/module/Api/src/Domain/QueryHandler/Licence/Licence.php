@@ -12,9 +12,12 @@ use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Licence
@@ -44,11 +47,7 @@ class Licence extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Licence::class);
     }
 
     /**
@@ -171,5 +170,23 @@ class Licence extends AbstractQueryHandler
         /** @var \Dvsa\Olcs\Api\Domain\Repository\Application $applications */
         $applications = $this->getRepo('Application');
         return empty($applications->fetchOpenApplicationsForLicence($query->getId()));
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Licence
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+        $this->sectionAccessService = $container->get('SectionAccessService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

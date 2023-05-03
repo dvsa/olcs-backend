@@ -18,7 +18,10 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\Organisation\OrganisationAvailableLicences as OrganisationPermitsQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class OrganisationAvailableLicences extends AbstractQueryHandler
 {
@@ -39,11 +42,7 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->stockAvailabilityChecker = $mainServiceLocator->get('PermitsAvailabilityStockAvailabilityChecker');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, OrganisationAvailableLicences::class);
     }
 
     /**
@@ -156,5 +155,24 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
             'permitsAvailable' => true, //we don't check this yet for these stocks
             'selectedLicence' => null,
         ];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return OrganisationAvailableLicences
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->stockAvailabilityChecker = $container->get('PermitsAvailabilityStockAvailabilityChecker');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

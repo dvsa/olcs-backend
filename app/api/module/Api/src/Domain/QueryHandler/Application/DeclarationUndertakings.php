@@ -11,7 +11,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationUndertakingsReviewService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Declaration Undertakings
@@ -29,11 +32,7 @@ class DeclarationUndertakings extends AbstractQueryHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $sm = $serviceLocator->getServiceLocator();
-
-        $this->reviewService = $sm->get('Review\ApplicationUndertakings');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, DeclarationUndertakings::class);
     }
 
     public function handleQuery(QueryInterface $query)
@@ -63,5 +62,24 @@ class DeclarationUndertakings extends AbstractQueryHandler
         $data['isInternal'] = false;
 
         return $this->reviewService->getMarkup($data);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return DeclarationUndertakings
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->reviewService = $container->get('Review\ApplicationUndertakings');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
