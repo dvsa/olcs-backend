@@ -39,6 +39,7 @@ class Declaration extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator service locator
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -142,12 +143,14 @@ class Declaration extends AbstractQueryHandler
             true
         );
 
-        if ($feeType !== null && ($application->hasHgvAuthorisationIncreased() ||
+        if (
+            $feeType !== null && ($application->hasHgvAuthorisationIncreased() ||
             $application->hasLgvAuthorisationIncreased() ||
             $application->hasAuthTrailersIncrease() ||
             $application->hasNewOperatingCentre() ||
             $application->hasIncreaseInOperatingCentre()
-          )) {
+            )
+        ) {
             return $feeType->getFixedValue() == 0 ? $feeType->getFiveYearValue() : $feeType->getFixedValue();
         }
 
@@ -161,6 +164,7 @@ class Declaration extends AbstractQueryHandler
      * @return Declaration
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

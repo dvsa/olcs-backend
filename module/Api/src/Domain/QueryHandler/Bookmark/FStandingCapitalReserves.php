@@ -1,10 +1,5 @@
 <?php
 
-/**
- * FStanding Capital Reserves Bookmark
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -36,6 +31,7 @@ class FStandingCapitalReserves extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service manager
      *
      * @return FStandingCapitalReserves
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -60,6 +56,7 @@ class FStandingCapitalReserves extends AbstractQueryHandler
      * @return FStandingCapitalReserves
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Licence
- *
- * @author Josh Curtis <josh.curtis@valtech.co.uk>
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
@@ -44,6 +38,7 @@ class Licence extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -79,7 +74,6 @@ class Licence extends AbstractQueryHandler
             && $licence->isExpiring()
             && !$this->getRepo('SystemParameter')->getDisabledDigitalContinuations()
             && (string)$continuationDetail->getStatus() === Entity\Licence\ContinuationDetail::STATUS_PRINTED;
-
 
         /** @var LicenceVehicle $licVehicleRepo */
         $licVehicleRepo = $this->getRepo('LicenceVehicle');
@@ -152,7 +146,7 @@ class Licence extends AbstractQueryHandler
         return null;
     }
 
-    private function guardAgainstLackOfPermission(Entity\Licence\Licence $licence) : void
+    private function guardAgainstLackOfPermission(Entity\Licence\Licence $licence): void
     {
         if ($this->isExternalUser() && !$this->isLicenceStatusAccessibleForExternalUser($licence)) {
             throw new ForbiddenException('You do not have permission to access this record');
@@ -179,6 +173,7 @@ class Licence extends AbstractQueryHandler
      * @return Licence
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

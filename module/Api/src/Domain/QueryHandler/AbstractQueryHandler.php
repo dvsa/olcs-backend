@@ -73,6 +73,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      * @param ServiceLocatorInterface $serviceLocator Service locator
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -276,6 +277,16 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
 
         throw $rethrow;
     }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return $this
+     * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $mainServiceLocator = $container->getServiceLocator();

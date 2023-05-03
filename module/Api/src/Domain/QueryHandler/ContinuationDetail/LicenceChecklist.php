@@ -24,13 +24,22 @@ class LicenceChecklist extends AbstractQueryHandler
 
     protected $extraRepos = ['ConditionUndertaking'];
 
-    const CONDITIONS_UNDERTAKINGS_SECTION = 'conditions_undertakings';
+    private const CONDITIONS_UNDERTAKINGS_SECTION = 'conditions_undertakings';
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
      */
     protected $sectionAccessService;
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return LicenceChecklist
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         return $this->__invoke($serviceLocator, LicenceChecklist::class);
@@ -143,7 +152,8 @@ class LicenceChecklist extends AbstractQueryHandler
      */
     protected function alterSections($sections, Licence $licence)
     {
-        if (count($licence->getConditionUndertakings()) === 0
+        if (
+            count($licence->getConditionUndertakings()) === 0
             && in_array(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)
         ) {
             unset($sections[array_search(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)]);
@@ -165,6 +175,7 @@ class LicenceChecklist extends AbstractQueryHandler
      * @return LicenceChecklist
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

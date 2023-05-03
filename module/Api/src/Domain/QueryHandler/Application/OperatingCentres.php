@@ -47,6 +47,7 @@ class OperatingCentres extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator serviceLocator
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -226,6 +227,7 @@ class OperatingCentres extends AbstractQueryHandler
      * @return OperatingCentres
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

@@ -29,6 +29,7 @@ class UniqueCountriesByLicence extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -75,6 +76,7 @@ class UniqueCountriesByLicence extends AbstractQueryHandler
      * @return UniqueCountriesByLicence
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

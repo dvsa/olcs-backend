@@ -18,7 +18,7 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class Application extends AbstractQueryHandler
 {
-    const OPERATING_CENTRES_SECTION = 'operatingCentres';
+    private const OPERATING_CENTRES_SECTION = 'operatingCentres';
 
     protected $repoServiceName = 'Application';
     protected $extraRepos = ['Note', 'SystemParameter'];
@@ -33,6 +33,15 @@ class Application extends AbstractQueryHandler
      */
     private $feesHelper;
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return Application
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         return $this->__invoke($serviceLocator, Application::class);
@@ -99,6 +108,8 @@ class Application extends AbstractQueryHandler
      * @return Application
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

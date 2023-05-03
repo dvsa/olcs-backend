@@ -25,6 +25,7 @@ class GetAuthRequest extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service locator
      *
      * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
@@ -78,6 +79,7 @@ class GetAuthRequest extends AbstractQueryHandler
      * @return GetAuthRequest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
