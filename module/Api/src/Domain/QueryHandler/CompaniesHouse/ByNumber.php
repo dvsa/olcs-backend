@@ -9,7 +9,10 @@ use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as CompanyNotFo
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Query\CompaniesHouse\ByNumber as Qry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ByNumber extends AbstractQueryHandler
 {
@@ -28,10 +31,7 @@ class ByNumber extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->companiesHouseApi = $mainServiceLocator->get(CompaniesHouseClient::class);
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ByNumber::class);
     }
 
     /**
@@ -67,5 +67,24 @@ class ByNumber extends AbstractQueryHandler
             $companyNumber = str_pad($companyNumber, self::MAX_COMPANY_NUMBER_LENGTH, "0", STR_PAD_LEFT);
         }
         return $companyNumber;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return ByNumber
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->companiesHouseApi = $container->get(CompaniesHouseClient::class);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

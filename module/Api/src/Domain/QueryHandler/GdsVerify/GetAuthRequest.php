@@ -4,7 +4,10 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * GetAuthRequest
@@ -25,10 +28,7 @@ class GetAuthRequest extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->setGdsVerifyService($mainServiceLocator->get(\Dvsa\Olcs\GdsVerify\Service\GdsVerify::class));
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, GetAuthRequest::class);
     }
 
     /**
@@ -69,5 +69,24 @@ class GetAuthRequest extends AbstractQueryHandler
     public function setGdsVerifyService(\Dvsa\Olcs\GdsVerify\Service\GdsVerify $gdsVerifyService)
     {
         $this->gdsVerifyService = $gdsVerifyService;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return GetAuthRequest
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->setGdsVerifyService($container->get(\Dvsa\Olcs\GdsVerify\Service\GdsVerify::class));
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

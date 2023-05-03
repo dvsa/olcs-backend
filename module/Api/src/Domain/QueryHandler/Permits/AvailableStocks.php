@@ -8,7 +8,10 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\Permits\AvailableStocks as AvailableStocksQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Available stocks
@@ -29,11 +32,7 @@ class AvailableStocks extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->stockAvailabilityChecker = $mainServiceLocator->get('PermitsAvailabilityStockAvailabilityChecker');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, AvailableStocks::class);
     }
 
     /**
@@ -103,5 +102,24 @@ class AvailableStocks extends AbstractQueryHandler
             'stocks' => $availableStocks,
             'hasStocks' => !empty($availableStocks),
         ];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return AvailableStocks
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->stockAvailabilityChecker = $container->get('PermitsAvailabilityStockAvailabilityChecker');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

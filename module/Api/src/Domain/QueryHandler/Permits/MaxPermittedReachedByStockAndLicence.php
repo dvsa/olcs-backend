@@ -6,7 +6,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
 use Dvsa\Olcs\Transfer\Query\Permits\MaxPermittedReachedByStockAndLicence as MaxPermittedReachedByStockAndLicenceQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Max permitted reached by stock and licence
@@ -29,13 +32,7 @@ class MaxPermittedReachedByStockAndLicence extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->stockLicenceMaxPermittedCounter = $mainServiceLocator->get(
-            'PermitsAvailabilityStockLicenceMaxPermittedCounter'
-        );
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, MaxPermittedReachedByStockAndLicence::class);
     }
 
     /**
@@ -77,5 +74,26 @@ class MaxPermittedReachedByStockAndLicence extends AbstractQueryHandler
     private function generateResponse($maxPermittedReached)
     {
         return ['maxPermittedReached' => $maxPermittedReached];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return MaxPermittedReachedByStockAndLicence
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->stockLicenceMaxPermittedCounter = $container->get(
+            'PermitsAvailabilityStockLicenceMaxPermittedCounter'
+        );
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

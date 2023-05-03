@@ -9,7 +9,10 @@ use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
 use Dvsa\Olcs\Transfer\Query\Permits\MaxPermittedReachedByTypeAndOrganisation
     as MaxPermittedReachedByTypeAndOrganisationQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Max permitted reached by type and organisation
@@ -35,15 +38,7 @@ class MaxPermittedReachedByTypeAndOrganisation extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->currentDateTimeFactory = $mainServiceLocator->get('CommonCurrentDateTimeFactory');
-
-        $this->stockLicenceMaxPermittedCounter = $mainServiceLocator->get(
-            'PermitsAvailabilityStockLicenceMaxPermittedCounter'
-        );
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, MaxPermittedReachedByTypeAndOrganisation::class);
     }
 
     /**
@@ -95,5 +90,27 @@ class MaxPermittedReachedByTypeAndOrganisation extends AbstractQueryHandler
     private function generateResponse($maxPermittedReached)
     {
         return ['maxPermittedReached' => $maxPermittedReached];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return MaxPermittedReachedByTypeAndOrganisation
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->currentDateTimeFactory = $container->get('CommonCurrentDateTimeFactory');
+        $this->stockLicenceMaxPermittedCounter = $container->get(
+            'PermitsAvailabilityStockLicenceMaxPermittedCounter'
+        );
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

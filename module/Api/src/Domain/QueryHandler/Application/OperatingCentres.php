@@ -19,8 +19,11 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\Application\OperatingCentres as OperatingCentresQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Operating Centres
@@ -47,9 +50,7 @@ class OperatingCentres extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, OperatingCentres::class);
     }
 
     /**
@@ -216,5 +217,23 @@ class OperatingCentres extends AbstractQueryHandler
         }
 
         return $this->variationHelper->getListDataForApplication($application, $query);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return OperatingCentres
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+        $this->variationHelper = $container->get('VariationOperatingCentreHelper');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

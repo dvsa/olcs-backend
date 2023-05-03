@@ -9,7 +9,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Bilateral metadata
@@ -32,11 +35,7 @@ class BilateralMetadata extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->countryGenerator = $mainServiceLocator->get('PermitsBilateralMetadataCountryGenerator');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, BilateralMetadata::class);
     }
 
     /**
@@ -67,5 +66,24 @@ class BilateralMetadata extends AbstractQueryHandler
         }
 
         return ['countries' => $countryResponses];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return BilateralMetadata
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->countryGenerator = $container->get('PermitsBilateralMetadataCountryGenerator');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -6,7 +6,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
 use Dvsa\Olcs\Transfer\Query\Qa\ApplicationStep as ApplicationStepQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Application step
@@ -30,12 +33,7 @@ class ApplicationStep extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->qaContextGenerator = $mainServiceLocator->get('QaContextGenerator');
-        $this->selfservePageGenerator = $mainServiceLocator->get('QaSelfservePageGenerator');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ApplicationStep::class);
     }
 
     /**
@@ -55,5 +53,25 @@ class ApplicationStep extends AbstractQueryHandler
 
         $selfservePage = $this->selfservePageGenerator->generate($qaContext);
         return $selfservePage->getRepresentation();
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return ApplicationStep
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $fullContainer = $container;
+            $container = $container->getServiceLocator();
+        }
+
+        $this->qaContextGenerator = $container->get('QaContextGenerator');
+        $this->selfservePageGenerator = $container->get('QaSelfservePageGenerator');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
