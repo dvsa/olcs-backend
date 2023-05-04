@@ -89,7 +89,6 @@ class ById extends AbstractQueryHandler
      * @return ById
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

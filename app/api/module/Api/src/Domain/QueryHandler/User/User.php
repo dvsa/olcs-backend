@@ -120,9 +120,6 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
      * @return User
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

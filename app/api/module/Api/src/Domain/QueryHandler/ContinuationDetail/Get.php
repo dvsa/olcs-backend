@@ -159,7 +159,6 @@ class Get extends AbstractQueryHandler
      * @return Get
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

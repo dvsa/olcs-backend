@@ -69,7 +69,6 @@ class Vehicle extends AbstractQueryHandler
      * @return Vehicle
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
