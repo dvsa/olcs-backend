@@ -35,6 +35,11 @@ final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
         return $this->__invoke($serviceLocator, GenerateCheckFkIntegritySql::class);
     }
 
+    /**
+     * @param QueryInterface $query
+     * @return array[]
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function handleQuery(QueryInterface $query)
     {
         $constraintStatement = $this->pdo->prepare(
