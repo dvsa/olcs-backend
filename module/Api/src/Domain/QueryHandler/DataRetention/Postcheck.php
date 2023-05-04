@@ -38,6 +38,7 @@ class Postcheck extends AbstractQueryHandler
      * @param QueryInterface $query
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handleQuery(QueryInterface $query)
     {

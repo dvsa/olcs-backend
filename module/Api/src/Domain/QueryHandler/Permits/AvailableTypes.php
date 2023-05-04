@@ -42,6 +42,7 @@ class AvailableTypes extends AbstractQueryHandler
      * @param QueryInterface|AvailableTypesQuery $query query
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handleQuery(QueryInterface $query)
     {

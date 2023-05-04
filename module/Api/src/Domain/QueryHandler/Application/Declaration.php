@@ -53,6 +53,7 @@ class Declaration extends AbstractQueryHandler
      *
      * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handleQuery(QueryInterface $query)
     {

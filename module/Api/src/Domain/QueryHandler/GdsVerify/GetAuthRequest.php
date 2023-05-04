@@ -38,6 +38,7 @@ class GetAuthRequest extends AbstractQueryHandler
      * @param QueryInterface $query Query to handle
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handleQuery(QueryInterface $query)
     {
