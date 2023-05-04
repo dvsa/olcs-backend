@@ -56,7 +56,6 @@ class Postcheck extends AbstractQueryHandler
      * @return Postcheck
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

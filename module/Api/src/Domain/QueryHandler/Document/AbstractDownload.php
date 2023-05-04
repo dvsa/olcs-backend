@@ -139,7 +139,6 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
      * @return AbstractDownload
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
