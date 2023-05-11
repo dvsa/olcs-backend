@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -191,17 +192,23 @@ final class GeneratePermits extends AbstractCommandHandler
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $sm Service Manager
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return AbstractCommandHandler
      */
-    public function createService(ServiceLocatorInterface $sm, $name = null, $requestedName = null)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        /** @var ServiceLocatorInterface $sl */
-        $sl = $sm->getServiceLocator();
+        return $this->__invoke($serviceLocator, GeneratePermits::class);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
 
-        $this->transMngr = $sl->get('TransactionManager');
-
-        return parent::createService($sm);
+        $this->transMngr = $container->get('TransactionManager');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

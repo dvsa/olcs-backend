@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Interop\Container\ContainerInterface;
 
 /**
  * Create a Transport Manager Application
@@ -52,12 +53,7 @@ final class Create extends AbstractCommandHandler implements
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->userRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('User');
-        $this->tmRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('TransportManager');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Create::class);
     }
 
     /**
@@ -162,5 +158,17 @@ final class Create extends AbstractCommandHandler implements
                 ]
             );
         }
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->userRepo = $container->get('RepositoryServiceManager')->get('User');
+        $this->tmRepo = $container->get('RepositoryServiceManager')->get('TransportManager');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Si\ErruRequest;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse as MsiResponseService;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\CreateResponse as CreateErruResponseCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
+use Interop\Container\ContainerInterface;
 
 /**
  * CreateResponse
@@ -52,10 +53,7 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->msiResponseService = $mainServiceLocator->get(MsiResponseService::class);
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, CreateResponse::class);
     }
 
     /**
@@ -128,5 +126,16 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
         ];
 
         return UploadCmd::create($data);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->msiResponseService = $container->get(MsiResponseService::class);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

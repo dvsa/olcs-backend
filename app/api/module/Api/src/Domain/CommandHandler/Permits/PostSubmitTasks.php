@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\IrhpCandidatePermitsCreator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -34,13 +35,7 @@ final class PostSubmitTasks extends AbstractCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->irhpCandidatePermitsCreator = $mainServiceLocator->get(
-            'PermitsCandidatePermitsIrhpCandidatePermitsCreator'
-        );
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, PostSubmitTasks::class);
     }
 
     /**
@@ -72,5 +67,18 @@ final class PostSubmitTasks extends AbstractCommandHandler
         );
 
         return $this->result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->irhpCandidatePermitsCreator = $container->get(
+            'PermitsCandidatePermitsIrhpCandidatePermitsCreator'
+        );
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

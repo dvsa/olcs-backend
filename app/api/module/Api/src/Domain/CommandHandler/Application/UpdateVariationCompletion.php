@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateOperatingCentresCmd;
+use Interop\Container\ContainerInterface;
 
 /**
  * @see \Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres
@@ -129,12 +130,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->updateHelper = $mainServiceLocator->get('UpdateOperatingCentreHelper');
-        $this->variationHelper = $mainServiceLocator->get('VariationOperatingCentreHelper');
-        $this->financialStandingHelper = $mainServiceLocator->get('FinancialStandingHelperService');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, UpdateVariationCompletion::class);
     }
 
     /**
@@ -986,5 +982,18 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         $totDiscs = $this->licence->getPsvDiscsNotCeasedCount();
 
         return $totAuthVehicles < $totDiscs;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
+        $this->variationHelper = $container->get('VariationOperatingCentreHelper');
+        $this->financialStandingHelper = $container->get('FinancialStandingHelperService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

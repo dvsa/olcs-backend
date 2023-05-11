@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteriaFactory;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\IrhpPermitAllocator;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\RangeMatchingCriteriaInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use RuntimeException;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
@@ -49,15 +50,7 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->emissionsStandardCriteriaFactory = $mainServiceLocator->get(
-            'PermitsAllocateEmissionsStandardCriteriaFactory'
-        );
-        $this->bilateralCriteriaFactory = $mainServiceLocator->get('PermitsAllocateBilateralCriteriaFactory');
-        $this->irhpPermitAllocator = $mainServiceLocator->get('PermitsAllocateIrhpPermitAllocator');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, AllocateIrhpApplicationPermits::class);
     }
 
     /**
@@ -306,5 +299,20 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
         for ($index = 0; $index < $permitsRequired; $index++) {
             $this->irhpPermitAllocator->allocate($this->result, $irhpPermitApplication, $criteria, $expiryDate);
         }
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->emissionsStandardCriteriaFactory = $container->get(
+            'PermitsAllocateEmissionsStandardCriteriaFactory'
+        );
+        $this->bilateralCriteriaFactory = $container->get('PermitsAllocateBilateralCriteriaFactory');
+        $this->irhpPermitAllocator = $container->get('PermitsAllocateIrhpPermitAllocator');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

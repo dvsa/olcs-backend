@@ -9,13 +9,11 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendLiquidatedCompanyForUnregisteredUser;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
-use Dvsa\Olcs\Api\Domain\Repository\Team;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseInsolvencyPractitioner;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
@@ -26,6 +24,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
+use Interop\Container\ContainerInterface;
 
 class ProcessInsolvency extends AbstractConsumer
 {
@@ -84,8 +83,7 @@ class ProcessInsolvency extends AbstractConsumer
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->companiesHouseApi = $serviceLocator->getServiceLocator()->get(CompaniesHouseClient::class);
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ProcessInsolvency::class);
     }
 
     /**
@@ -379,5 +377,16 @@ class ProcessInsolvency extends AbstractConsumer
         });
 
         return array_values(array_unique($practitionerData, SORT_REGULAR));
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->companiesHouseApi = $container->get(CompaniesHouseClient::class);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

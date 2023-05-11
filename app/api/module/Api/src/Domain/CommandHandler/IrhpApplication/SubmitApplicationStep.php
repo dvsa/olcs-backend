@@ -5,10 +5,12 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationStep as SubmitApplicationStepCmd;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -37,12 +39,7 @@ class SubmitApplicationStep extends AbstractCommandHandler implements Transactio
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->qaContextGenerator = $mainServiceLocator->get('QaContextGenerator');
-        $this->formControlServiceManager = $mainServiceLocator->get('FormControlServiceManager');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, SubmitApplicationStep::class);
     }
 
     /**
@@ -77,5 +74,17 @@ class SubmitApplicationStep extends AbstractCommandHandler implements Transactio
         }
 
         return $this->result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->qaContextGenerator = $container->get('QaContextGenerator');
+        $this->formControlServiceManager = $container->get('FormControlServiceManager');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

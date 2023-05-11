@@ -32,6 +32,7 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
+use Interop\Container\ContainerInterface;
 
 /**
  * Pay Outstanding Fees
@@ -430,8 +431,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, PayOutstandingFees::class);
     }
 
     /**
@@ -663,5 +663,16 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         }
 
         return $extraParams;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->feesHelper = $container->get('FeesHelperService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
