@@ -9,6 +9,7 @@ use Dvsa\Olcs\Cli\Domain\Command\ApplyRangesToSuccessfulPermitApplications
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\Containerinterface;
 use RuntimeException;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
@@ -44,13 +45,7 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->stockBasedForCpProviderFactory = $mainServiceLocator->get(
-            'PermitsApplyRangesStockBasedForCpProviderFactory'
-        );
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ApplyRangesToSuccessfulPermitApplications::class);
     }
 
     /**
@@ -188,5 +183,18 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
         }
 
         return $ids;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->stockBasedForCpProviderFactory = $container->get(
+            'PermitsApplyRangesStockBasedForCpProviderFactory'
+        );
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

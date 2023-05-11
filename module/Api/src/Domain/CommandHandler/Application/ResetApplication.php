@@ -18,9 +18,9 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as CreateApplicationCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -41,10 +41,7 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->licenceRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('Licence');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ResetApplication::class);
     }
 
     public function handleCommand(CommandInterface $command)
@@ -116,5 +113,16 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
         }
 
         return true;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->licenceRepo = $container->get('RepositoryServiceManager')
+            ->get('Licence');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

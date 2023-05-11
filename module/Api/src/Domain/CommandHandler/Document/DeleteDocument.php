@@ -13,6 +13,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteEbsrSubmission;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox;
 use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate;
+use Interop\Container\ContainerInterface;
 
 /**
  * Delete Document
@@ -39,12 +40,7 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        /** @var ServiceLocatorInterface $mainServiceLocator  */
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->fileUploader = $mainServiceLocator->get('FileUploader');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, DeleteDocument::class);
     }
 
     /**
@@ -95,5 +91,16 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
         $result->addMessage('Document deleted');
 
         return $result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->fileUploader = $container->get('FileUploader');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

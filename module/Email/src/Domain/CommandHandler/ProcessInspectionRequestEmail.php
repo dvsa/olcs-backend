@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Email\Domain\Command\UpdateInspectionRequest as UpdateInspectionRequestCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\Containerinterface;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Email\Service\Imap as Mailbox;
@@ -48,11 +49,7 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->setMailbox($mainServiceLocator->get('ImapService'));
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ProcessInspectionRequestEmail::class);
     }
 
     public function handleCommand(CommandInterface $command)
@@ -192,5 +189,16 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
     protected function outputLine($message)
     {
         $this->result->addMessage($message);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->setMailbox($container->get('ImapService'));
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

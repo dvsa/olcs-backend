@@ -19,6 +19,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
+use Interop\Container\ContainerInterface;
 
 /**
  * Generate SlaTargetDate
@@ -172,10 +173,18 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        parent::createService($serviceLocator);
-        $sl = $serviceLocator->getServiceLocator();
+        return $this->__invoke($serviceLocator, GenerateSlaTargetDate::class);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
 
-        $this->slaService = $sl->get(SlaCalculatorInterface::class);
+        parent::__invoke($fullContainer, $requestedName, $options);
+        $this->slaService = $container->get(SlaCalculatorInterface::class);
 
         return $this;
     }

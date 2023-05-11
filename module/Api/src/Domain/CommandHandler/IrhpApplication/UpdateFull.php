@@ -20,6 +20,7 @@ use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as Cmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -47,13 +48,7 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->checkedValueUpdater = $mainServiceLocator->get('PermitsCheckableCheckedValueUpdater');
-        $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
-        $this->bilateralApplicationUpdater = $mainServiceLocator->get('PermitsBilateralInternalApplicationUpdater');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, UpdateFull::class);
     }
 
     /**
@@ -171,5 +166,18 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
             default:
                 throw new RuntimeException('Unsupported permit type ' . $permitTypeId);
         }
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->checkedValueUpdater = $container->get('PermitsCheckableCheckedValueUpdater');
+        $this->eventHistoryCreator = $container->get('EventHistoryCreator');
+        $this->bilateralApplicationUpdater = $container->get('PermitsBilateralInternalApplicationUpdater');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

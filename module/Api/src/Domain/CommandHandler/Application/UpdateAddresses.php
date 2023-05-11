@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
@@ -12,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -37,9 +37,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements Transactio
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, UpdateAddresses::class);
     }
 
     /**
@@ -111,5 +109,15 @@ final class UpdateAddresses extends AbstractCommandHandler implements Transactio
     {
         return !empty($address['postcode']) || !empty($address['town']) || !empty($address['addressLine1'])
             || !empty($address['addressLine2']) || !empty($address['addressLine3']) || !empty($address['addressLine4']);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
+use Interop\Container\ContainerInterface;
 
 /**
  * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence\UpdateOperatingCentresTest
@@ -37,9 +38,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->updateHelper = $serviceLocator->getServiceLocator()->get('UpdateOperatingCentreHelper');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, UpdateOperatingCentres::class);
     }
 
     /**
@@ -125,5 +124,15 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         }
 
         return $this->totals;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -87,18 +88,23 @@ final class DataDvaNiExport extends AbstractDataExport
      *
      * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
      */
-    public function createService(ServiceLocatorInterface $sm, $name = null, $requestedName = null)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        /** @var ServiceLocatorInterface $sl */
-        $sl = $sm->getServiceLocator();
-        $config = $sl->get('Config');
+        return $this->__invoke($serviceLocator, DataDvaNiExport::class);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
 
+        $config = $container->get('Config');
         $exportCfg = (!empty($config['data-dva-ni-export']) ? $config['data-dva-ni-export'] : []);
-
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
-
-        return parent::createService($sm);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

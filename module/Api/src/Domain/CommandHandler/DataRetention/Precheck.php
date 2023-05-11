@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -29,10 +30,7 @@ final class Precheck extends AbstractCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $serviceLocator->getServiceLocator()->get('DoctrineOrmEntityManager');
-        $this->connection = $entityManager->getConnection()->getWrappedConnection();
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Precheck::class);
     }
 
     /**
@@ -73,5 +71,17 @@ final class Precheck extends AbstractCommandHandler
         $systemParameterRepo = $this->getRepo('SystemParameter');
 
         return $systemParameterRepo->getDataRetentionDeleteLimit();
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get('DoctrineOrmEntityManager');
+        $this->connection = $entityManager->getConnection()->getWrappedConnection();
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

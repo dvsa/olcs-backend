@@ -9,11 +9,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Doctrine\ORM\Query;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -29,10 +29,7 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->licNoGenRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('LicenceNoGen');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, GenerateLicenceNumber::class);
     }
 
     public function handleCommand(CommandInterface $command)
@@ -91,5 +88,16 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
             $licence->getTrafficArea()->getId(),
             $licenceNoGen->getId()
         );
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->licNoGenRepo = $container->get('RepositoryServiceManager')
+            ->get('LicenceNoGen');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

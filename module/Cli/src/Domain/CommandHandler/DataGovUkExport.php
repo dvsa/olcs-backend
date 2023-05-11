@@ -6,18 +6,15 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendIntlGoodsEmailCmd;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\AbstractDataExport;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Doctrine\DBAL\Driver\Statement;
-use Dvsa\Olcs\Api\Service\Exception;
 
 /**
  * Export data to csv files for data.gov.uk
@@ -262,18 +259,23 @@ final class DataGovUkExport extends AbstractDataExport
      *
      * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
      */
-    public function createService(ServiceLocatorInterface $sm, $name = null, $requestedName = null)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        /** @var ServiceLocatorInterface $sl */
-        $sl = $sm->getServiceLocator();
-        $config = $sl->get('Config');
+        return $this->__invoke($serviceLocator, DataGovUkExport::class);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
 
+        $config = $container->get('Config');
         $exportCfg = (!empty($config['data-gov-uk-export']) ? $config['data-gov-uk-export'] : []);
-
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
-
-        return parent::createService($sm);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
