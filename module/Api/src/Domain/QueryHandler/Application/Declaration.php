@@ -168,8 +168,9 @@ class Declaration extends AbstractQueryHandler
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
+        $fullContainer = $container;
+
         if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $fullContainer = $container;
             $container = $container->getServiceLocator();
         }
 
