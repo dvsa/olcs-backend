@@ -118,4 +118,6 @@ return [
     CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\CompanyProfileDlq::class => IsSystemUser::class,
     CliQueryHandler\CompaniesHouse\Organisations::class => IsSystemUser::class,
 
+    CliCommandHandler\InterimEndDateEnforcement::class => IsSystemUser::class,
+
 ];

@@ -308,11 +308,20 @@ return [
                         'defaults' => [
                             'controller' => Cli\Controller\SQSController::class,
                             'action' => 'index'
-                        ]
-                    ]
-                ]
-            ]
-        ]
+                        ],
+                    ],
+                ],
+                'interim-end-date-enforcement' => [
+                    'options' => [
+                        'route' => 'interim-end-date-enforcement [--dryrun|-d]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'interimEndDateEnforcement'
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
     'controllers' => [
         'invokables' => [
@@ -515,6 +524,7 @@ return [
             Command\Permits\CancelUnsubmittedBilateral::class => CommandHandler\Permits\CancelUnsubmittedBilateral::class,
             Command\Permits\MarkExpiredPermits::class => CommandHandler\Permits\MarkExpiredPermits::class,
             Command\PopulateLastLoginFromOpenAm::class => CommandHandler\PopulateLastLoginFromOpenAm::class,
+            Command\InterimEndDateEnforcement::class => CommandHandler\InterimEndDateEnforcement::class,
         ],
     ],
 

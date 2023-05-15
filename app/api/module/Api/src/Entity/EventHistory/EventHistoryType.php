@@ -20,4 +20,5 @@ class EventHistoryType extends AbstractEventHistoryType
     const IRHP_APPLICATION_SUBMITTED = 'PAS';
     const IRHP_APPLICATION_GRANTED = 'PAG';
     const USER_EMAIL_ADDRESS_UPDATED = 'UEU';
+    const INTERIM_END = 'INE';
 }

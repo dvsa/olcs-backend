@@ -16,11 +16,6 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Laminas\Http\Response;
 use Laminas\View\Model\ConsoleModel;
 
-/**
- * BatchController
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class BatchController extends AbstractCliController
 {
     /**
@@ -575,6 +570,22 @@ class BatchController extends AbstractCliController
 
         $this->handleExitStatus(
             $this->handleCommand([PopulateLastLoginFromOpenAm::create($params)])
+        );
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function interimEndDateEnforcementAction()
+    {
+        $dryRun = $this->isDryRun();
+
+        return $this->handleExitStatus(
+            $this->handleCommand([
+                CliCommand\InterimEndDateEnforcement::create([
+                'dryRun' => $dryRun,
+                ])
+            ])
         );
     }
 }
