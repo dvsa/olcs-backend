@@ -1171,4 +1171,17 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->sut->populateLastLoginAction();
     }
+
+    public function testInterimEndDateEnforcementAction()
+    {
+        $this->mockParamsPlugin([]);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\InterimEndDateEnforcement::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->interimEndDateEnforcementAction();
+    }
 }
