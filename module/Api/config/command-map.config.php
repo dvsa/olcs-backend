@@ -1281,4 +1281,6 @@ return [
     // DvsaReports
     TransferCommand\DvsaReports\GetRedirect::class =>
         CommandHandler\DvsaReports\GetRedirectFactory::class,
+
+    CommandCli\InterimEndDateEnforcement::class => CommandHandlerCli\InterimEndDateEnforcement::class,
 ];

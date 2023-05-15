@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\EventHistory;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistory as EventHistoryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistoryType as EventHistoryTypeRepo;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
@@ -70,6 +71,10 @@ class Creator
             case $entity instanceof Licence:
                 $eventHistory->setLicence($entity);
                 $eventHistory->setEntityType('licence');
+                break;
+            case $entity instanceof Application:
+                $eventHistory->setApplication($entity);
+                $eventHistory->setEntityType('application');
                 break;
             default:
                 throw new RuntimeException('Cannot create event history for the entity');
