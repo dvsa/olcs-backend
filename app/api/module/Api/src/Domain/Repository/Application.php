@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
@@ -10,12 +12,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
+use Olcs\Logging\Log\Logger;
 
-/**
- * Application
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class Application extends AbstractRepository
 {
     use LicenceStatusAwareTrait;
@@ -335,6 +333,36 @@ class Application extends AbstractRepository
         $qb->setParameter('licenceId', $licenceId);
         $qb->setParameter('applicationStatus', Entity::APPLICATION_STATUS_UNDER_CONSIDERATION);
 
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch applications with status: 'apsts_consideration' which have an interim in force
+     * and end date equal to today or in the past
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function fetchOpenApplicationsWhereInterimInForceAndInterimEndDateIsPast(): array
+    {
+        $interimEndCutoff = new DateTime();
+
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':applicationStatus'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.interimStatus', ':interimStatus'));
+        $qb->andWhere($qb->expr()->lte($this->alias . '.interimEnd', ':interimEnd'));
+
+        $qb->setParameter('applicationStatus', Entity::APPLICATION_STATUS_UNDER_CONSIDERATION);
+        $qb->setParameter('interimStatus', Entity::INTERIM_STATUS_INFORCE);
+        $qb->setParameter('interimEnd', $interimEndCutoff);
+
+        Logger::debug(sprintf(
+            '\Dvsa\Olcs\Api\Domain\Repository\Application::fetchOpenApplicationsWhereInterimInForceAndInterimEndDateIsPast :: Fetching applications with status=%s AND interimStatus=%s AND interimEnd<=%s',
+            Entity::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            Entity::INTERIM_STATUS_INFORCE,
+            $interimEndCutoff->format(DateTimeInterface::W3C)
+        ));
         return $qb->getQuery()->getResult();
     }
 }
