@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
+use Interop\Container\ContainerInterface;
 
 class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedInterface
 {
@@ -20,9 +21,7 @@ class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedI
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->snapshotService = $serviceLocator->getServiceLocator()->get(Generator::class);
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Snapshot::class);
     }
 
     public function handleCommand(CommandInterface $command)
@@ -54,5 +53,15 @@ class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedI
         ];
 
         return $this->handleSideEffect(Upload::create($data));
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->snapshotService = $container->get(Generator::class);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

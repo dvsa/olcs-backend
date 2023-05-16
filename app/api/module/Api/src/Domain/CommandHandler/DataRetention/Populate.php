@@ -13,6 +13,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class Populate
@@ -31,10 +32,7 @@ final class Populate extends AbstractCommandHandler implements AuthAwareInterfac
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $serviceLocator->getServiceLocator()->get('DoctrineOrmEntityManager');
-        $this->connection = $entityManager->getConnection();
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Populate::class);
     }
 
     protected $repoServiceName = 'DataRetentionRule';
@@ -94,5 +92,17 @@ final class Populate extends AbstractCommandHandler implements AuthAwareInterfac
         }
 
         return $this->result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get('DoctrineOrmEntityManager');
+        $this->connection = $entityManager->getConnection();
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

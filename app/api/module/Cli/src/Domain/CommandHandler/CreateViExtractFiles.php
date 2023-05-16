@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
@@ -74,15 +75,7 @@ final class CreateViExtractFiles extends AbstractCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $config = $mainServiceLocator->get('Config');
-
-        if (isset($config['vi_extract_files']['export_path'])) {
-            $this->exportPath = $config['vi_extract_files']['export_path'];
-        }
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, CreateViExtractFiles::class);
     }
 
     /**
@@ -195,5 +188,19 @@ final class CreateViExtractFiles extends AbstractCommandHandler
             . '_'
             . $dt->format('His')
             . '.bak';
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $config = $container->get('Config');
+        if (isset($config['vi_extract_files']['export_path'])) {
+            $this->exportPath = $config['vi_extract_files']['export_path'];
+        }
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

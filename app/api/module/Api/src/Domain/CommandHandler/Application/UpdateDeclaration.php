@@ -19,6 +19,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateDeclaration as UpdateDeclarationCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Interop\Container\ContainerInterface;
 
 /**
  * UpdateDeclaration
@@ -36,10 +37,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->feeRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('Fee');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, UpdateDeclaration::class);
     }
 
     public function handleCommand(CommandInterface $command)
@@ -160,5 +158,16 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
         }
 
         return false;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->feeRepo = $container->get('RepositoryServiceManager')
+            ->get('Fee');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

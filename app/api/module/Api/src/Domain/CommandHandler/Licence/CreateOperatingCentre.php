@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateOperatingCentre as Cmd;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -47,11 +48,7 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->helper = $mainServiceLocator->get('OperatingCentreHelper');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, CreateOperatingCentre::class);
     }
 
     /**
@@ -105,5 +102,16 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
             $command,
             $this->getRepo('LicenceOperatingCentre')
         );
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->helper = $container->get('OperatingCentreHelper');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

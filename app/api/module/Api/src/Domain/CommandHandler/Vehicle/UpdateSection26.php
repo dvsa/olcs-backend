@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -23,9 +24,7 @@ final class UpdateSection26 extends AbstractCommandHandler implements Transactio
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->searchService = $serviceLocator->getServiceLocator()->get('ElasticSearch\Search');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, UpdateSection26::class);
     }
 
     public function handleCommand(CommandInterface $command)
@@ -47,5 +46,16 @@ final class UpdateSection26 extends AbstractCommandHandler implements Transactio
         $this->result->addMessage(sprintf('Updated Section26 on %d Vehicle(s).', count($command->getIds())));
 
         return $this->result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->searchService = $container->get('ElasticSearch\Search');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

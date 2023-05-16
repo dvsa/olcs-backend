@@ -12,6 +12,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\GdsVerify;
+use Interop\Container\ContainerInterface;
 
 /**
  * ProcessResponse
@@ -32,10 +33,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->setGdsVerifyService($mainServiceLocator->get(\Dvsa\Olcs\GdsVerify\Service\GdsVerify::class));
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ProcessSignatureResponse::class);
     }
 
     /**
@@ -137,5 +135,16 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     public function setGdsVerifyService(\Dvsa\Olcs\GdsVerify\Service\GdsVerify $gdsVerifyService)
     {
         $this->gdsVerifyService = $gdsVerifyService;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->setGdsVerifyService($container->get(\Dvsa\Olcs\GdsVerify\Service\GdsVerify::class));
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

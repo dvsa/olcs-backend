@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Generator;
+use Interop\Container\ContainerInterface;
 
 /**
  * Snapshot
@@ -35,9 +36,7 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->reviewSnapshotService = $serviceLocator->getServiceLocator()->get('TmReviewSnapshot');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Snapshot::class);
     }
 
     /**
@@ -104,5 +103,16 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
                 break;
         }
         return $status;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->reviewSnapshotService = $container->get('TmReviewSnapshot');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

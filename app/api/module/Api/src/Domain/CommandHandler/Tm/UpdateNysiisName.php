@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
+use Interop\Container\ContainerInterface;
 
 /**
  * Queue request to update TM name with Nysiis values
@@ -38,11 +39,7 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->nysiisClient = $mainServiceLocator->get(NysiisRestClient::class);
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, UpdateNysiisName::class);
     }
 
     /**
@@ -74,5 +71,16 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
         $this->result->addMessage('TM NYSIIS name was requested and updated');
 
         return $this->result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->nysiisClient = $container->get(NysiisRestClient::class);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

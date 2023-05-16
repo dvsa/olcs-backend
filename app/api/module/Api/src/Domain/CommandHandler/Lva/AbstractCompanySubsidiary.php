@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -30,15 +31,9 @@ abstract class AbstractCompanySubsidiary extends AbstractCommandHandler implemen
      * @return $this
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
-    public function createService(ServiceLocatorInterface $sl, $name = null, $requestedName = null)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->extraRepos = array_merge(['CompanySubsidiary', 'Licence', 'Application'], $this->extraRepos);
-
-        $instance = parent::createService($sl);
-
-        $this->repo = $this->getRepo('CompanySubsidiary');
-
-        return $instance;
+        return $this->__invoke($serviceLocator, AbstractCompanySubsidiary::class);
     }
 
     /**
@@ -166,5 +161,12 @@ abstract class AbstractCompanySubsidiary extends AbstractCommandHandler implemen
                 ]
             )
         );
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->extraRepos = array_merge(['CompanySubsidiary', 'Licence', 'Application'], $this->extraRepos);
+        $instance = parent::__invoke($container, $requestedName, $options);
+        $this->repo = $this->getRepo('CompanySubsidiary');
+        return $instance;
     }
 }

@@ -19,6 +19,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Interop\Container\ContainerInterface;
 
 /**
  * Update Application Operating Centre
@@ -40,11 +41,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->helper = $mainServiceLocator->get('OperatingCentreHelper');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Update::class);
     }
 
     /**
@@ -97,5 +94,16 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $this->result->merge($this->handleSideEffect(UpdateApplicationCompletionCmd::create($completionData)));
 
         return $this->result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->helper = $container->get('OperatingCentreHelper');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

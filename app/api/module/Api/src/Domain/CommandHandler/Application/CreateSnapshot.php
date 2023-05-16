@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
@@ -46,11 +47,7 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->reviewSnapshotService = $mainServiceLocator->get('ReviewSnapshot');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, CreateSnapshot::class);
     }
 
     public function handleCommand(CommandInterface $command)
@@ -170,5 +167,16 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
             default:
                 throw new ValidationException(['Unexpected event']);
         }
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->reviewSnapshotService = $container->get('ReviewSnapshot');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

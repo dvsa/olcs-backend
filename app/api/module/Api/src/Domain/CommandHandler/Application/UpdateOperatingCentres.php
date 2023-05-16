@@ -18,6 +18,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Interop\Container\ContainerInterface;
 
 /**
  * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\UpdateOperatingCentresTest
@@ -51,11 +52,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');
-        $this->updateHelper = $serviceLocator->getServiceLocator()->get('UpdateOperatingCentreHelper');
-        $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, UpdateOperatingCentres::class);
     }
 
     /**
@@ -232,5 +229,17 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         }
 
         return $this->totals;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->variationHelper = $container->get('VariationOperatingCentreHelper');
+        $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
+        $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

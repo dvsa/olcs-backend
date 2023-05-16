@@ -13,8 +13,8 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -37,8 +37,7 @@ final class CreateOverpaymentFee extends AbstractCommandHandler implements
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, CreateOverpaymentFee::class);
     }
 
     /**
@@ -86,5 +85,15 @@ final class CreateOverpaymentFee extends AbstractCommandHandler implements
         }
 
         return $this->result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->feesHelper = $container->get('FeesHelperService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

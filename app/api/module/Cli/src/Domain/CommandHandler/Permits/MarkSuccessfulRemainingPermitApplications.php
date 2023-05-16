@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulRemainingPermitApplications
     as MarkSuccessfulRemainingPermitApplicationsCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -34,13 +35,7 @@ class MarkSuccessfulRemainingPermitApplications extends ScoringCommandHandler im
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->successfulCandidatePermitsFacade = $mainServiceLocator->get(
-            'PermitsScoringSuccessfulCandidatePermitsFacade'
-        );
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, MarkSuccessfulRemainingPermitApplications::class);
     }
 
     /**
@@ -91,5 +86,18 @@ class MarkSuccessfulRemainingPermitApplications extends ScoringCommandHandler im
         }
 
         return $this->result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->successfulCandidatePermitsFacade = $container->get(
+            'PermitsScoringSuccessfulCandidatePermitsFacade'
+        );
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

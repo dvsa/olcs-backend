@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Grant as GrantCmd;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -52,12 +53,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->grantabilityChecker = $mainServiceLocator->get('PermitsGrantabilityChecker');
-        $this->eventHistoryCreator = $mainServiceLocator->get('EventHistoryCreator');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Grant::class);
     }
 
     /**
@@ -145,5 +141,17 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
                 'quantity' => $totalRequired,
             ]
         );
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->grantabilityChecker = $container->get('PermitsGrantabilityChecker');
+        $this->eventHistoryCreator = $container->get('EventHistoryCreator');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

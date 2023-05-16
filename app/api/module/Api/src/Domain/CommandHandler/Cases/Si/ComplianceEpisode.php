@@ -44,6 +44,7 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Interop\Container\ContainerInterface;
 
 /**
  * Process Si Compliance Episode
@@ -149,14 +150,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->xmlStructureInput = $mainServiceLocator->get('ComplianceXmlStructure');
-        $this->complianceEpisodeInput = $mainServiceLocator->get('ComplianceEpisodeInput');
-        $this->seriousInfringementInput = $mainServiceLocator->get('SeriousInfringementInput');
-        $this->xmlMapping = $mainServiceLocator->get('ComplianceEpisodeXmlMapping');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ComplianceEpisode::class);
     }
 
     /**
@@ -627,5 +621,19 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     public function getErrors()
     {
         return $this->errors;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->xmlStructureInput = $container->get('ComplianceXmlStructure');
+        $this->complianceEpisodeInput = $container->get('ComplianceEpisodeInput');
+        $this->seriousInfringementInput = $container->get('SeriousInfringementInput');
+        $this->xmlMapping = $container->get('ComplianceEpisodeXmlMapping');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

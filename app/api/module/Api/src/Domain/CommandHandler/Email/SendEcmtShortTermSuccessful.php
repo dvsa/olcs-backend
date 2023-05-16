@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
+use Interop\Container\ContainerInterface;
 use Laminas\I18n\Translator\Translator;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
@@ -37,12 +38,7 @@ class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->translator = $mainServiceLocator->get('translator');
-        $this->daysToPayIssueFeeProvider = $mainServiceLocator->get('PermitsFeesDaysToPayIssueFeeProvider');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, SendEcmtShortTermSuccessful::class);
     }
 
     /**
@@ -90,5 +86,17 @@ class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler
             'paymentUrl' => 'http://selfserve/permits/application/' . $irhpApplicationId . '/awaiting-fee',
             'periodName' => $periodName
         ];
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->translator = $container->get('translator');
+        $this->daysToPayIssueFeeProvider = $container->get('PermitsFeesDaysToPayIssueFeeProvider');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
