@@ -1,9 +1,4 @@
 <?php
-/**
- * IrhpPermitRanges by IrhpApplication
- *
- * @author Andy Newton <andy@vitri.ltd>
- */
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
@@ -11,8 +6,16 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Permits\Availability\CandidatePermitsAvailableCountCalculator;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * IrhpPermitRanges by IrhpApplication
+ *
+ * @author Andy Newton <andy@vitri.ltd>
+ */
 class RangesByIrhpApplication extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpApplication';
@@ -27,14 +30,11 @@ class RangesByIrhpApplication extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->candidatePermitsAvailableCountCalculator = $mainServiceLocator->get('PermitsAvailabilityCandidatePermitsAvailableCountCalculator');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, RangesByIrhpApplication::class);
     }
 
     /**
@@ -59,5 +59,25 @@ class RangesByIrhpApplication extends AbstractQueryHandler
             'ranges' => $this->resultList($ranges, $this->bundle),
             'count' => count($ranges)
         ];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return RangesByIrhpApplication
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->candidatePermitsAvailableCountCalculator = $container->get('PermitsAvailabilityCandidatePermitsAvailableCountCalculator');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -8,8 +8,11 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryGenerator;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\IpaAnswersSummaryGenerator;
 use Dvsa\Olcs\Transfer\Query\Qa\AnswersSummary as AnswersSummaryQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\I18n\Translator\Translator;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Answers summary
@@ -34,16 +37,11 @@ class AnswersSummary extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->answersSummaryGenerator = $mainServiceLocator->get('PermitsAnswersSummaryGenerator');
-        $this->ipaAnswersSummaryGenerator = $mainServiceLocator->get('PermitsIpaAnswersSummaryGenerator');
-        $this->translator = $mainServiceLocator->get('translator');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, AnswersSummary::class);
     }
 
     /**
@@ -81,5 +79,26 @@ class AnswersSummary extends AbstractQueryHandler
         $this->translator->setLocale($previousLocale);
 
         return $representation;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return AnswersSummary
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->answersSummaryGenerator = $container->get('PermitsAnswersSummaryGenerator');
+        $this->ipaAnswersSummaryGenerator = $container->get('PermitsIpaAnswersSummaryGenerator');
+        $this->translator = $container->get('translator');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

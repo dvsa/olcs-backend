@@ -1,9 +1,4 @@
 <?php
-/**
- * Retrieve Irhp Permit list by Irhp ID
- *
- * @author Andy Newton <andy@vitri.ltd>
- */
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermit;
 
@@ -12,8 +7,16 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Permits\Common\RangeBasedRestrictedCountriesProvider;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * Retrieve Irhp Permit list by Irhp ID
+ *
+ * @author Andy Newton <andy@vitri.ltd>
+ */
 class GetListByIrhpId extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermit';
@@ -41,15 +44,11 @@ class GetListByIrhpId extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->restrictedCountriesProvider
-            = $mainServiceLocator->get('PermitsCommonRangeBasedRestrictedCountriesProvider');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, GetListByIrhpId::class);
     }
 
     /**
@@ -88,5 +87,26 @@ class GetListByIrhpId extends AbstractQueryHandler
             'results' => $irhpPermits,
             'count' => $repo->fetchCount($query)
         ];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return GetListByIrhpId
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->restrictedCountriesProvider
+            = $container->get('PermitsCommonRangeBasedRestrictedCountriesProvider');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -6,8 +6,11 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\FeeBreakdown as FeeBreakdownQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Permits\FeeBreakdown\FeeBreakdownGeneratorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Fee breakdown
@@ -25,22 +28,11 @@ class FeeBreakdown extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->registerGenerator(
-            IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
-            $mainServiceLocator->get('PermitsBilateralFeeBreakdownGenerator')
-        );
-
-        $this->registerGenerator(
-            IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
-            $mainServiceLocator->get('PermitsMultilateralFeeBreakdownGenerator')
-        );
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, FeeBreakdown::class);
     }
 
     /**
@@ -73,5 +65,32 @@ class FeeBreakdown extends AbstractQueryHandler
     private function registerGenerator($irhpPermitTypeId, FeeBreakdownGeneratorInterface $feeBreakdownGenerator)
     {
         $this->feeBreakdownGenerators[$irhpPermitTypeId] = $feeBreakdownGenerator;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return FeeBreakdown
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->registerGenerator(
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            $container->get('PermitsBilateralFeeBreakdownGenerator')
+        );
+        $this->registerGenerator(
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+            $container->get('PermitsMultilateralFeeBreakdownGenerator')
+        );
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

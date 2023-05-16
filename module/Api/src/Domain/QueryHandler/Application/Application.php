@@ -5,8 +5,11 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Application
@@ -15,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  */
 class Application extends AbstractQueryHandler
 {
-    const OPERATING_CENTRES_SECTION = 'operatingCentres';
+    private const OPERATING_CENTRES_SECTION = 'operatingCentres';
 
     protected $repoServiceName = 'Application';
     protected $extraRepos = ['Note', 'SystemParameter'];
@@ -30,14 +33,18 @@ class Application extends AbstractQueryHandler
      */
     private $feesHelper;
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return Application
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
-        $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Application::class);
     }
 
     public function handleQuery(QueryInterface $query)
@@ -92,5 +99,25 @@ class Application extends AbstractQueryHandler
                 'canHaveInspectionRequest' => !$application->isSpecialRestricted(),
             ]
         );
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Application
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->sectionAccessService = $container->get('SectionAccessService');
+        $this->feesHelper = $container->get('FeesHelperService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

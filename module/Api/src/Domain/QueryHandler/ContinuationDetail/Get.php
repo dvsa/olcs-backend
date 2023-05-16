@@ -11,9 +11,12 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Get Continuation Detail
@@ -39,13 +42,11 @@ class Get extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->financialStandingHelper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
-        $this->reviewService = $serviceLocator->getServiceLocator()->get('ContinuationReview\Declaration');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Get::class);
     }
 
     /**
@@ -149,5 +150,26 @@ class Get extends AbstractQueryHandler
         }
 
         return null;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Get
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->financialStandingHelper = $container->get('FinancialStandingHelperService');
+        $this->reviewService = $container->get('ContinuationReview\Declaration');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
