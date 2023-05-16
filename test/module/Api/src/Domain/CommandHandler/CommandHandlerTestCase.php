@@ -26,10 +26,10 @@ use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\Repository\ValidateMockRepoTypeTrait;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\Json\Json as LaminasJson;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -98,7 +98,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $this->pidIdentityProvider = m::mock(IdentityProviderInterface::class);
         $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);

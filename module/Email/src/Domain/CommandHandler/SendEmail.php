@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail as SendEmailCmd;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
+use Interop\Container\Containerinterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -64,35 +65,7 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $config = $mainServiceLocator->get('Config');
-
-        if (isset($config['email']['from_name'])) {
-            $this->setFromName($config['email']['from_name']);
-        }
-
-        if (isset($config['email']['from_email'])) {
-            $this->setFromEmail($config['email']['from_email']);
-        }
-
-        if (isset($config['email']['send_all_mail_to'])) {
-            $this->setSendAllMailTo($config['email']['send_all_mail_to']);
-        }
-
-        if (isset($config['email']['selfserve_uri'])) {
-            $this->setSelfServeUri($config['email']['selfserve_uri']);
-        }
-
-        if (isset($config['email']['internal_uri'])) {
-            $this->setInternalUri($config['email']['internal_uri']);
-        }
-
-        $this->setTranslator($mainServiceLocator->get('translator'));
-
-        $this->setEmailService($mainServiceLocator->get('EmailService'));
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, SendEmail::class);
     }
 
     /**
@@ -343,5 +316,33 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
                 'http://internal/' => $this->getInternalUri().'/',
             ]
         );
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $config = $container->get('Config');
+        if (isset($config['email']['from_name'])) {
+            $this->setFromName($config['email']['from_name']);
+        }
+        if (isset($config['email']['from_email'])) {
+            $this->setFromEmail($config['email']['from_email']);
+        }
+        if (isset($config['email']['send_all_mail_to'])) {
+            $this->setSendAllMailTo($config['email']['send_all_mail_to']);
+        }
+        if (isset($config['email']['selfserve_uri'])) {
+            $this->setSelfServeUri($config['email']['selfserve_uri']);
+        }
+        if (isset($config['email']['internal_uri'])) {
+            $this->setInternalUri($config['email']['internal_uri']);
+        }
+        $this->setTranslator($container->get('translator'));
+        $this->setEmailService($container->get('EmailService'));
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

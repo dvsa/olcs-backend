@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter as PrintLetterCmd;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -138,11 +139,17 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        /** @var \Laminas\ServiceManager\ServiceLocatorInterface $sm  */
-        $sm = $serviceLocator->getServiceLocator();
+        return $this->__invoke($serviceLocator, PrintLetter::class);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
 
-        $this->srvPrintLetter = $sm->get(Service\Document\PrintLetter::class);
-
-        return parent::createService($serviceLocator);
+        $this->srvPrintLetter = $container->get(Service\Document\PrintLetter::class);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

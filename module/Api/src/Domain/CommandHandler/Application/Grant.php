@@ -17,6 +17,7 @@ use Dvsa\Olcs\Transfer\Command\Application\Grant as Cmd;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods as GrantGoodsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv as GrantPsvCmd;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -44,11 +45,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->grantValidationService = $mainServiceLocator->get('ApplicationGrantValidationService');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Grant::class);
     }
 
     /**
@@ -205,5 +202,16 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
                 ]
             )
         );
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->grantValidationService = $container->get('ApplicationGrantValidationService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

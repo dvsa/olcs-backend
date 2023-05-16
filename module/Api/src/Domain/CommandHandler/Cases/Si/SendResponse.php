@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\Cases\Si\SendResponse as SendResponseCmd;
 use Laminas\Http\Response;
 use Laminas\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\InrClientException;
+use Interop\Container\ContainerInterface;
 
 /**
  * SendResponse
@@ -46,10 +47,7 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->inrClient = $mainServiceLocator->get(InrClientInterface::class);
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, SendResponse::class);
     }
 
     /**
@@ -110,5 +108,16 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
         $this->getRepo('ErruRequest')->save($erruRequest);
 
         return $erruRequest;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->inrClient = $container->get(InrClientInterface::class);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

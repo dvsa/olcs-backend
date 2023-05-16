@@ -5,11 +5,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
-use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProvider;
 use Dvsa\Olcs\Api\Service\Qa\PostSubmit\IrhpApplicationPostSubmitHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath as SubmitApplicationPathCmd;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -39,17 +39,7 @@ class SubmitApplicationPath extends AbstractCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->qaContextFactory = $mainServiceLocator->get('QaContextFactory');
-
-        $this->supplementedApplicationStepsProvider = $mainServiceLocator->get(
-            'QaSupplementedApplicationStepsProvider'
-        );
-
-        $this->irhpApplicationPostSubmitHandler = $mainServiceLocator->get('QaIrhpApplicationPostSubmitHandler');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, SubmitApplicationPath::class);
     }
 
     /**
@@ -84,5 +74,20 @@ class SubmitApplicationPath extends AbstractCommandHandler
         $this->irhpApplicationPostSubmitHandler->handle($irhpApplication);
 
         return $this->result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->qaContextFactory = $container->get('QaContextFactory');
+        $this->supplementedApplicationStepsProvider = $container->get(
+            'QaSupplementedApplicationStepsProvider'
+        );
+        $this->irhpApplicationPostSubmitHandler = $container->get('QaIrhpApplicationPostSubmitHandler');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

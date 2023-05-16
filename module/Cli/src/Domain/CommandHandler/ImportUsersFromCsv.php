@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service\OpenAm;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Validators\EmailAddress;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -245,15 +246,21 @@ class ImportUsersFromCsv extends AbstractCommandHandler
      *
      * @return AbstractCommandHandler|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler
      */
-    public function createService(ServiceLocatorInterface $sm, $name = null, $requestedName = null)
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        /** @var ServiceLocatorInterface $sl */
-        $sl = $sm->getServiceLocator();
+        return $this->__invoke($serviceLocator, ImportUsersFromCsv::class);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
 
-        $this->openAmSrv = $sl->get(OpenAm\UserInterface::class);
-        $this->openAmClient = $sl->get(OpenAm\ClientInterface::class);
-        $this->transMngr = $sl->get('TransactionManager');
-
-        return parent::createService($sm);
+        $this->openAmSrv = $container->get(OpenAm\UserInterface::class);
+        $this->openAmClient = $container->get(OpenAm\ClientInterface::class);
+        $this->transMngr = $container->get('TransactionManager');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
 use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -31,11 +32,7 @@ class SendEcmtShortTermAutomaticallyWithdrawn extends AbstractEmailHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->daysToPayIssueFeeProvider = $mainServiceLocator->get('PermitsFeesDaysToPayIssueFeeProvider');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, SendEcmtShortTermAutomaticallyWithdrawn::class);
     }
 
     /**
@@ -51,5 +48,16 @@ class SendEcmtShortTermAutomaticallyWithdrawn extends AbstractEmailHandler
             'applicationRef' => $recordObject->getApplicationRef(),
             'paymentDeadlineNumDays' => $this->daysToPayIssueFeeProvider->getDays(),
         ];
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->daysToPayIssueFeeProvider = $container->get('PermitsFeesDaysToPayIssueFeeProvider');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

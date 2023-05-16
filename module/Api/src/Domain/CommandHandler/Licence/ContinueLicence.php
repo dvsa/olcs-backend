@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -46,9 +47,7 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->financialStandingHelper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ContinueLicence::class);
     }
 
     /**
@@ -332,5 +331,15 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
         return (float)$this->financialStandingHelper->getFinanceCalculationForOrganisation(
             $continuationDetail->getLicence()->getOrganisation()->getId()
         );
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->financialStandingHelper = $container->get('FinancialStandingHelperService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

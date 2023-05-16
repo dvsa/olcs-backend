@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Create a Transport Manager Delete Delta
@@ -34,13 +35,7 @@ final class TransportManagerDeleteDelta extends AbstractCommandHandler implement
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->tmaRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('TransportManagerApplication');
-
-        $this->tmlRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
-            ->get('TransportManagerLicence');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, TransportManagerDeleteDelta::class);
     }
 
     public function handleCommand(CommandInterface $command)
@@ -86,5 +81,16 @@ final class TransportManagerDeleteDelta extends AbstractCommandHandler implement
         }
 
         return $result;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->tmaRepo = $container->get('RepositoryServiceManager')->get('TransportManagerApplication');
+        $this->tmlRepo = $container->get('RepositoryServiceManager')->get('TransportManagerLicence');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

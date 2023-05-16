@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\SnapshotGeneratorInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -38,8 +39,7 @@ abstract class AbstractCreateSnapshotHandler extends AbstractCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->snapshotService = $serviceLocator->getServiceLocator()->get($this->generatorClass);
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, AbstractCreateSnapshotHandler::class);
     }
 
     /**
@@ -104,5 +104,15 @@ abstract class AbstractCreateSnapshotHandler extends AbstractCommandHandler
         ];
 
         return Upload::create($data);
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->snapshotService = $container->get($this->generatorClass);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

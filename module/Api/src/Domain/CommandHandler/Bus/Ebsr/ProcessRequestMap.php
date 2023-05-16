@@ -33,6 +33,7 @@ use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Olcs\Logging\Log\Logger;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
+use Interop\Container\ContainerInterface;
 
 /**
  * Request new Ebsr map
@@ -85,11 +86,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->templateBuilder = $mainServiceLocator->get(TemplateBuilder::class);
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, ProcessRequestMap::class);
     }
 
     /**
@@ -350,5 +347,16 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     public function getDocumentDescriptions()
     {
         return $this->documentDescriptions;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->templateBuilder = $container->get(TemplateBuilder::class);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

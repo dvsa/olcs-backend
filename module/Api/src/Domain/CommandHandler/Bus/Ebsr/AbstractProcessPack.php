@@ -43,6 +43,7 @@ use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
+use Interop\Container\ContainerInterface;
 
 abstract class AbstractProcessPack extends AbstractCommandHandler implements
     UploaderAwareInterface,
@@ -86,16 +87,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
 
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->xmlStructureInput = $mainServiceLocator->get(XmlStructureInputFactory::class);
-        $this->busRegInput = $mainServiceLocator->get(BusRegistrationInputFactory::class);
-        $this->processedDataInput = $mainServiceLocator->get(ProcessedDataInputFactory::class);
-        $this->shortNoticeInput = $mainServiceLocator->get(ShortNoticeInputFactory::class);
-        $this->submissionResultFilter = $mainServiceLocator->get('FilterManager')->get(SubmissionResultFilter::class);
-        $this->result = new Result();
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, AbstractProcessPack::class);
     }
 
     /**
@@ -660,5 +652,21 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
         }
 
         return $collection;
+    }
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+        
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->xmlStructureInput = $container->get(XmlStructureInputFactory::class);
+        $this->busRegInput = $container->get(BusRegistrationInputFactory::class);
+        $this->processedDataInput = $container->get(ProcessedDataInputFactory::class);
+        $this->shortNoticeInput = $container->get(ShortNoticeInputFactory::class);
+        $this->submissionResultFilter = $container->get('FilterManager')->get(SubmissionResultFilter::class);
+        $this->result = new Result();
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
