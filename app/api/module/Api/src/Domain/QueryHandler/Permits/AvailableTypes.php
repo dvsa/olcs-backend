@@ -8,7 +8,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\Permits\Availability\WindowAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use DateTime;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Available types
@@ -26,14 +29,11 @@ class AvailableTypes extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->windowAvailabilityChecker = $mainServiceLocator->get('PermitsAvailabilityWindowAvailabilityChecker');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, AvailableTypes::class);
     }
 
     /**
@@ -42,6 +42,7 @@ class AvailableTypes extends AbstractQueryHandler
      * @param QueryInterface|AvailableTypesQuery $query query
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handleQuery(QueryInterface $query)
     {
@@ -67,5 +68,25 @@ class AvailableTypes extends AbstractQueryHandler
             'types' => $filteredAvailableTypes,
             'hasTypes' => !empty($filteredAvailableTypes),
         ];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return AvailableTypes
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->windowAvailabilityChecker = $container->get('PermitsAvailabilityWindowAvailabilityChecker');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

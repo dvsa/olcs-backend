@@ -6,8 +6,11 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Schedule41Approve
@@ -16,9 +19,9 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
  */
 class Schedule41Approve extends AbstractQueryHandler
 {
-    const ERROR_MUST_COMPETE_OC = 'S41_APP_APPROVE_OC';
-    const ERROR_MUST_COMPETE_TM = 'S41_APP_APPROVE_TM';
-    const ERROR_OUSTANDING_FEE = 'S41_APP_OUSTANDING_FEE';
+    private const ERROR_MUST_COMPETE_OC = 'S41_APP_APPROVE_OC';
+    private const ERROR_MUST_COMPETE_TM = 'S41_APP_APPROVE_TM';
+    private const ERROR_OUSTANDING_FEE = 'S41_APP_OUSTANDING_FEE';
 
     protected $repoServiceName = 'Application';
 
@@ -28,12 +31,18 @@ class Schedule41Approve extends AbstractQueryHandler
     private $feesHelper;
 
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return Schedule41Approve
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Schedule41Approve::class);
     }
 
     public function handleQuery(QueryInterface $query)
@@ -70,7 +79,8 @@ class Schedule41Approve extends AbstractQueryHandler
         // Application is new
         // The application licence type is standard national or international and
         // the transport manager section is NOT complete
-        if ($application->isNew() &&
+        if (
+            $application->isNew() &&
             ($application->isStandardNational() || $application->isStandardInternational()) &&
             $applicationCompletion->getTransportManagersStatus() !== ApplicationCompletion::STATUS_COMPLETE
         ) {
@@ -83,5 +93,25 @@ class Schedule41Approve extends AbstractQueryHandler
         }
 
         return $errors;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Schedule41Approve
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->feesHelper = $container->get('FeesHelperService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

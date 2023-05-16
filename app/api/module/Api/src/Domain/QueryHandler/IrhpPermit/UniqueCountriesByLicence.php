@@ -13,7 +13,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class UniqueCountriesByLicence extends AbstractQueryHandler
 {
@@ -26,12 +29,11 @@ class UniqueCountriesByLicence extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $this->queryHandlerManager = $serviceLocator->getServiceLocator()->get('QueryHandlerManager');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, UniqueCountriesByLicence::class);
     }
 
     /**
@@ -65,5 +67,24 @@ class UniqueCountriesByLicence extends AbstractQueryHandler
         asort($countryMap);
 
         return $countryMap;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return UniqueCountriesByLicence
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->queryHandlerManager = $container->get('QueryHandlerManager');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

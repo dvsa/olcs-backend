@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Organisation for Permits
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -18,11 +15,17 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\Organisation\OrganisationAvailableLicences as OrganisationPermitsQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * Organisation for Permits
+ */
 class OrganisationAvailableLicences extends AbstractQueryHandler
 {
-    const ERR_TYPE_MISMATCH = 'Permit type does not match the stock';
+    public const ERR_TYPE_MISMATCH = 'Permit type does not match the stock';
 
     protected $repoServiceName = 'Organisation';
     protected $extraRepos = ['IrhpPermitStock', 'IrhpPermitType', 'IrhpPermitWindow'];
@@ -36,14 +39,11 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->stockAvailabilityChecker = $mainServiceLocator->get('PermitsAvailabilityStockAvailabilityChecker');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, OrganisationAvailableLicences::class);
     }
 
     /**
@@ -156,5 +156,25 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
             'permitsAvailable' => true, //we don't check this yet for these stocks
             'selectedLicence' => null,
         ];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return OrganisationAvailableLicences
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->stockAvailabilityChecker = $container->get('PermitsAvailabilityStockAvailabilityChecker');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

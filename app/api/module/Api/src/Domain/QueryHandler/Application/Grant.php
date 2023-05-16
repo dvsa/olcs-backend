@@ -4,9 +4,12 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Grant
@@ -22,13 +25,18 @@ class Grant extends AbstractQueryHandler
      */
     private $grantValidationService;
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return Grant
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->grantValidationService = $mainServiceLocator->get('ApplicationGrantValidationService');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Grant::class);
     }
 
     public function handleQuery(QueryInterface $query)
@@ -53,5 +61,25 @@ class Grant extends AbstractQueryHandler
     protected function canHaveInspectionRequest(ApplicationEntity $application)
     {
         return !$application->isVariation() && !$application->isSpecialRestricted();
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Grant
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->grantValidationService = $container->get('ApplicationGrantValidationService');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -12,7 +12,10 @@ use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\DvlaSearch\Vehicle as VehicleQuery;
 use GuzzleHttp\Exception\GuzzleException;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class Vehicle extends AbstractQueryHandler
 {
@@ -21,11 +24,18 @@ class Vehicle extends AbstractQueryHandler
      */
     protected $dvlaSearchService;
 
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param $name
+     * @param $requestedName
+     * @return Vehicle
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->dvlaSearchService = $mainServiceLocator->get(DvlaSearchService::class);
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, Vehicle::class);
     }
 
 
@@ -50,5 +60,24 @@ class Vehicle extends AbstractQueryHandler
                 'result' => []
             ];
         }
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return Vehicle
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+        $this->dvlaSearchService = $container->get(DvlaSearchService::class);
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

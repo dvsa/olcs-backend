@@ -8,6 +8,9 @@ use Dvsa\Olcs\Api\Service\Template\TwigRenderer;
 use Dvsa\Olcs\Transfer\Query\Template\PreviewTemplateSource as PreviewTemplateSourceQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Exception;
+use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use RuntimeException;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
@@ -32,15 +35,11 @@ class PreviewTemplateSource extends AbstractQueryHandler
      * @param ServiceLocatorInterface $serviceLocator Service Manager
      *
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->twigRenderer = $mainServiceLocator->get('TemplateTwigRenderer');
-        $this->strategySelectingViewRenderer = $mainServiceLocator->get('TemplateStrategySelectingViewRenderer');
-
-        return parent::createService($serviceLocator);
+        return $this->__invoke($serviceLocator, PreviewTemplateSource::class);
     }
 
     /**
@@ -76,5 +75,27 @@ class PreviewTemplateSource extends AbstractQueryHandler
         }
 
         return $result;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @param $requestedName
+     * @param array|null $options
+     * @return PreviewTemplateSource
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fullContainer = $container;
+
+        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
+            $container = $container->getServiceLocator();
+        }
+
+        $this->twigRenderer = $container->get('TemplateTwigRenderer');
+        $this->strategySelectingViewRenderer = $container->get('TemplateStrategySelectingViewRenderer');
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
