@@ -146,6 +146,8 @@ class Module implements ConsoleUsageProviderInterface
             [
                 '--queue-duration=SECONDS', '(optional) Number of seconds the queue process will run for'
             ],
+
+            'interim-end-date-enforcement [--dryrun|-d]' => 'Enforces interim end by checking applications under consideration with an in-force interim which have an end date of the previous day or earlier; will end the interim and generate an INTERIM_END event in event/change history.',
         ];
     }
 
