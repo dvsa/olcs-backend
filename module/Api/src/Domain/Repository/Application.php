@@ -345,13 +345,13 @@ class Application extends AbstractRepository
      */
     public function fetchOpenApplicationsWhereInterimInForceAndInterimEndDateIsPast(): array
     {
-        $interimEndCutoff = new DateTime();
+        $interimEndCutoff = (new DateTime())->setTime(0,0,0,0);
 
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':applicationStatus'));
         $qb->andWhere($qb->expr()->eq($this->alias . '.interimStatus', ':interimStatus'));
-        $qb->andWhere($qb->expr()->lte($this->alias . '.interimEnd', ':interimEnd'));
+        $qb->andWhere($qb->expr()->lt($this->alias . '.interimEnd', ':interimEnd'));
 
         $qb->setParameter('applicationStatus', Entity::APPLICATION_STATUS_UNDER_CONSIDERATION);
         $qb->setParameter('interimStatus', Entity::INTERIM_STATUS_INFORCE);
