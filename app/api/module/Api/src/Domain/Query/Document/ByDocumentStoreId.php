@@ -14,8 +14,8 @@ class ByDocumentStoreId extends AbstractQuery
 {
     /**
      * @Transfer\String
-     * @Transfer\Filter({"name":"Laminas\Filter\StringTrim"})
-     * @Transfer\Validator({"name":"Laminas\Validator\StringLength", "options":{"max":1000}})
+     * @Transfer\Filter("Laminas\Filter\StringTrim")
+     * @Transfer\Validator("Laminas\Validator\StringLength", options={"max":1000})
      */
     protected $documentStoreId = '';
 

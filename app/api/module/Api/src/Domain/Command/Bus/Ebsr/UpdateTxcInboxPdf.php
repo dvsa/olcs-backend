@@ -25,13 +25,8 @@ final class UpdateTxcInboxPdf extends AbstractIdOnlyCommand
     }
     /**
      * @var String
-     * @Transfer\Filter({"name":"Laminas\Filter\StringTrim"})
-     * @Transfer\Validator({
-     *      "name":"Laminas\Validator\InArray",
-     *      "options": {
-     *          "haystack": {"Route","Pdf"}
-     *          }
-     *      })
+     * @Transfer\Filter("Laminas\Filter\StringTrim")
+     * @Transfer\Validator("Laminas\Validator\InArray", options={"haystack": {"Route","Pdf"}})
      */
     protected $pdfType = null;
 

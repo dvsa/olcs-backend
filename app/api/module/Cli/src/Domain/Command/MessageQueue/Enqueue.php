@@ -10,30 +10,12 @@ class Enqueue extends AbstractCommand implements LoggerOmitContentInterface
     protected $messageData;
 
     /**
-     * @Transfer\Validator(
-     *  {
-     *      "name":"Laminas\Validator\InArray",
-     *      "options": {
-     *          "haystack": {
-     *              "Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile",
-     *          }
-     *      }
-     *  }
-     * )
+     * @Transfer\Validator("Laminas\Validator\InArray", options={"haystack": {"Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile"}})
      */
     protected $messageType;
 
     /**
-     * @Transfer\Validator(
-     *  {
-     *      "name":"Laminas\Validator\InArray",
-     *      "options": {
-     *          "haystack": {
-     *              "Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile",
-     *          }
-     *      }
-     *  }
-     * )
+     * @Transfer\Validator("Laminas\Validator\InArray", options={"haystack": {"Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile"}})
      */
     protected $queueType;
 
