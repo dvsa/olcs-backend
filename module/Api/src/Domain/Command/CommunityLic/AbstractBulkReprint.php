@@ -16,7 +16,7 @@ abstract class AbstractBulkReprint extends AbstractCommand
 
     /**
      * @var String
-     * @Transfer\Filter({"name":"Laminas\Filter\StringTrim"})
+     * @Transfer\Filter("Laminas\Filter\StringTrim")
      */
     protected $documentIdentifier;
 
