@@ -61,48 +61,48 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     use LicenceStatusAwareTrait;
     use TotAuthVehiclesTrait;
 
-    const ERROR_CANT_BE_SR = 'LIC-TOL-1';
-    const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
-    const ERROR_SAFETY_REQUIRES_TACHO_NAME = 'LIC-SAFE-TACH-1';
+    public const ERROR_CANT_BE_SR = 'LIC-TOL-1';
+    public const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
+    public const ERROR_SAFETY_REQUIRES_TACHO_NAME = 'LIC-SAFE-TACH-1';
 
-    const ERROR_TRANSFER_TOT_AUTH = 'LIC_TRAN_1';
-    const ERROR_TRANSFER_OVERLAP_ONE = 'LIC_TRAN_2';
-    const ERROR_TRANSFER_OVERLAP_MANY = 'LIC_TRAN_3';
+    public const ERROR_TRANSFER_TOT_AUTH = 'LIC_TRAN_1';
+    public const ERROR_TRANSFER_OVERLAP_ONE = 'LIC_TRAN_2';
+    public const ERROR_TRANSFER_OVERLAP_MANY = 'LIC_TRAN_3';
 
-    const LICENCE_EXEMPT_PREFIX = 'E';
-    const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
-    const LICENCE_CATEGORY_PSV = 'lcat_psv';
+    public const LICENCE_EXEMPT_PREFIX = 'E';
+    public const LICENCE_CATEGORY_GOODS_VEHICLE = 'lcat_gv';
+    public const LICENCE_CATEGORY_PSV = 'lcat_psv';
 
-    const LICENCE_TYPE_RESTRICTED = 'ltyp_r';
-    const LICENCE_TYPE_STANDARD_INTERNATIONAL = 'ltyp_si';
-    const LICENCE_TYPE_STANDARD_NATIONAL = 'ltyp_sn';
-    const LICENCE_TYPE_SPECIAL_RESTRICTED = 'ltyp_sr';
+    public const LICENCE_TYPE_RESTRICTED = 'ltyp_r';
+    public const LICENCE_TYPE_STANDARD_INTERNATIONAL = 'ltyp_si';
+    public const LICENCE_TYPE_STANDARD_NATIONAL = 'ltyp_sn';
+    public const LICENCE_TYPE_SPECIAL_RESTRICTED = 'ltyp_sr';
 
-    const LICENCE_STATUS_UNDER_CONSIDERATION = 'lsts_consideration';
-    const LICENCE_STATUS_NOT_SUBMITTED = 'lsts_not_submitted';
-    const LICENCE_STATUS_SUSPENDED = 'lsts_suspended';
-    const LICENCE_STATUS_VALID = 'lsts_valid';
-    const LICENCE_STATUS_CURTAILED = 'lsts_curtailed';
-    const LICENCE_STATUS_GRANTED = 'lsts_granted';
-    const LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION = 'lsts_surr_consideration';
-    const LICENCE_STATUS_SURRENDERED = 'lsts_surrendered';
-    const LICENCE_STATUS_WITHDRAWN = 'lsts_withdrawn';
-    const LICENCE_STATUS_REFUSED = 'lsts_refused';
-    const LICENCE_STATUS_REVOKED = 'lsts_revoked';
-    const LICENCE_STATUS_NOT_TAKEN_UP = 'lsts_ntu';
-    const LICENCE_STATUS_TERMINATED = 'lsts_terminated';
-    const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
-    const LICENCE_STATUS_UNLICENSED = 'lsts_unlicenced'; // note, refdata misspelled
-    const LICENCE_STATUS_CANCELLED = 'lsts_cancelled';
+    public const LICENCE_STATUS_UNDER_CONSIDERATION = 'lsts_consideration';
+    public const LICENCE_STATUS_NOT_SUBMITTED = 'lsts_not_submitted';
+    public const LICENCE_STATUS_SUSPENDED = 'lsts_suspended';
+    public const LICENCE_STATUS_VALID = 'lsts_valid';
+    public const LICENCE_STATUS_CURTAILED = 'lsts_curtailed';
+    public const LICENCE_STATUS_GRANTED = 'lsts_granted';
+    public const LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION = 'lsts_surr_consideration';
+    public const LICENCE_STATUS_SURRENDERED = 'lsts_surrendered';
+    public const LICENCE_STATUS_WITHDRAWN = 'lsts_withdrawn';
+    public const LICENCE_STATUS_REFUSED = 'lsts_refused';
+    public const LICENCE_STATUS_REVOKED = 'lsts_revoked';
+    public const LICENCE_STATUS_NOT_TAKEN_UP = 'lsts_ntu';
+    public const LICENCE_STATUS_TERMINATED = 'lsts_terminated';
+    public const LICENCE_STATUS_CONTINUATION_NOT_SOUGHT = 'lsts_cns';
+    public const LICENCE_STATUS_UNLICENSED = 'lsts_unlicenced'; // note, refdata misspelled
+    public const LICENCE_STATUS_CANCELLED = 'lsts_cancelled';
 
-    const TACH_EXT = 'tach_external';
-    const TACH_INT = 'tach_internal';
-    const TACH_NA = 'tach_na';
+    public const TACH_EXT = 'tach_external';
+    public const TACH_INT = 'tach_internal';
+    public const TACH_NA = 'tach_na';
 
-    const AUTHORISATION_VEHICLE_COUNT = 'vehicle';
-    const AUTHORISATION_HGV_COUNT = 'hgv';
-    const AUTHORISATION_LGV_COUNT = 'lgv';
-    const AUTHORISATION_TRAILER_COUNT = 'trailer';
+    public const AUTHORISATION_VEHICLE_COUNT = 'vehicle';
+    public const AUTHORISATION_HGV_COUNT = 'hgv';
+    public const AUTHORISATION_LGV_COUNT = 'lgv';
+    public const AUTHORISATION_TRAILER_COUNT = 'trailer';
 
     /**
      * Licence constructor
@@ -434,14 +434,17 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      * Returns list of active vehicles
      *
      * @param bool $checkSpecified When true, only return vehicles with a specified date
+     * @param bool $includeInterim When true, vehicles on interim applications will be included
      *
      * @return ArrayCollection
      */
-    public function getActiveVehicles($checkSpecified = true)
+    public function getActiveVehicles(bool $checkSpecified = true, bool $includeInterim = false)
     {
         $criteria = Criteria::create();
         $criteria->andWhere($criteria->expr()->isNull('removalDate'));
-        $criteria->andWhere($criteria->expr()->eq('interimApplication', null));
+        if (!$includeInterim) {
+            $criteria->andWhere($criteria->expr()->eq('interimApplication', null));
+        }
 
         if ($checkSpecified) {
             $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
@@ -505,7 +508,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         );
 
         // goods_or_psv can be null
-        if (!empty($this->getGoodsOrPsv()) &&
+        if (
+            !empty($this->getGoodsOrPsv()) &&
             ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV)
         ) {
 
@@ -586,13 +590,17 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             }
         }
 
-        if (isset($licenceConditionsUndertakings['conditions'])
-            && count($licenceConditionsUndertakings['conditions']) > 0) {
+        if (
+            isset($licenceConditionsUndertakings['conditions'])
+            && count($licenceConditionsUndertakings['conditions']) > 0
+        ) {
             $this->sortConditionsUndertakings($licenceConditionsUndertakings['conditions']);
         }
 
-        if (isset($licenceConditionsUndertakings['undertakings'])
-            && count($licenceConditionsUndertakings['undertakings']) > 0) {
+        if (
+            isset($licenceConditionsUndertakings['undertakings'])
+            && count($licenceConditionsUndertakings['undertakings']) > 0
+        ) {
             $this->sortConditionsUndertakings($licenceConditionsUndertakings['undertakings']);
         }
 
@@ -967,9 +975,10 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function allowFeePayments()
     {
-        if (in_array(
-            $this->getStatus()->getId(),
-            [
+        if (
+            in_array(
+                $this->getStatus()->getId(),
+                [
                 self::LICENCE_STATUS_REVOKED,
                 self::LICENCE_STATUS_TERMINATED,
                 self::LICENCE_STATUS_SURRENDERED,
@@ -977,8 +986,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
                 self::LICENCE_STATUS_REFUSED,
                 self::LICENCE_STATUS_WITHDRAWN,
                 self::LICENCE_STATUS_NOT_TAKEN_UP,
-            ]
-        )) {
+                ]
+            )
+        ) {
             return false;
         }
 
@@ -1255,7 +1265,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         foreach ($this->getLicenceStatusRules() as $licenceStatusRule) {
             /* @var $licenceStatusRule LicenceStatusRule */
-            if ($licenceStatusRule->getLicenceStatus()->getId() === Licence::LICENCE_STATUS_REVOKED &&
+            if (
+                $licenceStatusRule->getLicenceStatus()->getId() === Licence::LICENCE_STATUS_REVOKED &&
                 $licenceStatusRule->isQueued()
             ) {
                 return true;
@@ -1442,7 +1453,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         $continuationDetails = $this->getActiveContinuationDetails();
         /** @var ContinuationDetail $continuationDetail */
         foreach ($continuationDetails as $continuationDetail) {
-            if ($continuationDetail->getContinuation()->getMonth() == $expiryDate->format('n')
+            if (
+                $continuationDetail->getContinuation()->getMonth() == $expiryDate->format('n')
                 && $continuationDetail->getContinuation()->getYear() == $expiryDate->format('Y')
             ) {
                 $currentContinuationDetail = $continuationDetail;
