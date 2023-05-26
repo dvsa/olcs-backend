@@ -18,6 +18,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\GovUkAccount\ProcessAuthResponse as ProcessAuthResponseCmd;
+use Olcs\Logging\Log\Logger;
 
 class ProcessAuthResponse extends AbstractCommandHandler implements TransactionedInterface
 {
@@ -38,91 +39,108 @@ class ProcessAuthResponse extends AbstractCommandHandler implements Transactione
     {
         assert($command instanceof ProcessAuthResponseCmd);
 
-        $code = $command->getCode();
-        $token = $command->getState();
+        try {
+            $code = $command->getCode();
+            $token = $command->getState();
+            $error = $command->getError();
+            $errorDescription = $command->getErrorDescription();
 
-        $stateTokenClaims = $this->govUkAccountService->getStateClaimsFromToken($token);
-        $accessToken = $this->govUkAccountService->getAccessToken($code);
-        $userDetails = $this->govUkAccountService->getUserDetails($accessToken)->toArray();
+            // Ensure we process the state token first as this will contain our redirect URL even during an error
+            $stateTokenClaims = $this->govUkAccountService->getStateClaimsFromToken($token);
 
-        if (!isset($userDetails[GovUkAccountUser::KEY_CLAIMS_CORE_IDENTITY_DECODED])) {
-            throw new \Exception(self::ERR_MISSING_KEY_CLAIM);
+            $this->result->setFlag('redirect_url', $stateTokenClaims['returnUrl']);
+            $this->result->setFlag('entity_id', $stateTokenClaims['id']);
+            $this->result->setFlag('journey', $stateTokenClaims['journey']);
+
+            if (!empty($error) || !empty($errorDescription)) {
+                throw new \Exception("Response from GOV.UK Account contains error/errorDescription: " . json_encode([
+                    'error' => $error,
+                    'errorDescription' => $errorDescription,
+                ]));
+            }
+
+            $accessToken = $this->govUkAccountService->getAccessToken($code);
+            $userDetails = $this->govUkAccountService->getUserDetails($accessToken)->toArray();
+
+            if (!isset($userDetails[GovUkAccountUser::KEY_CLAIMS_CORE_IDENTITY_DECODED])) {
+                throw new \Exception(self::ERR_MISSING_KEY_CLAIM);
+            }
+
+            $vot = $userDetails[GovUkAccountUser::KEY_CLAIMS_CORE_IDENTITY_DECODED]['vot'];
+
+            $meetsVectorOfTrust = $this->govUkAccountService->meetsVectorOfTrust($vot, GovUkAccountService::VOT_P2);
+
+            if (!$meetsVectorOfTrust) {
+                $message = sprintf(self::ERR_INSUFFICIENT_TRUST, GovUkAccountService::VOT_P2, $vot);
+                throw new \Exception($message);
+            }
+
+            $userAttributes = $userDetails[GovUkAccountUser::KEY_CLAIMS_CORE_IDENTITY_DECODED]['vc']['credentialSubject'];
+            $name = $this->govUkAccountService->processNames($userAttributes['name']);
+
+            //this is done to match the format of the previous govuk verify
+            $attributes = new Attributes(
+                [
+                    Attributes::FIRST_NAME => $name['firstName'] ?? null,
+                    Attributes::SURNAME => $name['familyName'] ?? null,
+                    Attributes::DATE_OF_BIRTH => $userAttributes['birthDate'][0]['value'] ?? null,
+                ]
+            );
+
+            $digitalSignature = new Entity\DigitalSignature();
+            $digitalSignature->addSignatureInfo($attributes, $userDetails[GovUkAccountUser::KEY_CLAIMS_CORE_IDENTITY]);
+            $this->getRepo()->save($digitalSignature);
+
+            $digitalSignatureId = $digitalSignature->getId();
+
+            $this->result->addId('DigitalSignature', $digitalSignatureId);
+            $this->result->addMessage('Digital signature created');
+
+            switch ($stateTokenClaims['journey']) {
+                case RefData::JOURNEY_NEW_APPLICATION:
+                    $sideEffectCmd = UpdateApplication::create(
+                        [
+                            'application' => $stateTokenClaims['id'],
+                            'digitalSignature' => $digitalSignatureId,
+                        ]
+                    );
+                    break;
+                case RefData::JOURNEY_CONTINUATION:
+                    $sideEffectCmd = UpdateContinuationDetail::create(
+                        [
+                            'continuationDetail' => $stateTokenClaims['id'],
+                            'digitalSignature' => $digitalSignatureId,
+                        ]
+                    );
+                    break;
+                case RefData::JOURNEY_SURRENDER:
+                    $sideEffectCmd = UpdateSurrender::create(
+                        [
+                            'licence' => $stateTokenClaims['id'],
+                            'digitalSignature' => $digitalSignatureId,
+                        ]
+                    );
+                    break;
+                case RefData::JOURNEY_TM_APPLICATION:
+                    $sideEffectCmd = UpdateTmApplication::create(
+                        [
+                            'application' => $stateTokenClaims['id'],
+                            'digitalSignature' => $digitalSignatureId,
+                            'role' => $stateTokenClaims['role'],
+                        ]
+                    );
+                    break;
+                default:
+                    throw new \Exception(self::ERR_MISSING_JOURNEY);
+            }
+
+            $this->result->merge(
+                $this->handleSideEffect($sideEffectCmd)
+            );
+        } catch (\Exception $e) {
+            Logger::logException($e, \Laminas\Log\Logger::ERR);
+            $this->result->setFlag('error', $e->getMessage());
         }
-
-        $vot = $userDetails[GovUkAccountUser::KEY_CLAIMS_CORE_IDENTITY_DECODED]['vot'];
-
-        $meetsVectorOfTrust = $this->govUkAccountService->meetsVectorOfTrust($vot, GovUkAccountService::VOT_P2);
-
-        if (!$meetsVectorOfTrust) {
-            $message = sprintf(self::ERR_INSUFFICIENT_TRUST, GovUkAccountService::VOT_P2, $vot);
-            throw new \Exception($message);
-        }
-
-        $userAttributes = $userDetails[GovUkAccountUser::KEY_CLAIMS_CORE_IDENTITY_DECODED]['vc']['credentialSubject'];
-        $name = $this->govUkAccountService->processNames($userAttributes['name']);
-
-        //this is done to match the format of the previous govuk verify
-        $attributes = new Attributes(
-            [
-                Attributes::FIRST_NAME => $name['firstName'] ?? null,
-                Attributes::SURNAME => $name['familyName'] ?? null,
-                Attributes::DATE_OF_BIRTH => $userAttributes['birthDate'][0]['value'] ?? null,
-            ]
-        );
-
-        $digitalSignature = new Entity\DigitalSignature();
-        $digitalSignature->addSignatureInfo($attributes, $userDetails[GovUkAccountUser::KEY_CLAIMS_CORE_IDENTITY]);
-        $this->getRepo()->save($digitalSignature);
-
-        $digitalSignatureId = $digitalSignature->getId();
-
-        $this->result->addId('DigitalSignature', $digitalSignatureId);
-        $this->result->addMessage('Digital signature created');
-
-        switch ($stateTokenClaims['journey']) {
-            case RefData::JOURNEY_NEW_APPLICATION:
-                $sideEffectCmd = UpdateApplication::create(
-                    [
-                        'application' => $stateTokenClaims['id'],
-                        'digitalSignature' => $digitalSignatureId,
-                    ]
-                );
-                break;
-            case RefData::JOURNEY_CONTINUATION:
-                $sideEffectCmd = UpdateContinuationDetail::create(
-                    [
-                        'continuationDetail' => $stateTokenClaims['id'],
-                        'digitalSignature' => $digitalSignatureId,
-                    ]
-                );
-                break;
-            case RefData::JOURNEY_SURRENDER:
-                $sideEffectCmd = UpdateSurrender::create(
-                    [
-                        'licence' => $stateTokenClaims['id'],
-                        'digitalSignature' => $digitalSignatureId,
-                    ]
-                );
-                break;
-            case RefData::JOURNEY_TM_APPLICATION:
-                $sideEffectCmd = UpdateTmApplication::create(
-                    [
-                        'application' => $stateTokenClaims['id'],
-                        'digitalSignature' => $digitalSignatureId,
-                        'role' => $stateTokenClaims['role'],
-                    ]
-                );
-                break;
-            default:
-                throw new \Exception(self::ERR_MISSING_JOURNEY);
-        }
-
-        $this->result->merge(
-            $this->handleSideEffect($sideEffectCmd)
-        );
-
-        //pass back the state token return url
-        $this->result->setFlag('redirect_url', $stateTokenClaims['returnUrl']);
 
         return $this->result;
     }

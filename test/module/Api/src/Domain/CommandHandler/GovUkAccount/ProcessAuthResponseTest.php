@@ -37,14 +37,15 @@ class ProcessAuthResponseTest extends CommandHandlerTestCase
 
     public function testHandleCommandMissingCoreIdentity(): void
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(Handler::ERR_MISSING_KEY_CLAIM);
-
         $code = 'code';
         $stateToken = 'token';
         $accessToken = m::mock(AccessToken::class);
         $userDetailsArray = ['required key missing'];
-        $stateTokenClaims = [];
+        $stateTokenClaims = [
+            'returnUrl' => 'test',
+            'id' => 100,
+            'journey' => 'some_journey'
+        ];
 
         $userDetailsResourceOwner = m::mock(ResourceOwnerInterface::class);
         $userDetailsResourceOwner->expects('toArray')->withNoArgs()->andReturn($userDetailsArray);
@@ -52,21 +53,25 @@ class ProcessAuthResponseTest extends CommandHandlerTestCase
         $this->getGovUkAccountService($stateToken, $stateTokenClaims, $code, $accessToken, $userDetailsResourceOwner);
 
         $cmd = Cmd::create(['code' => $code, 'state' => $stateToken]);
-        $this->sut->handleCommand($cmd);
+        $result = $this->sut->handleCommand($cmd);
+
+        $this->assertArrayHasKey('error', $result->getFlags());
+        $this->assertEquals(Handler::ERR_MISSING_KEY_CLAIM, $result->getFlag('error'));
     }
 
     public function testHandleCommandInsufficientTrust(): void
     {
         $vot = GovUkAccountService::VOT_P1;
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(sprintf(Handler::ERR_INSUFFICIENT_TRUST, GovUkAccountService::VOT_P2, $vot));
-
         $code = 'code';
         $stateToken = 'token';
         $accessToken = m::mock(AccessToken::class);
         $userDetailsArray = [GovUkAccountUser::KEY_CLAIMS_CORE_IDENTITY_DECODED => ['vot' => $vot]];
-        $stateTokenClaims = [];
+        $stateTokenClaims = [
+            'returnUrl' => 'test',
+            'id' => 100,
+            'journey' => 'some_journey'
+        ];
 
         $userDetailsResourceOwner = m::mock(ResourceOwnerInterface::class);
         $userDetailsResourceOwner->expects('toArray')->withNoArgs()->andReturn($userDetailsArray);
@@ -78,14 +83,14 @@ class ProcessAuthResponseTest extends CommandHandlerTestCase
             ->andReturnFalse();
 
         $cmd = Cmd::create(['code' => $code, 'state' => $stateToken]);
-        $this->sut->handleCommand($cmd);
+        $result = $this->sut->handleCommand($cmd);
+
+        $this->assertArrayHasKey('error', $result->getFlags());
+        $this->assertEquals(sprintf(Handler::ERR_INSUFFICIENT_TRUST, GovUkAccountService::VOT_P2, $vot), $result->getFlag('error'));
     }
 
     public function testHandleCommandMissingJourneyConfig(): void
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(Handler::ERR_MISSING_JOURNEY);
-
         $id = 999;
         $digitalSignatureId = 666;
         $code = 'code';
@@ -115,7 +120,36 @@ class ProcessAuthResponseTest extends CommandHandlerTestCase
         $this->saveDigitalSignature($digitalSignatureId, $firstName, $familyName, $birthDate, $jwt);
 
         $cmd = Cmd::create(['code' => $code, 'state' => $stateToken]);
-        $this->sut->handleCommand($cmd);
+        $result = $this->sut->handleCommand($cmd);
+
+        $this->assertArrayHasKey('error', $result->getFlags());
+        $this->assertEquals(Handler::ERR_MISSING_JOURNEY, $result->getFlag('error'));
+    }
+
+    public function testHandleCommandGovUkError()
+    {
+        $code = 'code';
+        $stateToken = 'token';
+        $error = 'error';
+        $errorDescription = 'errorDescription';
+        $stateTokenClaims = [
+            'returnUrl' => 'test',
+            'id' => 100,
+            'journey' => 'some_journey'
+        ];
+
+        $this->govUkAccountService->expects('getStateClaimsFromToken')
+            ->with($stateToken)
+            ->andReturn($stateTokenClaims);
+
+        $cmd = Cmd::create(['code' => $code, 'state' => $stateToken, 'error' => $error, 'errorDescription' => $errorDescription]);
+        $result = $this->sut->handleCommand($cmd);
+
+        $this->assertArrayHasKey('error', $result->getFlags());
+        $this->assertEquals("Response from GOV.UK Account contains error/errorDescription: " . json_encode([
+                'error' => $error,
+                'errorDescription' => $errorDescription,
+            ]), $result->getFlag('error'));
     }
 
     /**
