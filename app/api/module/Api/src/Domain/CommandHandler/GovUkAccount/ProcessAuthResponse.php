@@ -49,6 +49,7 @@ class ProcessAuthResponse extends AbstractCommandHandler implements Transactione
             $stateTokenClaims = $this->govUkAccountService->getStateClaimsFromToken($token);
 
             $this->result->setFlag('redirect_url', $stateTokenClaims['returnUrl']);
+            $this->result->setFlag('redirect_url_on_error', $stateTokenClaims['returnUrlOnError'] ?? null);
             $this->result->setFlag('entity_id', $stateTokenClaims['id']);
             $this->result->setFlag('journey', $stateTokenClaims['journey']);
 
