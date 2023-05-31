@@ -64,11 +64,27 @@ class GovUkAccountService
      * Creates a JWT with claims from $data and signs it. For use with the $state param on getAuthorisationUrl() which
      * is replayed when user returns the service.
      *
-     * @param array $data
+     * The method will set or overwrite the following values within the payload:
+     *  - jti       A random ID prefixed with "guka_state_"
+     *  - iat       Set to current unix timestamp
+     *  - nbf       Set to current unix timestamp
+     *  - exp       Set to current unix timestamp + $expireSeconds
+     *
+     * @param array $data The claims for the payload
+     * @param int $expireSeconds The number of seconds the token will expire
      * @return string
+     * @throws \Exception
      */
-    public function createStateToken(array $data): string
+    public function createStateToken(array $data, int $expireSeconds = 2419200): string
     {
+        $currentTimestamp = time();
+        $data = array_merge($data, [
+            'jti' => 'guka_state_' . bin2hex(random_bytes(16)),
+            'iat' => $currentTimestamp,
+            'nbf' => $currentTimestamp,
+            'exp' => $currentTimestamp + $expireSeconds,
+        ]);
+
         return JWT::encode($data, base64_decode($this->config['keys']['private_key']), $this->config['keys']['algorithm']);
     }
 

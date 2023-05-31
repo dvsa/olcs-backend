@@ -13,7 +13,13 @@ class GovUkAccountServiceTest extends MockeryTestCase
     const CONFIG = [
         'redirect_uri' => [
             'logged_in' => 'logged_in_uri',
-        ]
+        ],
+        'keys' => [
+            // Note keys below are generated ONLY for this Unit Test file and do not exist or used elsewhere
+            'private_key' => 'LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ01waWdmb01Rdi9jZEpWRmkKZ3EvZGFUdDUzV01IZlFPenlNZEVZOCt5YUkyaFJBTkNBQVJXMDFwN2pmQ1NUclJzMDk0UHk1YUtsd3k3L29OYQprZk03VEdtTmhTWWVFTndQelhJR1JQTWszbmtscVBBeHdBMXNFRXY3bC9sc3lGRUxqeDM1UnROYwotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0t',
+            'public_key' => 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFVnROYWU0M3drazYwYk5QZUQ4dVdpcGNNdS82RApXcEh6TzB4cGpZVW1IaERjRDgxeUJrVHpKTjU1SmFqd01jQU5iQkJMKzVmNWJNaFJDNDhkK1ViVFhBPT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0t',
+            'algorithm' => 'ES256',
+        ],
     ];
 
     protected GovUkAccount $provider;
@@ -21,6 +27,62 @@ class GovUkAccountServiceTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->provider = m::mock(GovUkAccount::class);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCreateStateToken(): void
+    {
+        $sut = new GovUkAccountService(self::CONFIG, $this->provider);
+        $data = [
+            'property_1' => 'value_1',
+            'property_2' => 'value_2',
+        ];
+
+        $currentTimestamp = time();
+        $result = $sut->createStateToken($data, 60);
+
+        $payload = json_decode(base64_decode(explode('.', $result)[1]), true);
+
+        $this->assertArrayHasKey('property_1', $payload);
+        $this->assertArrayHasKey('property_2', $payload);
+        $this->assertArrayHasKey('jti', $payload);
+        $this->assertArrayHasKey('iat', $payload);
+        $this->assertArrayHasKey('nbf', $payload);
+        $this->assertArrayHasKey('exp', $payload);
+
+        $this->assertEquals('value_1', $payload['property_1']);
+        $this->assertEquals('value_2', $payload['property_2']);
+
+        $this->assertMatchesRegularExpression('/^guka_state_[a-f0-9]{32}$/', $payload['jti']);
+
+        $this->assertGreaterThanOrEqual($currentTimestamp, $payload['iat']);
+        $this->assertGreaterThanOrEqual($currentTimestamp, $payload['nbf']);
+        $this->assertGreaterThanOrEqual($currentTimestamp + 60, $payload['exp']);
+    }
+
+    public function testCreateStateTokenClaimsAreOverriddenByMethod(): void
+    {
+        $sut = new GovUkAccountService(self::CONFIG, $this->provider);
+        $data = [
+            'property_1' => 'value_1',
+            'jti' => 'value_2',     // Should be overridden
+            'exp' => 100,           // Should be overridden
+        ];
+
+        $currentTimestamp = time();
+        $result = $sut->createStateToken($data, 60);
+
+        $payload = json_decode(base64_decode(explode('.', $result)[1]), true);
+
+        $this->assertArrayHasKey('property_1', $payload);
+        $this->assertArrayHasKey('jti', $payload);
+        $this->assertArrayHasKey('exp', $payload);
+
+        $this->assertEquals('value_1', $payload['property_1']);
+        $this->assertMatchesRegularExpression('/^guka_state_[a-f0-9]{32}$/', $payload['jti']);
+        $this->assertGreaterThanOrEqual($currentTimestamp + 60, $payload['exp']);
     }
 
     public function testGetAuthorisationUrl(): void
