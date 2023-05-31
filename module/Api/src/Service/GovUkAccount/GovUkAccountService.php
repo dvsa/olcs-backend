@@ -75,7 +75,7 @@ class GovUkAccountService
      * @return string
      * @throws \Exception
      */
-    public function createStateToken(array $data, int $expireSeconds = 86400): string
+    public function createStateToken(array $data, int $expireSeconds = 2419200): string
     {
         $currentTimestamp = time();
         $data = array_merge($data, [
