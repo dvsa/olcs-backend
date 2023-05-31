@@ -67,7 +67,7 @@ final class DvlaVehicleResponseToModelMapper
         if (empty($date)) {
             return null;
         }
-        $format = $ignoreDay ? 'Y-m' : 'Y-m-d';
+        $format = $ignoreDay ? 'Y-m|' : 'Y-m-d|';
         $dt = \DateTime::createFromFormat($format, $date);
 
         return $dt ?: null;
