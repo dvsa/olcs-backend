@@ -51,10 +51,12 @@ final class UploadEvidence extends AbstractCommandHandler implements Transaction
 
             if (!$financialEvidenceDocuments->isEmpty()) {
                 $application->setFinancialEvidenceUploaded(Application::FINANCIAL_EVIDENCE_UPLOADED);
-                foreach ($application->getPostSubmissionApplicationDocuments(
-                    $applicationCategory,
-                    $financialEvidenceSubCategory
-                ) as $postSubmissionApplicationDocument) {
+                foreach (
+                    $application->getPostSubmissionApplicationDocuments(
+                        $applicationCategory,
+                        $financialEvidenceSubCategory
+                    ) as $postSubmissionApplicationDocument
+                ) {
                     $postSubmissionApplicationDocument->setIsPostSubmissionUpload(false);
                 }
                 $this->getRepo()->save($application);
@@ -75,7 +77,8 @@ final class UploadEvidence extends AbstractCommandHandler implements Transaction
                 $this->getRepo()->getReference(OperatingCentre::class, $operatingCentreId)
             );
 
-            if (!$advertDigitalDocuments->isEmpty()
+            if (
+                !$advertDigitalDocuments->isEmpty()
                 && !empty($commandOc['adPlacedIn'])
                 && !empty($commandOc['adPlacedDate'])
             ) {
@@ -93,7 +96,40 @@ final class UploadEvidence extends AbstractCommandHandler implements Transaction
             $this->result->addMessage('Advert details for OC ' . $operatingCentreId . ' saved');
         }
 
+        if ($command->getSupportingEvidence()) {
+            $supporingDigitalDocuments = $application->getApplicationDocuments(
+                $this->getRepo()->getCategoryReference(Category::CATEGORY_APPLICATION),
+                $this->getRepo()->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_SUPPORTING_EVIDENCE)
+            );
+            if (!$supporingDigitalDocuments->isEmpty()) {
+                $this->getRepo()->save($application);
+                $this->createTaskForSupportingEvidence($application);
+                $this->result->addMessage('Supporting document uploaded');
+            }
+        }
         return $this->result;
+    }
+
+    /**
+     * Create task for supporting evidence
+     *
+     * @param Application $application application
+     *
+     * @return void
+     * @throws RuntimeException
+     */
+    protected function createTaskForSupportingEvidence(Application $application): void
+    {
+        $data = [
+            'category' => Category::CATEGORY_APPLICATION,
+            'subCategory' => SubCategory::DOC_SUB_CATEGORY_SUPPORTING_EVIDENCE,
+            'description' => Task::TASK_DESCRIPTION_SUPPORTING_EVIDENCE_UPLOADED,
+            'actionDate' => (new DateTime('now'))->format(Task::ACTION_DATE_FORMAT),
+            'application' => $application->getId(),
+            'licence' => $application->getLicence()->getId()
+        ];
+
+        $this->result->merge($this->handleSideEffect(CreateTask::create($data)));
     }
 
     /**
