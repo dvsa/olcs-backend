@@ -45,7 +45,8 @@ class UploadEvidenceTest extends CommandHandlerTestCase
 
         $this->subCategoryReferences = [
             SubCategoryEntity::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL => m::mock(SubCategoryEntity::class),
-            SubCategoryEntity::DOC_SUB_CATEGORY_ADVERT_DIGITAL => m::mock(SubCategoryEntity::class)
+            SubCategoryEntity::DOC_SUB_CATEGORY_ADVERT_DIGITAL => m::mock(SubCategoryEntity::class),
+            SubCategoryEntity::DOC_SUB_CATEGORY_SUPPORTING_EVIDENCE => m::mock(SubCategoryEntity::class)
         ];
 
         $this->references = [
@@ -59,7 +60,7 @@ class UploadEvidenceTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $command = Cmd::create(['id' => 111, 'financialEvidence' => true]);
+        $command = Cmd::create(['id' => 111, 'financialEvidence' => true,  'supportingEvidence' => false]);
 
         $documentCollection = new ArrayCollection(
             [
@@ -132,7 +133,7 @@ class UploadEvidenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandFinancialEvidenceTaskExists()
     {
-        $command = Cmd::create(['id' => 111, 'financialEvidence' => true]);
+        $command = Cmd::create(['id' => 111, 'financialEvidence' => true, 'supportingEvidence' => false]);
 
         $documentCollection = new ArrayCollection(
             [
@@ -182,7 +183,7 @@ class UploadEvidenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandNoFinancialEvidenceDocs()
     {
-        $command = Cmd::create(['id' => 111, 'financialEvidence' => true]);
+        $command = Cmd::create(['id' => 111, 'financialEvidence' => true, 'supportingEvidence' => false]);
 
         $documentCollection = new ArrayCollection([]);
 
@@ -334,7 +335,8 @@ class UploadEvidenceTest extends CommandHandlerTestCase
                         'adPlacedDate' => '2017-01-02'
                     ]
                 ],
-                'financialEvidence' => true
+                'financialEvidence' => true,
+                'supportingEvidence' => false,
             ]
         );
         $mockOperatingCentre = m::mock()
@@ -450,5 +452,57 @@ class UploadEvidenceTest extends CommandHandlerTestCase
             ->shouldReceive('fetchById')->with(111)->once()->andReturn($application);
 
         $this->sut->handleCommand($command)->toArray();
+    }
+    public function testHandleCommandWithSupportingDocs()
+    {
+        $command = Cmd::create(['id' => 10, 'financialEvidence' => false,'supportingEvidence' => true, ]);
+
+        $documentCollection = new ArrayCollection([new DocumentEntity('doc1')]);
+
+        /** @var ApplicationEntity|m\Mock $application */
+        $application = m::mock(ApplicationEntity::class)
+            ->makePartial();
+
+        $application->setId(10);
+        $application
+            ->shouldReceive('get')
+            ->shouldReceive('getApplicationDocuments')
+            ->with(
+                $this->categoryReferences[CategoryEntity::CATEGORY_APPLICATION],
+                $this->subCategoryReferences[SubCategoryEntity::DOC_SUB_CATEGORY_SUPPORTING_EVIDENCE]
+            )->once()->andReturn($documentCollection);
+
+        $application->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(20)
+                    ->once()
+                    ->getMock()
+            )
+            ->once();
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchById')->with(10)->once()->andReturn($application)
+            ->shouldReceive('save')->with($application)->once()->andReturn();
+
+        $createTaskData = [
+            'category' => CategoryEntity::CATEGORY_APPLICATION,
+            'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_SUPPORTING_EVIDENCE,
+            'description' => TaskEntity::TASK_DESCRIPTION_SUPPORTING_EVIDENCE_UPLOADED,
+            'actionDate' => (new DateTime('now'))->format(TaskEntity::ACTION_DATE_FORMAT),
+            'application' => 10,
+            'licence' => 20
+            ];
+
+        $resultTask = new Result();
+        $this->expectedSideEffect(CreateTaskCmd::class, $createTaskData, $resultTask);
+
+        $result = $this->sut->handleCommand($command);
+        $expected = [
+            'id' => [],
+            'messages' => ['Supporting document uploaded']
+        ];
+        $this->assertEquals($expected, $result->toArray());
     }
 }
