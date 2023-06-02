@@ -140,7 +140,8 @@ class Licence extends AbstractQueryHandler
                     ]
                 ),
                 'applications' => $this->resultList(
-                    $applicationsArray
+                    $applicationsArray,
+                    ['interimStatus']
                 ),
                 'conditionUndertakings' => $this->resultList(
                     $licence->getConditionUndertakings(),
