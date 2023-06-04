@@ -49,8 +49,8 @@ class ClientFactory implements FactoryInterface
     /**
      * Gets options from configuration based on name.
      *
-     * @param ServiceLocatorInterface $sl  Service Manager
-     * @param string                  $key Key
+     * @param ServiceLocatorInterface $sl Service Manager
+     * @param string $key Key
      *
      * @return array
      * @throws \RuntimeException
@@ -85,7 +85,6 @@ class ClientFactory implements FactoryInterface
         return $this->__invoke($serviceLocator, DocManClient::class);
     }
 
-
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
@@ -94,18 +93,17 @@ class ClientFactory implements FactoryInterface
     private function getClientType(ServiceLocatorInterface $serviceLocator): string
     {
         $authService = $serviceLocator->get(AuthorizationService::class);
-
+        /** @var Logger $logger */
         $logger = $serviceLocator->get('logger');
-
         /** @var User $currentUser */
         $currentUser = $authService->getIdentity()->getUser();
 
-       $clientType = ($currentUser->getOsType() == User::USER_OS_TYPE_WINDOWS_10 || $currentUser->getOsType() == User::USER_OS_TYPE_NORTHERN_I) ? WebDavClient::class : DocManClient::class;
-       if( $clientType === DocManClient::class ) {
-           //record if document share client is used for a particular user
-           $logger->info(DocManClient::class . ' is used for user ' . $currentUser->getId() . ' with OS type ' . $currentUser->getOsType());
-       }
-       return $clientType;
+        $clientType = ($currentUser->getOsType() == User::USER_OS_TYPE_WINDOWS_10 || $currentUser->getOsType() == User::USER_OS_TYPE_NORTHERN_I) ? WebDavClient::class : DocManClient::class;
+        if ($clientType === DocManClient::class) {
+            //record if document share client is used for a particular user
+            $logger->info(DocManClient::class . ' is used for user ' . $currentUser->getId() . ' with OS type ' . $currentUser->getOsType());
+        }
+        return $clientType;
     }
 
     /**
@@ -144,6 +142,7 @@ class ClientFactory implements FactoryInterface
             throw new RuntimeException('Missing required option document_share.client.baseuri');
         }
     }
+
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $clientOptions = $this->getOptions($container, 'client');

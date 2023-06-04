@@ -78,8 +78,6 @@ class ClientFactoryTest extends MockeryTestCase
         $mockSl = m::mock(ServiceLocatorInterface::class);
 
         $mockLogger = m::mock(LoggerInterface::class);
-
-
         $mockUser = m::mock(User::class)
             ->shouldReceive('getOstype')
             ->andReturn($client)->getMock();
@@ -90,9 +88,6 @@ class ClientFactoryTest extends MockeryTestCase
         }
 
         $mockSl->shouldReceive('get')->once()->with('logger')->andReturn($mockLogger);
-
-
-
         $authService = m::mock(AuthorizationService::class)
             ->shouldReceive('getIdentity')->once()
             ->andReturn(
