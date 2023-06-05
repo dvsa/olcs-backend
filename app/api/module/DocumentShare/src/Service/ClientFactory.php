@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
+use Laminas\Log\Logger;
 use League\Flysystem\Filesystem;
 use League\Flysystem\WebDAV\WebDAVAdapter;
 use RuntimeException;
@@ -48,8 +49,8 @@ class ClientFactory implements FactoryInterface
     /**
      * Gets options from configuration based on name.
      *
-     * @param ServiceLocatorInterface $sl  Service Manager
-     * @param string                  $key Key
+     * @param ServiceLocatorInterface $sl Service Manager
+     * @param string $key Key
      *
      * @return array
      * @throws \RuntimeException
@@ -84,7 +85,6 @@ class ClientFactory implements FactoryInterface
         return $this->__invoke($serviceLocator, DocManClient::class);
     }
 
-
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
@@ -93,33 +93,37 @@ class ClientFactory implements FactoryInterface
     private function getClientType(ServiceLocatorInterface $serviceLocator): string
     {
         $authService = $serviceLocator->get(AuthorizationService::class);
-
+        /** @var Logger $logger */
+        $logger = $serviceLocator->get('logger');
         /** @var User $currentUser */
         $currentUser = $authService->getIdentity()->getUser();
 
-        return ($currentUser->getOsType() == User::USER_OS_TYPE_WINDOWS_10 || $currentUser->getOsType() == User::USER_OS_TYPE_NORTHERN_I) ? WebDavClient::class : DocManClient::class;
+        $clientType = ($currentUser->getOsType() == User::USER_OS_TYPE_WINDOWS_10 || $currentUser->getOsType() == User::USER_OS_TYPE_NORTHERN_I) ? WebDavClient::class : DocManClient::class;
+        if ($clientType === DocManClient::class) {
+            //record if document share client is used for a particular user
+            $logger->info(DocManClient::class . ' is used for user ' . $currentUser->getId() . ' with OS type ' . $currentUser->getOsType());
+        }
+        return $clientType;
     }
 
     /**
-     * @param $requestedName
      * @param $clientOptions
-     *
      */
     private function validateWebDavConfig($clientOptions)
     {
-        if (!isset($clientOptions['workspace']) || empty($clientOptions['workspace'])) {
+        if (empty($clientOptions['workspace'])) {
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        if (!isset($clientOptions['webdav_baseuri']) || empty($clientOptions['webdav_baseuri'])) {
+        if (empty($clientOptions['webdav_baseuri'])) {
             throw new RuntimeException('Missing required option document_share.client.webdav_baseuri');
         }
 
-        if (!isset($clientOptions['username']) || empty($clientOptions['username'])) {
+        if (empty($clientOptions['username'])) {
             throw new RuntimeException('Missing required option document_share.client.username');
         }
 
-        if (!isset($clientOptions['password']) || empty($clientOptions['password'])) {
+        if (empty($clientOptions['password'])) {
             throw new RuntimeException('Missing required option document_share.client.password');
         }
     }
@@ -138,6 +142,7 @@ class ClientFactory implements FactoryInterface
             throw new RuntimeException('Missing required option document_share.client.baseuri');
         }
     }
+
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $clientOptions = $this->getOptions($container, 'client');

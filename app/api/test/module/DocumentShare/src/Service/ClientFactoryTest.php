@@ -9,6 +9,7 @@ use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Log\LoggerInterface;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Service\AuthorizationService;
 
@@ -76,10 +77,17 @@ class ClientFactoryTest extends MockeryTestCase
 
         $mockSl = m::mock(ServiceLocatorInterface::class);
 
+        $mockLogger = m::mock(LoggerInterface::class);
         $mockUser = m::mock(User::class)
             ->shouldReceive('getOstype')
             ->andReturn($client)->getMock();
 
+        if ($client === User::USER_OS_TYPE_WINDOWS_7) {
+            $mockLogger->shouldReceive('info')->once();
+            $mockUser->shouldReceive('getId')->once();
+        }
+
+        $mockSl->shouldReceive('get')->once()->with('logger')->andReturn($mockLogger);
         $authService = m::mock(AuthorizationService::class)
             ->shouldReceive('getIdentity')->once()
             ->andReturn(
@@ -97,7 +105,7 @@ class ClientFactoryTest extends MockeryTestCase
         if ($expected instanceof \Exception) {
             $passed = false;
             try {
-                $service = $sut->createService($mockSl);
+                $sut->createService($mockSl);
             } catch (\Exception $e) {
                 if ($e->getMessage() === $expected->getMessage() && get_class($e) === get_class($expected)) {
                     $passed = true;
