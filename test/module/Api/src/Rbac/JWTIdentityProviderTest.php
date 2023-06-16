@@ -50,7 +50,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
 
         // Expectations
         $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage(JWTIdentityProvider::MESSAGE_MALFORMED_BEARER);
+        $this->expectExceptionMessage(JWTIdentityProvider::MESSAGE_MALFORMED_BEARER);
 
         // Execute
         $this->sut->getIdentity();
