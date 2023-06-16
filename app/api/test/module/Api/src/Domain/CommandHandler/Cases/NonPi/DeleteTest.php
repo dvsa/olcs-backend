@@ -68,8 +68,8 @@ class DeleteTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(Result::class, $result);
-        $this->assertObjectHasAttribute('ids', $result);
-        $this->assertObjectHasAttribute('messages', $result);
+        $this->assertTrue(property_exists($result, 'ids'));
+        $this->assertTrue(property_exists($result, 'messages'));
         $this->assertContains('Id 111 deleted', $result->getMessages());
     }
 }

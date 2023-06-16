@@ -18,7 +18,7 @@ class UriBuilderTest extends MockeryTestCase
         $sut = new UriBuilder('internal.openam', 'selfserve.openam');
 
         $this->expectException(ClientException::class);
-        $this->expectErrorMessage(UriBuilder::MSG_REALM_NOT_SET);
+        $this->expectExceptionMessage(UriBuilder::MSG_REALM_NOT_SET);
 
         $sut->build('foo/bar');
     }
@@ -28,7 +28,7 @@ class UriBuilderTest extends MockeryTestCase
         $sut = new UriBuilder('internal.openam', 'selfserve.openam', 'incorrect');
 
         $this->expectException(ClientException::class);
-        $this->expectErrorMessage(UriBuilder::MSG_REALM_INCORRECT);
+        $this->expectExceptionMessage(UriBuilder::MSG_REALM_INCORRECT);
 
         $sut->build('foo/bar');
     }
