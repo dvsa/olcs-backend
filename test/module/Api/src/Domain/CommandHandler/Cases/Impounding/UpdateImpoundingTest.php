@@ -122,8 +122,8 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
-        $this->assertObjectHasAttribute('ids', $result);
-        $this->assertObjectHasAttribute('messages', $result);
+        $this->assertTrue(property_exists($result, 'ids'));
+        $this->assertTrue(property_exists($result, 'messages'));
         $this->assertContains('Impounding updated', $result->getMessages());
     }
 }
