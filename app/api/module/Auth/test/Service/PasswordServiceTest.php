@@ -23,7 +23,7 @@ class PasswordServiceTest extends MockeryTestCase
     public function generatePassword_ThrowsException_WhenRequestedLengthIsTooShort(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectErrorMessage(PasswordService::ERR_MESSAGE_TOO_SHORT);
+        $this->expectExceptionMessage(PasswordService::ERR_MESSAGE_TOO_SHORT);
 
         $length = (PasswordService::MINIMUM_LENGTH - 1);
         $this->sut->generatePassword($length);
