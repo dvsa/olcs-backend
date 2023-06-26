@@ -13,8 +13,7 @@ class PasswordServiceTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $faker = Factory::create();
-        $this->sut = new PasswordService($faker);
+        $this->sut = new PasswordService();
     }
 
     /**
@@ -31,23 +30,58 @@ class PasswordServiceTest extends MockeryTestCase
 
     /**
      * @test
-     * @dataProvider policyPatternProvider
+     * @throws \Exception
      */
-    public function generatePassword_ReturnsPassword_ThatConformsToPolicy(string $pattern): void
+    public function generatePassword_ReturnsPassword_ThatConformsToPolicy(): void
     {
-        $password = $this->sut->generatePassword();
-
-        $this->assertSame(1, preg_match($pattern, $password));
-    }
-
-    public function policyPatternProvider(): array
-    {
-        return [
-            'contains symbol' => ['/[-=~!@#$%^&*()_+,.<>?;:]/'],
-            'contains number' => ['/[0-9]/'],
-            'contains uppercase' => ['/[A-Z]/'],
-            'contains lowercase' => ['/[a-z]/'],
-        ];
+        /**
+         * Run this test 10000 times since we generate random passwords.
+         * Gives more assurance of successful password generation conforming to the password policy.
+         **/
+        for ($i = 0; $i < 10000; $i++) {
+            $password = $this->sut->generatePassword($this->sut::MINIMUM_LENGTH);
+            $this->assertCount(
+                $this->sut::MINIMUM_LENGTH,
+                str_split($password),
+                sprintf(
+                    "Generated password '%s' does not have the expected length of PasswordService::MINIMUM_LENGTH (%s)",
+                    $password,
+                    $this->sut::MINIMUM_LENGTH
+                )
+            );
+            $this->assertMatchesRegularExpression(
+                "/(?=.*\d)/",
+                $password,
+                sprintf(
+                    "Generated password '%s' does not contain at least one digit",
+                    $password
+                )
+            );
+            $this->assertMatchesRegularExpression(
+                "/(?=.*[a-z])/",
+                $password,
+                sprintf(
+                    "Generated password '%s' does not contain at least one lowercase character a-z",
+                    $password
+                )
+            );
+            $this->assertMatchesRegularExpression(
+                "/(?=.*[A-Z])/",
+                $password,
+                sprintf(
+                    "Generated password '%s' does not contain at least one uppercase character A-Z",
+                    $password
+                )
+            );
+            $this->assertMatchesRegularExpression(
+                "/(?=.*[-=~!@#$%^&*()_+,.\/?;:])/",
+                $password,
+                sprintf(
+                    "Generated password '%s' does not contain at least one symbol",
+                    $password
+                )
+            );
+        }
     }
 
     /**

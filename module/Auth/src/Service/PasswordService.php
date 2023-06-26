@@ -7,45 +7,44 @@ use Faker\Generator;
 
 class PasswordService
 {
-    const MINIMUM_LENGTH = 12;
-    const SYMBOL_REGEX = '[-=~!@#$%^&*()_+,./?;:]{1}';
+    public const MINIMUM_LENGTH = 12;
 
-    const ERR_MESSAGE_TOO_SHORT = 'Password length cannot be less than 12';
-
-    /**
-     * @var Generator
-     */
-    private $generator;
-
-    public function __construct(Generator $generator)
-    {
-        $this->generator = $generator;
-    }
+    public const ERR_MESSAGE_TOO_SHORT = 'Password length cannot be less than 12';
 
     /**
      * Generates a password
      *
+     * @param int $length Defaults to PasswordService::MINIMUM_LENGTH
      * @return string
+     * @throws \Exception
      */
-    public function generatePassword(int $length = 12)
+    public function generatePassword(int $length = self::MINIMUM_LENGTH): string
     {
         if ($length < static::MINIMUM_LENGTH) {
             throw new \InvalidArgumentException(static::ERR_MESSAGE_TOO_SHORT);
         }
 
-        $fillerLength = $length - 5;
+        $digits    = range('0', '9');
+        $lowercase = range('a', 'z');
+        $uppercase = range('A', 'Z');
+        $special   = str_split('-=~!@#$%^&*()_+,./?;:');
+        $combined  = array_merge($digits, $lowercase, $uppercase, $special);
 
-        $components = [
-            strtoupper($this->generator->randomLetter),
-            $this->generator->regexify(static::SYMBOL_REGEX),
-            strtolower($this->generator->randomLetter),
-            $this->generator->randomNumber(1),
-            $this->generator->regexify(static::SYMBOL_REGEX),
-            $this->generator->regexify(sprintf('[A-Za-z0-9]{%d}$', $fillerLength)),
+        // Ensure our resulting password has at least ONE of each requirement
+        // Uses random_int instead of array_rand for cryptographically secure random number generation.
+        $passwordCharacters = [
+            $digits[random_int(0, count($digits) - 1)],
+            $lowercase[random_int(0, count($lowercase) - 1)],
+            $uppercase[random_int(0, count($uppercase) - 1)],
+            $special[random_int(0, count($special) - 1)]
         ];
 
-        shuffle($components);
+        for ($i = count($passwordCharacters); $i < $length; $i++) {
+            $passwordCharacters[] = $combined[random_int(0, count($combined) - 1)];
+        }
 
-        return implode('', $components);
+        shuffle($passwordCharacters);
+
+        return implode('', $passwordCharacters);
     }
 }
