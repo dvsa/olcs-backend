@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Service;
 
-use Faker\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -20,7 +19,7 @@ class PasswordServiceFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): PasswordService
     {
-        return new PasswordService(Factory::create());
+        return new PasswordService();
     }
 
     /**
