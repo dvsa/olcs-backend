@@ -9,11 +9,6 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
-/**
- * Application Type Of Licence Review Service
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class ApplicationTypeOfLicenceReviewService extends AbstractReviewService
 {
     const GOODS_SI_VEHICLE_TYPE_MAPPINGS = [
@@ -46,7 +41,7 @@ class ApplicationTypeOfLicenceReviewService extends AbstractReviewService
             ]
         ];
 
-        if (!empty($data['licenceType']['id']) && $data['licenceType']['id'] === 'ltyp_r') {
+        if (!empty($data['licenceType']['id']) && $data['isGoods'] && $data['licenceType']['id'] === 'ltyp_r') {
             $config['multiItems'][] = [
                 [
                     'label' => 'application_type-of-licence_licence-type.data.restrictedGuidance',
