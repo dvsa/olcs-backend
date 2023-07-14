@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Application Undertakings Review Service Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
@@ -63,7 +58,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
 
         $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV79-auth-lgv')
-            ->andReturn('GV79-auth-lgv-translated');
+            ->andReturn('GV79-auth-lgv-translated [%s]');
 
         $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV79-auth-other')
@@ -75,11 +70,11 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
 
         $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV79')
-            ->andReturn('GV79-translated [%s] [%s] [%s]');
+            ->andReturn('GV79-translated [%s]');
 
         $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV79-Standard')
-            ->andReturn('GV79-standard-translated');
+            ->andReturn('GV79-standard-translated [%s]');
 
         $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV79-declare')
@@ -96,6 +91,18 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
         $this->mockTranslator->shouldReceive('translate')
             ->with('markup-application_undertakings_GV79-NI-declare')
             ->andReturn('GV79-NI-declare-translated');
+
+        $this->mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-auth-restricted')
+            ->andReturn('GV79-auth-restricted-translated [%s]');
+
+        $this->mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-si')
+            ->andReturn('GV79-si-translated [%s]');
+
+        $this->mockTranslator->shouldReceive('translate')
+            ->with('markup-application_undertakings_GV79-auth-lgv-NI')
+            ->andReturn('GV79-auth-lgv-NI-translated');
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));
     }
@@ -199,7 +206,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => false,
                 ],
                 [
-                    'markup' => 'GV79-translated [GV79-auth-other-translated] [] []',
+                    'markup' => 'GV79-auth-restricted-translated []',
                 ]
             ],
             'goods, standard national, hgv, not internal, not ni' => [
@@ -215,7 +222,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => false,
                 ],
                 [
-                    'markup' => 'GV79-translated [GV79-auth-other-translated] [GV79-standard-translated] []',
+                    'markup' => 'GV79-translated []',
                 ]
             ],
             'goods, standard international, mixed, not internal, not ni' => [
@@ -231,7 +238,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => false,
                 ],
                 [
-                    'markup' => 'GV79-translated [GV79-auth-other-translated] [GV79-standard-translated] []',
+                    'markup' => 'GV79-si-translated []',
                 ]
             ],
             'goods, standard international, lgv, not internal, not ni' => [
@@ -247,7 +254,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => false,
                 ],
                 [
-                    'markup' => 'GV79-translated [GV79-auth-lgv-translated] [GV79-standard-translated] []',
+                    'markup' => 'GV79-auth-lgv-translated []',
                 ]
             ],
             'goods, restricted, hgv, internal, not ni' => [
@@ -263,7 +270,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => false,
                 ],
                 [
-                    'markup' => 'GV79-translated [GV79-auth-other-translated] [] [GV79-declare-translated]',
+                    'markup' => 'GV79-auth-restricted-translated [GV79-declare-translated]',
                 ]
             ],
             'goods, standard national, hgv, internal, not ni' => [
@@ -279,8 +286,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => false,
                 ],
                 [
-                    'markup' => 'GV79-translated [GV79-auth-other-translated] [GV79-standard-translated] ' .
-                        '[GV79-declare-translated]',
+                    'markup' => 'GV79-translated [GV79-declare-translated]',
                 ]
             ],
             'goods, standard international, mixed, internal, not ni' => [
@@ -296,8 +302,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => false,
                 ],
                 [
-                    'markup' => 'GV79-translated [GV79-auth-other-translated] [GV79-standard-translated] ' .
-                        '[GV79-declare-translated]',
+                    'markup' => 'GV79-si-translated [GV79-declare-translated]',
                 ]
             ],
             'goods, standard international, lgv, internal, not ni' => [
@@ -313,8 +318,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => false,
                 ],
                 [
-                    'markup' => 'GV79-translated [GV79-auth-lgv-translated] [GV79-standard-translated] ' .
-                        '[GV79-declare-translated]',
+                    'markup' => 'GV79-auth-lgv-translated [GV79-declare-translated]',
                 ]
             ],
             'goods, restricted, hgv, not internal, ni' => [
@@ -378,7 +382,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => true,
                 ],
                 [
-                    'markup' => 'GV79-NI-translated [GV79-auth-lgv-translated] [GV79-NI-standard-translated] []',
+                    'markup' => 'GV79-NI-translated [GV79-auth-lgv-NI-translated] [GV79-NI-standard-translated] []',
                 ]
             ],
             'goods, restricted, hgv, internal, ni' => [
@@ -444,8 +448,7 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                     'niFlag' => true,
                 ],
                 [
-                    'markup' => 'GV79-NI-translated [GV79-auth-lgv-translated] [GV79-NI-standard-translated] ' .
-                        '[GV79-NI-declare-translated]',
+                    'markup' => 'GV79-NI-translated [GV79-auth-lgv-NI-translated] [GV79-NI-standard-translated] [GV79-NI-declare-translated]',
                 ]
             ],
         ];
