@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Abstract Review Service
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
@@ -22,11 +17,11 @@ use Laminas\I18n\Translator\TranslatorInterface;
  */
 abstract class AbstractReviewService implements ReviewServiceInterface
 {
-    const SIGNATURE = 'markup-application_undertakings_signature';
-    const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
-    const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
-
     use FormatReviewDataTrait;
+
+    public const SIGNATURE = 'markup-application_undertakings_signature';
+    public const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
+    public const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
 
     /** @var TranslatorInterface */
     protected $translator;
