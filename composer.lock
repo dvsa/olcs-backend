@@ -5979,12 +5979,12 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "4.206.18",
+            "version": "4.206.19",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.18/olcs-olcs-utils-4.206.18.zip",
-                "reference": "cd495bc1a09bb99f18f8ab22200aea0dfab94cd8",
-                "shasum": "cd495bc1a09bb99f18f8ab22200aea0dfab94cd8"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.19/olcs-olcs-utils-4.206.19.zip",
+                "reference": "c9f8d3cfcb2a0da45ada6588b6f15c6731601a13",
+                "shasum": "c9f8d3cfcb2a0da45ada6588b6f15c6731601a13"
             },
             "require": {
                 "elendev/composer-push": "^1.0.3",
@@ -6031,7 +6031,7 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2023-02-28T10:29:38+00:00"
+            "time": "2023-07-10T08:47:38+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
