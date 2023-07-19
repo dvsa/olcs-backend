@@ -65,7 +65,7 @@ class TransportManagerOtherEmploymentReviewService extends AbstractReviewService
                             'value' => $employment->getHoursPerWeek()
                         ],
                         [
-                            'label' => '',
+                            'label' => 'tm-review-other-employment-confirmation',
                             'value' => $this->translate('transportManager.data.availability.understoodAvailabilityAgreementConfirmation')
                         ],
                     ]
