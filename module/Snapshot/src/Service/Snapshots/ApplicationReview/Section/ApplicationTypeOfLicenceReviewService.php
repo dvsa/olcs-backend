@@ -41,7 +41,10 @@ class ApplicationTypeOfLicenceReviewService extends AbstractReviewService
             ]
         ];
 
-        if (!empty($data['licenceType']['id']) && $data['isGoods'] && $data['licenceType']['id'] === 'ltyp_r') {
+        if (
+            !empty($data['licenceType']['id']) && $data['licenceType']['id'] === 'ltyp_r' &&
+            $data['isGoods'] && $data['niFlag'] === 'N'
+        ) {
             $config['multiItems'][] = [
                 [
                     'label' => 'application_type-of-licence_licence-type.data.restrictedGuidance',
