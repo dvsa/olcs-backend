@@ -138,6 +138,10 @@ class TransportManagerOtherEmploymentReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'tm-review-other-employment-hours-per-week',
                                                 'value' => 'All night long'
+                                            ],
+                                            [
+                                                'label' => 'tm-review-other-employment-confirmation',
+                                                'value' => 'transportManager.data.availability.understoodAvailabilityAgreementConfirmation-translated'
                                             ]
                                         ]
                                     ]
@@ -157,6 +161,10 @@ class TransportManagerOtherEmploymentReviewServiceTest extends MockeryTestCase
                                             [
                                                 'label' => 'tm-review-other-employment-hours-per-week',
                                                 'value' => '24/7'
+                                            ],
+                                            [
+                                                'label' => 'tm-review-other-employment-confirmation',
+                                                'value' => 'transportManager.data.availability.understoodAvailabilityAgreementConfirmation-translated'
                                             ]
                                         ]
                                     ]
