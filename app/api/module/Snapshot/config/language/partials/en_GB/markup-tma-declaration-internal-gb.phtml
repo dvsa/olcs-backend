@@ -8,16 +8,15 @@
 
 <p>I understand that my responsibilities include:</p>
 <ul class="list--bullet">
-    <li>The making of arrangements to ensure that drivers comply with drivers’ hours and tachograph rules and with speed limits;</li>
-    <li>The making of arrangements to ensure that the vehicles are maintained properly, including the inspection of vehicles at the appropriate time and the action taken to remedy defects found;</li>
-    <li>The reporting and recording of vehicle defects by drivers;</li>
-    <li>The method of compilation and the accuracy of all records, which must be kept for a period of not less than 15 months;</li>
-    <li>The making of arrangements to ensure that the vehicle/s are not overloaded;</li>
-    <li>Ensuring that authorised vehicles will be kept at the authorised operating centre(s) when not in use;</li>
-    <li>Where appropriate, notifying the relevant Traffic Commissioner (in writing) of all prosecutions and convictions concerning the operator, the drivers and me within 28 days of the court hearing; and</li>
-    <li>Notifying the relevant Traffic Commissioner of my resignation.</li>
+    <?php
+    echo $this->HtmlPurifier($this->translate('tma-tm-declaration-drivers-administration'));
+    echo $this->HtmlPurifier($this->translate('tma-tm-declaration-drivers-management'));
+    echo $this->HtmlPurifier($this->translate('tma-tm-declaration-drivers-operations'));
+    echo $this->HtmlPurifier($this->translate('tma-tm-declaration-vehicle-administration'));
+    echo $this->HtmlPurifier($this->translate('tma-tm-declaration-vehicle-management'));
+    echo $this->HtmlPurifier($this->translate('tma-tm-declaration-licence-administration'));
+    echo $this->HtmlPurifier($this->translate('tma-tm-declaration-internal'));
+    echo $this->HtmlPurifier($this->translate('tma-tm-declaration-external'));
+    echo $this->HtmlPurifier($this->translate('tma-tm-declaration-warning'));
+    ?>
 </ul>
-
-<p>
-    <strong>Should I fail to meet any of the above requirements I understand that the traffic commissioner has the power to disqualify me from being a transport manager in any European Union country. %s</strong>
-</p>
