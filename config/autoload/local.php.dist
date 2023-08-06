@@ -131,7 +131,7 @@ return [
     ],
 
     // Asset path, URI to olcs-static (CSS, JS, etc) *Environment specific*
-    'asset_path' => '',     //  https://dev-olcs-static.i-env.net'
+    'asset_path' => 'http://localhost:7001',    
 
     // Companies house RESTful API
     'companies_house' => [
