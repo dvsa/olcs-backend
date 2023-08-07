@@ -189,7 +189,6 @@ class CreateTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Transfer\Command\TransportManagerApplication\SendTmApplication::class,
             [
                 'id' => 534,
-                'emailAddress' => 'test@test.com'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
