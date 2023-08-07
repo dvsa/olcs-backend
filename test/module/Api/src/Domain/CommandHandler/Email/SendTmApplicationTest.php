@@ -49,11 +49,11 @@ class SendTmApplicationTest extends CommandHandlerTestCase
      */
     public function testHandleCommand($isVariation, $uriPart)
     {
-        $command = Cmd::create(['id' => 863, 'emailAddress' => "test@email.com"]);
+        $command = Cmd::create(['id' => 863]);
 
         $tm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
         $hcd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(m::mock(RefData::class));
-        $tm->setHomeCd($hcd)->getHomeCd()->setEmailAddress("h@jhf.com");
+        $tm->setHomeCd($hcd)->getHomeCd()->setEmailAddress('test@email.com');
 
         $cd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(m::mock(RefData::class));
         $cd->setEmailAddress('EMAIL');
@@ -82,8 +82,6 @@ class SendTmApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($tma);
-
-        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->with($tma)->once();
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->with(
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
@@ -118,10 +116,10 @@ class SendTmApplicationTest extends CommandHandlerTestCase
      */
     public function testHandleCommandWithoutTmUsers($isVariation, $uriPart)
     {
-        $command = Cmd::create(['id' => 863, 'emailAddress' => 'test@123.com']);
+        $command = Cmd::create(['id' => 863]);
 
         $hcd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(m::mock(RefData::class));
-        $hcd->setEmailAddress('EMAIL');
+        $hcd->setEmailAddress('test@123.com');
         $tm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
         $tm->setHomeCd($hcd);
 
@@ -143,8 +141,6 @@ class SendTmApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($tma);
-
-        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->with($tma)->once();
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->with(
             m::type(\Dvsa\Olcs\Email\Data\Message::class),

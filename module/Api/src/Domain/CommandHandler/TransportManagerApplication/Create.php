@@ -106,8 +106,7 @@ final class Create extends AbstractCommandHandler implements
                 $this->handleSideEffect(
                     \Dvsa\Olcs\Transfer\Command\TransportManagerApplication\SendTmApplication::create(
                         [
-                            'id' => $tma->getId(),
-                            'emailAddress' => $user->getContactDetails()->getEmailAddress()
+                            'id' => $tma->getId()
                         ]
                     )
                 )
