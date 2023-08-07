@@ -27,11 +27,6 @@ abstract class AbstractSendTmEmail extends AbstractCommandHandler implements \Dv
         /* @var $tma \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication */
         $tma = $this->getRepo()->fetchUsingId($command);
 
-        if ($command->getEmailAddress() !== $tma->getTransportManager()->getHomeCd()->getEmailAddress()) {
-            $tma->getTransportManager()->getHomeCd()->setEmailAddress($command->getEmailAddress());
-            $this->getRepo()->save($tma);
-        }
-
         if (!$tma->getTransportManager()->getUsers()->isEmpty()) {
             // got user linked to the TM
             $user = $tma->getTransportManager()->getUsers()->first();
@@ -48,7 +43,7 @@ abstract class AbstractSendTmEmail extends AbstractCommandHandler implements \Dv
         }
 
         $message = new \Dvsa\Olcs\Email\Data\Message(
-            $command->getEmailAddress(),
+            $tma->getTransportManager()->getHomeCd()->getEmailAddress(),
             $this->subject
         );
         $message->setTranslateToWelsh($translateToWelsh);
