@@ -16,7 +16,7 @@ use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\OperatingCentres as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Licence\OperatingCentres as Qry;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
 

@@ -30,7 +30,7 @@ use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\Json\Json as LaminasJson;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Command Handler Test Case
@@ -495,7 +495,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     protected function setupIsInternalUser($isInternalUser = true)
     {
-        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('isGranted')
             ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
             ->atLeast()->once()
@@ -511,7 +511,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
      */
     protected function setupIsExternalUser($isExternalUser = true)
     {
-        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('isGranted')
             ->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
             ->atLeast()->once()

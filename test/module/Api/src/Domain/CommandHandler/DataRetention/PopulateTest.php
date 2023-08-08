@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\DataRetention\Populate as Cmd;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Class PopulateTest

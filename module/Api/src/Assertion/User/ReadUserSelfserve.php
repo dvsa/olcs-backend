@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Assertion\User;
 
-use ZfcRbac\Assertion\AssertionInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Assertion\AssertionInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User;
 
 /**

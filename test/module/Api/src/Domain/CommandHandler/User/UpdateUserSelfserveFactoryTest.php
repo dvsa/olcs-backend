@@ -19,7 +19,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Olcs\TestHelpers\MockeryTestCase;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserveFactory

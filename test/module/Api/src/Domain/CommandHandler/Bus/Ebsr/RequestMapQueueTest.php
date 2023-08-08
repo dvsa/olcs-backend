@@ -10,8 +10,8 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapCmd;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 

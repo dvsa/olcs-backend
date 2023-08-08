@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
 use Dvsa\Olcs\Transfer\Query\User\UserListInternal as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @see QueryHandler

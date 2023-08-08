@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUser as Sut;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUser as Cmd;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Class Delete User Test

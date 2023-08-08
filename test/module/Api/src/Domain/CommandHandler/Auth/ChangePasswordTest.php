@@ -12,8 +12,8 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Http\Response;
 use Mockery as m;
-use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @see ChangePassword

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUserLastLoginAt as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 class UpdateUserLastLoginAtTest extends CommandHandlerTestCase
 {

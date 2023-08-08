@@ -10,8 +10,8 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Log\LoggerInterface;
-use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Client Factory Test

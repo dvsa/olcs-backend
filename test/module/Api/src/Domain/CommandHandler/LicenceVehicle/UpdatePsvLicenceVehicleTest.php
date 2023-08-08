@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\LicenceVehicle\UpdatePsvLicenceVehicle as Cmd;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Update Psv Licence Vehicle Test

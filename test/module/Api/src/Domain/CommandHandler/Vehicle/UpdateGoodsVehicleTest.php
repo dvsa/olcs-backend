@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\UpdateGoodsVehicle;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Transfer\Command\Vehicle\UpdateGoodsVehicle as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Update Goods Vehicle Test

@@ -13,7 +13,7 @@ use Olcs\Db\Service\Search\Search;
 use Olcs\Db\Service\Search\SearchFactory;
 use Olcs\TestHelpers\MockeryTestCase;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Class SearchFactoryTest

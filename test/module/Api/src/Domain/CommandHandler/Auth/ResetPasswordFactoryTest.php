@@ -13,7 +13,7 @@ use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @see ResetPasswordFactory

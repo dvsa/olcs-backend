@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
 

@@ -23,7 +23,7 @@ use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\OperatingCentres as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Application\OperatingCentres as Qry;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository;
 
 /**

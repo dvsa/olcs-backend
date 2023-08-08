@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\Logger;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Psr\Container\ContainerInterface;
 
 /**

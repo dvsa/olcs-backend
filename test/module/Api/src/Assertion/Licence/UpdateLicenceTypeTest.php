@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Assertion\Licence\UpdateLicenceType;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Check whether the current user can update the type of licence for the given licence

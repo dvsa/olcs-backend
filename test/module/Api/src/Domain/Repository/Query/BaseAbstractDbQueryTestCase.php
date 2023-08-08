@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ServiceManager;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**

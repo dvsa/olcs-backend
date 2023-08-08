@@ -7,7 +7,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\People as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Organisation\People as Qry;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
 
 /**

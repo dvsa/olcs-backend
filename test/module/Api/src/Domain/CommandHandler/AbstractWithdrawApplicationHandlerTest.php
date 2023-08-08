@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\WithdrawApplicationInterface;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTestCase
 {

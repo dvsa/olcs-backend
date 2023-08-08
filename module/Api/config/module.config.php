@@ -880,10 +880,10 @@ return [
             ]
         ]
     ],
-    'zfc_rbac' => [
+    'lmc_rbac' => [
         'identity_provider' => \Dvsa\Olcs\Api\Rbac\IdentityProviderInterface::class,
         'role_provider' => [
-            'ZfcRbac\Role\ObjectRepositoryRoleProvider' => [
+            'LmcRbacMvc\Role\ObjectRepositoryRoleProvider' => [
                 'object_manager'     => 'doctrine.entitymanager.orm_default',
                 'class_name'         => \Dvsa\Olcs\Api\Entity\User\Role::class,
                 'role_name_property' => 'role'

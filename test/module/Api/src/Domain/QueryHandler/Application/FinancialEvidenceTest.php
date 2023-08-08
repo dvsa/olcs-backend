@@ -22,8 +22,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
-use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Financial Evidence Test

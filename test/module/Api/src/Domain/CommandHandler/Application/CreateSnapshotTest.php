@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use \ZfcRbac\Service\AuthorizationService;
+use \LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Create Snapshot Test

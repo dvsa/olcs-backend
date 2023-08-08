@@ -7,7 +7,7 @@ use Dvsa\Olcs\Cpms\Service\ApiService;
 use PHPUnit\Framework\TestCase;
 use Mockery as m;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 class ApiServiceFactoryTest extends TestCase
 {

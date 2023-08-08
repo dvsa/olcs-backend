@@ -13,7 +13,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
 
 /**

@@ -16,7 +16,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTranslateToWelshTask as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Task\CreateTranslateToWelshTask;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Create Translate To Welsh Task Test

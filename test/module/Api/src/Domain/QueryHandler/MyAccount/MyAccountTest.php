@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\User\User;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SysParamRepo;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount as Qry;
