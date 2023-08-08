@@ -12,7 +12,7 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Http\Client as HttpClient;
 use Sabre\DAV\Client as SabreClient;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Interop\Container\ContainerInterface;
 
 /**

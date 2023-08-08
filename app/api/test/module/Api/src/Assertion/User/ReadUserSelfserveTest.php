@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Read User Selfserve Test

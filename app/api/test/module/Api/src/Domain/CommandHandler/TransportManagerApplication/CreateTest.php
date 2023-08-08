@@ -37,11 +37,11 @@ class CreateTest extends CommandHandlerTestCase
         $this->mockRepo('User', User::class);
 
         $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
         ];
 
         $this->loggedInUser = m::mock(UserEntity::class)->makePartial();
-        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('getIdentity->getUser')->andReturn($this->loggedInUser);
 
         parent::setUp();

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateOperatingCentresCmd;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;

@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Service;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as UpdateLicenceOperatingCentres;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateApplicationOperatingCentres;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;

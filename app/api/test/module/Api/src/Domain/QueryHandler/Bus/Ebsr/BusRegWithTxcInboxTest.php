@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\BusRegWithTxcInbox as Qry;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * BusRegWithTxcInboxTest
@@ -36,7 +36,7 @@ class BusRegWithTxcInboxTest extends QueryHandlerTestCase
         $this->mockRepo('Bus', BusRepo::class);
 
         $this->mockedSmServices = [
-            'ZfcRbac\Service\AuthorizationService' => m::mock('ZfcRbac\Service\AuthorizationService')
+            'LmcRbacMvc\Service\AuthorizationService' => m::mock('LmcRbacMvc\Service\AuthorizationService')
         ];
 
         parent::setUp();
@@ -92,7 +92,7 @@ class BusRegWithTxcInboxTest extends QueryHandlerTestCase
             ]
         );
 
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
             ->andReturn($this->getCurrentUser(null, $organisationId));
 
@@ -134,7 +134,7 @@ class BusRegWithTxcInboxTest extends QueryHandlerTestCase
             ]
         );
 
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
             ->andReturn($this->getCurrentUser($localAuthorityId));
 
@@ -182,7 +182,7 @@ class BusRegWithTxcInboxTest extends QueryHandlerTestCase
             ]
         );
 
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
             ->andReturn($this->getCurrentUser());
 
@@ -231,7 +231,7 @@ class BusRegWithTxcInboxTest extends QueryHandlerTestCase
             ]
         );
 
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
             ->andReturn($this->getCurrentUser(4));
 
@@ -260,7 +260,7 @@ class BusRegWithTxcInboxTest extends QueryHandlerTestCase
             ]
         );
 
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
             ->shouldReceive('getIdentity')
             ->andReturn($this->getCurrentUser());
 

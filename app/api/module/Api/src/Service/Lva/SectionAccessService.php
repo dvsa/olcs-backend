@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Interop\Container\ContainerInterface;
 

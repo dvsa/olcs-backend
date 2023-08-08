@@ -12,7 +12,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\BusReg as Qry;
 use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Bus Test

@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\Schedule41 as Cmd;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**

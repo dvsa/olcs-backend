@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\Lva\SectionAccessService

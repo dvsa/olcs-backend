@@ -17,7 +17,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as Cmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Create Goods Vehicle Test

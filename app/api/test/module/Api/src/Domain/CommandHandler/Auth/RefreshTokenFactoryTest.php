@@ -16,7 +16,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @see RefreshTokensFactory

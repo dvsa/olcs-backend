@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PublishHearingCmd;

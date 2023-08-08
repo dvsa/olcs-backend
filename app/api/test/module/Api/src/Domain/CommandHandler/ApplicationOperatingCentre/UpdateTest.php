@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationOperatingCentre\Update as Com
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**

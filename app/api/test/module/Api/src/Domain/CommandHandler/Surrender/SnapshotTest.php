@@ -23,7 +23,7 @@ class SnapshotTest extends CommandHandlerTestCase
         $this->mockRepo('Surrender', Repository\Surrender::class);
 
         $this->mockedSmServices[Generator::class] = m::mock(Generator::class);
-        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class] = m::mock(\ZfcRbac\Service\AuthorizationService::class);
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class] = m::mock(\LmcRbacMvc\Service\AuthorizationService::class);
 
         parent::setUp();
     }

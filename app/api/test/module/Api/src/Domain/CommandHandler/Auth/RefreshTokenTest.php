@@ -14,8 +14,8 @@ use Laminas\Authentication\Result;
 use Mockery as m;
 use Mockery\MockInterface;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @see RefreshTokens

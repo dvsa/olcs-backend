@@ -8,7 +8,7 @@ use Olcs\Db\Exceptions\SearchDateFilterParseException;
 use Olcs\Db\Service\Search\Search as SearchService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use \Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**

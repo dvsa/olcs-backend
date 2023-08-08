@@ -11,7 +11,7 @@ namespace Dvsa\Olcs\Api\Domain\Validation;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
 
 /**

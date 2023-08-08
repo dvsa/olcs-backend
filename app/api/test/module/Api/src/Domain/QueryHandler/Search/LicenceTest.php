@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary as CompanySubsidiaryEnti
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Transfer\Query\Search\Licence as Qry;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Mockery\MockInterface;

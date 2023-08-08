@@ -13,7 +13,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\UpdateTxcInbox as Cmd;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Update TxcInbox Test

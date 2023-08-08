@@ -8,8 +8,8 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use RuntimeException;
-use ZfcRbac\Identity\IdentityProviderInterface;
-use ZfcRbac\Options\ModuleOptions;
+use LmcRbacMvc\Identity\IdentityProviderInterface;
+use LmcRbacMvc\Options\ModuleOptions;
 
 class IdentityProviderFactory implements FactoryInterface
 {

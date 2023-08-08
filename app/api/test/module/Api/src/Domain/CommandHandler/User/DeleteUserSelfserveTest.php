@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Class Delete User Selfserve Test

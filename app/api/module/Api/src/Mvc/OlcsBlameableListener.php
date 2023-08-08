@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Gedmo\Blameable\BlameableListener as GedmoBlameableListener;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**

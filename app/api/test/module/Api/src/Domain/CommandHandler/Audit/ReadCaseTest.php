@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Cases\CasesReadAudit;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Read Case Test

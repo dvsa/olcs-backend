@@ -31,7 +31,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Create New User Test

@@ -14,7 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandlerManagerMockBuilder;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Doctrine\ORM\Query;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery\MockInterface;
 use Dvsa\OlcsTest\MocksRepositoriesTrait;
 use Olcs\TestHelpers\Service\MocksServicesTrait;

@@ -11,8 +11,8 @@ use Dvsa\Olcs\Transfer\Query\IrhpApplication\AvailableLicences as AvailableLicen
 use Dvsa\Olcs\Transfer\Query\Organisation\OrganisationAvailableLicences;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
 
 class AvailableLicencesTest extends QueryHandlerTestCase
 {

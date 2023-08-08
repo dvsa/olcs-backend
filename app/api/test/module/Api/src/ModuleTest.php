@@ -11,7 +11,7 @@ use Laminas\EventManager\Event;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\ResponseSender\SendResponseEvent;
 use Laminas\ServiceManager\ServiceManager;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
 
 /**

@@ -7,7 +7,7 @@ namespace Dvsa\OlcsTest\Api\Logger;
 use Olcs\TestHelpers\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLoggerFactory;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Mockery\MockInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;

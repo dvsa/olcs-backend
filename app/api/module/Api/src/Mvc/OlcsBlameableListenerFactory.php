@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Class OlcsBlameableListenerFactory

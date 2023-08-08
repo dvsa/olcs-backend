@@ -10,7 +10,7 @@ use Gedmo\Mapping\Event\AdapterInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * OlcsBlameableListener Test

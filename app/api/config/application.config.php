@@ -10,7 +10,7 @@ return array(
         'Dvsa\Olcs\Email',
         'Dvsa\Olcs\CompaniesHouse',
         'Dvsa\Olcs\DocumentShare',
-        'ZfcRbac',
+        'LmcRbacMvc',
         'Dvsa\Olcs\Transfer',
         'Olcs\Logging',
         'DoctrineModule',

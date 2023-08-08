@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
 use Hamcrest\Core\AllOf;
 use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;

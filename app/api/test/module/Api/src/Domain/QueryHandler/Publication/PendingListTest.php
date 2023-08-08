@@ -14,8 +14,8 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Transfer\Query\Publication\PendingList as Qry;
 use Mockery as m;
-use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * PendingList Test

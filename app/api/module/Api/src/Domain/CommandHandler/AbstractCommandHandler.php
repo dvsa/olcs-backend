@@ -45,7 +45,7 @@ use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;

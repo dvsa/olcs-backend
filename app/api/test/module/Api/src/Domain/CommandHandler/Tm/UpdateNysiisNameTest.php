@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as Cmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Transport Manager / Update NYSIIS Name

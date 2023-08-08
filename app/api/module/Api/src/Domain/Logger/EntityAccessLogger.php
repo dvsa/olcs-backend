@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Dvsa\Olcs\Api\Domain\Logger;
 
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;

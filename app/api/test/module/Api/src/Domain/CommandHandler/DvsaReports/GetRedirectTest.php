@@ -14,7 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\DvsaReports\GetRedirect as GetRedirectCmd;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Get DVSA Reports Redirect Test

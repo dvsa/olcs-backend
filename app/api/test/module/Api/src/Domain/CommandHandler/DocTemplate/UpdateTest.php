@@ -20,7 +20,7 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\DocTemplate\Update
