@@ -13,10 +13,10 @@
  */
 
 $doctrine_connection_params = [
-    'host' => 'localhost',
+    'host' => 'db',
     'port' => '3306',
-    'user' => 'root',
-    'password' => 'password',
+    'user' => 'mysql',
+    'password' => 'olcs',
     'dbname' => 'olcs_be',
 ];
 
@@ -83,9 +83,10 @@ return [
         ],
     ],
 
+    // Key used to encrypt data stored in the Doctrine EncryptedStringType
     'olcs-doctrine' => [
         // The encryption key used for storing encrypted data in the database
-        'encryption_key' => ''
+        'encryption_key' => 'ABCDEFGHIJKLM'
     ],
 
 
@@ -99,21 +100,21 @@ return [
 
     // Set the following if you need to go via a proxy to get to Companies house XML gateway
     // *Environment specific*
-    // 'companies_house_connection' => [
+    'companies_house_connection' => [
     //    'proxy => 'proxy.gw.npm:80'
-    // ],
+    ],
 
     // Document service
     'document_share' => [
         'client' => [
             // Document service URI *Environment specific*
-            'baseuri' => "http://docman.reg.olcs.dev-dvsacloud.uk:8080/hfs/",
+            'baseuri' => "http://docman.qa.olcs.dev-dvsacloud.uk:8080/hfs/",
             // Document service user ID *Environment specific*
             'uuid' => 'uD12345',
             // Document service workspace "olcs"
             'workspace' => 'olcs',
-            'webdav_baseuri' => '',
-            'username' => '',
+            'webdav_baseuri' => 'http://webdav.qa.olcs.dev-dvsacloud.uk:8080/documents/',
+            'username' => 'olcs_app',
             'password' => ''
         ],
         'invalid_defined_mime_types' => [
@@ -131,7 +132,7 @@ return [
     ],
 
     // Asset path, URI to olcs-static (CSS, JS, etc) *Environment specific*
-    'asset_path' => 'http://localhost:7001',    
+    'asset_path' => 'http://localhost:7001',     //  https://dev-olcs-static.i-env.net'
 
     // Companies house RESTful API
     'companies_house' => [
@@ -157,7 +158,7 @@ return [
 
     // Configuration for DVLA search
     'dvla_search' => [
-        'base_uri' => 'https://api.dvla.search.dev.dvsacloud.uk/1.0/',
+        'base_uri' => 'https://api.dvla.dev.smc.dvsacloud.uk/1.0/',
         'api_key' => 'INSERT_KEY_HERE',
         'proxy' => '',
     ],
@@ -170,12 +171,16 @@ return [
 
     // CPMS service
     'cpms_api' => [
+        'logger_alias' => 'Logger', // Laminas logger service manager alias - use 'Logger' for the main OLCS log
+        'identity_provider' => 'CpmsIdentityProvider', // Should implement CpmsClient\Authenticate\IdentityProviderInterface
+        'enable_cache' => true,
+        'cache_storage' => 'array',
         'rest_client' => [
             'options' => [
                 //CPMS API version to use
                 'version' => 2,
                 // CPMS hostname e.g. 'payment-service.psqa-ap01.ps.npm' *Environment specific*
-                'domain' => 'payment-service.psqa-ap01.ps.npm', // QA
+                'domain' => 'api.accept.dev.cpms.dvsacloud.uk', // QA
                 'customer_reference' => '',
                 'grant_type' => 'client_credentials',
                 'timeout' => 15.0,
@@ -208,53 +213,57 @@ return [
     // Email config
     'email' => [
         // Debugging option forces all email to be sent to an address
-        'send_all_mail_to' => 'terry.valtech@gmail.com',
         // Selfserve/external URI e.g. http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
-        'selfserve_uri' => 'http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa',
-        // Internal URI e.g. http://demo_dvsa-internal.web03.olcs.mgt.mtpdvsa *Environment specific*
-        'internal_uri' => 'http://demo_dvsa-internal.web03.olcs.mgt.mtpdvsa',
+        'send_all_mail_to' => '',
+        'from_name' => 'OLCS do not reply',
+        'from_email' => 'mail.olcs.dev@dev-dvsacloud.uk',
+        'selfserve_uri' => 'https://olcs-selfserve.olcs.gov.uk',
+        'internal_uri' => 'https://olcs-internal.olcs.gov.uk',
     ],
 
-    'mail' => [],
+    'awsOptions' => [
+        'region' => 'eu-west-1',
+        'version' => 'latest',
+        'useEnvCredentials' => true,
+    ],
+
+    'mail' => array(
+        'type' => '\Laminas\Mail\Transport\Smtp',
+        'options' => [
+            'name' => 'mailhog',
+            'host' => 'mailhog',
+            'port' => 1025,
+            'connection_config' => [
+                'username' => 'null',
+                'password' => 'null',
+                'port' => 1025,
+            ]
+        ],
+    ),
+
+    /*    'mail' => array(
+            'type' => '\Dvsa\Olcs\Email\Transport\MultiTransport',
+            'options' => [
+                'transport' => [
+                    ['type' => 'SendMail'],
+                    ['type' => '\Dvsa\Olcs\Email\Transport\S3File', 'options' => ['s3Path' => 'devapp-olcs-pri-olcs-autotest-s3/olcs.dev.nonprod.dvsa.aws/email']],
+                ]
+            ],
+        ),*/
+
     'mailboxes' => [
         // IMAP connection to a the mailbox for reading inspection request emails
         'inspection_request' => [
             // IMAP hostname *Environment specific*
-            'host' => 'mail01.olcs.mgt.mtpdvsa',
+            'host' => 'outlook.office365.com',
             // IMAP user *Environment specific*
             'user' => 'olcsemail',
             // IMAP password *Environment specific*
-            'password' => '74398f7g39',
+            'password' => '',
             // IMAP port 993 *Environment specific*
             'port' => 993,
-            'ssl' => 'SSL',
+            'ssl' => '1',
         ],
-    ],
-
-    'awsOptions' => [
-        'useEnvCredentials' => true,
-        'region' => 'eu-west-1',
-        'version'=> 'latest',
-    ],
-
-    // AUTH config
-    'openam' => [
-        'username' => 'olcs_app',
-        'password' => 'password',
-        'uri' => 'http://olcs-openam.olcs.gov.uk:18080',
-        'pid_header' => 'X-Pid',
-        'url' => null, // @NOTE This must be implemented
-        'realm' => null,
-        'cookie' => [
-            'name' => 'secureToken',
-            'domain' => null, // @NOTE This must be implemented
-        ],
-        'client' => [
-            'options' => [
-                'adapter' => \Laminas\Http\Client\Adapter\Curl::class,
-                'timeout' => 60,
-            ]
-        ]
     ],
 
     'ebsr' => [
@@ -293,30 +302,31 @@ return [
             ]
         ],
         'repute_url' => [
-            'uri' => 'https://r-inr-01.corp.vosa.gov.uk:444/INR.BackofficeWeb/Repute/SubmitCheck.aspx?'
-        ]
+            'uri' => 'Not Available in NonProd'
+        ],
     ],
 
     // CUPS print server
     'print' => [
-        'server' => 'print01.olcs.mgt.mtpdvsa:631'
+        'server' => 'print.localdev:631'
     ],
 
     // If this value is populated then printing will use this service,
     // if it is not populated or missing then the Libreoffice converter will be used
     'convert_to_pdf' => [
-        'uri' => 'http://10.161.14.234:8080/convert-document',
+        'uri' => 'http://renderer.qa.olcs.dev-dvsacloud.uk:8080/convert-document',
     ],
 
     /**
      * Configure the location of the application log
      */
     'log' => [
+        'allowPasswordLogging' => true,
         'Logger' => [
             'writers' => [
                 'full' => [
                     'options' => [
-                        'stream' => '/var/tmp/backend.log',
+                        'stream' => 'php://stdout',
                         'filters' => [
                             'priority' => [
                                 'name' => 'priority',
@@ -386,7 +396,6 @@ return [
     //If we find these strings in xml validator error messages, don't return the message to the user.
     //This is so we can avoid showing things like directory paths to the user in cases such as schema import errors
     'xml_valid_message_exclude' => [
-        '/var/www/olcs',
         '/opt/dvsa',
         'Skipping import of schema'
     ],
@@ -438,8 +447,9 @@ return [
         //    CURLOPT_PROXY => 'proxy.shd.proxy.nonprod.dvsa.aws:3128',
         //],
     ],
+
     'cache-encryption' => [
-        'node_suffix' => 'api',
+        'node_suffix' => 'backend',
         'adapter' => 'openssl',
         'options' => [
             'algo' => 'aes',
@@ -450,20 +460,21 @@ return [
             'shared' => 'shared-cache-encryption-key',
         ],
     ],
+
     'caches' => [
         \Laminas\Cache\Storage\Adapter\Redis::class => [
             'adapter' => [
                 'name' => 'redis',
                 'options' => [
                     'server' => [
-                        'host' => '127.0.0.1',
+                        'host' => 'redis',
                         'port' => 6379,
                     ],
                     'lib_options' => [
                         \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_IGBINARY
                     ],
                     'ttl' => 3600, //one hour, likely to be overridden based on use case
-                    'namespace' => 'zfcache',
+                    'namespace' => 'backend', //otherwise Laminas will default to "zfcache", but usually overridden anyway
                 ],
                 'plugins' => [
                     'exception_handler' => [
@@ -474,8 +485,8 @@ return [
         ],
     ],
     'auth' => [
-        'default_adapter' => 'mock',
-        'identity_provider' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class,
+        'default_adapter' => 'cognito',
+        'identity_provider' => \Dvsa\Olcs\Api\Rbac\JWTIdentityProvider::class,
         'adapters' => [
             'cognito' => [
                 'adapter' => \Dvsa\Olcs\Auth\Adapter\CognitoAdapter::class,
@@ -483,35 +494,20 @@ return [
                 'clientSecret' => '',
                 'poolId' => '',
                 'region' => 'eu-west-1',
-                'nbfLeeway' => 0,
+                'nbfLeeway' => 30,
                 'http' => [],
             ],
             'azure' => [
-                'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
+                'adapter' => new \Laminas\Authentication\Adapter\Callback(function () {
+                    return true;
+                }),
                 'timeout' => 3000,
                 'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks'
             ],
-            'openam' => [
-                'adapter' => \Dvsa\Olcs\Auth\Adapter\OpenAm::class,
-                'timeout' => 3000,
-                'pool-arn' => 'https://ksdmfosmdfosdmnfgosmfosmgoks',
-                'urls' => [
-                    'internal' => 'http://olcs-auth.olcs.gov.uk:8080/secure/',
-                    'selfserve' => 'http://olcs-auth.olcs.gov.uk:8080/secure/',
-                ],
-                'cookie' => [
-                    'name' => 'secureToken',
-                    'domain' => null, // @NOTE This must be implemented
-                ],
-                'client' => [
-                    'options' => [
-                        'adapter' => \Laminas\Http\Client\Adapter\Curl::class,
-                        'timeout' => 60,
-                    ],
-                ],
-            ],
             'mock' => [
-                'adapter' => new \Laminas\Authentication\Adapter\Callback(function() { return true;}),
+                'adapter' => new \Laminas\Authentication\Adapter\Callback(function () {
+                    return true;
+                }),
             ],
         ],
     ],
@@ -522,11 +518,13 @@ return [
         'expiry' => DateTimeImmutable::createFromFormat(\DateTimeInterface::RFC7231, 'Tue, 20 May 2025 22:59:59 GMT'), // Tue, 20 May 2025 23:59:59 BST
         // guzzle client options
         'client' => [ // Client configuration passed to Guzzle client. base_url is required and must be set to API root.
-            'base_url' => 'http://127.0.0.1:3000/',
+            'base_uri' => 'http://127.0.0.1:3000/',
             'timeout' => 30,
         ]
     ],
+
     'govuk_account' => [
+        'redirectUri' => 'https://ssweb.dev.olcs.dev-dvsacloud.uk/govuk-id/loggedin',
         'discovery_endpoint' => 'https://oidc.integration.account.gov.uk/.well-known/openid-configuration',
         'client_id' => '',
         'keys' => [
@@ -539,6 +537,21 @@ return [
             'logged_in' => 'https://olcs-selfserve/govuk-id/loggedin',
             'logged_out' => 'https://olcs-selfserve/govuk-id/loggedout',
         ],
-        'expected_core_identity_issuer' => 'identity.integration.account.gov.uk',
+        'expected_core_identity_issuer' => 'https://identity.integration.account.gov.uk/',
     ],
+    'top-report-link' => [
+        'targetUrl' => 'https://operator-reports-api.develop.edh.dvsacloud.uk/redirect',
+        'apiKey' => '',
+    ],
+    // App registrations
+    'app_registrations' => [
+            'secrets' => ['client_secret'],
+            'transxchange' => [
+                'token_url' => 'http://localhost',
+                'clientId' => 'abc123',
+                'scope' => 'abc123',
+            ],
+            'proxy' => 'http://localhost',
+            'max_retry_attempts' => 3,
+        ]
 ];
