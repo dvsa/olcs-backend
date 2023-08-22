@@ -4,7 +4,7 @@ return array(
     'router' => array(
         'routes' => array(
             'document' => array(
-                'type' => 'Laminas\Mvc\Router\Http\Literal',
+                'type' => 'literal',
                 'options' => array(
                     'route' => '/scanning/document',
                     'defaults' => array(
