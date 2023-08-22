@@ -3,6 +3,9 @@ return array(
     // This should be an array of module namespaces used in the application.
     'modules' => [
         'Dvsa\LaminasConfigCloudParameters',
+        'Laminas\Router',
+        'Laminas\Cache\Module',
+        'Laminas\Log',
         'Dvsa\Olcs\Utils',
         'Dvsa\Olcs\Address',
         'Dvsa\Olcs\Auth',
@@ -12,6 +15,7 @@ return array(
         'Dvsa\Olcs\DocumentShare',
         'LmcRbacMvc',
         'Dvsa\Olcs\Transfer',
+
         'Olcs\Logging',
         'DoctrineModule',
         'DoctrineORMModule',
