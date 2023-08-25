@@ -5921,12 +5921,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.181",
+            "version": "4.206.183",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.181/olcs-olcs-transfer-4.206.181.zip",
-                "reference": "95353577340ee73dfbe176c6235a2540b2480d9c",
-                "shasum": "95353577340ee73dfbe176c6235a2540b2480d9c"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-transfer/4.206.183/olcs-olcs-transfer-4.206.183.zip",
+                "reference": "59d492b3b46616de24d2b5706ce661a8133fcc0d",
+                "shasum": "59d492b3b46616de24d2b5706ce661a8133fcc0d"
             },
             "require": {
                 "elendev/composer-push": "^1.0.3",
@@ -5975,7 +5975,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2023-07-26T14:40:13+00:00"
+            "time": "2023-08-10T08:53:37+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -6035,12 +6035,12 @@
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "4.206.14",
+            "version": "4.206.15",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-xmltools/4.206.14/olcs-olcs-xmltools-4.206.14.zip",
-                "reference": "cc07c580aa172df0becd06e12505f72b87e93a67",
-                "shasum": "cc07c580aa172df0becd06e12505f72b87e93a67"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-xmltools/4.206.15/olcs-olcs-xmltools-4.206.15.zip",
+                "reference": "fd365f0cce00f40838a994baad5f6fdec3dd53f6",
+                "shasum": "fd365f0cce00f40838a994baad5f6fdec3dd53f6"
             },
             "require": {
                 "elendev/composer-push": "^1.0.3",
@@ -6086,7 +6086,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2023-02-28T10:30:24+00:00"
+            "time": "2023-08-10T11:38:22+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
