@@ -19,7 +19,6 @@ use Dvsa\Olcs\Api\Service\Permits\Allocate\RangeMatchingCriteriaInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
 use RuntimeException;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Allocate permits for an IRHP Permit application
@@ -40,18 +39,6 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
 
     /** @var IrhpPermitAllocator */
     private $irhpPermitAllocator;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, AllocateIrhpApplicationPermits::class);
-    }
 
     /**
      * Handle command
@@ -303,10 +290,7 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->emissionsStandardCriteriaFactory = $container->get(
             'PermitsAllocateEmissionsStandardCriteriaFactory'

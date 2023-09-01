@@ -5,8 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Document;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Utils\Helper\ValueHelper;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -77,17 +76,6 @@ class PrintLetter implements FactoryInterface
         );
     }
 
-    /**
-     * Create instance
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return PrintLetter
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, PrintLetter::class);
-    }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $this->repoDocTemplate = $container->get('RepositoryServiceManager')->get('DocTemplate');

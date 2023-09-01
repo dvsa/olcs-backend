@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrErrors as SendEbsrErrorsCmd;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult as SubmissionResultFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception;
@@ -84,11 +83,6 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      * @var Result
      */
     protected $result;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, AbstractProcessPack::class);
-    }
 
     /**
      * Calls the specified input filters/validators
@@ -656,10 +650,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->xmlStructureInput = $container->get(XmlStructureInputFactory::class);
         $this->busRegInput = $container->get(BusRegistrationInputFactory::class);

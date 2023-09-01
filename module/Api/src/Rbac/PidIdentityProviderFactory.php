@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Rbac;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -11,17 +10,6 @@ use Interop\Container\ContainerInterface;
  */
 class PidIdentityProviderFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): PidIdentityProvider
-    {
-        return $this->__invoke($serviceLocator, PidIdentityProvider::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

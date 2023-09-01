@@ -5,9 +5,9 @@ namespace Dvsa\OlcsTest\Api\Service\Document;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service\Document\PrintLetter;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\Document\PrintLetter
@@ -24,7 +24,7 @@ class PrintLetterTest extends MockeryTestCase
     private $mockLicE;
     /** @var  m\MockInterface */
     private $mockOrgE;
-    /** @var  m\MockInterface | ServiceLocatorInterface */
+    /** @var  m\MockInterface | ContainerInterface */
     private $mockSm;
     /** @var  m\MockInterface */
     private $mockRepoSm;
@@ -43,7 +43,7 @@ class PrintLetterTest extends MockeryTestCase
 
         $this->mockRepoSm = m::mock(\Dvsa\Olcs\Api\Domain\RepositoryServiceManager::class);
 
-        $this->mockSm = m::mock(ServiceLocatorInterface::class);
+        $this->mockSm = m::mock(ContainerInterface::class);
         $this->mockSm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->mockRepoSm);
     }
 
@@ -108,7 +108,7 @@ class PrintLetterTest extends MockeryTestCase
 
         $this->mockRepoSm->shouldReceive('get')->with('DocTemplate')->andReturn($mockDocTemplateRepo);
 
-        $this->sut->createService($this->mockSm);
+        $this->sut->__invoke($this->mockSm, PrintLetter::class);
 
         static::assertTrue($this->sut->canEmail($this->mockDocE, $forceEmailCorrespondence));
     }

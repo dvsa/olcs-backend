@@ -52,35 +52,6 @@ class EntityAccessLoggerFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(EntityAccessLogger::class, $product);
     }
 
-    /**
-     * @test
-     * @deprecated
-     */
-    public function createService_IsCallable()
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Assert
-        $this->assertIsCallable([$this->sut, 'createService']);
-    }
-
-    /**
-     * @test
-     * @deprecated
-     */
-    public function createService_ReturnsInstanceOfFactoryProduct()
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Execute
-        $product = $this->sut->createService($this->serviceManager);
-
-        // Assert
-        $this->assertInstanceOf(EntityAccessLogger::class, $product);
-    }
-
     protected function setUp(): void
     {
         $this->setUpServiceManager();

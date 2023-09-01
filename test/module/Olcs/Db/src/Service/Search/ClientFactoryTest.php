@@ -2,6 +2,7 @@
 
 namespace OlcsTest\Db\Service\Search;
 
+use Elastica\Client;
 use Olcs\Db\Service\Search\ClientFactory;
 use Mockery as m;
 
@@ -19,9 +20,9 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
         );
 
         $sut = new ClientFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, Client::class);
 
-        $this->assertInstanceOf('Elastica\Client', $service);
+        $this->assertInstanceOf(Client::class, $service);
     }
 
     public function testCreateServiceWithException()
@@ -32,7 +33,7 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
         $sut = new ClientFactory();
         $passed = false;
         try {
-            $service = $sut->createService($mockSl);
+            $service = $sut->__invoke($mockSl, Client::class);
         } catch (\Laminas\ServiceManager\Exception\RuntimeException $e) {
             if ($e->getMessage() === 'Elastic search config not found') {
                 $passed = true;

@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Psr\Container\ContainerExceptionInterface;
@@ -25,20 +24,6 @@ class Review extends AbstractQueryHandler
      * @var Generator
      */
     protected $reviewSnapshotService;
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return Review
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Review::class);
-    }
 
     public function handleQuery(QueryInterface $query)
     {
@@ -62,9 +47,6 @@ class Review extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
         $this->reviewSnapshotService = $container->get('ReviewSnapshot');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

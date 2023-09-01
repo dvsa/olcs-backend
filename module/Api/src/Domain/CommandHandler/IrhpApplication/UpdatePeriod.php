@@ -2,7 +2,6 @@
 /**
  * Update Period selection (create irhp permit application for selected stock period)
  */
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication\CreateForIrhpApplication;
@@ -17,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class UpdatePeriod extends AbstractCommandHandler implements TransactionedInterface
 {
@@ -27,18 +25,6 @@ class UpdatePeriod extends AbstractCommandHandler implements TransactionedInterf
 
     /** @var ApplicationAnswersClearer */
     private $applicationAnswersClearer;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdatePeriod::class);
-    }
 
     /**
      * Handle command
@@ -104,10 +90,7 @@ class UpdatePeriod extends AbstractCommandHandler implements TransactionedInterf
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->applicationAnswersClearer = $container->get('QaApplicationAnswersClearer');
         return parent::__invoke($fullContainer, $requestedName, $options);

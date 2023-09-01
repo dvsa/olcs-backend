@@ -11,8 +11,6 @@ use Exception;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use RuntimeException;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Preview template source
@@ -28,19 +26,6 @@ class PreviewTemplateSource extends AbstractQueryHandler
 
     /** @var StrategySelectingViewRenderer */
     private $strategySelectingViewRenderer;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, PreviewTemplateSource::class);
-    }
 
     /**
      * Handle query
@@ -90,9 +75,6 @@ class PreviewTemplateSource extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->twigRenderer = $container->get('TemplateTwigRenderer');
         $this->strategySelectingViewRenderer = $container->get('TemplateStrategySelectingViewRenderer');

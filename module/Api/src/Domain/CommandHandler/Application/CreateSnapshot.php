@@ -16,8 +16,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
 
 /**
@@ -39,16 +37,6 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
     const CODE_PSV_VAR_NO_UPGRADE = 'PSV431';
 
     protected $repoServiceName = 'Application';
-
-    /**
-     * @var Generator
-     */
-    protected $reviewSnapshotService;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, CreateSnapshot::class);
-    }
 
     public function handleCommand(CommandInterface $command)
     {
@@ -171,10 +159,7 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->reviewSnapshotService = $container->get('ReviewSnapshot');
         return parent::__invoke($fullContainer, $requestedName, $options);

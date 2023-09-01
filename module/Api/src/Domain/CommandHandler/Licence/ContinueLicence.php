@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence\ContinueLicenceTest
@@ -37,18 +36,6 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
      * @var FinancialStandingHelperService
      */
     private $financialStandingHelper;
-
-    /**
-     * Factory
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, ContinueLicence::class);
-    }
 
     /**
      * Handle command
@@ -335,10 +322,7 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->financialStandingHelper = $container->get('FinancialStandingHelperService');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

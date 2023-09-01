@@ -7,8 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\GovUkAccount;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Service\GovUkAccount\GovUkAccountService;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ProcessAuthResponseFactory implements FactoryInterface
 {
@@ -22,17 +21,8 @@ class ProcessAuthResponseFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransactioningCommandHandler
     {
-        $sl = $container->getServiceLocator();
-        $govUkAccountService = $sl->get(GovUkAccountService::class);
+        $govUkAccountService = $container->get(GovUkAccountService::class);
 
-        return (new ProcessAuthResponse($govUkAccountService))->createService($container);
-    }
-
-    /**
-     * @deprecated Remove once Laminas v3 upgrade is complete
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): TransactioningCommandHandler
-    {
-        return $this($serviceLocator, ProcessAuthResponse::class);
+        return (new ProcessAuthResponse($govUkAccountService))->__invoke($container, $requestedName, $options);
     }
 }

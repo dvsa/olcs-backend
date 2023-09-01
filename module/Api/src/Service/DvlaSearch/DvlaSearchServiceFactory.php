@@ -8,8 +8,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleRetry\GuzzleRetryMiddleware;
 use Olcs\Logging\Log\LaminasLogPsr3Adapter;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class DvlaSearchServiceFactory implements FactoryInterface
@@ -18,11 +17,6 @@ class DvlaSearchServiceFactory implements FactoryInterface
      * @var array<mixed>
      */
     protected $options;
-
-    public function createService(ServiceLocatorInterface $serviceLocator): DvlaSearchService
-    {
-        return $this->__invoke($serviceLocator, DvlaSearchService::class);
-    }
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): DvlaSearchService
     {

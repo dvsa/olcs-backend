@@ -44,39 +44,6 @@ class ChangeExpiredPasswordFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     */
-    public function createService_IsCallable(): void
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Assert
-        $this->assertIsCallable([$this->sut, 'createService']);
-    }
-
-    /**
-     * @test
-     * @depends createService_IsCallable
-     * @depends __invoke_IsCallable
-     */
-    public function createService_CallsInvoke(): void
-    {
-        // Setup
-        $this->sut = m::mock(ChangeExpiredPasswordFactory::class)->makePartial();
-
-        // Expectations
-        $this->sut->expects('__invoke')->withArgs(function ($serviceManager, $requestedName) {
-            $this->assertSame($this->serviceManager(), $serviceManager, 'Expected first argument to be the ServiceManager passed to createService');
-            $this->assertSame(ChangeExpiredPassword::class, $requestedName, 'Expected requestedName to be ' . ChangeExpiredPassword::class);
-            return true;
-        });
-
-        // Execute
-        $this->sut->createService($this->serviceManager());
-    }
-
-    /**
-     * @test
      * @depends __invoke_IsCallable
      */
     public function __invoke_ReturnsAnInstanceOfChangeExpiredPasswordCommandHandler(): void

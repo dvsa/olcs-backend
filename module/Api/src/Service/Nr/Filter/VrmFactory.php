@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Transfer\Filter\Vrm as TransferVrmFilter;
 use Interop\Container\ContainerInterface;
 
@@ -13,17 +12,6 @@ use Interop\Container\ContainerInterface;
  */
 class VrmFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Vrm
-    {
-        return $this->__invoke($serviceLocator, Vrm::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

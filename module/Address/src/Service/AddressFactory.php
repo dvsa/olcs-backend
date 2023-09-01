@@ -8,8 +8,7 @@
 namespace Dvsa\Olcs\Address\Service;
 
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -19,10 +18,6 @@ use Interop\Container\ContainerInterface;
  */
 class AddressFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, Address::class);
-    }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $config = $container->get('Config');

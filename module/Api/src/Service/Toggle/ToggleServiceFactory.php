@@ -4,29 +4,13 @@ namespace Dvsa\Olcs\Api\Service\Toggle;
 
 use Dvsa\Olcs\Api\Domain\Repository\FeatureToggle as FeatureToggleRepo;
 use Dvsa\Olcs\Api\Domain\Query\FeatureToggle\FetchList;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Qandidate\Toggle\Serializer\InMemoryCollectionSerializer;
 use Qandidate\Toggle\ToggleManager;
 use Interop\Container\ContainerInterface;
 
-/**
- * Class ToggleServiceFactory
- */
 class ToggleServiceFactory implements FactoryInterface
 {
-    /**
-     * Create the toggle service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return ToggleService
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): ToggleService
-    {
-        return $this->__invoke($serviceLocator, ToggleService::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

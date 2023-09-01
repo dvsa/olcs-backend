@@ -134,11 +134,8 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         }
 
         $this->commandHandler = m::mock(CommandHandlerManager::class);
-        $this->commandHandler
-            ->shouldReceive('getServiceLocator')
-            ->andReturn($sm);
 
-        $this->sut->createService($this->commandHandler);
+        $this->sut->__invoke($this->commandHandler, null);
 
         $this->sideEffects = [];
         $this->commands = [];

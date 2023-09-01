@@ -17,7 +17,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update countries
@@ -30,18 +29,6 @@ class UpdateCountries extends AbstractCommandHandler implements TransactionedInt
 
     /** @var ApplicationAnswersClearer */
     private $applicationAnswersClearer;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateCountries::class);
-    }
 
     /**
      * Handle command
@@ -143,10 +130,7 @@ class UpdateCountries extends AbstractCommandHandler implements TransactionedInt
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->applicationAnswersClearer = $container->get('QaApplicationAnswersClearer');
         return parent::__invoke($fullContainer, $requestedName, $options);

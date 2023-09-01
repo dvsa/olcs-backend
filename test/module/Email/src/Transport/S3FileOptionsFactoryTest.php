@@ -28,7 +28,7 @@ class S3FileOptionsFactoryTest extends MockeryTestCase
         $this->sut = new S3FileOptionsFactory();
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
         // Params
         $config = [
@@ -65,7 +65,7 @@ class S3FileOptionsFactoryTest extends MockeryTestCase
             'credentials' => $provider
         ]));
 
-        $s3Options = $this->sut->createService($this->sm);
+        $s3Options = $this->sut->__invoke($this->sm, S3FileOptions::class);
         $this->assertInstanceOf(S3FileOptions::class, $s3Options);
     }
 }

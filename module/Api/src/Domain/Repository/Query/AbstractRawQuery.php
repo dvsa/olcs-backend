@@ -12,8 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Interop\Container\ContainerInterface;
@@ -79,18 +78,6 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
      * @var IdentityProviderInterface
      */
     protected $identityProvider;
-
-    /**
-     * Inject the DB connection object
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, AbstractRawQuery::class);
-    }
 
     /**
      * Execute the query
@@ -258,12 +245,11 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $sm = $container->getServiceLocator();
-        $this->em = $sm->get('doctrine.entitymanager.orm_default');
+        $this->em = $container->get('doctrine.entitymanager.orm_default');
         $this->connection = $this->em->getConnection();
-        $this->identityProvider = $sm->get(IdentityProviderInterface::class);
-        $this->setAuthService($sm->get(AuthorizationService::class));
-        $this->setUserRepository($sm->get('RepositoryServiceManager')->get('User'));
+        $this->identityProvider = $container->get(IdentityProviderInterface::class);
+        $this->setAuthService($container->get(AuthorizationService::class));
+        $this->setUserRepository($container->get('RepositoryServiceManager')->get('User'));
         return $this;
     }
 }

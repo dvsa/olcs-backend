@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class EcmtCheckEcmtNeededFormControlStrategyFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return BaseFormControlStrategy
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): BaseFormControlStrategy
-    {
-        return $this->__invoke($serviceLocator, BaseFormControlStrategy::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -30,14 +17,13 @@ class EcmtCheckEcmtNeededFormControlStrategyFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): BaseFormControlStrategy
     {
-        $mainServiceLocator = $container->getServiceLocator();
         return new BaseFormControlStrategy(
             'ecmt_check_ecmt_needed',
-            $mainServiceLocator->get('QaCheckboxElementGenerator'),
-            $mainServiceLocator->get('QaGenericAnswerSaver'),
-            $mainServiceLocator->get('QaGenericAnswerClearer'),
-            $mainServiceLocator->get('QaQuestionTextGenerator'),
-            $mainServiceLocator->get('QaCheckboxAnswerSummaryProvider')
+            $container->get('QaCheckboxElementGenerator'),
+            $container->get('QaGenericAnswerSaver'),
+            $container->get('QaGenericAnswerClearer'),
+            $container->get('QaQuestionTextGenerator'),
+            $container->get('QaCheckboxAnswerSummaryProvider')
         );
     }
 }

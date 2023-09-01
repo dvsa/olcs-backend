@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Diagnostics;
 
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Domain\QueryHandler\DataRetention\EscapeMysqlIdentifierTrait;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
@@ -12,7 +11,6 @@ use PDO;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use RuntimeException;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
 {
@@ -23,17 +21,6 @@ final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
 
     /** @var PDO */
     private $pdo;
-
-    /**
-     * @param ServiceLocatorInterface|QueryHandlerManager $serviceLocator
-     *
-     * @return AbstractQueryHandler
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, GenerateCheckFkIntegritySql::class);
-    }
 
     /**
      * @param QueryInterface $query
@@ -147,9 +134,6 @@ final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
         /** @var EntityManager $entityManager */
         $entityManager = $container->get('DoctrineOrmEntityManager');
         $this->databaseName = $entityManager->getConnection()->getParams()['dbname'];

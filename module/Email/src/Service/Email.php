@@ -7,11 +7,9 @@ use Dvsa\Olcs\Email\Transport\MultiTransport;
 use Dvsa\Olcs\Email\Transport\MultiTransportOptions;
 use Dvsa\Olcs\Email\Transport\S3File;
 use Dvsa\Olcs\Email\Transport\S3FileOptions;
-use Dvsa\Olcs\Email\Transport\S3FileOptionsFactory;
 use Laminas\Mail\Header\GenericHeader;
 use Laminas\Mail\Transport\Factory;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Mail as LaminasMail;
 use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Part as LaminasMimePart;
@@ -60,18 +58,6 @@ class Email implements FactoryInterface
         $this->mailTransport = $mailTransport;
 
         return $this;
-    }
-
-    /**
-     * Setup the factory, with a service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, Email::class);
     }
 
     /**

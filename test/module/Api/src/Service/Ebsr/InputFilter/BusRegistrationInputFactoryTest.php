@@ -12,6 +12,8 @@ use Dvsa\Olcs\Api\Service\Ebsr\Filter\NoticePeriod;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Olcs\XmlTools\Filter\MapXmlFile;
@@ -21,16 +23,9 @@ use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate;
 
-/**
- * Class BusRegistrationInputFactoryTest
- * @package Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter
- */
 class BusRegistrationInputFactoryTest extends TestCase
 {
-    /**
-     * Tests create service
-     */
-    public function testCreateService()
+    public function testInvoke()
     {
         $mockMappings = m::mock(SpecificationInterface::class);
 
@@ -41,7 +36,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockMapFilter = m::mock(MapXmlFile::class);
         $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
@@ -65,10 +60,10 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(EndDate::class)->andReturn($mockValidator);
 
         $sut = new BusRegistrationInputFactory();
-        /** @var \Laminas\InputFilter\Input $service */
-        $service = $sut->createService($mockSl);
+        /** @var Input $service */
+        $service = $sut->__invoke($mockSl, Input::class);
 
-        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
+        $this->assertInstanceOf(Input::class, $service);
         $this->assertCount(9, $service->getFilterChain());
         $this->assertCount(5, $service->getValidatorChain());
 
@@ -84,7 +79,7 @@ class BusRegistrationInputFactoryTest extends TestCase
     /**
      * Tests create service with disabled validators
      */
-    public function testCreateServiceDisabledValidators()
+    public function testInvokeDisabledValidators()
     {
         $config = [
             'ebsr' => [
@@ -100,7 +95,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockMapFilter = m::mock(MapXmlFile::class);
         $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
 
@@ -117,10 +112,10 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(MiscSnJustification::class)->andReturn($mockFilter);
 
         $sut = new BusRegistrationInputFactory();
-        /** @var \Laminas\InputFilter\Input $service */
-        $service = $sut->createService($mockSl);
+        /** @var Input $service */
+        $service = $sut->__invoke($mockSl, Input::class);
 
-        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
+        $this->assertInstanceOf(Input::class, $service);
         $this->assertCount(9, $service->getFilterChain());
         $this->assertCount(0, $service->getValidatorChain());
     }

@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -15,7 +16,7 @@ class SectionGeneratorPluginManagerFactoryTest extends MockeryTestCase
     public function testCanCreateServiceWithName()
     {
         /** @var  \Laminas\ServiceManager\ServiceLocatorInterface $mockSl */
-        $mockSl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)
+        $mockSl = m::mock(ContainerInterface::class)
             ->shouldReceive('get')
             ->with('Config')
             ->andReturn(
@@ -27,7 +28,7 @@ class SectionGeneratorPluginManagerFactoryTest extends MockeryTestCase
             )
             ->getMock();
 
-        $actual = (new SectionGeneratorPluginManagerFactory())->createService($mockSl);
+        $actual = (new SectionGeneratorPluginManagerFactory())->__invoke($mockSl, SectionGeneratorPluginManager::class);
 
         static::assertInstanceOf(SectionGeneratorPluginManager::class, $actual);
     }

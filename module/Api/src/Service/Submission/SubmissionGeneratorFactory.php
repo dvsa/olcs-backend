@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager as SectionGeneratorPluginManager;
 use Interop\Container\ContainerInterface;
 
@@ -13,17 +12,6 @@ use Interop\Container\ContainerInterface;
  */
 class SubmissionGeneratorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): SubmissionGenerator
-    {
-        return $this->__invoke($serviceLocator, SubmissionGenerator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

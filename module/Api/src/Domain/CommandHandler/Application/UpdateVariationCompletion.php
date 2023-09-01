@@ -14,7 +14,6 @@ use Laminas\Filter\Word\CamelCaseToUnderscore;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
@@ -127,11 +126,6 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
      * @var FinancialStandingHelperService
      */
     private $financialStandingHelper;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateVariationCompletion::class);
-    }
 
     /**
      * Handle command
@@ -986,10 +980,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
         $this->variationHelper = $container->get('VariationOperatingCentreHelper');

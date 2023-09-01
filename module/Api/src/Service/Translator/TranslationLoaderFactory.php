@@ -4,8 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Translator;
 
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * TranslationLoaderFactory for API nodes
@@ -14,18 +13,6 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class TranslationLoaderFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return TranslationLoader
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): TranslationLoader
-    {
-        return $this($serviceLocator, TranslationLoader::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -36,11 +23,10 @@ class TranslationLoaderFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TranslationLoader
     {
-        $parentLocator = $container->getServiceLocator();
-        $repoServiceManager = $parentLocator->get('RepositoryServiceManager');
+        $repoServiceManager = $container->get('RepositoryServiceManager');
 
         return new TranslationLoader(
-            $parentLocator->get(CacheEncryption::class),
+            $container->get(CacheEncryption::class),
             $repoServiceManager->get('TranslationKeyText'),
             $repoServiceManager->get('Replacement')
         );

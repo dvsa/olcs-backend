@@ -12,7 +12,6 @@ use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Query\CompaniesHouse\ByNumber as Qry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -24,18 +23,6 @@ class ByNumber extends AbstractQueryHandler
      * @var CompaniesHouseClient
      */
     protected $companiesHouseApi;
-
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return AbstractQueryHandler
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, ByNumber::class);
-    }
 
     /**
      * @param QueryInterface $query
@@ -84,9 +71,6 @@ class ByNumber extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->companiesHouseApi = $container->get(CompaniesHouseClient::class);
         return parent::__invoke($fullContainer, $requestedName, $options);

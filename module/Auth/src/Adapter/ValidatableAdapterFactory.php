@@ -5,8 +5,7 @@ namespace Dvsa\Olcs\Auth\Adapter;
 
 use Interop\Container\ContainerInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ValidatableAdapterFactory implements FactoryInterface
 {
@@ -45,17 +44,6 @@ class ValidatableAdapterFactory implements FactoryInterface
 
         return $adapter;
     }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @deprecated Can be removed following Laminas v3 upgrade
-     * @return ValidatableAdapterInterface
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): ValidatableAdapterInterface
-    {
-        return $this->__invoke($serviceLocator, null);
-    }
-
 
     /**
      * Returns the configuration from the default adapter

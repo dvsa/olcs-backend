@@ -8,8 +8,7 @@ use Laminas\Log\Logger;
 use League\Flysystem\Filesystem;
 use League\Flysystem\WebDAV\WebDAVAdapter;
 use RuntimeException;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as HttpClient;
 use Sabre\DAV\Client as SabreClient;
 use LmcRbacMvc\Service\AuthorizationService;
@@ -28,14 +27,14 @@ class ClientFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator Service manager
+     * @param ContainerInterface $container
      *
      * @return HttpClient
      * @throws \RuntimeException
      */
-    public function getHttpClient(ServiceLocatorInterface $serviceLocator): HttpClient
+    public function getHttpClient(ContainerInterface $container): HttpClient
     {
-        $options = $this->getOptions($serviceLocator, 'http');
+        $options = $this->getOptions($container, 'http');
         $httpClient = new HttpClient();
         $httpClient->setOptions($options);
 
@@ -49,16 +48,16 @@ class ClientFactory implements FactoryInterface
     /**
      * Gets options from configuration based on name.
      *
-     * @param ServiceLocatorInterface $sl Service Manager
+     * @param ContainerInterface $container Service Manager
      * @param string $key Key
      *
      * @return array
      * @throws \RuntimeException
      */
-    public function getOptions(ServiceLocatorInterface $sl, $key)
+    public function getOptions(ContainerInterface $container, $key)
     {
         if (is_null($this->options)) {
-            $options = $sl->get('Configuration');
+            $options = $container->get('Configuration');
             $this->options = isset($options['document_share']) ? $options['document_share'] : array();
         }
 
@@ -76,25 +75,15 @@ class ClientFactory implements FactoryInterface
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return DocumentStoreInterface
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): DocumentStoreInterface
-    {
-        return $this->__invoke($serviceLocator, DocManClient::class);
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      *
      * @return string
      */
-    private function getClientType(ServiceLocatorInterface $serviceLocator): string
+    private function getClientType(ContainerInterface $container): string
     {
-        $authService = $serviceLocator->get(AuthorizationService::class);
+        $authService = $container->get(AuthorizationService::class);
         /** @var Logger $logger */
-        $logger = $serviceLocator->get('logger');
+        $logger = $container->get('logger');
         /** @var User $currentUser */
         $currentUser = $authService->getIdentity()->getUser();
 

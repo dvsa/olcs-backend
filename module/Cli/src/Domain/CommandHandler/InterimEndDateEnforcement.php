@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Cli\Domain\Command\InterimEndDateEnforcement as InterimEndDateEnforcementCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\Logging\Log\Logger;
 
 final class InterimEndDateEnforcement extends AbstractCommandHandler
@@ -23,20 +22,9 @@ final class InterimEndDateEnforcement extends AbstractCommandHandler
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $this->eventHistoryCreator = $container->get(EventHistoryCreator::class);
 
-        return parent::__invoke($fullContainer, $requestedName, $options);
-    }
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return parent::createService($serviceLocator, null, InterimEndDateEnforcement::class);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

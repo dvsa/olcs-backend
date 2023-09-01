@@ -21,7 +21,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as CreateApplicationCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Reset Application
@@ -38,11 +37,6 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
     private $licenceRepo;
 
     protected $repoServiceName = 'Application';
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, ResetApplication::class);
-    }
 
     public function handleCommand(CommandInterface $command)
     {
@@ -117,10 +111,7 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->licenceRepo = $container->get('RepositoryServiceManager')
             ->get('Licence');
         return parent::__invoke($fullContainer, $requestedName, $options);

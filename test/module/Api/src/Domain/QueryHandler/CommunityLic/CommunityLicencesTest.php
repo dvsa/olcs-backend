@@ -7,10 +7,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\CommunityLic\CommunityLicences as Communit
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\OlcsTest\Api\Domain\CommandHandlerManagerMockBuilder;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicences as Qry;
-use Dvsa\OlcsTest\Api\Domain\QueryHandlerManagerMockBuilder;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Doctrine\ORM\Query;
@@ -163,12 +161,10 @@ class CommunityLicencesTest extends QueryHandlerTestCase
      */
     public function setUpDefaultServices(ServiceManager $serviceManager)
     {
-        $this->setUpQueryHandler($serviceManager);
         $this->repositoryServiceManager();
         $this->licenceRepository();
         $this->communityLicenceRepository();
         $serviceManager->setService(AuthorizationService::class, $this->setUpAuthorizationService());
-        $serviceManager->setService(CommandHandlerManagerMockBuilder::ALIAS, (new CommandHandlerManagerMockBuilder($serviceManager))->build());
     }
 
     /**
@@ -192,16 +188,6 @@ class CommunityLicencesTest extends QueryHandlerTestCase
             $repositoryServiceManager->setService('CommunityLic', $instance);
         }
         return $repositoryServiceManager->get('CommunityLic');
-    }
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-    protected function setUpQueryHandler(ServiceManager $serviceManager)
-    {
-        $queryHandlerBuilder = new QueryHandlerManagerMockBuilder();
-        $queryHandler = $queryHandlerBuilder->build($serviceManager);
-        $queryHandlerBuilder->register($queryHandler);
     }
 
     /**

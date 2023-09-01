@@ -4,12 +4,9 @@ namespace Dvsa\OlcsTest\Api\Service\Nr;
 
 use Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
-use Laminas\Http\Client as RestClient;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
 
 /**
@@ -19,7 +16,7 @@ use Olcs\XmlTools\Xml\XmlNodeBuilder;
  */
 class MsiResponseFactoryTest extends TestCase
 {
-    public function testCreateService()
+    public function testInvoke()
     {
         $config = [
             'nr' => [
@@ -29,24 +26,24 @@ class MsiResponseFactoryTest extends TestCase
             ],
         ];
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
 
         $sut = new MsiResponseFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, MsiResponse::class);
 
         $this->assertInstanceOf(MsiResponse::class, $service);
         $this->assertInstanceOf(XmlNodeBuilder::class, $service->getXmlBuilder());
     }
 
-    public function testCreateServiceMissingConfig()
+    public function testInvokeMissingConfig()
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No config specified for xml ns');
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn([]);
         $sut = new MsiResponseFactory();
-        $sut->createService($mockSl);
+        $sut->__invoke($mockSl, MsiResponse::class);
     }
 }

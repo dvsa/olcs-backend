@@ -8,6 +8,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Query\User\User;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\AssignSubmission;
@@ -21,7 +22,6 @@ use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
@@ -80,7 +80,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
                 ->andReturn($service);
         }
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn(m::mock(TransactionManagerInterface::class));
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
@@ -91,11 +91,8 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         }
 
         $this->commandHandler = m::mock(CommandHandlerManager::class);
-        $this->commandHandler
-            ->shouldReceive('getServiceLocator')
-            ->andReturn($sm);
 
-        $this->sut->createService($this->commandHandler);
+        $this->sut->__invoke($this->commandHandler, AssignSubmission::class);
 
         $this->sideEffects = [];
         $this->commands = [];

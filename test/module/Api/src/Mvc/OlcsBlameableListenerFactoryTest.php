@@ -1,26 +1,20 @@
 <?php
 
-/**
- * OlcsBlameableListenerFactory Test
- */
 namespace Dvsa\OlcsTest\Api\Mvc;
 
 use Dvsa\Olcs\Api\Mvc\OlcsBlameableListener;
 use Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * OlcsBlameableListenerFactory Test
- */
 class OlcsBlameableListenerFactoryTest extends MockeryTestCase
 {
-    public function testCreateService()
+    public function testInvoke()
     {
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $container = m::mock(ContainerInterface::class);
         $sut = new OlcsBlameableListenerFactory();
-        $listener = $sut->createService($mockSl);
+        $listener = $sut->__invoke($container, OlcsBlameableListener::class);
 
         $this->assertInstanceOf(OlcsBlameableListener::class, $listener);
     }

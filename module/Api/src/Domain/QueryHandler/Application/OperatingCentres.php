@@ -20,7 +20,6 @@ use Dvsa\Olcs\Transfer\Query\Application\OperatingCentres as OperatingCentresQue
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -40,19 +39,6 @@ class OperatingCentres extends AbstractQueryHandler
      * @var VariationOperatingCentreHelper
      */
     private $variationHelper;
-
-    /**
-     * Create the service
-     *
-     * @param ServiceLocatorInterface $serviceLocator serviceLocator
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, OperatingCentres::class);
-    }
 
     /**
      * Handle the query
@@ -232,9 +218,6 @@ class OperatingCentres extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
         $this->variationHelper = $container->get('VariationOperatingCentreHelper');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

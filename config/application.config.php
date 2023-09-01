@@ -5,6 +5,8 @@ return array(
         'Dvsa\LaminasConfigCloudParameters',
         'Laminas\Router',
         'Laminas\Cache\Module',
+        'Laminas\Filter\Module',
+        'Laminas\Validator\Module',
         'Laminas\Log',
         'Dvsa\Olcs\Utils',
         'Dvsa\Olcs\Address',
@@ -15,7 +17,6 @@ return array(
         'Dvsa\Olcs\DocumentShare',
         'LmcRbacMvc',
         'Dvsa\Olcs\Transfer',
-
         'Olcs\Logging',
         'DoctrineModule',
         'DoctrineORMModule',

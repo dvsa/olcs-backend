@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\OlcsTest\Api\Service\Stub\AbstractServiceManagerFactoryStub;
 use Dvsa\OlcsTest\Api\Service\Stub\ServiceManagerStub;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -12,10 +13,9 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class AbstractServiceManagerFactoryTest extends MockeryTestCase
 {
-    public function testCreateService()
+    public function testInvoke()
     {
-        /** @var  \Laminas\ServiceManager\ServiceLocatorInterface $mockSl */
-        $mockSl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)
+        $mockSl = m::mock(ContainerInterface::class)
             ->shouldReceive('get')
             ->andReturnUsing(
                 function ($class) {
@@ -30,7 +30,7 @@ class AbstractServiceManagerFactoryTest extends MockeryTestCase
             )
             ->getMock();
 
-        $actual = (new AbstractServiceManagerFactoryStub())->createService($mockSl);
+        $actual = (new AbstractServiceManagerFactoryStub())->__invoke($mockSl, ServiceManagerStub::class);
 
         static::assertInstanceOf(ServiceManagerStub::class, $actual);
     }

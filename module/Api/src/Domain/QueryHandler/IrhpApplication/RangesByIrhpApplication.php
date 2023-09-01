@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Permits\Availability\CandidatePermitsAvailableCountCalculator;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -23,19 +22,6 @@ class RangesByIrhpApplication extends AbstractQueryHandler
 
     /** @var CandidatePermitsAvailableCountCalculator $candidatePermitsAvailableCountCalculator */
     protected $candidatePermitsAvailableCountCalculator;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, RangesByIrhpApplication::class);
-    }
 
     /**
      * @param QueryInterface $query query
@@ -73,9 +59,6 @@ class RangesByIrhpApplication extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->candidatePermitsAvailableCountCalculator = $container->get('PermitsAvailabilityCandidatePermitsAvailableCountCalculator');
         return parent::__invoke($fullContainer, $requestedName, $options);

@@ -4,26 +4,13 @@ namespace Dvsa\Olcs\Api\Controller;
 
 use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\IrhpCandidatePermitsCreator;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Xml Controller Factory
  */
 class XmlControllerFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return IrhpCandidatePermitsCreator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): XmlController
-    {
-        return $this->__invoke($serviceLocator, XmlController::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -36,8 +23,7 @@ class XmlControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): XmlController
     {
-        $sm = $container->getServiceLocator();
-        $commandHandlerManager = $sm->get('CommandHandlerManager');
+        $commandHandlerManager = $container->get('CommandHandlerManager');
 
         return new XmlController(
             $commandHandlerManager

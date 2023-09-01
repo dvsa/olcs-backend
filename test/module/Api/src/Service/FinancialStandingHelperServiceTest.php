@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
+use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -57,14 +58,14 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
             ->shouldReceive('get')->with('Application')->once()->andReturn($this->repoMap['Application'])
             ->getMock();
 
-        $sm = m::mock(ServiceLocatorInterface::class)
+        $sm = m::mock(ContainerInterface::class)
             ->shouldReceive('get')
             ->with('RepositoryServiceManager')
             ->andReturn($mockRepoServiceManager)
             ->getMock();
 
         $sut = new FinancialStandingHelperService();
-        return $sut->createService($sm);
+        return $sut->__invoke($sm, FinancialStandingHelperService::class);
     }
 
     /**

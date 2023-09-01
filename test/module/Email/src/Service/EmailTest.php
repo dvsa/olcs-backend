@@ -1,28 +1,18 @@
 <?php
 
-/**
- * Email Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Email\Service;
 
 use Dvsa\Olcs\Email\Service\Email;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\Mail\Message;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Mail\Transport\TransportInterface;
 use Laminas\Mime\Mime as LaminasMime;
 use Laminas\Mime\Part as LaminasMimePart;
 use Laminas\Mail\AddressList;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 
-/**
- * Email Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class EmailTest extends MockeryTestCase
 {
     /**
@@ -41,10 +31,10 @@ class EmailTest extends MockeryTestCase
 
         $config = [];
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('Config')->andReturn($config);
 
-        $this->sut->createService($sm);
+        $this->sut->__invoke($sm, Email::class);
     }
 
     /**
@@ -56,10 +46,10 @@ class EmailTest extends MockeryTestCase
             'mail' => []
         ];
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('Config')->andReturn($config);
 
-        $service = $this->sut->createService($sm);
+        $service = $this->sut->__invoke($sm, Email::class);
 
         $this->assertSame($this->sut, $service);
 

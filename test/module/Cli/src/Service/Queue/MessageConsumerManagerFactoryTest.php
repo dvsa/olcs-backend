@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
+use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory;
 
@@ -28,7 +29,7 @@ class MessageConsumerManagerFactoryTest extends \PHPUnit\Framework\TestCase
         $this->sm = Bootstrap::getServiceManager();
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
         // Params
         $config = [
@@ -42,10 +43,9 @@ class MessageConsumerManagerFactoryTest extends \PHPUnit\Framework\TestCase
         // Mocks
         $this->sm->setService('Config', $config);
 
-        $mcm = $this->sut->createService($this->sm);
+        $mcm = $this->sut->__invoke($this->sm, MessageConsumerManager::class);
 
-        $this->assertInstanceOf('\Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager', $mcm);
-        $this->assertSame($this->sm, $mcm->getServiceLocator());
+        $this->assertInstanceOf(MessageConsumerManager::class, $mcm);
         $this->assertTrue($mcm->has('foo'));
         $this->assertFalse($mcm->has('bar'));
     }

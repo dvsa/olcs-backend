@@ -558,7 +558,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     public function setUpSut(): void
     {
         $this->sut = new UpdateOperatingCentreHelper();
-        $this->sut->createService($this->serviceManager());
+        $this->sut->__invoke($this->serviceManager(), null);
     }
 
     protected function setUpDefaultServices(): void

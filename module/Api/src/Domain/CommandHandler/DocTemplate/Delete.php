@@ -9,12 +9,10 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\DocTemplate;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 final class Delete extends AbstractCommandHandler implements TransactionedInterface
 {
@@ -26,18 +24,6 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
      * @var ContentStoreFileUploader
      */
     private $fileUploader;
-
-    /**
-     * Creates service (needs instance of file uploader)
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Delete::class);
-    }
 
     /**
      * Deletes a document template and document record and file
@@ -68,10 +54,6 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->fileUploader = $container->get('FileUploader');
         return parent::__invoke($fullContainer, $requestedName, $options);

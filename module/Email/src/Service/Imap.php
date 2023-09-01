@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Email\Service;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Mail\Storage;
 use Laminas\Mail\Exception\RuntimeException as LaminasMailRuntimeException;
 use Interop\Container\ContainerInterface;
@@ -20,17 +19,6 @@ class Imap implements FactoryInterface
     private $connected = false;
 
     private $config;
-
-    /**
-     * Setup the factory, with a service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, Imap::class);
-    }
 
     /**
      * @param array $config

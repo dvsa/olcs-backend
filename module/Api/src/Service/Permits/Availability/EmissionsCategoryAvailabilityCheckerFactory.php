@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class EmissionsCategoryAvailabilityCheckerFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return EmissionsCategoryAvailabilityChecker
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): EmissionsCategoryAvailabilityChecker
-    {
-        return $this->__invoke($serviceLocator, EmissionsCategoryAvailabilityChecker::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class VariationConditionsUndertakingsReviewServiceFactory implements FactoryInterface
 {
@@ -14,17 +13,5 @@ class VariationConditionsUndertakingsReviewServiceFactory implements FactoryInte
             $container->get(AbstractReviewServiceServices::class),
             $container->get('Review\ConditionsUndertakings')
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $services
-     *
-     * @return VariationConditionsUndertakingsReviewService
-     */
-    public function createService(ServiceLocatorInterface $services)
-    {
-        return $this($services, VariationConditionsUndertakingsReviewService::class);
     }
 }

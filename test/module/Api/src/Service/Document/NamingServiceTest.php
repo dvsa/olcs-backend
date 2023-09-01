@@ -42,10 +42,10 @@ class NamingServiceTest extends MockeryTestCase
         $sm->setService('Config', $config);
 
         $this->sut = new NamingService();
-        $this->sut->createService($sm);
+        $this->sut->__invoke($sm, NamingService::class);
     }
 
-    public function testCreateServiceFail()
+    public function testInvokeFail()
     {
         $this->expectException('\RuntimeException');
 
@@ -55,7 +55,7 @@ class NamingServiceTest extends MockeryTestCase
         $sm->setService('Config', $config);
 
         $this->sut = new NamingService();
-        $this->sut->createService($sm);
+        $this->sut->__invoke($sm, NamingService::class);
     }
 
     public function testGenerateName()

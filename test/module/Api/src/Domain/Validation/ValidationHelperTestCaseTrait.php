@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
@@ -45,13 +44,12 @@ trait ValidationHelperTestCaseTrait
         $this->validatorManager = m::mock(ValidatorManager::class)->makePartial();
 
         $sm = m::mock(ServiceManager::class)->makePartial();
-        $sm->shouldReceive('getServiceLocator')->andReturnSelf();
         $sm->setService('RepositoryServiceManager', $this->repoManager);
         $sm->setService(AuthorizationService::class, $this->auth);
         $sm->setService('DomainValidatorManager', $this->validatorManager);
         $sm->setService('config', ['config']);
 
-        $this->sut->createService($sm);
+        $this->sut->__invoke($sm, null);
     }
 
     public function mockRepo($repoName)

@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\ConvertToPdf;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as HttpClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Interop\Container\ContainerInterface;
@@ -13,18 +12,6 @@ use Interop\Container\ContainerInterface;
  */
 class WebServiceClientFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service manager
-     *
-     * @return WebServiceClient
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): WebServiceClient
-    {
-        return $this->__invoke($serviceLocator, WebServiceClient::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

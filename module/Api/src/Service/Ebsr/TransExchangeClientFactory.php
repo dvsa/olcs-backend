@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
 use Laminas\Filter\FilterPluginManager;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Validator\Xsd;
@@ -19,18 +18,6 @@ use Interop\Container\ContainerInterface;
 class TransExchangeClientFactory implements FactoryInterface
 {
     const PUBLISH_XSD = 'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd';
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): TransExchangeClient
-    {
-        return $this->__invoke($serviceLocator, TransExchangeClient::class);
-    }
 
     /**
      * invoke method

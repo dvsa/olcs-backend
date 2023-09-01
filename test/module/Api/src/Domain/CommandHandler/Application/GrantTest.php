@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Transfer\Command\Application\Grant as Cmd;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -373,7 +374,7 @@ class GrantTest extends CommandHandlerTestCase
 
         // Execute test
         $commandHandler = new GrantApplicationCommandHandler();
-        $commandHandler->createService($serviceLocator);
+        $commandHandler->__invoke($serviceLocator, GrantApplicationCommandHandler::class);
         $commandHandler->handleCommand($command);
     }
 
@@ -410,7 +411,7 @@ class GrantTest extends CommandHandlerTestCase
 
         // Execute test
         $commandHandler = new GrantApplicationCommandHandler();
-        $commandHandler->createService($serviceLocator);
+        $commandHandler->__invoke($serviceLocator, GrantApplicationCommandHandler::class);
         $commandHandler->handleCommand($command);
     }
 
@@ -429,12 +430,11 @@ class GrantTest extends CommandHandlerTestCase
         $validationService = $services[static::SERVICE_VALIDATION] ?? $this->newMockValidationService();
         $queryHandler = $services[static::SERVICE_QUERY_HANDLER] ?? $this->getMockBuilder(QueryHandlerInterface::class)
                 ->disableOriginalConstructor()->getMock();
-        $serviceLocator = $this->getMockBuilder(\Laminas\ServiceManager\ServiceLocatorInterface::class)
+        $serviceLocator = $this->getMockBuilder(ContainerInterface::class)
             ->disableOriginalConstructor()
-            ->addMethods(['getServiceLocator', 'handleCommand'])
+            ->addMethods(['handleCommand'])
             ->onlyMethods(['get', 'has'])
             ->getMock();
-        $serviceLocator->expects($this->any())->method('getServiceLocator')->willReturnSelf();
         $serviceLocator->expects($this->any())->method('get')->willReturn($this->returnCallback(function ($class) use (
             $transactionManager,
             $repositoryServiceManager,

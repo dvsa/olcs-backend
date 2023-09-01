@@ -22,7 +22,6 @@ use Hamcrest\Core\AllOf;
 use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
@@ -1252,7 +1251,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $this->sut = new UpdateVariationCompletion();
 
         if ($this->serviceManager()) {
-            $this->sut->createService($this->commandHandlerManager());
+            $this->sut->__invoke($this->commandHandlerManager(), null);
         }
     }
 
@@ -1264,7 +1263,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $sm = $this->serviceManager();
         if (! $sm->has('UpdateOperatingCentreHelper')) {
             $instance = new UpdateOperatingCentreHelper();
-            $instance->createService($sm);
+            $instance->__invoke($sm, null);
             $sm->setService('UpdateOperatingCentreHelper', $instance);
         }
         return $sm->get('UpdateOperatingCentreHelper');
@@ -1298,7 +1297,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $sm = $this->serviceManager();
         if (! $sm->has('VariationOperatingCentreHelper')) {
             $instance = new VariationOperatingCentreHelper();
-            $instance->createService($sm);
+            $instance->__invoke($sm, null);
             $sm->setService('VariationOperatingCentreHelper', $instance);
         }
         return $sm->get('VariationOperatingCentreHelper');

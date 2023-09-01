@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\CpmsV2HelperService;
 use Dvsa\Olcs\Api\Service\CpmsV2HelperServiceException;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -79,8 +80,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     private function createService($api, $feesHelper, $config = [])
     {
-        /** @var \Laminas\ServiceManager\ServiceLocatorInterface | m\MockInterface $sm */
-        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
+        /** @var ContainerInterface | m\MockInterface $sm */
+        $sm = m::mock(ContainerInterface::class);
         $sm
             ->shouldReceive('get')
             ->with(ApiServiceFactory::class)
@@ -96,7 +97,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn($this->identity);
 
         $sut = new CpmsV2HelperService();
-        return $sut->createService($sm);
+        return $sut->__invoke($sm, CpmsV2HelperService::class);
     }
 
     public function testHandleResponse()

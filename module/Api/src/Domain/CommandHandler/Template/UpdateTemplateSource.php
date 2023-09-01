@@ -10,7 +10,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Template\UpdateTemplateSource as UpdateTemplateSourceCmd;
 use Exception;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update template source
@@ -23,11 +22,6 @@ class UpdateTemplateSource extends AbstractCommandHandler
 
     /** @var TwigRenderer */
     private $twigRenderer;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateTemplateSource::class);
-    }
 
     /**
      * Handle command
@@ -67,10 +61,7 @@ class UpdateTemplateSource extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->twigRenderer = $container->get('TemplateTwigRenderer');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

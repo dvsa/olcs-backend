@@ -5,8 +5,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -14,17 +13,6 @@ use Interop\Container\ContainerInterface;
  */
 class WithCaseFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): WithCase
-    {
-        return $this->__invoke($serviceLocator, WithCase::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

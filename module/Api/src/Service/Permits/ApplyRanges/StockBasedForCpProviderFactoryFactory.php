@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\ApplyRanges;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class StockBasedForCpProviderFactoryFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return StockBasedForCpProviderFactory
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): StockBasedForCpProviderFactory
-    {
-        return $this->__invoke($serviceLocator, StockBasedForCpProviderFactory::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

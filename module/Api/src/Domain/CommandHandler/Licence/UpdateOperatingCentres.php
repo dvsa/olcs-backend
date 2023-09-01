@@ -13,7 +13,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use Interop\Container\ContainerInterface;
 
@@ -35,11 +34,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
      * @var UpdateOperatingCentreHelper
      */
     private $updateHelper;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateOperatingCentres::class);
-    }
 
     /**
      * @param Cmd $command
@@ -128,10 +122,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

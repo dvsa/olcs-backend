@@ -11,7 +11,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\ResetToNotYetSubmittedFromCancelled
     as ResetToNotYetSubmittedFromCancelledCmd;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Reset to not yet submitted from cancelled
@@ -24,18 +23,6 @@ class ResetToNotYetSubmittedFromCancelled extends AbstractCommandHandler impleme
 
     /** @var EcmtApplicationFeeCommandCreator */
     private $ecmtApplicationFeeCommandCreator;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, ResetToNotYetSubmittedFromCancelled::class);
-    }
 
     /**
      * Handle command
@@ -69,10 +56,7 @@ class ResetToNotYetSubmittedFromCancelled extends AbstractCommandHandler impleme
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->ecmtApplicationFeeCommandCreator = $container->get('PermitsFeesEcmtApplicationFeeCommandCreator');
         return parent::__invoke($fullContainer, $requestedName, $options);

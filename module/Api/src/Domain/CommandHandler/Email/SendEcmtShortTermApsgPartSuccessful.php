@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
 use Interop\Container\ContainerInterface;
 use Laminas\I18n\Translator\Translator;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Send confirmation of ECMT short term apply/pay/score/get app being part successful
@@ -28,18 +27,6 @@ class SendEcmtShortTermApsgPartSuccessful extends AbstractEcmtShortTermEmailHand
 
     /** @var DaysToPayIssueFeeProvider */
     private $daysToPayIssueFeeProvider;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, SendEcmtShortTermApsgPartSuccessful::class);
-    }
 
     /**
      * Get template variables
@@ -92,14 +79,8 @@ class SendEcmtShortTermApsgPartSuccessful extends AbstractEcmtShortTermEmailHand
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $this->translator = $container->get('translator');
         $this->daysToPayIssueFeeProvider = $container->get('PermitsFeesDaysToPayIssueFeeProvider');
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

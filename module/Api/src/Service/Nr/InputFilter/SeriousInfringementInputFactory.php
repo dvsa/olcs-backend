@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\InputFilter;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates as SiDateFilter;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted;
@@ -16,17 +15,6 @@ use Interop\Container\ContainerInterface;
  */
 class SeriousInfringementInputFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Input
-    {
-        return $this->__invoke($serviceLocator, Input::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

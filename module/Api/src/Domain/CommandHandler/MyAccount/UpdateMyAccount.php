@@ -25,7 +25,6 @@ use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update MyAccount
@@ -50,11 +49,6 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
      * @var ValidatableAdapterInterface|CognitoAdapter
      */
     protected ValidatableAdapterInterface $adapter;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateMyAccount::class);
-    }
 
     /**
      * Handle command
@@ -232,10 +226,7 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->adapter = $container->get(ValidatableAdapterInterface::class);
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

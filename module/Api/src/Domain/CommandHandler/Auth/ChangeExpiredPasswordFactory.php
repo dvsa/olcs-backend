@@ -6,8 +6,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
 use Interop\Container\ContainerInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @see ChangeExpiredPassword
@@ -24,21 +23,8 @@ class ChangeExpiredPasswordFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ChangeExpiredPassword
     {
-        $sl = $container->getServiceLocator();
-        $adapter = $sl->get(ValidatableAdapterInterface::class);
-        $userRepository = $sl->get('RepositoryServiceManager')->get('User');
-        return (new ChangeExpiredPassword($adapter, $userRepository))->createService($container);
-    }
-
-    /**
-     * @deprecated Remove once Laminas v3 upgrade is complete
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return ChangeExpiredPassword
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): ChangeExpiredPassword
-    {
-        return $this($serviceLocator, ChangeExpiredPassword::class);
+        $adapter = $container->get(ValidatableAdapterInterface::class);
+        $userRepository = $container->get('RepositoryServiceManager')->get('User');
+        return (new ChangeExpiredPassword($adapter, $userRepository))->__invoke($container, $requestedName, $options);
     }
 }

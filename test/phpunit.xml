@@ -18,7 +18,6 @@
       <file>../module/GdsVerify/src/Module.php</file>
       <file>../module/Queue/src/Module.php</file>
       <file>../module/**/src/Module.php</file>
-      <directory>../module/GdsVerify/config</directory>
       <directory>../module/Email/config</directory>
       <directory>../module/Cli/config</directory>
       <directory>../module/AwsSdk/config</directory>
@@ -73,9 +72,6 @@
     </testsuite>
     <testsuite name="OLD Scanning">
       <directory>./module/Scanning</directory>
-    </testsuite>
-    <testsuite name="GdsVerify">
-      <directory>./module/GdsVerify</directory>
     </testsuite>
     <testsuite name="AwsSDK">
       <directory>./module/AwsSdk</directory>

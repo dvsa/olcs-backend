@@ -6,8 +6,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
 use Interop\Container\ContainerInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @see RefreshTokens
@@ -24,21 +23,8 @@ class RefreshTokensFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): RefreshTokens
     {
-        $sl = $container->getServiceLocator();
-        $adapter = $sl->get(ValidatableAdapterInterface::class);
+        $adapter = $container->get(ValidatableAdapterInterface::class);
         $instance = new RefreshTokens($adapter);
-        return $instance->createService($container);
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return RefreshTokens
-     *@deprecated Remove once Laminas v3 upgrade is complete
-     *
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): RefreshTokens
-    {
-        return $this($serviceLocator, RefreshTokens::class);
+        return $instance->__invoke($container, $requestedName, $options);
     }
 }

@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\InputFilter;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
@@ -18,19 +17,6 @@ class XmlStructureInputFactory implements FactoryInterface
     const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';
     const XML_VALID_EXCLUDE_MSG = 'No config specified for xml messages to exclude';
     const XML_NS_MSG = 'No config specified for xml ns';
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return Input
-     * @throws \RuntimeException
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Input
-    {
-        return $this->__invoke($serviceLocator, Input::class);
-    }
 
     /**
      * invoke method

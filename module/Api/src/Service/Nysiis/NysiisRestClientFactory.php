@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nysiis;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as RestClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Interop\Container\ContainerInterface;
@@ -14,19 +13,6 @@ use Interop\Container\ContainerInterface;
  */
 class NysiisRestClientFactory implements FactoryInterface
 {
-    /**
-     * Create service.
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return NysiisRestClient
-     * @throws \RuntimeException
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): NysiisRestClient
-    {
-        return $this->__invoke($serviceLocator, NysiisRestClient::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Email\Service;
 
+use Dvsa\Olcs\Email\Service\TemplateRenderer;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Service\Template\StrategySelectingViewRenderer;
@@ -21,12 +23,12 @@ class TemplateRendererFactoryTest extends MockeryTestCase
         $this->sut = new TemplateRendererFactory();
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
         $mockViewRenderer = m::mock(StrategySelectingViewRenderer::class);
-        $sl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
+        $sl = m::mock(ContainerInterface::class);
         $sl->shouldReceive('get')->with('TemplateStrategySelectingViewRenderer')->once()->andReturn($mockViewRenderer);
-        $service = $this->sut->createService($sl);
+        $service = $this->sut->__invoke($sl, TemplateRenderer::class);
 
         $this->assertSame($mockViewRenderer, $service->getViewRenderer());
     }
