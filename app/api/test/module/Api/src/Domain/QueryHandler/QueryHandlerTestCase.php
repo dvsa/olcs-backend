@@ -15,10 +15,9 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Transfer\Query\Cache\ById as CacheByIdQry;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
@@ -52,7 +51,7 @@ class QueryHandlerTestCase extends MockeryTestCase
     protected $commandHandler;
 
     /**
-     * @var m\MockInterface|ServiceLocatorInterface
+     * @var m\MockInterface|RepositoryServiceManager
      */
     protected $repoManager;
 
@@ -95,7 +94,7 @@ class QueryHandlerTestCase extends MockeryTestCase
                 ->andReturn($service);
         }
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
 
@@ -127,15 +126,12 @@ class QueryHandlerTestCase extends MockeryTestCase
         }
 
         $this->queryHandler = m::mock(QueryHandlerManager::class);
-        $this->queryHandler
-            ->shouldReceive('getServiceLocator')
-            ->andReturn($sm);
 
         $this->initReferences();
 
         $this->commands = [];
 
-        $this->sut = $this->sut->createService($this->queryHandler);
+        $this->sut = $this->sut->__invoke($this->queryHandler, null);
     }
 
     protected function initReferences()
@@ -347,14 +343,14 @@ class QueryHandlerTestCase extends MockeryTestCase
      * Initializes a query handler.
      *
      * @param QueryHandlerInterface $queryHandler
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $serviceLocator
      * @return QueryHandlerInterface
      */
-    protected function initializeQueryHandler(QueryHandlerInterface $queryHandler, ServiceLocatorInterface $serviceLocator): QueryHandlerInterface
+    protected function initializeQueryHandler(QueryHandlerInterface $queryHandler, ContainerInterface $serviceLocator): QueryHandlerInterface
     {
         $queryHandlerManager = $serviceLocator->get(QueryHandlerManager::class);
         assert($queryHandlerManager instanceof QueryHandlerManager, 'Expected instance of QueryHandlerManager');
-        $queryHandler->createService($queryHandlerManager);
+        $queryHandler->__invoke($queryHandlerManager, null);
         return $queryHandler;
     }
 }

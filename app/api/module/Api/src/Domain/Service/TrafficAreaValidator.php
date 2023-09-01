@@ -13,7 +13,7 @@ use Interop\Container\ContainerInterface;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class TrafficAreaValidator implements \Laminas\ServiceManager\FactoryInterface
+class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
     const ERR_TA_GOODS = 'ERR_TA_GOODS';   // Operator already has Goods licence/application in same Traffic Area
     const ERR_TA_PSV = 'ERR_TA_PSV';       // Operator already has PSV licence/application in same Traffic Area
@@ -32,11 +32,6 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\FactoryInterface
      * @var AdminAreaTrafficArea
      */
     protected $adminAreaTrafficAreaRepo;
-
-    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, TrafficAreaValidator::class);
-    }
 
     /**
      * Validate traffic area based on postcode

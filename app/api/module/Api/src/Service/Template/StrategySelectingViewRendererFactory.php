@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Template;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -13,18 +12,6 @@ use Interop\Container\ContainerInterface;
  */
 class StrategySelectingViewRendererFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return StrategySelectingViewRenderer
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): StrategySelectingViewRenderer
-    {
-        return $this->__invoke($serviceLocator, StrategySelectingViewRenderer::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

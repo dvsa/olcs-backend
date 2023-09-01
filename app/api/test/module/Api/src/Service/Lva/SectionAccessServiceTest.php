@@ -48,7 +48,7 @@ class SectionAccessServiceTest extends MockeryTestCase
         $this->serviceLocator->setService(AuthorizationService::class, $this->authService);
 
         $sut = new SectionAccessService();
-        $this->sut = $sut->createService($this->serviceLocator);
+        $this->sut = $sut->__invoke($this->serviceLocator,SectionAccessService::class);
 
         $sections = [
             'no_restriction' => [],

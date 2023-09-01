@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\InputFilter;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason;
@@ -15,18 +14,6 @@ use Interop\Container\ContainerInterface;
  */
 class ShortNoticeInputFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return Input
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Input
-    {
-        return $this->__invoke($serviceLocator, Input::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Overpayment Fee
@@ -34,11 +33,6 @@ final class CreateOverpaymentFee extends AbstractCommandHandler implements
     protected $feesHelper;
 
     protected $repoServiceName = 'FeeType';
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, CreateOverpaymentFee::class);
-    }
 
     /**
      * Given a payment amount and an array of fees, will create an overpayment
@@ -89,10 +83,7 @@ final class CreateOverpaymentFee extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->feesHelper = $container->get('FeesHelperService');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

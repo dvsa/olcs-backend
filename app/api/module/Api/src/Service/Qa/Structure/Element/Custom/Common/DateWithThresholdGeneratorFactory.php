@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class DateWithThresholdGeneratorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return DateWithThresholdGenerator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): DateWithThresholdGenerator
-    {
-        return $this->__invoke($serviceLocator, DateWithThresholdGenerator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

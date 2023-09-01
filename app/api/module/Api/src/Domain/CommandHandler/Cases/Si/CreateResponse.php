@@ -4,9 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
@@ -43,18 +41,6 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
      * @var MsiResponseService
      */
     protected $msiResponseService;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, CreateResponse::class);
-    }
 
     /**
      * Create the erru response
@@ -130,10 +116,7 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->msiResponseService = $container->get(MsiResponseService::class);
         return parent::__invoke($fullContainer, $requestedName, $options);

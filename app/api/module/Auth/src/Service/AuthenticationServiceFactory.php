@@ -5,8 +5,7 @@ namespace Dvsa\Olcs\Auth\Service;
 
 use Interop\Container\ContainerInterface;
 use Laminas\Authentication\Storage\NonPersistent;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Class AuthenticationServiceFactory
@@ -25,14 +24,5 @@ class AuthenticationServiceFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AuthenticationService
     {
         return new AuthenticationService(new NonPersistent());
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): AuthenticationService
-    {
-        return $this->__invoke($serviceLocator, null);
     }
 }

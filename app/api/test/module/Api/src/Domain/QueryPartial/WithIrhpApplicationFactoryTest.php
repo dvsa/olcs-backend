@@ -29,7 +29,7 @@ class WithIrhpApplicationFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
         $this->setUpSut();
 
         // Result
-        $result = $this->sut->createService($this->serviceManager);
+        $result = $this->sut->__invoke($this->serviceManager, null);
 
         // Assert
         $this->assertInstanceOf(WithIrhpApplication::class, $result);

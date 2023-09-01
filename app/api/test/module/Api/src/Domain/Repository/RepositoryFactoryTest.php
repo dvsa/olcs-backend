@@ -33,7 +33,7 @@ class RepositoryFactoryTest extends MockeryTestCase
         $this->sut = new RepositoryFactory();
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
         /** @var RepositoryServiceManager $sm */
         $sm = m::mock(RepositoryServiceManager::class)->makePartial();
@@ -50,7 +50,7 @@ class RepositoryFactoryTest extends MockeryTestCase
         $name = 'Application';
         $requestedName = 'Application';
 
-        $service = $this->sut->createService($sm, $name, $requestedName);
+        $service = $this->sut->__invoke($sm, $name, $requestedName);
 
         $this->assertInstanceOf(Application::class, $service);
     }

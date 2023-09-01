@@ -14,7 +14,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Doctrine\ORM\Query;
 use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Generate Licence Number
@@ -26,11 +25,6 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
     protected $licNoGenRepo;
 
     protected $repoServiceName = 'Application';
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, GenerateLicenceNumber::class);
-    }
 
     public function handleCommand(CommandInterface $command)
     {
@@ -92,10 +86,7 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->licNoGenRepo = $container->get('RepositoryServiceManager')
             ->get('LicenceNoGen');
         return parent::__invoke($fullContainer, $requestedName, $options);

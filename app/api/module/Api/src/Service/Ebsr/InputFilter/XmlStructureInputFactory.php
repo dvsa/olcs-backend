@@ -6,8 +6,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Filter\ParseXml;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
@@ -23,19 +22,6 @@ class XmlStructureInputFactory implements FactoryInterface
     const SCHEMA_VERSION_MSG = 'No config specified for transxchange schema version';
     const XML_VALID_EXCLUDE_MSG = 'No config specified for xml messages to exclude';
     const XSD_PATH = 'http://www.transxchange.org.uk/schema/%s/TransXChange_registration.xsd';
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return Input
-     * @throws \RuntimeException
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Input
-    {
-        return $this->__invoke($serviceLocator, Input::class);
-    }
 
     /**
      * invoke method
@@ -69,7 +55,6 @@ class XmlStructureInputFactory implements FactoryInterface
                 throw new \RuntimeException(self::XML_VALID_EXCLUDE_MSG);
             }
 
-            /** @var ServiceLocatorInterface $validatorManager */
             $validatorManager = $container->get('ValidatorManager');
 
             /** @var Xsd $xsdValidator */

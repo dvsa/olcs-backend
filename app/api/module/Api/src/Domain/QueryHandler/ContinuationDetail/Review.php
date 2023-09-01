@@ -2,11 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\ContinuationDetail;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Generator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -24,19 +22,6 @@ class Review extends AbstractQueryHandler
      * @var Generator
      */
     protected $continuationReviewService;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Review::class);
-    }
 
     /**
      * Handle query
@@ -67,9 +52,6 @@ class Review extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
         $this->continuationReviewService = $container->get('ContinuationReview');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

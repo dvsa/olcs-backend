@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class TranslateableTextGeneratorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return TranslateableTextGenerator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): TranslateableTextGenerator
-    {
-        return $this->__invoke($serviceLocator, TranslateableTextGenerator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -43,8 +43,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
@@ -103,18 +102,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      * @var array
      */
     protected $toggleConfig = [];
-
-    /**
-     * create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this|TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, $requestedName);
-    }
 
     /**
      * Laminas ServiceManager masks exceptions behind a simple 'service not created'

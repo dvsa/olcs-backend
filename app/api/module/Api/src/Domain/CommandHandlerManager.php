@@ -93,7 +93,7 @@ class CommandHandlerManager extends AbstractPluginManager
     protected function validateDto($dto, $queryHandlerFqcl)
     {
         /** @var ValidationHandlerManager $vhm */
-        $vhm = $this->getServiceLocator()->get('ValidationHandlerManager');
+        $vhm = $this->get('ValidationHandlerManager');
 
         $validationHandler = $vhm->get($queryHandlerFqcl);
 

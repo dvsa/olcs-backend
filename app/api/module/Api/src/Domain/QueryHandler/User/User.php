@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -29,21 +28,6 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
     protected $extraRepos = ['EventHistory', 'EventHistoryType'];
 
     private array $config;
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return User
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, User::class);
-    }
-
 
     /**
      * Handle query
@@ -125,9 +109,6 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
         $this->config = $container->get('Config');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

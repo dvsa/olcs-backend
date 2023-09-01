@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -44,7 +45,7 @@ class DocumentGeneratorTest extends MockeryTestCase
         $this->documentRepo = m::mock();
 
         /** @var \Laminas\ServiceManager\ServiceLocatorInterface $sm */
-        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)
+        $sm = m::mock(ContainerInterface::class)
             ->shouldReceive('get')->with('ContentStore')->andReturn($this->contentStore)
             ->shouldReceive('get')->with('Document')->andReturn($this->document)
             ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandlerManager)
@@ -55,7 +56,7 @@ class DocumentGeneratorTest extends MockeryTestCase
             )
             ->getMock();
 
-        $this->sut->createService($sm);
+        $this->sut->__invoke($sm, DocumentGenerator::class);
     }
 
     public function testGenerateFromTemplateWithEmptyQuery()

@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevokeEntity;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
@@ -164,24 +163,10 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
         return $reduced;
     }
 
-    /**
-     * Creates service
-     *
-     * @param ServiceLocatorInterface $serviceLocator ServiceLocator
-     *
-     * @return GenerateSlaTargetDate
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, GenerateSlaTargetDate::class);
-    }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         parent::__invoke($fullContainer, $requestedName, $options);
         $this->slaService = $container->get(SlaCalculatorInterface::class);

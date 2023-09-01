@@ -6,26 +6,13 @@ use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
 use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\IrhpCandidatePermitsCreator;
 use Dvsa\Olcs\CompaniesHouse\Service\Client;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Diagnostic Controller Factory
  */
 class DiagnosticControllerFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return IrhpCandidatePermitsCreator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): DiagnosticController
-    {
-        return $this->__invoke($serviceLocator, DiagnosticController::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -38,17 +25,15 @@ class DiagnosticControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): DiagnosticController
     {
-        $sm = $container->getServiceLocator();
-
-        $config = $sm->get('config');
-        $cpmsHelperService = $sm->get('CpmsHelperService');
-        $elasticSearch = $sm->get('ElasticSearch\Search');
-        $addressService = $sm->get('AddressService');
-        $companiesHouseService = $sm->get(Client::class);
-        $imapService = $sm->get('ImapService');
-        $nrService = $sm->get(InrClientInterface::class);
-        $queryHandlerManager = $sm->get('QueryHandlerManager');
-        $commandHandlerManager = $sm->get('CommandHandlerManager');
+        $config = $container->get('config');
+        $cpmsHelperService = $container->get('CpmsHelperService');
+        $elasticSearch = $container->get('ElasticSearch\Search');
+        $addressService = $container->get('AddressService');
+        $companiesHouseService = $container->get(Client::class);
+        $imapService = $container->get('ImapService');
+        $nrService = $container->get(InrClientInterface::class);
+        $queryHandlerManager = $container->get('QueryHandlerManager');
+        $commandHandlerManager = $container->get('CommandHandlerManager');
 
         return new DiagnosticController(
             $config,

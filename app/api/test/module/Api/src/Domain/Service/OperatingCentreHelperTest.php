@@ -67,7 +67,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
             ->andReturn($this->trafficAreaValidator);
 
         $this->sut = new OperatingCentreHelper();
-        $this->sut->createService($sm);
+        $this->sut->__invoke($sm, null);
     }
 
     /**

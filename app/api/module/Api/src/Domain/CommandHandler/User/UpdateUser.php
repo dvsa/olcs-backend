@@ -68,12 +68,6 @@ final class UpdateUser extends AbstractUserCommandHandler implements
     protected PasswordService $passwordService;
     private string $provider;
 
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateUser::class);
-    }
-
-
     /**
      * Handle command
      *
@@ -352,10 +346,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->authAdapter = $container->get(ValidatableAdapterInterface::class);
         $this->passwordService = $container->get(PasswordService::class);

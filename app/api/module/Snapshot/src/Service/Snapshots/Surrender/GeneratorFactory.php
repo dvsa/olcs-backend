@@ -10,8 +10,7 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReview
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class GeneratorFactory implements FactoryInterface
 {
@@ -26,17 +25,5 @@ class GeneratorFactory implements FactoryInterface
             $container->get(DeclarationReviewService::class),
             $container->get(SignatureReviewService::class)
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $services
-     *
-     * @return Generator
-     */
-    public function createService(ServiceLocatorInterface $services)
-    {
-        return $this($services, Generator::class);
     }
 }

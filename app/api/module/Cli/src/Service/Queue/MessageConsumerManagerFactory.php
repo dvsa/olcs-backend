@@ -8,9 +8,8 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
-use Laminas\ServiceManager\Config;
+use Interop\Container\Containerinterface;
 use Laminas\Mvc\Service\AbstractPluginManagerFactory;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Message Consumer Manager Factory
@@ -20,14 +19,11 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class MessageConsumerManagerFactory extends AbstractPluginManagerFactory
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    const PLUGIN_MANAGER_CLASS = MessageConsumerManager::class;
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('Config');
-        $configObject = new Config($config['message_consumer_manager']);
-
-        $plugins = new MessageConsumerManager($configObject);
-        $plugins->setServiceLocator($serviceLocator);
-
-        return $plugins;
+        $config = $container->get('Config');
+        return parent::__invoke($container, $config['message_consumer_manager']);
     }
 }

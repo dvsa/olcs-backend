@@ -7,9 +7,9 @@
  */
 namespace Dvsa\Olcs\Api\Service;
 
+use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\Config;
 use Laminas\Mvc\Service\AbstractPluginManagerFactory;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Abstract Service Manager Factory
@@ -22,16 +22,16 @@ abstract class AbstractServiceManagerFactory extends AbstractPluginManagerFactor
 
     protected $serviceManagerClass;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $name, array $options = null)
     {
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
 
         $configObject = new Config(!empty($config[static::CONFIG_KEY]) ? $config[static::CONFIG_KEY] : []);
 
         $class = $this->serviceManagerClass;
 
         $plugins = new $class($configObject);
-        $plugins->setServiceLocator($serviceLocator);
+        $plugins->setService($container);
 
         return $plugins;
     }

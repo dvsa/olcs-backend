@@ -4,26 +4,25 @@ namespace Dvsa\OlcsTest\Api\Service\Nr;
 
 use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory;
 use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Class WebServiceClientFactoryTest
- */
 class WebServiceClientFactoryTest extends MockeryTestCase
 {
-    public function testCreateServiceNoConfig()
+    public function testInvokeMissingConfig()
     {
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('config')->andReturn([]);
 
-        $this->expectException(\RuntimeException::class, 'Missing print service config[convert_to_pdf][uri]');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Missing print service config[convert_to_pdf][uri]');
+
         $sut = new WebServiceClientFactory();
-        $sut->createService($mockSl);
+        $sut->__invoke($mockSl, WebServiceClient::class);
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
         $config = [
             'convert_to_pdf' => [
@@ -31,11 +30,11 @@ class WebServiceClientFactoryTest extends MockeryTestCase
             ]
         ];
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('config')->andReturn($config);
 
         $sut = new WebServiceClientFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, WebServiceClient::class);
 
         $this->assertInstanceOf(WebServiceClient::class, $service);
         $this->assertSame('http://foo.com:90/', $service->getHttpClient()->getUri()->toString());

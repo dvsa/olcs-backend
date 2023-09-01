@@ -5,8 +5,7 @@ namespace Olcs\Db\Service\Search;
 use Elastica\Client;
 use Olcs\Logging\Log\Logger;
 use Olcs\Logging\Log\LaminasLogPsr3Adapter;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\ServiceManager\Exception;
 use Interop\Container\ContainerInterface;
 
@@ -16,18 +15,6 @@ use Interop\Container\ContainerInterface;
  */
 class ClientFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @throws \Laminas\ServiceManager\Exception\RuntimeException
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Client
-    {
-        return $this->__invoke($serviceLocator, Client::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

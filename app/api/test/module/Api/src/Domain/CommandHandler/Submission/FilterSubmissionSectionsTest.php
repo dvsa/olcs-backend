@@ -1,10 +1,8 @@
 <?php
 
-/**
- * Filter Submission Sections Test
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\FilterSubmissionSections;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
@@ -17,13 +15,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
-/**
- * Filter Submission Sections Test
- */
 class FilterSubmissionSectionsTest extends CommandHandlerTestCase
 {
     protected $submissionConfig = [
@@ -64,7 +58,7 @@ class FilterSubmissionSectionsTest extends CommandHandlerTestCase
                 ->andReturn($service);
         }
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn(m::mock(TransactionManagerInterface::class));
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
@@ -75,11 +69,8 @@ class FilterSubmissionSectionsTest extends CommandHandlerTestCase
         }
 
         $this->commandHandler = m::mock(CommandHandlerManager::class);
-        $this->commandHandler
-            ->shouldReceive('getServiceLocator')
-            ->andReturn($sm);
 
-        $this->sut->createService($this->commandHandler);
+        $this->sut->__invoke($this->commandHandler, FilterSubmissionSections::class);
 
         $this->sideEffects = [];
         $this->commands = [];

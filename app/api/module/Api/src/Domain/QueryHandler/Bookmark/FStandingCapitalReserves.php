@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -24,20 +23,6 @@ class FStandingCapitalReserves extends AbstractQueryHandler
      * @var \Dvsa\Olcs\Api\Service\FinancialStandingHelperService $helper
      */
     protected $helper;
-
-    /**
-     * Factory create
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service manager
-     *
-     * @return FStandingCapitalReserves
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        $this->helper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
-        return $this;
-    }
 
     /**
      * For an operator, get the required finance based on:
@@ -61,9 +46,6 @@ class FStandingCapitalReserves extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->helper = $container->get('FinancialStandingHelperService');
         return parent::__invoke($fullContainer, $requestedName, $options);

@@ -2,25 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class AbstractEcmtNoOfPermitsFormControlStrategyFactory implements FactoryInterface
 {
     protected $frontendComponent = 'changeMe';
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return BaseFormControlStrategy
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): BaseFormControlStrategy
-    {
-        return $this->__invoke($serviceLocator, BaseFormControlStrategy::class);
-    }
 
     /**
      * @param ContainerInterface $container
@@ -32,14 +19,13 @@ class AbstractEcmtNoOfPermitsFormControlStrategyFactory implements FactoryInterf
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): BaseFormControlStrategy
     {
-        $mainServiceLocator = $container->getServiceLocator();
         return new BaseFormControlStrategy(
             $this->frontendComponent,
-            $mainServiceLocator->get('QaEcmtNoOfPermitsElementGenerator'),
-            $mainServiceLocator->get('QaEcmtNoOfPermitsAnswerSaver'),
-            $mainServiceLocator->get('QaEcmtNoOfPermitsAnswerClearer'),
-            $mainServiceLocator->get('QaQuestionTextGenerator'),
-            $mainServiceLocator->get('QaEcmtNoOfPermitsAnswerSummaryProvider')
+            $container->get('QaEcmtNoOfPermitsElementGenerator'),
+            $container->get('QaEcmtNoOfPermitsAnswerSaver'),
+            $container->get('QaEcmtNoOfPermitsAnswerClearer'),
+            $container->get('QaQuestionTextGenerator'),
+            $container->get('QaEcmtNoOfPermitsAnswerSummaryProvider')
         );
     }
 }

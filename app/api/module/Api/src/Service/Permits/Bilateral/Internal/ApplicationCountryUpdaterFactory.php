@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class ApplicationCountryUpdaterFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return ApplicationCountryUpdater
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): ApplicationCountryUpdater
-    {
-        return $this->__invoke($serviceLocator, ApplicationCountryUpdater::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

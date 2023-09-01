@@ -10,7 +10,6 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\Utils\Helper\FileHelper;
 use Interop\Container\ContainerInterface;
 use Laminas\Http\Response;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -28,19 +27,6 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
     private $isInline = false;
     /** @var array */
     private $config = [];
-
-    /**
-     * Create service
-     *
-     * @param \Dvsa\Olcs\Api\Domain\QueryHandlerManager $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, AbstractDownload::class);
-    }
 
     /**
      * Process downloading file
@@ -144,9 +130,6 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
         $this->config = (array)$container->get('config');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

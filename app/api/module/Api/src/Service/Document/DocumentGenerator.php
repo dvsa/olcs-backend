@@ -9,8 +9,7 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Stdlib\ArrayUtils;
 use Interop\Container\ContainerInterface;
 
@@ -57,18 +56,6 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     private $documentRepo;
 
     private $disableBookmarksFlag = false;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Locator
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, DocumentGenerator::class);
-    }
 
     /**
      * Helper method to generate a string of content from a given template and

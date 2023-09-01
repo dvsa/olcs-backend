@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\LicenceOperatingCentre\Update as Cmd;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
@@ -37,11 +36,6 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
      * @var \Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper
      */
     protected $helper;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Update::class);
-    }
 
     /**
      * @param Cmd $command
@@ -76,10 +70,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->helper = $container->get('OperatingCentreHelper');
         return parent::__invoke($fullContainer, $requestedName, $options);

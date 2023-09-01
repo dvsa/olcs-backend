@@ -101,7 +101,7 @@ class RefreshTokenTest extends CommandHandlerTestCase
         $this->sut = new RefreshTokens($this->adapter());
 
         if (null !== $this->serviceManager()) {
-            $this->sut->createService($this->commandHandlerManager());
+            $this->sut->__invoke($this->commandHandlerManager(), null);
         }
     }
 

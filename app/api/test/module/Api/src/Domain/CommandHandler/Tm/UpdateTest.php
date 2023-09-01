@@ -336,8 +336,7 @@ class UpdateTest extends CommandHandlerTestCase
     public function handleCommand_ReportsNoUpdatesToHomeContactDetails_WhenVersionIsUnchanged()
     {
         // Setup
-        $serviceLocator = $this->setUpServiceLocator();
-        $sut = $this->setUpSut($serviceLocator);
+        $sut = $this->setUpSut();
         $contactDetailsVersion = 3;
         $command = Cmd::create(['homeCdId' => $homeContactDetailsId = 4321, 'homeCdVersion' => (string) $contactDetailsVersion]);
         $this->contactDetailsRepository()->shouldReceive('fetchById')->with($homeContactDetailsId)->andReturnUsing(function () use ($homeContactDetailsId, $contactDetailsVersion) {
@@ -367,13 +366,9 @@ class UpdateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return Update
-     */
-    protected function setUpSut(ServiceLocatorInterface $serviceLocator)
+    protected function setUpSut()
     {
-        return $this->sut->createService($this->commandHandlerManager());
+        return $this->sut->__invoke($this->commandHandlerManager(), null);
     }
 
     protected function setUpDefaultServices()

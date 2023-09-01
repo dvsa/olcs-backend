@@ -4,9 +4,9 @@ namespace OlcsTest\Queue\Factories;
 
 use Dvsa\Olcs\Queue\Factories\MessageBuilderFactory;
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
+use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery as m;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class MessageBuilderFactoryTest extends TestCase
 {
@@ -15,12 +15,12 @@ class MessageBuilderFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->mockSl = m::mock(ServiceLocatorInterface::class);
+        $this->mockSl = m::mock(ContainerInterface::class);
         $this->sut = new MessageBuilderFactory();
     }
     
     public function testCreateService()
     {
-        $this->assertInstanceOf(MessageBuilder::class, $this->sut->createService($this->mockSl));
+        $this->assertInstanceOf(MessageBuilder::class, $this->sut->__invoke($this->mockSl,MessageBuilder::class));
     }
 }

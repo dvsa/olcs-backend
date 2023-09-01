@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class PermitUsageAnswerSaverFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return PermitUsageAnswerSaver
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): PermitUsageAnswerSaver
-    {
-        return $this->__invoke($serviceLocator, PermitUsageAnswerSaver::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

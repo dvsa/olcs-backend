@@ -2,23 +2,19 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Data;
 
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClientFactory;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
-/**
- * NysiisRestClientFactory Test
- *
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
- */
+
 class NysiisRestClientFactoryTest extends MockeryTestCase
 {
     /**
      * Tests client created properly
      */
-    public function testCreateServiceValid()
+    public function testInvokeValid()
     {
         $config = [
             'nysiis' => [
@@ -29,10 +25,10 @@ class NysiisRestClientFactoryTest extends MockeryTestCase
             ]
         ];
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $sut = new NysiisRestClientFactory();
-        $this->assertInstanceOf(NysiisRestClient::class, $sut->createService($mockSl));
+        $this->assertInstanceOf(NysiisRestClient::class, $sut->__invoke($mockSl, NysiisRestClient::class));
     }
 
     /**
@@ -41,11 +37,12 @@ class NysiisRestClientFactoryTest extends MockeryTestCase
      * @param $config
      * @param $errorMsg
      *
-     * @dataProvider createServiceFailProvider
+     * @dataProvider invokeFailProvider
      */
-    public function testCreateServiceMissingConfig($config, $errorMsg)
+    public function testInvokeMissingConfig($config, $errorMsg)
     {
-        $this->expectException(\RuntimeException::class, $errorMsg);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($errorMsg);
 
         $config = [
             'nysiis' => [
@@ -53,16 +50,16 @@ class NysiisRestClientFactoryTest extends MockeryTestCase
             ]
         ];
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $sut = new NysiisRestClientFactory();
-        $sut->createService($mockSl);
+        $sut->__invoke($mockSl, NysiisRestClient::class);
     }
 
     /**
      * data provider for testing service creation failures
      */
-    public function createServiceFailProvider()
+    public function invokeFailProvider()
     {
         return [
             [['uri' => 'address'], 'Missing nysiis rest client options'],

@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Document\RemoveDeletedDocuments;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Document\RemoveDeletedDocuments as Cmd;
 use Laminas\Http\Response;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * RemoveDeletedDocumentsTest
@@ -33,9 +32,9 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCreateService()
+    public function testHandleInvoke()
     {
-        $this->sut->createService($this->commandHandler);
+        $this->sut->__invoke($this->commandHandler, null);
         $this->assertSame($this->mockUploader, $this->sut->getContentStoreService());
     }
 

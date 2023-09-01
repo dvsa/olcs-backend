@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Common;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class TypeBasedPermitTypeConfigProviderFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return TypeBasedPermitTypeConfigProvider
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): TypeBasedPermitTypeConfigProvider
-    {
-        return $this->__invoke($serviceLocator, TypeBasedPermitTypeConfigProvider::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

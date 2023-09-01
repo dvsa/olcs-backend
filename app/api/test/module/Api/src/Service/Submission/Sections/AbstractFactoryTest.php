@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory;
 use Dvsa\OlcsTest\Api\Service\Submission\Sections\Stub\AbstractSectionStub;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -12,23 +13,16 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class AbstractFactoryTest extends MockeryTestCase
 {
-    /** @var  \Laminas\ServiceManager\ServiceLocatorInterface | m\MockInterface */
+    /** @var  ContainerInterface | m\MockInterface */
     private $mockSl;
-    /** @var  \Laminas\ServiceManager\ServiceManager | m\MockInterface */
-    private $mockSm;
 
     public function setUp(): void
     {
-        $this->mockSl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
-
-        $this->mockSm = m::mock(\Laminas\ServiceManager\ServiceManager::class)
-            ->shouldReceive('getServiceLocator')->andReturn($this->mockSl)
-            ->getMock();
+        $this->mockSl = m::mock(ContainerInterface::class);
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
-        $name = 'unit_Name';
         $reqName = AbstractSectionStub::class;
 
         $this->mockSl
@@ -44,7 +38,7 @@ class AbstractFactoryTest extends MockeryTestCase
                 }
             );
 
-        $actual = (new AbstractFactory())->createService($this->mockSm, $name, $reqName);
+        $actual = (new AbstractFactory())->__invoke($this->mockSl, $reqName);
 
         static::assertInstanceOf(AbstractSectionStub::class, $actual);
     }

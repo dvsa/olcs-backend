@@ -59,7 +59,7 @@ class VariationOperatingCentreHelperTest extends MockeryTestCase
 
         $this->sut = new VariationOperatingCentreHelper();
 
-        $this->sut->createService($sm);
+        $this->sut->__invoke($sm, VariationOperatingCentreHelper::class);
     }
 
     /**

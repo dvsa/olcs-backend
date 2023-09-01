@@ -5,8 +5,7 @@ namespace Dvsa\Olcs\AwsSdk\Factories;
 
 use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class CognitoIdentityProviderClientFactory implements FactoryInterface
 {
@@ -27,14 +26,5 @@ class CognitoIdentityProviderClientFactory implements FactoryInterface
             'version' => '2016-04-18',
             'region' => $config['awsOptions']['cognito']['region'],
         ]);
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated Can be removed following Laminas v3 upgrade
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): CognitoIdentityProviderClient
-    {
-        return $this->__invoke($serviceLocator, null);
     }
 }

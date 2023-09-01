@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\AwsSdk\Factories;
 
 use Aws\Sqs\SqsClient;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -14,18 +13,6 @@ use Interop\Container\ContainerInterface;
  */
 class SqsClientFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): SqsClient
-    {
-        return $this->__invoke($serviceLocator, SqsClient::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

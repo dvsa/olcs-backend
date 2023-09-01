@@ -2,10 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\Mapping;
 
-use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Xml\Specification\FixedValue;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\XmlTools\Xml\Specification\NodeValue;
 use Olcs\XmlTools\Xml\Specification\Recursion;
 use Olcs\XmlTools\Xml\Specification\MultiNodeValue;
@@ -17,17 +15,6 @@ use Interop\Container\ContainerInterface;
  */
 class TransExchangeXmlFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return MapXmlFile
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Recursion
-    {
-        return $this->__invoke($serviceLocator, Recursion::class);
-    }
-
     protected function getDocuments()
     {
         return ['SupportingDocument' => new Recursion('DocumentUri', new MultiNodeValue('documents'))];

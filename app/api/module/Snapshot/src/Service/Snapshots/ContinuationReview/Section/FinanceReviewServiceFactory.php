@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class FinanceReviewServiceFactory implements FactoryInterface
 {
@@ -15,17 +14,5 @@ class FinanceReviewServiceFactory implements FactoryInterface
             $container->get('FinancialStandingHelperService'),
             $container->get('RepositoryServiceManager')->get('Document')
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $services
-     *
-     * @return FinanceReviewService
-     */
-    public function createService(ServiceLocatorInterface $services)
-    {
-        return $this($services, FinanceReviewService::class);
     }
 }

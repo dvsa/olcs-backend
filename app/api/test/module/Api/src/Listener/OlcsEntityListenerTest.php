@@ -6,9 +6,9 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Listener\OlcsEntityListener;
 use Dvsa\OlcsTest\Api\Listener\Stub\EntityStub;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
@@ -22,7 +22,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
     /** @var  OlcsEntityListener */
     private $sut;
 
-    /** @var  m\MockInterface|ServiceLocatorInterface */
+    /** @var  m\MockInterface|ContainerInterface */
     private $mockSl;
     /** @var  m\MockInterface */
     private $mockAuth;
@@ -59,7 +59,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
 
         $this->mockIdentityProvider = m::mock(IdentityProviderInterface::class);
 
-        $this->mockSl = m::mock(ServiceLocatorInterface::class);
+        $this->mockSl = m::mock(ContainerInterface::class);
         $this->mockSl
             ->shouldReceive('get')
             ->andReturnUsing(
@@ -74,7 +74,7 @@ class OlcsEntityListenerTest extends MockeryTestCase
                 }
             );
 
-        $this->sut = (new OlcsEntityListener())->createService($this->mockSl);
+        $this->sut = (new OlcsEntityListener())->__invoke($this->mockSl, OlcsEntityListener::class);
     }
 
     public function testGetSubscribedEvents()

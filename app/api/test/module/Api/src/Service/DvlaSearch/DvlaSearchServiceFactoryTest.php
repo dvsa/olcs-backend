@@ -4,13 +4,13 @@ namespace Dvsa\OlcsTest\Api\Service\DvlaSearch;
 
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService as DvlaSearchServiceClient;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery as m;
 
 class DvlaSearchServiceFactoryTest extends TestCase
 {
-    public function testCreateService()
+    public function testInvoke()
     {
         $config = [
             'dvla_search' => [
@@ -22,12 +22,12 @@ class DvlaSearchServiceFactoryTest extends TestCase
 
         $logger = new \Laminas\Log\Logger();
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('logger')->andReturn($logger);
 
         $sut = new DvlaSearchServiceFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, DvlaSearchServiceClient::class);
 
         $this->assertInstanceOf(DvlaSearchServiceClient::class, $service);
     }

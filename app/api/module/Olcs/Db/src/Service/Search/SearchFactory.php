@@ -4,8 +4,7 @@ namespace Olcs\Db\Service\Search;
 
 use ElasticSearch\Client;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
@@ -31,16 +30,5 @@ class SearchFactory implements FactoryInterface
             $container->get(AuthorizationService::class),
             $container->get('RepositoryServiceManager')->get('SystemParameter')
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return Search
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Search
-    {
-        return $this->__invoke($serviceLocator, null);
     }
 }

@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Faker\Factory;
 use Interop\Container\ContainerInterface;
 
@@ -12,18 +11,6 @@ use Interop\Container\ContainerInterface;
  */
 class UserFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator ZF Service locator
-     *
-     * @return User
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): User
-    {
-        return $this->__invoke($serviceLocator, User::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

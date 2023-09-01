@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class QueueProcessorFactory implements FactoryInterface
 {
@@ -14,17 +13,5 @@ class QueueProcessorFactory implements FactoryInterface
             $container->get('QueryHandlerManager'),
             $container->get('MessageConsumerManager')
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $services
-     *
-     * @return QueueProcessor
-     */
-    public function createService(ServiceLocatorInterface $services)
-    {
-        return $this($services, QueueProcessor::class);
     }
 }

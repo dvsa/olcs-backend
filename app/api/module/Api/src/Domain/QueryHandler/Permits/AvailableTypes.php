@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Service\Permits\Availability\WindowAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use DateTime;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -22,19 +21,6 @@ class AvailableTypes extends AbstractQueryHandler
 
     /** @var WindowAvailabilityChecker */
     private $windowAvailabilityChecker;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, AvailableTypes::class);
-    }
 
     /**
      * Handle query
@@ -82,9 +68,6 @@ class AvailableTypes extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->windowAvailabilityChecker = $container->get('PermitsAvailabilityWindowAvailabilityChecker');
         return parent::__invoke($fullContainer, $requestedName, $options);

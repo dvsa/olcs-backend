@@ -14,7 +14,6 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as Cmd;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -49,11 +48,6 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
     private $trafficAreaValidator;
 
     private $totals;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateOperatingCentres::class);
-    }
 
     /**
      * @param Cmd $command
@@ -233,10 +227,7 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->variationHelper = $container->get('VariationOperatingCentreHelper');
         $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
         $this->trafficAreaValidator = $container->get('TrafficAreaValidator');

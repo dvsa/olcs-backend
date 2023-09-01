@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler as DomainAbstract
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
@@ -24,18 +23,6 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
      * @var \Laminas\Filter\Word\UnderscoreToCamelCase
      */
     protected $wordFilter;
-
-    /**
-     * Create Service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, AbstractCommandHandler::class);
-    }
 
     /**
      * Normalise Profile Data
@@ -153,10 +140,7 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->api = $container->get(CompaniesHouseClient::class);
         $this->wordFilter = new \Laminas\Filter\Word\UnderscoreToCamelCase();
         return parent::__invoke($fullContainer, $requestedName, $options);

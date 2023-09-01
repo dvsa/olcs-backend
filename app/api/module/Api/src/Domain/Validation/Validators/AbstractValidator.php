@@ -8,7 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\ValidationHelperTrait;
-use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Abstract Validator

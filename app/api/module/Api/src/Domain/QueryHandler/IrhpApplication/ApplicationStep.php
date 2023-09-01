@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
 use Dvsa\Olcs\Transfer\Query\Qa\ApplicationStep as ApplicationStepQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -23,19 +22,6 @@ class ApplicationStep extends AbstractQueryHandler
 
     /** @var SelfservePageGenerator */
     private $selfservePageGenerator;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, ApplicationStep::class);
-    }
 
     /**
      * Handle query
@@ -68,9 +54,6 @@ class ApplicationStep extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->qaContextGenerator = $container->get('QaContextGenerator');
         $this->selfservePageGenerator = $container->get('QaSelfservePageGenerator');

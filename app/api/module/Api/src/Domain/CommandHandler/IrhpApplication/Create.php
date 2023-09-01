@@ -22,7 +22,6 @@ use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as CreateIrhpApplicationCmd;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Irhp Permit Application
@@ -36,18 +35,6 @@ final class Create extends AbstractCommandHandler
 
     /** @var EventHistoryCreator */
     private $eventHistoryCreator;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Create::class);
-    }
 
     /**
      * Handle command
@@ -144,10 +131,7 @@ final class Create extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');
         return parent::__invoke($fullContainer, $requestedName, $options);

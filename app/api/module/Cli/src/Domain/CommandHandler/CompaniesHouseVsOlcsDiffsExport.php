@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Export difference between company house and OLCS data to csv files
@@ -138,30 +137,13 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
         fclose($fh);
     }
 
-    /**
-     * Create service
-     *
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $sm Handler Manager
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, CompaniesHouseVsOlcsDiffsExport::class);
-    }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $config = $container->get('Config');
         $exportCfg = (!empty($config['ch-vs-olcs-export']) ? $config['ch-vs-olcs-export'] : []);
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

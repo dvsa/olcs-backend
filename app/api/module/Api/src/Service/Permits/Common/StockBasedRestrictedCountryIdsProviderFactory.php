@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Common;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class StockBasedRestrictedCountryIdsProviderFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return StockBasedRestrictedCountryIdsProvider
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): StockBasedRestrictedCountryIdsProvider
-    {
-        return $this->__invoke($serviceLocator, StockBasedRestrictedCountryIdsProvider::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

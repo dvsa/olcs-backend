@@ -7,7 +7,6 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -64,20 +63,6 @@ class FeeList extends AbstractQueryHandler
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return FeeList
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, FeeList::class);
-    }
-
-    /**
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
@@ -89,9 +74,6 @@ class FeeList extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->feesHelper = $container->get('FeesHelperService');
         return parent::__invoke($fullContainer, $requestedName, $options);

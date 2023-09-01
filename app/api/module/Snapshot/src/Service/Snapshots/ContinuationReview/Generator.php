@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -10,9 +9,8 @@ use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Utils\Translation\NiTextTranslation;
+use Interop\Container\ContainerInterface;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\View\Model\ViewModel;
 
 /**
  * Continuation Review generator
@@ -37,8 +35,7 @@ class Generator extends AbstractGenerator
     /** @var NiTextTranslation */
     private $niTextTranslation;
 
-    /** @var ServiceLocatorInterface */
-    private $services;
+    private ContainerInterface $services;
 
     /**
      * Create service instance
@@ -49,7 +46,7 @@ class Generator extends AbstractGenerator
      * @param AbstractGeneratorServices $abstractGeneratorServices
      * @param SectionAccessService $sectionAccessService
      * @param NiTextTranslation $niTextTranslation
-     * @param ServiceLocatorInterface $services
+     * @param ContainerInterface $services
      *
      * @return Generator
      */
@@ -57,7 +54,7 @@ class Generator extends AbstractGenerator
         AbstractGeneratorServices $abstractGeneratorServices,
         SectionAccessService $sectionAccessService,
         NiTextTranslation $niTextTranslation,
-        ServiceLocatorInterface $services
+        ContainerInterface $services
     ) {
         parent::__construct($abstractGeneratorServices);
         $this->sectionAccessService = $sectionAccessService;

@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\Permits\AvailableStocks as AvailableStocksQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -22,19 +21,6 @@ class AvailableStocks extends AbstractQueryHandler
 
     /** @var StockAvailabilityChecker */
     private $stockAvailabilityChecker;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, AvailableStocks::class);
-    }
 
     /**
      * Handle query
@@ -117,9 +103,6 @@ class AvailableStocks extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->stockAvailabilityChecker = $container->get('PermitsAvailabilityStockAvailabilityChecker');
         return parent::__invoke($fullContainer, $requestedName, $options);

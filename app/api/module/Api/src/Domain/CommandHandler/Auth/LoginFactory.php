@@ -8,9 +8,7 @@ use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth\LoginFactoryTest;
 use Interop\Container\ContainerInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Class LoginFactory
@@ -34,21 +32,10 @@ class LoginFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Login
     {
         $pluginManager = $container;
-        $container = $container->getServiceLocator();
 
         $adapter = $container->get(ValidatableAdapterInterface::class);
         $authService = $container->get(AuthenticationServiceInterface::class);
         $instance = new Login($authService, $adapter);
-        return $instance->createService($pluginManager);
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return Login
-     * @deprecated Use __invoke
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): Login
-    {
-        return $this->__invoke($serviceLocator, null);
+        return $instance->__invoke($pluginManager, $requestedName, $options);
     }
 }

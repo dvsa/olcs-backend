@@ -105,7 +105,7 @@ class ClientFactoryTest extends MockeryTestCase
         if ($expected instanceof \Exception) {
             $passed = false;
             try {
-                $sut->createService($mockSl);
+                $sut->__invoke($mockSl, null);
             } catch (\Exception $e) {
                 if ($e->getMessage() === $expected->getMessage() && get_class($e) === get_class($expected)) {
                     $passed = true;
@@ -114,7 +114,7 @@ class ClientFactoryTest extends MockeryTestCase
 
             $this->assertTrue($passed, 'Expected exception not thrown or message didn\'t match expected value');
         } else {
-            $service = $sut->createService($mockSl);
+            $service = $sut->__invoke($mockSl, null);
 
             if ($client === User::USER_OS_TYPE_WINDOWS_7) {
                 $this->assertInstanceOf(DocManClient::class, $service);

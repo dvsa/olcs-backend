@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class CountryDeletingAnswerSaverFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return CountryDeletingAnswerSaver
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): CountryDeletingAnswerSaver
-    {
-        return $this->__invoke($serviceLocator, CountryDeletingAnswerSaver::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

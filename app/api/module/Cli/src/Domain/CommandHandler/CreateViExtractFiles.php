@@ -67,18 +67,6 @@ final class CreateViExtractFiles extends AbstractCommandHandler
     ];
 
     /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return CreateViExtractFiles
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, CreateViExtractFiles::class);
-    }
-
-    /**
      * Handle command
      *
      * @param CommandInterface $command command
@@ -191,16 +179,10 @@ final class CreateViExtractFiles extends AbstractCommandHandler
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $config = $container->get('Config');
         if (isset($config['vi_extract_files']['export_path'])) {
             $this->exportPath = $config['vi_extract_files']['export_path'];
         }
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

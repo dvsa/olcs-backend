@@ -26,7 +26,7 @@ class S3ClientFactoryTest extends TestCase
         $this->sm = Bootstrap::getServiceManager();
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
         // Params
         $config = [
@@ -46,7 +46,7 @@ class S3ClientFactoryTest extends TestCase
         /**
          * @var S3Client
          */
-        $s3Options = $this->sut->createService($this->sm);
+        $s3Options = $this->sut->__invoke($this->sm, S3Client::class);
         $this->assertInstanceOf(S3Client::class, $s3Options);
     }
 }

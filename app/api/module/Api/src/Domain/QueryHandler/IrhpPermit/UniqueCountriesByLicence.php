@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -22,19 +21,6 @@ class UniqueCountriesByLicence extends AbstractQueryHandler
 {
     /** @var QueryHandlerManager */
     private $queryHandlerManager;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UniqueCountriesByLicence::class);
-    }
 
     /**
      * Handle query
@@ -81,9 +67,6 @@ class UniqueCountriesByLicence extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
         $this->queryHandlerManager = $container->get('QueryHandlerManager');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

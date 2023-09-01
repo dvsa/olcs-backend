@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * GrantValidationService
@@ -14,7 +15,7 @@ use Interop\Container\ContainerInterface;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class GrantValidationService implements \Laminas\ServiceManager\FactoryInterface
+class GrantValidationService implements FactoryInterface
 {
     const ERROR_S4_EMPTY = 'APP-GRA-S4-EMPTY';
     const ERROR_OOOD_UNKNOWN = 'APP-GRA-OOOD-UNKNOWN';
@@ -26,11 +27,6 @@ class GrantValidationService implements \Laminas\ServiceManager\FactoryInterface
      * @var SectionAccessService
      */
     private $sectionAccessService;
-
-    public function createService(\Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, GrantValidationService::class);
-    }
 
     /**
      * Validate the application
@@ -233,6 +229,7 @@ class GrantValidationService implements \Laminas\ServiceManager\FactoryInterface
 
         return $errors;
     }
+
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $this->sectionAccessService = $container->get('SectionAccessService');

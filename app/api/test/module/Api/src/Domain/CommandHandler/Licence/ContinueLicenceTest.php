@@ -821,7 +821,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
 
         if (null !== $this->serviceManager()) {
-            $this->sut->createService($this->commandHandlerManager());
+            $this->sut->__invoke($this->commandHandlerManager(), null);
         }
     }
 
