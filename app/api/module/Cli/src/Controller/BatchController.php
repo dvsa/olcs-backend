@@ -14,14 +14,14 @@ use Dvsa\Olcs\Transfer\Command as TransferCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Laminas\Http\Response;
-use Laminas\View\Model\ConsoleModel;
+use Laminas\Mvc\Console\View\ViewModel as ConsoleModel;
 
 class BatchController extends AbstractCliController
 {
     /**
      * Perform database management tasks, eg changing is_irfo flags
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function databaseMaintenanceAction()
     {
@@ -38,7 +38,7 @@ class BatchController extends AbstractCliController
     /**
      * Find continuations that have not been process and generate reminders
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function digitalContinuationRemindersAction()
     {
@@ -50,7 +50,7 @@ class BatchController extends AbstractCliController
     /**
      * Run data retention rules
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      * @throws \Exception
      */
     public function dataRetentionRuleAction()
@@ -83,7 +83,7 @@ class BatchController extends AbstractCliController
     /**
      * Clean abandoned variations
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function cleanUpVariationsAction()
     {
@@ -93,7 +93,7 @@ class BatchController extends AbstractCliController
     /**
      * Expire bus registrations that have passed the end date
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function expireBusRegistrationAction()
     {
@@ -103,7 +103,7 @@ class BatchController extends AbstractCliController
     /**
      * Flag tasks as urgent
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function flagUrgentTasksAction()
     {
@@ -113,7 +113,7 @@ class BatchController extends AbstractCliController
     /**
      * Remove read audit action
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function removeReadAuditAction()
     {
@@ -123,7 +123,7 @@ class BatchController extends AbstractCliController
     /**
      * Inspection request email action
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function inspectionRequestEmailAction()
     {

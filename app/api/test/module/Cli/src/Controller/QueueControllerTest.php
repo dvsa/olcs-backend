@@ -186,7 +186,7 @@ class QueueControllerTest extends MockeryTestCase
 
         // Assertions
         $this->routeMatch->setParam('action', 'index');
-        /** @var \Laminas\View\Model\ConsoleModel $model */
+        /** @var \Laminas\Mvc\Console\View\ViewModel $model */
         $model = $this->sut->dispatch($this->request);
 
         $this->assertEquals(1, $model->getErrorLevel());

@@ -6,8 +6,8 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
-use Laminas\Mvc\Controller\AbstractConsoleController;
-use Laminas\View\Model\ConsoleModel;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
+use Laminas\Mvc\Console\View\ViewModel as ConsoleModel;
 
 class AbstractCliController extends AbstractConsoleController
 {
@@ -51,7 +51,7 @@ class AbstractCliController extends AbstractConsoleController
      *
      * @param int $result exit code, should be non-zero if there was an error
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     protected function handleExitStatus($result)
     {

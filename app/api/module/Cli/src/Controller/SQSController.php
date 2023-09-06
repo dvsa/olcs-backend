@@ -15,7 +15,7 @@ use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessIns
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfileDlq;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\TransXChange\TransXChangeConsumer;
 use Olcs\Logging\Log\Logger;
-use Laminas\View\Model\ConsoleModel;
+use Laminas\Mvc\Console\View\ViewModel as ConsoleModel;
 
 /**
  * SQSController
@@ -50,7 +50,7 @@ class SQSController extends AbstractQueueController
     /**
      * Index Action
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function indexAction()
     {

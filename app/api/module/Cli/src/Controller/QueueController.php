@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Cli\Controller;
 use Doctrine\ORM\ORMException;
 use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
 use Olcs\Logging\Log\Logger;
-use Laminas\View\Model\ConsoleModel;
+use Laminas\Mvc\Console\View\ViewModel as ConsoleModel;
 
 /**
  * QueueController
