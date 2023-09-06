@@ -4,7 +4,7 @@
 namespace Dvsa\Olcs\Cli\Controller;
 
 use Olcs\Logging\Log\Logger;
-use Laminas\View\Model\ConsoleModel;
+use Laminas\Mvc\Console\View\ViewModel as ConsoleModel;
 
 class AbstractQueueController extends AbstractCliController
 {
