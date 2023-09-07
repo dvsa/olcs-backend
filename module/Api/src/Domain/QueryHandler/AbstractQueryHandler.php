@@ -183,14 +183,10 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     /**
      * Warnings suppressed as by design this is just a series of 'if' conditions
      *
-     * @param ServiceLocatorInterface $mainServiceLocator service locator
-     *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function applyInterfaces($mainServiceLocator)
+    private function applyInterfaces(ContainerInterface $mainServiceLocator): void
     {
         if ($this instanceof ToggleRequiredInterface || $this instanceof ToggleAwareInterface) {
             $toggleService = $mainServiceLocator->get(ToggleService::class);
@@ -275,16 +271,15 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $container->getServiceLocator();
         try {
-            $this->applyInterfaces($mainServiceLocator);
+            $this->applyInterfaces($container);
         } catch (LaminasServiceException $e) {
             $this->logServiceExceptions($e);
         }
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
+        $this->repoManager = $container->get('RepositoryServiceManager');
         $this->extraRepos[] = $this->repoServiceName;
-        $this->queryHandler = $container;
-        $this->commandHandler = $mainServiceLocator->get('CommandHandlerManager');
+        $this->queryHandler = $container->get('QueryHandlerManager');
+        $this->commandHandler = $container->get('CommandHandlerManager');
         return $this;
     }
 }

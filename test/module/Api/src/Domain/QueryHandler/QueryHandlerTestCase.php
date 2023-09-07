@@ -86,6 +86,7 @@ class QueryHandlerTestCase extends MockeryTestCase
         $this->repoManager = m::mock(RepositoryServiceManager::class);
 
         $this->commandHandler = m::mock(CommandHandlerManager::class);
+        $this->queryHandler = m::mock(QueryHandlerManager::class);
 
         foreach ($this->repoMap as $alias => $service) {
             $this->repoManager
@@ -97,6 +98,7 @@ class QueryHandlerTestCase extends MockeryTestCase
         $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
+        $sm->expects('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
 
         if (! isset($this->mockedSmServices[EntityAccessLogger::class])) {
             $this->mockedSmServices[EntityAccessLogger::class] = m::mock(EntityAccessLogger::class)->shouldIgnoreMissing();
@@ -125,13 +127,11 @@ class QueryHandlerTestCase extends MockeryTestCase
             $sm->shouldReceive('get')->with(ToggleService::class)->andReturn($toggleService);
         }
 
-        $this->queryHandler = m::mock(QueryHandlerManager::class);
-
         $this->initReferences();
 
         $this->commands = [];
 
-        $this->sut = $this->sut->__invoke($this->queryHandler, null);
+        $this->sut = $this->sut->__invoke($sm, null);
     }
 
     protected function initReferences()

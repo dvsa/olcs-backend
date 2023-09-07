@@ -128,14 +128,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Warnings suppressed as by design this is just a series of 'if' conditions
      *
-     * @param ServiceLocatorInterface $mainServiceLocator service locator
-     *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function applyInterfaces($mainServiceLocator)
+    private function applyInterfaces(ContainerInterface $mainServiceLocator): void
     {
         if ($this instanceof ToggleRequiredInterface || $this instanceof ToggleAwareInterface) {
             $toggleService = $mainServiceLocator->get(ToggleService::class);
@@ -553,22 +549,21 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $this->result = new Result();
-        /** @var ServiceLocatorInterface $mainServiceLocator */
-        $mainServiceLocator = $container->getServiceLocator();
+
         try {
-            $this->applyInterfaces($mainServiceLocator);
+            $this->applyInterfaces($container);
         } catch (LaminasServiceException $e) {
             $this->logServiceExceptions($e);
         }
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
+        $this->repoManager = $container->get('RepositoryServiceManager');
         if ($this->repoServiceName !== null) {
             $this->extraRepos[] = $this->repoServiceName;
         }
-        $this->commandHandler = $container;
-        $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
-        $this->pidIdentityProvider = $mainServiceLocator->get(IdentityProviderInterface::class);
+        $this->commandHandler = $container->get('CommandHandlerManager');
+        $this->queryHandler = $container->get('QueryHandlerManager');
+        $this->pidIdentityProvider = $container->get(IdentityProviderInterface::class);
         if ($this instanceof TransactionedInterface) {
-            return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
+            return new TransactioningCommandHandler($this, $container->get('TransactionManager'));
         }
         return $this;
     }
