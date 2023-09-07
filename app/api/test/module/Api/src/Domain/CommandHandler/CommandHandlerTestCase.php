@@ -87,6 +87,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
         $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->commandHandler = m::mock(CommandHandlerManager::class);
 
         foreach ($this->repoMap as $alias => $service) {
             $this->repoManager
@@ -101,6 +102,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
+        $sm->expects('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->pidIdentityProvider);
         if (property_exists($this, 'submissionConfig')) {
@@ -133,9 +135,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             $sm->shouldReceive('get')->with(ToggleService::class)->andReturn($toggleService);
         }
 
-        $this->commandHandler = m::mock(CommandHandlerManager::class);
-
-        $this->sut->__invoke($this->commandHandler, null);
+        $this->sut->__invoke($sm, null);
 
         $this->sideEffects = [];
         $this->commands = [];
