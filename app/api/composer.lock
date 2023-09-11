@@ -56,11 +56,11 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.280.1",
+            "version": "3.281.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.280.1/aws-aws-sdk-php-3.280.1.zip",
-                "reference": "2b2bb8cc5be21e252fb5803d229f1d7fbbec0222",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.281.3/aws-aws-sdk-php-3.281.3.zip",
+                "reference": "a3cfb20dbfb11117b7174b2594fc597745252e0c",
                 "shasum": ""
             },
             "require": {
@@ -139,9 +139,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.280.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.281.3"
             },
-            "time": "2023-08-31T18:56:31+00:00"
+            "time": "2023-09-08T18:06:26+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
