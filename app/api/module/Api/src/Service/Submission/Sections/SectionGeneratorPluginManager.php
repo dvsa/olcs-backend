@@ -2,17 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
-use Dvsa\Olcs\Utils\Traits\PluginManagerTrait;
 use Laminas\ServiceManager\AbstractPluginManager;
 
-/**
- * Class PluginManager
- * @package Dvsa\Olcs\Api\Service\Submission\Sections
- */
 class SectionGeneratorPluginManager extends AbstractPluginManager
 {
-    use PluginManagerTrait;
-
     protected $instanceOf = SectionGeneratorInterface::class;
 
     protected $aliases = [

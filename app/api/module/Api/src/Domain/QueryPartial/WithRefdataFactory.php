@@ -27,7 +27,7 @@ class WithRefdataFactory implements FactoryInterface
     {
         return new WithRefdata(
             $container->get('doctrine.entitymanager.orm_default'),
-            $container->get('with')
+            $container->get('QueryPartialServiceManager')->get('with')
         );
     }
 }
