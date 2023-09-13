@@ -26,7 +26,7 @@ class Module
          * @var Translator $translator
          * @var Redis      $cache
          */
-        $cache = $sm->get(Redis::class);
+        $cache = $sm->get('default-cache');
         $translator = $sm->get('translator');
         $translator->setCache($cache);
 

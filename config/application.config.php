@@ -5,6 +5,7 @@ return array(
         'Dvsa\LaminasConfigCloudParameters',
         'Laminas\Router',
         'Laminas\Cache\Module',
+        'Laminas\Cache\Storage\Adapter\Redis',
         'Laminas\Filter\Module',
         'Laminas\Validator\Module',
         'Laminas\Log',
