@@ -1,40 +1,25 @@
 <?php
 
-/**
- * Query Handler Manager
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Transfer\Query\LoggerOmitResponseInterface;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandlerInterface;
-use Dvsa\Olcs\Utils\Traits\PluginManagerTrait;
 
-/**
- * Query Handler Manager
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class QueryHandlerManager extends AbstractPluginManager
 {
-    use PluginManagerTrait;
-
     protected $instanceOf = QueryHandlerInterface::class;
+    private ValidationHandlerManager $validationHandlerManager;
 
-    public function __construct(ConfigInterface $config = null)
+    public function __construct(ContainerInterface $container, array $config = [])
     {
-        $this->setShareByDefault(false);
-
-        if ($config) {
-            $config->configureServiceManager($this);
-        }
+        $this->validationHandlerManager = $container->get('ValidationHandlerManager');
+        parent::__construct($container, $config);
     }
 
     public function handleQuery(QueryInterface $query, $validate = true)
@@ -84,11 +69,8 @@ class QueryHandlerManager extends AbstractPluginManager
 
     protected function validateDto($dto, $queryHandlerFqcl)
     {
-        /** @var ValidationHandlerManager $vhm */
-        $vhm = $this->getServiceLocator()->get('ValidationHandlerManager');
-
         /** @var ValidationHandlerInterface $validationHandler */
-        $validationHandler = $vhm->get($queryHandlerFqcl);
+        $validationHandler = $this->validationHandlerManager->get($queryHandlerFqcl);
 
         if (!$validationHandler->isValid($dto)) {
             Logger::debug(

@@ -153,7 +153,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     protected function getAuditLogger(): EntityAccessLogger
     {
         if (null === $this->auditLogger) {
-            $this->auditLogger = $this->queryHandler->getServiceLocator()->get(EntityAccessLogger::class);
+            $this->auditLogger = $this->queryHandler->get(EntityAccessLogger::class);
         }
         return $this->auditLogger;
     }

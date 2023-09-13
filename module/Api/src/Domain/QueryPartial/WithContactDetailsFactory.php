@@ -26,7 +26,7 @@ class WithContactDetailsFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): WithContactDetails
     {
         return new WithContactDetails(
-            $container->getServiceLocator()->get('doctrine.entitymanager.orm_default'),
+            $container->get('doctrine.entitymanager.orm_default'),
             $container->get('with'),
             $container->get('withRefdata')
         );

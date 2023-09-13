@@ -15,7 +15,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractValidator implements FactoryInterface
+abstract class AbstractValidator implements FactoryInterface, ValidatorInterface
 {
     use ValidationHelperTrait;
 }
