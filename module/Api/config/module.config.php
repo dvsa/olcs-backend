@@ -574,7 +574,7 @@ return [
             'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
             'withRefdata' => QueryPartial\WithRefdataFactory::class,
             'withUser' => QueryPartial\WithUserFactory::class,
-            'WithPersonContactDetails' => QueryPartial\WithPersonContactDetailsFactory::class,
+            'withPersonContactDetails' => QueryPartial\WithPersonContactDetailsFactory::class,
         ],
         'invokables' => [
             'byId' => QueryPartial\ById::class,
