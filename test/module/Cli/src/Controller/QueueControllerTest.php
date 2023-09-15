@@ -2,13 +2,15 @@
 
 namespace Dvsa\OlcsTest\Cli\Controller;
 
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Cli\Controller\QueueController;
 use OlcsTest\Bootstrap;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Mvc\Router\RouteMatch;
+use Laminas\Router\RouteMatch;
 
 /**
  * Queue Controller Test
@@ -44,9 +46,13 @@ class QueueControllerTest extends MockeryTestCase
 
         $this->mockQueueService = m::mock(QueueProcessor::class);
 
-        $this->sut = new QueueController($this->config, $this->mockQueueService);
+        $this->sut = new QueueController(
+            $this->config,
+            $this->mockQueueService,
+            m::mock(QueryHandlerManager::class),
+            m::mock(CommandHandlerManager::class)
+        );
         $this->sut->setEvent($this->event);
-        $this->sut->setServiceLocator($this->sm);
         $this->sut->setConsole($this->console);
     }
 

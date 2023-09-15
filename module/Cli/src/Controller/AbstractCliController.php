@@ -2,8 +2,10 @@
 
 namespace Dvsa\Olcs\Cli\Controller;
 
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
 use Laminas\Mvc\Console\Controller\AbstractConsoleController;
@@ -11,6 +13,16 @@ use Laminas\Mvc\Console\View\ViewModel as ConsoleModel;
 
 class AbstractCliController extends AbstractConsoleController
 {
+    protected CommandHandlerManager $commandHandlerManager;
+    protected QueryHandlerManager $queryHandlerManager;
+
+    public function __construct(
+        QueryHandlerManager $queryHandlerManager,
+        CommandHandlerManager $commandHandlerManager
+    ) {
+        $this->queryHandlerManager = $queryHandlerManager;
+        $this->commandHandlerManager = $commandHandlerManager;
+    }
 
     /**
      * Is verbose
@@ -77,7 +89,7 @@ class AbstractCliController extends AbstractConsoleController
                 $this->writeVerboseMessages("Handle command " . $count . ' ' . get_class($dtoCommand));
 
                 /** @var \Dvsa\Olcs\Api\Domain\Command\Result $result */
-                $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
+                $result = $this->commandHandlerManager->handleCommand($dtoCommand);
 
                 $this->writeVerboseMessages($result->getMessages());
             }
@@ -132,7 +144,7 @@ class AbstractCliController extends AbstractConsoleController
     {
         try {
             $this->writeVerboseMessages("Handle query " . get_class($dto));
-            return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
+            return $this->queryHandlerManager->handleQuery($dto);
         } catch (NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Laminas\Log\Logger::WARN);
         } catch (Exception\Exception $e) {

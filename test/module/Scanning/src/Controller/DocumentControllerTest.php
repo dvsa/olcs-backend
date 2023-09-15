@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Scanning\Controller;
 
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -27,7 +28,6 @@ class DocumentControllerTest extends MockeryTestCase
 
     protected function setUp(): void
     {
-        $this->sm = \OlcsTest\Bootstrap::getServiceManager();
         $this->request  = m::mock('\Laminas\Http\Request')->makePartial();
         $this->response = m::mock('\Laminas\Http\Response')->makePartial();
 
@@ -39,10 +39,8 @@ class DocumentControllerTest extends MockeryTestCase
             ->shouldReceive('getRequest')
             ->andReturn($this->request);
 
-        $this->mockCommandHandlerManager = m::mock();
-        $this->sm->setService('CommandHandlerManager', $this->mockCommandHandlerManager);
-
-        $this->sut->setServiceLocator($this->sm);
+        $this->mockCommandHandlerManager = m::mock(CommandHandlerManager::class);
+        $this->sut->setCommandHandlerManager($this->mockCommandHandlerManager);
     }
 
     public function testMissingDescription()

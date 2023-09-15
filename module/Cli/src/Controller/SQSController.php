@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Cli\Controller;
 use Doctrine\ORM\ORMException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfile;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq;
@@ -31,20 +32,15 @@ class SQSController extends AbstractQueueController
         'transXChangeConsumer',
     ];
 
-    private CommandHandlerManager $commandHandlerManager;
-
     private array $config;
 
-    /**
-     * @param array $config
-     * @param CommandHandlerManager $commandHandlerManager
-     */
     public function __construct(
         array $config,
+        QueryHandlerManager $queryHandlerManager,
         CommandHandlerManager $commandHandlerManager
     ) {
         $this->config = $config;
-        $this->commandHandlerManager = $commandHandlerManager;
+        parent::__construct($queryHandlerManager, $commandHandlerManager);
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Cli\Controller;
 
-use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\IrhpCandidatePermitsCreator;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
@@ -24,10 +23,12 @@ class SQSControllerFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): SQSController
     {
         $config = $container->get('config');
+        $queryHandlerManager = $container->get('QueryHandlerManager');
         $commandHandlerManager = $container->get('CommandHandlerManager');
 
         return new SQSController(
             $config,
+            $queryHandlerManager,
             $commandHandlerManager
         );
     }
