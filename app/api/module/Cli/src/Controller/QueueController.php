@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Cli\Controller;
 
 use Doctrine\ORM\ORMException;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
 use Olcs\Logging\Log\Logger;
 use Laminas\Mvc\Console\View\ViewModel as ConsoleModel;
@@ -25,10 +27,13 @@ class QueueController extends AbstractQueueController
      */
     public function __construct(
         array $config,
-        QueueProcessor $queueService
+        QueueProcessor $queueService,
+        QueryHandlerManager $queryHandlerManager,
+        CommandHandlerManager $commandHandlerManager
     ) {
         $this->config = $config;
         $this->queueService = $queueService;
+        parent::__construct($queryHandlerManager, $commandHandlerManager);
     }
 
     /**

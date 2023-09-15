@@ -25,10 +25,14 @@ class QueueControllerFactory implements FactoryInterface
     {
         $config = $container->get('config');
         $queueService = $container->get('Queue');
+        $queryHandlerManager = $container->get('QueryHandlerManager');
+        $commandHandlerManager = $container->get('CommandHandlerManager');
 
         return new QueueController(
             $config,
-            $queueService
+            $queueService,
+            $queryHandlerManager,
+            $commandHandlerManager
         );
     }
 }

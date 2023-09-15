@@ -33,7 +33,6 @@ class XmlControllerTest extends TestCase
     {
         $sut = new XmlController($this->commandHandlerManager);
         $sut->setPluginManager($mockSl);
-        $sut->setServiceLocator($mockSl);
         return $sut;
     }
 

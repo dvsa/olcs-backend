@@ -18,9 +18,9 @@ return array(
         'invokables' => array(),
     ),
     'controllers' => array(
-        'invokables' => array(
+        'factories' => array(
             Dvsa\Olcs\Scanning\Controller\DocumentController::class =>
-                Dvsa\Olcs\Scanning\Controller\DocumentController::class
+                Dvsa\Olcs\Scanning\Controller\DocumentControllerFactory::class
         ),
     ),
     'view_manager' => array(
