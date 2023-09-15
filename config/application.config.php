@@ -8,6 +8,7 @@ return array(
         'Laminas\Cache\Storage\Adapter\Redis',
         'Laminas\Filter\Module',
         'Laminas\Validator\Module',
+        'Laminas\Mvc\I18n\Module',
         'Laminas\Log',
         'Dvsa\Olcs\Utils',
         'Dvsa\Olcs\Address',
