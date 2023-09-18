@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\CommunityLic;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\CommunityLic\CommunityLicences as CommunityLicencesQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
@@ -109,8 +110,8 @@ class CommunityLicencesTest extends QueryHandlerTestCase
             ->once()
             ->getMock();
 
-        $mockOfficeCopy = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class)->shouldReceive('serialize')->andReturn(['item'])->getMock();
-        $mockComLic = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class)
+        $mockOfficeCopy = m::mock(BundleSerializableInterface::class)->shouldReceive('serialize')->andReturn(['item'])->getMock();
+        $mockComLic = m::mock(BundleSerializableInterface::class)
             ->shouldReceive('serialize')
             ->once()
             ->andReturn('result')

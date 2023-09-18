@@ -48,7 +48,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $sut = new XmlStructureInputFactory();
         $service = $sut->__invoke($mockSl, Input::class);
 
-        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
+        $this->assertInstanceOf(Input::class, $service);
         $this->assertCount(1, $service->getFilterChain());
         $this->assertCount(1, $service->getValidatorChain());
     }
@@ -60,7 +60,7 @@ class XmlStructureInputFactoryTest extends TestCase
      * @param $exceptionName
      * @param $exceptionMessage
      *
-     * @dataProvider createServiceErrorProvider
+     * @dataProvider invokeErrorProvider
      */
     public function testInvokeMissingConfig($config, $exceptionName, $exceptionMessage)
     {

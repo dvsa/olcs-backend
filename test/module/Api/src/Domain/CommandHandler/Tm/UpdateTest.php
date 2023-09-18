@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Update;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
@@ -222,8 +221,8 @@ class UpdateTest extends CommandHandlerTestCase
     public function handleCommand_CreatesHomeAddress()
     {
         // Setup
-        $serviceLocator = $this->setUpServiceLocator();
-        $sut = $this->setUpSut($serviceLocator);
+        $this->setUpServiceLocator();
+        $sut = $this->setUpSut();
         $command = Cmd::create([]);
 
         // Define Expectations
@@ -243,8 +242,7 @@ class UpdateTest extends CommandHandlerTestCase
     public function handleCommand_UpdatesHomeAddress_WhenHomeAddressIdProvided()
     {
         // Setup
-        $serviceLocator = $this->setUpServiceLocator();
-        $sut = $this->setUpSut($serviceLocator);
+        $serviceLocator = $sut = $this->setUpSut();
         $command = Cmd::create(['id' => $transportManagerId = 1234, 'homeAddressId' => $homeAddressId = 4321]);
         $mockTransportManager = new TransportManagerEntity();
         $this->transportManagerRepository()->shouldReceive('fetchById')->with($transportManagerId)->andReturn($mockTransportManager);
@@ -265,8 +263,8 @@ class UpdateTest extends CommandHandlerTestCase
     public function handleCommand_DoesNotCreateHomeContactDetails()
     {
         // Setup
-        $serviceLocator = $this->setUpServiceLocator();
-        $sut = $this->setUpSut($serviceLocator);
+        $this->setUpServiceLocator();
+        $sut = $this->setUpSut();
         $command = Cmd::create(['homeAddressId' => $homeAddressId = 4321]);
 
         // Define Expectations
@@ -285,8 +283,8 @@ class UpdateTest extends CommandHandlerTestCase
     public function handleCommand_CreatesHomeAddress_WhenNoHomeAddressIdProvided()
     {
         // Setup
-        $serviceLocator = $this->setUpServiceLocator();
-        $sut = $this->setUpSut($serviceLocator);
+        $this->setUpServiceLocator();
+        $sut = $this->setUpSut();
         $command = Cmd::create(['homeAddressId' => null, 'workAddressId' => $workAddressId = 1234]);
         $homeAddressSaveResult = new Result();
         $homeAddressSaveResult->addId('address', $newHomeAddressId = 4321);
@@ -313,8 +311,8 @@ class UpdateTest extends CommandHandlerTestCase
     public function handleCommand_ReportsNoUpdatesToHomeAddress_WhenNoChangeRequired()
     {
         // Setup
-        $serviceLocator = $this->setUpServiceLocator();
-        $sut = $this->setUpSut($serviceLocator);
+        $this->setUpServiceLocator();
+        $sut = $this->setUpSut();
         $command = Cmd::create(['homeAddressId' => $homeAddressId = 1234]);
         $homeAddressSaveResult = new Result();
         $homeAddressSaveResult->setFlag('hasChanged', false);
@@ -368,7 +366,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     protected function setUpSut()
     {
-        return $this->sut->__invoke($this->commandHandlerManager(), null);
+        return $this->sut->__invoke($this->serviceManager, Update::class);
     }
 
     protected function setUpDefaultServices()

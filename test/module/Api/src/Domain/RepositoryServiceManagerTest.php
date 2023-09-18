@@ -2,41 +2,25 @@
 
 namespace Dvsa\OlcsTest\Api\Domain;
 
+use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Laminas\ServiceManager\ConfigInterface;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-/**
- * RepositoryServiceManagerTest
- */
 class RepositoryServiceManagerTest extends MockeryTestCase
 {
-    /**
-     * @var RepositoryServiceManager
-     */
-    protected $sut;
+    protected RepositoryServiceManager $sut;
 
     public function setUp(): void
     {
-        $config = m::mock(ConfigInterface::class);
-        $config->shouldReceive('configureServiceManager')
-            ->with(m::type(RepositoryServiceManager::class))
-            ->once();
-
-        $this->sut = new RepositoryServiceManager($config);
+        $container = m::mock(ContainerInterface::class);
+        $this->sut = new RepositoryServiceManager($container, []);
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
-        $this->assertNull($this->sut->validate(null));
+        $this->assertNull($this->sut->validate(m::mock(RepositoryInterface::class)));
     }
 
-    /**
-     * @todo To be removed as part of OLCS-28149
-     */
-    public function testValidatePlugin()
-    {
-        $this->assertNull($this->sut->validatePlugin(null));
-    }
 }

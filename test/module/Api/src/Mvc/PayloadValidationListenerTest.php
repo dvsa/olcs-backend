@@ -14,11 +14,8 @@ use Laminas\EventManager\EventManagerInterface;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\Http\Response as HttpResponse;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Mvc\Router\RouteMatch;
+use Laminas\Router\RouteMatch;
 
-/**
- * PayloadValidationListener Test
- */
 class PayloadValidationListenerTest extends MockeryTestCase
 {
     public function setUp(): void

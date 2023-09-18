@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Validation;
 
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
+use Dvsa\Olcs\Api\Domain\Validation\Validators\ValidatorInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -76,7 +77,7 @@ trait ValidationHelperTestCaseTrait
     public function setIsValid($validator, $arguments, $isValid = true)
     {
         if ($this->validatorManager->has($validator) === false) {
-            $mockValidator = m::mock();
+            $mockValidator = m::mock(ValidatorInterface::class);
             $this->validatorManager->setService($validator, $mockValidator);
         } else {
             $mockValidator = $this->validatorManager->get($validator);

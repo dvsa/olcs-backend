@@ -4,9 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
 
-class CanAccessLicenceForSurrender extends CanAccessLicence implements HandlerInterface
+class CanAccessLicenceForSurrender extends CanAccessLicence implements ValidatorInterface
 {
     use LicenceStatusAwareTrait;
     use SurrenderStatusAwareTrait;

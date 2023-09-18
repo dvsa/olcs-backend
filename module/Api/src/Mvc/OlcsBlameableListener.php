@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Gedmo\Blameable\BlameableListener as GedmoBlameableListener;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
@@ -19,18 +19,16 @@ class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareI
 {
     use AuthAwareTrait;
 
-    /** @var ServiceLocatorInterface */
-    private $serviceLocator;
+    private ContainerInterface $serviceLocator;
 
     /**
      * Injecting instances of AuthService and RepoServiceManager did not work here due to some deeper co-dependency
      * when the app instantiated part of the Doctrine ORM, so ServiceLocator had to be injected instead.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
      */
-    public function __construct(ServiceLocatorInterface $serviceLocator)
+    public function __construct(ContainerInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
+        parent::__construct();
     }
 
     /**

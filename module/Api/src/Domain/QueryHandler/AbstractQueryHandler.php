@@ -66,6 +66,8 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      */
     private $auditLogger;
 
+    private ContainerInterface $container;
+
     /**
      * Get the repository
      *
@@ -153,7 +155,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     protected function getAuditLogger(): EntityAccessLogger
     {
         if (null === $this->auditLogger) {
-            $this->auditLogger = $this->queryHandler->get(EntityAccessLogger::class);
+            $this->auditLogger = $this->container->get(EntityAccessLogger::class);
         }
         return $this->auditLogger;
     }
@@ -280,6 +282,8 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         $this->extraRepos[] = $this->repoServiceName;
         $this->queryHandler = $container->get('QueryHandlerManager');
         $this->commandHandler = $container->get('CommandHandlerManager');
+        $this->container = $container;
+
         return $this;
     }
 }

@@ -2,12 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant as GrantApplicationCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -33,6 +35,7 @@ class GrantTest extends CommandHandlerTestCase
     const SERVICE_REPOSITORY_MANAGER = 'RepositoryServiceManager';
     const SERVICE_VALIDATION = 'ApplicationGrantValidationService';
     const SERVICE_QUERY_HANDLER = 'QueryHandlerManager';
+    const SERVICE_COMMAND_HANDLER = 'CommandHandlerManager';
     const REPOSITORY_APPLICATION = 'Application';
 
     /**
@@ -134,7 +137,7 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffectAsSystemUser(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            CloseTexTask::class,
             ['id' => 111],
             new Result()
         );
@@ -190,7 +193,7 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffectAsSystemUser(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            CloseTexTask::class,
             ['id' => 111],
             new Result()
         );
@@ -257,7 +260,7 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffectAsSystemUser(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            CloseTexTask::class,
             ['id' => 111],
             new Result()
         );
@@ -330,7 +333,7 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffectAsSystemUser(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            CloseTexTask::class,
             ['id' => 111],
             new Result()
         );
@@ -428,8 +431,10 @@ class GrantTest extends CommandHandlerTestCase
                 ->disableOriginalConstructor()->getMock();
         $repositoryServiceManager = $services[static::SERVICE_REPOSITORY_MANAGER] ?? $this->newMockRepositoryManager();
         $validationService = $services[static::SERVICE_VALIDATION] ?? $this->newMockValidationService();
-        $queryHandler = $services[static::SERVICE_QUERY_HANDLER] ?? $this->getMockBuilder(QueryHandlerInterface::class)
+        $queryHandler = $services[static::SERVICE_QUERY_HANDLER] ?? $this->getMockBuilder(QueryHandlerManager::class)
                 ->disableOriginalConstructor()->getMock();
+        $commandHandler = $services[static::SERVICE_COMMAND_HANDLER] ?? $this->getMockBuilder(CommandHandlerManager::class)
+            ->disableOriginalConstructor()->getMock();
         $serviceLocator = $this->getMockBuilder(ContainerInterface::class)
             ->disableOriginalConstructor()
             ->addMethods(['handleCommand'])
@@ -439,7 +444,8 @@ class GrantTest extends CommandHandlerTestCase
             $transactionManager,
             $repositoryServiceManager,
             $validationService,
-            $queryHandler
+            $queryHandler,
+            $commandHandler
         ) {
             switch ($class) {
                 case static::SERVICE_TRANSACTION_MANAGER:
@@ -450,6 +456,8 @@ class GrantTest extends CommandHandlerTestCase
                     return $validationService;
                 case static::SERVICE_QUERY_HANDLER:
                     return $queryHandler;
+                case static::SERVICE_COMMAND_HANDLER:
+                    return $commandHandler;
                 default:
                     return null;
             }

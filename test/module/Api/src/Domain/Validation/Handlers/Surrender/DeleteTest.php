@@ -3,6 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Surrender;
 
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Surrender\Delete;
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessLicence;
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanDeleteSurrender;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
@@ -30,11 +32,11 @@ class DeleteTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn(7);
 
-        $canAccessLicence = m::mock();
+        $canAccessLicence = m::mock(CanAccessLicence::class);
         $this->validatorManager->setService('canAccessLicence', $canAccessLicence);
         $canAccessLicence->shouldReceive('isValid')->andReturn($canAccess);
 
-        $canDeleteSurrender = m::mock();
+        $canDeleteSurrender = m::mock(CanDeleteSurrender::class);
         $this->validatorManager->setService('canDeleteSurrender', $canDeleteSurrender);
         $canDeleteSurrender->shouldReceive('isValid')->andReturn($canDelete);
 

@@ -12,7 +12,7 @@ use stdClass;
 
 class AddressFormatterInitializerTest extends MockeryTestCase
 {
-    private $sut;
+    private AddressFormatterInitializer $sut;
 
     public function setUp(): void
     {
@@ -69,7 +69,7 @@ class AddressFormatterInitializerTest extends MockeryTestCase
 
         $this->assertSame(
             $instance,
-            $this->sut->initialize($instance, $container)
+            $this->sut->__invoke($container, $instance)
         );
     }
 
@@ -83,7 +83,7 @@ class AddressFormatterInitializerTest extends MockeryTestCase
 
         $this->assertSame(
             $instance,
-            $this->sut->initialize($instance, $container)
+            $this->sut->__invoke($container, $instance)
         );
     }
 }

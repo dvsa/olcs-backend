@@ -72,6 +72,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         // copied from parent,
         $this->repoManager = m::mock(RepositoryServiceManager::class);
         $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->commandHandler = m::mock(CommandHandlerManager::class);
 
         foreach ($this->repoMap as $alias => $service) {
             $this->repoManager
@@ -83,6 +84,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
         $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn(m::mock(TransactionManagerInterface::class));
+        $sm->expects('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
 
@@ -90,9 +92,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
         }
 
-        $this->commandHandler = m::mock(CommandHandlerManager::class);
-
-        $this->sut->__invoke($this->commandHandler, AssignSubmission::class);
+        $this->sut->__invoke($sm, AssignSubmission::class);
 
         $this->sideEffects = [];
         $this->commands = [];

@@ -42,7 +42,7 @@ class ResetPasswordFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), ResetPassword::class);
+        $result = $this->sut->__invoke($this->serviceManager, ResetPassword::class);
 
         // Assert
         $this->assertInstanceOf(ResetPassword::class, $result);

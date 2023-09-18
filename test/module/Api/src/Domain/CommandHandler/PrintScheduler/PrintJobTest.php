@@ -4,14 +4,19 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrintScheduler;
 
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\PrintJob as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\PrintJob as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\Exception;
+use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\PrintScan\Printer;
+use Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
+use Dvsa\Olcs\Api\Entity\User\Team;
+use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
-/**
- * PrintJobTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class PrintJobTest extends CommandHandlerTestCase
 {
     /** @var  CommandHandler | m\MockInterface */
@@ -42,22 +47,21 @@ class PrintJobTest extends CommandHandlerTestCase
             ]
         ];
 
-        $this->convertToPdfService = m::mock();
-        $this->mockedSmServices['ConvertToPdf'] = $this->convertToPdfService;
+        $this->convertToPdfService = m::mock(WebServiceClient::class);
 
         $this->mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $this->mockUser->setLoginId('LOGIN_ID');
         $this->repoMap['User']->shouldReceive('fetchById')->with('USER_ID')->andReturn($this->mockUser);
 
-        /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $mockDocument */
-        $mockDocument = m::mock(\Dvsa\Olcs\Api\Entity\Doc\Document::class)->makePartial();
+        /** @var Document $mockDocument */
+        $mockDocument = m::mock(Document::class)->makePartial();
         $mockDocument->setIdentifier('IDENTIFIER');
         $mockDocument->setFilename('FILENAME');
         $mockDocument->setDescription('DESC');
         $this->repoMap['Document']->shouldReceive('fetchById')->with('DOC_ID')->once()->andReturn($mockDocument);
 
-        /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $mockDocument */
-        $mockDocument2 = m::mock(\Dvsa\Olcs\Api\Entity\Doc\Document::class)->makePartial();
+        /** @var Document $mockDocument */
+        $mockDocument2 = m::mock(Document::class)->makePartial();
         $mockDocument2->setIdentifier('IDENTIFIER2');
         $mockDocument2->setFilename('FILENAME2');
         $mockDocument2->setDescription('DESC2');
@@ -72,8 +76,8 @@ class PrintJobTest extends CommandHandlerTestCase
         ];
 
         $this->references = [
-            \Dvsa\Olcs\Api\Entity\Licence\Licence::class => [
-                34 => m::mock(\Dvsa\Olcs\Api\Entity\Licence\Licence::class)
+            Licence::class => [
+                34 => m::mock(Licence::class)
             ]
         ];
 
@@ -92,9 +96,9 @@ class PrintJobTest extends CommandHandlerTestCase
         );
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -124,9 +128,9 @@ class PrintJobTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => '']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -135,6 +139,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->once()
             ->andReturn('TEMP_FILE.rtf');
 
+        $this->commandHandler->expects('get')->with('ConvertToPdf')->andReturn($this->convertToPdfService);
         $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once();
 
         $this->expectLpr('Anonymous', 0, true, 1);
@@ -158,9 +163,9 @@ class PrintJobTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => '']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -169,15 +174,14 @@ class PrintJobTest extends CommandHandlerTestCase
             ->once()
             ->andReturn('TEMP_FILE.rtf');
 
+        $this->commandHandler->expects('get')->with('ConvertToPdf')->andReturn($this->convertToPdfService);
         $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once()
             ->andThrow(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class, 'TEST MESSAGE');
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->expectException(
-            \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
-            'Error generating the PDF TEMP_FILE.rtf : TEST MESSAGE'
-        );
+        $this->expectException(NotReadyException::class);
+        $this->expectExceptionMessage('Error generating the PDF TEMP_FILE.rtf : TEST MESSAGE');
         $this->sut->handleCommand($command);
     }
 
@@ -196,9 +200,9 @@ class PrintJobTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => '']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -207,15 +211,14 @@ class PrintJobTest extends CommandHandlerTestCase
             ->once()
             ->andReturn('TEMP_FILE.rtf');
 
+        $this->commandHandler->expects('get')->with('ConvertToPdf')->andReturn($this->convertToPdfService);
         $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once()
             ->andThrow(\Laminas\Http\Client\Adapter\Exception\TimeoutException::class, 'Timeout');
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->expectException(
-            \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
-            'Error generating the PDF TEMP_FILE.rtf : Timeout'
-        );
+        $this->expectException(NotReadyException::class,);
+        $this->expectExceptionMessage('Error generating the PDF TEMP_FILE.rtf : Timeout');
         $this->sut->handleCommand($command);
     }
 
@@ -224,9 +227,9 @@ class PrintJobTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => 'USER_ID']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -249,9 +252,9 @@ class PrintJobTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => 'USER_ID']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -264,11 +267,8 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->expectException(
-            \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
-            'Error generating the PDF : OUTPUT PDF'
-        );
-
+        $this->expectException(NotReadyException::class);
+        $this->expectExceptionMessage('Error generating the PDF : OUTPUT PDF');
         $this->sut->handleCommand($command);
     }
 
@@ -277,9 +277,9 @@ class PrintJobTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => 'USER_ID']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -292,11 +292,8 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->expectException(
-            \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
-            'PDF file does not exist : TEMP_FILE.pdf'
-        );
-
+        $this->expectException(NotReadyException::class);
+        $this->expectExceptionMessage('PDF file does not exist : TEMP_FILE.pdf');
         $this->sut->handleCommand($command);
     }
 
@@ -305,9 +302,9 @@ class PrintJobTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => 'USER_ID']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -320,11 +317,8 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->expectException(
-            \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
-            'Error executing lpr command : OUTPUT LPR'
-        );
-
+        $this->expectException(NotReadyException::class);
+        $this->expectExceptionMessage('Error executing lpr command : OUTPUT LPR');
         $this->sut->handleCommand($command);
     }
 
@@ -332,14 +326,14 @@ class PrintJobTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => 'USER_ID']);
 
-        $team = new \Dvsa\Olcs\Api\Entity\User\Team();
-        $printer = new \Dvsa\Olcs\Api\Entity\PrintScan\Printer();
+        $team = new Team();
+        $printer = new Printer();
         $printer->setPrinterName('QUEUE1');
-        $teamPrinter = new \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter($team, $printer);
+        $teamPrinter = new TeamPrinter($team, $printer);
         $team->addTeamPrinters($teamPrinter);
         $this->mockUser->setTeam($team);
 
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -363,15 +357,15 @@ class PrintJobTest extends CommandHandlerTestCase
             ['id' => 'QUEUE_ID', 'documents' => ['DOC_ID', 'DOC2_ID'], 'title' => 'JOB', 'user' => 'USER_ID']
         );
 
-        $team = new \Dvsa\Olcs\Api\Entity\User\Team();
-        $printer = new \Dvsa\Olcs\Api\Entity\PrintScan\Printer();
+        $team = new Team();
+        $printer = new Printer();
         $printer->setPrinterName('QUEUE1');
-        $teamPrinter = new \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter($team, $printer);
+        $teamPrinter = new TeamPrinter($team, $printer);
         $team->addTeamPrinters($teamPrinter);
         $this->mockUser->setTeam($team);
 
         // 1st file
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -391,7 +385,7 @@ class PrintJobTest extends CommandHandlerTestCase
             );
 
         // 2nd file
-        $mockFile2 = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile2 = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER2')->once()
             ->andReturn($mockFile2);
 
@@ -465,15 +459,15 @@ class PrintJobTest extends CommandHandlerTestCase
             ['id' => 'QUEUE_ID', 'documents' => ['DOC_ID', 'DOC2_ID'], 'title' => 'JOB', 'user' => 'USER_ID']
         );
 
-        $team = new \Dvsa\Olcs\Api\Entity\User\Team();
-        $printer = new \Dvsa\Olcs\Api\Entity\PrintScan\Printer();
+        $team = new Team();
+        $printer = new Printer();
         $printer->setPrinterName('QUEUE1');
-        $teamPrinter = new \Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter($team, $printer);
+        $teamPrinter = new TeamPrinter($team, $printer);
         $team->addTeamPrinters($teamPrinter);
         $this->mockUser->setTeam($team);
 
         // 1st file
-        $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
@@ -493,7 +487,7 @@ class PrintJobTest extends CommandHandlerTestCase
             );
 
         // 2nd file
-        $mockFile2 = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
+        $mockFile2 = m::mock(File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER2')->once()
             ->andReturn($mockFile2);
 
@@ -550,10 +544,10 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class);
+        $this->expectException(NotReadyException::class);
         $this->expectExceptionMessage('Error executing pdfunite command : PDF MERGE ERROR');
 
-        $result = $this->sut->handleCommand($command);
+        $this->sut->handleCommand($command);
     }
 
     public function testHandleCommandCannotDownloadFile()
@@ -561,16 +555,13 @@ class PrintJobTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => 'USER_ID']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn(null);
 
-        $this->expectException(
-            \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
-            "Can't find document"
-        );
-
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Can't find document");
         $this->sut->handleCommand($command);
     }
 
@@ -578,14 +569,11 @@ class PrintJobTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => 'USER_ID']);
 
-        $team = new \Dvsa\Olcs\Api\Entity\User\Team();
+        $team = new Team();
         $this->mockUser->setTeam($team);
 
-        $this->expectException(
-            \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
-            'Cannot find printer for User LOGIN_ID'
-        );
-
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Cannot find printer for User LOGIN_ID');
         $this->sut->handleCommand($command);
     }
 
@@ -594,7 +582,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => 'USER_ID']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()
             ->andReturn('TESTING-STUB-LICENCE:34');
 
         $this->repoMap['Document']->shouldReceive('save')->once()->andReturnUsing(
@@ -618,7 +606,7 @@ class PrintJobTest extends CommandHandlerTestCase
         );
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()
+            ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()
             ->andReturn('TESTING-STUB-LICENCE:34');
 
         $this->repoMap['Document']->shouldReceive('save')->once()->andReturnUsing(

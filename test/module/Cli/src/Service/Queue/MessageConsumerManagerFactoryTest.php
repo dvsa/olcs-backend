@@ -1,32 +1,20 @@
 <?php
 
-/**
- * Message Consumer Manager Factory Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
-use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory;
+use Interop\Container\ContainerInterface;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-/**
- * Message Consumer Manager Factory Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
-class MessageConsumerManagerFactoryTest extends \PHPUnit\Framework\TestCase
+class MessageConsumerManagerFactoryTest extends MockeryTestCase
 {
-    protected $sut;
-
-    protected $sm;
+    private MessageConsumerManagerFactory $sut;
 
     public function setUp(): void
     {
         $this->sut = new MessageConsumerManagerFactory();
-
-        $this->sm = Bootstrap::getServiceManager();
     }
 
     public function testInvoke()
@@ -41,9 +29,10 @@ class MessageConsumerManagerFactoryTest extends \PHPUnit\Framework\TestCase
         ];
 
         // Mocks
-        $this->sm->setService('Config', $config);
+        $container = m::mock(ContainerInterface::class);
+        $container->expects('get')->with('Config')->andReturn($config);
 
-        $mcm = $this->sut->__invoke($this->sm, MessageConsumerManager::class);
+        $mcm = $this->sut->__invoke($container, MessageConsumerManager::class);
 
         $this->assertInstanceOf(MessageConsumerManager::class, $mcm);
         $this->assertTrue($mcm->has('foo'));

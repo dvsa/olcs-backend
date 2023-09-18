@@ -3,13 +3,16 @@
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserRegistered as SampleEmail;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Complete;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Failed;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Retry;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
 use Laminas\Serializer\Adapter\Json as LaminasJson;
-use Laminas\ServiceManager\Exception\RuntimeException as LaminasServiceException;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send
@@ -50,7 +53,7 @@ class SendTest extends AbstractConsumerTestCase
         );
 
         $this->expectCommand(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Complete::class,
+            Complete::class,
             ['item' => $item],
             new Result(),
             false
@@ -88,7 +91,7 @@ class SendTest extends AbstractConsumerTestCase
             ->andThrow(new EmailNotSentException($message));
 
         $this->expectCommand(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Retry::class,
+            Retry::class,
             [
                 'item' => $item,
                 'retryAfter' => 900,
@@ -127,10 +130,10 @@ class SendTest extends AbstractConsumerTestCase
         $this->chm
             ->shouldReceive('handleCommand')
             ->with(SampleEmail::class)
-            ->andThrow(new LaminasServiceException($message));
+            ->andThrow(new InvalidServiceException($message));
 
         $this->expectCommand(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
+            Failed::class,
             [
                 'item' => $item,
                 'lastError' => 'Email not sent',
@@ -171,7 +174,7 @@ class SendTest extends AbstractConsumerTestCase
             ->andThrow(new \Exception($message));
 
         $this->expectCommand(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
+            Failed::class,
             [
                 'item' => $item,
                 'lastError' => 'Email not sent',
@@ -210,7 +213,7 @@ class SendTest extends AbstractConsumerTestCase
             ->never();
 
         $this->expectCommand(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
+            Failed::class,
             [
                 'item' => $item,
                 'lastError' => QueueEntity::ERR_MAX_ATTEMPTS,

@@ -2,16 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\TmEmployment;
 
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessTransportManager;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\TmEmployment\Create;
 
-/**
- * Create TmEmployment test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class CreateTest extends AbstractHandlerTestCase
 {
     /**
@@ -32,7 +29,7 @@ class CreateTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(true);
 
         $this->assertSame(true, $this->sut->isValid($dto));
@@ -48,10 +45,10 @@ class CreateTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getTmaId')->andReturn(1);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(false);
 
-        $mockValidator = m::mock();
+        $mockValidator = m::mock(CanAccessTransportManager::class);
         $this->validatorManager->setService('canAccessTransportManagerApplication', $mockValidator);
 
         $mockValidator->shouldReceive('isValid')->with(1)->andReturn($canAccess);
@@ -70,10 +67,10 @@ class CreateTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getTransportManager')->andReturn(1);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(false);
 
-        $mockValidator = m::mock();
+        $mockValidator = m::mock(CanAccessTransportManager::class);
         $this->validatorManager->setService('canAccessTransportManager', $mockValidator);
 
         $mockValidator->shouldReceive('isValid')->with(1)->andReturn($canAccess);
@@ -89,7 +86,7 @@ class CreateTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getTransportManager')->andReturn(null);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(false);
 
         $this->assertSame(false, $this->sut->isValid($dto));

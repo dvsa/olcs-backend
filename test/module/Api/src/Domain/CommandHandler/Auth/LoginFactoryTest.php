@@ -49,7 +49,7 @@ class LoginFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, Login::class);
 
         // Assert
         $this->assertInstanceOf(Login::class, $result);

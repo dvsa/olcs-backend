@@ -2,17 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\TransportManagerApplication;
 
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessTransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\TransportManagerApplication\Delete;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
-/**
- * DeleteTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class DeleteTest extends AbstractHandlerTestCase
 {
     /**
@@ -42,7 +38,7 @@ class DeleteTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getIds')->andReturn([19, 11, 2015]);
 
-        $mockValidator = m::mock();
+        $mockValidator = m::mock(CanAccessTransportManagerApplication::class);
         $this->validatorManager->setService('canAccessTransportManagerApplication', $mockValidator);
 
         $mockValidator->shouldReceive('isValid')->with(19)->andReturn($canAccess);
