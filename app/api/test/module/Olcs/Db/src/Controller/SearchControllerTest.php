@@ -5,12 +5,7 @@ namespace OlcsTest\Db\Controller;
 use Olcs\Db\Controller\SearchController;
 use Mockery as m;
 use Olcs\Db\Service\Search\Search;
-use OlcsTest\Bootstrap;
 
-/**
- * Class SearchControllerTest
- * @package OlcsTest\Db\Controller
- */
 class SearchControllerTest extends \PHPUnit\Framework\TestCase
 {
     protected $mockSearchService;
@@ -20,15 +15,13 @@ class SearchControllerTest extends \PHPUnit\Framework\TestCase
     public function setUp(): void
     {
         $this->mockSearchService = m::mock(Search::class);
-        $this->sm = Bootstrap::getServiceManager();
         $this->sut = new SearchController($this->mockSearchService);
-        $this->sut->setServiceLocator($this->sm);
     }
     public function testGetList()
     {
         $mockPluginManager = $this->getMockPluginManager(['params' => 'Params']);
 
-        $mockParams = $mockPluginManager->get('params', '');
+        $mockParams = $mockPluginManager->get('params');
         $mockParams->shouldReceive('fromRoute')->andReturn([]);
         $mockParams->shouldReceive('fromQuery')->andReturn(
             [

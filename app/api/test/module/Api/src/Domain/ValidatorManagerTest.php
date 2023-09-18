@@ -1,22 +1,13 @@
 <?php
 
-/**
- * Validator Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain;
 
+use Dvsa\Olcs\Api\Domain\Validation\Validators\ValidatorInterface;
+use Interop\Container\Containerinterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
-use Laminas\ServiceManager\ConfigInterface;
 
-/**
- * Validator Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class ValidatorManagerTest extends MockeryTestCase
 {
     /**
@@ -26,33 +17,22 @@ class ValidatorManagerTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $config = m::mock(ConfigInterface::class);
-        $config->shouldReceive('configureServiceManager')
-            ->with(m::type(ValidatorManager::class))
-            ->once();
-
-        $this->sut = new ValidatorManager($config);
+        $container = m::mock(ContainerInterface::class);
+        $this->sut = new ValidatorManager($container, []);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
-        $mock = m::mock();
+        $mock = m::mock(ValidatorInterface::class);
 
         $this->sut->setService('Foo', $mock);
 
         $this->assertSame($mock, $this->sut->get('Foo'));
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
-        $this->assertNull($this->sut->validate(null));
-    }
-
-    /**
-     * @todo To be removed as part of OLCS-28149
-     */
-    public function testValidatePlugin()
-    {
-        $this->assertNull($this->sut->validatePlugin(null));
+        $plugin = m::mock(ValidatorInterface::class);
+        $this->assertNull($this->sut->validate($plugin));
     }
 }

@@ -14,11 +14,4 @@ use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 class MessageConsumerManager extends AbstractPluginManager
 {
     protected $instanceOf = MessageConsumerInterface::class;
-
-    public function __construct(ConfigInterface $config = null)
-    {
-        if ($config) {
-            $config->configureServiceManager($this);
-        }
-    }
 }

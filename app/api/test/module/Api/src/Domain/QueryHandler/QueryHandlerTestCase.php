@@ -84,9 +84,9 @@ class QueryHandlerTestCase extends MockeryTestCase
     public function setUp(): void
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
-
         $this->commandHandler = m::mock(CommandHandlerManager::class);
         $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->entityAccessLogger = m::mock(EntityAccessLogger::class)->shouldIgnoreMissing();
 
         foreach ($this->repoMap as $alias => $service) {
             $this->repoManager
@@ -98,11 +98,8 @@ class QueryHandlerTestCase extends MockeryTestCase
         $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
+        $sm->shouldReceive('get')->with(EntityAccessLogger::class)->andReturn($this->entityAccessLogger);
         $sm->expects('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
-
-        if (! isset($this->mockedSmServices[EntityAccessLogger::class])) {
-            $this->mockedSmServices[EntityAccessLogger::class] = m::mock(EntityAccessLogger::class)->shouldIgnoreMissing();
-        }
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
@@ -348,7 +345,7 @@ class QueryHandlerTestCase extends MockeryTestCase
      */
     protected function initializeQueryHandler(QueryHandlerInterface $queryHandler, ContainerInterface $serviceLocator): QueryHandlerInterface
     {
-        $queryHandlerManager = $serviceLocator->get(QueryHandlerManager::class);
+        $queryHandlerManager = $serviceLocator->get('QueryHandlerManager');
         assert($queryHandlerManager instanceof QueryHandlerManager, 'Expected instance of QueryHandlerManager');
         $queryHandler->__invoke($queryHandlerManager, null);
         return $queryHandler;

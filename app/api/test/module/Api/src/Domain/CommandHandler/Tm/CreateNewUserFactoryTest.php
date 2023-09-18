@@ -54,7 +54,7 @@ class CreateNewUserFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, CreateNewUser::class);
 
         // Assert
         $this->assertInstanceOf(CreateNewUser::class, $result->getWrapped());

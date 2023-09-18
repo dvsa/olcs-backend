@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Mvc\OlcsBlameableListener;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Gedmo\Mapping\Event\AdapterInterface;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -34,7 +35,7 @@ class OlcsBlameableListenerTest extends MockeryTestCase
      */
     protected function setUp(): void
     {
-        $this->serviceLocator = m::mock(ServiceLocatorInterface::class);
+        $this->serviceLocator = m::mock(ContainerInterface::class);
         $this->sut = new OlcsBlameableListener($this->serviceLocator);
     }
 

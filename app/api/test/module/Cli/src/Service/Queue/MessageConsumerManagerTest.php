@@ -14,7 +14,6 @@ use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
-use Laminas\ServiceManager\Exception\RuntimeException;
 
 /**
  * Message Consumer Manager Test
@@ -59,25 +58,5 @@ class MessageConsumerManagerTest extends MockeryTestCase
         $this->expectException(InvalidServiceException::class);
 
         $this->sut->validate(null);
-    }
-
-    /**
-     * @todo To be removed as part of OLCS-28149
-     */
-    public function testValidatePlugin()
-    {
-        $plugin = m::mock(MessageConsumerInterface::class);
-
-        $this->assertNull($this->sut->validatePlugin($plugin));
-    }
-
-    /**
-     * @todo To be removed as part of OLCS-28149
-     */
-    public function testValidatePluginInvalid()
-    {
-        $this->expectException(RuntimeException::class);
-
-        $this->sut->validatePlugin(null);
     }
 }

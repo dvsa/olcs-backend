@@ -56,7 +56,7 @@ class ChangeExpiredPasswordFactoryTest extends MockeryTestCase
         $repositoryServiceManager->expects('get')->with('User')->andReturn(m::mock(User::class));
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, ChangeExpiredPassword::class);
 
         // Assert
         $this->assertInstanceOf(ChangeExpiredPassword::class, $result);

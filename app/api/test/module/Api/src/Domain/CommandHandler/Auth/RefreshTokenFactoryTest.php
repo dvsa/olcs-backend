@@ -54,7 +54,7 @@ class RefreshTokenFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, RefreshTokens::class);
 
         // Assert
         $this->assertInstanceOf(RefreshTokens::class, $result);

@@ -34,7 +34,7 @@ class CanAccessIrhpApplicationWithIdTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn($id);
 
-        $this->setIsValid('CanAccessIrhpApplicationWithId', [$id], $canAccess);
+        $this->setIsValid('canAccessIrhpApplicationWithId', [$id], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }

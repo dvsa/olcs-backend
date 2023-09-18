@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForOrganisation;
 use Dvsa\Olcs\Api\Domain\Command\Cache\Generate;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
@@ -16,7 +17,9 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\SlaCalculatorAwareInterface;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
@@ -76,17 +79,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     private $repos = [];
 
-    /**
-     * @var CommandHandlerInterface
-     */
-    private $commandHandler;
+    private CommandHandlerManager $commandHandler;
 
-    /**
-     * @var \Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface
-     */
-    private $queryHandler;
+    private QueryHandlerManager $queryHandler;
 
-    private $repoManager;
+    private RepositoryServiceManager $repoManager;
 
     /**
      * @var IdentityProviderInterface

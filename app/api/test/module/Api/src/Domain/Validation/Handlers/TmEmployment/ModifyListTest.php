@@ -2,16 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\TmEmployment;
 
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessTmEmployment;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\TmEmployment\ModifyList;
 
-/**
- * ModifyList TmEmployment test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class ModifyListTest extends AbstractHandlerTestCase
 {
     /**
@@ -32,7 +29,7 @@ class ModifyListTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(true);
 
         $this->assertSame(true, $this->sut->isValid($dto));
@@ -48,10 +45,10 @@ class ModifyListTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getIds')->andReturn([1, 2]);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(false);
 
-        $mockValidator = m::mock();
+        $mockValidator = m::mock(CanAccessTmEmployment::class);
         $this->validatorManager->setService('canAccessTmEmployment', $mockValidator);
 
         $mockValidator->shouldReceive('isValid')->with(1)->andReturn($canAccess);

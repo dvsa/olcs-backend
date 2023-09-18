@@ -49,7 +49,7 @@ class ForgotPasswordFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, ForgotPassword::class);
 
         // Assert
         $this->assertInstanceOf(ForgotPassword::class, $result);

@@ -41,7 +41,7 @@ class ChangePasswordFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), ChangePassword::class);
+        $result = $this->sut->__invoke($this->serviceManager, ChangePassword::class);
 
         // Assert
         $this->assertInstanceOf(ChangePassword::class, $result);
