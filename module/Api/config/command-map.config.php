@@ -859,6 +859,7 @@ return [
 
     // Message Queue
     CommandCli\MessageQueue\Enqueue::class => CommandHandlerCli\MessageQueue\Enqueue::class,
+    CommandCli\MessageQueue\Consumer\TransXChange\TransXChangeConsumer::class => CommandHandlerCli\MessageQueue\Consumer\TransXChange\TransXChangeConsumer::class,
     CommandCli\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class => CommandHandlerCli\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class,
     CommandCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class => CommandHandlerCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class,
     CommandCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq::class => CommandHandlerCli\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq::class,

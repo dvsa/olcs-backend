@@ -127,7 +127,7 @@ class CompanyProfileTest extends CompaniesHouseConsumerTestCase
         $queueService = m::mock(Queue::class);
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('company_profile_queue_url', 1)
+            ->with('company_profile_queue_url', 1, 1)
             ->andReturnNull();
 
         $this->mockedSmServices = [
@@ -153,7 +153,7 @@ class CompanyProfileTest extends CompaniesHouseConsumerTestCase
         $queueService = m::mock(Queue::class);
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('company_profile_queue_url', 1)
+            ->with('company_profile_queue_url', 1, 1)
             ->andReturn([
                 [
                     'Body' => '1234',

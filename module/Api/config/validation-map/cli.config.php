@@ -112,6 +112,7 @@ return [
     CommandHandler\BulkSend\Letter::class => IsSystemUser::class,
     CommandHandler\Permits\PostScoringEmail::class => IsSystemUser::class,
     CliCommandHandler\MessageQueue\Enqueue::class => IsSystemUser::class,
+    CliCommandHandler\MessageQueue\Consumer\TransXChange\TransXChangeConsumer::class => IsSystemUser::class,
     CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\CompanyProfile::class => IsSystemUser::class,
     CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency::class => IsSystemUser::class,
     CliCommandHandler\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq::class => IsSystemUser::class,
