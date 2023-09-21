@@ -155,7 +155,7 @@ class CompanyProfileDlqTest extends CompaniesHouseConsumerTestCase
         $thirdFetchResult = null;
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('company_profile_dlq_url', 10)
+            ->with('company_profile_dlq_url', 10, 1)
             ->andReturn(
                 $firstFetchResult,
                 $secondFetchResult,
@@ -185,7 +185,7 @@ class CompanyProfileDlqTest extends CompaniesHouseConsumerTestCase
         $queueService = m::mock(Queue::class);
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('company_profile_dlq_url', 10)
+            ->with('company_profile_dlq_url', 10, 1)
             ->andReturn([])
             ->once();
 
@@ -230,7 +230,7 @@ class CompanyProfileDlqTest extends CompaniesHouseConsumerTestCase
         $secondFetchResult = null;
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('company_profile_dlq_url', 10)
+            ->with('company_profile_dlq_url', 10, 1)
             ->andReturn(
                 $firstFetchResult,
                 $secondFetchResult

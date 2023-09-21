@@ -16,6 +16,7 @@ class Queue
     const SEND_ACTION = 'send';
     const FETCH_ACTION = 'fetch';
     const DELETE_ACTION = 'delete';
+    const SET_VISIBILITY_TIMEOUT_ACTION = 'set visibility timeout';
 
     public function __construct(SqsClient $sqsClient)
     {
@@ -42,10 +43,11 @@ class Queue
      *
      * @param string $queueUrl
      * @param int $maxMessages Number of messages to fetch. No more than 10
+     * @param int $visibilityTimeout
      *
      * @return array|null
      */
-    public function fetchMessages(string $queueUrl, int $maxMessages): ?array
+    public function fetchMessages(string $queueUrl, int $maxMessages, int $visibilityTimeout = 1): ?array
     {
         if ($maxMessages > 10) {
             throw new \InvalidArgumentException('maxMessages must be 10 or less');
@@ -57,7 +59,7 @@ class Queue
                 'MessageAttributeNames' => ['All'],
                 'QueueUrl' => $queueUrl,
                 'WaitTimeSeconds' => 1,
-                'VisibilityTimeout' => 1
+                'VisibilityTimeout' => $visibilityTimeout
             ]);
 
             return $result->get('Messages');
@@ -81,6 +83,20 @@ class Queue
             ])->toArray();
         } catch (AwsException $exception) {
             $this->logAwsException($exception, static::DELETE_ACTION);
+            throw $exception;
+        }
+    }
+
+    public function changeMessageVisibility(string $queueUrl, string $receiptHandle, int $visibilityTimeout): array
+    {
+        try {
+            return $this->sqsClient->changeMessageVisibility([
+                'QueueUrl' => $queueUrl,
+                'ReceiptHandle' => $receiptHandle,
+                'VisibilityTimeout' => $visibilityTimeout,
+            ])->toArray();
+        } catch (AwsException $exception) {
+            $this->logAwsException($exception, static::SET_VISIBILITY_TIMEOUT_ACTION);
             throw $exception;
         }
     }
