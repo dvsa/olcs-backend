@@ -19,7 +19,8 @@ use Laminas\Mail\Transport\Sendmail;
 use Mockery as m;
 
 /**
- * Class S3FileTest
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class S3FileTest extends MockeryTestCase
 {

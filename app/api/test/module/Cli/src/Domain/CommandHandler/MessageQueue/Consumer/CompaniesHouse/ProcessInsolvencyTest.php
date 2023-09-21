@@ -237,7 +237,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $queueService = m::mock(Queue::class);
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('process_insolvency_queue_url', 1)
+            ->with('process_insolvency_queue_url', 1, 1)
             ->andReturnNull()
             ->once();
 
@@ -265,7 +265,7 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
         $queueService = m::mock(Queue::class);
 
         $queueService->shouldReceive('fetchMessages')
-            ->with('process_insolvency_queue_url', 1)
+            ->with('process_insolvency_queue_url', 1, 1)
             ->andReturn([
                 [
                     'Body' => '1234',

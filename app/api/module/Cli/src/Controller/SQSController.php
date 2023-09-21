@@ -13,6 +13,7 @@ use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyPro
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfileDlq;
+use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\TransXChange\TransXChangeConsumer;
 use Olcs\Logging\Log\Logger;
 use Laminas\View\Model\ConsoleModel;
 
@@ -26,7 +27,8 @@ class SQSController extends AbstractQueueController
         'companyProfile',
         'processInsolvency',
         'processInsolvencyDlq',
-        'companyProfileDlq'
+        'companyProfileDlq',
+        'transXChangeConsumer',
     ];
 
     private CommandHandlerManager $commandHandlerManager;
@@ -119,24 +121,44 @@ class SQSController extends AbstractQueueController
         return in_array($queue, static::VALID_QUEUE_TYPES);
     }
 
-    private function companyProfile()
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
+    private function companyProfile(): CompanyProfile
     {
         return CompanyProfile::create([]);
     }
 
-    private function processInsolvency()
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
+    private function processInsolvency(): ProcessInsolvency
     {
         return ProcessInsolvency::create([]);
     }
 
-    private function processInsolvencyDlq()
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
+    private function processInsolvencyDlq(): ProcessInsolvencyDlq
     {
         return ProcessInsolvencyDlq::create([]);
     }
 
-    private function companyProfileDlq()
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
+    private function companyProfileDlq(): CompanyProfileDlq
     {
         return CompanyProfileDlq::create([]);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
+    private function transXChangeConsumer(): TransXChangeConsumer
+    {
+        return TransXChangeConsumer::create([]);
     }
 
     protected function handleSingleCommand($dto): Result
