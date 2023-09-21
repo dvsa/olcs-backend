@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as Entity;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
