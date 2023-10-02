@@ -7,7 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\ORM\Exception\ORMException;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as NextQueueItemQry;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
@@ -140,9 +141,9 @@ class QueueProcessorTest extends MockeryTestCase
         $mockConsumer->shouldReceive('processMessage')
             ->once()
             ->with($item)
-            ->andThrow(new \Doctrine\ORM\ORMException($exceptionMessage));
+            ->andThrow(new ORMException($exceptionMessage));
 
-        $this->expectException(\Doctrine\ORM\ORMException::class);
+        $this->expectException(ORMException::class);
 
         $this->sut->processNextItem($includeTypes, $excludeTypes);
     }

@@ -86,7 +86,6 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
      * @param array $paramTypes param types
      *
      * @throws RuntimeException
-     * @return \Doctrine\DBAL\Driver\Statement
      */
     public function execute(array $params = [], array $paramTypes = [])
     {

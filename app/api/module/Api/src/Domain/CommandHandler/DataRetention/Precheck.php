@@ -2,7 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\PDO\Connection as PDOConnection;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Command\DataRetention\Precheck as PrecheckCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -11,13 +12,10 @@ use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
 
-/**
- * DR Precheck
- */
 final class Precheck extends AbstractCommandHandler
 {
-    /** @var Connection */
-    private $connection;
+    /** @var PDOConnection|ServerInfoAwareConnection  */
+    private ServerInfoAwareConnection $connection;
 
     protected $extraRepos = ['SystemParameter'];
 
@@ -41,6 +39,8 @@ final class Precheck extends AbstractCommandHandler
         $this->result->addMessage(
             "Calling stored procedure sp_dr_precheck($limit)"
         );
+
+        /** @var \PDOStatement $stmt */
         $stmt = $this->connection->prepare("CALL sp_dr_precheck($limit);");
         $stmt->execute();
         $this->result->addMessage("Precheck procedure executed.");
@@ -66,7 +66,7 @@ final class Precheck extends AbstractCommandHandler
 
         /** @var EntityManager $entityManager */
         $entityManager = $container->get('DoctrineOrmEntityManager');
-        $this->connection = $entityManager->getConnection()->getWrappedConnection();
+        $this->connection = $entityManager->getConnection()->getNativeConnection();
         return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
+use Doctrine\DBAL\Statement;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Cli\Domain\Command\DataDvaNiExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataDvaNiExport;
-use Doctrine\DBAL\Driver\PDOStatement;
 use Dvsa\Olcs\Api\Domain\Repository;
 use org\bovigo\vfs\vfsStream;
 use Mockery as m;
@@ -46,7 +46,7 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
         $this->mockRepo('SubCategory', Repository\SubCategory::class);
         $this->mockRepo('Licence', Repository\Licence::class);
 
-        $this->mockStmt = m::mock(PDOStatement::class);
+        $this->mockStmt = m::mock(Statement::class);
 
         //  mock config
         $this->mockedSmServices['Config'] = [

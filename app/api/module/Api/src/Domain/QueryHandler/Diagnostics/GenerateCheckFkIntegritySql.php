@@ -137,7 +137,7 @@ final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
         /** @var EntityManager $entityManager */
         $entityManager = $container->get('DoctrineOrmEntityManager');
         $this->databaseName = $entityManager->getConnection()->getParams()['dbname'];
-        $this->pdo = $entityManager->getConnection()->getWrappedConnection();
+        $this->pdo = $entityManager->getConnection()->getNativeConnection();
         return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

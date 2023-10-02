@@ -137,7 +137,7 @@ class Task extends AbstractRepository
      */
     public function flagUrgentsTasks()
     {
-        /** @var \Doctrine\DBAL\Driver\PDOStatement $stmt */
+        /** @var \Doctrine\DBAL\Result $stmt */
         $stmt = $this->getDbQueryManager()
             ->get('Task/FlagUrgentTasks')
             ->execute();

@@ -38,10 +38,8 @@ class DataDvaNi
 
     /**
      * Fetch operator licences in specified areas
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
      */
-    public function fetchNiOperatorLicences()
+    public function fetchNiOperatorLicences(): \Doctrine\DBAL\Statement
     {
 
         //  query data
@@ -49,7 +47,7 @@ class DataDvaNi
             'SELECT * FROM data_dva_ni_operator_licence_view'
         );
 
-        $stmt->execute();
+        $stmt->executeQuery();
 
         return $stmt;
     }

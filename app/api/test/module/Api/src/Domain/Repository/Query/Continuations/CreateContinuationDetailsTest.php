@@ -75,8 +75,8 @@ class CreateContinuationDetailsTest extends BaseAbstractDbQueryTestCase
                 . 'VALUES (\'1\', \'0\', \'status\', \'2\', NOW(), 1), '
                 . '(\'1\', \'0\', \'status\', \'2\', NOW(), 1)'
             )->once()
-            ->andReturn('result');
-        $this->assertEquals('result', $this->sut->executeInsert([1, 1], false, 'status', 2));
+            ->andReturn(1);
+        $this->assertEquals(1, $this->sut->executeInsert([1, 1], false, 'status', 2));
     }
 
     public function testExecuteInsertException()

@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
@@ -253,7 +253,7 @@ class IrhpPermit extends AbstractRepository
             Entity::STATUS_PRINTED
         ];
 
-        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+        $dbalResult = $this->getEntityManager()->getConnection()->executeQuery(
             'select ips.id AS irhpPermitStockId, ' .
             'count(ip.id) AS irhpPermitCount ' .
             'from irhp_permit ip ' .
@@ -269,12 +269,12 @@ class IrhpPermit extends AbstractRepository
                 $licenceId
             ],
             [
-                Connection::PARAM_STR_ARRAY,
+                ArrayParameterType::STRING,
                 PDO::PARAM_INT
             ]
         );
 
-        return $statement->fetchAll();
+        return $dbalResult->fetchAllAssociative();
     }
 
     /**

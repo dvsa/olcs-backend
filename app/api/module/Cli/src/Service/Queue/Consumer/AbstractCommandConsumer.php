@@ -2,11 +2,11 @@
 
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\ORM\Exception\ORMException;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
-use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Olcs\Logging\Log\Logger;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
@@ -90,7 +90,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
         } catch (LaminasServiceException $e) {
             Logger::logException($e, \Laminas\Log\Logger::ERR);
             return $this->handleLaminasServiceException($item, $e);
-        } catch (\Doctrine\ORM\ORMException $e) {
+        } catch (ORMException $e) {
             Logger::logException($e, \Laminas\Log\Logger::ERR);
             return $this->failed($item, $e->getMessage());
         } catch (DBALException $e) {

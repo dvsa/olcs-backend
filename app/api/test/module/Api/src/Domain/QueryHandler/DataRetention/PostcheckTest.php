@@ -2,18 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\DataRetention;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Query\DataRetention\Postcheck as Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\DataRetention\Postcheck;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use PDO;
 
-/**
- * Postcheck Test
- */
 class PostcheckTest extends QueryHandlerTestCase
 {
     private $mockedConnection;
@@ -21,10 +18,10 @@ class PostcheckTest extends QueryHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Postcheck();
-        $this->mockedConnection = m::mock(Connection::class);
+        $this->mockedConnection = m::mock(ServerInfoAwareConnection::class);
         $this->mockedSmServices['DoctrineOrmEntityManager'] = m::mock(EntityManager::class);
         $this->mockedSmServices['DoctrineOrmEntityManager']
-            ->shouldReceive('getConnection->getWrappedConnection')
+            ->shouldReceive('getConnection->getNativeConnection')
             ->withNoArgs()
             ->andReturn($this->mockedConnection);
         parent::setUp();
@@ -32,15 +29,9 @@ class PostcheckTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $mockStatement = m::mock(Statement::class);
-        $mockStatement
-            ->shouldReceive('execute')
-            ->once()
+        $mockResult = m::mock(Result::class);
+        $mockResult->expects('fetchAllAssociative')
             ->withNoArgs()
-            ->andReturn()
-            ->ordered()
-            ->shouldReceive('fetchAll')
-            ->with(PDO::FETCH_ASSOC)
             ->andReturn(
                 [
                     [
@@ -56,13 +47,15 @@ class PostcheckTest extends QueryHandlerTestCase
                         'data2' => '29'
                     ]
                 ]
-            )
-            ->ordered()
-            ->shouldReceive('closeCursor')
-            ->once()
+            );
+
+        $mockResult->expects('free')->withNoArgs();
+
+        $mockStatement = m::mock(Statement::class);
+        $mockStatement
+            ->expects('executeQuery')
             ->withNoArgs()
-            ->andReturn()
-            ->ordered();
+            ->andReturn($mockResult);
 
         $this->mockedConnection->shouldReceive('prepare')->with("CALL sp_dr_postcheck();")->once()->andReturn($mockStatement);
         $query = Query::create([]);
