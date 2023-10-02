@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
 
 /**
@@ -115,11 +116,11 @@ abstract class AbstractConsumer implements MessageConsumerInterface
     /**
      * Run a DTO command side effect
      *
-     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $command the command
+     * @param CommandInterface $command the command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    protected function handleSideEffectCommand(\Dvsa\Olcs\Transfer\Command\CommandInterface $command)
+    protected function handleSideEffectCommand(CommandInterface $command)
     {
         return $this->commandHandlerManager->handleCommand($command, false);
     }
@@ -127,11 +128,11 @@ abstract class AbstractConsumer implements MessageConsumerInterface
     /**
      * Run a DTO command
      *
-     * @param \Dvsa\Olcs\Transfer\Command\CommandInterface $command the command
+     * @param CommandInterface $command the command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    protected function handleCommand(\Dvsa\Olcs\Transfer\Command\CommandInterface $command)
+    protected function handleCommand(CommandInterface $command)
     {
         return $this->commandHandlerManager->handleCommand($command);
     }

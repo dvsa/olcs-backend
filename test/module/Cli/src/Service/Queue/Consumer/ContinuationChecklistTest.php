@@ -2,13 +2,18 @@
 
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\ORMException;
+use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\ORM\Exception\ORMException;
+use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Complete;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Failed;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist;
+use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist
@@ -39,13 +44,13 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
             ->addMessage('Document created');
 
         $this->expectCommand(
-            \Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process::class,
+            Process::class,
             $expectedDtoData,
             $cmdResult
         );
 
         $this->expectCommand(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Complete::class,
+            Complete::class,
             ['item' => $item],
             new Result(),
             false
@@ -69,14 +74,14 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
         $item->setCreatedBy($user);
 
         $this->expectCommandException(
-            \Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process::class,
+            Process::class,
             ['id' => 69, 'user' => 1],
-            \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
+            Exception::class,
             'epic fail'
         );
 
         $this->expectCommandException(
-            \Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update::class,
+            Update::class,
             [
                 'id' => 69,
                 'status' => ContinuationDetailEntity::STATUS_ERROR,
@@ -86,12 +91,12 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
                 'totPsvDiscs' => null,
                 'totCommunityLicences' => null,
             ],
-            \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
+            Exception::class,
             'marking as fail failed'
         );
 
         $this->expectCommand(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
+            Failed::class,
             [
                 'item' => $item,
                 'lastError' => 'epic fail, marking as fail failed',
@@ -121,14 +126,14 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
         $item->setCreatedBy($user);
 
         $this->expectCommandException(
-            \Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process::class,
+            Process::class,
             ['id' => 69, 'user' => 1],
             $exception,
             $exceptionMessageString
         );
 
         $this->expectCommandException(
-            \Dvsa\Olcs\Transfer\Command\ContinuationDetail\Update::class,
+            Update::class,
             [
                 'id' => 69,
                 'status' => ContinuationDetailEntity::STATUS_ERROR,
@@ -138,12 +143,12 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
                 'totPsvDiscs' => null,
                 'totCommunityLicences' => null,
             ],
-            \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
+            Exception::class,
             'marking as fail failed'
         );
 
         $this->expectCommand(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
+            Failed::class,
             [
                 'item' => $item,
                 'lastError' => "{$exceptionMessageString}, marking as fail failed",
@@ -160,7 +165,7 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
         );
     }
 
-    public function dpHandledExceptionProvider()
+    public function dpHandledExceptionProvider(): array
     {
         return [
             [ORMException::class, 'ORM Exception'],

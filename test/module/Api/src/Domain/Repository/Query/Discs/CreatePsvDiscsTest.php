@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\Discs;
 
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\CreatePsvDiscs;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\BaseAbstractDbQueryTestCase;
 
@@ -65,9 +65,9 @@ class CreatePsvDiscsTest extends BaseAbstractDbQueryTestCase
         $this->connection->shouldReceive('executeUpdate')
             ->with($sql)
             ->once()
-            ->andReturn('result');
+            ->andReturn(100);
 
-        $this->assertEquals('result', $this->sut->executeInsert(1102, 4, false));
+        $this->assertEquals(100, $this->sut->executeInsert(1102, 4, false));
     }
 
     public function testExecuteZeroDiscs()
@@ -77,7 +77,7 @@ class CreatePsvDiscsTest extends BaseAbstractDbQueryTestCase
 
     public function testExecuteInsertException()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this->connection->shouldReceive('quote')->with(1102)->times(4)->andReturn("'1102'");
         $this->connection->shouldReceive('quote')->with(0)->times(4)->andReturn("'0'");

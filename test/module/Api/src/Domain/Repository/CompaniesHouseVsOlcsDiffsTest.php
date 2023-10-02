@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Result;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseVsOlcsDiffs;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -22,7 +22,7 @@ class CompaniesHouseVsOlcsDiffsTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->mockStmt = m::mock(Statement::class);
+        $this->mockStmt = m::mock(Result::class);
 
         $this->mockConn = m::mock(\Doctrine\DBAL\Connection::class)
             ->shouldReceive('close')->atMost()

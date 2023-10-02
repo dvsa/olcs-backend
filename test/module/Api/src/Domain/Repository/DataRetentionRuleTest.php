@@ -2,15 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\DBAL\Driver\PDO\Result;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Transfer\Query\DataRetention\RuleAdmin;
 use Dvsa\Olcs\Transfer\Query\DataRetention\RuleList;
 use Mockery as m;
 
-/**
- * Class DataRetentionRuleTest
- */
 class DataRetentionRuleTest extends RepositoryTestCase
 {
     /** @var DataRetentionRule */
@@ -182,24 +180,25 @@ class DataRetentionRuleTest extends RepositoryTestCase
 
     public function testRunProc()
     {
-        $mockedStatement = m::mock(\Doctrine\DBAL\Driver\Statement::class);
+        //doctrine pdo result is marked final
+        $result = true;
+
+        $mockedStatement = m::mock(\PDOStatement::class);
         $mockedStatement
             ->shouldReceive('rowCount')
             ->andReturn(12)
             ->shouldReceive('nextRowset')
             ->shouldReceive('execute')
-            ->andReturn(true)
+            ->andReturn($result)
             ->shouldReceive('closeCursor')
             ->andReturn(true);
 
         $this->em
-            ->shouldReceive('getConnection->getWrappedConnection->prepare')
+            ->shouldReceive('getConnection->getNativeConnection->prepare')
             ->with('CALL proc(99)')
             ->once()
             ->andReturn($mockedStatement);
 
-        $result = $this->sut->runProc('proc', 99);
-
-        $this->assertSame(true, $result);
+        $this->assertSame($result, $this->sut->runProc('proc', 99));
     }
 }

@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Listener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\NotifyPropertyChanged;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\NotifyPropertyChanged;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity;

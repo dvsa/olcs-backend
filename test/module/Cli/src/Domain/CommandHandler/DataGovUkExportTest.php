@@ -16,7 +16,7 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Doctrine\DBAL\Driver\PDOStatement;
+use Doctrine\DBAL\Statement;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Email\Service\Email;
 use org\bovigo\vfs\vfsStream;
@@ -60,7 +60,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $this->mockRepo('SubCategory', Repository\SubCategory::class);
         $this->mockRepo('Licence', Repository\Licence::class);
 
-        $this->mockStmt = m::mock(PDOStatement::class);
+        $this->mockStmt = m::mock(Statement::class);
 
         //  mock config
         $this->mockedSmServices['Config'] = [

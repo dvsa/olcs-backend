@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Cli\Controller;
 
+use Doctrine\ORM\Exception\ORMException;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
@@ -181,7 +182,7 @@ class QueueControllerTest extends MockeryTestCase
         $errorMessage = 'error message';
         $this->mockQueueService->shouldReceive('processNextItem')
             ->with(['foo'], [])
-            ->andThrow(new \Doctrine\ORM\ORMException($errorMessage));
+            ->andThrow(new ORMException($errorMessage));
 
         $this->console->shouldReceive('writeLine')->with('Types = foo')->once();
         $this->console->shouldReceive('writeLine')->with('Exclude types = ')->once();

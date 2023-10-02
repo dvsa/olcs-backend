@@ -148,7 +148,7 @@ class IrhpPermitRange extends AbstractRepository
             ['stockId' => $stockId]
         );
 
-        return $statement->fetchAll();
+        return $statement->fetchAllAssociative();
     }
 
     /**

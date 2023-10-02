@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
+use Doctrine\DBAL\Statement;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Doctrine\DBAL\Driver\Statement;
 use Dvsa\Olcs\Api\Service\Exception;
 
 /**
@@ -129,7 +129,7 @@ abstract class AbstractDataExport extends AbstractCommandHandler
     /**
      * Make CSV file for the list of PSV Operators
      *
-     * @param Statement $stmt Database query response
+     * @param Statement $stmt     db records set
      *
      * @return string
      */

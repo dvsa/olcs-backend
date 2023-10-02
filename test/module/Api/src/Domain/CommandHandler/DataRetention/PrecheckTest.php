@@ -2,7 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\Precheck;
@@ -20,10 +21,10 @@ class PrecheckTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Precheck();
-        $this->mockedConnection = m::mock(Connection::class);
+        $this->mockedConnection = m::mock(ServerInfoAwareConnection::class);
         $this->mockedSmServices['DoctrineOrmEntityManager'] = m::mock(EntityManager::class);
         $this->mockedSmServices['DoctrineOrmEntityManager']
-            ->shouldReceive('getConnection->getWrappedConnection')
+            ->shouldReceive('getConnection->getNativeConnection')
             ->andReturn($this->mockedConnection);
         parent::setUp();
     }
@@ -37,10 +38,8 @@ class PrecheckTest extends CommandHandlerTestCase
 
         $mockStatement = m::mock(Statement::class);
         $mockStatement
-            ->shouldReceive('execute')
-            ->once()
-            ->withNoArgs()
-            ->andReturn();
+            ->expects('execute')
+            ->withNoArgs();
 
         $this->mockedConnection->shouldReceive('prepare')->with("CALL sp_dr_precheck(10);")->once()->andReturn($mockStatement);
         $result = $this->sut->handleCommand($command);

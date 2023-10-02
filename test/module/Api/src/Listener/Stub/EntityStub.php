@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Listener\Stub;
 
-use Doctrine\Common\NotifyPropertyChanged;
-use Doctrine\Common\PropertyChangedListener;
+use Doctrine\Persistence\NotifyPropertyChanged;
+use Doctrine\Persistence\PropertyChangedListener;
 
 /**
  * Stub for emulation Entity object with LastModified fields in test @see OlcsEntityListenerTest

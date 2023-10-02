@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\Statement;
 use PDO;
 
 /**
@@ -46,13 +45,13 @@ class DataGovUk
      *
      * @return \Doctrine\DBAL\Driver\Statement
      */
-    public function fetchPsvOperatorList()
+    public function fetchPsvOperatorList(): Statement
     {
         $stmt = $this->conn->prepare(
             'SELECT * FROM data_gov_uk_psv_operator_list'
         );
 
-        $stmt->execute();
+        $stmt->executeQuery();
 
         return $stmt;
     }
@@ -61,10 +60,8 @@ class DataGovUk
      * Fetch operator licences in specified areas
      *
      * @param array $areaNames Area names
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
      */
-    public function fetchOperatorLicences(array $areaNames)
+    public function fetchOperatorLicences(array $areaNames): Statement
     {
         $inStmt = implode(', ', array_fill(0, count($areaNames), '?'));
 
@@ -77,7 +74,7 @@ class DataGovUk
             $stmt->bindValue($idx + 1, $name, PDO::PARAM_STR);
         }
 
-        $stmt->execute();
+        $stmt->executeQuery();
 
         return $stmt;
     }
@@ -86,10 +83,8 @@ class DataGovUk
      * Fetch bus registered only
      *
      * @param array $areaCodes Area codes
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
      */
-    public function fetchBusRegisteredOnly(array $areaCodes)
+    public function fetchBusRegisteredOnly(array $areaCodes): Statement
     {
         return $this->fetchBusReg('data_gov_uk_bus_registered_only_view', $areaCodes);
     }
@@ -99,9 +94,9 @@ class DataGovUk
      *
      * @param array $areaCodes area codes
      *
-     * @return \Doctrine\DBAL\Driver\Statement
+     * @return Statement
      */
-    public function fetchBusVariation(array $areaCodes)
+    public function fetchBusVariation(array $areaCodes): Statement
     {
         return $this->fetchBusReg('data_gov_uk_bus_variation_view', $areaCodes);
     }
@@ -111,10 +106,8 @@ class DataGovUk
      *
      * @param string $view      Database View
      * @param array  $areaCodes area codes
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
      */
-    private function fetchBusReg($view, array $areaCodes)
+    private function fetchBusReg($view, array $areaCodes): Statement
     {
         $inStmt = implode(', ', array_fill(0, count($areaCodes), '?'));
 
@@ -126,7 +119,7 @@ class DataGovUk
             $stmt->bindValue($idx + 1, $code, PDO::PARAM_STR);
         }
 
-        $stmt->execute();
+        $stmt->executeQuery();
 
         return $stmt;
     }

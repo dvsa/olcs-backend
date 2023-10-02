@@ -2,12 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\DataRetention;
 
-use Doctrine\DBAL\Driver\PDOConnection;
+use Doctrine\DBAL\Driver\PDO\Connection as PDOConnection;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use PDO;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -16,8 +16,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class Postcheck extends AbstractQueryHandler
 {
-    /** @var PDOConnection */
-    private $connection;
+    /** @var PDOConnection|ServerInfoAwareConnection  */
+    private ServerInfoAwareConnection $connection;
 
     /**
      * Execute post-check stored procedure and
@@ -29,6 +29,7 @@ class Postcheck extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var \PDOStatement $stmt */
         $stmt = $this->connection->prepare('CALL sp_dr_postcheck();');
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -50,7 +51,7 @@ class Postcheck extends AbstractQueryHandler
 
         /** @var EntityManager $entityManager */
         $entityManager = $container->get('DoctrineOrmEntityManager');
-        $this->connection = $entityManager->getConnection()->getWrappedConnection();
+        $this->connection = $entityManager->getConnection()->getNativeConnection();
         return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
