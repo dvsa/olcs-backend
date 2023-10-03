@@ -655,4 +655,106 @@ class HandleOcVariationFeesTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+    public function testHandleCommandPSVWithIncreasedAuthShouldCreateFee()
+    {
+        $data = [];
+        $command = Cmd::create($data);
+
+        /** @var LicenceOperatingCentre $loc */
+        $loc = m::mock(LicenceOperatingCentre::class)->makePartial();
+        $locs = new ArrayCollection();
+        $locs->add($loc);
+
+        /** @var ApplicationOperatingCentre $aoc */
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('A');
+        $aocs = new ArrayCollection();
+        $aocs->add($aoc);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setOperatingCentres($locs);
+        $licence->setTotAuthVehicles(1);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial()
+            ->shouldReceive('isPsv')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('isVariation')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('hasApplicationFee')
+            ->andReturn(false)
+            ->getMock();
+
+        $application->setOperatingCentres($aocs);
+        $application->setLicence($licence);
+        $application->setId($applicationId = 111);
+        $application->setTotAuthVehicles(2);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $data = [
+            'id' => $applicationId,
+            'feeTypeFeeType' => FeeType::FEE_TYPE_VAR,
+            'description' => null
+        ];
+        $result = new Result();
+        $this->expectedSideEffect(CreateApplicationFee::class, $data, $result);
+
+        $result = $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandPSVWithoutIncreasedAuthShouldNotCreateFee()
+    {
+        $data = [];
+        $command = Cmd::create($data);
+
+        /** @var LicenceOperatingCentre $loc */
+        $loc = m::mock(LicenceOperatingCentre::class)->makePartial();
+        $locs = new ArrayCollection();
+        $locs->add($loc);
+
+        /** @var ApplicationOperatingCentre $aoc */
+        $aoc = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $aoc->setAction('A');
+        $aocs = new ArrayCollection();
+        $aocs->add($aoc);
+
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+        $licence->setOperatingCentres($locs);
+        $licence->setTotAuthVehicles(1);
+
+        /** @var Application $application */
+        $application = m::mock(Application::class)->makePartial()
+            ->shouldReceive('isPsv')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('isVariation')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('hasApplicationFee')
+            ->andReturn(false)
+            ->getMock();
+
+        $application->setOperatingCentres($aocs);
+        $application->setLicence($licence);
+        $application->setId($applicationId = 111);
+        $application->setTotAuthVehicles(1);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $this->repoMap['Fee']->shouldReceive('fetchOutstandingFeesByApplicationId')
+            ->with($applicationId)
+            ->andReturn([]);
+
+        $this->sut->handleCommand($command);
+    }
 }

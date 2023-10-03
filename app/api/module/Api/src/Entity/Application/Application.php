@@ -944,6 +944,24 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
+     * Has the total vehicle authorisation of this variation application increased ?
+     * Always returns false for non-variation applications
+     *
+     * @return bool
+     */
+    public function hasTotalVehicleAuthorisationIncreased(): bool
+    {
+        if (!$this->isVariation()) {
+            return false;
+        }
+
+        $variationAuthorisation = $this->getTotAuthVehicles();
+        $licenceAuthorisation = $this->getLicence()->getTotAuthVehicles();
+
+        return $variationAuthorisation > $licenceAuthorisation;
+    }
+
+    /**
      * Get Code
      *
      * @return string
