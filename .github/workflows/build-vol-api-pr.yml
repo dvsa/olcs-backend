@@ -2,12 +2,11 @@ name: Test, lint and build vol-api Image
 run-name: Test, lint and build vol-api Image 
 
 on:
-  pull_request:
+  push:
     branches:
     - AWSRESET1-313
 
 jobs:
-
   security:
     uses: dvsa/.github/.github/workflows/php-security.yml@main
     secrets:
