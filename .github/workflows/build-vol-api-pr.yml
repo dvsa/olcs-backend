@@ -47,12 +47,12 @@ jobs:
     - name: Download the compose file 
       run: |
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-        php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+        php composer-setup.php --install-dir=/usr/local/bin --filename=composer.phar
         php -r "unlink('composer-setup.php');"
 
     - name: install composer dependency
       run: |
-        php composer.phar install --optimize-autoloader --no-interaction --no-dev
+        php /usr/local/bin/composer.phar install --optimize-autoloader --no-interaction --no-dev
 
     - name: Build application
       run: |
