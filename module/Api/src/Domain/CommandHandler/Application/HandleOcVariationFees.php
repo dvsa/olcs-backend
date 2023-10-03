@@ -123,6 +123,14 @@ final class HandleOcVariationFees extends AbstractCommandHandler implements Tran
             }
         }
 
+        // PSV - fee always applies on authorisation increase, regardless of OC changes
+        if ($application->isPsv()) {
+            if ($application->hasTotalVehicleAuthorisationIncreased()) {
+                // if there's an increase in authorised vehicles, fee applies
+                return true;
+            }
+        }
+
         foreach ($applicationOcs as $aoc) {
             switch ($aoc->getAction()) {
                 case 'A':
