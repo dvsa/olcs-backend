@@ -32,12 +32,6 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleInvoke()
-    {
-        $this->sut->__invoke($this->commandHandler, null);
-        $this->assertSame($this->mockUploader, $this->sut->getContentStoreService());
-    }
-
     public function testHandleCommand()
     {
         $command = Cmd::create([]);

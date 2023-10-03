@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserve;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserveFactory;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\User;
@@ -61,7 +60,7 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
         $repositoryServiceManager->expects('get')->with('User')->andReturn(m::mock(User::class));
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, null);
 
         // Assert
         $this->assertInstanceOf(TransactioningCommandHandler::class, $result);

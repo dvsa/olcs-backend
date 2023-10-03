@@ -42,7 +42,7 @@ class DeleteUserFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), DeleteUser::class);
+        $result = $this->sut->__invoke($this->serviceManager, DeleteUser::class);
 
         // Assert
         $this->assertInstanceOf(TransactioningCommandHandler::class, $result);

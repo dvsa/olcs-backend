@@ -2,10 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpPermit;
 
-use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermit\UniqueCountriesByLicence as Handler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Transfer\Query\IrhpPermit\UniqueCountriesByLicence as UniqueCountriesByLicenceQuery;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence as GetListByLicenceQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -21,9 +19,6 @@ class UniqueCountriesByLicenceTest extends QueryHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Handler();
-
-        $this->mockedSmServices['QueryHandlerManager'] = m::mock(QueryHandlerManager::class);
-
         $this->query = m::mock(QueryInterface::class);
 
         parent::setUp();
@@ -105,7 +100,7 @@ class UniqueCountriesByLicenceTest extends QueryHandlerTestCase
             ]
         ];
 
-        $this->mockedSmServices['QueryHandlerManager']->shouldReceive('handleQuery')
+        $this->queryHandler->shouldReceive('handleQuery')
             ->with(m::type(GetListByLicenceQuery::class), false)
             ->andReturnUsing(function ($query) use (
                 $licenceId,

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\LoginFactory;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserve;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserveFactory;
 use Dvsa\Olcs\Api\Domain\Repository\User;
@@ -54,7 +53,7 @@ class RegisterUserSelfserveFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, null);
 
         // Assert
         $this->assertInstanceOf(RegisterUserSelfserve::class, $result->getWrapped());

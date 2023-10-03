@@ -287,7 +287,6 @@ class QueryHandlerTestCase extends MockeryTestCase
             $qryDataToMatch = [];
 
             foreach ($data as $key => $value) {
-                //unset($value);
                 $qryDataToMatch[$key] = $qryData[$key] ?? null;
             }
 
@@ -334,20 +333,5 @@ class QueryHandlerTestCase extends MockeryTestCase
                 'trafficAreas' => ["A", "B"],
             ],
         ];
-    }
-
-    /**
-     * Initializes a query handler.
-     *
-     * @param QueryHandlerInterface $queryHandler
-     * @param ContainerInterface $serviceLocator
-     * @return QueryHandlerInterface
-     */
-    protected function initializeQueryHandler(QueryHandlerInterface $queryHandler, ContainerInterface $serviceLocator): QueryHandlerInterface
-    {
-        $queryHandlerManager = $serviceLocator->get('QueryHandlerManager');
-        assert($queryHandlerManager instanceof QueryHandlerManager, 'Expected instance of QueryHandlerManager');
-        $queryHandler->__invoke($queryHandlerManager, null);
-        return $queryHandler;
     }
 }

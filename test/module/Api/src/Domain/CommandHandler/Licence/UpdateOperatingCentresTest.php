@@ -637,7 +637,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
 
         if (null !== $this->serviceManager()) {
-            $this->sut->__invoke($this->commandHandlerManager(), null);
+            $this->sut->__invoke($this->serviceManager(), CommandHandler::class);
         }
     }
 

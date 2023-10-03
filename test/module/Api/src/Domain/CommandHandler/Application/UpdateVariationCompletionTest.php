@@ -1251,7 +1251,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $this->sut = new UpdateVariationCompletion();
 
         if ($this->serviceManager()) {
-            $this->sut->__invoke($this->commandHandlerManager(), null);
+            $this->sut->__invoke($this->serviceManager(), UpdateVariationCompletion::class);
         }
     }
 

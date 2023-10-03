@@ -2,13 +2,12 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Driver\PDOStatement;
+use Doctrine\DBAL\Driver\Statement;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Cli\Domain\Command\CompaniesHouseVsOlcsDiffsExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CompaniesHouseVsOlcsDiffsExport;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
 
 /**
@@ -89,7 +88,7 @@ class CompaniesHouseVsOlcsDiffsExportTest extends CommandHandlerTestCase
             'col2' => 'val22',
         ];
 
-        $mockStmt = m::mock(PDOStatement::class)
+        $mockStmt = m::mock(Statement::class)
             ->shouldReceive('fetch')->once()->andReturn($row1)
             ->shouldReceive('fetch')->once()->andReturn($row2)
             ->shouldReceive('fetch')->andReturn(false)

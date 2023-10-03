@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\DataRetention;
 
 use Doctrine\DBAL\Driver\PDO\Connection as PDOConnection;
-use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -16,8 +15,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class Postcheck extends AbstractQueryHandler
 {
-    /** @var PDOConnection|ServerInfoAwareConnection  */
-    private ServerInfoAwareConnection $connection;
+    /** @var PDOConnection  */
+    private \PDO $connection;
 
     /**
      * Execute post-check stored procedure and
@@ -32,7 +31,7 @@ class Postcheck extends AbstractQueryHandler
         /** @var \PDOStatement $stmt */
         $stmt = $this->connection->prepare('CALL sp_dr_postcheck();');
         $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $stmt->closeCursor();
         return $results;
     }
