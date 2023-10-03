@@ -26,6 +26,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as ContinuationDetailRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
@@ -842,7 +843,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     {
         $repositoryServiceManager = $this->repositoryServiceManager();
         if (! $repositoryServiceManager->has('Licence')) {
-            $instance = $this->setUpMockService(Licence::class);
+            $instance = $this->setUpMockService(LicenceRepo::class);
 
             // Inject default licence instance
             $instance->allows('fetchUsingId')->andReturnUsing(function ($id) {

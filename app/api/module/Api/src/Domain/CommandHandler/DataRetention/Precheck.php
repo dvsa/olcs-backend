@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention;
 
 use Doctrine\DBAL\Driver\PDO\Connection as PDOConnection;
-use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Command\DataRetention\Precheck as PrecheckCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -14,8 +13,7 @@ use Interop\Container\ContainerInterface;
 
 final class Precheck extends AbstractCommandHandler
 {
-    /** @var PDOConnection|ServerInfoAwareConnection  */
-    private ServerInfoAwareConnection $connection;
+    private \PDO $connection;
 
     protected $extraRepos = ['SystemParameter'];
 

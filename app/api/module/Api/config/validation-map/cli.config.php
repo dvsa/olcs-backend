@@ -96,7 +96,7 @@ return [
     CommandHandler\Email\SendEcmtShortTermAppSubmitted::class => IsSystemUser::class,
     CommandHandler\Email\SendPtrNotificationForRegisteredUser::class =>IsSystemUser::class,
     CommandHandler\Email\SendPtrNotificationForUnregisteredUser::class =>IsSystemUser::class,
-    CommandHandler\Email\SendLiquidatedCompanyForUnRegisteredUser::class =>IsSystemUser::class,
+    CommandHandler\Email\SendLiquidatedCompanyForUnregisteredUser::class =>IsSystemUser::class,
     CommandHandler\Email\SendFailedOrganisationsList::class =>IsSystemUser::class,
     CommandHandler\Email\SendForgotPassword::class => IsSystemUser::class,
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,

@@ -12,14 +12,8 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
-use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 
-/**
- * Message Consumer Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class MessageConsumerManagerTest extends MockeryTestCase
 {
     protected $sut;
@@ -31,19 +25,6 @@ class MessageConsumerManagerTest extends MockeryTestCase
         $this->sm = Bootstrap::getServiceManager();
 
         $this->sut = new MessageConsumerManager();
-
-        $this->sut->setServiceLocator($this->sm);
-    }
-
-    public function testConstructWithConfig()
-    {
-        $config = m::mock(ConfigInterface::class);
-
-        $config->shouldReceive('configureServiceManager')
-            ->with(m::type(MessageConsumerManager::class))
-            ->once();
-
-        new MessageConsumerManager($config);
     }
 
     public function testValidate()

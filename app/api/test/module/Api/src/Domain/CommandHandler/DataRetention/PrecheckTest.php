@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 
-use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
-use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\Precheck;
@@ -11,9 +11,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
-/**
- * Class PrecheckTest
- */
 class PrecheckTest extends CommandHandlerTestCase
 {
     private $mockedConnection;
@@ -21,7 +18,7 @@ class PrecheckTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Precheck();
-        $this->mockedConnection = m::mock(ServerInfoAwareConnection::class);
+        $this->mockedConnection = m::mock(\PDO::class);
         $this->mockedSmServices['DoctrineOrmEntityManager'] = m::mock(EntityManager::class);
         $this->mockedSmServices['DoctrineOrmEntityManager']
             ->shouldReceive('getConnection->getNativeConnection')
@@ -29,7 +26,7 @@ class PrecheckTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommand(): void
     {
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getLimit')

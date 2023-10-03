@@ -27,12 +27,12 @@ class PrintLetterTest extends QueryHandlerTestCase
 
         $this->mockRepo('Document', Repository\Document::class);
 
+        parent::setUp();
+
         $this->mockPrintLetterSrv = m::mock(PrintLetterService::class);
         $this->queryHandler->expects('get')
             ->with(PrintLetterService::class)
             ->andReturn($this->mockPrintLetterSrv);
-
-        parent::setUp();
     }
 
     /**

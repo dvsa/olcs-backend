@@ -1,10 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\DataRetention;
 
-use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
-use Doctrine\DBAL\Result;
-use Doctrine\DBAL\Driver\Statement;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Query\DataRetention\Postcheck as Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\DataRetention\Postcheck;
@@ -18,50 +17,18 @@ class PostcheckTest extends QueryHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Postcheck();
-        $this->mockedConnection = m::mock(ServerInfoAwareConnection::class);
+        $this->mockedConnection = m::mock(\PDO::class);
+
         $this->mockedSmServices['DoctrineOrmEntityManager'] = m::mock(EntityManager::class);
         $this->mockedSmServices['DoctrineOrmEntityManager']
-            ->shouldReceive('getConnection->getNativeConnection')
+            ->expects('getConnection->getNativeConnection')
             ->withNoArgs()
             ->andReturn($this->mockedConnection);
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function testHandleQuery(): void
     {
-        $mockResult = m::mock(Result::class);
-        $mockResult->expects('fetchAllAssociative')
-            ->withNoArgs()
-            ->andReturn(
-                [
-                    [
-                        'type' => 'rowcount',
-                        'tableName' => 'queue',
-                        'data1' => '28',
-                        'data2' => '27'
-                    ],
-                    [
-                        'type' => 'rowcount',
-                        'tableName' => 'answer',
-                        'data1' => '30',
-                        'data2' => '29'
-                    ]
-                ]
-            );
-
-        $mockResult->expects('free')->withNoArgs();
-
-        $mockStatement = m::mock(Statement::class);
-        $mockStatement
-            ->expects('executeQuery')
-            ->withNoArgs()
-            ->andReturn($mockResult);
-
-        $this->mockedConnection->shouldReceive('prepare')->with("CALL sp_dr_postcheck();")->once()->andReturn($mockStatement);
-        $query = Query::create([]);
-
-        $result = $this->sut->handleQuery($query);
-
         $expected = [
             [
                 'type' => 'rowcount',
@@ -76,6 +43,21 @@ class PostcheckTest extends QueryHandlerTestCase
                 'data2' => '29'
             ]
         ];
+
+        $mockStatement = m::mock(\PDOStatement::class);
+        $mockStatement
+            ->expects('execute')
+            ->with()
+            ->andReturnTrue();
+        $mockStatement->expects('fetchAll')
+            ->with(\PDO::FETCH_ASSOC)
+            ->andReturn($expected);
+        $mockStatement->expects('closeCursor')->withNoArgs();
+
+        $this->mockedConnection->expects('prepare')->with("CALL sp_dr_postcheck();")->andReturn($mockStatement);
+        $query = Query::create([]);
+
+        $result = $this->sut->handleQuery($query);
 
         $this->assertEquals($expected, $result);
     }

@@ -242,7 +242,8 @@ class UpdateTest extends CommandHandlerTestCase
     public function handleCommand_UpdatesHomeAddress_WhenHomeAddressIdProvided()
     {
         // Setup
-        $serviceLocator = $sut = $this->setUpSut();
+        $this->setUpServiceManager();
+        $sut = $this->setUpSut();
         $command = Cmd::create(['id' => $transportManagerId = 1234, 'homeAddressId' => $homeAddressId = 4321]);
         $mockTransportManager = new TransportManagerEntity();
         $this->transportManagerRepository()->shouldReceive('fetchById')->with($transportManagerId)->andReturn($mockTransportManager);
@@ -334,6 +335,7 @@ class UpdateTest extends CommandHandlerTestCase
     public function handleCommand_ReportsNoUpdatesToHomeContactDetails_WhenVersionIsUnchanged()
     {
         // Setup
+        $this->setUpServiceManager();
         $sut = $this->setUpSut();
         $contactDetailsVersion = 3;
         $command = Cmd::create(['homeCdId' => $homeContactDetailsId = 4321, 'homeCdVersion' => (string) $contactDetailsVersion]);

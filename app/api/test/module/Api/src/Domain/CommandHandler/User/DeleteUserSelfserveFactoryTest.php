@@ -42,7 +42,7 @@ class DeleteUserSelfserveFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), DeleteUserSelfserve::class);
+        $result = $this->sut->__invoke($this->serviceManager, DeleteUserSelfserve::class);
 
         // Assert
         $this->assertInstanceOf(TransactioningCommandHandler::class, $result);

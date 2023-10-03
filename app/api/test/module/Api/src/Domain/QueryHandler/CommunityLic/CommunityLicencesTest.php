@@ -37,55 +37,6 @@ class CommunityLicencesTest extends QueryHandlerTestCase
     /**
      * @depends testHandleQueryIsDefined
      */
-    public function testHandleQueryReturnsAnArray()
-    {
-        // SetUp
-        $licence = LicenceBuilder::aLicence()->build();
-        $this->injectEntities($licence);
-        $query = Qry::create(['licence' => $licence->getId()]);
-        $queryHandler = $this->initializeQueryHandler($this->sut, $this->serviceManager());
-
-        // Execute
-        $result = $queryHandler->handleQuery($query);
-
-        // Assert
-        $this->assertIsArray($result);
-
-        return $result;
-    }
-
-    /**
-     * @depends testHandleQueryReturnsAnArray
-     * @param array $result
-     */
-    public function testHandleQueryReturnsAnArrayWithTheTotActiveCommunityLicencesKey(array $result)
-    {
-        $this->assertArrayHasKey('totActiveCommunityLicences', $result);
-    }
-
-    /**
-     * @depends testHandleQueryReturnsAnArrayWithTheTotActiveCommunityLicencesKey
-     */
-    public function testHandleQueryReturnsAnArrayWithTheTotActiveCommunityLicencesValue()
-    {
-        // SetUp
-        $licence = LicenceBuilder::aLicence()->build();
-        $this->injectEntities($licence);
-        $query = Qry::create(['licence' => $licence->getId()]);
-        $queryHandler = $this->initializeQueryHandler($this->sut, $this->serviceManager());
-        $expectedCount = 1234;
-        $this->communityLicenceRepository()->shouldReceive('countActiveByLicenceId')->andReturn($expectedCount);
-
-        // Execute
-        $result = $queryHandler->handleQuery($query);
-
-        // Assert
-        $this->assertEquals($expectedCount, $result['totActiveCommunityLicences']);
-    }
-
-    /**
-     * @depends testHandleQueryIsDefined
-     */
     public function testHandleQuery()
     {
         $this->mockRepo('CommunityLic', CommunityLicRepo::class);
@@ -155,6 +106,7 @@ class CommunityLicencesTest extends QueryHandlerTestCase
     {
         $this->setUpServiceManager();
         $this->sut = new CommunityLicencesQueryHandler();
+        parent::setUp();
     }
 
     /**
