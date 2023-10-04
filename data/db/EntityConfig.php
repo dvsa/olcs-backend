@@ -1983,7 +1983,7 @@ return array(
     ),
     'transport_manager' => array(
         'merge_details' => array(
-            'type' => 'json_array'
+            'type' => 'json'
         ),
     ),
     'application_read_audit' => array(
