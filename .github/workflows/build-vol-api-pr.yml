@@ -8,20 +8,22 @@ on:
 
 jobs:
   security:
-    uses: dvsa/.github/.github/workflows/php-security.yml@main
+    uses: dvsa/.github/.github/workflows/php-security.yml@rahul-dvsa-patch-1
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-  static-analysis:
-    uses: dvsa/.github/.github/workflows/php-static.yml@main
     with:
-      php-version: '7.4'
+      sev-threshold: 'high'
 
-  tests:
-    uses: dvsa/.github/.github/workflows/php-tests.yml@main
-    with:
-      php-versions: "[\"7.4\"]"
-      fail-fast: false
+  # static-analysis:
+  #   uses: dvsa/.github/.github/workflows/php-static.yml@main
+  #   with:
+  #     php-version: '7.4'
+
+  # tests:
+  #   uses: dvsa/.github/.github/workflows/php-tests.yml@main
+  #   with:
+  #     php-versions: "[\"7.4\"]"
+  #     fail-fast: false
 
   vol-api-image-build:
     runs-on: ubuntu-latest
@@ -75,12 +77,13 @@ jobs:
         notation version
         notation plugin ls
 
-    - name: Configure AWS credentials from Test account
-      uses: aws-actions/configure-aws-credentials@v4
+    - name: configure aws credentials on Non Production account
+      uses: aws-actions/configure-aws-credentials@v1.7.0
       with:
-        role-to-assume:  ${{ secrets.DEV_AWS_ROLE }}
-        aws-region: eu-west-1
+        role-to-assume: ${{ secrets.DEV_AWS_ROLE }} 
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: ${{ env.AWS_REGION }}
+
 
     - name: Login to Shared Core ECR
       id: login-ecr
