@@ -12,7 +12,7 @@ jobs:
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     with:
-      severity-threshold: 'high'
+      severity-threshold: high
 
   # static-analysis:
   #   uses: dvsa/.github/.github/workflows/php-static.yml@main
