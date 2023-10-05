@@ -26,7 +26,7 @@ class WithCaseFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): WithCase
     {
         return new WithCase(
-            $container->get('with')
+            $container->get('QueryPartialServiceManager')->get('with')
         );
     }
 }

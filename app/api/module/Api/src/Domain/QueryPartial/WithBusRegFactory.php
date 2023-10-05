@@ -26,7 +26,7 @@ class WithBusRegFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): WithBusReg
     {
         return new WithBusReg(
-            $container->get('with')
+            $container->get('QueryPartialServiceManager')->get('with')
         );
     }
 }
