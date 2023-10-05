@@ -26,7 +26,7 @@ class WithApplicationFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): WithApplication
     {
         return new WithApplication(
-            $container->get('with')
+            $container->get('QueryPartialServiceManager')->get('with')
         );
     }
 }

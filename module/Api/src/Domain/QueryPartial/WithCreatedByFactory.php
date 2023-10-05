@@ -26,7 +26,7 @@ class WithCreatedByFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): WithCreatedBy
     {
         return new WithCreatedBy(
-            $container->get('with')
+            $container->get('QueryPartialServiceManager')->get('with')
         );
     }
 }

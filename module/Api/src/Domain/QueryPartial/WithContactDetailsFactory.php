@@ -27,8 +27,8 @@ class WithContactDetailsFactory implements FactoryInterface
     {
         return new WithContactDetails(
             $container->get('doctrine.entitymanager.orm_default'),
-            $container->get('with'),
-            $container->get('withRefdata')
+            $container->get('QueryPartialServiceManager')->get('with'),
+            $container->get('QueryPartialServiceManager')->get('withRefdata')
         );
     }
 }
