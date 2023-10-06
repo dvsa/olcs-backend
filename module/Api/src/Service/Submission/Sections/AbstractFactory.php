@@ -9,6 +9,6 @@ class AbstractFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {;
-        return new $requestedName($container->get('QueryHandlerManager'), $container->get('viewrenderer'));
+        return new $requestedName($container->get('QueryHandlerManager'), $container->get('ViewRenderer'));
     }
 }

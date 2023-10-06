@@ -34,7 +34,7 @@ class ProhibitionDefect extends AbstractRepository
     protected function applyListJoins(QueryBuilder $qb)
     {
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('prohibition');
     }
 }

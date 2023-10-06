@@ -678,14 +678,14 @@ class LicenceTest extends RepositoryTestCase
             ->shouldReceive('withContactDetails')->once()->with('correspondenceCd', 'c')->andReturnSelf()
             ->shouldReceive('with')->once()->with('c.phoneContacts', 'c_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('c_p.phoneContactType', 'c_p_pct')->andReturnSelf()
-            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('organisation', 'o')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('o.contactDetails', 'o_cd')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('establishmentCd', 'e')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('transportConsultantCd', 't')->andReturnSelf()
             ->shouldReceive('with')->once()->with('t.phoneContacts', 't_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('t_p.phoneContactType', 't_p_pct')->andReturnSelf()
-            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
+            ->shouldReceive('withRefdata')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getSingleResult')
             ->with()
@@ -715,14 +715,14 @@ class LicenceTest extends RepositoryTestCase
             ->shouldReceive('withContactDetails')->once()->with('correspondenceCd', 'c')->andReturnSelf()
             ->shouldReceive('with')->once()->with('c.phoneContacts', 'c_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('c_p.phoneContactType', 'c_p_pct')->andReturnSelf()
-            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('organisation', 'o')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('o.contactDetails', 'o_cd')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('establishmentCd', 'e')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('transportConsultantCd', 't')->andReturnSelf()
             ->shouldReceive('with')->once()->with('t.phoneContacts', 't_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('t_p.phoneContactType', 't_p_pct')->andReturnSelf()
-            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
+            ->shouldReceive('withRefdata')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getSingleResult')
             ->with()

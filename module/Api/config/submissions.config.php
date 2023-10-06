@@ -1,84 +1,87 @@
 <?php
+
+use Dvsa\Olcs\Api\Service\Submission\Sections;
+
 return [
     'excluded-tm-sections' => ['case-summary', 'outstanding-applications', 'people'],
     'section-types' => [
         'submission_type_o_mlh_otc' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_mlh_clo' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_clo_g' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_clo_psv' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_clo_fep' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_otc' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_env' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_irfo' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_bus_reg' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_tm' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_schedule_41' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_impounding' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
         'submission_type_o_ni_tru' => [
-            'case-summary',
-            'case-outline',
-            'outstanding-applications',
-            'people'
+            Sections\CaseSummary::class,
+            Sections\CaseOutline::class,
+            Sections\OutstandingApplications::class,
+            Sections\People::class,
         ],
     ],
     'sections' => [

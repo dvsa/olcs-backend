@@ -77,7 +77,7 @@ class Appeal extends AbstractRepository
     protected function applyListJoins(QueryBuilder $qb)
     {
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('case')
             ->with('createdBy')
             ->with('lastModifiedBy');
