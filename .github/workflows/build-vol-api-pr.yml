@@ -11,20 +11,20 @@ jobs:
     uses: dvsa/.github/.github/workflows/php-security.yml@rahul-dvsa-patch-1
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    # with:
+    #   severity-threshold: high
+
+  static-analysis:
+    uses: dvsa/.github/.github/workflows/php-static.yml@main
     with:
-      severity-threshold: low
+      php-version: '7.4'
 
-  # static-analysis:
-  #   uses: dvsa/.github/.github/workflows/php-static.yml@main
-  #   with:
-  #     php-version: '7.4'
-
-  # tests:
-  #   uses: dvsa/.github/.github/workflows/php-tests.yml@main
-  #   with:
-  #     php-versions: "[\"7.4\"]"
-  #     fail-fast: false
-  #
+  tests:
+    uses: dvsa/.github/.github/workflows/php-tests.yml@main
+    with:
+      php-versions: "[\"7.4\"]"
+      fail-fast: false
+  
 
   vol-api-image-build:
     runs-on: ubuntu-latest
@@ -63,6 +63,7 @@ jobs:
     
     #upload the tar as artifact on github workflow 
 
+
     - name: Lint check on dockerfile
       run: docker run --rm --privileged -v `pwd`:/root/ projectatomic/dockerfile-lint dockerfile_lint -f dockerfile
 
@@ -71,17 +72,15 @@ jobs:
         IMAGE_SHA=$(echo $GITHUB_SHA | cut -c 1-6)
         echo "IMAGE_TAG=vol-api-$IMAGE_SHA" >> $GITHUB_ENV
   
-    - name: Set up Notation CLI
-      run: |
-        wget https://d2hvyiie56hcat.cloudfront.net/linux/amd64/installer/deb/latest/aws-signer-notation-cli_amd64.deb
-        sudo dpkg -i aws-signer-notation-cli_amd64.deb
-        notation version
-        notation plugin ls
+    - name: setup Notation CLI
+      uses: notaryproject/notation-action/setup@v1
+      with:
+        version: "1.0.0"
 
     - name: configure aws credentials on Non Production account
       uses: aws-actions/configure-aws-credentials@v1.7.0
       with:
-        role-to-assume: ${{ secrets.DEV_AWS_ROLE }} 
+        role-to-assume: ${{ secrets.VOL_AWS_ROLE_TOOLING_NONPROD }} 
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
         aws-region: ${{ env.AWS_REGION }}
 
