@@ -1,0 +1,1 @@
+FROM 245185850403.dkr.ecr.eu-west-1.amazonaws.com/php-base
