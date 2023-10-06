@@ -8,11 +8,11 @@ on:
 
 jobs:
   security:
-    uses: dvsa/.github/.github/workflows/php-security.yml@rahul-dvsa-patch-1
+    uses: dvsa/.github/.github/workflows/php-security.yml@v3.4.0
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-    # with:
-    #   severity-threshold: high
+    with:
+      severity-threshold: high
 
   static-analysis:
     uses: dvsa/.github/.github/workflows/php-static.yml@main
