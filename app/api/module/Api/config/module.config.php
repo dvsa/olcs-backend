@@ -645,7 +645,7 @@ return [
             'SystemParameter' => RepositoryFactory::class,
             'FeatureToggle' => RepositoryFactory::class,
             'Stay' => RepositoryFactory::class,
-            'Submission ' => RepositoryFactory::class,
+            'Submission' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
             'TaskAlphaSplit' => RepositoryFactory::class,
             'IrfoPartner' => RepositoryFactory::class,

@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Dvsa\Olcs\Api\Domain\QueryPartial\WithContactDetails;
 use Dvsa\Olcs\Api\Domain\QueryPartial\With;
 use Dvsa\Olcs\Api\Domain\QueryPartial\WithRefdata;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\ContactDetails;
 use Mockery as m;
 
@@ -27,8 +26,8 @@ class WithContactDetailsTest extends QueryPartialTestCase
         // Cannot mock With as it is Final
         $this->with = new With();
         // Cannot mock WithRefdata as it is Final
-        $this->withRefData = new WithRefdata($this->em, $this->with);
-        $this->sut = new WithContactDetails($this->em, $this->with, $this->withRefData);
+        $this->withRefdata = new WithRefdata($this->em, $this->with);
+        $this->sut = new WithContactDetails($this->em, $this->with, $this->withRefdata);
 
         parent::setUp();
     }

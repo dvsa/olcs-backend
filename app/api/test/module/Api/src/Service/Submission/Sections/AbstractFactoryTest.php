@@ -2,9 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory;
 use Dvsa\OlcsTest\Api\Service\Submission\Sections\Stub\AbstractSectionStub;
 use Interop\Container\ContainerInterface;
+use Laminas\View\Renderer\PhpRenderer;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -30,8 +32,8 @@ class AbstractFactoryTest extends MockeryTestCase
             ->andReturnUsing(
                 function ($class) {
                     $map = [
-                        'viewrenderer' => m::mock(\Laminas\View\Renderer\PhpRenderer::class),
-                        'QueryHandlerManager' => m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class),
+                        'ViewRenderer' => m::mock(PhpRenderer::class),
+                        'QueryHandlerManager' => m::mock(QueryHandlerManager::class),
                     ];
 
                     return $map[$class];

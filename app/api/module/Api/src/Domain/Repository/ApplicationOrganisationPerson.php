@@ -30,7 +30,7 @@ class ApplicationOrganisationPerson extends AbstractRepository
         /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('person', 'p')
             ->with('p.title');
 
@@ -54,7 +54,7 @@ class ApplicationOrganisationPerson extends AbstractRepository
         /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('person', 'p')
             ->with('p.title');
 
@@ -85,7 +85,7 @@ class ApplicationOrganisationPerson extends AbstractRepository
         /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('person', 'p')
             ->with('p.title');
 

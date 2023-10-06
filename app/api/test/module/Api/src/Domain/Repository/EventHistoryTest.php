@@ -237,7 +237,7 @@ class EventHistoryTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->once()->with($qb)->andReturnSelf()
-            ->shouldReceive('withRefData')->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('case')->once()->andReturnSelf()
             ->shouldReceive('with')->with('licence')->once()->andReturnSelf()
             ->shouldReceive('with')->with('application')->once()->andReturnSelf()

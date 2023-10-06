@@ -89,14 +89,14 @@ class Licence extends AbstractRepository
             ->withContactDetails('correspondenceCd', 'c')
             ->with('c.phoneContacts', 'c_p')
             ->with('c_p.phoneContactType', 'c_p_pct')
-            ->withRefData(PhoneContactEntity::class, 'c_p')
+            ->withRefdata(PhoneContactEntity::class, 'c_p')
             ->with('organisation', 'o')
             ->withContactDetails('o.contactDetails', 'o_cd')
             ->withContactDetails('establishmentCd', 'e')
             ->withContactDetails('transportConsultantCd', 't')
             ->with('t.phoneContacts', 't_p')
             ->with('t_p.phoneContactType', 't_p_pct')
-            ->withRefData(PhoneContactEntity::class, 't_p');
+            ->withRefdata(PhoneContactEntity::class, 't_p');
 
         return $qb->getQuery()->getSingleResult();
     }

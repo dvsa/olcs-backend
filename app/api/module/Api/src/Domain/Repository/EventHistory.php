@@ -89,7 +89,7 @@ class EventHistory extends AbstractRepository
     protected function applyListJoins(QueryBuilder $qb)
     {
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('case')
             ->with('licence')
             ->with('application')

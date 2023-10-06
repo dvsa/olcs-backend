@@ -83,7 +83,7 @@ class ClientFactory implements FactoryInterface
     {
         $authService = $container->get(AuthorizationService::class);
         /** @var Logger $logger */
-        $logger = $container->get('logger');
+        $logger = $container->get('Logger');
         /** @var User $currentUser */
         $currentUser = $authService->getIdentity()->getUser();
 
