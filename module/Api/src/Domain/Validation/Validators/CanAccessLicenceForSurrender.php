@@ -13,10 +13,8 @@ class CanAccessLicenceForSurrender extends CanAccessLicence implements Validator
 
     protected $repo = 'Licence';
 
-    public function isValid($dto)
+    public function isValid($entityId)
     {
-        $entityId = $dto->getId($dto);
-
         $licence = $this->getRepo($this->repo)->fetchById($entityId);
         $surrender = $this->getRepo('Surrender')->fetchOneByLicenceId($entityId);
 

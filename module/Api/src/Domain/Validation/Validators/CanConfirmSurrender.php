@@ -2,22 +2,19 @@
 
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
-
 /**
  * Class CanConfirmSurrender
  *
  * @package Dvsa\Olcs\Api\Domain\Validation\Validators
  */
-class CanConfirmSurrender extends AbstractCanAccessEntity implements HandlerInterface
+class CanConfirmSurrender extends AbstractCanAccessEntity implements ValidatorInterface
 {
     use SurrenderStatusAwareTrait;
 
     protected $repo = 'Licence';
 
-    public function isValid($dto)
+    public function isValid($entityId)
     {
-        $entityId = $dto->getId();
         $surrender = $this->getRepo('Surrender')->fetchOneByLicenceId($entityId);
 
         if ($this->hasBeenSigned($surrender)) {
