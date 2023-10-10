@@ -65,10 +65,10 @@ jobs:
     
     #upload the tar as artifact on github workflow 
 
-
-    - name: Lint check on dockerfile
-      run: docker run --rm --privileged -v `pwd`:/root/ projectatomic/dockerfile-lint dockerfile_lint -f dockerfile
-      continue-on-error: true #only for testing
+    - uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: dockerfile
+        failure-threshold: error
 
     - name: Set IMAGE_TAG
       run: | 
