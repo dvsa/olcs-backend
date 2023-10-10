@@ -6,8 +6,8 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanSurrenderLicence;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Surrender\Delete as CanDeleteSurrender;
-use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessLicenceForSurrender;
-use Dvsa\Olcs\Api\Domain\Validation\Validators\CanConfirmSurrender;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Surrender\CanAccessLicenceForSurrender;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Surrender\CanConfirmSurrender;
 
 return [
     CommandHandler\Surrender\Approve::class                             => IsInternalUser::class,

@@ -66,7 +66,8 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool canAccessIrhpApplicationWithId($entityId)
  * @method bool canEditIrhpApplicationWithId($entityId)
  * @method bool canDeleteSurrender($entityId)
- * @method bool CanAccessSurrenderedLicence($entity)
+ * @method bool canAccessLicenceForSurrender($entityId)
+ * @method bool canConfirmSurrender($entityId)
  */
 trait ValidationHelperTrait
 {
