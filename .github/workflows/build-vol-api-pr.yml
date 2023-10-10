@@ -31,7 +31,9 @@ jobs:
 
     env:
       AWS_REGION :  ${{ vars.DVSA_AWS_REGION }}
-      AWS_ACCOUNT_ID: ${{ secrets.VOL_AWS_ACCOUNT_TOOLING_NONPROD }}
+      AWS_ACCOUNT_ID_VOL_NP_TOOLING: ${{ secrets.VOL_AWS_ACCOUNT_TOOLING_NONPROD }}
+      REPO_NAME: ${{vars.AWS_ECR_NP_VOLTOOLING_REPONAME}}
+      AWS_ACCOUNT_ID_SHAREDCOREECR: ${{secrets.DVSA_AWS_SHAREDCOREECR_ID}}
 
     permissions:
       id-token: write   # This is required for requesting the JWT
@@ -69,13 +71,29 @@ jobs:
 
     - name: Set IMAGE_TAG
       run: | 
-        IMAGE_SHA=$(echo $GITHUB_SHA | cut -c 1-6)
+        IMAGE_SHA=$(git rev-parse --short HEAD)
         echo "IMAGE_TAG=vol-api-$IMAGE_SHA" >> $GITHUB_ENV
   
     - name: setup Notation CLI
       uses: notaryproject/notation-action/setup@v1
       with:
         version: "1.0.0"
+
+    - name: configure aws credentials on shared core ecr
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+      with:
+        role-to-assume: ${{ secrets.DVSA_AWS_ROLE_SHAREDCORECR }} 
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: ${{ vars.DVSA_AWS_REGION }}
+
+  
+    - name: Login to Shared Core ECR
+      id: login-ecr-sharedcoreecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build the Docker image
+      run: |
+        docker build -t $AWS_ACCOUNT_ID_VOL_NP_TOOLING.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG --build-arg DVSA_AWS_SHAREDCOREECR_ID=${{secrets.DVSA_AWS_SHAREDCOREECR_ID}} -f dockerfile . 
 
     - name: configure aws credentials on Non Production account
       uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -86,12 +104,10 @@ jobs:
 
 
     - name: Login to Shared Core ECR
-      id: login-ecr
+      id: login-ecr-vol-tooling-non-prod
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build the Docker image
-      run: |
-        docker build -t ${{ secrets.ECR_BASE_URL }}:$IMAGE_TAG -f dockerfile . 
+    
 
     - name: Snyk scan api image
       id: scan-api-image
