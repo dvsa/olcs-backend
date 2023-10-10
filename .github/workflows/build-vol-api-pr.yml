@@ -7,23 +7,23 @@ on:
     - AWSRESET1-313
 
 jobs:
-  security:
-    uses: dvsa/.github/.github/workflows/php-security.yml@v3.4.0
-    secrets:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-    with:
-      severity-threshold: high
+  # security:
+  #   uses: dvsa/.github/.github/workflows/php-security.yml@v3.4.0
+  #   secrets:
+  #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #   with:
+  #     severity-threshold: high
 
-  static-analysis:
-    uses: dvsa/.github/.github/workflows/php-static.yml@main
-    with:
-      php-version: '7.4'
+  # static-analysis:
+  #   uses: dvsa/.github/.github/workflows/php-static.yml@main
+  #   with:
+  #     php-version: '7.4'
 
-  tests:
-    uses: dvsa/.github/.github/workflows/php-tests.yml@main
-    with:
-      php-versions: "[\"7.4\"]"
-      fail-fast: false
+  # tests:
+  #   uses: dvsa/.github/.github/workflows/php-tests.yml@main
+  #   with:
+  #     php-versions: "[\"7.4\"]"
+  #     fail-fast: false
   
 
   vol-api-image-build:

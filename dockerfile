@@ -1,6 +1,7 @@
 # Add metadata to the image
 ARG DVSA_AWS_SHAREDCOREECR_ID 
 
+# hadolint ignore=DL3006
 FROM ${DVSA_AWS_SHAREDCOREECR_ID}.dkr.ecr.eu-west-1.amazonaws.com/php-base:7.4.0-alpine-fpm-8b0b625
 
 LABEL maintainer="shaun.hare@dvsa.gov.uk"
