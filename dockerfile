@@ -1,4 +1,3 @@
-# Add metadata to the image
 ARG DVSA_AWS_SHAREDCOREECR_ID 
 
 # hadolint ignore=DL3006
