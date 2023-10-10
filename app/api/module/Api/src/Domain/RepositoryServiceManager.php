@@ -11,7 +11,6 @@ class RepositoryServiceManager extends AbstractPluginManager
 {
     const VALIDATE_ERROR = 'Plugin manager "%s" expected an instance of type RepositoryInterface or 
     ReadonlyRepositoryInterface, but "%s" was received';
-    protected $instanceOf = RepositoryInterface::class;
 
     public function validate($instance)
     {
