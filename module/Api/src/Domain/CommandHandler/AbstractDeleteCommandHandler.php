@@ -79,13 +79,13 @@ abstract class AbstractDeleteCommandHandler extends AbstractCommandHandler imple
     /**
      * Check the entity is deletable
      *
-     * @param int   $id     the id of the entity
-     * @param mixed $entity the entity being deleted
+     * @param int|string   $id     the id of the entity
+     * @param mixed        $entity the entity being deleted
      *
      * @return void
      * @throws ValidationException
      */
-    protected function checkDeletable(int $id, $entity): void
+    protected function checkDeletable($id, $entity): void
     {
         /** for BC reasons we need to check the interface, not everything has a canDelete method */
         if ($entity instanceof DeletableInterface && !$entity->canDelete()) {
