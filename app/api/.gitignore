@@ -19,3 +19,4 @@ data/db/test-olcs-refdata.sql
 test/coverage/
 .scannerwork/
 .test/
+.test2/
