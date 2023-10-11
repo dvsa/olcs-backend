@@ -32,7 +32,7 @@ final class SetViFlags extends AbstractCommandHandler
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->setDbConnection($container->get('doctrine.connection.ormdefault'));
+        $this->setDbConnection($container->get('doctrine.connection.orm_default'));
         return parent::__invoke($container, $requestedName, $options);
     }
 }
