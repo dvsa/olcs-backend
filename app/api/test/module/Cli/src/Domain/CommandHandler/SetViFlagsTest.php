@@ -24,7 +24,7 @@ class SetViFlagsTest extends CommandHandlerTestCase
         $this->sut = new SetViFlags();
 
         $this->mockDbConnection = m::mock(Connection::class);
-        $this->mockedSmServices['doctrine.connection.ormdefault'] = $this->mockDbConnection;
+        $this->mockedSmServices['doctrine.connection.orm_default'] = $this->mockDbConnection;
 
         parent::setUp();
     }
