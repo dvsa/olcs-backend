@@ -15,9 +15,9 @@ jobs:
 
     env:
       AWS_REGION :  ${{ vars.DVSA_AWS_REGION }}
-      AWS_ACCOUNT_ID_VOL_NP_TOOLING: ${{ secrets.VOL_AWS_ACCOUNT_TOOLING_NONPROD }}
+      AWS_ACCOUNT_ID_VOL_NP_TOOLING: ${{ vars.VOL_AWS_ACCOUNT_TOOLING_NONPROD }}
       REPO_NAME: ${{vars.AWS_ECR_NP_VOLTOOLING_REPONAME}}
-      AWS_ACCOUNT_ID_SHAREDCOREECR: ${{secrets.DVSA_AWS_SHAREDCOREECR_ID}}
+      AWS_ACCOUNT_ID_SHAREDCOREECR: ${{vars.AWS_ACCOUNT_ID_SHAREDCOREECR}}
 
     permissions:
       id-token: write   # This is required for requesting the JWT
