@@ -14,6 +14,18 @@
             ]
         },
         {
+            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-transfer.git",
+            "type": "vcs"
+        },
+        {
+            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-xmltools.git",
+            "type": "vcs"
+        },
+        {
+            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-laminas.git",
+            "type": "vcs"
+        },
+        {
             "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS",
             "type": "composer"
         },
@@ -40,12 +52,12 @@
         "guzzlehttp/guzzle": "^7.5",
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "1.0.10",
-        "olcs/olcs-laminas": "~3.0.0",
+        "olcs/olcs-laminas": "3.0.3",
         "olcs/olcs-cpms": "~4.206.0",
         "olcs/olcs-logging": "^5.0.0",
-        "olcs/olcs-transfer": "~4.206.0",
+        "olcs/olcs-transfer": "dev-project/3.0",
         "olcs/olcs-utils": "^5.0.0",
-        "olcs/olcs-xmltools": "~4.206.0",
+        "olcs/olcs-xmltools": "dev-project/3.0",
         "oro/doctrine-extensions": "^2",
         "phprtflite/phprtflite": "~1.3.3",
         "phpseclib/phpseclib": "^2.0.6",
