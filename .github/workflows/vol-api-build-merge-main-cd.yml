@@ -59,8 +59,8 @@ jobs:
 
     - name: Set IMAGE_TAG
       run: | 
-        IMAGE_SHA=$(echo $GITHUB_SHA | cut -c 1-6)
-        echo "IMAGE_TAG=vol-php-fpm-7.4.0-alpine-fpm-$IMAGE_SHA" >> $GITHUB_ENV
+        IMAGE_SHA=$(git rev-parse --short HEAD)
+        echo "IMAGE_TAG=vol-api-7.4.33-alpine-fpm-$IMAGE_SHA" >> $GITHUB_ENV
     
     - name: Setup Notation CLI
       uses: notaryproject/notation-action/setup@v1
@@ -99,15 +99,16 @@ jobs:
       with:
         role-to-assume: ${{ secrets.VOL_AWS_ROLE_TOOLING_NONPROD }} 
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: ${{ vars.DVSA_AWS_REGION}}
   
-    - name: Login to Shared Core ECR
+    - name: Login to non prod vol tooling
       id: login-ecr-vol-tooling-non-prod
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: push the docker image
       run: |
         docker push $AWS_ACCOUNT_ID_VOL_NP_TOOLING.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
+        #docker push 342926679414.dkr.ecr.eu-west-1.amazonaws.com/non-prod-vol-api:latest
 
     - name: sign the base image
       run: |
