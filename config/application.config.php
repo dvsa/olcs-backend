@@ -2,6 +2,7 @@
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => [
+        'Dvsa\LaminasConfigCloudParameters',
         'Dvsa\Olcs\Utils',
         'Dvsa\Olcs\Address',
         'Dvsa\Olcs\Auth',
