@@ -112,6 +112,6 @@ jobs:
 
     - name: sign the base image
       run: |
-        notation sign $AWS_ACCOUNT_ID_VOL_NP_TOOLING.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_SHAREDCORECR_IMAGE_SIGNING_PROFILE }}" 
+        notation sign $AWS_ACCOUNT_ID_VOL_NP_TOOLING.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_NONPRODVOLTOOLING_IMAGE_SIGNING_PROFILE }}" 
 
    
