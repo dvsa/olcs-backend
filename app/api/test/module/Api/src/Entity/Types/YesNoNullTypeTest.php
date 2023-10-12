@@ -1,19 +1,10 @@
 <?php
 
-/**
- * Test YesNoType
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Entity\Types;
 
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Dvsa\Olcs\Api\Entity\Types\YesNoNullType;
 
-/**
- * Test YesNoType
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class YesNoNullTypeTest extends \PHPUnit\Framework\TestCase
 {
     private $type;
@@ -31,7 +22,7 @@ class YesNoNullTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSqlDeclaration()
     {
-        $mockPlatform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $mockPlatform = $this->createMock(MySQLPlatform::class);
         $this->assertEquals(
             'tinyint(1) NULL COMMENT \'(DC2Type:yesnonull)\'',
             $this->type->getSqlDeclaration(array(), $mockPlatform)
@@ -45,7 +36,7 @@ class YesNoNullTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function testConvertToPhpValue($input, $output)
     {
-        $mockPlatform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $mockPlatform = $this->createMock(MySQLPlatform::class);
         $this->assertEquals($output, $this->type->convertToPHPValue($input, $mockPlatform));
     }
 
@@ -70,7 +61,7 @@ class YesNoNullTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function testConvertToDatabaseValue($input, $output)
     {
-        $mockPlatform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $mockPlatform = $this->createMock(MySQLPlatform::class);
         $this->assertEquals($output, $this->type->convertToDatabaseValue($input, $mockPlatform));
     }
 
