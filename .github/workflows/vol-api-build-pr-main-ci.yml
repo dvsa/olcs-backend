@@ -1,10 +1,10 @@
 name: Test, lint and build vol-api Image
-run-name: Test, lint and build vol-api Image 
+run-name: Test, lint and build vol-api Image - CI
 
 on:
-  push:
+  pull_request:
     branches:
-    - AWSRESET1-313
+    - main
 
 jobs:
   # security:

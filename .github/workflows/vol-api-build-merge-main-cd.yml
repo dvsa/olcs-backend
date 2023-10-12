@@ -1,10 +1,11 @@
-name: Test, lint and build PHP base Image on Shared Core ECR
-run-name: Test, lint and build PHP base Image on Shared Core ECR
+name: Build, lint, push and sign vol-api Image
+run-name: Build, lint, push and sign vol-api Image - CD
 
 on:
-  pull_request:
-    branches:
-    - AWSRESET1-313
+  # pull_request:
+    push:
+     branches:
+      - AWSRESET1-313
 
 jobs:
 
