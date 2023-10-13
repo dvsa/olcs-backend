@@ -5,7 +5,7 @@ on:
   # pull_request:
     push:
      branches:
-      - AWSRESET1-313
+      - allinonecontainer
 
 jobs:
 

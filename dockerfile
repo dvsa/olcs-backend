@@ -1,4 +1,4 @@
-ARG DVSA_AWS_SHAREDCOREECR_ID 
+ARG DVSA_AWS_SHAREDCOREECR_ID
 
 # hadolint ignore=DL3006
 FROM ${DVSA_AWS_SHAREDCOREECR_ID}.dkr.ecr.eu-west-1.amazonaws.com/php-base:7.4.0-alpine-fpm-8b0b625
@@ -40,6 +40,10 @@ RUN echo 'session.save_handler = redis' >> /usr/local/etc/php/conf.d/50-docker-p
 
 RUN rm -f /opt/dvsa/olcs-backend/config/autoload/local* && \
     chown -R www-data:www-data /opt/dvsa /tmp/Entity /var/log/dvsa
+
+RUN apk add --no-cache nginx \
+    nginx-mod-http-lua \
+    nginx-mod-devel-kit
 
 USER www-data
 
