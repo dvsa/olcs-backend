@@ -67,7 +67,7 @@ jobs:
       with:
         version: "1.0.0"
         # plugin_name: <notation_signing_plugin_name>
-        # plugin_url: <plugin_download_url >
+        # plugin_url: <plugin_download_url>
 
     - name: Set up Notation plugin
       run: |
