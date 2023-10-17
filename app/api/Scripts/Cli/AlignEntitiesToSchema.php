@@ -7,6 +7,7 @@
  */
 namespace Cli;
 
+use Doctrine\DBAL\Connection;
 use Pdo;
 use DirectoryIterator;
 use Laminas\Filter\Word\CamelCaseToSeparator;
@@ -30,12 +31,7 @@ class AlignEntitiesToSchema
      */
     private $options;
 
-    /**
-     * Holds the PDO connection
-     *
-     * @var \Pdo
-     */
-    private $pdo;
+    private Connection $conn;
 
     /**
      * Required params
@@ -43,10 +39,6 @@ class AlignEntitiesToSchema
      * @var array
      */
     private $requiredParams = array(
-        'u' => '',
-        'p' => '',
-        'd' => '',
-        'host' => '',
         'mapping-files' => '',
         'entity-files' => '',
         'test-files' => '',
@@ -57,10 +49,6 @@ class AlignEntitiesToSchema
      * @todo these vagrant options can be removed once all devs migrated to k8s
      */
     private $vagrantDefaultOptions = [
-        'u' => 'root',
-        'p' => 'password',
-        'd' => 'olcs_be',
-        'host' => 'localhost',
         'mapping-files' => '/var/www/olcs/olcs-backend/data/mapping/',
         'entity-files' => '/var/www/olcs/olcs-backend/module/Api/src/Entity/',
         'test-files' => '/var/www/olcs/olcs-backend/test/module/Api/src/Entity/',
@@ -70,10 +58,6 @@ class AlignEntitiesToSchema
     ];
 
     private $defaultOptions = [
-        'u' => 'mysql',
-        'p' => 'olcs',
-        'd' => 'olcs_be',
-        'host' => 'database.localdev',
         'mapping-files' => '/opt/dvsa/olcs-backend/data/mapping/',
         'entity-files' => '/opt/dvsa/olcs-backend/module/Api/src/Entity/',
         'test-files' => '/opt/dvsa/olcs-backend/test/module/Api/src/Entity/',
@@ -184,7 +168,7 @@ class AlignEntitiesToSchema
      */
     private $entityConfig = array();
 
-    private $application;
+    private Application $application;
 
     /**
      * Initialise the variables
@@ -192,8 +176,8 @@ class AlignEntitiesToSchema
     public function __construct()
     {
         $this->options = getopt(
-            'u:p:d:',
-            array('help', 'default', 'host:', 'mapping-files:', 'entity-files:', 'test-files:', 'etl-files:', 'entity-config:')
+            '',
+            array('help', 'default', 'mapping-files:', 'entity-files:', 'test-files:', 'etl-files:', 'entity-config:')
         );
 
         if (isset($this->options['help'])) {
@@ -207,10 +191,6 @@ class AlignEntitiesToSchema
                 . "     etl-files        " . $this->defaultOptions['etl-files'] . " \n"
                 . "     entity-config    " . $this->defaultOptions['entity-config'] . " \n"
                 . "     restart-apache   " . $this->defaultOptions['restart-apache'] . " \n"
-                . "     host             " . $this->defaultOptions['host'] . " \n"
-                . "     -u               " . $this->defaultOptions['u'] . " \n"
-                . "     -p               " . $this->defaultOptions['p'] . " \n"
-                . "     -d               " . $this->defaultOptions['d'] . " \n"
                 . " \n\n"
                 . "===================================================\n"
                 . "Sample usage with default options \n"
@@ -227,10 +207,6 @@ class AlignEntitiesToSchema
                 . "--etl-files " . $this->defaultOptions['etl-files'] . " "
                 . "--entity-config " . $this->defaultOptions['entity-config'] . " "
                 . "--restart-apache " . $this->defaultOptions['restart-apache'] . " "
-                . "--host " . $this->defaultOptions['host'] . " "
-                . "-u" . $this->defaultOptions['u'] . " "
-                . "-p" . $this->defaultOptions['p'] . " "
-                . "-d" . $this->defaultOptions['d'] . "'\n\n"
                 . "===================================================\n"
                 . "Sample Usage with custom options (vagrant env) \n"
                 . "===================================================\n\n"
@@ -241,10 +217,6 @@ class AlignEntitiesToSchema
                 . "--etl-files " . $this->vagrantDefaultOptions['etl-files'] . " "
                 . "--entity-config " . $this->vagrantDefaultOptions['entity-config'] . " "
                 . "--restart-apache " . $this->defaultOptions['restart-apache'] . " "
-                . "--host " . $this->vagrantDefaultOptions['host'] . " "
-                . "-u" . $this->vagrantDefaultOptions['u'] . " "
-                . "-p" . $this->vagrantDefaultOptions['p'] . " "
-                . "-d" . $this->vagrantDefaultOptions['d'] . "'\n\n"
             );
         }
 
@@ -326,12 +298,10 @@ class AlignEntitiesToSchema
         $this->respond('Connecting to database...', 'info');
 
         try {
-            $this->pdo = new Pdo(
-                'mysql:dbname=' . $this->options['d'] . ';host=' . $this->options['host'],
-                $this->options['u'],
-                $this->options['p'],
-                array(Pdo::ATTR_ERRMODE => Pdo::ERRMODE_EXCEPTION)
-            );
+            $this->conn = $this->application->getServiceManager()->get('doctrine.connection.orm_default');
+
+            $this->conn->connect();
+
             $this->respond('Connection successful', 'success');
         } catch (\Exception $ex) {
             $this->exitResponse($ex->getMessage(), 'error');
@@ -342,58 +312,41 @@ class AlignEntitiesToSchema
     {
         $this->respond('Removing _hist tables', 'info');
 
-        $mysqlCommand = sprintf(
-            'mysql -h%s -u%s -p%s %s',
-            $this->options['host'],
-            $this->options['u'],
-            $this->options['p'],
-            $this->options['d']
-        );
-
         // SQL to generate DROP statements for all _hist tables
         $sql = 'SELECT CONCAT(\'DROP TABLE \', t.TABLE_NAME, \';\') AS \'-- DROP _hist tables\'FROM information_schema.TABLES t 
-          WHERE t.TABLE_SCHEMA = \''. $this->options['d'] .'\'
+          WHERE t.TABLE_SCHEMA = \''. $this->conn->getDatabase() .'\'
           AND t.TABLE_NAME LIKE \'%_hist\'';
 
         // run the SQL to get the DROP statements
-        $dropHistTablesSql = shell_exec($mysqlCommand .' -e "'. $sql .'"');
+        $output = $this->conn->executeQuery($sql)->fetchFirstColumn();
 
-        // execute the DROP statments
-        $output = shell_exec($mysqlCommand .' -e "'. $dropHistTablesSql .'"');
+        if (empty($output)) {
+            $this->respond('No _hist tables found', 'info');
+            return;
+        }
+
+        // run the DROP statements
+        $dropStatements = join("", $output);
+
+        $this->conn->executeStatement($dropStatements);
     }
 
     private function removeLiquibaseTables()
     {
         $this->respond('Removing Liquibase tables', 'info');
 
-        $mysqlCommand = sprintf(
-            'mysql -h%s -u%s -p%s %s',
-            $this->options['host'],
-            $this->options['u'],
-            $this->options['p'],
-            $this->options['d']
-        );
-
-        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOG"');
-        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOGLOCK"');
-        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS log_update"');
+        $this->conn->executeStatement('DROP TABLE IF EXISTS DATABASECHANGELOG');
+        $this->conn->executeStatement('DROP TABLE IF EXISTS DATABASECHANGELOGLOCK');
+        $this->conn->executeStatement('DROP TABLE IF EXISTS log_update');
     }
 
     private function removeDataRetentionCheckTables()
     {
         $this->respond('Removing Data Retention Check tables', 'info');
 
-        $mysqlCommand = sprintf(
-            'mysql -h%s -u%s -p%s %s',
-            $this->options['host'],
-            $this->options['u'],
-            $this->options['p'],
-            $this->options['d']
-        );
-
-        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_EXPECTED_DELETES"');
-        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_EXPECTED_NULLS"');
-        shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DR_TABLE_COUNTS"');
+        $this->conn->executeStatement('DROP TABLE IF EXISTS DR_EXPECTED_DELETES');
+        $this->conn->executeStatement('DROP TABLE IF EXISTS DR_EXPECTED_NULLS');
+        $this->conn->executeStatement('DROP TABLE IF EXISTS DR_TABLE_COUNTS');
     }
 
     /**
@@ -401,29 +354,10 @@ class AlignEntitiesToSchema
      */
     private function recreateDatabase()
     {
-        $dropDatabase = 'mysql -h%s -u%s -p%s -e \'DROP DATABASE IF EXISTS %s\'';
+        $this->respond('Rebuilding database...', 'info');
 
-        $createDatabase = 'mysql -h%s -u%s -p%s -e \'CREATE DATABASE IF NOT EXISTS %s\'';
-
-        shell_exec(
-            sprintf(
-                $dropDatabase,
-                $this->options['host'],
-                $this->options['u'],
-                $this->options['p'],
-                $this->options['d']
-            )
-        );
-
-        shell_exec(
-            sprintf(
-                $createDatabase,
-                $this->options['host'],
-                $this->options['u'],
-                $this->options['p'],
-                $this->options['d']
-            )
-        );
+        $this->conn->executeStatement('DROP DATABASE IF EXISTS ' . $this->conn->getDatabase());
+        $this->conn->executeStatement('CREATE DATABASE IF NOT EXISTS ' . $this->conn->getDatabase());
     }
 
     /**
@@ -1596,11 +1530,9 @@ class AlignEntitiesToSchema
     private function describeTable($table)
     {
         if (!isset($this->tableDescription[$table])) {
-            $query = $this->pdo->prepare('DESC ' . $table);
+            $query = $this->conn->executeQuery('DESC ' . $table);
 
-            $query->execute();
-
-            $this->tableDescription[$table] = $query->fetchAll(Pdo::FETCH_ASSOC);
+            $this->tableDescription[$table] = $query->fetchAllAssociative();
         }
 
         return $this->tableDescription[$table];
