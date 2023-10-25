@@ -368,7 +368,7 @@ class GdsVerify implements FactoryInterface
         }
         $this->config = $config;
         \SAML2\Compat\ContainerSingleton::setContainer(
-            $this->getContainer($container->get('logger'))
+            $this->getContainer($container->get('Logger'))
         );
         $this->setMetadataLoader(new Data\Loader($this->getCache()));
         if ($container->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {
