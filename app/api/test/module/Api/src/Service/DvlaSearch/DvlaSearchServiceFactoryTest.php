@@ -24,7 +24,7 @@ class DvlaSearchServiceFactoryTest extends TestCase
 
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
-        $mockSl->shouldReceive('get')->with('logger')->andReturn($logger);
+        $mockSl->shouldReceive('get')->with('Logger')->andReturn($logger);
 
         $sut = new DvlaSearchServiceFactory();
         $service = $sut->__invoke($mockSl, DvlaSearchServiceClient::class);
