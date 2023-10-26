@@ -98,7 +98,8 @@ jobs:
     - name: Build VOL API image after verifying Base image
       run: |
         notation inspect $BASE_IMAGE
-        docker build -t ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG} --build-arg DVSA_AWS_SHAREDCOREECR_ID=${{secrets.DVSA_AWS_SHAREDCOREECR_ID}} .
+        docker build -t ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG} \
+          --build-arg DVSA_AWS_SHAREDCOREECR_ID=${{secrets.DVSA_AWS_SHAREDCOREECR_ID}} .
 
     - name: Snyk scan VOL API image
       id: scan-api-image
@@ -128,13 +129,14 @@ jobs:
     - name: Sign VOL API image
       if: github.ref == 'refs/heads/main'
       run: |
-        notation sign ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG} --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_NONPRODVOLTOOLING_IMAGE_SIGNING_PROFILE }}"
+        notation sign ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG} \
+          --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_NONPRODVOLTOOLING_IMAGE_SIGNING_PROFILE }}"
 
-    - name: Deploy on Static environment
-      if: github.event_name == 'pull_request' && github.event.label.name == 'cd ready'
-      run: |
-       echo 'Deployment in process...'
-       sleep 10s
+    # - name: Deploy on Static environment
+    #   if: github.event_name == 'pull_request' && github.event.label.name == 'cd ready'
+    #   run: |
+    #    echo 'Deployment in process...'
+    #    sleep 10s
 
   run-automation-tests:
 
