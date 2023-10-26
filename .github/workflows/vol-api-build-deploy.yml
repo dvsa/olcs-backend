@@ -112,12 +112,14 @@ jobs:
       id: pr-image-tag
       run: |
         echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
+        echo "::set-output name=pr_image_tag::${VOL_API_IMAGE_TAG}"
 
     - name: Set VOL_API_IMAGE_TAG at mainline
       id: main-image-tag
       if: github.ref == 'refs/heads/main'
       run: |
         echo "VOL_API_IMAGE_TAG=approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
+        echo "::set-output name=main_image_tag::${VOL_API_IMAGE_TAG}"
 
     - name: Setup Notation CLI
       uses: notaryproject/notation-action/setup@v1
@@ -185,7 +187,9 @@ jobs:
     # #    echo 'Deployment in process...'
     # #    sleep 10s
     outputs:
-      image_tag: ${VOL_API_IMAGE_TAG}
+      pr_image_tag: ${{ steps.pr-image-tag.outputs.pr_image_tag }}
+      main_image_tag: ${{ steps.main-image-tag.outputs.main_image_tag }}
+
 
   deploy-on-ephemral-cluster:
 
@@ -199,7 +203,7 @@ jobs:
     - name: Trigger workflow 'nonprod-vol-api-manual-cd'
       if: github.event_name == 'pull_request'
       run: |
-        echo "${{ needs.build-test-push-sign-image.outputs.image_tag }}"
+        echo "Here: ${{ needs.build-test-push-sign-image.outputs.pr_image_tag }}"
 
   automation-tests:
 
