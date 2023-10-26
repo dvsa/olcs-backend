@@ -65,12 +65,12 @@ jobs:
 
     - name: Set VOL_API_IMAGE_TAG at PR level
       run: |
-        echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-7.4.33-alpine-fpm-$IMAGE_SHA" >> $GITHUB_ENV
+        echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
 
     - name: Set VOL_API_IMAGE_TAG at mainline
       if: github.ref == 'refs/heads/main'
       run: |
-        echo "VOL_API_IMAGE_TAG=approved-vol-api-7.4.33-alpine-fpm-$IMAGE_SHA" >> $GITHUB_ENV
+        echo "VOL_API_IMAGE_TAG=approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
 
     - name: Setup Notation CLI
       uses: notaryproject/notation-action/setup@v1

@@ -11,9 +11,8 @@ EXPOSE 80
 
 RUN apk -U upgrade && apk add --no-cache \
     curl \
-    nginx 
-    
-    
+    nginx
+
 #RUN rm /etc/nginx/conf.d/default.conf
 
 COPY nginx/conf.d/backend.conf /etc/nginx/nginx.conf
@@ -22,7 +21,7 @@ COPY nginx/conf.d/backend.conf /etc/nginx/nginx.conf
 
 RUN mkdir -p /opt/dvsa/olcs-backend /var/log/dvsa /tmp/Entity/Proxy && \
     touch /var/log/dvsa/backend.log
-    
+
 ADD backend.tar.gz /opt/dvsa/olcs-backend
 
 COPY start.sh /start.sh
@@ -30,7 +29,7 @@ RUN chmod +x /start.sh
 
 
 # FROM registry.olcs.dev-dvsacloud.uk/k8s/php-baseline:7.4.22-fpm-alpine
-    
+
 # Tweak redis extension settings
 #RUN echo 'session.save_handler = redis' >> /usr/local/etc/php/conf.d/50-docker-php-ext-redis.ini && \
     #echo 'session.save_path = "tcp://redis-master"' >> /usr/local/etc/php/conf.d/50-docker-php-ext-redis.ini
