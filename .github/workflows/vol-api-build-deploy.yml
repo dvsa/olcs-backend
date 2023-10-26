@@ -3,10 +3,16 @@ run-name: CI/CD VOL API
 
 on:
   pull_request:
-    types: ['labeled']
+    # types: ['labeled']
     # push:
     branches:
       - master
+
+env:
+  AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
+  AWS_ACCOUNT_ID_VOL_NP_TOOLING: ${{ vars.VOL_AWS_ACCOUNT_TOOLING_NONPROD }}
+  REPO_NAME: ${{vars.AWS_ECR_NP_VOLTOOLING_REPONAME}}
+  AWS_ACCOUNT_ID_SHAREDCOREECR: ${{ vars.AWS_ACCOUNT_ID_SHAREDCOREECR }}
 
 jobs:
 
@@ -69,12 +75,6 @@ jobs:
        ls -la ./
 
   build-and-push-image:
-
-    env:
-      AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
-      AWS_ACCOUNT_ID_VOL_NP_TOOLING: ${{ vars.VOL_AWS_ACCOUNT_TOOLING_NONPROD }}
-      REPO_NAME: ${{vars.AWS_ECR_NP_VOLTOOLING_REPONAME}}
-      AWS_ACCOUNT_ID_SHAREDCOREECR: ${{ vars.AWS_ACCOUNT_ID_SHAREDCOREECR }}
 
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
