@@ -1,0 +1,20 @@
+name: Lint check Dockerfile
+
+on:
+  workflow_call:
+
+jobs:
+  hadolint:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Lint check on dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: dockerfile
+          ignore: DL3018,DL3048

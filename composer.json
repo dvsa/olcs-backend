@@ -1,39 +1,25 @@
 {
     "name": "olcs/backend",
     "description": "Back End Application for OLCS Project",
-    "repositories": [
-        {
-            "packagist": false
-        },
-        {
-            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS",
-            "type": "composer"
-        },
-        {
-            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
-            "type": "composer"
-        }
-    ],
     "require": {
         "php": ">=7.4",
+        "guzzlehttp/guzzle": "^7.5",
+        "caseyamcl/guzzle_retry_middleware": "^2.7.1",
         "ext-intl": "*",
         "ext-json": "*",
         "aws/aws-sdk-php": "^3.183",
         "beberlei/doctrineextensions": "^1.0",
-        "caseyamcl/guzzle_retry_middleware": "^2.7.1",
         "doctrine/doctrine-orm-module": "^1.0.0",
         "doctrine/orm": "~2.7.5",
         "dvsa/authentication-cognito": "^2.0",
-        "dvsa/laminas-config-cloud-parameters": "^0.1.0",
         "dvsa/php-govuk-account": "^1.0",
         "fzaninotto/faker": "^1.9",
         "gedmo/doctrine-extensions": "^3",
-        "guzzlehttp/guzzle": "^7.5",
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "1.0.10",
+        "olcs/olcs-laminas": "~2.5.0",
         "olcs/olcs-companies-house": "~4.206.0",
         "olcs/olcs-cpms": "~4.206.0",
-        "olcs/olcs-laminas": "~2.5.0",
         "olcs/olcs-logging": "~4.206.0",
         "olcs/olcs-transfer": "~4.206.0",
         "olcs/olcs-utils": "~4.206.0",
