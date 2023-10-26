@@ -81,7 +81,7 @@ jobs:
 
   build-test-push-sign-image:
 
-    name: Build, Test, Push & Sign Image
+    name: Build, Push & Sign Image
     runs-on: ubuntu-latest
     needs:
     - build
@@ -203,7 +203,7 @@ jobs:
     - name: Trigger workflow 'nonprod-vol-api-manual-cd'
       if: github.event_name == 'pull_request'
       run: |
-        echo "Here: ${{ needs.build-test-push-sign-image.outputs.pr_image_tag }}"
+        echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
 
   automation-tests:
 
