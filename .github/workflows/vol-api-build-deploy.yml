@@ -21,182 +21,182 @@ permissions:
 
 jobs:
 
-  dockerfile-lint-check:
-    name: Dockerfile Lint Check
-    if: github.event_name == 'pull_request'
-    uses: ./.github/workflows/docker-hadolint.yaml
+  # dockerfile-lint-check:
+  #   name: Dockerfile Lint Check
+  #   if: github.event_name == 'pull_request'
+  #   uses: ./.github/workflows/docker-hadolint.yaml
 
-  build:
+  # build:
 
-    name: Build VOL API
-    runs-on: ubuntu-latest
+  #   name: Build VOL API
+  #   runs-on: ubuntu-latest
 
-    steps:
+  #   steps:
 
-    - name: Checkout the repository to this runner
-      uses: actions/checkout@v3
+  #   - name: Checkout the repository to this runner
+  #     uses: actions/checkout@v3
 
-    ##create s3 bucket in vol-non-prod tooling and vol-prod tooling to get the composer
-    - name: Download the compose file
-      run: |
-        php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-        php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-        php -r "unlink('composer-setup.php');"
+  #   ##create s3 bucket in vol-non-prod tooling and vol-prod tooling to get the composer
+  #   - name: Download the compose file
+  #     run: |
+  #       php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  #       php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+  #       php -r "unlink('composer-setup.php');"
 
-    - name: Install Composer dependencies
-      run: |
-       composer install --optimize-autoloader --no-interaction --no-dev
+  #   - name: Install Composer dependencies
+  #     run: |
+  #      composer install --optimize-autoloader --no-interaction --no-dev
 
-    - name: Build VOL Backend
-      run: |
-       date > config/version
-       git describe --all >> config/version
-       tar cvzf backend.tar.gz --exclude=config/autoload/local.php --exclude=config/autoload/local.php.dist composer.lock init_autoloader.php config module public data/autoload data/cache vendor
-       ls -la
-       echo $PWD
+  #   - name: Build VOL Backend
+  #     run: |
+  #      date > config/version
+  #      git describe --all >> config/version
+  #      tar cvzf backend.tar.gz --exclude=config/autoload/local.php --exclude=config/autoload/local.php.dist composer.lock init_autoloader.php config module public data/autoload data/cache vendor
+  #      ls -la
+  #      echo $PWD
 
-    - name: Upload VOL API artifact
-      uses: actions/upload-artifact@v3.1.3
-      with:
-        name: Backend
-        path: ./backend.tar.gz
+  #   - name: Upload VOL API artifact
+  #     uses: actions/upload-artifact@v3.1.3
+  #     with:
+  #       name: Backend
+  #       path: ./backend.tar.gz
 
-  unit-tests:
+  # unit-tests:
 
-    name: Run Unit Tests
-    runs-on: ubuntu-latest
-    # needs:
-    # - build
+  #   name: Run Unit Tests
+  #   runs-on: ubuntu-latest
+  #   # needs:
+  #   # - build
 
-    steps:
+  #   steps:
 
-    - name: Checkout the repository to this runner
-      uses: actions/checkout@v3
+  #   - name: Checkout the repository to this runner
+  #     uses: actions/checkout@v3
 
-    - name: Run unit tests
-      # if: github.event_name == 'pull_request'
-      run: |
-       echo 'Run unit tests'
-       ls -la ./
+  #   - name: Run unit tests
+  #     # if: github.event_name == 'pull_request'
+  #     run: |
+  #      echo 'Run unit tests'
+  #      ls -la ./
 
-  build-test-push-sign-image:
+  # build-test-push-sign-image:
 
-    name: Build, Push & Sign Image
-    runs-on: ubuntu-latest
-    needs:
-    - build
-    - unit-tests
-    - dockerfile-lint-check
+  #   name: Build, Push & Sign Image
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #   - build
+  #   - unit-tests
+  #   - dockerfile-lint-check
 
-    steps:
+  #   steps:
 
-    - name: Checkout the repository to this runner
-      uses: actions/checkout@v3
+  #   - name: Checkout the repository to this runner
+  #     uses: actions/checkout@v3
 
-    - name: Download VOL API artifact
-      uses: actions/download-artifact@v3.0.2
-      with:
-        name: Backend
-        path: ./
+  #   - name: Download VOL API artifact
+  #     uses: actions/download-artifact@v3.0.2
+  #     with:
+  #       name: Backend
+  #       path: ./
 
-    - name: Set BASE_IMAGE & IMAGE_SHA
-      run: |
-        ls -la ./
-        envsubst < dockerfile | tee dockerfile.tmp
-        mv dockerfile.tmp dockerfile
-        echo "IMAGE_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-        BASE_IMAGE=$(head -n1 dockerfile)
-        echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
+  #   - name: Set BASE_IMAGE & IMAGE_SHA
+  #     run: |
+  #       ls -la ./
+  #       envsubst < dockerfile | tee dockerfile.tmp
+  #       mv dockerfile.tmp dockerfile
+  #       echo "IMAGE_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+  #       BASE_IMAGE=$(head -n1 dockerfile)
+  #       echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
 
-    - name: Set VOL_API_IMAGE_TAG at PR level
-      run: |
-        echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
-        echo "::set-output name=pr_image_tag::${VOL_API_IMAGE_TAG}"
+  #   - name: Set VOL_API_IMAGE_TAG at PR level
+  #     run: |
+  #       echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
+  #       echo "::set-output name=pr_image_tag::${VOL_API_IMAGE_TAG}"
 
-    - name: Set VOL_API_IMAGE_TAG at mainline
-      if: github.ref == 'refs/heads/main'
-      run: |
-        echo "VOL_API_IMAGE_TAG=approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
-        echo "::set-output name=main_image_tag::${VOL_API_IMAGE_TAG}"
+  #   - name: Set VOL_API_IMAGE_TAG at mainline
+  #     if: github.ref == 'refs/heads/main'
+  #     run: |
+  #       echo "VOL_API_IMAGE_TAG=approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
+  #       echo "::set-output name=main_image_tag::${VOL_API_IMAGE_TAG}"
 
-    - name: Setup Notation CLI
-      uses: notaryproject/notation-action/setup@v1
-      with:
-        version: 1.0.0
+  #   - name: Setup Notation CLI
+  #     uses: notaryproject/notation-action/setup@v1
+  #     with:
+  #       version: 1.0.0
 
-    - name: Set up Notation AWS Signer plugin
-      run: |
-        wget https://d2hvyiie56hcat.cloudfront.net/linux/amd64/installer/deb/latest/aws-signer-notation-cli_amd64.deb
-        sudo dpkg -i aws-signer-notation-cli_amd64.deb
-        notation version
-        notation plugin ls
+  #   - name: Set up Notation AWS Signer plugin
+  #     run: |
+  #       wget https://d2hvyiie56hcat.cloudfront.net/linux/amd64/installer/deb/latest/aws-signer-notation-cli_amd64.deb
+  #       sudo dpkg -i aws-signer-notation-cli_amd64.deb
+  #       notation version
+  #       notation plugin ls
 
-    - name: Configure AWS credentials on Shared Core ECR
-      uses: aws-actions/configure-aws-credentials@v4.0.1
-      with:
-        role-to-assume: ${{ secrets.DVSA_AWS_ROLE_SHAREDCORECR }}
-        role-session-name: GitHub_to_AWS_via_FederatedOIDC
-        aws-region: ${{ vars.DVSA_AWS_REGION }}
+  #   - name: Configure AWS credentials on Shared Core ECR
+  #     uses: aws-actions/configure-aws-credentials@v4.0.1
+  #     with:
+  #       role-to-assume: ${{ secrets.DVSA_AWS_ROLE_SHAREDCORECR }}
+  #       role-session-name: GitHub_to_AWS_via_FederatedOIDC
+  #       aws-region: ${{ vars.DVSA_AWS_REGION }}
 
-    - name: Login to Shared Core ECR
-      id: login-ecr-sharedcoreecr
-      uses: aws-actions/amazon-ecr-login@v2.0.1
+  #   - name: Login to Shared Core ECR
+  #     id: login-ecr-sharedcoreecr
+  #     uses: aws-actions/amazon-ecr-login@v2.0.1
 
-    - name: Build VOL API image after verifying Base image
-      run: |
-        notation inspect $BASE_IMAGE
-        docker build -t ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG} \
-          --build-arg DVSA_AWS_SHAREDCOREECR_ID=${{secrets.DVSA_AWS_SHAREDCOREECR_ID}} .
+  #   - name: Build VOL API image after verifying Base image
+  #     run: |
+  #       notation inspect $BASE_IMAGE
+  #       docker build -t ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG} \
+  #         --build-arg DVSA_AWS_SHAREDCOREECR_ID=${{secrets.DVSA_AWS_SHAREDCOREECR_ID}} .
 
-    - name: Snyk scan VOL API image
-      id: scan-api-image
-      uses: snyk/actions/docker@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        image: ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG}
-        args: --file=dockerfile
-      continue-on-error: true
+  #   - name: Snyk scan VOL API image
+  #     id: scan-api-image
+  #     uses: snyk/actions/docker@master
+  #     env:
+  #       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #     with:
+  #       image: ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG}
+  #       args: --file=dockerfile
+  #     continue-on-error: true
 
-    - name: Configure AWS credentials on Non Production VOL ECR
-      uses: aws-actions/configure-aws-credentials@v4.0.1
-      with:
-        role-to-assume: ${{ secrets.VOL_AWS_ROLE_TOOLING_NONPROD }}
-        role-session-name: GitHub_to_AWS_via_FederatedOIDC
-        aws-region: ${{ vars.DVSA_AWS_REGION}}
+  #   - name: Configure AWS credentials on Non Production VOL ECR
+  #     uses: aws-actions/configure-aws-credentials@v4.0.1
+  #     with:
+  #       role-to-assume: ${{ secrets.VOL_AWS_ROLE_TOOLING_NONPROD }}
+  #       role-session-name: GitHub_to_AWS_via_FederatedOIDC
+  #       aws-region: ${{ vars.DVSA_AWS_REGION}}
 
-    - name: Login to Non Production VOL ECR
-      id: login-ecr-vol-tooling-non-prod
-      uses: aws-actions/amazon-ecr-login@v2
+  #   - name: Login to Non Production VOL ECR
+  #     id: login-ecr-vol-tooling-non-prod
+  #     uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Push VOL API image
-      id: push-image
-      run: |
-        echo "image_tag=${VOL_API_IMAGE_TAG}" >> $GITHUB_OUTPUT
-        docker push ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG}
+  #   - name: Push VOL API image
+  #     id: push-image
+  #     run: |
+  #       echo "image_tag=${VOL_API_IMAGE_TAG}" >> $GITHUB_OUTPUT
+  #       docker push ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG}
 
-    - name: Sign VOL API image
-      if: github.ref == 'refs/heads/main'
-      run: |
-        notation sign ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG} \
-          --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_NONPRODVOLTOOLING_IMAGE_SIGNING_PROFILE }}"
+  #   - name: Sign VOL API image
+  #     if: github.ref == 'refs/heads/main'
+  #     run: |
+  #       notation sign ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG} \
+  #         --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_NONPRODVOLTOOLING_IMAGE_SIGNING_PROFILE }}"
 
-    # # - name: Deploy on Static environment
-    # #   if: github.event_name == 'pull_request' && github.event.label.name == 'cd ready'
-    # #   run: |
-    # #    echo 'Deployment in process...'
-    # #    sleep 10s
-    outputs:
-      image_tag: ${{ steps.push-image.outputs.image_tag }}
-      # main_image_tag: ${{ steps.main-image-tag.outputs.main_image_tag }}
+  #   # # - name: Deploy on Static environment
+  #   # #   if: github.event_name == 'pull_request' && github.event.label.name == 'cd ready'
+  #   # #   run: |
+  #   # #    echo 'Deployment in process...'
+  #   # #    sleep 10s
+  #   outputs:
+  #     image_tag: ${{ steps.push-image.outputs.image_tag }}
+  #     # main_image_tag: ${{ steps.main-image-tag.outputs.main_image_tag }}
 
 
   deploy-on-ephemral-cluster:
 
     name: Deploy on Ephmeral Cluster
     runs-on: ubuntu-latest
-    needs:
-    - build-test-push-sign-image
+    # needs:
+    # - build-test-push-sign-image
 
     steps:
   
@@ -209,22 +209,35 @@ jobs:
         github-token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
         script: |
           await github.rest.actions.createWorkflowDispatch({
-          owner: 'dvsa'
-          repo: 'dvsa-container-registry',
-          workflow_id: 'nonprod-vol-api-manual-cd.yaml',
-          ref: 'feature/AWSRESET1-514'
-          })
+            owner: 'dvsa',
+            repo: 'dvsa-container-registry',
+            workflow_id: 'workflows/nonprod-vol-api-manual-cd.yaml',
+            ref: 'feature/AWSRESET1-514',
+            inputs: {
+              vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a',
+            },
+          });
+                  # script: |
+        #   await github.rest.actions.createWorkflowDispatch({
+        #   owner: 'dvsa'
+        #   repo: 'dvsa-container-registry',
+        #   workflow_id: 'nonprod-vol-api-manual-cd.yaml',
+        #   ref: 'feature/AWSRESET1-514'
+        #   inputs: {
+        #     vol_api_image_tag: ${{ needs.build-test-push-sign-image.outputs.image_tag }}
+        #   }
+        #   })
 
-  automation-tests:
+  # automation-tests:
 
-    name: Run Automation Tests
-    runs-on: ubuntu-latest
-    needs:
-    - deploy-on-ephemral-cluster
+  #   name: Run Automation Tests
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #   - deploy-on-ephemral-cluster
 
-    steps:
+  #   steps:
 
-    - name: Run automation tests
-      if: github.event_name == 'pull_request' && github.event.label.name == 'cd ready'
-      run: |
-       echo 'Run automation tests'
+  #   - name: Run automation tests
+  #     if: github.event_name == 'pull_request' && github.event.label.name == 'cd ready'
+  #     run: |
+  #      echo 'Run automation tests'
