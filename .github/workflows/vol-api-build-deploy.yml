@@ -210,7 +210,7 @@ jobs:
         script: |
           await github.rest.actions.createWorkflowDispatch({
           owner: 'dvsa'
-          repo: 'vol-terraform',
+          repo: 'dvsa-container-registry',
           workflow_id: 'nonprod-vol-api-manual-cd.yaml',
           ref: 'feature/AWSRESET1-514'
           inputs: {
