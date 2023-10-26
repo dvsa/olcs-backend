@@ -14,6 +14,11 @@ env:
   REPO_NAME: ${{vars.AWS_ECR_NP_VOLTOOLING_REPONAME}}
   AWS_ACCOUNT_ID_SHAREDCOREECR: ${{ vars.AWS_ACCOUNT_ID_SHAREDCOREECR }}
 
+# Permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+
 jobs:
 
   dockerfile-lint-check:
