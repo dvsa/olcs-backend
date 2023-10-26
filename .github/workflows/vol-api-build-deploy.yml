@@ -20,19 +20,9 @@ jobs:
     name: Build VOL API
     runs-on: ubuntu-latest
 
-    env:
-      AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
-      AWS_ACCOUNT_ID_VOL_NP_TOOLING: ${{ vars.VOL_AWS_ACCOUNT_TOOLING_NONPROD }}
-      REPO_NAME: ${{vars.AWS_ECR_NP_VOLTOOLING_REPONAME}}
-      AWS_ACCOUNT_ID_SHAREDCOREECR: ${{ vars.AWS_ACCOUNT_ID_SHAREDCOREECR }}
-
-    permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
-
     steps:
 
-    - name: Checkout the repository to the runner
+    - name: Checkout the repository to this runner
       uses: actions/checkout@v3
 
     ##create s3 bucket in vol-non-prod tooling and vol-prod tooling to get the composer
@@ -57,15 +47,28 @@ jobs:
     - name: Upload VOL API artifact
       uses: actions/upload-artifact@v3.1.3
       with:
-        name: Build
-        path: ./
+        name: Backend
+        path: ./backend.tar.gz
 
   unit-tests:
 
     name: Run Unit Tests
     runs-on: ubuntu-latest
-    needs:
-    - build
+    # needs:
+    # - build
+
+    steps:
+
+    - name: Checkout the repository to this runner
+      uses: actions/checkout@v3
+
+    - name: Run unit tests
+      # if: github.event_name == 'pull_request'
+      run: |
+       echo 'Run unit tests'
+       ls -la ./
+
+  build-and-push-image:
 
     env:
       AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
@@ -73,32 +76,32 @@ jobs:
       REPO_NAME: ${{vars.AWS_ECR_NP_VOLTOOLING_REPONAME}}
       AWS_ACCOUNT_ID_SHAREDCOREECR: ${{ vars.AWS_ACCOUNT_ID_SHAREDCOREECR }}
 
-    permissions:
-      id-token: write   # This is required for requesting the JWT
-      contents: read    # This is required for actions/checkout
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs:
+    - build
+    - unit-tests
+    - dockerfile-lint-check
 
     steps:
 
-    # - name: Download VOL API artifact
-    #   uses: actions/download-artifact@v3.0.2
-    #   with:
-    #     name: Build
-    #     path: ./
-    # - run: zip -r build.zip ./
+    - name: Checkout the repository to this runner
+      uses: actions/checkout@v3
 
-    - name: Run unit tests
-      if: github.event_name == 'pull_request'
+    - name: Download VOL API artifact
+      uses: actions/download-artifact@v3.0.2
+      with:
+        name: Backend
+        path: ./
+
+    - name: Set BASE_IMAGE & IMAGE_SHA
       run: |
-       echo 'Run unit tests'
-       ls -la ./
-
-    # - name: Set VOL_API_IMAGE_TAG
-    #   run: |
-    #     envsubst < dockerfile | tee dockerfile.tmp
-    #     mv dockerfile.tmp dockerfile
-    #     echo "IMAGE_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-    #     BASE_IMAGE=$(head -n1 dockerfile)
-    #     echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
+        ls -la ./
+        envsubst < dockerfile | tee dockerfile.tmp
+        mv dockerfile.tmp dockerfile
+        echo "IMAGE_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        BASE_IMAGE=$(head -n1 dockerfile)
+        echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
 
     # - name: Set VOL_API_IMAGE_TAG at PR level
     #   run: |
@@ -180,9 +183,7 @@ jobs:
     name: Run Automation Tests
     runs-on: ubuntu-latest
     needs:
-    - dockerfile-lint-check
-    - build
-    - unit-tests
+    - build-and-push-image
 
     env:
       AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
