@@ -1,0 +1,46 @@
+name: Validate AWS ECR Image Signature
+
+on:
+  workflow_call:
+    secrets:
+      aws_role_arn:
+        required: true
+      ecr_tagged_image:
+        required: true
+
+jobs:
+
+  validate-image-signature:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v3
+
+      - name: Configure aws credential
+        uses: aws-actions/configure-aws-credentials@v4.0.1
+        with:
+          role-to-assume: ${{ secrets.aws_role_arn }}
+          role-session-name: GithubActionsSession
+          aws-region: ${{ vars.DVSA_AWS_REGION }}
+
+      - name: Login to ECR
+        id: login-to-ecr
+        uses: aws-actions/amazon-ecr-login@v2.0.1
+
+      - name: Setup Notation CLI
+        uses: notaryproject/notation-action/setup@v1
+        with:
+          version: 1.0.0
+
+      - name: Set up Notation AWS Signer plugin
+        run: |
+          wget https://d2hvyiie56hcat.cloudfront.net/linux/amd64/installer/deb/latest/aws-signer-notation-cli_amd64.deb
+          sudo dpkg -i aws-signer-notation-cli_amd64.deb
+
+      - name: Validate signature of VOL API image
+        run: |
+          notation inspect ${{ secrets.ecr_tagged_image }}
