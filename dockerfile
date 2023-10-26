@@ -1,5 +1,4 @@
 FROM ${AWS_ACCOUNT_ID_SHAREDCOREECR}.dkr.ecr.${AWS_REGION}.amazonaws.com/php-base:7.4.0-alpine-fpm-8b0b625
-
 LABEL maintainer="shaun.hare@dvsa.gov.uk"
 LABEL description="PHP Alpine base image with dependency packages"
 LABEL Name="vol-php-fpm:7.4.33-alpine-fpm"
