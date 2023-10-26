@@ -100,16 +100,26 @@ final class CaseSummary extends AbstractSection
      */
     private function extractLicenceData($licence, $application)
     {
-        $licenceData = [];
-        $licenceData['licNo'] = $licence->getLicNo();
-        $licenceData['licenceStartDate'] = $this->formatDate($licence->getInForceDate());
-        $licenceData['licenceType'] = !empty($licence->getLicenceType()) ?
-            $licence->getLicenceType()->getDescription() : '';
-        $licenceData['goodsOrPsv'] =
-            !empty($licence->getGoodsOrPsv()) ? $licence->getGoodsOrPsv()->getDescription() : '';
-        $licenceData['licenceStatus'] =
-            !empty($licence->getStatus()) ? $licence->getStatus()->getDescription() : '';
-        $licenceData['vehiclesInPossession'] = $licence->getActiveVehiclesCount();
+        $licenceData = [
+            'licNo' => '',
+            'licenceStartDate' => '',
+            'licenceType' => '',
+            'goodsOrPsv' => '',
+            'licenceStatus' => '',
+            'vehiclesInPossession' => '',
+        ];
+
+        if ($licence instanceof Licence) {
+            $licenceData['licNo'] = $licence->getLicNo();
+            $licenceData['licenceStartDate'] = $this->formatDate($licence->getInForceDate());
+            $licenceData['licenceType'] = !empty($licence->getLicenceType()) ?
+                $licence->getLicenceType()->getDescription() : '';
+            $licenceData['goodsOrPsv'] =
+                !empty($licence->getGoodsOrPsv()) ? $licence->getGoodsOrPsv()->getDescription() : '';
+            $licenceData['licenceStatus'] =
+                !empty($licence->getStatus()) ? $licence->getStatus()->getDescription() : '';
+            $licenceData['vehiclesInPossession'] = $licence->getActiveVehiclesCount();
+        }
 
         $authPropertiesEntity = $licence;
         if ($application instanceof Application && $application->isNew()) {
