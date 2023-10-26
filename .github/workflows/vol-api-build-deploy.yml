@@ -109,13 +109,11 @@ jobs:
         echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
 
     - name: Set VOL_API_IMAGE_TAG at PR level
-      id: pr-image-tag
       run: |
         echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
         echo "::set-output name=pr_image_tag::${VOL_API_IMAGE_TAG}"
 
     - name: Set VOL_API_IMAGE_TAG at mainline
-      id: main-image-tag
       if: github.ref == 'refs/heads/main'
       run: |
         echo "VOL_API_IMAGE_TAG=approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
@@ -172,7 +170,9 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Push VOL API image
+      id: push-image
       run: |
+        echo "image_tag=${VOL_API_IMAGE_TAG}" >> $GITHUB_OUTPUT
         docker push ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}:${VOL_API_IMAGE_TAG}
 
     - name: Sign VOL API image
@@ -187,8 +187,8 @@ jobs:
     # #    echo 'Deployment in process...'
     # #    sleep 10s
     outputs:
-      pr_image_tag: ${{ steps.pr-image-tag.outputs.pr_image_tag }}
-      main_image_tag: ${{ steps.main-image-tag.outputs.main_image_tag }}
+      image_tag: ${{ steps.push-image.outputs.image_tag }}
+      # main_image_tag: ${{ steps.main-image-tag.outputs.main_image_tag }}
 
 
   deploy-on-ephemral-cluster:
