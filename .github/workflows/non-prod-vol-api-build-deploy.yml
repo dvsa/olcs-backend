@@ -11,7 +11,7 @@ on:
 env:
   AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
   AWS_ACCOUNT_ID_VOL_NP_TOOLING: ${{ vars.VOL_AWS_ACCOUNT_TOOLING_NONPROD }}
-  VOL_NONPROD_TOOLING_REPO_NAME: ${{vars.AWS_ECR_NP_VOLTOOLING_REPONAME}}
+  VOL_NONPROD_TOOLING_REPO_URL: ${{ secrets.VOL_NONPROD_TOOLING_ECR_REPO_URL }}
   AWS_ACCOUNT_ID_SHAREDCOREECR: ${{ vars.AWS_ACCOUNT_ID_SHAREDCOREECR }}
 
 # Permission can be added at job level or workflow level    
@@ -101,7 +101,6 @@ jobs:
 
     - name: Set BASE_IMAGE & IMAGE_SHA
       run: |
-        ls -la ./
         envsubst < dockerfile | tee dockerfile.tmp
         mv dockerfile.tmp dockerfile
         echo "IMAGE_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
@@ -111,13 +110,11 @@ jobs:
     - name: Set VOL_API_IMAGE_TAG at PR level
       run: |
         echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
-        echo "::set-output name=pr_image_tag::${VOL_API_IMAGE_TAG}"
 
     - name: Set VOL_API_IMAGE_TAG at mainline
       if: github.ref == 'refs/heads/main'
       run: |
         echo "VOL_API_IMAGE_TAG=approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
-        echo "::set-output name=main_image_tag::${VOL_API_IMAGE_TAG}"
 
     - name: Setup Notation CLI
       uses: notaryproject/notation-action/setup@v1
@@ -145,7 +142,7 @@ jobs:
     - name: Build VOL API image after verifying Base image
       run: |
         notation inspect $BASE_IMAGE
-        docker build -t ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${VOL_NONPROD_TOOLING_REPO_NAME}:${VOL_API_IMAGE_TAG} \
+        docker build -t ${VOL_NONPROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG} \
           --build-arg DVSA_AWS_SHAREDCOREECR_ID=${{secrets.DVSA_AWS_SHAREDCOREECR_ID}} .
 
     - name: Snyk scan VOL API image
@@ -154,7 +151,7 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        image: ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${VOL_NONPROD_TOOLING_REPO_NAME}:${VOL_API_IMAGE_TAG}
+        image: ${VOL_NONPROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG}
         args: --file=dockerfile
       continue-on-error: true
 
@@ -167,18 +164,18 @@ jobs:
 
     - name: Login to Non Production VOL ECR
       id: login-ecr-vol-tooling-non-prod
-      uses: aws-actions/amazon-ecr-login@v2
+      uses: aws-actions/amazon-ecr-login@v2.0.1
 
     - name: Push VOL API image
       id: push-image
       run: |
         echo "image_tag=${VOL_API_IMAGE_TAG}" >> $GITHUB_OUTPUT
-        docker push ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${VOL_NONPROD_TOOLING_REPO_NAME}:${VOL_API_IMAGE_TAG}
+        docker push ${VOL_NONPROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG}
 
     - name: Sign VOL API image
       if: github.ref == 'refs/heads/main'
       run: |
-        notation sign ${AWS_ACCOUNT_ID_VOL_NP_TOOLING}.dkr.ecr.${AWS_REGION}.amazonaws.com/${VOL_NONPROD_TOOLING_REPO_NAME}:${VOL_API_IMAGE_TAG} \
+        notation sign ${VOL_NONPROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG} \
           --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_NONPRODVOLTOOLING_IMAGE_SIGNING_PROFILE }}"
 
     # # - name: Deploy on Static environment
@@ -244,7 +241,7 @@ jobs:
 
   deploy-on-non-prod-cluster:
 
-    name: Deploy on Ephmeral Cluster
+    name: Deploy on Non PROD Cluster
     runs-on: ubuntu-latest
     needs:
     - build-test-push-sign-image
@@ -252,7 +249,7 @@ jobs:
     steps:
   
     - name: Trigger workflow 'nonprod-vol-api-manual-cd'
-      if: github.event_name == 'pull_request'
+      # if: github.ref == 'refs/heads/main'
       run: |
         echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
       # uses: actions/github-script@v6.4.1
@@ -279,16 +276,16 @@ jobs:
       #   #   }
       #   #   })
 
-  artifact-by-qa-approval:
+  qa-artifact-approval:
 
-    name: VOL API Image approval by QA
+    name: QA VOL API Image Approval
     runs-on: ubuntu-latest
     needs:
     - deploy-on-non-prod-cluster
     steps:
   
     - name: Trigger workflow 'nonprod-vol-api-manual-cd'
-      if: github.event_name == 'pull_request'
+      # if: github.ref == 'refs/heads/main'
       run: |
         echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
       # uses: actions/github-script@v6.4.1
