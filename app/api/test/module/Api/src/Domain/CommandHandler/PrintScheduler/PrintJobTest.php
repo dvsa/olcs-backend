@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -35,10 +36,9 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->mockRepo('SystemParameter', \Dvsa\Olcs\Api\Domain\Repository\SystemParameter::class);
         $this->mockRepo('Printer', \Dvsa\Olcs\Api\Domain\Repository\Printer::class);
 
-        $mockFileUploader = m::mock(\Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class);
-        $this->mockedSmServices['FileUploader'] = $mockFileUploader;
+        $this->mockFileUploader = m::mock(ContentStoreFileUploader::class);
 
-        $this->mockedSmServices['Config'] = [
+        $this->config = [
             'print' => [
                 'server' => 'PRINT_SERVER',
                 'options' => [
@@ -48,6 +48,7 @@ class PrintJobTest extends CommandHandlerTestCase
         ];
 
         $this->convertToPdfService = m::mock(WebServiceClient::class);
+        $this->sut->__construct($this->config, $this->mockFileUploader, $this->convertToPdfService);
 
         $this->mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $this->mockUser->setLoginId('LOGIN_ID');
@@ -99,7 +100,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -118,20 +119,18 @@ class PrintJobTest extends CommandHandlerTestCase
 
     public function testHandleCommandConvertUsingWebService()
     {
-        $this->sut->setConfig(
-            [
-                'print' => ['server' => 'PRINT_SERVER'],
-                'convert_to_pdf' => ['uri' => 'http://web.com:8080/foo']
-            ]
-        );
-
+        $this->config = [
+            'print' => ['server' => 'PRINT_SERVER'],
+            'convert_to_pdf' => ['uri' => 'http://web.com:8080/foo']
+        ];
+        $this->sut->__construct($this->config, $this->mockFileUploader, $this->convertToPdfService);
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => '']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
             ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -139,7 +138,6 @@ class PrintJobTest extends CommandHandlerTestCase
             ->once()
             ->andReturn('TEMP_FILE.rtf');
 
-        $this->commandHandler->expects('get')->with('ConvertToPdf')->andReturn($this->convertToPdfService);
         $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once();
 
         $this->expectLpr('Anonymous', 0, true, 1);
@@ -153,20 +151,18 @@ class PrintJobTest extends CommandHandlerTestCase
 
     public function testHandleCommandConvertUsingWebServiceError()
     {
-        $this->sut->setConfig(
-            [
-                'print' => ['server' => 'PRINT_SERVER'],
-                'convert_to_pdf' => ['uri' => 'http://web.com:8080/foo']
-            ]
-        );
-
+        $this->config = [
+            'print' => ['server' => 'PRINT_SERVER'],
+            'convert_to_pdf' => ['uri' => 'http://web.com:8080/foo']
+        ];
+        $this->sut->__construct($this->config, $this->mockFileUploader, $this->convertToPdfService);
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => '']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
             ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -174,7 +170,6 @@ class PrintJobTest extends CommandHandlerTestCase
             ->once()
             ->andReturn('TEMP_FILE.rtf');
 
-        $this->commandHandler->expects('get')->with('ConvertToPdf')->andReturn($this->convertToPdfService);
         $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once()
             ->andThrow(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class, 'TEST MESSAGE');
 
@@ -190,20 +185,18 @@ class PrintJobTest extends CommandHandlerTestCase
      */
     public function testHandleCommandConvertUsingWebServiceTimeout()
     {
-        $this->sut->setConfig(
-            [
-                'print' => ['server' => 'PRINT_SERVER'],
-                'convert_to_pdf' => ['uri' => 'http://web.com:8080/foo']
-            ]
-        );
-
+        $this->config = [
+            'print' => ['server' => 'PRINT_SERVER'],
+            'convert_to_pdf' => ['uri' => 'http://web.com:8080/foo']
+        ];
+        $this->sut->__construct($this->config, $this->mockFileUploader, $this->convertToPdfService);
         $command = Cmd::create(['id' => 'QUEUE_ID', 'documents' => ['DOC_ID'], 'title' => 'JOB', 'user' => '']);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
             ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -211,7 +204,6 @@ class PrintJobTest extends CommandHandlerTestCase
             ->once()
             ->andReturn('TEMP_FILE.rtf');
 
-        $this->commandHandler->expects('get')->with('ConvertToPdf')->andReturn($this->convertToPdfService);
         $this->convertToPdfService->shouldReceive('convert')->with('TEMP_FILE.rtf', 'TEMP_FILE.pdf')->once()
             ->andThrow(\Laminas\Http\Client\Adapter\Exception\TimeoutException::class, 'Timeout');
 
@@ -230,7 +222,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -255,7 +247,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -280,7 +272,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -305,7 +297,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -334,7 +326,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->mockUser->setTeam($team);
 
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -366,7 +358,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         // 1st file
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -386,7 +378,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         // 2nd file
         $mockFile2 = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER2')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER2')->once()
             ->andReturn($mockFile2);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -468,7 +460,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         // 1st file
         $mockFile = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn($mockFile);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -488,7 +480,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         // 2nd file
         $mockFile2 = m::mock(File::class);
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER2')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER2')->once()
             ->andReturn($mockFile2);
 
         $this->sut->shouldReceive('createTmpFile')
@@ -557,7 +549,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
             ->with(SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
+        $this->mockFileUploader->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn(null);
 
         $this->expectException(Exception::class);
@@ -592,7 +584,7 @@ class PrintJobTest extends CommandHandlerTestCase
             }
         );
 
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->never();
+        $this->mockFileUploader->shouldReceive('download')->never();
 
         $result = $this->sut->handleCommand($command);
 
@@ -622,7 +614,7 @@ class PrintJobTest extends CommandHandlerTestCase
             }
         );
 
-        $this->mockedSmServices['FileUploader']->shouldReceive('download')->never();
+        $this->mockFileUploader->shouldReceive('download')->never();
 
         $result = $this->sut->handleCommand($command);
 
