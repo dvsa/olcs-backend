@@ -79,7 +79,7 @@ jobs:
        echo 'Run unit tests'
        ls -la ./
 
-  build_test_push_sign_image:
+  build-test-push-sign-image:
 
     name: Build, Test, Push & Sign Image
     runs-on: ubuntu-latest
@@ -109,17 +109,15 @@ jobs:
         echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
 
     - name: Set VOL_API_IMAGE_TAG at PR level
-      id: pr_image_tag
+      id: pr-image-tag
       run: |
         echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
-        echo "::set-output name=pr_image_tag::${VOL_API_IMAGE_TAG}"
 
     - name: Set VOL_API_IMAGE_TAG at mainline
       id: main-image-tag
       if: github.ref == 'refs/heads/main'
       run: |
         echo "VOL_API_IMAGE_TAG=approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
-        echo "::set-output name=main_image_tag::${VOL_API_IMAGE_TAG}"
 
     - name: Setup Notation CLI
       uses: notaryproject/notation-action/setup@v1
@@ -186,20 +184,22 @@ jobs:
     # #   run: |
     # #    echo 'Deployment in process...'
     # #    sleep 10s
+    outputs:
+      image_tag: ${VOL_API_IMAGE_TAG}
 
   deploy-on-ephemral-cluster:
 
     name: Deploy on Ephmeral Cluster
     runs-on: ubuntu-latest
     needs:
-    - build_test_push_sign_image
+    - build-test-push-sign-image
 
     steps:
   
     - name: Trigger workflow 'nonprod-vol-api-manual-cd'
       if: github.event_name == 'pull_request'
       run: |
-        echo "${{ jobs.build_test_push_sign_image.steps.pr_image_tag.outputs.pr_image_tag }}"
+        echo "${{ needs.build-test-push-sign-image.outputs.image_tag }}"
 
   automation-tests:
 
