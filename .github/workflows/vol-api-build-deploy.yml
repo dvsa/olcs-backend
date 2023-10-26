@@ -60,6 +60,7 @@ jobs:
         envsubst < dockerfile | tee dockerfile.tmp
         mv dockerfile.tmp dockerfile
         IMAGE_SHA=$(git rev-parse --short HEAD)
+        echo "BASE_IMAGE=${IMAGE_SHA}" >> $GITHUB_ENV
         BASE_IMAGE=$(head -n1 dockerfile)
         echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
 
