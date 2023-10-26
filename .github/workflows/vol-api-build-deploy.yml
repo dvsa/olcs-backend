@@ -58,7 +58,7 @@ jobs:
         name: Build
         path: $PWD
 
-  run-unit-tests:
+  unit-tests:
 
     name: Run Unit Tests
     runs-on: ubuntu-latest
@@ -173,11 +173,14 @@ jobs:
     # #    echo 'Deployment in process...'
     # #    sleep 10s
 
-  run-automation-tests:
+  automation-tests:
 
     name: Run Automation Tests
     runs-on: ubuntu-latest
-    needs: ci-cd-vol-api
+    needs:
+    - dockerfile-lint-check
+    - build
+    - unit-tests
 
     env:
       AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
