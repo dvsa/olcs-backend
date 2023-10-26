@@ -101,6 +101,7 @@ return [
     CommandHandler\Email\SendForgotPassword::class => IsSystemUser::class,
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
+    CommandHandler\PrintScheduler\PrintJobFactory::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,
     CommandHandler\Permits\AllocateCandidatePermits::class => IsSystemUser::class,
     CommandHandler\Permits\PostSubmitTasks::class => IsSystemUser::class,
