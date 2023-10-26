@@ -51,12 +51,14 @@ jobs:
        date > config/version
        git describe --all >> config/version
        tar cvzf backend.tar.gz --exclude=config/autoload/local.php --exclude=config/autoload/local.php.dist composer.lock init_autoloader.php config module public data/autoload data/cache vendor
+       ls -la
+       echo $PWD
 
     - name: Upload VOL API artifact
       uses: actions/upload-artifact@v3.1.3
       with:
         name: Build
-        path: $PWD
+        path: ./
 
   unit-tests:
 
@@ -77,12 +79,12 @@ jobs:
 
     steps:
 
-    - name: Download VOL API artifact 
-      uses: actions/download-artifact@v3.0.2
-      with:
-        name: Build
-        path: build
-    - run: zip -r build.zip ./
+    # - name: Download VOL API artifact
+    #   uses: actions/download-artifact@v3.0.2
+    #   with:
+    #     name: Build
+    #     path: ./
+    # - run: zip -r build.zip ./
 
     - name: Run unit tests
       if: github.event_name == 'pull_request'
