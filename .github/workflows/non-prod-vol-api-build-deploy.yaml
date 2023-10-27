@@ -290,6 +290,7 @@ jobs:
       #   echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
       uses: actions/github-script@v6.4.1
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           github.rest.actions.createWorkflowDispatch({
             owner: context.repo.owner,
