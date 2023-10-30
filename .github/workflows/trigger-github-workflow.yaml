@@ -2,6 +2,12 @@ name: Trigger GH Actions Workflow
 
 on:
   workflow_call:
+    inputs:
+      branch:
+        description: 'Name of the branch which contains the given Workflow'
+        default: 'feature/AWSRESET1-514'
+        required: true
+        type: string
     secrets:
       gh_token:
         required: true
@@ -22,7 +28,7 @@ jobs:
       run: |
         gh workflow run 'CD NON-PROD VOL API' \
           -R dvsa/dvsa-container-registry \
-          --ref feature/AWSRESET1-514 \
+          --ref ${{ inputs.branch }} \
           -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
       env:
         GITHUB_TOKEN: ${{ secrets.gh_token }}
