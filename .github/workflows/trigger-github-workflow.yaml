@@ -6,7 +6,7 @@ on:
       branch:
         description: 'Name of the branch which contains the given Workflow'
         default: 'feature/AWSRESET1-514'
-        required: true
+        required: false
         type: string
     secrets:
       gh_token:
