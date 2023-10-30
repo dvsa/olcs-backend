@@ -267,12 +267,12 @@ jobs:
         #   });
         script: |
           curl -L \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/dvsa/dvsa-container-registry/actions/workflows/nonprod-vol-api-manual-cd.yaml/dispatches \
-          -d '{"ref":"feature/AWSRESET1-514","inputs":{"vol_api_image_tag":"vol-api-7.4.33-alpine-fpm-ddea10a"}}'
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/dvsa/dvsa-container-registry/actions/workflows/nonprod-vol-api-manual-cd.yaml/dispatches \
+            -d '{"ref":"feature/AWSRESET1-514","inputs":{"vol_api_image_tag":"vol-api-7.4.33-alpine-fpm-ddea10a"}}'
       #             # script: |
       #   #   await github.rest.actions.createWorkflowDispatch({
       #   #   owner: 'dvsa'
