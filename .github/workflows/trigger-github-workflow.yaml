@@ -19,7 +19,7 @@ on:
         required: true
         type: string
       vol_api_image_tag:
-        description: 'VOL API image tag'
+        description: 'VOL API Image Tag'
         default: ''
         required: true
         type: string
@@ -58,15 +58,14 @@ jobs:
     #         -d '{"ref":"feature/AWSRESET1-514","inputs":{"vol_api_image_tag":"vol-api-7.4.33-alpine-fpm-ddea10a"}}'
 
     
-    - name: Monitor Workflow Execution Progress 
+    - name: Monitor Workflow Execution Progress
       run: |
-        runID=`curl -L -H \ 
+        runID=`curl -L -H \
                 "Accept: application/vnd.github+json" \
                 -H "Authorization: Bearer ${{ secrets.gh_token }}" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
                 https://api.github.com/repos/${{ inputs.git_repository }}/actions/runs |\
-                jq -r '.workflow_runs[0]|select(.name == "${{ inputs.workflow_name }}").id'`
-        # Use the filter select(.name == "{ WORKFLOW_NAME }" and .status == "in_progress").id if no Perf issues for Git API
+                jq -r '.workflow_runs[0]|select(.name == "${{ inputs.workflow_name }}" and .status == "in_progress").id'`
         gh run watch $runID --interval 10 --exit-status 1  -R ${{ inputs.git_repository }}
       env:
         GITHUB_TOKEN: ${{ secrets.gh_token }}
