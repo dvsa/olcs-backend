@@ -310,6 +310,8 @@ jobs:
       uses: ./.github/workflows/trigger-github-workflow.yaml
       with:
         branch: 'feature/AWSRESET1-514'
+        git_repository: 'dvsa/dvsa-container-registry'
+        workflow_name: 'CD NON-PROD VOL API'
       secrets:
         gh_token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
 

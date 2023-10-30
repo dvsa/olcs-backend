@@ -6,7 +6,17 @@ on:
       branch:
         description: 'Name of the branch which contains the given Workflow'
         default: 'main'
-        required: false
+        required: true
+        type: string
+      git_repository:
+        description: 'Name of the Owner/Repo which contains the given Workflow'
+        default: ''
+        required: true
+        type: string
+      workflow_name:
+        description: 'Name of the given Workflow'
+        default: ''
+        required: true
         type: string
     secrets:
       gh_token:
@@ -26,8 +36,8 @@ jobs:
 
     - name: Trigger Workflow
       run: |
-        gh workflow run 'CD NON-PROD VOL API' \
-          -R dvsa/dvsa-container-registry \
+        gh workflow run '${{ inputs.workflow_name }}' \
+          -R ${{ inputs.git_repository }} \
           --ref ${{ inputs.branch }} \
           -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
       env:
@@ -49,8 +59,8 @@ jobs:
                 "Accept: application/vnd.github+json" \
                 -H "Authorization: Bearer ${{ secrets.gh_token }}" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                https://api.github.com/repos/dvsa/dvsa-container-registry/actions/runs |\
-                jq -r '.workflow_runs[0]|select(.name == "CD NON-PROD VOL API" and .status == "in_progress").id'`
-        gh run watch $runID --interval 10 --exit-status 1  -R dvsa/dvsa-container-registry
+                https://api.github.com/repos/${{ inputs.git_repository }}/actions/runs |\
+                jq -r '.workflow_runs[0]|select(.name == "${{ inputs.workflow_name }}" and .status == "in_progress").id'`
+        gh run watch $runID --interval 10 --exit-status 1  -R ${{ inputs.git_repository }}
       env:
         GITHUB_TOKEN: ${{ secrets.gh_token }}
