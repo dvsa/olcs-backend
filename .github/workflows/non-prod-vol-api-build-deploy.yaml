@@ -256,7 +256,7 @@ jobs:
       with:
         script: |
           await github.rest.actions.createWorkflowDispatch({
-            owner: 'dvsa',
+            owner: context.repo.owner,
             repo: 'dvsa-container-registry',
             workflow_id: 'nonprod-vol-api-manual-cd.yaml',
             ref: 'feature/AWSRESET1-514',
