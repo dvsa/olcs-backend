@@ -265,7 +265,7 @@ jobs:
             },
           })
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
         # github-token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
         # script: |
         #   await github.rest.actions.createWorkflowDispatch({
