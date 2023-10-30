@@ -247,25 +247,32 @@ jobs:
     # - build-test-push-sign-image
 
     steps:
+
+    - name: Checkout the repository to this runner
+      uses: actions/checkout@v3
+      with:
+        repository: 'dvsa/dvsa-container-registry'
+        ref: 'feature/AWSRESET1-514'
+        token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
   
     - name: Trigger workflow 'nonprod-vol-api-manual-cd.yaml'
       # if: github.ref == 'refs/heads/main'
-      # run: |
-      #   echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
-      uses: actions/github-script@v6.4.1
-      with:
-        script: |
-          await github.rest.actions.createWorkflowDispatch({
-            owner: context.repo.owner,
-            repo: 'dvsa-container-registry',
-            workflow_id: 'nonprod-vol-api-manual-cd.yaml',
-            ref: 'feature/AWSRESET1-514',
-            inputs: {
-              vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a',
-            },
-          })
-      env:
-        GITHUB_TOKEN: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
+      run: |
+        ls -la ./
+      # uses: actions/github-script@v6.4.1
+      # with:
+      #   script: |
+      #     await github.rest.actions.createWorkflowDispatch({
+      #       owner: context.repo.owner,
+      #       repo: 'dvsa-container-registry',
+      #       workflow_id: 'nonprod-vol-api-manual-cd.yaml',
+      #       ref: 'feature/AWSRESET1-514',
+      #       inputs: {
+      #         vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a',
+      #       },
+      #     })
+      # env:
+      #   GITHUB_TOKEN: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
         # github-token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
         # script: |
         #   await github.rest.actions.createWorkflowDispatch({
