@@ -294,8 +294,8 @@ jobs:
       # needs: pre-pkr
     steps:
 
-    - name: Checkout the repository to this runner
-      uses: actions/checkout@v3
+    # - name: Checkout the repository to this runner
+    #   uses: actions/checkout@v3
 
     - name: Trigger workflow 'nonprod-vol-api-manual-cd'
       uses: actions/github-script@v6
@@ -310,7 +310,7 @@ jobs:
               vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a',
             },
           })
-        wait-interval: 10
+        # wait-interval: 10
       # if: github.ref == 'refs/heads/main'
       # run: |
       #   echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
