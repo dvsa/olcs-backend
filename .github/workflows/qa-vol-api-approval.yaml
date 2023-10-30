@@ -26,7 +26,7 @@ jobs:
     uses: ./.github/workflows/image-sign-validation.yaml
     secrets:
       aws_role_arn: ${{ secrets.VOL_AWS_ROLE_TOOLING_NONPROD }}
-      ecr_tagged_image: ${VOL_NONPROD_TOOLING_REPO_URL}:${{ github.event.inputs.vol_api_image_tag }}
+      ecr_tagged_image: ${{ env.VOL_NONPROD_TOOLING_ECR_REPO_URL }}:${{ github.event.inputs.vol_api_image_tag }}
 
   deploy-on-qa-cluster:
 
