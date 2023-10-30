@@ -38,4 +38,4 @@ jobs:
           --ref feature/AWSRESET1-514 \
           -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
       env:
-        GITHUB_TOKEN: ${{ secrets.github_token }}
+        GITHUB_TOKEN: ${{ secrets.gh_token }}
