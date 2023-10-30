@@ -302,7 +302,7 @@ jobs:
       # run: |
       #   echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
       run: |
-        gh workflow run 'qa-vol-api-approval.yaml' --ref feature/AWSRESET1-514 -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
+        gh workflow run 'QA VOL API ARTIFACT APPROVAL' --ref feature/AWSRESET1-514 -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # uses: actions/github-script@v6
