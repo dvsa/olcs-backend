@@ -38,6 +38,7 @@ jobs:
     
     - name: Monitor Workflow Execution Progress
       run: |
+        sleep 10
         runID=`curl -L -H \
                 "Accept: application/vnd.github+json" \
                 -H "Authorization: Bearer ${{ secrets.gh_token }}" \
