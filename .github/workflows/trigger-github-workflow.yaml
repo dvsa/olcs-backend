@@ -3,7 +3,7 @@ name: Trigger GH Actions Workflow
 on:
   workflow_call:
     secrets:
-      github_token:
+      gh_token:
         required: true
 
 jobs:

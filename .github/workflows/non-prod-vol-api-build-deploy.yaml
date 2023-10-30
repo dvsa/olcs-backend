@@ -309,7 +309,7 @@ jobs:
       # if: github.event_name == 'pull_request'
       uses: ./.github/workflows/trigger-github-workflow.yaml
       secrets:
-        github_token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
+        gh_token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
 
   # qa-artifact-approval:
 
