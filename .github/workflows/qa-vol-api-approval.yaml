@@ -115,10 +115,10 @@ jobs:
       run: |
         docker pull ${VOL_NONPROD_TOOLING_REPO_URL}:${{ github.event.inputs.vol_api_image_tag }}
         docker tag ${VOL_NONPROD_TOOLING_REPO_URL}:${{ github.event.inputs.vol_api_image_tag }} ${VOL_PROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG}
-        docker push ${VOL_PROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG}
+    #     docker push ${VOL_PROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG}
 
-    - name: Sign VOL API image
-      # if: github.ref == 'refs/heads/main'
-      run: |
-        notation sign ${VOL_PROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG} \
-          --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_NONPRODVOLTOOLING_IMAGE_SIGNING_PROFILE }}"
+    # - name: Sign VOL API image
+    #   # if: github.ref == 'refs/heads/main'
+    #   run: |
+    #     notation sign ${VOL_PROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG} \
+    #       --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_NONPRODVOLTOOLING_IMAGE_SIGNING_PROFILE }}"

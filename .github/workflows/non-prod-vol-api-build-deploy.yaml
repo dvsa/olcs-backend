@@ -305,7 +305,10 @@ jobs:
   #     #   #   })
 
     deploy-on-non-prod-cluster:
+
       name: Deploy on Non Prod Cluster
+      # needs:
+      # -  build-test-push-sign-image
       # if: github.event_name == 'pull_request'
       uses: ./.github/workflows/trigger-github-workflow.yaml
       with:
@@ -315,6 +318,21 @@ jobs:
         vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a'
       secrets:
         gh_token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
+
+    qa-artifact-approval:
+
+      name: QA VOL API Image Approval
+      needs:
+      -  deploy-on-non-prod-cluster
+      # if: github.event_name == 'pull_request'
+      uses: ./.github/workflows/trigger-github-workflow.yaml
+      with:
+        branch: 'feature/AWSRESET1-514'
+        git_repository: 'dvsa/olcs-backend'
+        workflow_name: 'QA VOL API ARTIFACT APPROVAL'
+        vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a'
+      secrets:
+        gh_token: ${{ secrets.GITHUB_TOKEN }}
 
   # qa-artifact-approval:
 
