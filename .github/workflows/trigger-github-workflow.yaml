@@ -45,6 +45,6 @@ jobs:
                 https://api.github.com/repos/dvsa/dvsa-container-registry/actions/runs |\
                 jq -r '.workflow_runs[0]|select(.name == "CD NON-PROD VOL API").id'`
         echo $runID
-        # gh run watch $runID -i1
+        gh run watch $runID -i1 -R dvsa/dvsa-container-registry
       env:
         GITHUB_TOKEN: ${{ secrets.gh_token }}
