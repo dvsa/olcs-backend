@@ -308,6 +308,8 @@ jobs:
       name: Deploy on Non Prod Cluster
       # if: github.event_name == 'pull_request'
       uses: ./.github/workflows/trigger-github-workflow.yaml
+      with:
+        branch: 'feature/AWSRESET1-514'
       secrets:
         gh_token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
 
