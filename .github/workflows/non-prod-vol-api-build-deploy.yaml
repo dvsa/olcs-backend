@@ -298,13 +298,25 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Trigger workflow 'nonprod-vol-api-manual-cd'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.actions.createWorkflowDispatch({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            workflow_id: 'qa-vol-api-approval.yaml',
+            ref: 'feature/AWSRESET1-514',
+            inputs: {
+              vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a',
+            },
+          })
       # if: github.ref == 'refs/heads/main'
       # run: |
       #   echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
-      run: |
-        gh workflow run 'QA VOL API ARTIFACT APPROVAL' --ref feature/AWSRESET1-514 \
-          -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
-        gh run watch -i1
+      # run: |
+      #   gh workflow run 'QA VOL API ARTIFACT APPROVAL' --ref feature/AWSRESET1-514 \
+      #     -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
+      #   gh run watch -i1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # uses: actions/github-script@v6
