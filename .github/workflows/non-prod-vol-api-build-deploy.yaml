@@ -259,8 +259,11 @@ jobs:
           await github.rest.actions.createWorkflowDispatch({
             owner: 'dvsa',
             repo: 'dvsa-container-registry',
-            workflow_id: 'nonprod-vol-api-manual-cd.yaml',
+            workflow_id: 'CD NON-PROD VOL API',
             ref: 'feature/AWSRESET1-514',
+            inputs: {
+              vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a',
+            },
           });
       #             # script: |
       #   #   await github.rest.actions.createWorkflowDispatch({
