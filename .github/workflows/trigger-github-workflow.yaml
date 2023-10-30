@@ -29,7 +29,7 @@ jobs:
     
     - name: Monitor Workflow Execution Progress
       run: |
-        runID=`gh run list --workflow='CD NON-PROD VOL API' -R dvsa/dvsa-container-registry -b feature/AWSRESET1-514 | sed -n 1p | awk '{ print $(NF-2) }'`
+        runID=`gh run list -w 'CD NON-PROD VOL API' --repo dvsa/dvsa-container-registry -L 1 --json databaseId | jq '.[]| .databaseId'`
         gh run watch $runID -i1
       env:
         GITHUB_TOKEN: ${{ secrets.gh_token }}
