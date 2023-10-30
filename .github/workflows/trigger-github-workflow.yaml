@@ -1,0 +1,41 @@
+name: Trigger GH Actions Workflow
+
+on:
+  workflow_call:
+    secrets:
+      github_token:
+        required: true
+
+jobs:
+
+  trigger-gh-workflow:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+
+    - name: Trigger workflow
+      # uses: actions/github-script@v6
+      # with:
+      #   script: |
+      #     await github.rest.actions.createWorkflowDispatch({
+      #       owner: context.repo.owner,
+      #       repo: 'dvsa-container-registry',
+      #       workflow_id: 'nonprod-vol-api-manual-cd.yaml',
+      #       ref: 'feature/AWSRESET1-514',
+      #       inputs: {
+      #         vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a',
+      #       },
+      #     })
+        # wait-interval: 10
+      # if: github.ref == 'refs/heads/main'
+      # run: |
+      #   echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
+      run: |
+        gh workflow run 'CD NON-PROD VOL API' \
+          -R dvsa/dvsa-container-registry \
+          --ref feature/AWSRESET1-514 \
+          -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }}
