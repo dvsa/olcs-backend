@@ -312,6 +312,7 @@ jobs:
         branch: 'feature/AWSRESET1-514'
         git_repository: 'dvsa/dvsa-container-registry'
         workflow_name: 'CD NON-PROD VOL API'
+        vol_api_image_tag: 'vol-api-7.4.33-alpine-fpm-ddea10a'
       secrets:
         gh_token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
 
