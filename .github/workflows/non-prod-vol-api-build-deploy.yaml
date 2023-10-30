@@ -18,9 +18,6 @@ env:
 permissions:
   id-token: write   # This is required for requesting the JWT
   contents: read    # This is required for actions/checkout
-  # contents: write
-  pull-requests: write
-  repository-projects: write
 
 jobs:
 
@@ -293,9 +290,10 @@ jobs:
     runs-on: ubuntu-latest
     # needs:
     # - deploy-on-non-prod-cluster
-    # permissions: read-all
+    permissions: write-all
+      # needs: pre-pkr
     steps:
-  
+
     - name: Trigger workflow 'nonprod-vol-api-manual-cd'
       # if: github.ref == 'refs/heads/main'
       # run: |
@@ -305,8 +303,8 @@ jobs:
         # github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           github.rest.actions.createWorkflowDispatch({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
+            owner: 'dvsa',
+            repo: olcs-backend,
             workflow_id: 'qa-vol-api-approval.yaml',
             ref: 'feature/AWSRESET1-514',
           })
