@@ -294,6 +294,9 @@ jobs:
       # needs: pre-pkr
     steps:
 
+    - name: Checkout the repository to this runner
+      uses: actions/checkout@v3
+
     - name: Trigger workflow 'nonprod-vol-api-manual-cd'
       # if: github.ref == 'refs/heads/main'
       # run: |
