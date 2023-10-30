@@ -301,7 +301,7 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: |
-          github.rest.actions.createWorkflowDispatch({
+          await github.rest.actions.createWorkflowDispatch({
             owner: context.repo.owner,
             repo: context.repo.repo,
             workflow_id: 'qa-vol-api-approval.yaml',
