@@ -28,3 +28,5 @@ jobs:
       run: |
         runID=`gh run list --workflow=nonprod-vol-api-manual-cd.yaml -R dvsa/dvsa-container-registry | sed -n 1p | awk '{ print $(NF-2) }'`
         gh run watch $runID -i1
+      env:
+        GITHUB_TOKEN: ${{ secrets.gh_token }}
