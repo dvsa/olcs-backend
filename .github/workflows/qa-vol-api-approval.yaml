@@ -1,12 +1,19 @@
 name: QA VOL API ARTIFACT APPROVAL
 run-name: QA VOL API ARTIFACT APPROVAL
 
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       vol_api_image_tag:
+#         description: 'Tag of VOL API Image'     
+#         required: true
+
 on:
-  workflow_dispatch:
-    inputs:
-      vol_api_image_tag:
-        description: 'Tag of VOL API Image'     
-        required: true
+  pull_request:
+    # types: ['labeled']
+    # push:
+    branches:
+      - master
 
 env:
   AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
