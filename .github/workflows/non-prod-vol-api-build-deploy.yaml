@@ -299,9 +299,7 @@ jobs:
       # run: |
       #   echo "Here: ${{ needs.build-test-push-sign-image.outputs.image_tag }}"
       run: |
-        gh workflow run 'CD NON-PROD VOL API' \
-          -R dvsa/dvsa-container-registry --ref feature/AWSRESET1-514 \
-          -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
+        gh workflow run 'CD NON-PROD VOL API' -R dvsa/dvsa-container-registry --ref feature/AWSRESET1-514 -f vol_api_image_tag=vol-api-7.4.33-alpine-fpm-ddea10a
       env:
         GITHUB_TOKEN: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
       # uses: actions/github-script@v6
