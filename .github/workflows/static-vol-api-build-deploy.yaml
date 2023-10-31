@@ -36,7 +36,7 @@ jobs:
     - name: Checkout the repository to this runner
       uses: actions/checkout@v3
 
-    ##create s3 bucket in vol-non-prod tooling and vol-prod tooling to get the composer
+    # Create s3 bucket in vol-non-prod tooling and vol-prod tooling to get the composer
     - name: Download the compose file
       run: |
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -103,10 +103,9 @@ jobs:
       run: |
         envsubst < dockerfile | tee dockerfile.tmp
         mv dockerfile.tmp dockerfile
-        echo "IMAGE_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
         BASE_IMAGE=$(head -n1 dockerfile)
         echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
-        echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
+        echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
     - name: Setup Notation CLI
       uses: notaryproject/notation-action/setup@v1
@@ -158,11 +157,11 @@ jobs:
       id: login-ecr-vol-tooling-non-prod
       uses: aws-actions/amazon-ecr-login@v2.0.1
 
-    - name: Push VOL API image
-      id: push-image
-      run: |
-        echo "image_tag=${VOL_API_IMAGE_TAG}" >> $GITHUB_OUTPUT
-        docker push ${VOL_NONPROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG}
+    # - name: Push VOL API image
+    #   id: push-image
+    #   run: |
+    #     echo "image_tag=${VOL_API_IMAGE_TAG}" >> $GITHUB_OUTPUT
+    #     docker push ${VOL_NONPROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG}
 
     outputs:
       image_tag: ${{ steps.push-image.outputs.image_tag }}
