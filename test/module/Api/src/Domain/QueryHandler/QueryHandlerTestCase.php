@@ -128,6 +128,7 @@ class QueryHandlerTestCase extends MockeryTestCase
 
         $this->commands = [];
 
+        $this->container = $sm;
         $this->sut = $this->sut->__invoke($sm, null);
     }
 

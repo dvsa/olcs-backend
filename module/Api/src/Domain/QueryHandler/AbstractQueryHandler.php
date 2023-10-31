@@ -112,6 +112,11 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         return $this->queryHandler->handleQuery($qry);
     }
 
+    protected function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
+
     /**
      * Get query handler
      *

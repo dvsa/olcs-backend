@@ -28,7 +28,7 @@ class PrintLetter extends AbstractQueryHandler
         $doc = $this->getRepo()->fetchUsingId($query);
 
         /** @var Service\Document\PrintLetter $srv */
-        $srv = $this->getQueryHandler()->get(Service\Document\PrintLetter::class);
+        $srv = $this->getContainer()->get(Service\Document\PrintLetter::class);
 
         return [
             'flags' => [
