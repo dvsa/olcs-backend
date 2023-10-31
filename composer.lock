@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "aws/aws-crt-php",
-            "version": "v1.2.2",
+            "version": "v1.2.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-crt-php/v1.2.2/aws-aws-crt-php-v1.2.2.zip",
-                "reference": "2f1dc7b7eda080498be96a4a6d683a41583030e9",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-crt-php/v1.2.3/aws-aws-crt-php-v1.2.3.zip",
+                "reference": "5545a4fa310aec39f54279fdacebcce33b3ff382",
                 "shasum": ""
             },
             "require": {
@@ -50,21 +50,21 @@
             ],
             "support": {
                 "issues": "https://github.com/awslabs/aws-crt-php/issues",
-                "source": "https://github.com/awslabs/aws-crt-php/tree/v1.2.2"
+                "source": "https://github.com/awslabs/aws-crt-php/tree/v1.2.3"
             },
-            "time": "2023-07-20T16:49:55+00:00"
+            "time": "2023-10-16T20:10:06+00:00"
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.283.1",
+            "version": "3.283.15",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.283.1/aws-aws-sdk-php-3.283.1.zip",
-                "reference": "0d1857ca3392ec9f8ee0b1605ba09842cced6351",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/aws/aws-sdk-php/3.283.15/aws-aws-sdk-php-3.283.15.zip",
+                "reference": "44b70c15c2a5d0fd2cfc74ee529a7877f1e7457d",
                 "shasum": ""
             },
             "require": {
-                "aws/aws-crt-php": "^1.0.4",
+                "aws/aws-crt-php": "^1.2.3",
                 "ext-json": "*",
                 "ext-pcre": "*",
                 "ext-simplexml": "*",
@@ -139,9 +139,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.283.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.283.15"
             },
-            "time": "2023-10-05T18:07:42+00:00"
+            "time": "2023-10-30T18:09:22+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -5450,11 +5450,11 @@
         },
         {
             "name": "league/mime-type-detection",
-            "version": "1.13.0",
+            "version": "1.14.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/league/mime-type-detection/1.13.0/league-mime-type-detection-1.13.0.zip",
-                "reference": "a6dfb1194a2946fcdc1f38219445234f65b35c96",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/league/mime-type-detection/1.14.0/league-mime-type-detection-1.14.0.zip",
+                "reference": "b6a5854368533df0295c5761a0253656a2e52d9e",
                 "shasum": ""
             },
             "require": {
@@ -5484,7 +5484,7 @@
             "description": "Mime-type detection for Flysystem",
             "support": {
                 "issues": "https://github.com/thephpleague/mime-type-detection/issues",
-                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.13.0"
+                "source": "https://github.com/thephpleague/mime-type-detection/tree/1.14.0"
             },
             "funding": [
                 {
@@ -5496,7 +5496,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-05T12:09:49+00:00"
+            "time": "2023-10-17T14:13:20+00:00"
         },
         {
             "name": "league/oauth2-client",
@@ -6193,12 +6193,12 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "4.206.19",
+            "version": "4.206.20",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.19/olcs-olcs-utils-4.206.19.zip",
-                "reference": "c9f8d3cfcb2a0da45ada6588b6f15c6731601a13",
-                "shasum": "c9f8d3cfcb2a0da45ada6588b6f15c6731601a13"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.20/olcs-olcs-utils-4.206.20.zip",
+                "reference": "060150978ef906706af8e0b67786c1fdc7edfdf1",
+                "shasum": "060150978ef906706af8e0b67786c1fdc7edfdf1"
             },
             "require": {
                 "elendev/composer-push": "^1.0.3",
@@ -6245,7 +6245,7 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2023-07-10T08:47:38+00:00"
+            "time": "2023-10-18T11:32:29+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
@@ -8104,11 +8104,11 @@
         },
         {
             "name": "symfony/lock",
-            "version": "v5.4.25",
+            "version": "v5.4.30",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/lock/v5.4.25/symfony-lock-v5.4.25.zip",
-                "reference": "ed4055b2e03c8893ce2d0042c8f0e0707be8e179",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/symfony/lock/v5.4.30/symfony-lock-v5.4.30.zip",
+                "reference": "759554c1831c8ef11ce36c9cebc32ad977ca518c",
                 "shasum": ""
             },
             "require": {
@@ -8121,7 +8121,7 @@
                 "doctrine/dbal": "<2.13"
             },
             "require-dev": {
-                "doctrine/dbal": "^2.13|^3.0",
+                "doctrine/dbal": "^2.13|^3|^4",
                 "predis/predis": "~1.0"
             },
             "type": "library",
@@ -8157,7 +8157,7 @@
                 "semaphore"
             ],
             "support": {
-                "source": "https://github.com/symfony/lock/tree/v5.4.25"
+                "source": "https://github.com/symfony/lock/tree/v5.4.30"
             },
             "funding": [
                 {
@@ -8173,7 +8173,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-22T08:06:06+00:00"
+            "time": "2023-10-28T23:35:12+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -8974,11 +8974,11 @@
     "packages-dev": [
         {
             "name": "composer/pcre",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/pcre/3.1.0/composer-pcre-3.1.0.zip",
-                "reference": "4bff79ddd77851fe3cdd11616ed3f92841ba5bd2",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/composer/pcre/3.1.1/composer-pcre-3.1.1.zip",
+                "reference": "00104306927c7a0919b4ced2aaa6782c1e61a3c9",
                 "shasum": ""
             },
             "require": {
@@ -9019,7 +9019,7 @@
             ],
             "support": {
                 "issues": "https://github.com/composer/pcre/issues",
-                "source": "https://github.com/composer/pcre/tree/3.1.0"
+                "source": "https://github.com/composer/pcre/tree/3.1.1"
             },
             "funding": [
                 {
@@ -9035,7 +9035,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-17T09:50:14+00:00"
+            "time": "2023-10-11T07:11:09+00:00"
         },
         {
             "name": "composer/xdebug-handler",
@@ -9490,12 +9490,12 @@
         },
         {
             "name": "olcs/olcs-testhelpers",
-            "version": "4.206.21",
+            "version": "4.206.22",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-testhelpers/4.206.21/olcs-olcs-testhelpers-4.206.21.zip",
-                "reference": "2e895b49e718448ff4e0ca777d252860c9ba5c35",
-                "shasum": "2e895b49e718448ff4e0ca777d252860c9ba5c35"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-testhelpers/4.206.22/olcs-olcs-testhelpers-4.206.22.zip",
+                "reference": "ab4c0103cf90ca52c4340ea776f3349b98931c16",
+                "shasum": "ab4c0103cf90ca52c4340ea776f3349b98931c16"
             },
             "require": {
                 "elendev/composer-push": "^1.0.3",
@@ -9514,7 +9514,7 @@
                 }
             },
             "description": "OLCS Test helpers",
-            "time": "2023-02-28T10:27:19+00:00"
+            "time": "2023-10-18T11:28:11+00:00"
         },
         {
             "name": "pdepend/pdepend",
