@@ -2,7 +2,7 @@ name: CI/CD NON PROD VOL API
 run-name: CI/CD NON PROD VOL API
 
 on:
-  pull_request:
+  push:
     # types: ['labeled']
     # push:
     branches:

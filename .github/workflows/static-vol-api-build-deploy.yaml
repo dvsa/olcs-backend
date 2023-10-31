@@ -1,0 +1,194 @@
+name: CI/CD STATIC VOL API
+run-name: CI/CD STATIC VOL API
+
+on:
+  pull_request:
+    # types: ['labeled']
+    branches:
+      - master
+
+env:
+  AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
+  AWS_ACCOUNT_ID_VOL_NP_TOOLING: ${{ vars.VOL_AWS_ACCOUNT_TOOLING_NONPROD }}
+  VOL_NONPROD_TOOLING_REPO_URL: ${{ secrets.VOL_NONPROD_TOOLING_ECR_REPO_URL }}
+  AWS_ACCOUNT_ID_SHAREDCOREECR: ${{ vars.AWS_ACCOUNT_ID_SHAREDCOREECR }}
+
+# Permission can be added at job level or workflow level    
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
+
+jobs:
+
+  dockerfile-lint-check:
+    name: Dockerfile Lint Check
+    uses: ./.github/workflows/docker-hadolint.yaml
+
+  build:
+
+    name: Build VOL API
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout the repository to this runner
+      uses: actions/checkout@v3
+
+    ##create s3 bucket in vol-non-prod tooling and vol-prod tooling to get the composer
+    - name: Download the compose file
+      run: |
+        php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+        php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+        php -r "unlink('composer-setup.php');"
+
+    - name: Install Composer dependencies
+      run: |
+       composer install --optimize-autoloader --no-interaction --no-dev
+
+    - name: Build VOL Backend
+      run: |
+       date > config/version
+       git describe --all >> config/version
+       tar cvzf backend.tar.gz --exclude=config/autoload/local.php --exclude=config/autoload/local.php.dist composer.lock init_autoloader.php config module public data/autoload data/cache vendor
+       ls -la
+       echo $PWD
+
+    - name: Upload VOL API artifact
+      uses: actions/upload-artifact@v3.1.3
+      with:
+        name: Backend
+        path: ./backend.tar.gz
+
+  unit-tests:
+
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout the repository to this runner
+      uses: actions/checkout@v3
+
+    - name: Run unit tests
+      run: |
+       echo 'Run unit tests'
+       ls -la ./
+
+  build-test-push-sign-image:
+
+    name: Build, Push & Sign Image
+    runs-on: ubuntu-latest
+
+    needs:
+    - build
+    - unit-tests
+    - dockerfile-lint-check
+
+    steps:
+
+    - name: Checkout the repository to this runner
+      uses: actions/checkout@v3
+
+    - name: Download VOL API artifact
+      uses: actions/download-artifact@v3.0.2
+      with:
+        name: Backend
+        path: ./
+
+    - name: Set BASE_IMAGE & IMAGE_SHA
+      run: |
+        envsubst < dockerfile | tee dockerfile.tmp
+        mv dockerfile.tmp dockerfile
+        echo "IMAGE_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        BASE_IMAGE=$(head -n1 dockerfile)
+        echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
+        echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$IMAGE_SHA" >> $GITHUB_ENV
+
+    - name: Setup Notation CLI
+      uses: notaryproject/notation-action/setup@v1
+      with:
+        version: 1.0.0
+
+    - name: Set up Notation AWS Signer plugin
+      run: |
+        wget https://d2hvyiie56hcat.cloudfront.net/linux/amd64/installer/deb/latest/aws-signer-notation-cli_amd64.deb
+        sudo dpkg -i aws-signer-notation-cli_amd64.deb
+        notation version
+        notation plugin ls
+
+    - name: Configure AWS credentials on Shared Core ECR
+      uses: aws-actions/configure-aws-credentials@v4.0.1
+      with:
+        role-to-assume: ${{ secrets.DVSA_AWS_ROLE_SHAREDCORECR }}
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: ${{ vars.DVSA_AWS_REGION }}
+
+    - name: Login to Shared Core ECR
+      id: login-ecr-sharedcoreecr
+      uses: aws-actions/amazon-ecr-login@v2.0.1
+
+    - name: Build VOL API image after verifying Base image
+      run: |
+        notation inspect $BASE_IMAGE
+        docker build -t ${VOL_NONPROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG} \
+          --build-arg DVSA_AWS_SHAREDCOREECR_ID=${{secrets.DVSA_AWS_SHAREDCOREECR_ID}} .
+
+    - name: Snyk scan VOL API image
+      id: scan-api-image
+      uses: snyk/actions/docker@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        image: ${VOL_NONPROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG}
+        args: --file=dockerfile --severity-threshold=high
+      continue-on-error: true
+
+    - name: Configure AWS credentials on Non Production VOL ECR
+      uses: aws-actions/configure-aws-credentials@v4.0.1
+      with:
+        role-to-assume: ${{ secrets.VOL_AWS_ROLE_TOOLING_NONPROD }}
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: ${{ vars.DVSA_AWS_REGION}}
+
+    - name: Login to Non Production VOL ECR
+      id: login-ecr-vol-tooling-non-prod
+      uses: aws-actions/amazon-ecr-login@v2.0.1
+
+    - name: Push VOL API image
+      id: push-image
+      run: |
+        echo "image_tag=${VOL_API_IMAGE_TAG}" >> $GITHUB_OUTPUT
+        docker push ${VOL_NONPROD_TOOLING_REPO_URL}:${VOL_API_IMAGE_TAG}
+
+    outputs:
+      image_tag: ${{ steps.push-image.outputs.image_tag }}
+
+  deploy-on-static-cluster:
+
+    name: Deploy on Static ECS Cluster
+
+    needs:
+    -  build-test-push-sign-image
+
+    uses: ./.github/workflows/trigger-github-workflow.yaml
+    with:
+      branch: 'feature/AWSRESET1-514'
+      git_repository: 'dvsa/dvsa-container-registry'
+      workflow_name: 'CD NON-PROD VOL API'
+      vol_api_image_tag: '${{ needs.build-test-push-sign-image.outputs.image_tag }}'
+    secrets:
+      gh_token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
+
+  automation-tests:
+
+    name: Run Automation Tests
+    runs-on: ubuntu-latest
+
+    needs:
+    - deploy-on-ephemral-cluster
+
+    steps:
+
+    - name: Run automation tests
+      run: |
+       echo 'Run automation tests'
