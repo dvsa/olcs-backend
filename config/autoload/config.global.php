@@ -384,7 +384,7 @@ return [
         'writers' => [
             'full' => [
                 'options' => [
-                    'stream' => '/var/log/dvsa/olcs-api/api.log',
+                    'stream' => 'php://stdout',
                     'filters' => [
                         'priority' => [
                             'name' => 'priority',
@@ -401,7 +401,7 @@ return [
         'writers' => [
             'full' => [
                 'options' => [
-                    'stream' => '/var/log/dvsa/olcs-api/api.log',
+                    'stream' => 'php://stderr',
                     'filters' => [
                         'priority' => [
                             'name' => 'priority',
