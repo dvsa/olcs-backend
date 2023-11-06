@@ -38,9 +38,6 @@ class AwsCredentialsProviderFactory implements FactoryInterface
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $envCredentialsFlag = $container->get('Config')['awsOptions']['useEnvCredentials'] ?? false;
-        $credentialsProvider = $envCredentialsFlag ? $this->getEnvCredentialProvider() : $this->getInstanceProfileCredentialProvider();
-        $provider = CredentialProvider::memoize($credentialsProvider);
-        return $provider;
+        return CredentialProvider::defaultProvider();
     }
 }
