@@ -124,6 +124,8 @@ class ConvertMappingCommand extends DoctrineConvertMappingCommand
         } else {
             $output->writeln('No Metadata Classes to process.');
         }
+
+        return 0;
     }
 
     protected function configureMetadata($metadata)
