@@ -2,6 +2,7 @@
 
 namespace Cli;
 
+use Doctrine\Inflector\InflectorFactory;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Inflector\Inflector;
@@ -55,13 +56,14 @@ class DatabaseDriver implements MappingDriver
      * @var string|null
      */
     private $namespace;
+    private Inflector $inflector;
 
     protected $mappingConfig = [];
 
     public function __construct(AbstractSchemaManager $schemaManager, $mappingConfig)
     {
         $this->_sm = $schemaManager;
-
+        $this->inflector = InflectorFactory::create()->build();
         $this->mappingConfig = $mappingConfig;
     }
 
@@ -508,7 +510,7 @@ class DatabaseDriver implements MappingDriver
             return $this->namespace . $this->classNamesForTables[$tableName];
         }
 
-        return $this->namespace . Inflector::classify(strtolower($tableName));
+        return $this->namespace . $this->inflector->classify(strtolower($tableName));
     }
 
     /**
@@ -532,6 +534,6 @@ class DatabaseDriver implements MappingDriver
         if ($fk) {
             $columnName = str_replace('_id', '', $columnName);
         }
-        return Inflector::camelize($columnName);
+        return $this->inflector->camelize($columnName);
     }
 }
