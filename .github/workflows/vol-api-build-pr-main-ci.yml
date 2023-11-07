@@ -56,7 +56,7 @@ jobs:
     - name: install composer dependency
       run: |
        composer install --optimize-autoloader --no-interaction --no-dev
-
+        
     - name: Build application
       run: |
        date > config/version
