@@ -132,7 +132,7 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
             $this->storeUserInAuthService($command, $password);
         } catch (ClientException | FailedRequestException $e) {
             $this->getRepo()->delete($user);
-            throw new \Exception("Unable to store user in Auth Service", $e->getCode(), $e);
+            throw $e;
         }
 
         try {
