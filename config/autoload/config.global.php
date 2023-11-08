@@ -214,10 +214,10 @@ return [
 
     // SQS Queues
     'message_queue' => [
-    'CompanyProfile_URL' => "%olcs_aws_sqs_ch_get_queue%",
-    'CompanyProfileDlq_URL' => "%olcs_aws_sqs_ch_get_dlq%",
-    'ProcessInsolvency_URL' => "%olcs_aws_sqs_ch_insolvency_queue%",
-    'ProcessInsolvencyDlq_URL' => "%olcs_aws_sqs_ch_insolvency_dlq%",
+    'CompanyProfile_URL' => "%olcs_aws_sqs_base_uri%/%olcs_aws_account_number%/%olcs_aws_sqs_ch_get_queue%",
+    'CompanyProfileDlq_URL' => "%olcs_aws_sqs_base_uri%/%olcs_aws_account_number%/%olcs_aws_sqs_ch_get_dlq%",
+    'ProcessInsolvency_URL' => "%olcs_aws_sqs_base_uri%/%olcs_aws_account_number%/%olcs_aws_sqs_ch_insolvency_queue%",
+    'ProcessInsolvencyDlq_URL' => "%olcs_aws_sqs_base_uri%/%olcs_aws_account_number%/%olcs_aws_sqs_ch_insolvency_dlq%",
     'TransXChangeConsumer_URL' => "%tranxchange_aws_sqs_output_uri%",
 ],
     
