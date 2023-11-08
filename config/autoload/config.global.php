@@ -1,8 +1,8 @@
 <?php
 
-$environment = $_ENV['APP_ENV'] ?? 'development';
+$environment = $_ENV['APP_ENV'] ?? 'local';
 
-$isProduction = $environment === 'production';
+$isProduction = $environment === 'PROD';
 
 /**
  * Local Configuration Override
@@ -222,7 +222,7 @@ return [
 ],
     
     'company_house_dlq' => [
-    'notification_email_address' => "%olcs_aws_sqs_base_uri%"
+    'notification_email_address' => "%company_house_dlq_notification_email_address%"
 ],
 
     // CPMS service
