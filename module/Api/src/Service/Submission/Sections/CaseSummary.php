@@ -121,6 +121,11 @@ final class CaseSummary extends AbstractSection
             $licenceData['vehiclesInPossession'] = $licence->getActiveVehiclesCount();
         }
 
+        //if we don't have either a licence or application we can exit here
+        if (is_null($licence) && is_null($application)) {
+            return $licenceData;
+        }
+
         $authPropertiesEntity = $licence;
         if ($application instanceof Application && $application->isNew()) {
             $authPropertiesEntity = $application;
