@@ -266,7 +266,7 @@ return [
     'email' => [
         // Debugging option forces all email to be sent to an address
         // Selfserve/external URI e.g. http://demo_dvsa-selfserve.web03.olcs.mgt.mtpdvsa *Environment specific*
-        'send_all_mail_to' => $isProduction ? '%olcs_send_all_mail_to%' : null,
+        'send_all_mail_to' => $isProduction ? null : '%olcs_send_all_mail_to%',
         'from_name' => 'OLCS do not reply',
         'from_email' => '%olcs_from_email%',
         'selfserve_uri' => '%olcs_ss_uri%',
