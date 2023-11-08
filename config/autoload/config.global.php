@@ -4,6 +4,8 @@ $environment = $_ENV['APP_ENV'] ?? 'local';
 
 $isProduction = $environment === 'PROD';
 
+$isProductionAccount = in_array($environment, ['INT', 'PS', 'PROD']);
+
 /**
  * Local Configuration Override
  *
@@ -220,7 +222,7 @@ return [
     'ProcessInsolvencyDlq_URL' => "%olcs_aws_sqs_base_uri%/%olcs_aws_account_number%/%olcs_aws_sqs_ch_insolvency_dlq%",
     'TransXChangeConsumer_URL' => "%tranxchange_aws_sqs_output_uri%",
 ],
-    
+
     'company_house_dlq' => [
     'notification_email_address' => "%company_house_dlq_notification_email_address%"
 ],
@@ -282,7 +284,7 @@ return [
             'roleSessionName' => $isProduction ? null : '%olcs_aws_s3_role_session_name%'
         ]
     ],
-    'mail' => $isProduction ? [
+    'mail' => $isProductionAccount ? null : [
     'type' => '\Dvsa\Olcs\Email\Transport\MultiTransport',
     'options' => [
         'transport' => [
@@ -290,7 +292,7 @@ return [
             ['type' => '\Dvsa\Olcs\Email\Transport\S3File', 'options' => ['bucket' => 'devapp-olcs-pri-olcs-autotest-s3' , 'key'=>'%domain%/email']],
         ]
     ],
-] : [],
+],
 
     'mailboxes' => [
     // IMAP connection to a the mailbox for reading inspection request emails
@@ -617,7 +619,7 @@ return [
     'algorithm' => '%govuk_account_private_key_algorithm%',
             'private_key' => '%govuk_account_private_key%',
             'public_key' => '%govuk_account_public_key%',
-            'identity_assurance_public_key' => (array)json_decode('%govuk_account_id_assurance_public_key%'),
+            'identity_assurance_public_key' => '%govuk_account_id_assurance_public_key%',
         ],
         'redirect_uri' => [
     'logged_in' => '%olcs_ss_uri%/govuk-id/loggedin',
