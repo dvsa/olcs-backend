@@ -175,6 +175,18 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     protected $isIrfo = 0;
 
     /**
+     * Is messaging disabled
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="is_messaging_disabled",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $isMessagingDisabled = 0;
+
+    /**
      * Is unlicensed
      *
      * @var boolean
@@ -636,6 +648,30 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getIsIrfo()
     {
         return $this->isIrfo;
+    }
+
+    /**
+     * Set the is messaging disabled
+     *
+     * @param boolean $isMessagingDisabled new value being set
+     *
+     * @return Organisation
+     */
+    public function setIsMessagingDisabled($isMessagingDisabled)
+    {
+        $this->isMessagingDisabled = $isMessagingDisabled;
+
+        return $this;
+    }
+
+    /**
+     * Get the is messaging disabled
+     *
+     * @return boolean
+     */
+    public function getIsMessagingDisabled()
+    {
+        return $this->isMessagingDisabled;
     }
 
     /**
