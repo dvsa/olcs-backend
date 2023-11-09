@@ -288,7 +288,7 @@ return [
     'type' => '\Dvsa\Olcs\Email\Transport\MultiTransport',
     'options' => [
         'transport' => [
-            ['type' => 'SendMail'],
+            ['type' => 'SMTP', 'options' => ['name' => '%olcs_email_host%', 'host' => '%olcs_email_host%', 'port' => '%olcs_email_port%']],
             ['type' => '\Dvsa\Olcs\Email\Transport\S3File', 'options' => ['bucket' => 'devapp-olcs-pri-olcs-autotest-s3' , 'key'=>'%domain%/email']],
         ]
     ],
