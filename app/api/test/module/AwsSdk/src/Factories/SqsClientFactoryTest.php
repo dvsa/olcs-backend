@@ -37,7 +37,6 @@ class SqsClientFactoryTest extends TestCase
         ];
         $provider = \Mockery::mock(CredentialsInterface::class);
         // Mocks
-        $this->sm->setService('AwsCredentialsProvider', $provider);
         $this->sm->setService('Config', $config);
 
 

@@ -44,7 +44,6 @@ class CognitoClientFactory implements FactoryInterface
         $this->validateConfig($config);
 
         $awsClient = new CognitoIdentityProviderClient([
-            'credentials' => $container->get('AwsCredentialsProvider'),
             'version' => '2016-04-18',
             'region' => $config[static::CONFIG_REGION],
             'http' => $config[static::CONFIG_HTTP]
