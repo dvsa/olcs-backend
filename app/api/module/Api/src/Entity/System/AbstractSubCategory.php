@@ -86,6 +86,15 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     protected $isFreeText = 0;
 
     /**
+     * Is messaging
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_messaging", nullable=false, options={"default": 0})
+     */
+    protected $isMessaging = 0;
+
+    /**
      * Is scan
      *
      * @var boolean
@@ -251,6 +260,30 @@ abstract class AbstractSubCategory implements BundleSerializableInterface, JsonS
     public function getIsFreeText()
     {
         return $this->isFreeText;
+    }
+
+    /**
+     * Set the is messaging
+     *
+     * @param boolean $isMessaging new value being set
+     *
+     * @return SubCategory
+     */
+    public function setIsMessaging($isMessaging)
+    {
+        $this->isMessaging = $isMessaging;
+
+        return $this;
+    }
+
+    /**
+     * Get the is messaging
+     *
+     * @return boolean
+     */
+    public function getIsMessaging()
+    {
+        return $this->isMessaging;
     }
 
     /**
