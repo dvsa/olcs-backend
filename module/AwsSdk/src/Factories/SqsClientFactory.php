@@ -42,7 +42,6 @@ class SqsClientFactory implements FactoryInterface
         $sqsClient = new SqsClient([
             'region' => $config['awsOptions']['region'],
             'version' => $config['awsOptions']['version'],
-            'credentials' => $container->get('AwsCredentialsProvider'),
             'http'    => [
                 'proxy' => $config['companies_house_connection']['proxy']
             ]
