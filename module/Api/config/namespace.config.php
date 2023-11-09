@@ -211,9 +211,5 @@ return [
     'TranslationKeyText' => 'System',
     'Replacement' => 'System',
     'ReplacementCategoryLink' => 'System',
-    'ReplacementTagLink' => 'System',
-    'MessagingConversation' => 'Messaging',
-    'MessagingMessage' => 'Messaging',
-    'MessagingContent' => 'Messaging',
-    'MessagingUserMessageRead' => 'Messaging',
+    'ReplacementTagLink' => 'System'
 ];
