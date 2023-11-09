@@ -76,15 +76,6 @@ abstract class AbstractCategory implements BundleSerializableInterface, JsonSeri
     protected $isDocCategory = 1;
 
     /**
-     * Is messaging
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_messaging", nullable=false, options={"default": 0})
-     */
-    protected $isMessaging = 0;
-
-    /**
      * Is scan category
      *
      * @var boolean
@@ -227,30 +218,6 @@ abstract class AbstractCategory implements BundleSerializableInterface, JsonSeri
     public function getIsDocCategory()
     {
         return $this->isDocCategory;
-    }
-
-    /**
-     * Set the is messaging
-     *
-     * @param boolean $isMessaging new value being set
-     *
-     * @return Category
-     */
-    public function setIsMessaging($isMessaging)
-    {
-        $this->isMessaging = $isMessaging;
-
-        return $this;
-    }
-
-    /**
-     * Get the is messaging
-     *
-     * @return boolean
-     */
-    public function getIsMessaging()
-    {
-        return $this->isMessaging;
     }
 
     /**
