@@ -6193,12 +6193,12 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "4.206.19",
+            "version": "4.206.20",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.19/olcs-olcs-utils-4.206.19.zip",
-                "reference": "c9f8d3cfcb2a0da45ada6588b6f15c6731601a13",
-                "shasum": "c9f8d3cfcb2a0da45ada6588b6f15c6731601a13"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.20/olcs-olcs-utils-4.206.20.zip",
+                "reference": "060150978ef906706af8e0b67786c1fdc7edfdf1",
+                "shasum": "060150978ef906706af8e0b67786c1fdc7edfdf1"
             },
             "require": {
                 "elendev/composer-push": "^1.0.3",
@@ -6245,7 +6245,7 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2023-07-10T08:47:38+00:00"
+            "time": "2023-10-18T11:32:29+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
@@ -9490,12 +9490,12 @@
         },
         {
             "name": "olcs/olcs-testhelpers",
-            "version": "4.206.21",
+            "version": "4.206.22",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-testhelpers/4.206.21/olcs-olcs-testhelpers-4.206.21.zip",
-                "reference": "2e895b49e718448ff4e0ca777d252860c9ba5c35",
-                "shasum": "2e895b49e718448ff4e0ca777d252860c9ba5c35"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-testhelpers/4.206.22/olcs-olcs-testhelpers-4.206.22.zip",
+                "reference": "ab4c0103cf90ca52c4340ea776f3349b98931c16",
+                "shasum": "ab4c0103cf90ca52c4340ea776f3349b98931c16"
             },
             "require": {
                 "elendev/composer-push": "^1.0.3",
@@ -9514,7 +9514,7 @@
                 }
             },
             "description": "OLCS Test helpers",
-            "time": "2023-02-28T10:27:19+00:00"
+            "time": "2023-10-18T11:28:11+00:00"
         },
         {
             "name": "pdepend/pdepend",
@@ -11491,5 +11491,5 @@
     "platform-overrides": {
         "php": "7.4.33"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
