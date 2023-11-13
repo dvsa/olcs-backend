@@ -5,8 +5,6 @@ namespace Dvsa\Olcs\Auth\Test\Client;
 
 use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Olcs\Auth\Client\CognitoClientFactory;
-use Dvsa\Olcs\AwsSdk\Factories\AwsCredentialsProviderFactory;
-use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Olcs\TestHelpers\MockeryTestCase;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
@@ -182,14 +180,6 @@ class CognitoClientFactoryTest extends MockeryTestCase
                 ]
             ]
         ];
-    }
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-    protected function setUpDefaultServices(ServiceManager $serviceManager)
-    {
-        $serviceManager->setFactory('AwsCredentialsProvider', AwsCredentialsProviderFactory::class);
     }
 
     /**
