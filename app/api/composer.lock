@@ -1832,18 +1832,18 @@
         },
         {
             "name": "dvsa/php-govuk-account",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dvsa/php-govuk-account/1.0.3/dvsa-php-govuk-account-1.0.3.zip",
-                "reference": "26af619c8169bf4fc3958529d4142a9cf47d10c8",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/dvsa/php-govuk-account/1.0.4/dvsa-php-govuk-account-1.0.4.zip",
+                "reference": "980bc170250dcc6843be94f91e09f46b6021d077",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "firebase/php-jwt": "^6.3",
                 "guzzlehttp/guzzle": "^7.5",
-                "guzzlehttp/psr7": "^2.0",
+                "guzzlehttp/psr7": "^2.4.5",
                 "illuminate/collections": "^8.0",
                 "league/oauth2-client": "^2.6",
                 "paragonie/random_compat": "^9.99",
@@ -1882,9 +1882,9 @@
             ],
             "support": {
                 "issues": "https://github.com/dvsa/php-govuk-account/issues",
-                "source": "https://github.com/dvsa/php-govuk-account/tree/1.0.3"
+                "source": "https://github.com/dvsa/php-govuk-account/tree/1.0.4"
             },
-            "time": "2022-11-24T18:45:13+00:00"
+            "time": "2023-11-09T15:29:00+00:00"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -11491,5 +11491,5 @@
     "platform-overrides": {
         "php": "7.4.33"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
