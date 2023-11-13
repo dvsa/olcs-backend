@@ -58,7 +58,6 @@ class S3FileOptionsFactoryTest extends MockeryTestCase
         ];
         $provider = \Mockery::mock(CredentialsInterface::class);
         // Mocks
-        $this->sm->setService('AWSCredentialsProvider', $provider);
         $this->sm->setService('Config', $config);
         $this->sm->setService('S3Client', new S3Client([
             'region' => $config['awsOptions']['region'],
