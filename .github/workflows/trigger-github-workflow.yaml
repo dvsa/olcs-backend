@@ -1,0 +1,59 @@
+name: Trigger GH Actions Workflow
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: 'Name of the branch which contains the given Workflow'
+        default: 'main'
+        required: true
+        type: string
+      git_repository:
+        description: 'Name of the Owner/Repo which contains the given Workflow'
+        default: ''
+        required: true
+        type: string
+      workflow_name:
+        description: 'Name of the given Workflow'
+        default: ''
+        required: true
+        type: string
+      input_arguments:
+        description: 'Input Arguments to the given Workflow'
+        default: ''
+        required: true
+        type: string
+    secrets:
+      gh_token:
+        required: true
+
+jobs:
+
+  trigger-workflow:
+
+    name: Trigger Workflow
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Trigger Workflow
+      run: |
+        gh workflow run '${{ inputs.workflow_name }}' \
+          -R ${{ inputs.git_repository }} \
+          --ref ${{ inputs.branch }} \
+          -f ${{ inputs.input_arguments }}
+        sleep 60 # required to assign the run-id to worflow
+      env:
+        GITHUB_TOKEN: ${{ secrets.gh_token }}
+    
+    - name: Monitor Workflow Execution Progress
+      run: |
+        runID=`curl -L -H \
+                "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer ${{ secrets.gh_token }}" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                https://api.github.com/repos/${{ inputs.git_repository }}/actions/runs |\
+                jq -r '.workflow_runs[0]|select(.name == "${{ inputs.workflow_name }}" and .status == "in_progress").id'`
+        gh run watch $runID --interval 10 --exit-status 1  -R ${{ inputs.git_repository }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.gh_token }}

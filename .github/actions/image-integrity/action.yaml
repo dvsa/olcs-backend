@@ -1,0 +1,50 @@
+name: Validate AWS ECR Image Signature
+description: Validate AWS ECR Image Signature
+
+inputs:
+  aws_signer_profile_arn:
+    description: 'AWS Signer Profile ARN if `image_sign_create` is set to `true`'
+    required: false
+  ecr_tagged_image:
+    description: 'AWS ECR Image: {ACCOUNT_ID}.dkr.ecr.{REGION}.amazonaws.com/{REPO_NAME}:{IMAGE_TAG}'
+    required: true
+  image_sign_create:
+    description: 'Sign image if `true`'
+    required: true
+    default: 'false'
+  image_sign_inspect:
+    description: 'Inspect sign if `true`'
+    required: true
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps: 
+    - name: Login to ECR
+      id: login-to-ecr
+      uses: aws-actions/amazon-ecr-login@v2.0.1
+
+    - name: Setup Notation CLI
+      uses: notaryproject/notation-action/setup@v1
+      with:
+        version: 1.0.0
+
+    - name: Set up Notation AWS Signer plugin
+      run: |
+        wget https://d2hvyiie56hcat.cloudfront.net/linux/amd64/installer/deb/latest/aws-signer-notation-cli_amd64.deb
+        sudo dpkg -i aws-signer-notation-cli_amd64.deb
+      shell: bash
+
+    - name: Sign image
+      if: inputs.image_sign_create == 'true'
+      run: |
+        notation sign ${{ inputs.ecr_tagged_image }} \
+          --plugin "com.amazonaws.signer.notation.plugin" \
+          --id "${{ inputs.aws_signer_profile_arn }}"
+      shell: bash
+
+    - name: Validate signature of image
+      if: inputs.image_sign_inspect == 'true'
+      run: |
+        notation inspect ${{ inputs.ecr_tagged_image }}
+      shell: bash

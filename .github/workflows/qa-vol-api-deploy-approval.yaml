@@ -1,0 +1,122 @@
+name: CD QA VOL API
+run-name: CD QA VOL API
+
+on:
+  workflow_dispatch:
+    inputs:
+      vol_api_image_tag:
+        description: 'Tag of VOL API Image'     
+        required: true
+
+env:
+  AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
+  VOL_NONPROD_TOOLING_REPO_URL: ${{ secrets.VOL_NONPROD_TOOLING_ECR_REPO_URL }}
+  VOL_PROD_TOOLING_REPO_URL: ${{ secrets.VOL_PROD_TOOLING_ECR_REPO_URL }}
+
+# Permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+
+jobs:
+
+  validate-nonprod-vol-api-image:
+
+    name: Validate VOL API Image
+    if: github.ref == 'refs/heads/master'
+
+    uses: ./.github/workflows/image-sign-validation.yaml
+    secrets:
+      aws_role_arn: ${{ secrets.VOL_AWS_ROLE_TOOLING_NONPROD }}
+      ecr_tagged_image: ${{ secrets.VOL_NONPROD_TOOLING_ECR_REPO_URL }}:${{ github.event.inputs.vol_api_image_tag }}
+
+  deploy-on-qa-cluster:
+
+    name: Deploy on QA Cluster
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    needs:
+    -  validate-nonprod-vol-api-image
+
+    steps:
+    - name: Deploy on QA
+      run: |
+       echo 'Deploy on QA'
+
+    # uses: ./.github/workflows/trigger-github-workflow.yaml
+    # with:
+    #   branch: 'feature/AWSRESET1-514'
+    #   git_repository: 'dvsa/dvsa-container-registry'
+    #   workflow_name: 'CD NON-PROD VOL API'
+    #   input_arguments: 'vol_api_image_tag=${{ github.event.inputs.vol_api_image_tag }}'
+    # secrets:
+    #   gh_token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}
+
+
+  qa-automation-tests:
+
+    name: Run QA Automation Tests
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+
+    needs:
+    - deploy-on-qa-cluster
+
+    steps:
+
+    - name: Run automation tests
+      run: |
+       echo 'Run automation tests'
+  
+  prod-approve-image:
+
+    name: Approval PROD VOL API Image
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+
+    needs:
+    - qa-automation-tests
+
+    steps:
+
+    - name: Set NONPROD_VOL_API_IMAGE_TAG & PROD_VOL_API_IMAGE_TAG
+      if: github.ref == 'refs/heads/master'
+      run: |
+        inputImageTag=${{ github.event.inputs.vol_api_image_tag }}
+        echo "NONPROD_VOL_API_IMAGE_TAG=${inputImageTag}" >> $GITHUB_ENV
+        echo "PROD_VOL_API_IMAGE_TAG=${inputImageTag#non}" >> $GITHUB_ENV
+
+    - name: Setup Notation CLI
+      uses: notaryproject/notation-action/setup@v1
+      with:
+        version: 1.0.0
+
+    - name: Set up Notation AWS Signer plugin
+      run: |
+        wget https://d2hvyiie56hcat.cloudfront.net/linux/amd64/installer/deb/latest/aws-signer-notation-cli_amd64.deb
+        sudo dpkg -i aws-signer-notation-cli_amd64.deb
+
+    - name: Configure AWS credentials on VOL Non Production Tooling ECR
+      uses: aws-actions/configure-aws-credentials@v4.0.1
+      with:
+        role-to-assume: ${{ secrets.VOL_AWS_ROLE_TOOLING_NONPROD }}
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: ${{ vars.DVSA_AWS_REGION}}
+
+    - name: Login to ECR
+      id: login-ecr-vol-tooling-non-prod
+      uses: aws-actions/amazon-ecr-login@v2.0.1
+
+    - name: Tag & Push PROD Approved VOL API image
+      if: github.ref == 'refs/heads/master'
+      id: push-image
+      run: |
+        docker pull ${VOL_NONPROD_TOOLING_REPO_URL}:${NONPROD_VOL_API_IMAGE_TAG}
+        docker tag ${VOL_NONPROD_TOOLING_REPO_URL}:${NONPROD_VOL_API_IMAGE_TAG} ${VOL_PROD_TOOLING_REPO_URL}:${PROD_VOL_API_IMAGE_TAG}
+        docker push ${VOL_PROD_TOOLING_REPO_URL}:${PROD_VOL_API_IMAGE_TAG}
+
+    - name: Sign PROD VOL API image
+      if: github.ref == 'refs/heads/master'
+      run: |
+        notation sign ${VOL_PROD_TOOLING_REPO_URL}:${PROD_VOL_API_IMAGE_TAG} \
+          --plugin "com.amazonaws.signer.notation.plugin" --id "${{ secrets.DVSA_AWS_NONPRODVOLTOOLING_IMAGE_SIGNING_PROFILE }}"
