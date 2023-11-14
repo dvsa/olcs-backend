@@ -5,9 +5,9 @@ on:
   pull_request_review:
     # branches:
     #     - feature/**
-  # pull_request:
-    # branches:
-    #   - master
+  pull_request:
+    branches:
+      - master
 
 env:
   AWS_REGION : ${{ vars.DVSA_AWS_REGION }}
