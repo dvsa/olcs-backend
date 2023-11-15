@@ -45,8 +45,8 @@ jobs:
     name: Build, Push & Sign Image
     runs-on: ubuntu-latest
 
-    needs:
-    - build
+    # needs:
+    # - build
 
     steps:
 
