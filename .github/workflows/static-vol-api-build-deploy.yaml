@@ -3,8 +3,6 @@ run-name: CI/CD STATIC VOL API
 
 on:
   pull_request_review:
-    # branches:
-    #     - feature/**
   pull_request:
     branches:
       - master
@@ -25,19 +23,6 @@ jobs:
     name: Dockerfile Lint Check
     if: github.event_name == 'pull_request_review' || github.event.review.state != 'APPROVED'
     uses: ./.github/workflows/docker-hadolint.yaml
-
-  build:
-
-    name: Build VOL API
-    runs-on: ubuntu-latest
-
-    steps:
-
-    - name: Checkout the repository to this runner
-      uses: actions/checkout@v3
-
-    - name: Build VOL API artifact
-      uses: dvsa/olcs-backend/.github/actions/build-vol-api@feature/AWSRESET1-514
 
   unit-tests:
 
@@ -68,11 +53,14 @@ jobs:
     - name: Checkout the repository to this runner
       uses: actions/checkout@v3
 
-    - name: Download VOL API artifact
-      uses: actions/download-artifact@v3.0.2
-      with:
-        name: VOL_API_Artifact
-        path: ./
+    - name: Build VOL API artifact
+      uses: dvsa/olcs-backend/.github/actions/build-vol-api@feature/AWSRESET1-514
+
+    # - name: Download VOL API artifact
+    #   uses: actions/download-artifact@v3.0.2
+    #   with:
+    #     name: VOL_API_Artifact
+    #     path: ./
 
     - name: Set BASE_IMAGE & VOL_API_IMAGE_TAG
       run: |
@@ -81,18 +69,6 @@ jobs:
         BASE_IMAGE=$(head -n1 dockerfile)
         echo "BASE_IMAGE=${BASE_IMAGE#* }" >> $GITHUB_ENV
         echo "VOL_API_IMAGE_TAG=pr-approved-vol-api-${BASE_IMAGE#*:}-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-    # - name: Setup Notation CLI
-    #   uses: notaryproject/notation-action/setup@v1
-    #   with:
-    #     version: 1.0.0
-
-    # - name: Set up Notation AWS Signer plugin
-    #   run: |
-    #     wget https://d2hvyiie56hcat.cloudfront.net/linux/amd64/installer/deb/latest/aws-signer-notation-cli_amd64.deb
-    #     sudo dpkg -i aws-signer-notation-cli_amd64.deb
-    #     notation version
-    #     notation plugin ls
 
     - name: Configure AWS credentials on Shared Core ECR
       uses: aws-actions/configure-aws-credentials@v4.0.1
