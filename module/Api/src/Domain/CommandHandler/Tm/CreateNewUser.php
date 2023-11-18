@@ -293,7 +293,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
             $this->storeUserInAuthService($command, $password, $realm);
         } catch (ClientException | FailedRequestException $e) {
             $this->getRepo()->delete($user);
-            throw new \RuntimeException("Unable to store user in Auth Service", $e->getCode(), $e);
+            throw $e;
         }
 
         try {

@@ -1,19 +1,6 @@
 {
     "name": "olcs/backend",
     "description": "Back End Application for OLCS Project",
-    "repositories": [
-        {
-            "packagist": false
-        },
-        {
-            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS",
-            "type": "composer"
-        },
-        {
-            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
-            "type": "composer"
-        }
-    ],
     "require": {
         "php": ">=7.4",
         "ext-intl": "*",
@@ -100,7 +87,10 @@
         "cs": "phpcs --severity=1 --standard=vendor/dvsa/coding-standards/src/Profiles/DVSA/CS/ruleset.xml",
         "coverage": "phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html",
         "sonar": "phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit",
-        "update-syms": "composer-update-syms"
+        "update-syms": "composer-update-syms",
+        "clear-config-cache": "php bin/clear-config-cache.php",
+        "post-install-cmd": "@clear-config-cache",
+        "post-update-cmd": "@clear-config-cache"
     },
     "extra": {
         "nexus-push": {

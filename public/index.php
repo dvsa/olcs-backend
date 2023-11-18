@@ -52,9 +52,11 @@ if (php_sapi_name() === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['RE
 // Setup autoloading
 require 'init_autoloader.php';
 
+$container = require __DIR__ . '/../config/container.php';
+
 // Run the application!
 try {
-    Laminas\Mvc\Application::init(require 'config/application.config.php')->run();
+    $container->get('Application')->run();
 } catch (Laminas\ServiceManager\Exception\ServiceNotCreatedException $e) {
     do {
         $lastException = sprintf(

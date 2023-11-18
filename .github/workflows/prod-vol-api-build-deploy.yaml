@@ -1,0 +1,36 @@
+name: CD PROD VOL API
+run-name: CD PROD VOL API
+
+on:
+  workflow_dispatch:
+    inputs:
+      vol_api_image_tag:
+        description: 'Tag of VOL API Image'     
+        required: true
+
+# Permission can be added at job level or workflow level    
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
+
+jobs:
+
+  deploy-on-prod-cluster:
+
+    name: Deploy on PROD Cluster
+    # if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Deploy on PROD
+      run: |
+       echo 'Deploy on PROD'
+
+    # uses: ./.github/workflows/trigger-github-workflow.yaml
+    # with:
+    #   branch: 'feature/AWSRESET1-514'
+    #   git_repository: 'dvsa/dvsa-container-registry'
+    #   workflow_name: 'CD NON-PROD VOL API'
+    #   input_arguments: 'vol_api_image_tag=${{ github.event.inputs.vol_api_image_tag }}'
+    # secrets:
+    #   gh_token: ${{ secrets.DVSA_VOL_TERRAFORM_ACCESS_TOKEN }}

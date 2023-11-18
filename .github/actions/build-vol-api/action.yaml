@@ -1,0 +1,34 @@
+name: Build VOL API
+description: Build VOL API
+
+runs:
+  using: 'composite'
+  steps:
+
+    # Create s3 bucket in vol-non-prod tooling & vol-prod tooling to get the composer
+    - name: Download the compose file
+      run: |
+        php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+        php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+        php -r "unlink('composer-setup.php');"
+      shell: bash
+
+    - name: Install Composer dependencies
+      run: |
+       composer install --optimize-autoloader --no-interaction --no-dev
+      shell: bash
+
+    - name: Build VOL Backend
+      run: |
+        date > config/version
+        git describe --all >> config/version
+        tar cvzf backend.tar.gz --exclude=config/autoload/local.php \
+          --exclude=config/autoload/local.php.dist composer.lock init_autoloader.php config module public data/autoload data/cache vendor
+      shell: bash
+
+    # - name: Save Artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: VOL_API_Artifact
+    #     path: ./backend.tar.gz
+    #     retention-days: 1
