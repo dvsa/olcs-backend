@@ -6,6 +6,13 @@
             "packagist": false
         },
         {
+            "type": "composer",
+            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
+            "only": [
+                "olcs/olcs-logging"
+            ]
+        },
+        {
             "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS",
             "type": "composer"
         },
@@ -34,7 +41,7 @@
         "olcs/olcs-companies-house": "~4.206.0",
         "olcs/olcs-cpms": "~4.206.0",
         "olcs/olcs-laminas": "~2.5.0",
-        "olcs/olcs-logging": "~4.206.0",
+        "olcs/olcs-logging": "^5.0.0",
         "olcs/olcs-transfer": "~4.206.0",
         "olcs/olcs-utils": "~4.206.0",
         "olcs/olcs-xmltools": "~4.206.0",
@@ -79,6 +86,8 @@
             "Dvsa\\Olcs\\Auth\\Test\\": "module/Auth/test"
         }
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
         "process-timeout": 600,
         "preferred-install": "dist",
@@ -91,7 +100,8 @@
             "elendev/composer-push": true,
             "phpstan/extension-installer": true,
             "laminas/laminas-component-installer": true,
-            "laminas/laminas-dependency-plugin": true
+            "laminas/laminas-dependency-plugin": true,
+            "composer/package-versions-deprecated": true
         }
     },
     "scripts": {
