@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Result;
 use PDO;
 
 /**
@@ -40,28 +42,19 @@ class DataGovUk
         }
     }
 
-    /**
-     * Fetch PSV Operator list
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
-     */
-    public function fetchPsvOperatorList(): Statement
+    public function fetchPsvOperatorList(): Result
     {
         $stmt = $this->conn->prepare(
             'SELECT * FROM data_gov_uk_psv_operator_list'
         );
 
-        $stmt->executeQuery();
-
-        return $stmt;
+        return $stmt->executeQuery();
     }
 
     /**
      * Fetch operator licences in specified areas
-     *
-     * @param array $areaNames Area names
      */
-    public function fetchOperatorLicences(array $areaNames): Statement
+    public function fetchOperatorLicences(array $areaNames): Result
     {
         $inStmt = implode(', ', array_fill(0, count($areaNames), '?'));
 
@@ -74,40 +67,29 @@ class DataGovUk
             $stmt->bindValue($idx + 1, $name, PDO::PARAM_STR);
         }
 
-        $stmt->executeQuery();
-
-        return $stmt;
+        return $stmt->executeQuery();
     }
 
     /**
      * Fetch bus registered only
-     *
-     * @param array $areaCodes Area codes
      */
-    public function fetchBusRegisteredOnly(array $areaCodes): Statement
+    public function fetchBusRegisteredOnly(array $areaCodes): Result
     {
         return $this->fetchBusReg('data_gov_uk_bus_registered_only_view', $areaCodes);
     }
 
     /**
      * Fetch bus variations
-     *
-     * @param array $areaCodes area codes
-     *
-     * @return Statement
      */
-    public function fetchBusVariation(array $areaCodes): Statement
+    public function fetchBusVariation(array $areaCodes): Result
     {
         return $this->fetchBusReg('data_gov_uk_bus_variation_view', $areaCodes);
     }
 
     /**
      * Fetch bus registrations
-     *
-     * @param string $view      Database View
-     * @param array  $areaCodes area codes
      */
-    private function fetchBusReg($view, array $areaCodes): Statement
+    private function fetchBusReg(string $view, array $areaCodes): Result
     {
         $inStmt = implode(', ', array_fill(0, count($areaCodes), '?'));
 
@@ -119,8 +101,6 @@ class DataGovUk
             $stmt->bindValue($idx + 1, $code, PDO::PARAM_STR);
         }
 
-        $stmt->executeQuery();
-
-        return $stmt;
+        return $stmt->executeQuery();
     }
 }

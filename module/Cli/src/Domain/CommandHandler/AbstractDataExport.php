@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Result;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -13,7 +15,6 @@ use Dvsa\Olcs\Api\Service\Exception;
 
 /**
  * Abstract class to be used by Export data to csv files
- *
  */
 abstract class AbstractDataExport extends AbstractCommandHandler
 {
@@ -48,15 +49,14 @@ abstract class AbstractDataExport extends AbstractCommandHandler
     /**
      * Fill a CSV with the result of a doctrine statement
      *
-     * @param Statement $stmt              db records set
+     * @param Result    $dbalResult        db records set
      * @param string    $fileName          main part of file name
      * @param string    $fileNameSeparator (optional) the separator between the main fileName and the timestamp
      *
      * @return string
      */
-    protected function singleCsvFromStatement(Statement $stmt, $fileName, $fileNameSeparator = '_')
+    protected function singleCsvFromDbalResult(Result $dbalResult, $fileName, $fileNameSeparator = '_')
     {
-
         $date = new DateTime('now');
 
         $filePath = $this->path . '/' . $fileName . $fileNameSeparator . $date->format(static::FILE_DATETIME_FORMAT) . '.csv';
@@ -67,7 +67,7 @@ abstract class AbstractDataExport extends AbstractCommandHandler
         $firstRow = false;
 
         //  add rows
-        while (($row = $stmt->fetch()) !== false) {
+        while (($row = $dbalResult->fetchAssociative()) !== false) {
             if (!$firstRow) {
                 //add title
                 fputcsv($fh, array_keys($row));
@@ -85,16 +85,16 @@ abstract class AbstractDataExport extends AbstractCommandHandler
     /**
      * Fill csv files with data. Csv created by value of Key Field and File name.
      *
-     * @param Statement $stmt     db records set
-     * @param string    $keyFld   name of Key field in data set
-     * @param string    $fileName main part of file name
+     * @param Result    $dbalResult db records set
+     * @param string    $keyFld     name of Key field in data set
+     * @param string    $fileName   main part of file name
      *
      * @return void
      */
-    protected function makeCsvsFromStatement(Statement $stmt, $keyFld, $fileName)
+    protected function makeCsvsFromDbalResult(Result $dbalResult, $keyFld, $fileName)
     {
         //  add rows
-        while (($row = $stmt->fetch()) !== false) {
+        while (($row = $dbalResult->fetchAssociative()) !== false) {
 
             $key = $row[$keyFld];
 
@@ -129,11 +129,9 @@ abstract class AbstractDataExport extends AbstractCommandHandler
     /**
      * Make CSV file for the list of PSV Operators
      *
-     * @param Statement $stmt     db records set
-     *
      * @return string
      */
-    protected function makeCsvForPsvOperatorList(Statement $stmt)
+    protected function makeCsvForPsvOperatorList(Result $dbalResult)
     {
         $this->result->addMessage('create csv file content');
 
@@ -142,7 +140,7 @@ abstract class AbstractDataExport extends AbstractCommandHandler
         $titleAdded = false;
 
         //  add rows
-        while (($row = $stmt->fetch()) !== false) {
+        while (($row = $dbalResult->fetchAssociative()) !== false) {
             if (!$titleAdded) {
                 //  add title & first row
                 fputcsv($handle, array_keys($row));

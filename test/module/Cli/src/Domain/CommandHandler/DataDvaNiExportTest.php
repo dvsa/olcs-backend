@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Result;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Cli\Domain\Command\DataDvaNiExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataDvaNiExport;
@@ -46,7 +46,7 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
         $this->mockRepo('SubCategory', Repository\SubCategory::class);
         $this->mockRepo('Licence', Repository\Licence::class);
 
-        $this->mockStmt = m::mock(Statement::class);
+        $this->mockDbalResult = m::mock(Result::class);
 
         //  mock config
         $this->mockedSmServices['Config'] = [
@@ -100,16 +100,16 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
             'LicenceNumber' => '123457',
             'LicenceType' => 'test_type',
         ];
-        $this->mockStmt
-            ->shouldReceive('fetch')->once()->andReturn($row1)
-            ->shouldReceive('fetch')->once()->andReturn($row2)
-            ->shouldReceive('fetch')->once()->andReturn($row3)
-            ->shouldReceive('fetch')->andReturn(false);
+
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row1);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row2);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row3);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturnFalse();
 
         $this->repoMap['DataDvaNi']
             ->shouldReceive('fetchNiOperatorLicences')
             ->once()
-            ->andReturn($this->mockStmt);
+            ->andReturn($this->mockDbalResult);
 
         //  call & check
         $actual = $this->sut->handleCommand($cmd);

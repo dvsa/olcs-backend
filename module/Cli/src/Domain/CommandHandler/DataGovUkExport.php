@@ -128,9 +128,9 @@ final class DataGovUkExport extends AbstractDataExport
 
         /** @var Repository\Licence $repo */
         $repo = $this->getRepo('Licence');
-        $stmt = $repo->internationalGoodsReport();
+        $dbalResult = $repo->internationalGoodsReport();
 
-        $csvContent = $this->singleCsvFromStatement($stmt, 'international_goods');
+        $csvContent = $this->singleCsvFromDbalResult($dbalResult, 'international_goods');
 
         $document = $this->handleSideEffect(
             $this->generateInternationalGoodsDocumentCmd($csvContent)
@@ -206,9 +206,9 @@ final class DataGovUkExport extends AbstractDataExport
         );
 
         $this->result->addMessage('Fetching data from DB for Operator Licences');
-        $stmt = $this->dataGovUkRepo->fetchOperatorLicences($areas);
+        $dbalResult = $this->dataGovUkRepo->fetchOperatorLicences($areas);
 
-        $this->makeCsvsFromStatement($stmt, 'GeographicRegion', 'OLBSLicenceReport');
+        $this->makeCsvsFromDbalResult($dbalResult, 'GeographicRegion', 'OLBSLicenceReport');
     }
 
     /**
@@ -226,9 +226,9 @@ final class DataGovUkExport extends AbstractDataExport
         );
 
         $this->result->addMessage('Fetching data from DB for Bus Registered Only');
-        $stmt = $this->dataGovUkRepo->fetchBusRegisteredOnly($areas);
+        $dbalResult = $this->dataGovUkRepo->fetchBusRegisteredOnly($areas);
 
-        $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_RegisteredOnly');
+        $this->makeCsvsFromDbalResult($dbalResult, 'Current Traffic Area', 'Bus_RegisteredOnly');
     }
 
     /**
@@ -246,9 +246,9 @@ final class DataGovUkExport extends AbstractDataExport
         );
 
         $this->result->addMessage('Fetching data from DB for Bus Variation');
-        $stmt = $this->dataGovUkRepo->fetchBusVariation($areas);
+        $dbalResult = $this->dataGovUkRepo->fetchBusVariation($areas);
 
-        $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_Variation');
+        $this->makeCsvsFromDbalResult($dbalResult, 'Current Traffic Area', 'Bus_Variation');
     }
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)

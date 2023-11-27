@@ -3,16 +3,14 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 
 /**
  * Contains methods to get data from DB to export for data for Northern Ireland
  */
 class DataDvaNi
 {
-    /**
-     * @var Connection
-     */
-    private $conn;
+    private Connection $conn;
 
     /**
      * DataDvaNi constructor.
@@ -31,15 +29,13 @@ class DataDvaNi
      */
     public function __destruct()
     {
-        if ($this->conn !== null) {
-            $this->conn->close();
-        }
+        $this->conn->close();
     }
 
     /**
      * Fetch operator licences in specified areas
      */
-    public function fetchNiOperatorLicences(): \Doctrine\DBAL\Statement
+    public function fetchNiOperatorLicences(): Result
     {
 
         //  query data
@@ -47,8 +43,6 @@ class DataDvaNi
             'SELECT * FROM data_dva_ni_operator_licence_view'
         );
 
-        $stmt->executeQuery();
-
-        return $stmt;
+        return $stmt->executeQuery();
     }
 }

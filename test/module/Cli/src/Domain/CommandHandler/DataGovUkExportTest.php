@@ -16,7 +16,6 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Doctrine\DBAL\Statement;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Email\Service\Email;
 use org\bovigo\vfs\vfsStream;
@@ -48,7 +47,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
     /**
      * @var  m\MockInterface
      */
-    private $mockStmt;
+    private $mockDbalResult;
 
     public function setUp(): void
     {
@@ -60,7 +59,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $this->mockRepo('SubCategory', Repository\SubCategory::class);
         $this->mockRepo('Licence', Repository\Licence::class);
 
-        $this->mockStmt = m::mock(Statement::class);
+        $this->mockDbalResult = m::mock(\Doctrine\DBAL\Result::class);
 
         //  mock config
         $this->mockedSmServices['Config'] = [
@@ -113,7 +112,8 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         );
 
         //  expect
-        $this->expectException(\Exception::class, DataGovUkExport::ERR_INVALID_REPORT);
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(DataGovUkExport::ERR_INVALID_REPORT);
 
         //  call
         $this->sut->handleCommand($cmd);
@@ -148,16 +148,15 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             'col2' => 'val32',
         ];
 
-        $this->mockStmt
-            ->shouldReceive('fetch')->once()->andReturn($row1)
-            ->shouldReceive('fetch')->once()->andReturn($row2)
-            ->shouldReceive('fetch')->once()->andReturn($row3)
-            ->shouldReceive('fetch')->once()->andReturn(false);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row1);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row2);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row3);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturnFalse();
 
         $this->repoMap['Licence']
             ->shouldReceive('internationalGoodsReport')
             ->once()
-            ->andReturn($this->mockStmt);
+            ->andReturn($this->mockDbalResult);
 
         // Create document in database
         $documentData['description'] = 'International goods list ' . date('d/m/Y');
@@ -242,16 +241,15 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             'col2' => 'val32',
         ];
 
-        $this->mockStmt
-            ->shouldReceive('fetch')->once()->andReturn($row1)
-            ->shouldReceive('fetch')->once()->andReturn($row2)
-            ->shouldReceive('fetch')->once()->andReturn($row3)
-            ->shouldReceive('fetch')->andReturn(false);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row1);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row2);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row3);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturnFalse();
 
         $this->repoMap['DataGovUk']
             ->shouldReceive('fetchPsvOperatorList')
             ->once()
-            ->andReturn($this->mockStmt);
+            ->andReturn($this->mockDbalResult);
 
         $this->mockedSmServices['DocumentNamingService']
             ->shouldReceive('generateName')
@@ -359,16 +357,16 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             'col1' => 'val31',
             'col2' => 'val32',
         ];
-        $this->mockStmt
-            ->shouldReceive('fetch')->once()->andReturn($row1)
-            ->shouldReceive('fetch')->once()->andReturn($row2)
-            ->shouldReceive('fetch')->once()->andReturn($row3)
-            ->shouldReceive('fetch')->andReturn(false);
+
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row1);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row2);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row3);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturnFalse();
 
         $this->repoMap['DataGovUk']
             ->shouldReceive('fetchOperatorLicences')
             ->once()
-            ->andReturn($this->mockStmt);
+            ->andReturn($this->mockDbalResult);
 
         //  call & check
         $actual = $this->sut->handleCommand($cmd);
@@ -420,15 +418,15 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             'col1' => 'val21',
             'col2' => 'val22',
         ];
-        $this->mockStmt
-            ->shouldReceive('fetch')->once()->andReturn($row1)
-            ->shouldReceive('fetch')->once()->andReturn($row2)
-            ->shouldReceive('fetch')->andReturn(false);
+
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row1);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row2);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturnFalse();
 
         $this->repoMap['DataGovUk']
             ->shouldReceive('fetchBusRegisteredOnly')
             ->once()
-            ->andReturn($this->mockStmt);
+            ->andReturn($this->mockDbalResult);
 
         //  call & check
         $actual = $this->sut->handleCommand($cmd);
@@ -469,14 +467,14 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             'col1' => 'val11',
             'col2' => 'v"\'-/\,',
         ];
-        $this->mockStmt
-            ->shouldReceive('fetch')->once()->andReturn($row1)
-            ->shouldReceive('fetch')->andReturn(false);
+
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row1);
+        $this->mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturnFalse();
 
         $this->repoMap['DataGovUk']
             ->shouldReceive('fetchBusVariation')
             ->once()
-            ->andReturn($this->mockStmt);
+            ->andReturn($this->mockDbalResult);
 
         //  call & check
         $actual = $this->sut->handleCommand($cmd);
@@ -507,7 +505,8 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             ->andReturn([]);
 
         //  expect
-        $this->expectException(\Exception::class, DataGovUkExport::ERR_NO_TRAFFIC_AREAS);
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(DataGovUkExport::ERR_NO_TRAFFIC_AREAS);
 
         //  call
         $this->sut->handleCommand(

@@ -73,9 +73,9 @@ final class DataDvaNiExport extends AbstractDataExport
     {
 
         $this->result->addMessage('Fetching data from DB for NI Operator Licences');
-        $stmt = $this->dataDvaNiRepo->fetchNiOperatorLicences();
+        $dbalResult = $this->dataDvaNiRepo->fetchNiOperatorLicences();
 
-        $this->singleCsvFromStatement($stmt, 'NiGvLicences', '-');
+        $this->singleCsvFromDbalResult($dbalResult, 'NiGvLicences', '-');
     }
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)

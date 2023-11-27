@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Join;
@@ -626,10 +627,8 @@ class Licence extends AbstractRepository
 
     /**
      * fetch information for the international goods report
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
      */
-    public function internationalGoodsReport()
+    public function internationalGoodsReport(): Result
     {
         return $this->getDbQueryManager()->get(InternationalGoodsReport::class)->execute([]);
     }

@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
 use Dvsa\Olcs\Api\Domain\Repository\DataGovUk;
@@ -25,13 +26,11 @@ class DataGovUkTest extends MockeryTestCase
     {
         $this->mockResult = m::mock(Result::class);
 
-        $this->mockStmt = m::mock(Statement::class)
-            ->expects('executeQuery')->andReturn($this->mockResult)
-            ->getMock();
+        $this->mockStmt = m::mock(Statement::class);
+        $this->mockStmt->expects('executeQuery')->withNoArgs()->andReturn($this->mockResult);
 
-        $this->mockConn = m::mock(\Doctrine\DBAL\Connection::class)
-            ->shouldReceive('close')->atMost()
-            ->getMock();
+        $this->mockConn = m::mock(Connection::class);
+        $this->mockConn->shouldReceive('close')->withNoArgs();
 
         $this->sut = new DataGovUk($this->mockConn);
     }
@@ -45,7 +44,7 @@ class DataGovUkTest extends MockeryTestCase
             ->andReturn($this->mockStmt);
 
         static::assertEquals(
-            $this->mockStmt,
+            $this->mockResult,
             $this->sut->fetchPsvOperatorList()
         );
     }
@@ -66,7 +65,7 @@ class DataGovUkTest extends MockeryTestCase
             ->andReturn($this->mockStmt);
 
         static::assertEquals(
-            $this->mockStmt,
+            $this->mockResult,
             $this->sut->fetchOperatorLicences($areas)
         );
     }
@@ -87,7 +86,7 @@ class DataGovUkTest extends MockeryTestCase
             ->andReturn($this->mockStmt);
 
         static::assertEquals(
-            $this->mockStmt,
+            $this->mockResult,
             $this->sut->fetchBusRegisteredOnly($areas)
         );
     }
@@ -101,7 +100,7 @@ class DataGovUkTest extends MockeryTestCase
             ->times(count($areas))
             ->with(1, 'areaKey1', \PDO::PARAM_STR);
 
-        /** @var \Doctrine\DBAL\Connection $mockConn */
+        /** @var Connection $mockConn */
         $this->mockConn
             ->shouldReceive('prepare')
             ->once()
@@ -109,7 +108,7 @@ class DataGovUkTest extends MockeryTestCase
             ->andReturn($this->mockStmt);
 
         static::assertEquals(
-            $this->mockStmt,
+            $this->mockResult,
             $this->sut->fetchBusVariation($areas)
         );
     }
