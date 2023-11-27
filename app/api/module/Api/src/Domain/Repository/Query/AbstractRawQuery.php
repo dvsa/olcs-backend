@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository\Query;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
@@ -87,7 +88,7 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
      *
      * @throws RuntimeException
      */
-    public function execute(array $params = [], array $paramTypes = [])
+    public function execute(array $params = [], array $paramTypes = []): Result
     {
         $masqueradedAsSystemUser = $this->identityProvider->getMasqueradedAsSystemUser();
         if ($masqueradedAsSystemUser) {
