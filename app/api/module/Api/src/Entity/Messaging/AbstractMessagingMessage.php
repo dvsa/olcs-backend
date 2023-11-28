@@ -25,10 +25,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_messaging_message_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_messaging_message_messaging_conversation_id",
-     *     columns={"conversation_id"})
+     *     columns={"messaging_conversation_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="message_content_id", columns={"message_content_id"})
+ *        @ORM\UniqueConstraint(name="message_content_id", columns={"messaging_content_id"})
  *    }
  * )
  */
@@ -39,19 +39,6 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
     use ClearPropertiesTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
-
-    /**
-     * Conversation
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinColumn(name="conversation_id", referencedColumnName="id", nullable=false)
-     */
-    protected $conversation;
 
     /**
      * Created by
@@ -87,14 +74,27 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
     protected $lastModifiedBy;
 
     /**
-     * Message content
+     * Messaging content
      *
      * @var \Dvsa\Olcs\Api\Entity\Messaging\MessagingContent
      *
      * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingContent", fetch="LAZY")
-     * @ORM\JoinColumn(name="message_content_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="messaging_content_id", referencedColumnName="id", nullable=false)
      */
-    protected $messageContent;
+    protected $messagingContent;
+
+    /**
+     * Messaging conversation
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinColumn(name="messaging_conversation_id", referencedColumnName="id", nullable=false)
+     */
+    protected $messagingConversation;
 
     /**
      * Version
@@ -105,30 +105,6 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
      * @ORM\Version
      */
     protected $version;
-
-    /**
-     * Set the conversation
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation $conversation entity being set as the value
-     *
-     * @return MessagingMessage
-     */
-    public function setConversation($conversation)
-    {
-        $this->conversation = $conversation;
-
-        return $this;
-    }
-
-    /**
-     * Get the conversation
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation
-     */
-    public function getConversation()
-    {
-        return $this->conversation;
-    }
 
     /**
      * Set the created by
@@ -203,27 +179,51 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
     }
 
     /**
-     * Set the message content
+     * Set the messaging content
      *
-     * @param \Dvsa\Olcs\Api\Entity\Messaging\MessagingContent $messageContent entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\Messaging\MessagingContent $messagingContent entity being set as the value
      *
      * @return MessagingMessage
      */
-    public function setMessageContent($messageContent)
+    public function setMessagingContent($messagingContent)
     {
-        $this->messageContent = $messageContent;
+        $this->messagingContent = $messagingContent;
 
         return $this;
     }
 
     /**
-     * Get the message content
+     * Get the messaging content
      *
      * @return \Dvsa\Olcs\Api\Entity\Messaging\MessagingContent
      */
-    public function getMessageContent()
+    public function getMessagingContent()
     {
-        return $this->messageContent;
+        return $this->messagingContent;
+    }
+
+    /**
+     * Set the messaging conversation
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation $messagingConversation entity being set as the value
+     *
+     * @return MessagingMessage
+     */
+    public function setMessagingConversation($messagingConversation)
+    {
+        $this->messagingConversation = $messagingConversation;
+
+        return $this;
+    }
+
+    /**
+     * Get the messaging conversation
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation
+     */
+    public function getMessagingConversation()
+    {
+        return $this->messagingConversation;
     }
 
     /**
