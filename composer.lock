@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b57f0f5a76e2cb8202fe831bd0eaccd",
+    "content-hash": "1b679e59b088ef6a37bf620f6c63f495",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -5890,12 +5890,12 @@
         },
         {
             "name": "olcs/olcs-companies-house",
-            "version": "4.206.11",
+            "version": "4.206.12",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.11/olcs-olcs-companies-house-4.206.11.zip",
-                "reference": "d5c921df8d5cac662d449acf088c2bda69bc2888",
-                "shasum": "d5c921df8d5cac662d449acf088c2bda69bc2888"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.12/olcs-olcs-companies-house-4.206.12.zip",
+                "reference": "4828d9494f784095f1b19dbc65a9745440733070",
+                "shasum": "4828d9494f784095f1b19dbc65a9745440733070"
             },
             "require": {
                 "elendev/composer-push": "^1.0.3",
@@ -5951,7 +5951,7 @@
                 "proprietary"
             ],
             "description": "companies house api client",
-            "time": "2023-02-28T10:25:58+00:00"
+            "time": "2023-11-27T18:01:14+00:00"
         },
         {
             "name": "olcs/olcs-cpms",
@@ -11481,5 +11481,5 @@
     "platform-overrides": {
         "php": "7.4.33"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
