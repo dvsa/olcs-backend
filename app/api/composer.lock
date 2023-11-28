@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b679e59b088ef6a37bf620f6c63f495",
+    "content-hash": "899c3d1c9ad8267473aaaf6030ecd484",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -5313,6 +5313,7 @@
                     "type": "community_bridge"
                 }
             ],
+            "abandoned": true,
             "time": "2022-07-29T13:28:29+00:00"
         },
         {
@@ -5887,71 +5888,6 @@
                 }
             ],
             "time": "2021-11-18T09:23:29+00:00"
-        },
-        {
-            "name": "olcs/olcs-companies-house",
-            "version": "4.206.12",
-            "dist": {
-                "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-companies-house/4.206.12/olcs-olcs-companies-house-4.206.12.zip",
-                "reference": "4828d9494f784095f1b19dbc65a9745440733070",
-                "shasum": "4828d9494f784095f1b19dbc65a9745440733070"
-            },
-            "require": {
-                "elendev/composer-push": "^1.0.3",
-                "olcs/olcs-laminas": "~2.5.0 || ~3.0.0",
-                "olcs/olcs-utils": "~4.206.0",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "olcs/olcs-devtools": "~4.206.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.1.x-dev"
-                },
-                "nexus-push": {
-                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-companies-house",
-                    "ignore": [
-                        "tests"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Dvsa\\Olcs\\CompaniesHouse\\": "src",
-                    "Dvsa\\Olcs\\CompaniesHouse\\Test\\": "test"
-                }
-            },
-            "scripts": {
-                "ut": [
-                    "phpunit test --stop-on-failure"
-                ],
-                "review": [
-                    "review"
-                ],
-                "cs": [
-                    "phpcs --severity=1 --standard=vendor/olcs/coding-standards/Profiles/DVSA/CS/ruleset.xml"
-                ],
-                "coverage": [
-                    "phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html"
-                ],
-                "sonar": [
-                    "phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit"
-                ],
-                "update-syms": [
-                    "composer-update-syms"
-                ],
-                "sa": [
-                    "phpstan analyse --level 7 src --ansi"
-                ]
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "companies house api client",
-            "time": "2023-11-27T18:01:14+00:00"
         },
         {
             "name": "olcs/olcs-cpms",
