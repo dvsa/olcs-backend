@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "899c3d1c9ad8267473aaaf6030ecd484",
+    "content-hash": "346c63477ca20cda978ad47c5e4dbdf6",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -6119,30 +6119,36 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "4.206.20",
+            "version": "5.0.0.alpha1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-utils/4.206.20/olcs-olcs-utils-4.206.20.zip",
-                "reference": "060150978ef906706af8e0b67786c1fdc7edfdf1",
-                "shasum": "060150978ef906706af8e0b67786c1fdc7edfdf1"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/olcs/olcs-utils/5.0.0.alpha1/olcs-olcs-utils-5.0.0.alpha1.zip",
+                "reference": "82b2c2986397dfc8b5e615b48259747fb28ca1a8",
+                "shasum": ""
             },
             "require": {
-                "elendev/composer-push": "^1.0.3",
-                "olcs/olcs-laminas": "~2.5.0 || ~3.0.0",
-                "php": ">=7.4"
+                "container-interop/container-interop": "^1.2",
+                "laminas/laminas-eventmanager": "^2.6",
+                "laminas/laminas-http": "^2.8",
+                "laminas/laminas-i18n": "^2.14",
+                "laminas/laminas-mvc": "^2.7",
+                "laminas/laminas-servicemanager": "^2.7",
+                "laminas/laminas-view": "^2.11",
+                "php": "^7.4",
+                "psr/container": "^1.1|^2.0"
             },
             "require-dev": {
-                "olcs/olcs-devtools": "~4.206.0",
-                "olcs/olcs-logging": "~4.206.0"
+                "bamarni/composer-bin-plugin": "^1.8",
+                "johnkary/phpunit-speedtrap": "^4.0",
+                "mockery/mockery": "^1.6",
+                "olcs/olcs-logging": "^5.0.0",
+                "phpunit/phpunit": "^9.6"
             },
             "type": "library",
             "extra": {
-                "nexus-push": {
-                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-utils",
-                    "ignore": [
-                        "test/",
-                        "sonar-project.properties"
-                    ]
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": true
                 }
             },
             "autoload": {
@@ -6150,28 +6156,11 @@
                     "Dvsa\\Olcs\\Utils\\": "src/"
                 }
             },
-            "scripts": {
-                "ut": [
-                    "vendor/bin/phpunit -c test/phpunit.xml --stop-on-failure"
-                ],
-                "review": [
-                    "vendor/bin/review"
-                ],
-                "cs": [
-                    "vendor/bin/phpcs --severity=1 --standard=vendor/dvsa/coding-standards/src/Profiles/DVSA/CS/ruleset.xml"
-                ],
-                "coverage": [
-                    "vendor/bin/phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html"
-                ],
-                "sonar": [
-                    "vendor/bin/phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit"
-                ],
-                "update-syms": [
-                    "vendor/bin/composer-update-syms"
-                ]
-            },
             "description": "OLCS Utils",
-            "time": "2023-10-18T11:32:29+00:00"
+            "support": {
+                "source": "https://github.com/dvsa/olcs-utils/tree/5.0.0.alpha1"
+            },
+            "time": "2023-11-27T14:10:02+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
