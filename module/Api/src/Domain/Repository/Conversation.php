@@ -1,0 +1,57 @@
+<?php
+
+namespace Dvsa\Olcs\Api\Domain\Repository;
+
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation as Entity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+
+class Conversation extends AbstractRepository
+{
+    protected $entity = Entity::class;
+
+    public function getBaseConversationListQuery(QueryInterface $query): QueryBuilder
+    {
+        $qb = $this->createDefaultListQuery($query);
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('task', 't1')
+            ->with('t1.licence', 'l1')
+            ->with('t1.application')
+            ->with('t1.category')
+            ->with('t1.subCategory')
+            ->with('createdBy')
+            ->with('lastModifiedBy');
+        return $qb;
+    }
+
+    public function filterByLicenceId(QueryBuilder $qb, $licenceId): QueryBuilder
+    {
+        $qb
+            ->innerJoin($this->alias . '.task', 't')
+            ->andWhere($qb->expr()->isNotNull('t.licence'))
+            ->andWhere($qb->expr()->eq('t.licence', ':licence'))
+            ->setParameter('licence', $licenceId);
+
+        return $qb;
+    }
+
+    public function filterByApplicationId(QueryBuilder $qb, $applicationId): QueryBuilder
+    {
+        $qb
+            ->innerJoin($this->alias . '.task', 't')
+            ->andWhere($qb->expr()->isNotNull('t.application'))
+            ->andWhere($qb->expr()->eq('t.application', ':application'))
+            ->setParameter('application', $applicationId);
+
+        return $qb;
+    }
+
+    public function applyOrderByOpen(QueryBuilder $qb): QueryBuilder
+    {
+        $qb->addOrderBy($this->alias . '.isClosed', 'DESC');
+
+        return $qb;
+    }
+}

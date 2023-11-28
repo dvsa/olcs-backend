@@ -778,6 +778,8 @@ return [
             'TranslationKeyText' => RepositoryFactory::class,
             'Language' => RepositoryFactory::class,
             'Replacement' => RepositoryFactory::class,
+            'Conversation' => RepositoryFactory::class,
+            'Message' => RepositoryFactory::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [

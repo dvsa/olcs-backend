@@ -26,10 +26,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_messaging_user_message_read_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_messaging_user_message_read_messaging_message_id",
-     *     columns={"message_id"})
+     *     columns={"messaging_message_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="ck_unique_user_id_message_id", columns={"user_id","message_id"})
+ *        @ORM\UniqueConstraint(name="ck_unique_user_id_message_id", columns={"user_id","messaging_message_id"})
  *    }
  * )
  */
@@ -75,14 +75,14 @@ abstract class AbstractMessagingUserMessageRead implements BundleSerializableInt
     protected $lastModifiedBy;
 
     /**
-     * Message
+     * Messaging message
      *
      * @var \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage", fetch="LAZY")
-     * @ORM\JoinColumn(name="message_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="messaging_message_id", referencedColumnName="id", nullable=false)
      */
-    protected $message;
+    protected $messagingMessage;
 
     /**
      * User
@@ -177,27 +177,27 @@ abstract class AbstractMessagingUserMessageRead implements BundleSerializableInt
     }
 
     /**
-     * Set the message
+     * Set the messaging message
      *
-     * @param \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage $message entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage $messagingMessage entity being set as the value
      *
      * @return MessagingUserMessageRead
      */
-    public function setMessage($message)
+    public function setMessagingMessage($messagingMessage)
     {
-        $this->message = $message;
+        $this->messagingMessage = $messagingMessage;
 
         return $this;
     }
 
     /**
-     * Get the message
+     * Get the messaging message
      *
      * @return \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage
      */
-    public function getMessage()
+    public function getMessagingMessage()
     {
-        return $this->message;
+        return $this->messagingMessage;
     }
 
     /**
