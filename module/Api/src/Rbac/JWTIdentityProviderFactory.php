@@ -3,10 +3,8 @@
 namespace Dvsa\Olcs\Api\Rbac;
 
 use Dvsa\Authentication\Cognito\Client;
-use Dvsa\Olcs\Auth\Service\AuthenticationService;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * @see JWTIdentityProvider
@@ -30,17 +28,5 @@ class JWTIdentityProviderFactory implements FactoryInterface
             $container->get('Request'),
             $container->get(Client::class)
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return JWTIdentityProvider
-     * @deprecated
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): JWTIdentityProvider
-    {
-        return $this->__invoke($serviceLocator, JWTIdentityProvider::class);
     }
 }

@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class AbstractGeneratorServicesFactory implements FactoryInterface
 {
@@ -13,17 +12,5 @@ class AbstractGeneratorServicesFactory implements FactoryInterface
         return new AbstractGeneratorServices(
             $container->get('ViewRenderer')
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return AbstractGeneratorServices
-     */
-    public function createService(ServiceLocatorInterface $services)
-    {
-        return $this($services, AbstractGeneratorServices::class);
     }
 }

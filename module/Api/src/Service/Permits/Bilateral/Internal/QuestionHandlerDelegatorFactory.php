@@ -3,24 +3,11 @@
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
 use Dvsa\Olcs\Api\Entity\Generic\Question;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class QuestionHandlerDelegatorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return QuestionHandlerDelegator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): QuestionHandlerDelegator
-    {
-        return $this->__invoke($serviceLocator, QuestionHandlerDelegator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

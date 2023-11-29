@@ -7,24 +7,22 @@ use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissin
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\RegisteredBusRoute;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\VariationNumber;
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
 
-/**
- * Class ProcessedDataInputFactoryTest
- * @package Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter
- */
 class ProcessedDataInputFactoryTest extends TestCase
 {
     /**
      * Tests create service
      */
-    public function testCreateService()
+    public function testInvoke()
     {
         $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
@@ -35,16 +33,16 @@ class ProcessedDataInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(LocalAuthorityMissing::class)->once()->andReturn($mockValidator);
 
         $sut = new ProcessedDataInputFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, Input::class);
 
-        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
+        $this->assertInstanceOf(Input::class, $service);
         $this->assertCount(5, $service->getValidatorChain());
     }
 
     /**
      * Tests create service with disabled validators
      */
-    public function testCreateServiceDisabledValidators()
+    public function testInvokeDisabledValidators()
     {
         $config = [
             'ebsr' => [
@@ -54,13 +52,13 @@ class ProcessedDataInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
 
         $sut = new ProcessedDataInputFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, Input::class);
 
-        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
+        $this->assertInstanceOf(Input::class, $service);
         $this->assertCount(0, $service->getValidatorChain());
     }
 }

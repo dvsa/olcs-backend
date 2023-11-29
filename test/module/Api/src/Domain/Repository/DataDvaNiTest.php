@@ -2,7 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
+use Doctrine\DBAL\Statement;
 use Dvsa\Olcs\Api\Domain\Repository\DataDvaNi;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
@@ -22,13 +24,13 @@ class DataDvaNiTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->mockStmt = m::mock(Statement::class)
-            ->shouldReceive('execute')->once()->andReturn(true)
-            ->getMock();
+        $this->mockResult = m::mock(Result::class);
 
-        $this->mockConn = m::mock(\Doctrine\DBAL\Connection::class)
-            ->shouldReceive('close')->atMost()
-            ->getMock();
+        $this->mockStmt = m::mock(Statement::class);
+        $this->mockStmt->expects('executeQuery')->andReturn($this->mockResult);
+
+        $this->mockConn = m::mock(Connection::class);
+        $this->mockConn->shouldReceive('close')->withNoArgs();
 
         $this->sut = new DataDvaNi($this->mockConn);
     }
@@ -42,7 +44,7 @@ class DataDvaNiTest extends MockeryTestCase
             ->andReturn($this->mockStmt);
 
         static::assertEquals(
-            $this->mockStmt,
+            $this->mockResult,
             $this->sut->fetchNiOperatorLicences()
         );
     }

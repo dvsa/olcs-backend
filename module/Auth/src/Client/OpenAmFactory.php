@@ -8,8 +8,7 @@ use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Auth\Client\OpenAm as OpenAmClient;
 use Interop\Container\ContainerInterface;
 use Laminas\Http\Client as HttpClient;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class OpenAmFactory implements FactoryInterface
 {
@@ -44,17 +43,5 @@ class OpenAmFactory implements FactoryInterface
             new HttpClient(null, $config['auth']['adapters']['openam']['client']['options']),
             $config['auth']['adapters']['openam']['cookie']['name']
         );
-    }
-
-    /**
-     * @deprecated can be removed following Laminas v3 upgrade
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return OpenAmClient
-     * @throws ClientException
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): OpenAmClient
-    {
-        return $this($serviceLocator, OpenAmClient::class);
     }
 }

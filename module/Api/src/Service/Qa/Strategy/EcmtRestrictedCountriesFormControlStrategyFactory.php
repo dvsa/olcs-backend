@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class EcmtRestrictedCountriesFormControlStrategyFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return BaseFormControlStrategy
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): BaseFormControlStrategy
-    {
-        return $this->__invoke($serviceLocator, BaseFormControlStrategy::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -30,14 +17,13 @@ class EcmtRestrictedCountriesFormControlStrategyFactory implements FactoryInterf
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): BaseFormControlStrategy
     {
-        $mainServiceLocator = $container->getServiceLocator();
         return new BaseFormControlStrategy(
             'ecmt_st_restricted_countries',
-            $mainServiceLocator->get('QaEcmtRestrictedCountriesElementGenerator'),
-            $mainServiceLocator->get('QaEcmtRestrictedCountriesAnswerSaver'),
-            $mainServiceLocator->get('QaEcmtRestrictedCountriesAnswerClearer'),
-            $mainServiceLocator->get('QaEcmtRestrictedCountriesQuestionTextGenerator'),
-            $mainServiceLocator->get('QaEcmtRestrictedCountriesAnswerSummaryProvider')
+            $container->get('QaEcmtRestrictedCountriesElementGenerator'),
+            $container->get('QaEcmtRestrictedCountriesAnswerSaver'),
+            $container->get('QaEcmtRestrictedCountriesAnswerClearer'),
+            $container->get('QaEcmtRestrictedCountriesQuestionTextGenerator'),
+            $container->get('QaEcmtRestrictedCountriesAnswerSummaryProvider')
         );
     }
 }

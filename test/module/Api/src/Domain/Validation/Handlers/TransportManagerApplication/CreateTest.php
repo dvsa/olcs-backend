@@ -2,16 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\TransportManagerApplication;
 
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessApplication;
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessUser;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\TransportManagerApplication\Create;
 
-/**
- * CreateTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class CreateTest extends AbstractHandlerTestCase
 {
     /**
@@ -36,10 +33,10 @@ class CreateTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getApplication')->andReturn(24);
         $dto->shouldReceive('getUser')->andReturn(11);
 
-        $mockApplicationValidator = m::mock();
+        $mockApplicationValidator = m::mock(CanAccessApplication::class);
         $this->validatorManager->setService('canAccessApplication', $mockApplicationValidator);
 
-        $mockUserValidator = m::mock();
+        $mockUserValidator = m::mock(CanAccessUser::class);
         $this->validatorManager->setService('canAccessUser', $mockUserValidator);
 
         $mockApplicationValidator->shouldReceive('isValid')->with(24)->andReturn($canAccess);

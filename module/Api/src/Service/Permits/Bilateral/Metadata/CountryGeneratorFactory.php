@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class CountryGeneratorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return CountryGenerator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): CountryGenerator
-    {
-        return $this->__invoke($serviceLocator, CountryGenerator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

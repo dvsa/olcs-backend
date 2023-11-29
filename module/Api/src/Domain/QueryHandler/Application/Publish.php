@@ -4,10 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -29,21 +27,6 @@ class Publish extends AbstractQueryHandler
      * @var \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService
      */
     private $variationValidationService;
-
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return Publish
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Publish::class);
-    }
 
     public function handleQuery(QueryInterface $query)
     {
@@ -77,9 +60,6 @@ class Publish extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->applicationValidationService = $container->get('ApplicationPublishValidationService');
         $this->variationValidationService = $container->get('VariationPublishValidationService');

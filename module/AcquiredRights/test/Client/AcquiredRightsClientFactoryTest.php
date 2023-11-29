@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\AcquiredRights\Client;
 
 use Laminas\ServiceManager\ServiceManager;
 use Olcs\TestHelpers\MockeryTestCase;
-use Mockery as m;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 
 class AcquiredRightsClientFactoryTest extends MockeryTestCase
@@ -26,39 +25,6 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     */
-    public function createService_IsCallable(): void
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Assert
-        $this->assertIsCallable([$this->sut, 'createService']);
-    }
-
-    /**
-     * @test
-     * @depends createService_IsCallable
-     * @depends __invoke_IsCallable
-     */
-    public function createService_CallsInvoke(): void
-    {
-        // Setup
-        $this->sut = m::mock(AcquiredRightsClientFactory::class)->makePartial();
-
-        // Expectations
-        $this->sut->expects('__invoke')->withArgs(function ($serviceManager, $requestedName) {
-            $this->assertSame($this->serviceManager(), $serviceManager, 'Expected first argument to be the ServiceManager passed to createService');
-            $this->assertSame(AcquiredRightsClient::class, $requestedName, 'Expected requestedName to be class reference');
-            return true;
-        });
-
-        // Execute
-        $this->sut->createService($this->serviceManager());
-    }
-
-    /**
-     * @test
      * @depends __invoke_IsCallable
      */
     public function __invoke_ReturnsAnInstanceOfAcquiredRightsClient(): void
@@ -66,8 +32,10 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
         // Setup
         $this->setUpSut();
 
+        $this->config();
+
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), AcquiredRightsClient::class);
+        $result = $this->sut->__invoke($this->serviceManager, AcquiredRightsClient::class);
 
         // Assert
         $this->assertInstanceOf(AcquiredRightsClient::class, $result);
@@ -91,7 +59,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
         $this->expectExceptionMessage('Expected configuration defined and not empty: acquired_rights -> client -> base_uri');
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), AcquiredRightsClient::class);
+        $result = $this->sut->__invoke($this->serviceManager, AcquiredRightsClient::class);
     }
 
     /**
@@ -112,7 +80,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
         $this->expectExceptionMessage('Expected configuration defined and not empty: acquired_rights -> client -> base_uri');
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), AcquiredRightsClient::class);
+        $result = $this->sut->__invoke($this->serviceManager, AcquiredRightsClient::class);
     }
 
     public function setUp(): void

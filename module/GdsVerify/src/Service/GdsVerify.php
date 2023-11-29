@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\GdsVerify\Service;
 
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Log\LoggerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use \RobRichards\XMLSecLibs;
 use Dvsa\Olcs\GdsVerify\Data;
 use Interop\Container\ContainerInterface;
@@ -16,7 +16,7 @@ use Interop\Container\ContainerInterface;
  *
  * @package Dvsa\Olcs\GdsVerify\Service
  */
-class GdsVerify implements \Laminas\ServiceManager\FactoryInterface
+class GdsVerify implements FactoryInterface
 {
     const CONFIG_KEY = 'gds_verify';
     const CONFIG_ENTITY_ID = 'entity_identifier';
@@ -50,18 +50,6 @@ class GdsVerify implements \Laminas\ServiceManager\FactoryInterface
      * @var Data\Loader;
      */
     private $metadataLoader;
-
-    /**
-     * Factory create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, GdsVerify::class);
-    }
 
     /**
      * Setup the SAML container, required to use the simpleSAML library
@@ -380,7 +368,7 @@ class GdsVerify implements \Laminas\ServiceManager\FactoryInterface
         }
         $this->config = $config;
         \SAML2\Compat\ContainerSingleton::setContainer(
-            $this->getContainer($container->get('logger'))
+            $this->getContainer($container->get('Logger'))
         );
         $this->setMetadataLoader(new Data\Loader($this->getCache()));
         if ($container->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {

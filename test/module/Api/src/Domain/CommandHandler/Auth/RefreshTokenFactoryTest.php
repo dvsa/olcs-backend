@@ -16,7 +16,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @see RefreshTokensFactory
@@ -46,39 +46,6 @@ class RefreshTokenFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     */
-    public function createService_IsCallable(): void
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Assert
-        $this->assertIsCallable([$this->sut, 'createService']);
-    }
-
-    /**
-     * @test
-     * @depends createService_IsCallable
-     * @depends __invoke_IsCallable
-     */
-    public function createService_CallsInvoke(): void
-    {
-        // Setup
-        $this->sut = m::mock(RefreshTokensFactory::class)->makePartial();
-
-        // Expectations
-        $this->sut->expects('__invoke')->withArgs(function ($serviceManager, $requestedName) {
-            $this->assertSame($this->serviceManager(), $serviceManager, 'Expected first argument to be the ServiceManager passed to createService');
-            $this->assertSame(RefreshTokens::class, $requestedName, 'Expected requestedName to be NULL');
-            return true;
-        });
-
-        // Execute
-        $this->sut->createService($this->serviceManager());
-    }
-
-    /**
-     * @test
      * @depends __invoke_IsCallable
      */
     public function __invoke_ReturnsAnInstanceOfRefreshTokenCommandHandler(): void
@@ -87,7 +54,7 @@ class RefreshTokenFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, RefreshTokens::class);
 
         // Assert
         $this->assertInstanceOf(RefreshTokens::class, $result);

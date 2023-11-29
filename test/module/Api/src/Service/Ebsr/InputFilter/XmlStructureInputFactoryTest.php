@@ -6,22 +6,17 @@ use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory;
 use Olcs\XmlTools\Filter\ParseXml;
 use Olcs\XmlTools\Validator\Xsd;
 
-/**
- * Class XmlStructureInputFactoryTest
- * @package Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter
- */
 class XmlStructureInputFactoryTest extends TestCase
 {
-    /**
-     * Tests create service
-     */
-    public function testCreateService()
+    public function testInvoke()
     {
         $maxSchemaErrors = 3;
         $schemaVersion = 2.5;
@@ -47,7 +42,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
         $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
@@ -60,7 +55,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(SupportingDocuments::class)->andReturn($mockValidator);
 
         $sut = new XmlStructureInputFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, Input::class);
 
         $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(1, $service->getFilterChain());
@@ -70,7 +65,7 @@ class XmlStructureInputFactoryTest extends TestCase
     /**
      * Tests create service with validation disabled
      */
-    public function testCreateServiceDisabledValidators()
+    public function testInvokeDisabledValidators()
     {
         $config = [
             'ebsr' => [
@@ -82,13 +77,13 @@ class XmlStructureInputFactoryTest extends TestCase
 
         $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->andReturn($mockFilter);
 
         $sut = new XmlStructureInputFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, Input::class);
 
         $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
         $this->assertCount(1, $service->getFilterChain());
@@ -98,7 +93,7 @@ class XmlStructureInputFactoryTest extends TestCase
     /**
      * test correct exception thrown when the max errors config is missing
      */
-    public function testCreateServiceMissingMaxErrorsConfig()
+    public function testInvokeMissingMaxErrorsConfig()
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No config specified for max_schema_errors');
@@ -113,19 +108,19 @@ class XmlStructureInputFactoryTest extends TestCase
 
         $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
 
         $sut = new XmlStructureInputFactory();
-        $sut->createService($mockSl);
+        $sut->__invoke($mockSl, Input::class);
     }
 
     /**
      * test correct exception thrown when the max errors config is missing
      */
-    public function testCreateServiceMissingSchemaVersionConfig()
+    public function testInvokeMissingSchemaVersionConfig()
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No config specified for transxchange schema version');
@@ -141,19 +136,19 @@ class XmlStructureInputFactoryTest extends TestCase
 
         $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
 
         $sut = new XmlStructureInputFactory();
-        $sut->createService($mockSl);
+        $sut->__invoke($mockSl, Input::class);
     }
 
     /**
      * test correct exception thrown when the max errors config is missing
      */
-    public function testCreateServiceMissingXmlMessageExclude()
+    public function testInvokeMissingXmlMessageExclude()
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No config specified for xml messages to exclude');
@@ -170,12 +165,12 @@ class XmlStructureInputFactoryTest extends TestCase
 
         $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
 
         $sut = new XmlStructureInputFactory();
-        $sut->createService($mockSl);
+        $sut->__invoke($mockSl, Input::class);
     }
 }

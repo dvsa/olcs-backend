@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitApplicationCmd;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Command Handler to action the submission of an IrhpApplication
@@ -31,18 +30,6 @@ final class SubmitApplication extends AbstractCommandHandler
 
     /** @var EventHistoryCreator */
     private $eventHistoryCreator;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, SubmitApplication::class);
-    }
 
     /**
      * Handle command
@@ -96,10 +83,7 @@ final class SubmitApplication extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->createTaskCommandGenerator = $container->get('PermitsCheckableCreateTaskCommandGenerator');
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');

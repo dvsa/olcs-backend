@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Scoring;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class SuccessfulCandidatePermitsFacadeFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return SuccessfulCandidatePermitsFacade
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): SuccessfulCandidatePermitsFacade
-    {
-        return $this->__invoke($serviceLocator, SuccessfulCandidatePermitsFacade::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -13,7 +13,7 @@ use Firebase\JWT\ExpiredException;
 use Laminas\Http\Header\HeaderInterface;
 use Laminas\Http\Request;
 use Laminas\Stdlib\RequestInterface;
-use ZfcRbac\Identity\IdentityInterface;
+use LmcRbacMvc\Identity\IdentityInterface;
 
 /**
  * @see JWTIdentityProviderFactory

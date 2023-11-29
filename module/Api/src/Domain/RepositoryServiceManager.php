@@ -1,31 +1,41 @@
 <?php
 
-/**
- * Repository Service Manager
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain;
 
-use Dvsa\Olcs\Utils\Traits\PluginManagerTrait;
+use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseVsOlcsDiffs;
+use Dvsa\Olcs\Api\Domain\Repository\DataDvaNi;
+use Dvsa\Olcs\Api\Domain\Repository\DataGovUk;
+use Dvsa\Olcs\Api\Domain\Repository\ReadonlyRepositoryInterface;
+use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 
-/**
- * Repository Service Manager
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class RepositoryServiceManager extends AbstractPluginManager
 {
-    use PluginManagerTrait;
+    const VALIDATE_ERROR = 'Plugin manager "%s" expected an instance of type RepositoryInterface or 
+    ReadonlyRepositoryInterface, but "%s" was received';
 
-    protected $instanceOf = null;
+    private array $exportRepos = [
+        DataGovUk::class,
+        DataDvaNi::class,
+        CompaniesHouseVsOlcsDiffs::class,
+    ];
 
-    public function __construct(ConfigInterface $config = null)
+    public function validate($instance)
     {
-        if ($config) {
-            $config->configureServiceManager($this);
+        if ($instance instanceof RepositoryInterface || $instance instanceof ReadonlyRepositoryInterface) {
+            return;
         }
+
+        //repos used for data exports have no corresponding Doctrine Entity, and don't implement the usual interfaces
+        if (in_array(get_class($instance), $this->exportRepos)) {
+            return;
+        }
+
+        throw new InvalidServiceException(sprintf(
+            self::VALIDATE_ERROR,
+            self::class,
+            is_object($instance) ? get_class($instance) : gettype($instance)
+        ));
     }
 }

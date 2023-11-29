@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTaxiPhv as Command;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * UpdateTaxiPhv
@@ -25,11 +24,6 @@ final class UpdateTaxiPhv extends AbstractCommandHandler implements Transactione
      * @var \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator
      */
     private $trafficAreaValidator;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateTaxiPhv::class);
-    }
 
     /**
      * @param Command $command
@@ -107,10 +101,7 @@ final class UpdateTaxiPhv extends AbstractCommandHandler implements Transactione
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

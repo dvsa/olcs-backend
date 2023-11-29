@@ -37,7 +37,7 @@ class CanUpdateTxcInboxRecordsTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getIds')->andReturn([$id]);
 
-        $this->setIsValid('CanUpdateTxcInbox', [[$id]], $canAccess);
+        $this->setIsValid('canUpdateTxcInbox', [[$id]], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }

@@ -34,7 +34,7 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
         $sm = Bootstrap::getServiceManager();
         $sm->setService('ContentStore', $this->mockContentStoreCli);
 
-        static::assertSame($this->sut, $this->sut->createService($sm));
+        static::assertSame($this->sut, $this->sut->__invoke($sm, null));
     }
 
     public function testDownload()
@@ -85,7 +85,8 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
     {
         $respBody = 'unit_RespBody';
 
-        $this->expectException(Exception::class, sprintf(ContentStoreFileUploader::ERR_UNABLE_UPLOAD, $respBody));
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(sprintf(ContentStoreFileUploader::ERR_UNABLE_UPLOAD, $respBody));
 
         $response = m::mock(Response::class);
         $response

@@ -20,7 +20,6 @@ use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Grant as GrantCmd;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Command Handler to action the granting of an IrhpApplication
@@ -43,18 +42,6 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
     /** @var EventHistoryCreator */
     private $eventHistoryCreator;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Grant::class);
-    }
 
     /**
      * Handle command
@@ -145,10 +132,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->grantabilityChecker = $container->get('PermitsGrantabilityChecker');
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');

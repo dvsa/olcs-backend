@@ -2,25 +2,11 @@
 
 namespace Dvsa\Olcs\Email\Transport;
 
-use Aws\S3\S3Client;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class S3FileOptionsFactory implements FactoryInterface
 {
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): S3FileOptions
-    {
-        return $this->__invoke($serviceLocator, S3FileOptions::class);
-    }
 
     /**
      * @param array $config

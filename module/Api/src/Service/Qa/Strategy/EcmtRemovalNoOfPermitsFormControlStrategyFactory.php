@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class EcmtRemovalNoOfPermitsFormControlStrategyFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return BaseFormControlStrategy
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): BaseFormControlStrategy
-    {
-        return $this->__invoke($serviceLocator, BaseFormControlStrategy::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -30,14 +17,13 @@ class EcmtRemovalNoOfPermitsFormControlStrategyFactory implements FactoryInterfa
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): BaseFormControlStrategy
     {
-        $mainServiceLocator = $container->getServiceLocator();
         return new BaseFormControlStrategy(
             'text',
-            $mainServiceLocator->get('QaTotAuthVehiclesTextElementGenerator'),
-            $mainServiceLocator->get('QaEcmtRemovalNoOfPermitsAnswerSaver'),
-            $mainServiceLocator->get('QaEcmtRemovalNoOfPermitsAnswerClearer'),
-            $mainServiceLocator->get('QaEcmtRemovalNoOfPermitsQuestionTextGenerator'),
-            $mainServiceLocator->get('QaGenericAnswerSummaryProvider')
+            $container->get('QaTotAuthVehiclesTextElementGenerator'),
+            $container->get('QaEcmtRemovalNoOfPermitsAnswerSaver'),
+            $container->get('QaEcmtRemovalNoOfPermitsAnswerClearer'),
+            $container->get('QaEcmtRemovalNoOfPermitsQuestionTextGenerator'),
+            $container->get('QaGenericAnswerSummaryProvider')
         );
     }
 }

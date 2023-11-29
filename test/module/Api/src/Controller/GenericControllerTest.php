@@ -1146,7 +1146,6 @@ class GenericControllerTest extends TestCase
     {
         $sut = new GenericController($this->queryHandlerManager, $this->commandHandlerManager);
         $sut->setPluginManager($mockSl);
-        $sut->setServiceLocator($mockSl);
         return $sut;
     }
 

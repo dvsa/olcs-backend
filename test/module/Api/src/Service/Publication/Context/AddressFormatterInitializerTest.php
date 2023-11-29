@@ -1,28 +1,18 @@
 <?php
 
-/**
- * Address Formatter Initializer Test
- *
- * @author Jonathan Thomas <jonathan@opalise.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context;
 
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
 use Dvsa\Olcs\Api\Service\Publication\Context\AddressFormatterInitializer;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use stdClass;
 
-/**
- * Address Formatter Initializer Test
- *
- * @author Jonathan Thomas <jonathan@opalise.co.uk>
- */
 class AddressFormatterInitializerTest extends MockeryTestCase
 {
-    private $sut;
+    private AddressFormatterInitializer $sut;
 
     public function setUp(): void
     {
@@ -33,15 +23,10 @@ class AddressFormatterInitializerTest extends MockeryTestCase
     {
         $formatAddress = m::mock(FormatAddress::class);
 
-        $parentServiceLocator = m::mock(ServiceLocatorInterface::class);
-        $parentServiceLocator->shouldReceive('get')
+        $container = m::mock(ContainerInterface::class);
+        $container->shouldReceive('get')
             ->with('AddressFormatter')
             ->andReturn($formatAddress);
-
-        $serviceLocator = m::mock(ServiceLocatorInterface::class);
-        $serviceLocator->shouldReceive('getServiceLocator')
-            ->withNoArgs()
-            ->andReturn($parentServiceLocator);
 
         $instance = m::mock(AddressFormatterAwareInterface::class);
         $instance->shouldReceive('setAddressFormatter')
@@ -50,13 +35,13 @@ class AddressFormatterInitializerTest extends MockeryTestCase
 
         $this->assertSame(
             $instance,
-            ($this->sut)($serviceLocator, $instance)
+            ($this->sut)($container, $instance)
         );
     }
 
     public function testInvokeWhenInstanceNotAddressFormatterAware()
     {
-        $serviceLocator = m::mock(ServiceLocatorInterface::class);
+        $container = m::mock(ContainerInterface::class);
 
         $instance = m::mock(stdClass::class);
         $instance->shouldReceive('setAddressFormatter')
@@ -64,7 +49,7 @@ class AddressFormatterInitializerTest extends MockeryTestCase
 
         $this->assertSame(
             $instance,
-            ($this->sut)($serviceLocator, $instance)
+            ($this->sut)($container, $instance)
         );
     }
 
@@ -72,15 +57,10 @@ class AddressFormatterInitializerTest extends MockeryTestCase
     {
         $formatAddress = m::mock(FormatAddress::class);
 
-        $parentServiceLocator = m::mock(ServiceLocatorInterface::class);
-        $parentServiceLocator->shouldReceive('get')
+        $container = m::mock(ContainerInterface::class);
+        $container->shouldReceive('get')
             ->with('AddressFormatter')
             ->andReturn($formatAddress);
-
-        $serviceLocator = m::mock(ServiceLocatorInterface::class);
-        $serviceLocator->shouldReceive('getServiceLocator')
-            ->withNoArgs()
-            ->andReturn($parentServiceLocator);
 
         $instance = m::mock(AddressFormatterAwareInterface::class);
         $instance->shouldReceive('setAddressFormatter')
@@ -89,13 +69,13 @@ class AddressFormatterInitializerTest extends MockeryTestCase
 
         $this->assertSame(
             $instance,
-            $this->sut->initialize($instance, $serviceLocator)
+            $this->sut->__invoke($container, $instance)
         );
     }
 
     public function testInitializeWhenInstanceNotAddressFormatterAware()
     {
-        $serviceLocator = m::mock(ServiceLocatorInterface::class);
+        $container = m::mock(ContainerInterface::class);
 
         $instance = m::mock(stdClass::class);
         $instance->shouldReceive('setAddressFormatter')
@@ -103,7 +83,7 @@ class AddressFormatterInitializerTest extends MockeryTestCase
 
         $this->assertSame(
             $instance,
-            $this->sut->initialize($instance, $serviceLocator)
+            $this->sut->__invoke($container, $instance)
         );
     }
 }

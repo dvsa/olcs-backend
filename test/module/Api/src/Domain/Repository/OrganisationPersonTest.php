@@ -59,7 +59,7 @@ class OrganisationPersonTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('withRefData')->with()->once()->andReturnSelf();
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
 
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
@@ -98,7 +98,7 @@ class OrganisationPersonTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('withRefData')->with()->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
             ->shouldReceive('with')->with('person', 'p')->once()->andReturnSelf()
             ->shouldReceive('with')->with('p.title')->once()->andReturnSelf();
 
@@ -122,7 +122,7 @@ class OrganisationPersonTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('withRefData')->with()->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
             ->shouldReceive('with')->with('person', 'p')->once()->andReturnSelf()
             ->shouldReceive('with')->with('p.title')->once()->andReturnSelf();
 

@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Generator;
 use Interop\Container\ContainerInterface;
 
@@ -26,18 +25,6 @@ final class CreateSnapshot extends AbstractCommandHandler
      * @var Generator
      */
     protected $reviewSnapshotService;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, CreateSnapshot::class);
-    }
 
     /**
      * Handle command
@@ -84,10 +71,7 @@ final class CreateSnapshot extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->reviewSnapshotService = $container->get('ContinuationReview');
         return parent::__invoke($fullContainer, $requestedName, $options);

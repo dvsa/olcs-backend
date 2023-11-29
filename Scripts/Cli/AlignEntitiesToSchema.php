@@ -262,8 +262,6 @@ class AlignEntitiesToSchema
 
             $this->createEntities();
 
-            //$this->removeOldUnitTests();
-
             $this->createUnitTests();
 
             $this->importEntities();
@@ -354,10 +352,12 @@ class AlignEntitiesToSchema
      */
     private function recreateDatabase()
     {
-        $this->respond('Rebuilding database...', 'info');
+        $dbName = $this->conn->getDatabase();
 
-        $this->conn->executeStatement('DROP DATABASE IF EXISTS ' . $this->conn->getDatabase());
-        $this->conn->executeStatement('CREATE DATABASE IF NOT EXISTS ' . $this->conn->getDatabase());
+        $this->respond('Rebuilding database...' . $dbName, 'info');
+
+        $this->conn->executeStatement('DROP DATABASE IF EXISTS ' . $dbName);
+        $this->conn->executeStatement('CREATE DATABASE IF NOT EXISTS ' . $dbName);
     }
 
     /**

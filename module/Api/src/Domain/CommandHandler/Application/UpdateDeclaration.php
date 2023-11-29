@@ -15,7 +15,6 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees as CancelAllInterimFeesCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateFeeCommand;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateDeclaration as UpdateDeclarationCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
@@ -34,11 +33,6 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
      * @var \Dvsa\Olcs\Api\Domain\Repository\Fee
      */
     protected $feeRepo;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateDeclaration::class);
-    }
 
     public function handleCommand(CommandInterface $command)
     {
@@ -162,10 +156,7 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->feeRepo = $container->get('RepositoryServiceManager')
             ->get('Fee');
         return parent::__invoke($fullContainer, $requestedName, $options);

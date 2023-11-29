@@ -4,33 +4,29 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Class TransExchangeClientFactoryTest
- * @package Dvsa\OlcsTest\Api\Service\Ebsr
- */
 class TransExchangeClientFactoryTest extends TestCase
 {
 
-    public function testCreateServiceNoConfig()
+    public function testInvokeNoConfig()
     {
         $this->expectException(\RuntimeException::class);
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
 
         $sut = new TransExchangeClientFactory();
-        $sut->createService($mockSl);
+        $sut->__invoke($mockSl, TransExchangeClient::class);
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
         $config = [
             'transexchange_publisher' => [
@@ -53,7 +49,7 @@ class TransExchangeClientFactoryTest extends TestCase
             ->once()
             ->with(TransExchangeClientFactory::PUBLISH_XSD);
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn(['ebsr'=>$config]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
@@ -63,7 +59,7 @@ class TransExchangeClientFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(Xsd::class)->andReturn($mockXsdValidator);
 
         $sut = new TransExchangeClientFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, TransExchangeClient::class);
 
         $this->assertInstanceOf(TransExchangeClient::class, $service);
     }

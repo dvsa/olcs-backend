@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class GeneratorFactory implements FactoryInterface
@@ -19,17 +19,5 @@ class GeneratorFactory implements FactoryInterface
             $container->get(SignatureReviewService::class),
             $container
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $services
-     *
-     * @return Generator
-     */
-    public function createService(ServiceLocatorInterface $services)
-    {
-        return $this($services, Generator::class);
     }
 }

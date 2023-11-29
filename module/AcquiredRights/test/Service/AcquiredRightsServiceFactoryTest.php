@@ -29,39 +29,6 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     */
-    public function createService_IsCallable(): void
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Assert
-        $this->assertIsCallable([$this->sut, 'createService']);
-    }
-
-    /**
-     * @test
-     * @depends createService_IsCallable
-     * @depends __invoke_IsCallable
-     */
-    public function createService_CallsInvoke(): void
-    {
-        // Setup
-        $this->sut = m::mock(AcquiredRightsServiceFactory::class)->makePartial();
-
-        // Expectations
-        $this->sut->expects('__invoke')->withArgs(function ($serviceManager, $requestedName) {
-            $this->assertSame($this->serviceManager(), $serviceManager, 'Expected first argument to be the ServiceManager passed to createService');
-            $this->assertSame(AcquiredRightsService::class, $requestedName, 'Expected requestedName to be class reference');
-            return true;
-        });
-
-        // Execute
-        $this->sut->createService($this->serviceManager());
-    }
-
-    /**
-     * @test
      * @depends __invoke_IsCallable
      */
     public function __invoke_ReturnsAnInstanceOfAcquiredRightsClient(): void
@@ -70,7 +37,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), AcquiredRightsService::class);
+        $result = $this->sut->__invoke($this->serviceManager, AcquiredRightsService::class);
 
         // Assert
         $this->assertInstanceOf(AcquiredRightsService::class, $result);
@@ -94,7 +61,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
         $this->expectExceptionMessage('Configuration is undefined or empty(): acquired_rights -> expiry');
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), AcquiredRightsService::class);
+        $result = $this->sut->__invoke($this->serviceManager, AcquiredRightsService::class);
 
         // Assert
         $this->assertInstanceOf(AcquiredRightsService::class, $result);
@@ -118,7 +85,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
         $this->expectExceptionMessage('Value must be instance of \DateTimeImmutable: acquired_rights -> expiry');
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), AcquiredRightsService::class);
+        $result = $this->sut->__invoke($this->serviceManager, AcquiredRightsService::class);
 
         // Assert
         $this->assertInstanceOf(AcquiredRightsService::class, $result);
@@ -142,7 +109,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
         $this->expectExceptionMessage('Configuration is undefined or null: acquired_rights -> check_enabled');
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), AcquiredRightsService::class);
+        $result = $this->sut->__invoke($this->serviceManager, AcquiredRightsService::class);
 
         // Assert
         $this->assertInstanceOf(AcquiredRightsService::class, $result);
@@ -166,7 +133,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
         $this->expectExceptionMessage('Value must be instance of bool: acquired_rights -> check_enabled');
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), AcquiredRightsService::class);
+        $result = $this->sut->__invoke($this->serviceManager, AcquiredRightsService::class);
 
         // Assert
         $this->assertInstanceOf(AcquiredRightsService::class, $result);

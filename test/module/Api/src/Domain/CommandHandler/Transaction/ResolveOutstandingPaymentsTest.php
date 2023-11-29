@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository\AbstractRepository as Repo;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use OlcsTest\Bootstrap;
 
 /**

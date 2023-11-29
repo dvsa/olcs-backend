@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Document;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Document\PrintLetter;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Api\Service;
+use Dvsa\Olcs\Api\Service\Document\PrintLetter as PrintLetterService;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -27,16 +27,18 @@ class PrintLetterTest extends QueryHandlerTestCase
 
         $this->mockRepo('Document', Repository\Document::class);
 
-        $this->mockPrintLetterSrv = m::mock(Service\Document\PrintLetter::class);
-        $this->mockedSmServices[Service\Document\PrintLetter::class] = $this->mockPrintLetterSrv;
-
         parent::setUp();
+
+        $this->mockPrintLetterSrv = m::mock(PrintLetterService::class);
+        $this->container->expects('get')
+            ->with(PrintLetterService::class)
+            ->andReturn($this->mockPrintLetterSrv);
     }
 
     /**
      * @dataProvider dpTestHandleQuery
      */
-    public function testHandleQuery($params, $expect)
+    public function testHandleQuery($params, $expect): void
     {
         $query = TransferQry\Document\PrintLetter::create(['id' => self::DOC_ID]);
 
@@ -56,7 +58,7 @@ class PrintLetterTest extends QueryHandlerTestCase
         static::assertEquals($expect, $actual);
     }
 
-    public function dpTestHandleQuery()
+    public function dpTestHandleQuery(): array
     {
         return [
             [

@@ -17,6 +17,5 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
 class QueryHandlerManagerFactory extends AbstractServiceManagerFactory
 {
     const CONFIG_KEY = 'query_handlers';
-
-    protected $serviceManagerClass = \Dvsa\Olcs\Api\Domain\QueryHandlerManager::class;
+    const PLUGIN_MANAGER_CLASS = QueryHandlerManager::class;
 }

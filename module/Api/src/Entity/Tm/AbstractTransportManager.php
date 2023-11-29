@@ -111,7 +111,7 @@ abstract class AbstractTransportManager implements BundleSerializableInterface, 
      *
      * @var unknown
      *
-     * @ORM\Column(type="json_array", name="merge_details", length=65535, nullable=true)
+     * @ORM\Column(type="json", name="merge_details", length=65535, nullable=true)
      */
     protected $mergeDetails;
 

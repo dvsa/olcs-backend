@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -13,10 +14,10 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class SubmissionGeneratorFactoryTest extends MockeryTestCase
 {
-    public function testCreateService()
+    public function testInvoke()
     {
         /** @var  \Laminas\ServiceManager\ServiceLocatorInterface $mockSl */
-        $mockSl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)
+        $mockSl = m::mock(ContainerInterface::class)
             ->shouldReceive('get')
             ->andReturnUsing(
                 function ($class) {
@@ -32,7 +33,7 @@ class SubmissionGeneratorFactoryTest extends MockeryTestCase
             )
             ->getMock();
 
-        $actual = (new SubmissionGeneratorFactory())->createService($mockSl);
+        $actual = (new SubmissionGeneratorFactory())->__invoke($mockSl, SubmissionGenerator::class);
 
         static::assertInstanceOf(SubmissionGenerator::class, $actual);
     }

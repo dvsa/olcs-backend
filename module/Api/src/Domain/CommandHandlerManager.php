@@ -4,33 +4,23 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandlerInterface;
 use Dvsa\Olcs\Transfer\Command\LoggerOmitContentInterface;
-use Dvsa\Olcs\Utils\Traits\PluginManagerTrait;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\AbstractPluginManager;
-use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 
-/**
- * Command Handler Manager
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class CommandHandlerManager extends AbstractPluginManager
 {
-    use PluginManagerTrait;
-
     protected $instanceOf = CommandHandlerInterface::class;
+    private ValidationHandlerManager $validationHandlerManager;
 
-    public function __construct(ConfigInterface $config = null)
+    public function __construct(ContainerInterface $container, array $config = [])
     {
-        $this->setShareByDefault(false);
-
-        if ($config) {
-            $config->configureServiceManager($this);
-        }
+        $this->validationHandlerManager = $container->get('ValidationHandlerManager');
+        parent::__construct($container, $config);
     }
 
     public function handleCommand(CommandInterface $command, $validate = true)
@@ -92,10 +82,8 @@ class CommandHandlerManager extends AbstractPluginManager
      */
     protected function validateDto($dto, $queryHandlerFqcl)
     {
-        /** @var ValidationHandlerManager $vhm */
-        $vhm = $this->getServiceLocator()->get('ValidationHandlerManager');
-
-        $validationHandler = $vhm->get($queryHandlerFqcl);
+        /** @var ValidationHandlerInterface $validationHandler */
+        $validationHandler = $this->validationHandlerManager->get($queryHandlerFqcl);
 
         if (!$validationHandler->isValid($dto)) {
             Logger::debug(

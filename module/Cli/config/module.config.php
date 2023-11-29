@@ -324,14 +324,12 @@ return [
         ],
     ],
     'controllers' => [
-        'invokables' => [
-            Cli\Controller\BatchController::class => Cli\Controller\BatchController::class,
-        ],
         'factories' => [
             Cli\Controller\SQSController::class => Cli\Controller\SQSControllerFactory::class,
             Cli\Controller\DiagnosticController::class => Cli\Controller\DiagnosticControllerFactory::class,
             Cli\Controller\QueueController::class => Cli\Controller\QueueControllerFactory::class,
             Cli\Controller\UtilController::class => Cli\Controller\UtilControllerFactory::class,
+            Cli\Controller\BatchController::class => Cli\Controller\BatchControllerFactory::class,
         ],
     ],
     'cache' => [

@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Rbac;
 
 use Dvsa\Olcs\Api\Entity\User\User;
-use ZfcRbac\Identity\IdentityInterface;
+use LmcRbacMvc\Identity\IdentityInterface;
 
 /**
  * Identity

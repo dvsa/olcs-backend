@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Lva\Application;
 
+use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -24,10 +26,10 @@ class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCas
     {
         $this->sectionAccessService = m::mock();
 
-        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('SectionAccessService')->once()->andReturn($this->sectionAccessService);
 
-        $this->sut = (new \Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService)->createService($sm);
+        $this->sut = (new GrantValidationService())->__invoke($sm, GrantValidationService::class);
     }
 
     public function testHandleQueryNewApp()

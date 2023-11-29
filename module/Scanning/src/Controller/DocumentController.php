@@ -2,11 +2,27 @@
 
 namespace Dvsa\Olcs\Scanning\Controller;
 
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+
 /**
  * Document controller
  */
 class DocumentController extends AbstractController
 {
+    private CommandHandlerManager $commandHandlerManager;
+
+    public function __construct(
+        CommandHandlerManager $commandHandlerManager
+    ) {
+        $this->setCommandHandlerManager($commandHandlerManager);
+    }
+
+    /** added as the easiest way to make sure old style unit test still works! */
+    public function setCommandHandlerManager(CommandHandlerManager $commandHandlerManager): void
+    {
+        $this->commandHandlerManager = $commandHandlerManager;
+    }
+
     /**
      * Create action
      *
@@ -90,7 +106,7 @@ class DocumentController extends AbstractController
      */
     private function handleCommand($dto)
     {
-        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
+        return $this->commandHandlerManager->handleCommand($dto);
     }
 
     /**

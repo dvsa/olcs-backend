@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Cache\ById as Handler;
 use Dvsa\Olcs\Transfer\Query\Cache\ById as ByIdQry;
 use Dvsa\Olcs\Api\Domain\Query\Cache\TranslationKey as TranslationKeyQry;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Tests the cache handler calls the correct query (uses the translation key query as an example)

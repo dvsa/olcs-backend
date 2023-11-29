@@ -2,16 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\PrivateHireLicence;
 
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessLicence;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\PrivateHireLicence\PrivateHireLicence;
 
-/**
- * PrivateHireLicence test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class PrivateHireLicenceTest extends AbstractHandlerTestCase
 {
     /**
@@ -32,7 +29,7 @@ class PrivateHireLicenceTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(true);
 
         $this->assertSame(true, $this->sut->isValid($dto));
@@ -48,10 +45,10 @@ class PrivateHireLicenceTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getLicence')->andReturn(1);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(false);
 
-        $mockValidator = m::mock();
+        $mockValidator = m::mock(CanAccessLicence::class);
         $this->validatorManager->setService('canAccessLicence', $mockValidator);
 
         $mockValidator->shouldReceive('isValid')->with(1)->andReturn($canAccess);

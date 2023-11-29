@@ -2,89 +2,37 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
+use Doctrine\DBAL\Connection;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Set Vi Flags
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 final class SetViFlags extends AbstractCommandHandler
 {
-    /**
-     * @var \Doctrine\DBAL\Connection
-     */
-    private $dbConnection;
+    private Connection $dbConnection;
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, SetViFlags::class);
-    }
-
-    /**
-     * Set the DB connection
-     *
-     * @param \Doctrine\DBAL\Connection $dbConnection DB Connection
-     *
-     * @return void
-     */
-    private function setDbConnection(\Doctrine\DBAL\Connection $dbConnection)
+    private function setDbConnection(Connection $dbConnection): void
     {
         $this->dbConnection = $dbConnection;
     }
 
-    /**
-     * Get the DB connection
-     *
-     * @return \Doctrine\DBAL\Connection
-     */
-    private function getDbConnection()
+    private function getDbConnection(): Connection
     {
         return $this->dbConnection;
     }
 
-    /**
-     * Handle command
-     *
-     * @param CommandInterface $command The command to execute
-     *
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    public function handleCommand(CommandInterface $command)
+    public function handleCommand(CommandInterface $command): Result
     {
-        /* @var $stmt \Doctrine\DBAL\Statement */
         $stmt = $this->getDbConnection()->prepare('CALL vi_set_flags()');
-        $stmt->execute();
-
-        $result = $stmt->fetchAll();
-
-        if (isset($result[0]['Result'])) {
-            throw new \Dvsa\Olcs\Api\Domain\Exception\RuntimeException($result[0]['Result']);
-        }
+        $stmt->executeQuery();
         $this->result->addMessage('VI Flags set');
 
         return $this->result;
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
-        $this->setDbConnection($container->get('doctrine.connection.ormdefault'));
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        $this->setDbConnection($container->get('doctrine.connection.orm_default'));
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

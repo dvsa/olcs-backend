@@ -21,7 +21,6 @@ use Dvsa\Olcs\Transfer\Command\IrhpApplication\CreateFull as Cmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Irhp Permit Application
@@ -36,18 +35,6 @@ class CreateFull extends AbstractCommandHandler implements TransactionedInterfac
 
     /** @var BilateralApplicationUpdater */
     private $bilateralApplicationUpdater;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, CreateFull::class);
-    }
 
     /**
      * Handle command
@@ -191,10 +178,7 @@ class CreateFull extends AbstractCommandHandler implements TransactionedInterfac
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->bilateralApplicationUpdater = $container->get('PermitsBilateralInternalApplicationUpdater');
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');

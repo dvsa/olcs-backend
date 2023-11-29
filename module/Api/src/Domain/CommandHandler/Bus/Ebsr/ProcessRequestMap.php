@@ -28,7 +28,6 @@ use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Olcs\XmlTools\Xml\TemplateBuilder;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Olcs\Logging\Log\Logger;
@@ -76,18 +75,6 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
      * @var TemplateBuilder
      */
     protected $templateBuilder;
-
-    /**
-     * Creates the service (injects template builder)
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, ProcessRequestMap::class);
-    }
 
     /**
      * Transxchange map request
@@ -351,10 +338,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->templateBuilder = $container->get(TemplateBuilder::class);
         return parent::__invoke($fullContainer, $requestedName, $options);

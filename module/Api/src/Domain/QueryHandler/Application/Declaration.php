@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
@@ -32,19 +31,6 @@ class Declaration extends AbstractQueryHandler
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
      */
     private $feesHelper;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Declaration::class);
-    }
 
     /**
      * Handle query
@@ -170,9 +156,6 @@ class Declaration extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->sectionAccessService = $container->get('SectionAccessService');
         $this->feesHelper = $container->get('FeesHelperService');

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Query Handler Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace OlcsTest\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -13,18 +8,11 @@ use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
 use Dvsa\Olcs\Api\Domain\ValidationHandlerManager;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
-use Laminas\ServiceManager\Exception\RuntimeException;
-use Laminas\ServiceManager\ServiceManager;
 
-/**
- * Query Handler Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class QueryHandlerManagerTest extends MockeryTestCase
 {
     /**
@@ -38,14 +26,10 @@ class QueryHandlerManagerTest extends MockeryTestCase
     {
         $this->vhm = m::mock(ValidationHandlerManager::class)->makePartial();
 
-        $sm = m::mock(ServiceManager::class)->makePartial();
-        $sm->setService('ValidationHandlerManager', $this->vhm);
+        $container = m::mock(ContainerInterface::class);
+        $container->expects('get')->with('ValidationHandlerManager')->andReturn($this->vhm);
 
-        $config = m::mock(ConfigInterface::class);
-        $config->shouldReceive('configureServiceManager')->with(m::type(QueryHandlerManager::class));
-
-        $this->sut = new QueryHandlerManager($config);
-        $this->sut->setServiceLocator($sm);
+        $this->sut = new QueryHandlerManager($container, []);
     }
 
     public function testHandleQuery()
@@ -109,7 +93,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
     public function testHandleQueryInvalid()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidServiceException::class);
 
         $query = m::mock(QueryInterface::class)->makePartial();
 
@@ -124,34 +108,12 @@ class QueryHandlerManagerTest extends MockeryTestCase
     public function testValidate()
     {
         $plugin = m::mock(QueryHandlerInterface::class);
-
         $this->assertNull($this->sut->validate($plugin));
     }
 
     public function testValidateInvalid()
     {
         $this->expectException(InvalidServiceException::class);
-
         $this->sut->validate(null);
-    }
-
-    /**
-     * @todo To be removed as part of OLCS-28149
-     */
-    public function testValidatePlugin()
-    {
-        $plugin = m::mock(QueryHandlerInterface::class);
-
-        $this->assertNull($this->sut->validatePlugin($plugin));
-    }
-
-    /**
-     * @todo To be removed as part of OLCS-28149
-     */
-    public function testValidatePluginInvalid()
-    {
-        $this->expectException(RuntimeException::class);
-
-        $this->sut->validatePlugin(null);
     }
 }

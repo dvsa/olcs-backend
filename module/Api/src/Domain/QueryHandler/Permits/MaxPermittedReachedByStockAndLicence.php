@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
 use Dvsa\Olcs\Transfer\Query\Permits\MaxPermittedReachedByStockAndLicence as MaxPermittedReachedByStockAndLicenceQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -22,19 +21,6 @@ class MaxPermittedReachedByStockAndLicence extends AbstractQueryHandler
 
     /** @var StockLicenceMaxPermittedCounter */
     private $stockLicenceMaxPermittedCounter;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, MaxPermittedReachedByStockAndLicence::class);
-    }
 
     /**
      * Handle query
@@ -89,9 +75,6 @@ class MaxPermittedReachedByStockAndLicence extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->stockLicenceMaxPermittedCounter = $container->get(
             'PermitsAvailabilityStockLicenceMaxPermittedCounter'

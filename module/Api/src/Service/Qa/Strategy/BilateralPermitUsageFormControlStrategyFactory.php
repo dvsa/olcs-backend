@@ -2,25 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class BilateralPermitUsageFormControlStrategyFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return BaseFormControlStrategy
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): BaseFormControlStrategy
-    {
-        return $this->__invoke($serviceLocator, BaseFormControlStrategy::class);
-    }
-
-    /**
+     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
@@ -30,14 +17,13 @@ class BilateralPermitUsageFormControlStrategyFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): BaseFormControlStrategy
     {
-        $mainServiceLocator = $container->getServiceLocator();
         return new BaseFormControlStrategy(
             'bilateral_permit_usage',
-            $mainServiceLocator->get('QaBilateralPermitUsageGenerator'),
-            $mainServiceLocator->get('QaBilateralPermitUsageAnswerSaver'),
-            $mainServiceLocator->get('QaGenericAnswerClearer'),
-            $mainServiceLocator->get('QaBilateralPermitUsageQuestionTextGenerator'),
-            $mainServiceLocator->get('QaBilateralPermitUsageAnswerSummaryProvider')
+            $container->get('QaBilateralPermitUsageGenerator'),
+            $container->get('QaBilateralPermitUsageAnswerSaver'),
+            $container->get('QaGenericAnswerClearer'),
+            $container->get('QaBilateralPermitUsageQuestionTextGenerator'),
+            $container->get('QaBilateralPermitUsageAnswerSummaryProvider')
         );
     }
 }

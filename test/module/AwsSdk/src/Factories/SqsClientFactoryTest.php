@@ -22,9 +22,9 @@ class SqsClientFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider dpTestCreateService
+     * @dataProvider dpTestInvoke
      */
-    public function testCreateService($sqsOptions)
+    public function testInvoke($sqsOptions)
     {
         // Params
         $config = [
@@ -43,12 +43,12 @@ class SqsClientFactoryTest extends TestCase
         /**
          * @var SqsClient $sqsClient
          */
-        $sqsClient = $this->sut->createService($this->sm);
+        $sqsClient = $this->sut->__invoke($this->sm, SqsClient::class);
 
         $this->assertInstanceOf(SqsClient::class, $sqsClient);
     }
 
-    public function dpTestCreateService()
+    public function dpTestInvoke()
     {
         return [
             [

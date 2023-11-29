@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\PsvDisc;
 
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessPsvDisc;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
@@ -33,7 +35,7 @@ class ModifyTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getIds')->andReturn([19, 11, 2015]);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(true);
 
         $this->assertSame(true, $this->sut->isValid($dto));
@@ -49,10 +51,10 @@ class ModifyTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getIds')->andReturn([19, 11, 2015]);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(false);
 
-        $mockValidator = m::mock();
+        $mockValidator = m::mock(CanAccessPsvDisc::class);
         $this->validatorManager->setService('canAccessPsvDisc', $mockValidator);
 
         $mockValidator->shouldReceive('isValid')->with(19)->andReturn($canAccess);

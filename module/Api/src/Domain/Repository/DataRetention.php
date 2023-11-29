@@ -2,14 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\DBAL\Driver\PDOConnection;
+use Doctrine\DBAL\Driver\PDO\Connection as PDOConnection;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as DataRetentionEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Transfer\Query\DataRetention\Records;
 use Dvsa\Olcs\Transfer\Query\DataRetention\Records as RecordsQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -99,7 +96,7 @@ class DataRetention extends AbstractRepository
     public function runCleanupProc($limit, $userId, $dryRun = false)
     {
         /** @var PDOConnection $connection */
-        $connection = $this->getEntityManager()->getConnection()->getWrappedConnection();
+        $connection = $this->getEntityManager()->getConnection()->getNativeConnection();
         $statement = $connection->prepare(
             sprintf('CALL sp_dr_cleanup(%d, %d, %d)', $userId, $limit, $dryRun)
         );

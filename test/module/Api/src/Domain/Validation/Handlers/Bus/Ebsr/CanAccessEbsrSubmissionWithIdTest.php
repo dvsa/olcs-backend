@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Document;
+namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Bus\Ebsr;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
@@ -20,7 +20,6 @@ class CanAccessEbsrSubmissionWithIdTest extends AbstractHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new CanAccessEbsrSubmissionWithId();
-
         parent::setUp();
     }
 
@@ -37,7 +36,7 @@ class CanAccessEbsrSubmissionWithIdTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn($id);
 
-        $this->setIsValid('CanAccessEbsrSubmission', [$id], $canAccess);
+        $this->setIsValid('canAccessEbsrSubmission', [$id], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }

@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\Precheck;
@@ -10,9 +11,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
-/**
- * Class PrecheckTest
- */
 class PrecheckTest extends CommandHandlerTestCase
 {
     private $mockedConnection;
@@ -20,15 +18,15 @@ class PrecheckTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Precheck();
-        $this->mockedConnection = m::mock(Connection::class);
+        $this->mockedConnection = m::mock(\PDO::class);
         $this->mockedSmServices['DoctrineOrmEntityManager'] = m::mock(EntityManager::class);
         $this->mockedSmServices['DoctrineOrmEntityManager']
-            ->shouldReceive('getConnection->getWrappedConnection')
+            ->shouldReceive('getConnection->getNativeConnection')
             ->andReturn($this->mockedConnection);
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommand(): void
     {
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getLimit')
@@ -37,10 +35,8 @@ class PrecheckTest extends CommandHandlerTestCase
 
         $mockStatement = m::mock(Statement::class);
         $mockStatement
-            ->shouldReceive('execute')
-            ->once()
-            ->withNoArgs()
-            ->andReturn();
+            ->expects('execute')
+            ->withNoArgs();
 
         $this->mockedConnection->shouldReceive('prepare')->with("CALL sp_dr_precheck(10);")->once()->andReturn($mockStatement);
         $result = $this->sut->handleCommand($command);

@@ -5,8 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\Mapping;
 use Olcs\XmlTools\Xml\Specification\MultiNodeValue;
 use Olcs\XmlTools\Xml\Specification\NodeValue;
 use Olcs\XmlTools\Xml\Specification\Recursion;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -15,17 +14,6 @@ use Interop\Container\ContainerInterface;
  */
 class TransExchangePublisherXmlFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Recursion
-    {
-        return $this->__invoke($serviceLocator, Recursion::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

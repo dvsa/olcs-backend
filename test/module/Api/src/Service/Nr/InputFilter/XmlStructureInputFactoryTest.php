@@ -2,22 +2,20 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Nr\InputFilter;
 
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\XmlStructureInputFactory;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
 
-/**
- * Class XmlStructureInputFactoryTest
- * @package Dvsa\OlcsTest\Api\Service\Nr\InputFilter
- */
 class XmlStructureInputFactoryTest extends TestCase
 {
     /**
      * Tests create service
      */
-    public function testCreateService()
+    public function testInvoke()
     {
         $xmlExclude = ['strings'];
         $maxSchemaErrors = 10;
@@ -40,7 +38,7 @@ class XmlStructureInputFactoryTest extends TestCase
 
         $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
 
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
@@ -48,9 +46,9 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(Xsd::class)->andReturn($mockXsdValidator);
 
         $sut = new XmlStructureInputFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, Input::class);
 
-        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
+        $this->assertInstanceOf(Input::class, $service);
         $this->assertCount(1, $service->getFilterChain());
         $this->assertCount(1, $service->getValidatorChain());
     }
@@ -62,24 +60,23 @@ class XmlStructureInputFactoryTest extends TestCase
      * @param $exceptionName
      * @param $exceptionMessage
      *
-     * @dataProvider createServiceErrorProvider
+     * @dataProvider invokeErrorProvider
      */
-    public function testCreateServiceMissingConfig($config, $exceptionName, $exceptionMessage)
+    public function testInvokeMissingConfig($config, $exceptionName, $exceptionMessage)
     {
-        $this->expectException($exceptionName, $exceptionMessage);
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $this->expectException($exceptionName);
+        $this->expectExceptionMessage($exceptionMessage);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
 
         $sut = new XmlStructureInputFactory();
-        $sut->createService($mockSl);
+        $sut->__invoke($mockSl, Input::class);
     }
 
     /**
-     * Data provider for testCreateServiceMissingConfig
-     *
-     * @return array
+     * Data provider for testInvokeMissingConfig
      */
-    public function createServiceErrorProvider()
+    public function invokeErrorProvider(): array
     {
         return [
             [

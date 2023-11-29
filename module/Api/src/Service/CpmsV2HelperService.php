@@ -18,8 +18,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 use Dvsa\Olcs\Cpms\Service\ApiService;
 use Olcs\Logging\Log\Logger;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -75,15 +74,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @var string
      */
     protected $clientSecret;
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return self
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, CpmsV2HelperService::class);
-    }
 
     /**
      * @return ApiService

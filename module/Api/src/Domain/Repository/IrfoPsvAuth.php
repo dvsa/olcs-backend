@@ -34,7 +34,7 @@ class IrfoPsvAuth extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('irfoPsvAuthType')
             ->with('irfoPsvAuthNumbers')
             ->with('countrys')

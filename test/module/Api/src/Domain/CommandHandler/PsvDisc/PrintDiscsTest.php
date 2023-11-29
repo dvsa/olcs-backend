@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Command\PsvDisc\PrintDiscs as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User;
 
 /**

@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ServiceManager;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
@@ -69,14 +69,13 @@ abstract class BaseAbstractDbQueryTestCase extends MockeryTestCase
         $this->mockPidIdentityProvider = m::mock(IdentityProviderInterface::class);
 
         $sm = m::mock(ServiceManager::class)->makePartial();
-        $sm->shouldReceive('getServiceLocator')->andReturnSelf();
         $sm->setService('doctrine.entitymanager.orm_default', $this->em);
         $sm->setService(AuthorizationService::class, $auth);
         $sm->setService('RepositoryServiceManager', $mockRepoServiceManager);
         $sm->setService(IdentityProviderInterface::class, $this->mockPidIdentityProvider);
 
         $sut = $this->getSut();
-        $this->sut = $sut->createService($sm);
+        $this->sut = $sut->__invoke($sm, null);
 
         $this->assertSame($sut, $this->sut);
     }

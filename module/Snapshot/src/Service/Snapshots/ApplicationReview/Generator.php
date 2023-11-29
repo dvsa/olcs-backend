@@ -17,8 +17,8 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService;
 use Dvsa\Olcs\Utils\Translation\NiTextTranslation;
+use Interop\Container\ContainerInterface;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Application Review
@@ -232,8 +232,7 @@ class Generator extends AbstractGenerator
     /** @var SignatureReviewService */
     private $signatureReviewService;
 
-    /** @var ServiceLocatorInterface */
-    private $services;
+    private ContainerInterface $services;
 
     /**
      * Create service instance
@@ -245,7 +244,7 @@ class Generator extends AbstractGenerator
      * @param SectionAccessService $sectionAccessService
      * @param NiTextTranslation $niTextTranslation
      * @param SignatureReviewService $signatureReviewService
-     * @param ServiceLocatorInterface $services
+     * @param ContainerInterface $services
      *
      * @return Generator
      */
@@ -254,7 +253,7 @@ class Generator extends AbstractGenerator
         SectionAccessService $sectionAccessService,
         NiTextTranslation $niTextTranslation,
         SignatureReviewService $signatureReviewService,
-        ServiceLocatorInterface $services
+        ContainerInterface $services
     ) {
         parent::__construct($abstractGeneratorServices);
         $this->sectionAccessService = $sectionAccessService;

@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\PermitsAvailable as PermitsAvailableQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -21,19 +20,6 @@ class PermitsAvailable extends AbstractQueryHandler
     private $stockAvailabilityChecker;
 
     protected $repoServiceName = 'IrhpApplication';
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, PermitsAvailable::class);
-    }
 
     /**
      * Handle query
@@ -86,9 +72,6 @@ class PermitsAvailable extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->stockAvailabilityChecker = $container->get('PermitsAvailabilityStockAvailabilityChecker');
         return parent::__invoke($fullContainer, $requestedName, $options);

@@ -5,8 +5,7 @@ namespace Olcs\Db\Service\Search;
 use Elastica\Client;
 use Olcs\Logging\Log\Logger;
 use Olcs\Logging\Log\LaminasLogPsr3Adapter;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\ServiceManager\Exception;
 use Interop\Container\ContainerInterface;
 
@@ -17,18 +16,6 @@ use Interop\Container\ContainerInterface;
 class ClientFactory implements FactoryInterface
 {
     /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @throws \Laminas\ServiceManager\Exception\RuntimeException
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Client
-    {
-        return $this->__invoke($serviceLocator, Client::class);
-    }
-
-    /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
@@ -37,12 +24,13 @@ class ClientFactory implements FactoryInterface
      * @return Client
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws Exception\InvalidServiceException
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Client
     {
         $config = $container->get('Config');
         if (!isset($config['elastic_search'])) {
-            throw new Exception\RuntimeException('Elastic search config not found');
+            throw new Exception\InvalidServiceException('Elastic search config not found');
         }
         $service = new Client($config['elastic_search']);
         if (isset($config['elastic_search']['log'])) {

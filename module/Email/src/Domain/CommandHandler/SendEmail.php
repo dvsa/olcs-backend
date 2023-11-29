@@ -10,7 +10,6 @@ use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Interop\Container\Containerinterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Dvsa\Olcs\Email\Service\Email as EmailService;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
@@ -62,11 +61,6 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
      * @var EmailService
      */
     private $emailService;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, SendEmail::class);
-    }
 
     /**
      * @return string
@@ -319,12 +313,6 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $config = $container->get('Config');
         if (isset($config['email']['from_name'])) {
             $this->setFromName($config['email']['from_name']);
@@ -343,6 +331,6 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
         }
         $this->setTranslator($container->get('translator'));
         $this->setEmailService($container->get('EmailService'));
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

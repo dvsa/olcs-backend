@@ -30,7 +30,7 @@ class ApproveTest extends CommandHandlerTestCase
         $this->sut = new ApproveHandler();
         $this->refData = [];
         $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
         ];
         $this->mockRepo('Licence', LicenceRepo::class);
         $this->mockRepo('Surrender', SurrenderRepo::class);

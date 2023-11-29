@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Rbac;
 
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use RuntimeException;
-use ZfcRbac\Identity\IdentityProviderInterface;
-use ZfcRbac\Options\ModuleOptions;
+use LmcRbacMvc\Identity\IdentityProviderInterface;
 
 class IdentityProviderFactory implements FactoryInterface
 {
@@ -44,17 +42,5 @@ class IdentityProviderFactory implements FactoryInterface
             throw new RunTimeException(static::MESSAGE_DOES_NOT_IMPLEMENT);
         }
         return $instance;
-    }
-
-    /**
-     * @deprecated remove following Laminas v3 upgrade
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return IdentityProviderInterface
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): IdentityProviderInterface
-    {
-        return $this($serviceLocator, null);
     }
 }

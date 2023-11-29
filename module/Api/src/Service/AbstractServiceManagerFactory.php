@@ -1,38 +1,19 @@
 <?php
 
-/**
- * Abstract Service Manager Factory
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Service;
 
-use Laminas\ServiceManager\Config;
+use Interop\Container\Containerinterface;
 use Laminas\Mvc\Service\AbstractPluginManagerFactory;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Abstract Service Manager Factory
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 abstract class AbstractServiceManagerFactory extends AbstractPluginManagerFactory
 {
     const CONFIG_KEY = 'define_me';
 
-    protected $serviceManagerClass;
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $name, array $options = null)
     {
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
+        $configArray = !empty($config[static::CONFIG_KEY]) ? $config[static::CONFIG_KEY] : [];
 
-        $configObject = new Config(!empty($config[static::CONFIG_KEY]) ? $config[static::CONFIG_KEY] : []);
-
-        $class = $this->serviceManagerClass;
-
-        $plugins = new $class($configObject);
-        $plugins->setServiceLocator($serviceLocator);
-
-        return $plugins;
+        return parent::__invoke($container, static::PLUGIN_MANAGER_CLASS, $configArray);
     }
 }

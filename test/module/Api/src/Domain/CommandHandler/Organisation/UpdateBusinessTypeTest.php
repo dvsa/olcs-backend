@@ -20,7 +20,7 @@ use Dvsa\Olcs\Transfer\Command\Organisation\UpdateBusinessType as Cmd;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Update Business Type Test

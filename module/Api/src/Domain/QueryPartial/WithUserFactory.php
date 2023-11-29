@@ -5,8 +5,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -14,17 +13,6 @@ use Interop\Container\ContainerInterface;
  */
 class WithUserFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): WithUser
-    {
-        return $this->__invoke($serviceLocator, WithUser::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -38,7 +26,7 @@ class WithUserFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): WithUser
     {
         return new WithUser(
-            $container->get('with')
+            $container->get('QueryPartialServiceManager')->get('with')
         );
     }
 }

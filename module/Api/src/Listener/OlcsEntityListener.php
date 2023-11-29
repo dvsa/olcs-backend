@@ -3,14 +3,13 @@
 namespace Dvsa\Olcs\Api\Listener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\NotifyPropertyChanged;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\NotifyPropertyChanged;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Interop\Container\ContainerInterface;
 
@@ -21,20 +20,8 @@ class OlcsEntityListener implements EventSubscriber, AuthAwareInterface, Factory
 {
     use AuthAwareTrait;
 
-    /** @var  ServiceLocatorInterface */
+    /** @var  ContainerInterface */
     private $sl;
-
-    /**
-     * Create instance
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, OlcsEntityListener::class);
-    }
 
     /**
      * Specifies the list of events to listen

@@ -2,13 +2,16 @@
 
 namespace Dvsa\OlcsTest\Cli\Controller;
 
+use Doctrine\ORM\Exception\ORMException;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Cli\Controller\QueueController;
 use OlcsTest\Bootstrap;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Mvc\Router\RouteMatch;
+use Laminas\Router\RouteMatch;
 
 /**
  * Queue Controller Test
@@ -44,9 +47,13 @@ class QueueControllerTest extends MockeryTestCase
 
         $this->mockQueueService = m::mock(QueueProcessor::class);
 
-        $this->sut = new QueueController($this->config, $this->mockQueueService);
+        $this->sut = new QueueController(
+            $this->config,
+            $this->mockQueueService,
+            m::mock(QueryHandlerManager::class),
+            m::mock(CommandHandlerManager::class)
+        );
         $this->sut->setEvent($this->event);
-        $this->sut->setServiceLocator($this->sm);
         $this->sut->setConsole($this->console);
     }
 
@@ -175,7 +182,7 @@ class QueueControllerTest extends MockeryTestCase
         $errorMessage = 'error message';
         $this->mockQueueService->shouldReceive('processNextItem')
             ->with(['foo'], [])
-            ->andThrow(new \Doctrine\ORM\ORMException($errorMessage));
+            ->andThrow(new ORMException($errorMessage));
 
         $this->console->shouldReceive('writeLine')->with('Types = foo')->once();
         $this->console->shouldReceive('writeLine')->with('Exclude types = ')->once();
@@ -186,7 +193,7 @@ class QueueControllerTest extends MockeryTestCase
 
         // Assertions
         $this->routeMatch->setParam('action', 'index');
-        /** @var \Laminas\View\Model\ConsoleModel $model */
+        /** @var \Laminas\Mvc\Console\View\ViewModel $model */
         $model = $this->sut->dispatch($this->request);
 
         $this->assertEquals(1, $model->getErrorLevel());

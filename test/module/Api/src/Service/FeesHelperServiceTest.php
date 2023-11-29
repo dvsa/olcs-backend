@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -66,7 +67,7 @@ class FeesHelperServiceTest extends MockeryTestCase
     {
         $mockRepoManager = m::mock();
 
-        $sm = m::mock('\Laminas\ServiceManager\ServiceLocatorInterface');
+        $sm = m::mock(ContainerInterface::class);
         $sm
             ->shouldReceive('get')
             ->with('RepositoryServiceManager')
@@ -91,7 +92,7 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->andReturn($feeTypeRepo);
 
         $sut = new FeesHelperService();
-        return $sut->createService($sm);
+        return $sut->__invoke($sm, FeesHelperService::class);
     }
 
     public function testGetOutstandingFeesForApplication()

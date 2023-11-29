@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ContinueLicence as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
@@ -12,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as Command;
+use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
@@ -24,6 +26,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as ContinuationDetailRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
@@ -150,12 +153,12 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs::class,
+            CeasePsvDiscs::class,
             ['licence' => 717],
             new Result()
         );
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs::class,
+            CreatePsvDiscs::class,
             ['licence' => 717, 'amount' => 7, 'isCopy' => 'N'],
             new Result()
         );
@@ -212,12 +215,12 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs::class,
+            CeasePsvDiscs::class,
             ['licence' => $licenceId],
             new Result()
         );
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs::class,
+            CreatePsvDiscs::class,
             ['licence' => $licenceId, 'amount' => 7, 'isCopy' => 'N'],
             new Result()
         );
@@ -438,12 +441,12 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs::class,
+            CeasePsvDiscs::class,
             ['licence' => 717],
             new Result()
         );
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs::class,
+            CreatePsvDiscs::class,
             ['licence' => 717, 'amount' => 7, 'isCopy' => 'N'],
             new Result()
         );
@@ -451,7 +454,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->expectedSideEffect(\Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class, ['id' => 717], new Result());
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Create::class,
+            CreateQueueCmd::class,
             [
                 'entityId' => 999,
                 'type' => QueueEntity::TYPE_CREATE_CONTINUATION_SNAPSHOT,
@@ -530,12 +533,12 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->repoMap['Licence']->shouldReceive('save')->with($licence)->once();
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs::class,
+            CeasePsvDiscs::class,
             ['licence' => 717],
             new Result()
         );
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs::class,
+            CreatePsvDiscs::class,
             ['licence' => 717, 'amount' => null, 'isCopy' => 'N'],
             new Result()
         );
@@ -544,7 +547,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->with($continuationDetail)->once();
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Create::class,
+            CreateQueueCmd::class,
             [
                 'entityId' => 999,
                 'type' => QueueEntity::TYPE_CREATE_CONTINUATION_SNAPSHOT,
@@ -611,7 +614,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->with($continuationDetail)->once();
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Create::class,
+            CreateQueueCmd::class,
             [
                 'entityId' => 999,
                 'type' => QueueEntity::TYPE_CREATE_CONTINUATION_SNAPSHOT,
@@ -667,7 +670,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->with($continuationDetail)->once();
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Create::class,
+            CreateQueueCmd::class,
             [
                 'entityId' => 999,
                 'type' => QueueEntity::TYPE_CREATE_CONTINUATION_SNAPSHOT,
@@ -735,7 +738,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->with($continuationDetail)->once();
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Queue\Create::class,
+            CreateQueueCmd::class,
             [
                 'entityId' => 999,
                 'type' => QueueEntity::TYPE_CREATE_CONTINUATION_SNAPSHOT,
@@ -821,7 +824,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
 
         if (null !== $this->serviceManager()) {
-            $this->sut->createService($this->commandHandlerManager());
+            $this->sut->__invoke($this->serviceManager, null);
         }
     }
 
@@ -840,7 +843,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     {
         $repositoryServiceManager = $this->repositoryServiceManager();
         if (! $repositoryServiceManager->has('Licence')) {
-            $instance = $this->setUpMockService(Licence::class);
+            $instance = $this->setUpMockService(LicenceRepo::class);
 
             // Inject default licence instance
             $instance->allows('fetchUsingId')->andReturnUsing(function ($id) {

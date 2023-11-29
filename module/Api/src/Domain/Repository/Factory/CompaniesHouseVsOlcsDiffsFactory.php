@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository\Factory;
 
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseVsOlcsDiffs;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -15,18 +14,6 @@ use Interop\Container\ContainerInterface;
 class CompaniesHouseVsOlcsDiffsFactory implements FactoryInterface
 {
     /**
-     * Create a repository
-     *
-     * @param \Dvsa\Olcs\Api\Domain\RepositoryServiceManager $sm Repos Manager
-     *
-     * @return CompaniesHouseVsOlcsDiffs
-     */
-    public function createService(ServiceLocatorInterface $sm): CompaniesHouseVsOlcsDiffs
-    {
-        return $this->__invoke($sm, CompaniesHouseVsOlcsDiffs::class);
-    }
-
-    /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
@@ -36,9 +23,8 @@ class CompaniesHouseVsOlcsDiffsFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): CompaniesHouseVsOlcsDiffs
     {
-        $sl = $container->getServiceLocator();
         return new CompaniesHouseVsOlcsDiffs(
-            $sl->get('doctrine.connection.export')
+            $container->get('doctrine.connection.export')
         );
     }
 }

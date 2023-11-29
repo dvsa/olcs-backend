@@ -2,8 +2,6 @@
 
 namespace Dvsa\Olcs\Cli\Service\Utils;
 
-use Doctrine\DBAL\Driver\Statement;
-
 /**
  * Class helper for creation file
  * 

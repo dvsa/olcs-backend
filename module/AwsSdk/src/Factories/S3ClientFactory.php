@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\AwsSdk\Factories;
 
 use Aws\S3\S3Client;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -14,20 +13,6 @@ use Interop\Container\ContainerInterface;
  */
 class S3ClientFactory implements FactoryInterface
 {
-
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): S3Client
-    {
-        return $this->__invoke($serviceLocator, S3Client::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\FormFragmentGenerator;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\ApplicationPath as ApplicationPathQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -22,19 +21,6 @@ class ApplicationPath extends AbstractQueryHandler
     private $formFragmentGenerator;
 
     protected $repoServiceName = 'IrhpApplication';
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, ApplicationPath::class);
-    }
 
     /**
      * Handle query
@@ -68,9 +54,6 @@ class ApplicationPath extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->formFragmentGenerator = $container->get('QaFormFragmentGenerator');
         return parent::__invoke($fullContainer, $requestedName, $options);

@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Template;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class DatabaseTemplateFetcherFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return DatabaseTemplateFetcher
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): DatabaseTemplateFetcher
-    {
-        return $this->__invoke($serviceLocator, DatabaseTemplateFetcher::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

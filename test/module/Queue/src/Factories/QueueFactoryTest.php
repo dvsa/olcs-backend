@@ -31,6 +31,6 @@ class QueueFactoryTest extends TestCase
          * @var SqsClient $sqsClient
          */
 
-        $this->assertInstanceOf(Queue::class, $this->sut->createService($this->sm));
+        $this->assertInstanceOf(Queue::class, $this->sut->__invoke($this->sm, Queue::class));
     }
 }

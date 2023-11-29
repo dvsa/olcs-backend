@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
 use Psr\Container\ContainerExceptionInterface;
@@ -24,20 +23,6 @@ class Grant extends AbstractQueryHandler
      * @var GrantValidationService
      */
     private $grantValidationService;
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return Grant
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Grant::class);
-    }
 
     public function handleQuery(QueryInterface $query)
     {
@@ -75,9 +60,6 @@ class Grant extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->grantValidationService = $container->get('ApplicationGrantValidationService');
         return parent::__invoke($fullContainer, $requestedName, $options);

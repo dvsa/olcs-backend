@@ -3,7 +3,7 @@
 namespace OlcsTest;
 
 use Olcs\Logging\Log\Logger;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 
 /**
@@ -48,7 +48,7 @@ class Bootstrap
 
     public static function getServiceManager()
     {
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ServiceManager::class);
 
         $sm->shouldReceive('setService')
             ->andReturnUsing(

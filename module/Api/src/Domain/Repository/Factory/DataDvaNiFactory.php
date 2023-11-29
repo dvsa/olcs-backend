@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository\Factory;
 
 use Dvsa\Olcs\Api\Domain\Repository\DataDvaNi;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -13,16 +12,6 @@ use Interop\Container\ContainerInterface;
  */
 class DataDvaNiFactory implements FactoryInterface
 {
-    /**
-     * @param \Dvsa\Olcs\Api\Domain\RepositoryServiceManager $sm the Service Manager
-     *
-     * @return DataDvaNi
-     */
-    public function createService(ServiceLocatorInterface $sm): DataDvaNi
-    {
-        return $this->__invoke($sm, DataDvaNi::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -33,9 +22,8 @@ class DataDvaNiFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): DataDvaNi
     {
-        $sl = $container->getServiceLocator();
         return new DataDvaNi(
-            $sl->get('doctrine.connection.export')
+            $container->get('doctrine.connection.export')
         );
     }
 }

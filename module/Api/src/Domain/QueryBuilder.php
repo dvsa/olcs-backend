@@ -74,7 +74,7 @@ class QueryBuilder implements QueryBuilderInterface
             throw new \RuntimeException(self::ERR_QB_NOT_SET);
         }
 
-        $this->queryPartialServiceManager->get(ucfirst($name))->modifyQuery($this->qb, $arguments);
+        $this->queryPartialServiceManager->get($name)->modifyQuery($this->qb, $arguments);
 
         return $this;
     }

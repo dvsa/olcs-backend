@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain;
 
+use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
 
 /**
@@ -17,6 +18,5 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
 class RepositoryServiceManagerFactory extends AbstractServiceManagerFactory
 {
     const CONFIG_KEY = 'repository_services';
-
-    protected $serviceManagerClass = \Dvsa\Olcs\Api\Domain\RepositoryServiceManager::class;
+    public const PLUGIN_MANAGER_CLASS = RepositoryServiceManager::class;
 }

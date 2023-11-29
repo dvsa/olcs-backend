@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as Entity;
 use Dvsa\Olcs\Transfer\Command\System\CreateSlaTargetDate as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * CreateSlaTargetDate command handler test
@@ -65,7 +65,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
         $mockUser->shouldReceive('getUser')
             ->andReturnSelf();
 
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
@@ -127,7 +127,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
         $mockUser->shouldReceive('getUser')
             ->andReturnSelf();
 
-        $this->mockedSmServices['ZfcRbac\Service\AuthorizationService']
+        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 

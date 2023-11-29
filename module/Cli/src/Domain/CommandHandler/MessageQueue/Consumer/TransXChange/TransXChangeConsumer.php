@@ -380,22 +380,8 @@ class TransXChangeConsumer extends AbstractConsumer
         return $message['MessageAttributes'][$attribute]['StringValue'] ?? null;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, static::class);
-    }
-
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): self
     {
-        $fullContainer = $container;
-
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $filterManager = $container->get('FilterManager');
         $this->xmlParser = $filterManager->get(ParseXmlString::class);
         $this->xmlFilter = $filterManager->get(MapXmlFile::class);
@@ -448,6 +434,6 @@ class TransXChangeConsumer extends AbstractConsumer
 
         $this->ebsrSubmissionRepository = $repositoryServiceManager->get('EbsrSubmission');
 
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

@@ -6,6 +6,14 @@
             "packagist": false
         },
         {
+            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-transfer.git",
+            "type": "vcs"
+        },
+        {
+            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-laminas.git",
+            "type": "vcs"
+        },
+        {
             "type": "composer",
             "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
             "only": [
@@ -29,8 +37,9 @@
         "aws/aws-sdk-php": "^3.183",
         "beberlei/doctrineextensions": "^1.0",
         "caseyamcl/guzzle_retry_middleware": "^2.7.1",
-        "doctrine/doctrine-orm-module": "^1.0.0",
-        "doctrine/orm": "~2.7.5",
+        "doctrine/doctrine-orm-module": "^5",
+        "doctrine/orm": "~2.11.0",
+        "doctrine/persistence": "^2.1",
         "dvsa/authentication-cognito": "^2.0",
         "dvsa/laminas-config-cloud-parameters": "^0.1.0",
         "dvsa/php-govuk-account": "^1.0",
@@ -39,10 +48,10 @@
         "guzzlehttp/guzzle": "^7.5",
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "1.0.10",
+        "olcs/olcs-laminas": "3.0.3",
         "olcs/olcs-cpms": "~4.206.0",
-        "olcs/olcs-laminas": "~2.5.0",
         "olcs/olcs-logging": "^5.0.0",
-        "olcs/olcs-transfer": "~4.206.0",
+        "olcs/olcs-transfer": "dev-project/3.0",
         "olcs/olcs-utils": "^5.0.0",
         "olcs/olcs-xmltools": "~4.206.0",
         "oro/doctrine-extensions": "^2",
@@ -51,8 +60,8 @@
         "qandidate/toggle": "^1.1",
         "ramsey/uuid": "^3.6",
         "ruflin/elastica": "7.1",
+        "saeven/zf3-purifier": "^1.1",
         "simplesamlphp/saml2": "~3.4.2",
-        "soflomo/purifier": "^1.0",
         "symfony/filesystem": "^5",
         "symfony/finder": "^5",
         "symfony/lock": "^5",

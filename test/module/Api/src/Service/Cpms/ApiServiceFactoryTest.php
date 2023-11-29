@@ -4,14 +4,14 @@ namespace Dvsa\OlcsTest\Api\Service\Cpms;
 
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 use Dvsa\Olcs\Cpms\Service\ApiService;
+use Interop\Container\ContainerInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery as m;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 class ApiServiceFactoryTest extends TestCase
 {
-    public function testCreateService()
+    public function testInvoke()
     {
         $config = [
             'cpms_api' => [
@@ -57,8 +57,7 @@ class ApiServiceFactoryTest extends TestCase
             ],
         ];
 
-        /** @var  ServiceLocatorInterface $mockSl */
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
 
         $mockAuth = m::mock(AuthorizationService::class);
         $mockAuth->
@@ -75,6 +74,6 @@ class ApiServiceFactoryTest extends TestCase
 
             $sut = new ApiServiceFactory();
 
-        $this->assertInstanceOf(ApiService::class, $sut->createService($mockSl));
+        $this->assertInstanceOf(ApiService::class, $sut->__invoke($mockSl, ApiService::class));
     }
 }

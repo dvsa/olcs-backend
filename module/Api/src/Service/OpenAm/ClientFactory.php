@@ -8,8 +8,7 @@ namespace Dvsa\Olcs\Api\Service\OpenAm;
 use Laminas\Http\Client as HttpClient;
 use Laminas\Http\Request;
 use Laminas\ServiceManager\Exception\RuntimeException;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Interop\Container\ContainerInterface;
 
@@ -18,17 +17,6 @@ use Interop\Container\ContainerInterface;
  */
 class ClientFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Client
-    {
-        return $this->__invoke($serviceLocator, Client::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

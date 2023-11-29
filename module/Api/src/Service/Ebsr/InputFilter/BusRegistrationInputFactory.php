@@ -13,8 +13,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
 use Olcs\XmlTools\Filter\MapXmlFile;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo;
@@ -27,18 +26,6 @@ use Interop\Container\ContainerInterface;
  */
 class BusRegistrationInputFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return Input
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Input
-    {
-        return $this->__invoke($serviceLocator, Input::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -54,7 +41,7 @@ class BusRegistrationInputFactory implements FactoryInterface
         $inputName = 'bus_registration';
         $service = new Input($inputName);
         $config = $container->get('Config');
-        /** @var ServiceLocatorInterface $filterManager */
+        /** @var ContainerInterface $filterManager */
         $filterManager = $container->get('FilterManager');
         /** @var MapXmlFile $mapXmlFile */
         $mapXmlFile = $filterManager->get(MapXmlFile::class);
@@ -72,7 +59,7 @@ class BusRegistrationInputFactory implements FactoryInterface
         $validatorChain = $service->getValidatorChain();
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
-            /** @var ServiceLocatorInterface $validatorManager */
+            /** @var ContainerInterface $validatorManager */
             $validatorManager = $container->get('ValidatorManager');
             $validatorChain->attach($validatorManager->get(EffectiveDate::class));
             $validatorChain->attach($validatorManager->get(ApplicationType::class));

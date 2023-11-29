@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\PostSubmit;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class IrhpApplicationPostSubmitHandlerFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return IrhpApplicationPostSubmitHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): IrhpApplicationPostSubmitHandler
-    {
-        return $this->__invoke($serviceLocator, IrhpApplicationPostSubmitHandler::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

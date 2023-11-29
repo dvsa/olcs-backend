@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Service;
 
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -11,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * TrafficAreaValidatorTest
@@ -40,8 +40,8 @@ class TrafficAreaValidatorTest extends MockeryTestCase
             ->once()
             ->andReturn($this->adminAreaTrafficAreaRepo);
 
-        $serviceLocator = m::mock(ServiceLocatorInterface::class);
-        $serviceLocator->shouldReceive('get')
+        $container = m::mock(ContainerInterface::class);
+        $container->shouldReceive('get')
             ->with('AddressService')
             ->once()
             ->andReturn($this->addressService)
@@ -51,7 +51,7 @@ class TrafficAreaValidatorTest extends MockeryTestCase
             ->andReturn($repositoryServiceManager);
 
         $this->sut = new TrafficAreaValidator();
-        $this->sut->createService($serviceLocator);
+        $this->sut->__invoke($container, TrafficAreaValidator::class);
     }
 
     public function testCalidateForSameTrafficAreasWithPostcodeWithNullPostcode()

@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Join;
@@ -89,14 +90,14 @@ class Licence extends AbstractRepository
             ->withContactDetails('correspondenceCd', 'c')
             ->with('c.phoneContacts', 'c_p')
             ->with('c_p.phoneContactType', 'c_p_pct')
-            ->withRefData(PhoneContactEntity::class, 'c_p')
+            ->withRefdata(PhoneContactEntity::class, 'c_p')
             ->with('organisation', 'o')
             ->withContactDetails('o.contactDetails', 'o_cd')
             ->withContactDetails('establishmentCd', 'e')
             ->withContactDetails('transportConsultantCd', 't')
             ->with('t.phoneContacts', 't_p')
             ->with('t_p.phoneContactType', 't_p_pct')
-            ->withRefData(PhoneContactEntity::class, 't_p');
+            ->withRefdata(PhoneContactEntity::class, 't_p');
 
         return $qb->getQuery()->getSingleResult();
     }
@@ -626,10 +627,8 @@ class Licence extends AbstractRepository
 
     /**
      * fetch information for the international goods report
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
      */
-    public function internationalGoodsReport()
+    public function internationalGoodsReport(): Result
     {
         return $this->getDbQueryManager()->get(InternationalGoodsReport::class)->execute([]);
     }

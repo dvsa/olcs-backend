@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Filesystem\Filesystem;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -13,15 +12,6 @@ use Interop\Container\ContainerInterface;
  */
 class FileProcessorFactory implements FactoryInterface
 {
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return FileProcessor
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): FileProcessor
-    {
-        return $this->__invoke($serviceLocator, FileProcessor::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

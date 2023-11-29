@@ -4,8 +4,7 @@ namespace Dvsa\Olcs\AcquiredRights\Service;
 
 use Dvsa\Olcs\AcquiredRights\Client\AcquiredRightsClient;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\Logging\Log\Logger;
 use phpDocumentor\Reflection\Types\Boolean;
 
@@ -27,9 +26,6 @@ class AcquiredRightsServiceFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AcquiredRightsService
     {
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $logger = $container->get('Logger');
         $acquiredRightsExpiry = $this->getAcquiredRightsExpiryFromConfig($container->get('Config'));
@@ -37,18 +33,6 @@ class AcquiredRightsServiceFactory implements FactoryInterface
         $acquiredRightsClient = $container->get(AcquiredRightsClient::class);
 
         return new AcquiredRightsService($logger, $acquiredRightsClient, $acquiredRightsExpiry, $acquiredRightsCheckEnabled);
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return AcquiredRightsService
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @deprecated Can be removed following Laminas v3 upgrade
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): AcquiredRightsService
-    {
-        return $this->__invoke($serviceLocator, AcquiredRightsService::class);
     }
 
     /**

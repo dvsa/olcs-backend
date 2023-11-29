@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
 use Hamcrest\Core\AllOf;
 use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
@@ -1113,7 +1113,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
 
         if (null !== $this->serviceManager()) {
-            $this->sut->createService($this->commandHandlerManager());
+            $this->sut->__invoke($this->serviceManager(), CommandHandler::class);
         }
     }
 
@@ -1148,7 +1148,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     {
         if (! $this->serviceManager()->has('UpdateOperatingCentreHelper')) {
             $instance = new UpdateOperatingCentreHelper();
-            $instance->createService($this->serviceManager());
+            $instance->__invoke($this->serviceManager(), null);
             $this->serviceManager()->setService('UpdateOperatingCentreHelper', $instance);
         }
         return $this->serviceManager()->get('UpdateOperatingCentreHelper');
@@ -1171,7 +1171,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     {
         if (! $this->serviceManager()->has('VariationOperatingCentreHelper')) {
             $instance = new VariationOperatingCentreHelper();
-            $instance->createService($this->serviceManager());
+            $instance->__invoke($this->serviceManager(), null);
             $this->serviceManager()->setService('VariationOperatingCentreHelper', $instance);
         }
         return $this->serviceManager()->get('VariationOperatingCentreHelper');

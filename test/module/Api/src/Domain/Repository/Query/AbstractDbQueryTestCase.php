@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository\Query;
 
+use Doctrine\DBAL\Result as DbalResult;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
@@ -50,12 +51,14 @@ abstract class AbstractDbQueryTestCase extends BaseAbstractDbQueryTestCase
         // add generic params
         $expectedParams['currentUserId'] = 1;
 
+        $result = m::mock(DbalResult::class);
+
         $this->connection->shouldReceive('executeQuery')
             ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
             ->once()
-            ->andReturn('result');
+            ->andReturn($result);
 
-        $this->assertEquals('result', $this->sut->execute($inputParams, $inputTypes));
+        $this->assertEquals($result, $this->sut->execute($inputParams, $inputTypes));
     }
 
     /**
@@ -78,11 +81,13 @@ abstract class AbstractDbQueryTestCase extends BaseAbstractDbQueryTestCase
         // add generic params
         $expectedParams['currentUserId'] = IdentityProviderInterface::SYSTEM_USER;
 
+        $result = m::mock(DbalResult::class);
+
         $this->connection->shouldReceive('executeQuery')
             ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
             ->once()
-            ->andReturn('result');
+            ->andReturn($result);
 
-        $this->assertEquals('result', $this->sut->execute($inputParams, $inputTypes));
+        $this->assertEquals($result, $this->sut->execute($inputParams, $inputTypes));
     }
 }

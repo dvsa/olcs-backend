@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Domain\Command\Cases\Si\SendResponse as SendResponseCmd;
@@ -37,18 +36,6 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
      * @var InrClient
      */
     protected $inrClient;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, SendResponse::class);
-    }
 
     /**
      * SendResponse
@@ -113,9 +100,6 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->inrClient = $container->get(InrClientInterface::class);
         return parent::__invoke($fullContainer, $requestedName, $options);

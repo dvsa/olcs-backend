@@ -143,7 +143,7 @@ class OrganisationTest extends RepositoryTestCase
             ->once()
             ->with($qb)
             ->andReturnSelf()
-            ->shouldReceive('withRefData')
+            ->shouldReceive('withRefdata')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('with')

@@ -2,8 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Nr\InputFilter;
 
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Nr\Filter;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -20,17 +22,17 @@ class ComplianceEpisodeInputFactoryTest extends MockeryTestCase
         $mockLicenceNumberFilter = m::mock(Filter\LicenceNumber::class);
         $mockMemberStateFilter = m::mock(Filter\Format\MemberStateCode::class);
 
-        $mockSl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with(Filter\Vrm::class)->andReturn($mockVrmFilter);
         $mockSl->shouldReceive('get')->with(Filter\LicenceNumber::class)->andReturn($mockLicenceNumberFilter);
         $mockSl->shouldReceive('get')->with(Filter\Format\MemberStateCode::class)->andReturn($mockMemberStateFilter);
 
         $sut = new ComplianceEpisodeInputFactory();
-        /** @var \Laminas\InputFilter\Input $service */
-        $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
+        $service = $sut->__invoke($mockSl, Input::class);
+
+        $this->assertInstanceOf(Input::class, $service);
         $this->assertCount(3, $service->getFilterChain());
     }
 }

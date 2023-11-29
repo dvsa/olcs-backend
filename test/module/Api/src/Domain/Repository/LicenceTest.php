@@ -4,12 +4,14 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Licence\InternationalGoodsReport;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
@@ -678,14 +680,14 @@ class LicenceTest extends RepositoryTestCase
             ->shouldReceive('withContactDetails')->once()->with('correspondenceCd', 'c')->andReturnSelf()
             ->shouldReceive('with')->once()->with('c.phoneContacts', 'c_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('c_p.phoneContactType', 'c_p_pct')->andReturnSelf()
-            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('organisation', 'o')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('o.contactDetails', 'o_cd')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('establishmentCd', 'e')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('transportConsultantCd', 't')->andReturnSelf()
             ->shouldReceive('with')->once()->with('t.phoneContacts', 't_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('t_p.phoneContactType', 't_p_pct')->andReturnSelf()
-            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
+            ->shouldReceive('withRefdata')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getSingleResult')
             ->with()
@@ -715,14 +717,14 @@ class LicenceTest extends RepositoryTestCase
             ->shouldReceive('withContactDetails')->once()->with('correspondenceCd', 'c')->andReturnSelf()
             ->shouldReceive('with')->once()->with('c.phoneContacts', 'c_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('c_p.phoneContactType', 'c_p_pct')->andReturnSelf()
-            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('organisation', 'o')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('o.contactDetails', 'o_cd')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('establishmentCd', 'e')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('transportConsultantCd', 't')->andReturnSelf()
             ->shouldReceive('with')->once()->with('t.phoneContacts', 't_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('t_p.phoneContactType', 't_p_pct')->andReturnSelf()
-            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
+            ->shouldReceive('withRefdata')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getSingleResult')
             ->with()
@@ -837,7 +839,7 @@ class LicenceTest extends RepositoryTestCase
 
     public function testInternationalGoodsReport()
     {
-        $this->expectQueryWithData(\Dvsa\Olcs\Api\Domain\Repository\Query\Licence\InternationalGoodsReport::class, []);
+        $this->expectQueryWithData(InternationalGoodsReport::class, [], [], m::mock(Result::class));
         $this->sut->internationalGoodsReport();
     }
 

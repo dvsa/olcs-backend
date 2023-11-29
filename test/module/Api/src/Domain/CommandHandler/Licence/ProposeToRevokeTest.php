@@ -25,8 +25,8 @@ use Dvsa\Olcs\Transfer\Command\Licence\ProposeToRevoke as ProposeToRevokeCmd;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 
 class ProposeToRevokeTest extends CommandHandlerTestCase

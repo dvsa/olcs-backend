@@ -30,7 +30,7 @@ use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\Json\Json as LaminasJson;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Command Handler Test Case
@@ -87,6 +87,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
         $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->commandHandler = m::mock(CommandHandlerManager::class);
 
         foreach ($this->repoMap as $alias => $service) {
             $this->repoManager
@@ -101,6 +102,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
+        $sm->expects('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->pidIdentityProvider);
         if (property_exists($this, 'submissionConfig')) {
@@ -133,12 +135,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             $sm->shouldReceive('get')->with(ToggleService::class)->andReturn($toggleService);
         }
 
-        $this->commandHandler = m::mock(CommandHandlerManager::class);
-        $this->commandHandler
-            ->shouldReceive('getServiceLocator')
-            ->andReturn($sm);
-
-        $this->sut->createService($this->commandHandler);
+        $this->sut->__invoke($sm, null);
 
         $this->sideEffects = [];
         $this->commands = [];
@@ -495,7 +492,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     protected function setupIsInternalUser($isInternalUser = true)
     {
-        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('isGranted')
             ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)
             ->atLeast()->once()
@@ -511,7 +508,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
      */
     protected function setupIsExternalUser($isExternalUser = true)
     {
-        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('isGranted')
             ->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
             ->atLeast()->once()

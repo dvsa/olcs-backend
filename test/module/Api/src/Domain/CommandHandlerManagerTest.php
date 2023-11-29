@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Command Handler Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace OlcsTest\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
@@ -14,19 +9,11 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
 use Dvsa\Olcs\Api\Domain\ValidationHandlerManager;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
-use Laminas\ServiceManager\Exception\RuntimeException;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\ServiceManager\ServiceManager;
 
-/**
- * Command Handler Manager Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class CommandHandlerManagerTest extends MockeryTestCase
 {
     /**
@@ -39,15 +26,10 @@ class CommandHandlerManagerTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->vhm = m::mock(ValidationHandlerManager::class)->makePartial();
+        $container = m::mock(ContainerInterface::class);
+        $container->expects('get')->with('ValidationHandlerManager')->andReturn($this->vhm);
 
-        $sm = m::mock(ServiceManager::class)->makePartial();
-        $sm->setService('ValidationHandlerManager', $this->vhm);
-
-        $config = m::mock(ConfigInterface::class);
-        $config->shouldReceive('configureServiceManager')->with(m::type(CommandHandlerManager::class));
-
-        $this->sut = new CommandHandlerManager($config);
-        $this->sut->setServiceLocator($sm);
+        $this->sut = new CommandHandlerManager($container, []);
     }
 
     public function testHandleCommand()
@@ -111,7 +93,7 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
     public function testHandleCommandInvalid()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidServiceException::class);
 
         $command = m::mock(CommandInterface::class)->makePartial();
 
@@ -135,25 +117,5 @@ class CommandHandlerManagerTest extends MockeryTestCase
         $this->expectException(InvalidServiceException::class);
 
         $this->sut->validate(null);
-    }
-
-    /**
-     * @todo To be removed as part of OLCS-28149
-     */
-    public function testValidatePlugin()
-    {
-        $plugin = m::mock(CommandHandlerInterface::class);
-
-        $this->assertNull($this->sut->validatePlugin($plugin));
-    }
-
-    /**
-     * @todo To be removed as part of OLCS-28149
-     */
-    public function testValidatePluginInvalid()
-    {
-        $this->expectException(RuntimeException::class);
-
-        $this->sut->validatePlugin(null);
     }
 }

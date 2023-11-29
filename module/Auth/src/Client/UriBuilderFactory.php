@@ -6,8 +6,7 @@ namespace Dvsa\Olcs\Auth\Client;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class UriBuilderFactory implements FactoryInterface
 {
@@ -41,17 +40,5 @@ class UriBuilderFactory implements FactoryInterface
         $selfserveUrl = $config['auth']['adapters']['openam']['urls']['selfserve'];
 
         return new UriBuilder($internalUrl, $selfserveUrl);
-    }
-
-    /**
-     * @deprecated can be removed following Laminas v3 upgrade
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return UriBuilder
-     * @throws ClientException
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): UriBuilder
-    {
-        return $this($serviceLocator, UriBuilder::class);
     }
 }

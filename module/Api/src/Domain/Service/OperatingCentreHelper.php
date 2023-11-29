@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\Service;
 
-use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Address\Service\Address;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -11,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -21,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Document as DocRepo;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Interop\Container\ContainerInterface;
@@ -70,20 +68,6 @@ class OperatingCentreHelper implements FactoryInterface
      * @var DocRepo
      */
     protected $docRepo;
-
-    /**
-     * Create factory for the service
-     *
-     * @param ServiceLocatorInterface $serviceLocator ZF Service locator
-     *
-     * @return $this
-     *
-     * @TODO this needs to be in a factory.  How can a factory be integrated into a service?
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, OperatingCentreHelper::class);
-    }
 
     /**
      * Validate entity

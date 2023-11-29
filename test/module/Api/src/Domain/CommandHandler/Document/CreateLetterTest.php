@@ -14,7 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Document\CreateLetter as Cmd;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Create Letter Test

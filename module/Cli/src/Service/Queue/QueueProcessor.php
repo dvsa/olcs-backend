@@ -8,11 +8,11 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\ORM\Exception\ORMException;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as NextQueueItemQry;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 use Olcs\Logging\Log\Logger;
 
@@ -78,7 +78,7 @@ class QueueProcessor
 
         try {
             return $consumer->processMessage($item);
-        } catch (\Doctrine\ORM\ORMException $e) {
+        } catch (ORMException $e) {
             Logger::logException($e, \Laminas\Log\Logger::ERR);
             // rethrow ORMException which can cause Entity Manager to close
             throw $e;

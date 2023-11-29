@@ -35,7 +35,7 @@ class LegacyOffence extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('case')
             ->with('createdBy')
             ->with('lastModifiedBy')

@@ -14,7 +14,7 @@ use Exception;
 use Mockery as m;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
 {

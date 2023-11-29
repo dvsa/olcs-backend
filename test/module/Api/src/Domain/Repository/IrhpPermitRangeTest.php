@@ -2,7 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use DateTime;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
@@ -247,13 +248,12 @@ class IrhpPermitRangeTest extends RepositoryTestCase
             3 => 'GR'
         ];
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
+        $dbalResult = m::mock(Result::class);
+        $dbalResult->expects('fetchAllAssociative')
             ->andReturn($associations);
 
         $connection = m::mock(Connection::class);
-        $connection->shouldReceive('executeQuery')
+        $connection->expects('executeQuery')
             ->with(
                 'select iprc.irhp_permit_stock_range_id as rangeId, iprc.country_id as countryId ' .
                 'from irhp_permit_range_country iprc ' .
@@ -261,8 +261,7 @@ class IrhpPermitRangeTest extends RepositoryTestCase
                 'where r.irhp_permit_stock_id = :stockId',
                 ['stockId' => $stockId]
             )
-            ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 

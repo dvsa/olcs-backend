@@ -3,10 +3,10 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Doctrine\DBAL\Connection;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Doctrine\DBAL\Result;
+use Doctrine\DBAL\Statement;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\SetViFlags;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository;
 use Mockery as m;
 
 /**
@@ -24,32 +24,19 @@ class SetViFlagsTest extends CommandHandlerTestCase
         $this->sut = new SetViFlags();
 
         $this->mockDbConnection = m::mock(Connection::class);
-        $this->mockedSmServices['doctrine.connection.ormdefault'] = $this->mockDbConnection;
+        $this->mockedSmServices['doctrine.connection.orm_default'] = $this->mockDbConnection;
 
         parent::setUp();
     }
 
     public function testHandleCommand()
     {
-        $mockStmt = m::mock();
-        $mockStmt->shouldReceive('execute')->with()->once()->andReturn(true);
-        $mockStmt->shouldReceive('fetchAll')->with()->once()->andReturn([0 => ['sp' => 'Done something']]);
+        $mockStmt = m::mock(Statement::class);
+        $mockStmt->expects('executeQuery')->withNoArgs()->andReturn(m::mock(Result::class));
         $this->mockDbConnection->shouldReceive('prepare')->with('CALL vi_set_flags()')->once()->andReturn($mockStmt);
 
         $response = $this->sut->handleCommand(\Dvsa\Olcs\Cli\Domain\Command\SetViFlags::create([]));
 
         $this->assertEquals(['id' => [], 'messages' => ['VI Flags set']], $response->toArray());
-    }
-
-    public function testHandleCommandError()
-    {
-        $mockStmt = m::mock();
-        $mockStmt->shouldReceive('execute')->with()->once()->andReturn(true);
-        $mockStmt->shouldReceive('fetchAll')->with()->once()->andReturn([0 => ['Result' => 'Something gone wrong']]);
-        $this->mockDbConnection->shouldReceive('prepare')->with('CALL vi_set_flags()')->once()->andReturn($mockStmt);
-
-        $this->expectException(RuntimeException::class);
-
-        $this->sut->handleCommand(\Dvsa\Olcs\Cli\Domain\Command\SetViFlags::create([]));
     }
 }

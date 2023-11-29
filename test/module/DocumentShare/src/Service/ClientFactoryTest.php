@@ -6,12 +6,12 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
 use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Log\LoggerInterface;
-use ZfcRbac\Identity\IdentityInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Client Factory Test
@@ -28,7 +28,7 @@ class ClientFactoryTest extends MockeryTestCase
      */
     public function testGetOptions($config, $expected)
     {
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->once()->with('Configuration')->andReturn($config);
 
         $sut = new ClientFactory();
@@ -75,7 +75,7 @@ class ClientFactoryTest extends MockeryTestCase
     {
         $sut = new ClientFactory();
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
 
         $mockLogger = m::mock(LoggerInterface::class);
         $mockUser = m::mock(User::class)
@@ -87,7 +87,7 @@ class ClientFactoryTest extends MockeryTestCase
             $mockUser->shouldReceive('getId')->once();
         }
 
-        $mockSl->shouldReceive('get')->once()->with('logger')->andReturn($mockLogger);
+        $mockSl->shouldReceive('get')->once()->with('Logger')->andReturn($mockLogger);
         $authService = m::mock(AuthorizationService::class)
             ->shouldReceive('getIdentity')->once()
             ->andReturn(
@@ -105,7 +105,7 @@ class ClientFactoryTest extends MockeryTestCase
         if ($expected instanceof \Exception) {
             $passed = false;
             try {
-                $sut->createService($mockSl);
+                $sut->__invoke($mockSl, null);
             } catch (\Exception $e) {
                 if ($e->getMessage() === $expected->getMessage() && get_class($e) === get_class($expected)) {
                     $passed = true;
@@ -114,7 +114,7 @@ class ClientFactoryTest extends MockeryTestCase
 
             $this->assertTrue($passed, 'Expected exception not thrown or message didn\'t match expected value');
         } else {
-            $service = $sut->createService($mockSl);
+            $service = $sut->__invoke($mockSl, null);
 
             if ($client === User::USER_OS_TYPE_WINDOWS_7) {
                 $this->assertInstanceOf(DocManClient::class, $service);

@@ -10,8 +10,8 @@ use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
 
 /**

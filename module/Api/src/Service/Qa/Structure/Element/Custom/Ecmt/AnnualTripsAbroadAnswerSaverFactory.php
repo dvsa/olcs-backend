@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class AnnualTripsAbroadAnswerSaverFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return AnnualTripsAbroadAnswerSaver
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): AnnualTripsAbroadAnswerSaver
-    {
-        return $this->__invoke($serviceLocator, AnnualTripsAbroadAnswerSaver::class);
-    }
-
     /**
      * @param ContainerInterface $container
      * @param $requestedName

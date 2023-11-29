@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\StoreSubmissionSnapshot;
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Submission\StoreSubmissionSnapshot as Cmd;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -12,9 +16,6 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
-/**
- * StoreSubmissionSnapshotTest
- */
 class StoreSubmissionSnapshotTest extends CommandHandlerTestCase
 {
     public function setUp(): void
@@ -25,21 +26,32 @@ class StoreSubmissionSnapshotTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpHandleCommand
+     */
+    public function testHandleCommand(bool $hasLicence, string $licNo): void
     {
+        $licence = $this->getLicence($hasLicence, $licNo);
+
+        $caseId = 121;
+        $submissionId = 15;
+
         $data = [
-            'id' => 15,
+            'id' => $submissionId,
             'html' => 'HTML',
         ];
         $command = Cmd::create($data);
 
         /** @var Submission $savedSubmission */
-        $submission = m::mock(Submission::class)->makePartial();
-        $submission->setId(15);
+        $submission = m::mock(Submission::class);
+        $submission->expects('getId')->withNoArgs()->twice()->andReturn($submissionId);
+
+        $case = m::mock(Cases::class);
+        $case->expects('getId')->withNoArgs()->andReturn($caseId);
+        $case->expects('getLicence')->withNoArgs()->andReturn($licence);
 
         $submission->shouldReceive('getSubmissionType->getDescription')->andReturn('DESC');
-        $submission->shouldReceive('getCase->getId')->andReturn(121);
-        $submission->shouldReceive('getCase->getLicence->getLicNo')->andReturn('AB123456')->getMock();
+        $submission->expects('getCase')->andReturn($case);
 
         $this->repoMap['Submission']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($submission);
 
@@ -54,8 +66,8 @@ class StoreSubmissionSnapshotTest extends CommandHandlerTestCase
             'subCategory' => Category::SUBMISSION_SUB_CATEGORY_OTHER,
             'isExternal' => false,
             'isScan' => false,
-            'filename' => 'DESC - Submission - 15 - Case 121 - AB123456.html',
-            'description' => 'DESC - Submission - 15 - Case 121 - AB123456',
+            'filename' => 'DESC - Submission - ' . $submissionId . ' - Case ' . $caseId . ' - ' . $licNo . '.html',
+            'description' => 'DESC - Submission - ' . $submissionId . ' - Case ' . $caseId . ' - ' . $licNo,
         ];
         $this->expectedSideEffect(Upload::class, $params, new Result());
 
@@ -63,7 +75,7 @@ class StoreSubmissionSnapshotTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [
-                'submission' => 15,
+                'submission' => $submissionId,
             ],
             'messages' => [
                 'Submission snapshot created',
@@ -71,5 +83,25 @@ class StoreSubmissionSnapshotTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function getLicence(bool $hasLicence, string $licNo)
+    {
+        if (!$hasLicence) {
+            return null;
+        }
+
+        $licence = m::mock(Licence::class);
+        $licence->expects('getLicNo')->withNoArgs()->andReturn($licNo);
+
+        return $licence;
+    }
+
+    public function dpHandleCommand(): array
+    {
+        return [
+            [true, 'AB123456'],
+            [false, 'No attached licence'],
+        ];
     }
 }

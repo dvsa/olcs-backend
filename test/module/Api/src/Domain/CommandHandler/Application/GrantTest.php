@@ -2,12 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant as GrantApplicationCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -17,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Transfer\Command\Application\Grant as Cmd;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -32,6 +35,7 @@ class GrantTest extends CommandHandlerTestCase
     const SERVICE_REPOSITORY_MANAGER = 'RepositoryServiceManager';
     const SERVICE_VALIDATION = 'ApplicationGrantValidationService';
     const SERVICE_QUERY_HANDLER = 'QueryHandlerManager';
+    const SERVICE_COMMAND_HANDLER = 'CommandHandlerManager';
     const REPOSITORY_APPLICATION = 'Application';
 
     /**
@@ -133,7 +137,7 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffectAsSystemUser(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            CloseTexTask::class,
             ['id' => 111],
             new Result()
         );
@@ -189,7 +193,7 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffectAsSystemUser(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            CloseTexTask::class,
             ['id' => 111],
             new Result()
         );
@@ -256,7 +260,7 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffectAsSystemUser(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            CloseTexTask::class,
             ['id' => 111],
             new Result()
         );
@@ -329,7 +333,7 @@ class GrantTest extends CommandHandlerTestCase
             new Result()
         );
         $this->expectedSideEffectAsSystemUser(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask::class,
+            CloseTexTask::class,
             ['id' => 111],
             new Result()
         );
@@ -347,159 +351,5 @@ class GrantTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandSetsApplicationGrantAuthority()
-    {
-        // Prepare test
-        $command = Cmd::create(['grantAuthority' => RefData::GRANT_AUTHORITY_DELEGATED]);
-        $expectedRefData = new RefData(RefData::GRANT_AUTHORITY_DELEGATED);
-
-        $licence = m::mock(Licence::class);
-        $licence->expects('getId')->withNoArgs()->andReturn(222);
-
-        $application = $this->getMockBuilder(ApplicationEntity::class)->disableOriginalConstructor()->getMock();
-        $application->method('getLicence')->willReturn($licence);
-
-        $applicationRepository = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
-        $applicationRepository->method('fetchUsingId')->with($command)->willReturn($application);
-        $applicationRepository->method('getRefdataReference')->with(RefData::GRANT_AUTHORITY_DELEGATED)->willReturn($expectedRefData);
-
-        $repositoryManager = $this->newMockRepositoryManager([static::REPOSITORY_APPLICATION => $applicationRepository]);
-        $serviceLocator = $this->newMockServiceLocator([static::SERVICE_REPOSITORY_MANAGER => $repositoryManager]);
-
-        // Set expectations
-        $application->expects($this->atLeastOnce())->method('setGrantAuthority')->with($expectedRefData);
-
-        // Execute test
-        $commandHandler = new GrantApplicationCommandHandler();
-        $commandHandler->createService($serviceLocator);
-        $commandHandler->handleCommand($command);
-    }
-
-    public function testHandleCommandSetsApplicationGrantAuthorityBeforeApplicationIsSaved()
-    {
-        // Prepare test
-        $command = Cmd::create(['grantAuthority' => RefData::GRANT_AUTHORITY_DELEGATED]);
-        $expectedRefData = new RefData(RefData::GRANT_AUTHORITY_DELEGATED);
-
-        $licence = m::mock(Licence::class);
-        $licence->expects('getId')->withNoArgs()->andReturn(222);
-
-        $application = $this->getMockBuilder(ApplicationEntity::class)->disableOriginalConstructor()->getMock();
-        $application->method('isGoods')->willReturn(true);
-        $application->method('getLicence')->willReturn($licence);
-
-        $applicationRepository = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
-        $applicationRepository->method('fetchUsingId')->with($command)->willReturn($application);
-        $applicationRepository->method('getRefdataReference')->with(RefData::GRANT_AUTHORITY_DELEGATED)->willReturn($expectedRefData);
-
-        $repositoryManager = $this->newMockRepositoryManager([static::REPOSITORY_APPLICATION => $applicationRepository]);
-        $serviceLocator = $this->newMockServiceLocator([static::SERVICE_REPOSITORY_MANAGER => $repositoryManager]);
-
-        // Set expectations
-        $application->expects($setGrantAuthorityMatcher = $this->atLeastOnce())->method('setGrantAuthority')->with($expectedRefData);
-        $application->expects($this->atLeastOnce())->method('setGrantAuthority')->with($expectedRefData);
-        $applicationRepository->expects($this->atLeastOnce())->method('save')->with(
-            $this->callback(function ($actualApplication) use ($setGrantAuthorityMatcher, $application) {
-
-                // The grant authority should have been set before the application is saved
-                return $setGrantAuthorityMatcher->hasBeenInvoked() && $actualApplication === $application;
-            })
-        );
-
-        // Execute test
-        $commandHandler = new GrantApplicationCommandHandler();
-        $commandHandler->createService($serviceLocator);
-        $commandHandler->handleCommand($command);
-    }
-
-    /**
-     * Creates a new mock service locator.
-     *
-     * @param array $services
-     * @param bool $overrideHandleCommandMethod
-     * @return MockObject
-     */
-    protected function newMockServiceLocator(array $services = [], bool $overrideHandleCommandMethod = true)
-    {
-        $transactionManager = $services[static::SERVICE_TRANSACTION_MANAGER] ?? $this->getMockBuilder(TransactionManagerInterface::class)
-                ->disableOriginalConstructor()->getMock();
-        $repositoryServiceManager = $services[static::SERVICE_REPOSITORY_MANAGER] ?? $this->newMockRepositoryManager();
-        $validationService = $services[static::SERVICE_VALIDATION] ?? $this->newMockValidationService();
-        $queryHandler = $services[static::SERVICE_QUERY_HANDLER] ?? $this->getMockBuilder(QueryHandlerInterface::class)
-                ->disableOriginalConstructor()->getMock();
-        $serviceLocator = $this->getMockBuilder(\Laminas\ServiceManager\ServiceLocatorInterface::class)
-            ->disableOriginalConstructor()
-            ->addMethods(['getServiceLocator', 'handleCommand'])
-            ->onlyMethods(['get', 'has'])
-            ->getMock();
-        $serviceLocator->expects($this->any())->method('getServiceLocator')->willReturnSelf();
-        $serviceLocator->expects($this->any())->method('get')->willReturn($this->returnCallback(function ($class) use (
-            $transactionManager,
-            $repositoryServiceManager,
-            $validationService,
-            $queryHandler
-        ) {
-            switch ($class) {
-                case static::SERVICE_TRANSACTION_MANAGER:
-                    return $transactionManager;
-                case static::SERVICE_REPOSITORY_MANAGER:
-                    return $repositoryServiceManager;
-                case static::SERVICE_VALIDATION:
-                    return $validationService;
-                case static::SERVICE_QUERY_HANDLER:
-                    return $queryHandler;
-                default:
-                    return null;
-            }
-        }));
-
-        if (true === $overrideHandleCommandMethod) {
-            // By default we will override this method as the command handler is not injected in. Instead the abstract
-            // command handler assumes that the service locator is also a command handler.
-            $serviceLocator->expects($this->any())->method('handleCommand')->willReturn($this->returnCallback(function () {
-                return new Result();
-            }));
-        }
-
-        return $serviceLocator;
-    }
-
-    /**
-     * Creates a new mock repository manager.
-     *
-     * @param array $repositories
-     * @return MockObject
-     */
-    protected function newMockRepositoryManager(array $repositories = [])
-    {
-        $applicationRepository = $repositories[static::REPOSITORY_APPLICATION] ?? $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
-        $instance = $this->getMockBuilder(RepositoryServiceManager::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['get', 'has'])
-            ->getMock();
-        $instance->expects($this->any())->method('get')->willReturn($this->returnCallback(function ($class) use ($applicationRepository) {
-            switch ($class) {
-                case 'Application':
-                    return $applicationRepository;
-                default:
-                    return null;
-            }
-        }));
-        return $instance;
-    }
-
-    /**
-     * Creates a new mock validation service.
-     *
-     * @param array $errors
-     * @return MockObject
-     */
-    protected function newMockValidationService(array $errors = [])
-    {
-        $instance = $this->getMockBuilder(GrantValidationService::class)->disableOriginalConstructor()->getMock();
-        $instance->expects($this->any())->method('validate')->willReturn($errors);
-        return $instance;
     }
 }

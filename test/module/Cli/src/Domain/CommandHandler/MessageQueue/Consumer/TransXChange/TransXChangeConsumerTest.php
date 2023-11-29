@@ -398,6 +398,7 @@ class TransXChangeConsumerTest extends CommandHandlerTestCase
 
         $this->repoManager = m::mock(RepositoryServiceManager::class);
         $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->commandHandler = m::mock(CommandHandlerManager::class);
         $this->pidIdentityProvider = m::mock(IdentityProviderInterface::class);
         $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
 
@@ -412,6 +413,7 @@ class TransXChangeConsumerTest extends CommandHandlerTestCase
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
+        $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->pidIdentityProvider);
 
         // Actual service mocks.
@@ -446,9 +448,6 @@ class TransXChangeConsumerTest extends CommandHandlerTestCase
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
         }
 
-        $this->commandHandler = m::mock(CommandHandlerManager::class);
-        $this->commandHandler->shouldReceive('getServiceLocator')->andReturn($sm);
-
         // AWS Services.
         $stsAssumeRoleResult = new \Aws\Result();
         $stsAssumeRoleResult['Credentials'] = [
@@ -462,6 +461,6 @@ class TransXChangeConsumerTest extends CommandHandlerTestCase
         $this->s3Client = m::mock('overload:\Aws\S3\S3Client');
         $this->s3Client->shouldReceive('getObject')->andReturn(new \Aws\Result(['Body' => '']));
 
-        $this->sut->createService($this->commandHandler);
+        $this->sut->__invoke($sm, TransXChangeConsumer::class);
     }
 }

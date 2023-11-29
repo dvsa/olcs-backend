@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class SupplementedApplicationStepsProviderFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return SupplementedApplicationStepsProvider
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): SupplementedApplicationStepsProvider
-    {
-        return $this->__invoke($serviceLocator, SupplementedApplicationStepsProvider::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
