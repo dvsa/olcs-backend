@@ -87,28 +87,45 @@ class ConversationList extends AbstractQueryHandler implements ToggleRequiredInt
         return $messageRepository->getLastMessageByConversationId($conversationId);
     }
 
+    /**
+     * This method takes a conversation list, and returns sorted based on the following rules:
+     *
+     *  - Sort by conversation status in order (NEW_MESSAGE, OPEN, CLOSED)
+     *  - Within the status groups, sort by latest message creation timestamp descending (newest first).
+     *
+     * @param $conversationList
+     * @return array
+     */
     private function orderResultPrioritisingNewMessages($conversationList): array
     {
         $conversationList = iterator_to_array($conversationList);
-        usort($conversationList, function ($a, $b) {
-            $aHasNewMessage = self::STATUS_NEW_MESSAGE === $a['userContextStatus'];
-            $bHasNewMessage = self::STATUS_NEW_MESSAGE === $b['userContextStatus'];
 
-            if ($aHasNewMessage && !$bHasNewMessage) {
-                return -1;      // $a comes first because it has a new message
-            } elseif (!$aHasNewMessage && $bHasNewMessage) {
-                return 1;       // $b comes first because it has a new message
-            } else {
-                // If both are equal, compare by latest message creation time
+        // If we don't have 2 or more items, there is nothing to sort...
+        if (count($conversationList) < 2) {
+            return $conversationList;
+        }
+
+        $order = [self::STATUS_NEW_MESSAGE, self::STATUS_OPEN, self::STATUS_CLOSED];
+
+        // Separate the data into groups based on 'userContextStatus'
+        $statusGroups = array_fill_keys($order, array());
+        foreach ($conversationList as $item) {
+            $status = $item['userContextStatus'];
+            $statusGroups[$status][] = $item;
+        }
+
+        // Sort each group by latest message created on timestamp (DESC)
+        foreach ($statusGroups as &$group) {
+            usort($group, function ($a, $b) {
                 $aLatestMessageTimestamp = \DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM, $a['latestMessage']['createdOn']);
                 $bLatestMessageTimestamp = \DateTimeImmutable::createFromFormat(\DateTimeInterface::ATOM, $b['latestMessage']['createdOn']);
-                if ($aLatestMessageTimestamp == $bLatestMessageTimestamp) {
-                    return 0;   // Equal
-                }
-                return ($aLatestMessageTimestamp > $bLatestMessageTimestamp) ? -1 : 1;
-            }
-        });
+                return $bLatestMessageTimestamp->getTimestamp() - $aLatestMessageTimestamp->getTimestamp();
+            });
+        }
 
-        return $conversationList;
+        // Flatten the sorted groups back into a single array, using the $order defined above
+        return array_reduce($order, function ($carry, $status) use ($statusGroups) {
+            return array_merge($carry, $statusGroups[$status]);
+        }, array());
     }
 }
