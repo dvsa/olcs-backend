@@ -4,25 +4,19 @@ namespace Dvsa\Olcs\CompaniesHouse\Test\Service;
 
 use Dvsa\Olcs\CompaniesHouse\Service\Client;
 use Dvsa\Olcs\CompaniesHouse\Service\ClientFactory;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-/**
- * ClientFactoryTest
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 class ClientFactoryTest extends MockeryTestCase
 {
     /** @var  ClientFactory */
     protected $sut;
-    /** @var  \Laminas\ServiceManager\ServiceLocatorInterface|m\MockInterface */
     private $sl;
 
     public function setUp(): void
     {
-        $this->sl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)->makePartial();
-
+        $this->sl = m::mock(ContainerInterface::class);
         $this->sut = new ClientFactory();
     }
 
@@ -75,8 +69,7 @@ class ClientFactoryTest extends MockeryTestCase
             ]
         );
 
-        $service = $this->sut->__invoke($this->sl, Client::class, null);
-
+        $service = $this->sut->__invoke($this->sl, Client::class);
         static::assertInstanceOf(Client::class, $service);
     }
 }
