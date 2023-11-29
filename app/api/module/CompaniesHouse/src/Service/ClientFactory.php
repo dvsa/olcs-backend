@@ -5,10 +5,8 @@ namespace Dvsa\Olcs\CompaniesHouse\Service;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Interop\Container\ContainerInterface;
 use RuntimeException;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as HttpClient;
-use Olcs\Logging\Log\Logger;
 
 class ClientFactory implements FactoryInterface
 {
@@ -19,7 +17,7 @@ class ClientFactory implements FactoryInterface
      */
     protected $options;
 
-    public function __invoke(ContainerInterface $container, string $requestedName, array $options = null): Client
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Client
     {
         $client = new Client();
 
@@ -47,18 +45,9 @@ class ClientFactory implements FactoryInterface
     }
 
     /**
-     * @deprecated Not needed after upgrade to Laminas 3
-     * @todo Remove as part of OLCS-28149
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Client
-    {
-        return $this($serviceLocator, Client::class);
-    }
-
-    /**
      * Gets options from configuration based on name.
      */
-    public function getOptions(ServiceLocatorInterface $sl, string $key): array
+    public function getOptions(ContainerInterface $sl, string $key): array
     {
         if (is_null($this->options)) {
             $options = $sl->get('Configuration');
