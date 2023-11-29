@@ -50,7 +50,7 @@ class Conversation extends AbstractRepository
 
     public function applyOrderByOpen(QueryBuilder $qb): QueryBuilder
     {
-        $qb->addOrderBy($this->alias . '.isClosed', 'DESC');
+        $qb->addOrderBy($this->alias . '.isClosed', 'ASC');
 
         return $qb;
     }
