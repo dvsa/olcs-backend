@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\AnswerSaver;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class ApplicationAnswersClearerFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return ApplicationAnswersClearer
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): ApplicationAnswersClearer
-    {
-        return $this->__invoke($serviceLocator, ApplicationAnswersClearer::class);
-    }
-
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container

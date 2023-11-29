@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class GrantabilityCheckerFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return GrantabilityChecker
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): GrantabilityChecker
-    {
-        return $this->__invoke($serviceLocator, GrantabilityChecker::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

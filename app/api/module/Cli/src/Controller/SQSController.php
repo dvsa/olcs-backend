@@ -6,16 +6,17 @@
 
 namespace Dvsa\Olcs\Cli\Controller;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfile;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvency;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfileDlq;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\TransXChange\TransXChangeConsumer;
 use Olcs\Logging\Log\Logger;
-use Laminas\View\Model\ConsoleModel;
+use Laminas\Mvc\Console\View\ViewModel as ConsoleModel;
 
 /**
  * SQSController
@@ -31,26 +32,21 @@ class SQSController extends AbstractQueueController
         'transXChangeConsumer',
     ];
 
-    private CommandHandlerManager $commandHandlerManager;
-
     private array $config;
 
-    /**
-     * @param array $config
-     * @param CommandHandlerManager $commandHandlerManager
-     */
     public function __construct(
         array $config,
+        QueryHandlerManager $queryHandlerManager,
         CommandHandlerManager $commandHandlerManager
     ) {
         $this->config = $config;
-        $this->commandHandlerManager = $commandHandlerManager;
+        parent::__construct($queryHandlerManager, $commandHandlerManager);
     }
 
     /**
      * Index Action
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function indexAction()
     {

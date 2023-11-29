@@ -10,8 +10,8 @@ namespace Dvsa\Olcs\Api\Domain\Validation;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use Interop\Container\ContainerInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
 
 /**
@@ -66,7 +66,8 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool canAccessIrhpApplicationWithId($entityId)
  * @method bool canEditIrhpApplicationWithId($entityId)
  * @method bool canDeleteSurrender($entityId)
- * @method bool CanAccessSurrenderedLicence($entity)
+ * @method bool canAccessLicenceForSurrender($entityId)
+ * @method bool canConfirmSurrender($entityId)
  */
 trait ValidationHelperTrait
 {
@@ -116,26 +117,17 @@ trait ValidationHelperTrait
         return call_user_func_array([$validator, 'isValid'], $params);
     }
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceManager = $serviceLocator->getServiceLocator();
-
         if ($this instanceof AuthAwareInterface) {
-            $this->setAuthService($mainServiceManager->get(AuthorizationService::class));
+            $this->setAuthService($container->get(AuthorizationService::class));
         }
 
         if ($this instanceof RepositoryManagerAwareInterface) {
-            $this->setRepoManager($mainServiceManager->get('RepositoryServiceManager'));
+            $this->setRepoManager($container->get('RepositoryServiceManager'));
         }
 
-        $this->setValidatorManager($mainServiceManager->get('DomainValidatorManager'));
+        $this->setValidatorManager($container->get('DomainValidatorManager'));
 
         return $this;
     }

@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class StandardAndCabotageQuestionHandlerFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return StandardAndCabotageQuestionHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): StandardAndCabotageQuestionHandler
-    {
-        return $this->__invoke($serviceLocator, StandardAndCabotageQuestionHandler::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreatePsvVehicle as CommandHandl
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvVehicle as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Create Psv Vehicle Test

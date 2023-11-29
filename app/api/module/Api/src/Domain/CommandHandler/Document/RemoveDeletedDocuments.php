@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\Repository\DocumentToDelete;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Interop\Container\ContainerInterface;
 
@@ -29,18 +28,6 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
      * @var FileUploaderInterface
      */
     private $contentStoreService;
-
-    /**
-     * Creates service (needs instance of contentFileStore service)
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return RemoveDeletedDocuments
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, RemoveDeletedDocuments::class);
-    }
 
     /**
      * Get the Content store service
@@ -165,10 +152,7 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->setContentStoreService($container->get('FileUploader'));
         return parent::__invoke($fullContainer, $requestedName, $options);

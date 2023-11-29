@@ -17,8 +17,8 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse as MsiResponseService;
-use ZfcRbac\Service\AuthorizationService;
-use ZfcRbac\Identity\IdentityInterface;
+use LmcRbacMvc\Service\AuthorizationService;
+use LmcRbacMvc\Identity\IdentityInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 
 /**

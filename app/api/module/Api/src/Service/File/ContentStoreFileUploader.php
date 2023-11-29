@@ -5,8 +5,7 @@ namespace Dvsa\Olcs\Api\Service\File;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 use Laminas\Http\Response;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -23,18 +22,6 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      * @var DocumentStoreInterface
      */
     private $contentStoreClient;
-
-    /**
-     * Method-factory
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, ContentStoreFile::class);
-    }
 
     /**
      * Upload file to remote storage

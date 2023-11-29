@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserve;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserveFactory;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\User;
@@ -19,7 +18,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Olcs\TestHelpers\MockeryTestCase;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserveFactory
@@ -49,43 +48,6 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @deprecated
-     */
-    public function createService_IsCallable()
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Assert
-        $this->assertIsCallable([$this->sut, 'createService']);
-    }
-
-    /**
-     * @test
-     * @depends    createService_IsCallable
-     * @depends    __invoke_IsCallable
-     * @deprecated
-     */
-    public function createService_CallsInvoke()
-    {
-        // Setup
-        $this->sut = m::mock(UpdateUserSelfserveFactory::class)->makePartial();
-
-        // Expectations
-        $this->sut->expects('__invoke')->withArgs(
-            function ($serviceManager, $requestedName) {
-                $this->assertSame($this->serviceManager(), $serviceManager, 'Expected first argument to be the ServiceManager passed to createService');
-                $this->assertSame(UpdateUserSelfserve::class, $requestedName, 'Expected requestedName to be '. UpdateUserSelfserve::class);
-                return true;
-            }
-        );
-
-        // Execute
-        $this->sut->createService($this->serviceManager());
-    }
-
-    /**
-     * @test
      * @depends __invoke_IsCallable
      */
     public function __invoke_ReturnsAnInstanceOfTransactioningCommandHandler()
@@ -98,7 +60,7 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
         $repositoryServiceManager->expects('get')->with('User')->andReturn(m::mock(User::class));
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, null);
 
         // Assert
         $this->assertInstanceOf(TransactioningCommandHandler::class, $result);

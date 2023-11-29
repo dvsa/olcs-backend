@@ -2,25 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Service\EventHistory;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 use Interop\Container\ContainerInterface;
 
 class CreatorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return Creator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Creator
-    {
-        return $this->__invoke($serviceLocator, Creator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

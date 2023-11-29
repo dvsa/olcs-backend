@@ -4,64 +4,29 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryPartial;
 
-use Dvsa\Olcs\Api\Domain\QueryPartial\WithIrhpApplicationFactory;
-use Dvsa\Olcs\Api\Domain\QueryPartial\WithIrhpApplication;
 use Dvsa\Olcs\Api\Domain\QueryPartial\With;
+use Dvsa\Olcs\Api\Domain\QueryPartial\WithIrhpApplication;
+use Dvsa\Olcs\Api\Domain\QueryPartial\WithIrhpApplicationFactory;
+use Dvsa\Olcs\Api\Domain\QueryPartialServiceManager;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
-use Laminas\ServiceManager\ServiceManager;
 
 class WithIrhpApplicationFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {
-    use MocksServicesTrait;
-
-    /**
-     * @var WithIrhpApplicationFactory|null
-     */
-    protected $sut;
-
-    /**
-     * @test
-     */
-    public function createService_ReturnsInstanceOfWithIrhpApplication(): void
+    public function testInvoke(): void
     {
-        // Setup
-        $this->setUpSut();
+        $withPlugin = new With();
 
-        // Result
-        $result = $this->sut->createService($this->serviceManager);
+        $pluginManager = m::mock(QueryPartialServiceManager::class);
+        $pluginManager->expects('get')->with('with')->andReturn($withPlugin);
 
-        // Assert
-        $this->assertInstanceOf(WithIrhpApplication::class, $result);
-    }
+        $container = m::mock(ContainerInterface::class);
+        $container->expects('get')->with('QueryPartialServiceManager')->andReturn($pluginManager);
 
-    protected function setUpSut()
-    {
-        $this->sut = new WithIrhpApplicationFactory();
-    }
-
-    protected function setUp(): void
-    {
-        $this->setUpServiceManager();
-    }
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-    protected function setUpDefaultServices(ServiceManager $serviceManager)
-    {
-        $this->withQueryPartial();
-    }
-
-    /**
-     * @return With
-     */
-    protected function withQueryPartial(): With
-    {
-        if (! $this->serviceManager->has('with')) {
-            $instance = new With();
-            $this->serviceManager->setService('with', $instance);
-        }
-        return $this->serviceManager->get('with');
+        $sut = new WithIrhpApplicationFactory();
+        $this->assertInstanceOf(
+            WithIrhpApplication::class,
+            $sut->__invoke($container, WithIrhpApplication::class)
+        );
     }
 }

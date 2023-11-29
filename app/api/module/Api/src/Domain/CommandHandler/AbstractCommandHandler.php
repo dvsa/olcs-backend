@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForOrganisation;
 use Dvsa\Olcs\Api\Domain\Command\Cache\Generate;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
@@ -16,7 +17,9 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\SlaCalculatorAwareInterface;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
@@ -43,9 +46,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use LmcRbacMvc\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
@@ -77,17 +79,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     private $repos = [];
 
-    /**
-     * @var CommandHandlerInterface
-     */
-    private $commandHandler;
+    private CommandHandlerManager $commandHandler;
 
-    /**
-     * @var \Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface
-     */
-    private $queryHandler;
+    private QueryHandlerManager $queryHandler;
 
-    private $repoManager;
+    private RepositoryServiceManager $repoManager;
 
     /**
      * @var IdentityProviderInterface
@@ -103,18 +99,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      * @var array
      */
     protected $toggleConfig = [];
-
-    /**
-     * create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this|TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, $requestedName);
-    }
 
     /**
      * Laminas ServiceManager masks exceptions behind a simple 'service not created'
@@ -141,14 +125,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Warnings suppressed as by design this is just a series of 'if' conditions
      *
-     * @param ServiceLocatorInterface $mainServiceLocator service locator
-     *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function applyInterfaces($mainServiceLocator)
+    private function applyInterfaces(ContainerInterface $mainServiceLocator): void
     {
         if ($this instanceof ToggleRequiredInterface || $this instanceof ToggleAwareInterface) {
             $toggleService = $mainServiceLocator->get(ToggleService::class);
@@ -566,22 +546,21 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $this->result = new Result();
-        /** @var ServiceLocatorInterface $mainServiceLocator */
-        $mainServiceLocator = $container->getServiceLocator();
+
         try {
-            $this->applyInterfaces($mainServiceLocator);
+            $this->applyInterfaces($container);
         } catch (LaminasServiceException $e) {
             $this->logServiceExceptions($e);
         }
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
+        $this->repoManager = $container->get('RepositoryServiceManager');
         if ($this->repoServiceName !== null) {
             $this->extraRepos[] = $this->repoServiceName;
         }
-        $this->commandHandler = $container;
-        $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
-        $this->pidIdentityProvider = $mainServiceLocator->get(IdentityProviderInterface::class);
+        $this->commandHandler = $container->get('CommandHandlerManager');
+        $this->queryHandler = $container->get('QueryHandlerManager');
+        $this->pidIdentityProvider = $container->get(IdentityProviderInterface::class);
         if ($this instanceof TransactionedInterface) {
-            return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
+            return new TransactioningCommandHandler($this, $container->get('TransactionManager'));
         }
         return $this;
     }

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -49,17 +50,26 @@ final class StoreSubmissionSnapshot extends AbstractCommandHandler implements
      */
     protected function generateDocument($content, Submission $submission)
     {
+        $licNo = 'No attached licence';
+        $case = $submission->getCase();
+        $licence = $case->getLicence();
+        $caseId = $case->getId();
+
+        if ($licence instanceof LicenceEntity) {
+            $licNo = $licence->getLicNo();
+        }
+
         $name = sprintf(
             '%s - Submission - %d - Case %d - %s',
             $submission->getSubmissionType()->getDescription(),
             $submission->getId(),
-            $submission->getCase()->getId(),
-            $submission->getCase()->getLicence()->getLicNo()
+            $caseId,
+            $licNo
         );
 
         $data = [
             'content' => base64_encode(trim($content)),
-            'case' => $submission->getCase()->getId(),
+            'case' => $caseId,
             'category' => Category::CATEGORY_SUBMISSION,
             'subCategory' => Category::SUBMISSION_SUB_CATEGORY_OTHER,
             'isExternal' => false,

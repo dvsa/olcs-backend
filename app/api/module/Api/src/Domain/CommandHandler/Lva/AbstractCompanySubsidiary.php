@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class with common function to Save Company Subsidiary
@@ -22,19 +21,6 @@ abstract class AbstractCompanySubsidiary extends AbstractCommandHandler implemen
 {
     /** @var  \Dvsa\Olcs\Api\Domain\Repository\CompanySubsidiary */
     protected $repo;
-
-    /**
-     * Method-Factory
-     *
-     * @param ServiceLocatorInterface $sl Handeler Service Manager
-     *
-     * @return $this
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, AbstractCompanySubsidiary::class);
-    }
 
     /**
      * Create subsidiary

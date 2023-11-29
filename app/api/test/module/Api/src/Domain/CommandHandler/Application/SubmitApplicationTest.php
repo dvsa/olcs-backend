@@ -73,7 +73,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
 
         $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class),
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class),
             SlaCalculatorInterface::class => m::mock(SlaCalculator::class),
         ];
 

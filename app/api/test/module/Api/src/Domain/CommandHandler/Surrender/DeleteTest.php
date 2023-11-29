@@ -24,7 +24,7 @@ class DeleteTest extends CommandHandlerTestCase
         $this->mockRepo('Surrender', SurrenderRepo::class);
 
         $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
         ];
         parent::setUp();
     }

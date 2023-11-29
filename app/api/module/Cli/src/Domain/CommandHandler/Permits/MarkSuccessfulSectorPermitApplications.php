@@ -9,7 +9,6 @@ use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulSectorPermitApplications
     as MarkSuccessfulSectorPermitApplicationsCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Set successful permit applications for each sector
@@ -25,18 +24,6 @@ class MarkSuccessfulSectorPermitApplications extends ScoringCommandHandler imple
 
     /** @var SuccessfulCandidatePermitsFacade */
     private $successfulCandidatePermitsFacade;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, MarkSuccessfulSectorPermitApplications::class);
-    }
 
     /**
      * Handle command
@@ -86,15 +73,9 @@ class MarkSuccessfulSectorPermitApplications extends ScoringCommandHandler imple
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $this->successfulCandidatePermitsFacade = $container->get(
             'PermitsScoringSuccessfulCandidatePermitsFacade'
         );
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

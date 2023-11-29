@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Auth\Service;
 
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class PasswordServiceFactory implements FactoryInterface
 {
@@ -20,14 +19,5 @@ class PasswordServiceFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): PasswordService
     {
         return new PasswordService();
-    }
-
-    /**
-     * @inheritDoc
-     * @deprecated
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): PasswordService
-    {
-        return $this->__invoke($serviceLocator, null);
     }
 }

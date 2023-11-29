@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\System\PublicHoliday as Entity;
 
@@ -19,8 +19,8 @@ class PublicHoliday extends AbstractRepository
 
         $qb->where($qb->expr()->between('p.publicHolidayDate', ':start', ':end'));
 
-        $qb->setParameter('start', $startDate, Type::DATE);
-        $qb->setParameter('end', $endDate, Type::DATE);
+        $qb->setParameter('start', $startDate, Types::DATE_MUTABLE);
+        $qb->setParameter('end', $endDate, Types::DATE_MUTABLE);
 
         if (!is_null($trafficArea)) {
             switch (true) {

@@ -27,7 +27,7 @@ class UpdateAddressesStatusTest extends AbstractUpdateStatusTestCase
         $this->command = Cmd::create(['id' => 111]);
 
         $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
         ];
 
         parent::setUp();

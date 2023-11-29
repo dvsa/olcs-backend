@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Application Update Addresses
@@ -27,18 +26,6 @@ final class UpdateAddresses extends AbstractCommandHandler implements Transactio
      * @var TrafficAreaValidator
      */
     private $trafficAreaValidator;
-
-    /**
-     * Create the service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateAddresses::class);
-    }
 
     /**
      * Handle command
@@ -113,10 +100,7 @@ final class UpdateAddresses extends AbstractCommandHandler implements Transactio
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

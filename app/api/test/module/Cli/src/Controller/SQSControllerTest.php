@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Controller;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Controller\SQSController;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfile;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\CompanyProfileDlq;
@@ -14,7 +15,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Mvc\Router\RouteMatch;
+use Laminas\Router\RouteMatch;
 use Hamcrest\Core\IsEqual;
 
 class SQSControllerTest extends MockeryTestCase
@@ -44,12 +45,12 @@ class SQSControllerTest extends MockeryTestCase
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
         $this->sm = Bootstrap::getServiceManager();
+        $this->mockQueryHandlerManager = m::mock(QueryHandlerManager::class);
         $this->mockCommandHandlerManager = m::mock(CommandHandlerManager::class);
         $this->console = m::mock('Laminas\Console\Adapter\AdapterInterface');
 
-        $this->sut = new SQSController($this->config, $this->mockCommandHandlerManager);
+        $this->sut = new SQSController($this->config, $this->mockQueryHandlerManager, $this->mockCommandHandlerManager);
         $this->sut->setEvent($this->event);
-        $this->sut->setServiceLocator($this->sm);
         $this->sut->setConsole($this->console);
     }
 

@@ -26,10 +26,12 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
         $surrenderStatus,
         $expected
     ) {
+        $entityId = 111;
+
         $this->setIsGranted($permission, true);
         $this->auth->shouldReceive('getIdentity')->andReturn(null);
         $entity = m::mock(Licence::class);
-        $entity->shouldReceive('getId')->once()->andReturn(111);
+
         switch ($this->dataName()) {
             case 'selfservice-user-owner':
                 $this->setIsValid('isOwner', [$entity], $isOwner);
@@ -58,7 +60,7 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
 
 
         $repo = $this->mockRepo('Licence');
-        $repo->shouldReceive('fetchById')->with(111)->andReturn($entity);
+        $repo->shouldReceive('fetchById')->with($entityId)->andReturn($entity);
         $surrenderRepo = $this->mockRepo('Surrender');
         $surrenderEntity = m::mock(Surrender::class);
         $surrenderEntity->shouldReceive('getId')->andReturn(1);
@@ -67,7 +69,7 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
             $surrenderEntity
         );
         $this->setIsValid('isOwner', [$surrenderEntity], $isOwner);
-        $this->assertEquals($expected, $this->sut->isValid($entity));
+        $this->assertEquals($expected, $this->sut->isValid($entityId));
     }
 
     public function dpLicencePermissions()

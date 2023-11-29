@@ -2,41 +2,48 @@
 
 namespace Dvsa\OlcsTest\Api\Domain;
 
+use Dvsa\Olcs\Api\Domain\Repository\ReadonlyRepositoryInterface;
+use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Laminas\ServiceManager\ConfigInterface;
+use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-/**
- * RepositoryServiceManagerTest
- */
 class RepositoryServiceManagerTest extends MockeryTestCase
 {
-    /**
-     * @var RepositoryServiceManager
-     */
-    protected $sut;
+    protected RepositoryServiceManager $sut;
 
     public function setUp(): void
     {
-        $config = m::mock(ConfigInterface::class);
-        $config->shouldReceive('configureServiceManager')
-            ->with(m::type(RepositoryServiceManager::class))
-            ->once();
-
-        $this->sut = new RepositoryServiceManager($config);
+        $container = m::mock(ContainerInterface::class);
+        $this->sut = new RepositoryServiceManager($container, []);
     }
 
-    public function testValidate()
+    public function testValidateException(): void
     {
-        $this->assertNull($this->sut->validate(null));
+        $invalidClass = new \stdClass();
+        $message = sprintf(
+            RepositoryServiceManager::VALIDATE_ERROR,
+            RepositoryServiceManager::class,
+            get_class($invalidClass)
+        );
+        $this->expectException(InvalidServiceException::class);
+        $this->expectExceptionMessage($message);
+        $this->sut->validate($invalidClass);
     }
 
-    /**
-     * @todo To be removed as part of OLCS-28149
-     */
-    public function testValidatePlugin()
+    /** @dataProvider dpValidate */
+    public function testValidate($instance): void
     {
-        $this->assertNull($this->sut->validatePlugin(null));
+        $this->assertNull($this->sut->validate(m::mock($instance)));
+    }
+
+    public function dpValidate(): array
+    {
+        return [
+            [RepositoryInterface::class],
+            [ReadonlyRepositoryInterface::class],
+        ];
     }
 }

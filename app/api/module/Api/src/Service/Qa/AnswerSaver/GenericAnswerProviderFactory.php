@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\AnswerSaver;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class GenericAnswerProviderFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return GenericAnswerProvider
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): GenericAnswerProvider
-    {
-        return $this->__invoke($serviceLocator, GenericAnswerProvider::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

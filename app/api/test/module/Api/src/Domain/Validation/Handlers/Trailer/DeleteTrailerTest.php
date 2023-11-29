@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Trailer;
 
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessTrailer;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
@@ -33,7 +35,7 @@ class DeleteTrailerTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getIds')->andReturn([19, 11, 2015]);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(true);
 
         $this->assertSame(true, $this->sut->isValid($dto));
@@ -49,10 +51,10 @@ class DeleteTrailerTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getIds')->andReturn([19, 11, 2015]);
 
         $this->auth->shouldReceive('isGranted')
-            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->once()
+            ->with(Permission::INTERNAL_USER, null)->once()
             ->andReturn(false);
 
-        $mockValidator = m::mock();
+        $mockValidator = m::mock(CanAccessTrailer::class);
         $this->validatorManager->setService('canAccessTrailer', $mockValidator);
 
         $mockValidator->shouldReceive('isValid')->with(19)->andReturn($canAccess);

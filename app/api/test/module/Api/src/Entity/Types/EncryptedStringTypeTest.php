@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Types;
 
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use phpseclib\Crypt\AES;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
 
 /**
- * Class EncryptedStringTypeTest
  * @covers \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType
  */
 class EncryptedStringTypeTest extends \PHPUnit\Framework\TestCase
@@ -45,7 +45,7 @@ class EncryptedStringTypeTest extends \PHPUnit\Framework\TestCase
 
     public function testConvertToPhpValue()
     {
-        $platform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $platform = $this->createMock(MySQLPlatform::class);
         $blockCipher = m::mock(AES::class);
         $blockCipher->shouldReceive('decrypt')->with('ENCRYPTED')->once()->andReturn('DECRYPTED');
         $this->sut->setEncrypter($blockCipher);
@@ -54,7 +54,7 @@ class EncryptedStringTypeTest extends \PHPUnit\Framework\TestCase
 
     public function testConvertToDatabaseValue()
     {
-        $platform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $platform = $this->createMock(MySQLPlatform::class);
         $blockCipher = m::mock(AES::class);
         $blockCipher->shouldReceive('encrypt')->with('DECRYPTED')->once()->andReturn('ENCRYPTED');
         $this->sut->setEncrypter($blockCipher);

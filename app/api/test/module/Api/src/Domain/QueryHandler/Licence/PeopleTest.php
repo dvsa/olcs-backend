@@ -10,7 +10,7 @@ use Dvsa\Olcs\Transfer\Query\Licence\People as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\QueryHandler\Licence\People

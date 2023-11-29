@@ -7,17 +7,13 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\FeatureToggle as FeatureToggleRepo;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle as FeatureToggleEntity;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory;
 
-/**
- * Class ToggleServiceFactoryTest
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
- */
 class ToggleServiceFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {
-    public function testCreateService()
+    public function testInvoke()
     {
         $configName1 = 'config name 1';
         $configName2 = 'config name 2';
@@ -51,14 +47,14 @@ class ToggleServiceFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
             ->with('FeatureToggle')
             ->andReturn($featureToggleRepo);
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')
             ->once()
             ->with('RepositoryServiceManager')
             ->andReturn($repoServiceManager);
 
         $sut = new ToggleServiceFactory();
-        $toggleService = $sut->createService($mockSl);
+        $toggleService = $sut->__invoke($mockSl, ToggleService::class);
 
         $this->assertInstanceOf(ToggleService::class, $toggleService);
 

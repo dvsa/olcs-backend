@@ -5,17 +5,13 @@ namespace Dvsa\OlcsTest\Api\Service\Nr;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\Api\Service\Nr\InrClientFactory;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Laminas\Http\Client as RestClient;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Laminas\Http\Client\Adapter\Curl;
 
-/**
- * Class InrClientFactoryTest
- * @package Dvsa\OlcsTest\Api\Service\Nr
- */
 class InrClientFactoryTest extends TestCase
 {
 
@@ -23,11 +19,11 @@ class InrClientFactoryTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
 
         $sut = new InrClientFactory();
-        $sut->createService($mockSl);
+        $sut->__invoke($mockSl, InrClient::class);
     }
 
     public function testCreateService()
@@ -42,13 +38,13 @@ class InrClientFactoryTest extends TestCase
             ]
         ];
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
 
         $sut = new InrClientFactory();
 
         /** @var InrClient $service */
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, InrClient::class);
 
         $restClient = $service->getRestClient();
         $wrapper = $restClient->getAdapter();

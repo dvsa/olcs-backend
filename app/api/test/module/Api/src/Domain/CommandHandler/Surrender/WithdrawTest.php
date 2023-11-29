@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateCommand;
 use Dvsa\Olcs\Transfer\Command\Surrender\Withdraw as WithdrawCommand;
 use Dvsa\Olcs\Transfer\Command\Task\CloseTasks;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 class WithdrawTest extends CommandHandlerTestCase
 {

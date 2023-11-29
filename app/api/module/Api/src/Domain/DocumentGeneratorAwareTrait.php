@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 
 /**

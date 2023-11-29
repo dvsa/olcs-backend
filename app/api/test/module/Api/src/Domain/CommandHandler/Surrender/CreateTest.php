@@ -27,7 +27,7 @@ class CreateTest extends CommandHandlerTestCase
         $this->mockRepo('Surrender', SurrenderRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
         $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
         ];
         parent::setUp();
     }

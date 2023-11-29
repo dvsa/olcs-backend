@@ -11,7 +11,6 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\WithdrawUnpaidIrhp as WithdrawUnpaidIrh
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Withdraw as WithdrawCmd;
 use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Withdraw IRHP applications that haven't been paid in time
@@ -24,18 +23,6 @@ final class WithdrawUnpaidIrhp extends AbstractCommandHandler implements Transac
 
     /** @var DaysToPayIssueFeeProvider */
     private $daysToPayIssueFeeProvider;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, WithdrawUnpaidIrhp::class);
-    }
 
     /**
      * Handle command
@@ -68,13 +55,7 @@ final class WithdrawUnpaidIrhp extends AbstractCommandHandler implements Transac
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $this->daysToPayIssueFeeProvider = $container->get('PermitsFeesDaysToPayIssueFeeProvider');
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

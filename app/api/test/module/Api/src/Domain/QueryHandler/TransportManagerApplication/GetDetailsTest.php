@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Query\TransportManagerApplication\GetDetails as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 
 /**
@@ -34,7 +34,7 @@ class GetDetailsTest extends QueryHandlerTestCase
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class),
+            AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class),
         ];
 
         parent::setUp();

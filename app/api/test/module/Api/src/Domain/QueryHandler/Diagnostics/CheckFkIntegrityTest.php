@@ -24,7 +24,7 @@ class CheckFkIntegrityTest extends QueryHandlerTestCase
 
         $this->mockPdo = m::mock(PDO::class);
         $mockDoctrineEntityManager
-            ->shouldReceive('getConnection->getWrappedConnection')
+            ->shouldReceive('getConnection->getNativeConnection')
             ->andReturn($this->mockPdo);
 
         $this->sut = new CheckFkIntegrity();

@@ -4,8 +4,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication;
 
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class GeneratorFactory implements FactoryInterface
 {
@@ -22,17 +21,5 @@ class GeneratorFactory implements FactoryInterface
             $container->get('Review\TransportManagerDeclaration'),
             $container->get('Review\TransportManagerSignature')
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $services
-     *
-     * @return Generator
-     */
-    public function createService(ServiceLocatorInterface $services)
-    {
-        return $this($services, Generator::class);
     }
 }

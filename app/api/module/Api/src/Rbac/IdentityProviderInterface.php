@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Rbac;
 
-use ZfcRbac\Identity\IdentityProviderInterface as ZfcRbacIdentityProviderInterface;
+use LmcRbacMvc\Identity\IdentityProviderInterface as LmcRbacMvcIdentityProviderInterface;
 
-interface IdentityProviderInterface extends ZfcRbacIdentityProviderInterface
+interface IdentityProviderInterface extends LmcRbacMvcIdentityProviderInterface
 {
     public const SYSTEM_TEAM = 1;
     public const SYSTEM_USER = 1;

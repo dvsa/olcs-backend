@@ -3,17 +3,11 @@
 namespace Dvsa\Olcs\Queue\Factories;
 
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class MessageBuilderFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator): MessageBuilder
-    {
-        return $this->__invoke($serviceLocator, MessageBuilder::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

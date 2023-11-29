@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Result as DbalResult;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpApplications as ExpireIrhpApplicationsQuery;
@@ -16,11 +16,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
-/**
- * Irhp Application test
- *
- * @author Scott Callaway <scott.callaway@capgemini.com>
- */
 class IrhpApplicationTest extends RepositoryTestCase
 {
     public function setUp(): void
@@ -145,9 +140,8 @@ class IrhpApplicationTest extends RepositoryTestCase
     {
         $stockId = 14;
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
+        $dbalResult = m::mock(DbalResult::class);
+        $dbalResult->expects('fetchAll')
             ->andReturn(
                 [
                     [ 'id' => 14 ],
@@ -181,7 +175,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 ]
             )
             ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 
@@ -195,9 +189,8 @@ class IrhpApplicationTest extends RepositoryTestCase
     {
         $stockId = 14;
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
+        $dbalResult = m::mock(DbalResult::class);
+        $dbalResult->expects('fetchAll')
             ->andReturn(
                 [
                     [ 'id' => 14 ],
@@ -223,7 +216,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 ]
             )
             ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 
@@ -272,9 +265,8 @@ class IrhpApplicationTest extends RepositoryTestCase
     {
         $stockId = 7;
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('execute')
-            ->once();
+        $dbalResult = m::mock(DbalResult::class);
+        $dbalResult->expects('execute');
 
         $connection = m::mock(Connection::class);
         $connection->shouldReceive('executeQuery')
@@ -289,7 +281,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 ['stockId' => $stockId]
             )
             ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 
@@ -300,9 +292,8 @@ class IrhpApplicationTest extends RepositoryTestCase
     {
         $stockId = 7;
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('execute')
-            ->once();
+        $dbalResult = m::mock(DbalResult::class);
+        $dbalResult->expects('execute');
 
         $connection = m::mock(Connection::class);
         $connection->shouldReceive('executeQuery')
@@ -330,7 +321,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 ]
             )
             ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 
@@ -873,9 +864,8 @@ class IrhpApplicationTest extends RepositoryTestCase
             103 => 'GR'
         ];
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
+        $dbalResult = m::mock(DbalResult::class);
+        $dbalResult->expects('fetchAll')
             ->andReturn($associations);
 
         $connection = m::mock(Connection::class);
@@ -893,7 +883,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 ['stockId' => $stockId]
             )
             ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 
@@ -1008,9 +998,8 @@ class IrhpApplicationTest extends RepositoryTestCase
 
         $organisationId = 14;
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
+        $dbalResult = m::mock(DbalResult::class);
+        $dbalResult->expects('fetchAll')
             ->andReturn($rows);
 
         $connection = m::mock(Connection::class);
@@ -1056,7 +1045,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 ]
             )
             ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 
@@ -1076,9 +1065,8 @@ class IrhpApplicationTest extends RepositoryTestCase
 
         $organisationId = 14;
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
+        $dbalResult = m::mock(DbalResult::class);
+        $dbalResult->expects('fetchAll')
             ->andReturn($rows);
 
         $connection = m::mock(Connection::class);
@@ -1119,7 +1107,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 ]
             )
             ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 
@@ -1140,9 +1128,8 @@ class IrhpApplicationTest extends RepositoryTestCase
         $licenceId = 14;
         $status = null;
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
+        $dbalResult = m::mock(DbalResult::class);
+        $dbalResult->expects('fetchAll')
             ->andReturn($rows);
 
         $connection = m::mock(Connection::class);
@@ -1190,7 +1177,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 ]
             )
             ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 
@@ -1211,9 +1198,8 @@ class IrhpApplicationTest extends RepositoryTestCase
         $licenceId = 14;
         $status = IrhpInterface::STATUS_NOT_YET_SUBMITTED;
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
+        $dbalResult = m::mock(DbalResult::class);
+        $dbalResult->expects('fetchAll')
             ->andReturn($rows);
 
         $connection = m::mock(Connection::class);
@@ -1250,7 +1236,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 ]
             )
             ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 

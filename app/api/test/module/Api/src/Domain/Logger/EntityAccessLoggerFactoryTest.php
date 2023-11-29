@@ -7,7 +7,7 @@ namespace Dvsa\OlcsTest\Api\Logger;
 use Olcs\TestHelpers\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLoggerFactory;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Mockery\MockInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
@@ -47,35 +47,6 @@ class EntityAccessLoggerFactoryTest extends MockeryTestCase
 
         // Execute
         $product = $this->sut->__invoke($this->serviceManager, EntityAccessLogger::class);
-
-        // Assert
-        $this->assertInstanceOf(EntityAccessLogger::class, $product);
-    }
-
-    /**
-     * @test
-     * @deprecated
-     */
-    public function createService_IsCallable()
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Assert
-        $this->assertIsCallable([$this->sut, 'createService']);
-    }
-
-    /**
-     * @test
-     * @deprecated
-     */
-    public function createService_ReturnsInstanceOfFactoryProduct()
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Execute
-        $product = $this->sut->createService($this->serviceManager);
 
         // Assert
         $this->assertInstanceOf(EntityAccessLogger::class, $product);

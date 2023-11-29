@@ -61,7 +61,7 @@ class OrganisationPerson extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData();
+            ->withRefdata();
 
         $qb
             ->innerJoin($this->alias . '.person', 'p')
@@ -104,7 +104,7 @@ class OrganisationPerson extends AbstractRepository
         /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('person', 'p')
             ->with('p.title');
 
@@ -128,7 +128,7 @@ class OrganisationPerson extends AbstractRepository
         /* @var \Doctrine\Orm\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('person', 'p')
             ->with('p.title');
 

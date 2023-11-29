@@ -2,16 +2,13 @@
 
 namespace OlcsTest\Db\Controller;
 
+use Laminas\Mvc\Controller\Plugin\Params;
+use Laminas\Mvc\Controller\PluginManager;
 use Olcs\Db\Controller\SearchController;
 use Mockery as m;
 use Olcs\Db\Service\Search\Search;
-use OlcsTest\Bootstrap;
 
-/**
- * Class SearchControllerTest
- * @package OlcsTest\Db\Controller
- */
-class SearchControllerTest extends \PHPUnit\Framework\TestCase
+class SearchControllerTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     protected $mockSearchService;
 
@@ -20,15 +17,12 @@ class SearchControllerTest extends \PHPUnit\Framework\TestCase
     public function setUp(): void
     {
         $this->mockSearchService = m::mock(Search::class);
-        $this->sm = Bootstrap::getServiceManager();
         $this->sut = new SearchController($this->mockSearchService);
-        $this->sut->setServiceLocator($this->sm);
     }
     public function testGetList()
     {
-        $mockPluginManager = $this->getMockPluginManager(['params' => 'Params']);
-
-        $mockParams = $mockPluginManager->get('params', '');
+        $mockParams = m::mock(Params::class);
+        $mockParams->expects('__invoke')->twice()->andReturnSelf();
         $mockParams->shouldReceive('fromRoute')->andReturn([]);
         $mockParams->shouldReceive('fromQuery')->andReturn(
             [
@@ -41,6 +35,10 @@ class SearchControllerTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
+        $mockPluginManager = m::mock(PluginManager::class);
+        $mockPluginManager->expects('setController')->times(3);
+        $mockPluginManager->expects('get')->with('params', null)->times(2)->andReturn($mockParams);
+
         $this->mockSearchService->shouldReceive('search')->with('test', ['application'], 1, 10)->andReturn('resultSet');
         $this->mockSearchService->shouldReceive('setSort')->with('someField');
         $this->mockSearchService->shouldReceive('setOrder')->with('desc');
@@ -51,37 +49,5 @@ class SearchControllerTest extends \PHPUnit\Framework\TestCase
             '{"Response":{"Code":200,"Message":"OK","Summary":"Results found","Data":"resultSet"}}',
             $this->sut->getList()->getContent()
         );
-    }
-
-    /**
-     * @param $class
-     * @return m\MockInterface
-     */
-    protected function getMockPlugin($class)
-    {
-        if (strpos($class, '\\') === false) {
-            $class = 'Laminas\Mvc\Controller\Plugin\\' . $class;
-        }
-
-        $mockPlugin = m::mock($class);
-        $mockPlugin->shouldReceive('__invoke')->andReturnSelf();
-        return $mockPlugin;
-    }
-
-    /**
-     * @param $plugins
-     * @return m\MockInterface|\Laminas\Mvc\Controller\PluginManager
-     */
-    protected function getMockPluginManager($plugins)
-    {
-        $mockPluginManager = m::mock('Laminas\Mvc\Controller\PluginManager');
-        $mockPluginManager->shouldReceive('setController');
-
-        foreach ($plugins as $name => $class) {
-            $mockPlugin = $this->getMockPlugin($class);
-            $mockPluginManager->shouldReceive('get')->with($name, '')->andReturn($mockPlugin);
-        }
-
-        return $mockPluginManager;
     }
 }

@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\Command\DigitalSignature\UpdateSurrender;
 use Dvsa\Olcs\Api\Domain\Command\DigitalSignature\UpdateTmApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\GdsVerify;
@@ -23,18 +22,6 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 
     /** @var  \Dvsa\Olcs\GdsVerify\Service\GdsVerify */
     private $gdsVerifyService;
-
-    /**
-     * Factory
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service locator
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, ProcessSignatureResponse::class);
-    }
 
     /**
      * Handle command
@@ -139,10 +126,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->setGdsVerifyService($container->get(\Dvsa\Olcs\GdsVerify\Service\GdsVerify::class));
         return parent::__invoke($fullContainer, $requestedName, $options);

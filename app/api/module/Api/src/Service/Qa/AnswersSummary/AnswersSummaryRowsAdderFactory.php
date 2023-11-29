@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\AnswersSummary;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class AnswersSummaryRowsAdderFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return AnswersSummaryRowsAdder
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): AnswersSummaryRowsAdder
-    {
-        return $this->__invoke($serviceLocator, AnswersSummaryRowsAdder::class);
-    }
-
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container

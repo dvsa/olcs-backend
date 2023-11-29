@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Export difference between company house and OLCS data to csv files
@@ -17,8 +18,6 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
 {
-    const FILE_DATETIME_FORMAT = 'Ymd_His';
-
     protected $repoServiceName = 'CompanyHouseVsOlcsDiffs';
 
     /** @var  string */
@@ -55,12 +54,12 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
      *
      * @return void
      */
-    private function processOrgOfficersDiff()
+    private function processOrgOfficersDiff(): void
     {
         $this->result->addMessage('Fetching data from DB for Company house and Organisation Officers differences');
-        $stmt = $this->chVsOlcsDiffs->fetchOfficerDiffs();
+        $dbalResult = $this->chVsOlcsDiffs->fetchOfficerDiffs();
 
-        $this->makeCsvsFromStatement($stmt, 'CompanyOfficerDiffs');
+        $this->makeCsvsFromDbalResult($dbalResult, 'CompanyOfficerDiffs');
     }
 
     /**
@@ -68,12 +67,12 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
      *
      * @return void
      */
-    private function processOrgAddressDiff()
+    private function processOrgAddressDiff(): void
     {
         $this->result->addMessage('Fetching data from DB for Company house and Organisation Address differences');
-        $stmt = $this->chVsOlcsDiffs->fetchAddressDiffs();
+        $dbalResult = $this->chVsOlcsDiffs->fetchAddressDiffs();
 
-        $this->makeCsvsFromStatement($stmt, 'CompanyAddressDiffs');
+        $this->makeCsvsFromDbalResult($dbalResult, 'CompanyAddressDiffs');
     }
 
     /**
@@ -81,12 +80,12 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
      *
      * @return void
      */
-    private function processOrgNameDiff()
+    private function processOrgNameDiff(): void
     {
         $this->result->addMessage('Fetching data from DB for Company house and Organisation Name differences');
-        $stmt = $this->chVsOlcsDiffs->fetchNameDiffs();
+        $dbalResult = $this->chVsOlcsDiffs->fetchNameDiffs();
 
-        $this->makeCsvsFromStatement($stmt, 'CompanyNameDiffs');
+        $this->makeCsvsFromDbalResult($dbalResult, 'CompanyNameDiffs');
     }
 
     /**
@@ -94,23 +93,18 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
      *
      * @return void
      */
-    private function processOrgStatusNotActice()
+    private function processOrgStatusNotActice(): void
     {
         $this->result->addMessage('Fetching data from DB where Organisation not active in Company house');
-        $stmt = $this->chVsOlcsDiffs->fetchWithNotActiveStatus();
+        $dbalResult = $this->chVsOlcsDiffs->fetchWithNotActiveStatus();
 
-        $this->makeCsvsFromStatement($stmt, 'CompanyNotActive');
+        $this->makeCsvsFromDbalResult($dbalResult, 'CompanyNotActive');
     }
 
     /**
      * Fill csv files with data. Csv created by value of Key Field and File name.
-     *
-     * @param Statement|boolean $stmt     DB Records set or false if failure
-     * @param string            $fileName main part of file name
-     *
-     * @return void
      */
-    private function makeCsvsFromStatement($stmt, $fileName)
+    private function makeCsvsFromDbalResult(Result $dbalResult, string $fileName): void
     {
         //  create csv file
         $filePath = $this->path . '/' . $fileName . '.csv';
@@ -118,50 +112,31 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
         $this->result->addMessage('create csv file: ' . $filePath);
         $fh = ExportToCsv::createFile($filePath);
 
-        if ($stmt instanceof Statement) {
-            //  add title & first row
-            $row = $stmt->fetch();
+        //  add title & first row
+        $row = $dbalResult->fetchAssociative();
 
-            if ($row !== false) {
-                fputcsv($fh, array_keys($row));
-                fputcsv($fh, $row);
-            }
+        if ($row !== false) {
+            fputcsv($fh, array_keys($row));
+            fputcsv($fh, $row);
+        }
 
-            //  add rows
-            while (($row = $stmt->fetch()) !== false) {
-                //  add rows to csv from pool
-                fputcsv($fh, $row);
-            }
+        //  add rows
+        while (($row = $dbalResult->fetchAssociative()) !== false) {
+            //  add rows to csv from pool
+            fputcsv($fh, $row);
         }
 
         //  close file
         fclose($fh);
     }
 
-    /**
-     * Create service
-     *
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $sm Handler Manager
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, CompaniesHouseVsOlcsDiffsExport::class);
-    }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $config = $container->get('Config');
         $exportCfg = (!empty($config['ch-vs-olcs-export']) ? $config['ch-vs-olcs-export'] : []);
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

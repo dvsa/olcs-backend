@@ -110,7 +110,7 @@ class InspectionRequestTest extends RepositoryTestCase
             ->with($inspectionRequestId)
             ->andReturnSelf()
             ->once()
-            ->shouldReceive('withRefData')
+            ->shouldReceive('withRefdata')
             ->andReturnSelf()
             ->once();
 

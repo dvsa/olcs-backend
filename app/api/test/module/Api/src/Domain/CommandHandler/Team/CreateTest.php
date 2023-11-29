@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Command\Team\CreateTeam as Cmd;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\PrintScan\Printer as PrinterEntity;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**

@@ -6,7 +6,6 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Interop\Container\ContainerInterface;
@@ -18,11 +17,6 @@ class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedI
      * @var Generator
      */
     protected $snapshotService;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Snapshot::class);
-    }
 
     public function handleCommand(CommandInterface $command)
     {
@@ -57,10 +51,7 @@ class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedI
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         $this->snapshotService = $container->get(Generator::class);
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

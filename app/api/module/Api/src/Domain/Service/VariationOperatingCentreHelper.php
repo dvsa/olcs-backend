@@ -8,8 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Service;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceOperatingCentre;
 use Interop\Container\ContainerInterface;
@@ -30,11 +29,6 @@ class VariationOperatingCentreHelper implements FactoryInterface
      * @var LicenceOperatingCentre
      */
     protected $locRepo;
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, VariationOperatingCentreHelper::class);
-    }
 
     public function getListDataForApplication(Application $application, $query = null)
     {

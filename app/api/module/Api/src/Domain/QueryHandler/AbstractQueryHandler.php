@@ -8,11 +8,10 @@ use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\NationalRegisterAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
@@ -67,18 +66,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      */
     private $auditLogger;
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service locator
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, $requestedName);
-    }
+    private ContainerInterface $container;
 
     /**
      * Get the repository
@@ -124,6 +112,11 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         return $this->queryHandler->handleQuery($qry);
     }
 
+    protected function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
+
     /**
      * Get query handler
      *
@@ -167,7 +160,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     protected function getAuditLogger(): EntityAccessLogger
     {
         if (null === $this->auditLogger) {
-            $this->auditLogger = $this->queryHandler->getServiceLocator()->get(EntityAccessLogger::class);
+            $this->auditLogger = $this->container->get(EntityAccessLogger::class);
         }
         return $this->auditLogger;
     }
@@ -197,14 +190,10 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     /**
      * Warnings suppressed as by design this is just a series of 'if' conditions
      *
-     * @param ServiceLocatorInterface $mainServiceLocator service locator
-     *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function applyInterfaces($mainServiceLocator)
+    private function applyInterfaces(ContainerInterface $mainServiceLocator): void
     {
         if ($this instanceof ToggleRequiredInterface || $this instanceof ToggleAwareInterface) {
             $toggleService = $mainServiceLocator->get(ToggleService::class);
@@ -289,16 +278,17 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $container->getServiceLocator();
         try {
-            $this->applyInterfaces($mainServiceLocator);
+            $this->applyInterfaces($container);
         } catch (LaminasServiceException $e) {
             $this->logServiceExceptions($e);
         }
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
+        $this->repoManager = $container->get('RepositoryServiceManager');
         $this->extraRepos[] = $this->repoServiceName;
-        $this->queryHandler = $container;
-        $this->commandHandler = $mainServiceLocator->get('CommandHandlerManager');
+        $this->queryHandler = $container->get('QueryHandlerManager');
+        $this->commandHandler = $container->get('CommandHandlerManager');
+        $this->container = $container;
+
         return $this;
     }
 }

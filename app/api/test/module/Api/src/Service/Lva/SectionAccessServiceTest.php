@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -48,7 +48,7 @@ class SectionAccessServiceTest extends MockeryTestCase
         $this->serviceLocator->setService(AuthorizationService::class, $this->authService);
 
         $sut = new SectionAccessService();
-        $this->sut = $sut->createService($this->serviceLocator);
+        $this->sut = $sut->__invoke($this->serviceLocator,SectionAccessService::class);
 
         $sections = [
             'no_restriction' => [],

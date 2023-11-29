@@ -3,16 +3,14 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler;
 
 use Doctrine\Common\Collections\Criteria;
-use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
-use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
-use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
-use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\PrintScan\Printer;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -23,11 +21,8 @@ use Laminas\Stdlib\Glob;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface, ConfigAwareInterface
+class PrintJob extends AbstractCommandHandler
 {
-    use UploaderAwareTrait,
-        ConfigAwareTrait;
-
     const DEF_PRINT_COPIES_CNT = 1;
 
     const TEMP_DIR = '/tmp/';
@@ -45,6 +40,19 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
 
     /** @var int */
     private $stubPrintToLicenceId;
+    private array $config;
+    private ContentStoreFileUploader $fileUploader;
+    private WebServiceClient $convertToPdfService;
+
+    public function __construct(
+        array $config,
+        ContentStoreFileUploader $fileUploader,
+        WebServiceClient $convertToPdfService
+    ) {
+        $this->config = $config;
+        $this->fileUploader = $fileUploader;
+        $this->convertToPdfService = $convertToPdfService;
+    }
 
     /**
      * Handle Command
@@ -91,7 +99,7 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
                 }
 
                 // download the document
-                $file = $this->getUploader()->download($document->getIdentifier());
+                $file = $this->fileUploader->download($document->getIdentifier());
                 if ($file === null) {
                     throw new Exception('Can\'t find document');
                 }
@@ -379,10 +387,8 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
      */
     private function getConfigPrintServer()
     {
-        $config = $this->getConfig();
-
-        if (isset($config['print']['server'])) {
-            return $config['print']['server'];
+        if (isset($this->config['print']['server'])) {
+            return $this->config['print']['server'];
         }
 
         return false;
@@ -395,10 +401,8 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
      */
     private function getConfigUser()
     {
-        $config = $this->getConfig();
-
-        if (isset($config['print']['options']['user'])) {
-            return $config['print']['options']['user'];
+        if (isset($this->config['print']['options']['user'])) {
+            return $this->config['print']['options']['user'];
         }
 
         return false;
@@ -411,9 +415,7 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
      */
     private function useWebService()
     {
-        $config = $this->getConfig();
-
-        return isset($config['convert_to_pdf']['uri']) && !empty($config['convert_to_pdf']['uri']);
+        return isset($this->config['convert_to_pdf']['uri']) && !empty($this->config['convert_to_pdf']['uri']);
     }
 
     /**
@@ -428,10 +430,8 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
     {
         $pdfFileName = str_replace('.rtf', '.pdf', $fileName);
         if ($this->useWebService()) {
-            /** @var \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient $convertToPdfService */
-            $convertToPdfService = $this->getCommandHandler()->getServiceLocator()->get('ConvertToPdf');
             try {
-                $convertToPdfService->convert($fileName, $pdfFileName);
+                $this->convertToPdfService->convert($fileName, $pdfFileName);
             } catch (\Exception $e) {
                 $exception = new NotReadyException('Error generating the PDF '. $fileName .' : '. $e->getMessage());
                 $exception->setRetryAfter(60);

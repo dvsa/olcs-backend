@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Nr;
 
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as RestClient;
 use Interop\Container\ContainerInterface;
 
@@ -14,18 +13,6 @@ use Interop\Container\ContainerInterface;
  */
 class InrClientFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return InrClient
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): InrClient
-    {
-        return $this->__invoke($serviceLocator, InrClient::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

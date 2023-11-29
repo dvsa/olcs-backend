@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -20,11 +15,6 @@ use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv as GrantPsvCmd;
 use Interop\Container\Containerinterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Grant
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 final class Grant extends AbstractCommandHandler implements TransactionedInterface
 {
     const ERROR_IR_DUE_DATE = 'APP-GRA-IR-DD-1';
@@ -35,18 +25,6 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      * @var \Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService
      */
     private $grantValidationService;
-
-    /**
-     * Create service
-     *
-     * @param \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Grant::class);
-    }
 
     /**
      * Handle command
@@ -207,9 +185,6 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->grantValidationService = $container->get('ApplicationGrantValidationService');
         return parent::__invoke($fullContainer, $requestedName, $options);

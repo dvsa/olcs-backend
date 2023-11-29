@@ -2,16 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\TransportManagerApplication;
 
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\TransportManagerApplication\GetList;
 
-/**
- * GetListTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class GetListTest extends AbstractHandlerTestCase
 {
     /**
@@ -32,7 +28,7 @@ class GetListTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getApplication')->andReturn(24);
 
-        $mockApplicationValidator = m::mock();
+        $mockApplicationValidator = m::mock(CanAccessApplication::class);
         $this->validatorManager->setService('canAccessApplication', $mockApplicationValidator);
 
         $mockApplicationValidator->shouldReceive('isValid')->with(24)->andReturn(true);
@@ -46,7 +42,7 @@ class GetListTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getApplication')->andReturn(24);
 
-        $mockApplicationValidator = m::mock();
+        $mockApplicationValidator = m::mock(CanAccessApplication::class);
         $this->validatorManager->setService('canAccessApplication', $mockApplicationValidator);
 
         $mockApplicationValidator->shouldReceive('isValid')->with(24)->andReturn(false);

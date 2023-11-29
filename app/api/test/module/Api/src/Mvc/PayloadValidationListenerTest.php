@@ -14,11 +14,8 @@ use Laminas\EventManager\EventManagerInterface;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\Http\Response as HttpResponse;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Mvc\Router\RouteMatch;
+use Laminas\Router\RouteMatch;
 
-/**
- * PayloadValidationListener Test
- */
 class PayloadValidationListenerTest extends MockeryTestCase
 {
     public function setUp(): void
@@ -54,9 +51,6 @@ class PayloadValidationListenerTest extends MockeryTestCase
     public function testOnRouteNoRouteMatch()
     {
         $mockHttpRequest = m::mock(HttpRequest::class);
-        $mockHttpRequest->shouldReceive('getMethod')
-            ->once()
-            ->andReturn('GET');
 
         $mockMvcEvent = m::mock(MvcEvent::class);
         $mockMvcEvent->shouldReceive('getRequest')
@@ -74,11 +68,11 @@ class PayloadValidationListenerTest extends MockeryTestCase
     public function testOnRouteNoDtoClass()
     {
         $mockHttpRequest = m::mock(HttpRequest::class);
-        $mockHttpRequest->shouldReceive('getMethod')
-            ->once()
-            ->andReturn('GET');
+        $mockHttpRequest->expects('getQuery->toArray')->withNoArgs()->andReturn([]);
+
 
         $mockRouteMatch = m::mock(RouteMatch::class);
+        $mockRouteMatch->expects('getParams')->withNoArgs()->andReturn([]);
         $mockRouteMatch->shouldReceive('getParam')
             ->with('dto', false)
             ->once()
@@ -102,12 +96,8 @@ class PayloadValidationListenerTest extends MockeryTestCase
         $params = [];
 
         $mockHttpRequest = m::mock(HttpRequest::class);
-        $mockHttpRequest->shouldReceive('getMethod')
-            ->once()
-            ->andReturn('GET')
-            ->shouldReceive('getQuery')
-            ->once()
-            ->andReturn([]);
+        $mockHttpRequest->expects('isGet')->withNoArgs()->andReturnTrue();
+        $mockHttpRequest->expects('getQuery')->withNoArgs()->andReturn([]);
 
         $mockRouteMatch = m::mock(RouteMatch::class);
         $mockRouteMatch->shouldReceive('getParam')
@@ -150,12 +140,8 @@ class PayloadValidationListenerTest extends MockeryTestCase
         $params = [];
 
         $mockHttpRequest = m::mock(HttpRequest::class);
-        $mockHttpRequest->shouldReceive('getMethod')
-            ->once()
-            ->andReturn('GET')
-            ->shouldReceive('getQuery')
-            ->once()
-            ->andReturn([]);
+        $mockHttpRequest->expects('isGet')->withNoArgs()->andReturnTrue();
+        $mockHttpRequest->expects('getQuery')->withNoArgs()->andReturn([]);
 
         $mockRouteMatch = m::mock(RouteMatch::class);
         $mockRouteMatch->shouldReceive('getParam')
@@ -210,10 +196,8 @@ class PayloadValidationListenerTest extends MockeryTestCase
             ->andReturn(Sut::JSON_MEDIA_TYPE);
 
         $mockHttpRequest = m::mock(HttpRequest::class);
-        $mockHttpRequest->shouldReceive('getMethod')
-            ->once()
-            ->andReturn('POST')
-            ->shouldReceive('getHeader')
+        $mockHttpRequest->expects('isGet')->withNoArgs()->andReturnFalse();
+        $mockHttpRequest->shouldReceive('getHeader')
             ->once()
             ->with('content-type')
             ->andReturn($mockContentType)
@@ -274,10 +258,8 @@ class PayloadValidationListenerTest extends MockeryTestCase
             ->andReturn('text/xml');
 
         $mockHttpRequest = m::mock(HttpRequest::class);
-        $mockHttpRequest->shouldReceive('getMethod')
-            ->once()
-            ->andReturn('POST')
-            ->shouldReceive('getHeader')
+        $mockHttpRequest->expects('isGet')->withNoArgs()->andReturnFalse();
+        $mockHttpRequest->shouldReceive('getHeader')
             ->once()
             ->with('content-type')
             ->andReturn($mockContentType)
@@ -336,10 +318,8 @@ class PayloadValidationListenerTest extends MockeryTestCase
             ->andReturn('application/x-www-form-urlencoded');
 
         $mockHttpRequest = m::mock(HttpRequest::class);
-        $mockHttpRequest->shouldReceive('getMethod')
-            ->once()
-            ->andReturn('POST')
-            ->shouldReceive('getHeader')
+        $mockHttpRequest->expects('isGet')->withNoArgs()->andReturnFalse();
+        $mockHttpRequest->shouldReceive('getHeader')
             ->once()
             ->with('content-type')
             ->andReturn($mockContentType)

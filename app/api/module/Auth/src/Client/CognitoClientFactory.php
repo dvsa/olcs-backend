@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Client;
 
-use Aws\AwsClient;
 use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Dvsa\Authentication\Cognito\Client;
 use GuzzleHttp\Client as HttpClient;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use RuntimeException;
 
 class CognitoClientFactory implements FactoryInterface
@@ -63,16 +61,6 @@ class CognitoClientFactory implements FactoryInterface
         $instance->setHttpClient($httpClient);
 
         return $instance;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @deprecated Can be removed following Laminas v3 upgrade
-     * @return Client|mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): Client
-    {
-        return $this->__invoke($serviceLocator, null);
     }
 
     /**

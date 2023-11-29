@@ -11,7 +11,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Mvc\Router\RouteMatch;
+use Laminas\Router\RouteMatch;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 
 class UtilControllerTest extends MockeryTestCase
@@ -39,7 +39,6 @@ class UtilControllerTest extends MockeryTestCase
 
         $this->sut = m::mock(new UtilController($this->mockQueryHandlerManager))->makePartial();
         $this->sut->setEvent($this->event);
-        $this->sut->setServiceLocator($this->sm);
         $this->sut->setConsole($this->console);
     }
 

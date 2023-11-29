@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class SelfservePageGeneratorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return SelfservePageGenerator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): SelfservePageGenerator
-    {
-        return $this->__invoke($serviceLocator, SelfservePageGenerator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -35,8 +22,7 @@ class SelfservePageGeneratorFactory implements FactoryInterface
         return new SelfservePageGenerator(
             $container->get('QaSelfservePageFactory'),
             $container->get('QaApplicationStepGenerator'),
-            $container->get('FormControlServiceManager'),
-            $container->get('QaContextFactory')
+            $container->get('FormControlServiceManager')
         );
     }
 }

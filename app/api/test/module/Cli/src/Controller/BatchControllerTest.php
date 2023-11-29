@@ -45,21 +45,15 @@ class BatchControllerTest extends MockeryTestCase
         $this->mockCommandHandler = m::mock(CommandHandlerManager::class);
         $this->mockQueryHandler = m::mock(QueryHandlerManager::class);
 
-        $this->sm = m::mock(ServiceManager::class)
-            ->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->mockCommandHandler)
-            ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->mockQueryHandler)
-            ->getMock();
-
         $this->pm = m::mock(PluginManager::class);
         $this->pm->shouldReceive('setController');
 
         $this->mockConsole = m::mock(AdapterInterface::class);
 
-        $this->sut = new BatchController();
+        $this->sut = new BatchController($this->mockQueryHandler, $this->mockCommandHandler);
         $this->sut
             ->setConsole($this->mockConsole)
-            ->setPluginManager($this->pm)
-            ->setServiceLocator($this->sm);
+            ->setPluginManager($this->pm);
     }
 
     public function testLicenceStatusRulesActionVerboseMessages()
@@ -91,7 +85,7 @@ class BatchControllerTest extends MockeryTestCase
             ->once()
             ->andThrow(Exception\NotFoundException::class);
 
-        /* @var $result \Laminas\View\Model\ConsoleModel */
+        /* @var $result \Laminas\Mvc\Console\View\ViewModel */
         $result = $this->sut->licenceStatusRulesAction();
 
         static::assertSame(404, $result->getErrorLevel());
@@ -106,7 +100,7 @@ class BatchControllerTest extends MockeryTestCase
             ->once()
             ->andThrow(Exception\RuntimeException::class);
 
-        /* @var $result \Laminas\View\Model\ConsoleModel */
+        /* @var $result \Laminas\Mvc\Console\View\ViewModel */
         $result = $this->sut->licenceStatusRulesAction();
 
         static::assertSame(Response::STATUS_CODE_400, $result->getErrorLevel());
@@ -121,7 +115,7 @@ class BatchControllerTest extends MockeryTestCase
             ->once()
             ->andThrow(\Exception::class);
 
-        /* @var $result \Laminas\View\Model\ConsoleModel */
+        /* @var $result \Laminas\Mvc\Console\View\ViewModel */
         $result = $this->sut->licenceStatusRulesAction();
 
         static::assertSame(500, $result->getErrorLevel());

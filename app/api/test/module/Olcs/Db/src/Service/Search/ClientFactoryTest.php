@@ -2,38 +2,37 @@
 
 namespace OlcsTest\Db\Service\Search;
 
+use Elastica\Client;
+use Interop\Container\Containerinterface;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Olcs\Db\Service\Search\ClientFactory;
 use Mockery as m;
 
-/**
- * Class ClientFactoryTest
- * @package OlcsTest\Db\Service\Search
- */
-class ClientFactoryTest extends \PHPUnit\Framework\TestCase
+class ClientFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {
-    public function testCreateService()
+    public function testInvoke(): void
     {
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(Containerinterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn(
             ['elastic_search' => ['host' => 'google.com', 'port' =>4034]]
         );
 
         $sut = new ClientFactory();
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, Client::class);
 
-        $this->assertInstanceOf('Elastica\Client', $service);
+        $this->assertInstanceOf(Client::class, $service);
     }
 
-    public function testCreateServiceWithException()
+    public function testInvokeWithException(): void
     {
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(Containerinterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
 
         $sut = new ClientFactory();
         $passed = false;
         try {
-            $service = $sut->createService($mockSl);
-        } catch (\Laminas\ServiceManager\Exception\RuntimeException $e) {
+            $service = $sut->__invoke($mockSl, Client::class);
+        } catch (InvalidServiceException $e) {
             if ($e->getMessage() === 'Elastic search config not found') {
                 $passed = true;
             }

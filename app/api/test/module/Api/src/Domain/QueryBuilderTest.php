@@ -28,7 +28,8 @@ class QueryBuilderTest extends MockeryTestCase
 
     public function testCallFailQbNotSet()
     {
-        $this->expectException(\RuntimeException::class, QueryBuilder::ERR_QB_NOT_SET);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(QueryBuilder::ERR_QB_NOT_SET);
 
         $this->sut->unit_testMethod('unit_Arg1', 'unit_Arg2');
     }
@@ -43,7 +44,7 @@ class QueryBuilderTest extends MockeryTestCase
             ->getMock();
 
         $this->mockQueryPartialSrvMngr
-            ->shouldReceive('get')->once()->with('Unit_testMethod')->andReturn($mockPartial);
+            ->shouldReceive('get')->once()->with('unit_testMethod')->andReturn($mockPartial);
 
         $actual = $this->sut
             ->modifyQuery($mockQb)

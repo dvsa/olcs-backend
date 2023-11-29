@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\CandidatePermits;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class IrhpCandidatePermitsCreatorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return IrhpCandidatePermitsCreator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): IrhpCandidatePermitsCreator
-    {
-        return $this->__invoke($serviceLocator, IrhpCandidatePermitsCreator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

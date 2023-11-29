@@ -3,13 +3,11 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteEbsrSubmission;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox;
 use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate;
@@ -30,18 +28,6 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
      * @var ContentStoreFileUploader
      */
     private $fileUploader;
-
-    /**
-     * Creates service (needs instance of file uploader)
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, DeleteDocument::class);
-    }
 
     /**
      * Deletes a document and optionally triggers side effect of deleting the associated EBSR submission
@@ -95,10 +81,7 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->fileUploader = $container->get('FileUploader');
         return parent::__invoke($fullContainer, $requestedName, $options);

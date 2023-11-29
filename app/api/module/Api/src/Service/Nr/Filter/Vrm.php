@@ -2,10 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter;
 
-use Laminas\ServiceManager\FactoryInterface;
 use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
 use Dvsa\Olcs\Transfer\Filter\Vrm as VrmFilter;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class Vrm

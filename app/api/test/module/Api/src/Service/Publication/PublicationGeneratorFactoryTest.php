@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager as ContextPluginMana
 use Dvsa\Olcs\Api\Service\Publication\Process\PluginManager as ProcessPluginManager;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGeneratorFactory;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -17,7 +18,7 @@ class PublicationGeneratorFactoryTest extends MockeryTestCase
     public function testCanCreateServiceWithName()
     {
         /** @var  \Laminas\ServiceManager\ServiceLocatorInterface $mockSl */
-        $mockSl = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class)
+        $mockSl = m::mock(ContainerInterface::class)
             ->shouldReceive('get')
             ->andReturnUsing(
                 function ($class) {
@@ -34,7 +35,7 @@ class PublicationGeneratorFactoryTest extends MockeryTestCase
             )
             ->getMock();
 
-        $actual = (new PublicationGeneratorFactory())->createService($mockSl);
+        $actual = (new PublicationGeneratorFactory())->__invoke($mockSl, PublicationGenerator::class);
 
         static::assertInstanceOf(PublicationGenerator::class, $actual);
     }

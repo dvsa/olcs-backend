@@ -46,7 +46,7 @@ class InspectionRequest extends AbstractRepository
             ->with('application', 'a')
             ->with('a.licence', 'a_l')
             ->with('a.licenceType', 'a_lt')
-            ->withRefData()
+            ->withRefdata()
             ->byId($id);
 
         $this->filterByEnforcementArea($qb, EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE);

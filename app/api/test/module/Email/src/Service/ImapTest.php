@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Email\Service;
 
 use Dvsa\Olcs\Email\Service\Imap as ImapService;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
@@ -18,7 +19,7 @@ class ImapTest extends TestCase
         $this->imapService = new ImapService();
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
         $config = [
             'mailboxes' => [
@@ -28,12 +29,12 @@ class ImapTest extends TestCase
             ]
         ];
 
-        $sl = new \Laminas\ServiceManager\ServiceManager();
+        $sl = new ServiceManager();
         $sl->setService('Config', $config);
 
         $this->assertSame(
             $this->imapService,
-            $this->imapService->createService($sl)
+            $this->imapService->__invoke($sl, ImapService::class)
         );
 
         $this->assertEquals(
@@ -46,14 +47,14 @@ class ImapTest extends TestCase
         );
     }
 
-    public function testCreateServiceThrowsException()
+    public function testInvokeThrowsException()
     {
-        $sl = new \Laminas\ServiceManager\ServiceManager();
+        $sl = new ServiceManager();
         $sl->setService('Config', []);
 
         $this->expectException('Laminas\Mail\Exception\RuntimeException', 'No mailbox config found');
 
-        $this->imapService->createService($sl);
+        $this->imapService->__invoke($sl, ImapService::class);
     }
 
     public function testConnectThrowsException()
@@ -66,15 +67,15 @@ class ImapTest extends TestCase
             ]
         ];
 
-        $sl = new \Laminas\ServiceManager\ServiceManager();
+        $sl = new ServiceManager();
         $sl->setService('Config', $config);
 
         $this->assertSame(
             $this->imapService,
-            $this->imapService->createService($sl)
+            $this->imapService->__invoke($sl, ImapService::class)
         );
 
-        $this->imapService->createService($sl);
+        $this->imapService->__invoke($sl, ImapService::class);
 
         $this->expectException('Laminas\Mail\Exception\RuntimeException', 'No config found for mailbox \'bar\'');
 

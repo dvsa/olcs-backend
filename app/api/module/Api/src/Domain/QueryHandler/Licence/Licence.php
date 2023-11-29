@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Psr\Container\ContainerExceptionInterface;
@@ -31,19 +30,6 @@ class Licence extends AbstractQueryHandler
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
      */
     private $sectionAccessService;
-
-    /**
-     * Factory
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service manager
-     *
-     * @return $this
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Licence::class);
-    }
 
     /**
      * Handle query
@@ -178,9 +164,6 @@ class Licence extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
         $this->sectionAccessService = $container->get('SectionAccessService');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Team\Team as QueryHandler;
 use Dvsa\Olcs\Transfer\Query\Team\Team as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Team as TeamRepo;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 

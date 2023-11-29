@@ -1,33 +1,11 @@
 <?php
 
-/**
- * Message Consumer Manager Factory
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @note ported from olcs-internal Cli\Service\Queue\MessageConsumerManagerFactory
- */
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
-use Laminas\ServiceManager\Config;
-use Laminas\Mvc\Service\AbstractPluginManagerFactory;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
 
-/**
- * Message Consumer Manager Factory
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @note ported from olcs-internal Cli\Service\Queue\MessageConsumerManagerFactory
- */
-class MessageConsumerManagerFactory extends AbstractPluginManagerFactory
+class MessageConsumerManagerFactory extends AbstractServiceManagerFactory
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $config = $serviceLocator->get('Config');
-        $configObject = new Config($config['message_consumer_manager']);
-
-        $plugins = new MessageConsumerManager($configObject);
-        $plugins->setServiceLocator($serviceLocator);
-
-        return $plugins;
-    }
+    const PLUGIN_MANAGER_CLASS = MessageConsumerManager::class;
+    const CONFIG_KEY = 'message_consumer_manager';
 }

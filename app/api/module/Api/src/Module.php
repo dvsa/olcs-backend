@@ -64,7 +64,7 @@ class Module implements BootstrapListenerInterface
      */
     private function setLoggerUser(\Laminas\ServiceManager\ServiceManager $serviceManager)
     {
-        $authService = $serviceManager->get(\ZfcRbac\Service\AuthorizationService::class);
+        $authService = $serviceManager->get(\LmcRbacMvc\Service\AuthorizationService::class);
         $serviceManager->get('LogProcessorManager')->get(\Olcs\Logging\Log\Processor\UserId::class)
             ->setUserId($authService->getIdentity()->getUser()->getLoginId());
     }

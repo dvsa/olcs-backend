@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ApplicationUpdater as BilateralApplicationUpdater;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
@@ -21,7 +20,6 @@ use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Irhp Permit Application
@@ -38,18 +36,6 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
 
     /** @var BilateralApplicationUpdater */
     private $bilateralApplicationUpdater;
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, UpdateFull::class);
-    }
 
     /**
      * Handle command
@@ -170,10 +156,7 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->checkedValueUpdater = $container->get('PermitsCheckableCheckedValueUpdater');
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');

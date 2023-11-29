@@ -88,7 +88,7 @@ class Organisation extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefData()
+            ->withRefdata()
             ->with('irfoNationality')
             ->with('irfoPartners')
             ->with('tradingNames', 'tn')

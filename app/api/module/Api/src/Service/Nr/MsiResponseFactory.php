@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Nr;
 
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -14,18 +13,6 @@ use Interop\Container\ContainerInterface;
 class MsiResponseFactory implements FactoryInterface
 {
     const XML_NS_MSG = 'No config specified for xml ns';
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return MsiResponse
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): MsiResponse
-    {
-        return $this->__invoke($serviceLocator, MsiResponse::class);
-    }
 
     /**
      * invoke method

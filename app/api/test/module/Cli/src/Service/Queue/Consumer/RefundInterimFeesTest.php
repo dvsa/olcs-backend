@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use DomainException;
 use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete;

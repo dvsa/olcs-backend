@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Lva\Application;
 
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -29,10 +30,10 @@ class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestC
     {
         $this->feesHelperService = m::mock();
 
-        $sm = m::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('FeesHelperService')->once()->andReturn($this->feesHelperService);
 
-        $this->sut = (new PublishValidationService())->createService($sm);
+        $this->sut = (new PublishValidationService())->__invoke($sm, PublishValidationService::class);
     }
 
     public function testValidate()

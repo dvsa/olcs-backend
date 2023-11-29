@@ -43,7 +43,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);
 
         $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
         ];
 
         parent::setUp();

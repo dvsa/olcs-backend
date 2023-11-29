@@ -22,7 +22,6 @@ use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Interop\Container\ContainerInterface;
 
@@ -75,16 +74,6 @@ class ProcessInsolvency extends AbstractConsumer
      * @var CompaniesHouseCompany
      */
     protected $company;
-
-    /**
-     * @var CompaniesHouseClient
-     */
-    protected $companiesHouseApi;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, ProcessInsolvency::class);
-    }
 
     /**
      * @param CommandInterface $command
@@ -380,13 +369,7 @@ class ProcessInsolvency extends AbstractConsumer
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $this->companiesHouseApi = $container->get(CompaniesHouseClient::class);
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

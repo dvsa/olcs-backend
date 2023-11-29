@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Permits\Availability;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\TransactionIsolationLevel;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
@@ -71,7 +72,7 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
 
         $this->connection->shouldReceive('getTransactionIsolation')
             ->withNoArgs()
-            ->andReturn(Connection::TRANSACTION_REPEATABLE_READ);
+            ->andReturn(TransactionIsolationLevel::REPEATABLE_READ);
 
         $this->connection->shouldReceive('beginTransaction')
             ->withNoArgs()
@@ -130,7 +131,7 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
 
         $this->connection->shouldReceive('getTransactionIsolation')
             ->withNoArgs()
-            ->andReturn(Connection::TRANSACTION_REPEATABLE_READ);
+            ->andReturn(TransactionIsolationLevel::REPEATABLE_READ);
 
         $this->connection->shouldReceive('beginTransaction')
             ->withNoArgs()
@@ -185,7 +186,7 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
 
         $this->connection->shouldReceive('getTransactionIsolation')
             ->withNoArgs()
-            ->andReturn(Connection::TRANSACTION_REPEATABLE_READ);
+            ->andReturn(TransactionIsolationLevel::REPEATABLE_READ);
 
         $this->connection->shouldReceive('beginTransaction')
             ->withNoArgs()
@@ -227,9 +228,9 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
     public function dpTestExceptionOnUnexpectedIsolationLevel()
     {
         return [
-            [Connection::TRANSACTION_READ_UNCOMMITTED],
-            [Connection::TRANSACTION_READ_COMMITTED],
-            [Connection::TRANSACTION_SERIALIZABLE],
+            [TransactionIsolationLevel::READ_UNCOMMITTED],
+            [TransactionIsolationLevel::READ_COMMITTED],
+            [TransactionIsolationLevel::SERIALIZABLE],
         ];
     }
 }

@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class BilateralIpaAnswersSummaryRowsAdderFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return BilateralIpaAnswersSummaryRowsAdder
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): BilateralIpaAnswersSummaryRowsAdder
-    {
-        return $this->__invoke($serviceLocator, BilateralIpaAnswersSummaryRowsAdder::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

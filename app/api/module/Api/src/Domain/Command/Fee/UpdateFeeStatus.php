@@ -10,14 +10,12 @@ class UpdateFeeStatus extends AbstractCommand
     use Identity;
 
     /**
-     * @Transfer\Filter({"name":"Laminas\Filter\StringTrim"})
-     * @Transfer\Validator({"name":"Laminas\Validator\StringLength", "options":{"min": 1}})
-     * @Transfer\Validator({
-     *     "name":"Laminas\Validator\InArray",
-     *     "options": {
+     * @Transfer\Filter("Laminas\Filter\StringTrim")
+     * @Transfer\Validator("Laminas\Validator\StringLength", options={"min": 1})
+     * @Transfer\Validator("Laminas\Validator\InArray", options={
      *         "haystack": {"lfs_ot","lfs_pd","lfs_cn", "lfs_refund_pending", "lfs_refund_failed", "lfs_refunded"}
      *     }
-     * })
+     * )
      */
     protected $status;
 

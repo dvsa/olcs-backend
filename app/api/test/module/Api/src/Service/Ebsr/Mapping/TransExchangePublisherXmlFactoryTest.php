@@ -2,9 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Mapping;
 
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangePublisherXmlFactory;
+use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
 
 /**
  * Class TransExchangePublisherXmlFactoryTest
@@ -12,14 +14,14 @@ use Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangePublisherXmlFactory;
  */
 class TransExchangePublisherXmlFactoryTest extends TestCase
 {
-    public function testCreateService()
+    public function testInvoke()
     {
-        $mockSl = m::mock('Laminas\ServiceManager\ServiceLocatorInterface');
+        $mockSl = m::mock(ContainerInterface::class);
 
         $sut = new TransExchangePublisherXmlFactory();
 
-        $service = $sut->createService($mockSl);
+        $service = $sut->__invoke($mockSl, null);
 
-        $this->assertInstanceOf('Olcs\XmlTools\Xml\Specification\SpecificationInterface', $service);
+        $this->assertInstanceOf(SpecificationInterface::class, $service);
     }
 }

@@ -6,12 +6,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Doctrine\ORM\Query;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\Stdlib\ArraySerializableInterface as QryCmd;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -20,11 +15,6 @@ use Interop\Container\ContainerInterface;
  */
 final class TransactionManagerFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): TransactionManager
-    {
-        return $this->__invoke($serviceLocator, TransactionManager::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

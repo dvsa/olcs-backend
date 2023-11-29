@@ -6,8 +6,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
 use Interop\Container\ContainerInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ForgotPasswordOpenAmFactory implements FactoryInterface
 {
@@ -21,21 +20,9 @@ class ForgotPasswordOpenAmFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ForgotPasswordOpenAm
     {
-        $sl = $container->getServiceLocator();
-        $adapter = $sl->get(ValidatableAdapterInterface::class);
-        $translator = $sl->get('translator');
+        $adapter = $container->get(ValidatableAdapterInterface::class);
+        $translator = $container->get('translator');
         $instance = new ForgotPasswordOpenAm($adapter, $translator);
-        return $instance->createService($container);
-    }
-
-    /**
-     * @deprecated can be removed following laminas v3 upgrade
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return ForgotPasswordOpenAm
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null): ForgotPasswordOpenAm
-    {
-        return $this->__invoke($serviceLocator, ForgotPasswordOpenAm::class);
+        return $instance->__invoke($container, $requestedName, $options);
     }
 }

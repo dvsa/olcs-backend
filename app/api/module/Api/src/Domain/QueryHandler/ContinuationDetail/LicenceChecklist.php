@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
 use Psr\Container\ContainerExceptionInterface;
@@ -30,20 +29,6 @@ class LicenceChecklist extends AbstractQueryHandler
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
      */
     protected $sectionAccessService;
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return LicenceChecklist
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, LicenceChecklist::class);
-    }
 
     /**
      * Handle query
@@ -180,9 +165,6 @@ class LicenceChecklist extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $this->sectionAccessService = $container->get('SectionAccessService');
         return parent::__invoke($fullContainer, $requestedName, $options);

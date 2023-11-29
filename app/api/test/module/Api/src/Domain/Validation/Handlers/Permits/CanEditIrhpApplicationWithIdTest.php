@@ -34,7 +34,7 @@ class CanEditIrhpApplicationWithIdTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn($id);
 
-        $this->setIsValid('CanEditIrhpApplicationWithId', [$id], $canEdit);
+        $this->setIsValid('canEditIrhpApplicationWithId', [$id], $canEdit);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }

@@ -15,11 +15,10 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Transfer\Query\Cache\ById as CacheByIdQry;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
@@ -52,7 +51,7 @@ class QueryHandlerTestCase extends MockeryTestCase
     protected $commandHandler;
 
     /**
-     * @var m\MockInterface|ServiceLocatorInterface
+     * @var m\MockInterface|RepositoryServiceManager
      */
     protected $repoManager;
 
@@ -85,8 +84,9 @@ class QueryHandlerTestCase extends MockeryTestCase
     public function setUp(): void
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
-
         $this->commandHandler = m::mock(CommandHandlerManager::class);
+        $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->entityAccessLogger = m::mock(EntityAccessLogger::class)->shouldIgnoreMissing();
 
         foreach ($this->repoMap as $alias => $service) {
             $this->repoManager
@@ -95,13 +95,11 @@ class QueryHandlerTestCase extends MockeryTestCase
                 ->andReturn($service);
         }
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
-
-        if (! isset($this->mockedSmServices[EntityAccessLogger::class])) {
-            $this->mockedSmServices[EntityAccessLogger::class] = m::mock(EntityAccessLogger::class)->shouldIgnoreMissing();
-        }
+        $sm->shouldReceive('get')->with(EntityAccessLogger::class)->andReturn($this->entityAccessLogger);
+        $sm->expects('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
@@ -126,16 +124,12 @@ class QueryHandlerTestCase extends MockeryTestCase
             $sm->shouldReceive('get')->with(ToggleService::class)->andReturn($toggleService);
         }
 
-        $this->queryHandler = m::mock(QueryHandlerManager::class);
-        $this->queryHandler
-            ->shouldReceive('getServiceLocator')
-            ->andReturn($sm);
-
         $this->initReferences();
 
         $this->commands = [];
 
-        $this->sut = $this->sut->createService($this->queryHandler);
+        $this->container = $sm;
+        $this->sut = $this->sut->__invoke($sm, null);
     }
 
     protected function initReferences()
@@ -294,7 +288,6 @@ class QueryHandlerTestCase extends MockeryTestCase
             $qryDataToMatch = [];
 
             foreach ($data as $key => $value) {
-                //unset($value);
                 $qryDataToMatch[$key] = $qryData[$key] ?? null;
             }
 
@@ -341,20 +334,5 @@ class QueryHandlerTestCase extends MockeryTestCase
                 'trafficAreas' => ["A", "B"],
             ],
         ];
-    }
-
-    /**
-     * Initializes a query handler.
-     *
-     * @param QueryHandlerInterface $queryHandler
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return QueryHandlerInterface
-     */
-    protected function initializeQueryHandler(QueryHandlerInterface $queryHandler, ServiceLocatorInterface $serviceLocator): QueryHandlerInterface
-    {
-        $queryHandlerManager = $serviceLocator->get(QueryHandlerManager::class);
-        assert($queryHandlerManager instanceof QueryHandlerManager, 'Expected instance of QueryHandlerManager');
-        $queryHandler->createService($queryHandlerManager);
-        return $queryHandler;
     }
 }

@@ -15,7 +15,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Olcs\Db\Service\Search\Search;
 use Laminas\Console\Response;
-use Laminas\Mvc\Controller\AbstractConsoleController;
+use Laminas\Mvc\Console\Controller\AbstractConsoleController;
 use Dvsa\Olcs\Address\Service\Address;
 use Laminas\Http\Client;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
@@ -137,7 +137,7 @@ class DiagnosticController extends AbstractConsoleController
     /**
      * Index action
      *
-     * @return \Laminas\View\Model\ConsoleModel
+     * @return \Laminas\Mvc\Console\View\ViewModel
      */
     public function indexAction()
     {

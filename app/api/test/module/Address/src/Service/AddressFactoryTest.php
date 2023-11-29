@@ -1,23 +1,13 @@
 <?php
 
-/**
- * Address Factory Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Address\Service;
 
 use Dvsa\Olcs\Address\Service\Address;
 use Dvsa\Olcs\Address\Service\AddressFactory;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Address Factory Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class AddressFactoryTest extends MockeryTestCase
 {
     /**
@@ -30,21 +20,21 @@ class AddressFactoryTest extends MockeryTestCase
         $this->sut = new AddressFactory();
     }
 
-    public function testCreateServiceWithoutConfig()
+    public function testInvokeWithoutConfig()
     {
         $this->expectException(\RuntimeException::class);
 
         $config = [];
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')
             ->with('Config')
             ->andReturn($config);
 
-        $this->sut->createService($sm);
+        $this->sut->__invoke($sm, Address::class);
     }
 
-    public function testCreateService()
+    public function testInvoke()
     {
         $config = [
             'address' => [
@@ -54,12 +44,12 @@ class AddressFactoryTest extends MockeryTestCase
             ]
         ];
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')
             ->with('Config')
             ->andReturn($config);
 
-        $address = $this->sut->createService($sm);
+        $address = $this->sut->__invoke($sm, Address::class);
 
         $this->assertInstanceOf(Address::class, $address);
     }

@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Service\Qa\PostSubmit\IrhpApplicationPostSubmitHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath as SubmitApplicationPathCmd;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Submit application path
@@ -29,18 +28,6 @@ class SubmitApplicationPath extends AbstractCommandHandler
     private $irhpApplicationPostSubmitHandler;
 
     protected $repoServiceName = 'IrhpApplication';
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, SubmitApplicationPath::class);
-    }
 
     /**
      * Handle command
@@ -78,10 +65,7 @@ class SubmitApplicationPath extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->qaContextFactory = $container->get('QaContextFactory');
         $this->supplementedApplicationStepsProvider = $container->get(

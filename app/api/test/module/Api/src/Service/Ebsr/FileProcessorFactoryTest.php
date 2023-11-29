@@ -4,10 +4,10 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorFactory;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Laminas\Filter\Decompress;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class FileProcessorFactoryTest
@@ -15,14 +15,14 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class FileProcessorFactoryTest extends TestCase
 {
-    public function testCreateService()
+    public function testInvoke()
     {
         $mockUploader = m::mock(FileUploaderInterface::class);
 
         $mockFilter = m::mock(Decompress::class);
         $mockFilter->shouldReceive('setAdapter')->with('zip');
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
 
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
@@ -32,6 +32,6 @@ class FileProcessorFactoryTest extends TestCase
 
         $sut = new FileProcessorFactory();
 
-        $this->assertInstanceOf(FileProcessor::class, $sut->createService($mockSl));
+        $this->assertInstanceOf(FileProcessor::class, $sut->__invoke($mockSl, FileProcessor::class));
     }
 }

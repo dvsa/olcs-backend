@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\FeeBreakdown;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class BilateralFeeBreakdownGeneratorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return BilateralFeeBreakdownGenerator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): BilateralFeeBreakdownGenerator
-    {
-        return $this->__invoke($serviceLocator, BilateralFeeBreakdownGenerator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

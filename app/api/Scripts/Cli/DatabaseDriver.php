@@ -2,14 +2,15 @@
 
 namespace Cli;
 
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\Common\Util\Inflector;
+use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Inflector\Inflector;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\Mapping\MappingException;
 
@@ -55,13 +56,14 @@ class DatabaseDriver implements MappingDriver
      * @var string|null
      */
     private $namespace;
+    private Inflector $inflector;
 
     protected $mappingConfig = [];
 
     public function __construct(AbstractSchemaManager $schemaManager, $mappingConfig)
     {
         $this->_sm = $schemaManager;
-
+        $this->inflector = InflectorFactory::create()->build();
         $this->mappingConfig = $mappingConfig;
     }
 
@@ -381,27 +383,26 @@ class DatabaseDriver implements MappingDriver
 
         // Type specific elements
         switch ($fieldMapping['type']) {
-            case Type::TARRAY:
-            case Type::BLOB:
-            case Type::GUID:
-            case Type::JSON_ARRAY:
-            case Type::OBJECT:
-            case Type::SIMPLE_ARRAY:
-            case Type::STRING:
-            case Type::TEXT:
+            case Types::ARRAY:
+            case Types::BLOB:
+            case Types::GUID:
+            case Types::JSON:
+            case Types::SIMPLE_ARRAY:
+            case Types::STRING:
+            case Types::TEXT:
                 $fieldMapping['length'] = $column->getLength();
                 $fieldMapping['fixed']  = $column->getFixed();
                 break;
 
-            case Type::DECIMAL:
-            case Type::FLOAT:
+            case Types::DECIMAL:
+            case Types::FLOAT:
                 $fieldMapping['precision'] = $column->getPrecision();
                 $fieldMapping['scale']     = $column->getScale();
                 break;
 
-            case Type::INTEGER:
-            case Type::BIGINT:
-            case Type::SMALLINT:
+            case Types::INTEGER:
+            case Types::BIGINT:
+            case Types::SMALLINT:
                 $fieldMapping['unsigned'] = $column->getUnsigned();
                 break;
         }
@@ -509,7 +510,7 @@ class DatabaseDriver implements MappingDriver
             return $this->namespace . $this->classNamesForTables[$tableName];
         }
 
-        return $this->namespace . Inflector::classify(strtolower($tableName));
+        return $this->namespace . $this->inflector->classify(strtolower($tableName));
     }
 
     /**
@@ -533,6 +534,6 @@ class DatabaseDriver implements MappingDriver
         if ($fk) {
             $columnName = str_replace('_id', '', $columnName);
         }
-        return Inflector::camelize($columnName);
+        return $this->inflector->camelize($columnName);
     }
 }

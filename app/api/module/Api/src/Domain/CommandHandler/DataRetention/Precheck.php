@@ -2,36 +2,20 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\PDO\Connection as PDOConnection;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Command\DataRetention\Precheck as PrecheckCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * DR Precheck
- */
 final class Precheck extends AbstractCommandHandler
 {
-    /** @var Connection */
-    private $connection;
+    private \PDO $connection;
 
     protected $extraRepos = ['SystemParameter'];
-
-    /**
-     * @param ServiceLocatorInterface|QueryHandlerManager $serviceLocator
-     *
-     * @return AbstractCommandHandler|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Precheck::class);
-    }
 
     /**
      * Handle command
@@ -53,6 +37,8 @@ final class Precheck extends AbstractCommandHandler
         $this->result->addMessage(
             "Calling stored procedure sp_dr_precheck($limit)"
         );
+
+        /** @var \PDOStatement $stmt */
         $stmt = $this->connection->prepare("CALL sp_dr_precheck($limit);");
         $stmt->execute();
         $this->result->addMessage("Precheck procedure executed.");
@@ -75,13 +61,10 @@ final class Precheck extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
         /** @var EntityManager $entityManager */
         $entityManager = $container->get('DoctrineOrmEntityManager');
-        $this->connection = $entityManager->getConnection()->getWrappedConnection();
+        $this->connection = $entityManager->getConnection()->getNativeConnection();
         return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

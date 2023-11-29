@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Fees;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class EcmtApplicationFeeCommandCreatorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return EcmtApplicationFeeCommandCreator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): EcmtApplicationFeeCommandCreator
-    {
-        return $this->__invoke($serviceLocator, EcmtApplicationFeeCommandCreator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

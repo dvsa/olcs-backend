@@ -2,24 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa;
 
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 class QaContextGeneratorFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return QaContextGenerator
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): QaContextGenerator
-    {
-        return $this->__invoke($serviceLocator, QaContextGenerator::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

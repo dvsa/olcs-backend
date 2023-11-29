@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\TransactionIsolationLevel;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepository;
@@ -74,7 +75,7 @@ class EmissionsCategoryAvailabilityCounter
      */
     public function getCount($irhpPermitStockId, $emissionsCategoryId)
     {
-        if ($this->connection->getTransactionIsolation() != Connection::TRANSACTION_REPEATABLE_READ) {
+        if ($this->connection->getTransactionIsolation() != TransactionIsolationLevel::REPEATABLE_READ) {
             throw new RuntimeException(self::ERR_BAD_ISOLATION_LEVEL);
         }
 

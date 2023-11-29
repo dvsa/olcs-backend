@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -29,11 +28,6 @@ final class Publish extends AbstractCommandHandler implements TransactionedInter
      * @var \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService
      */
     private $variationValidationService;
-
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, Publish::class);
-    }
 
     public function handleCommand(CommandInterface $command)
     {
@@ -95,10 +89,7 @@ final class Publish extends AbstractCommandHandler implements TransactionedInter
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
+
 
         $this->applicationValidationService = $container->get('ApplicationPublishValidationService');
         $this->variationValidationService = $container->get('VariationPublishValidationService');

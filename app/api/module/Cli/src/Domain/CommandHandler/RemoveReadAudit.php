@@ -10,7 +10,6 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\ReadAudit\ReadAuditRepositoryInterface;
 
 /**
@@ -31,11 +30,6 @@ final class RemoveReadAudit extends AbstractCommandHandler
 
     protected $maxAge = '1 year';
 
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, RemoveReadAudit::class);
-    }
-
     public function handleCommand(CommandInterface $command)
     {
         $oldestDate = date('Y-m-d', strtotime('-' . $this->maxAge));
@@ -54,16 +48,10 @@ final class RemoveReadAudit extends AbstractCommandHandler
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $config = $container->get('Config');
         if (isset($config['batch_config']['remove-read-audit']['max-age'])) {
             $this->maxAge = $config['batch_config']['remove-read-audit']['max-age'];
         }
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

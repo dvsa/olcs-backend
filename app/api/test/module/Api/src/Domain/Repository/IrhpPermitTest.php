@@ -2,7 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -542,13 +544,12 @@ class IrhpPermitTest extends RepositoryTestCase
             ]
         ];
 
-        $statement = m::mock(Statement::class);
-        $statement->shouldReceive('fetchAll')
-            ->once()
+        $dbalResult = m::mock(Result::class);
+        $dbalResult->expects('fetchAllAssociative')
             ->andReturn($livePermitCounts);
 
         $connection = m::mock(Connection::class);
-        $connection->shouldReceive('executeQuery')
+        $connection->expects('executeQuery')
             ->with(
                 'select ips.id AS irhpPermitStockId, ' .
                 'count(ip.id) AS irhpPermitCount ' .
@@ -570,12 +571,11 @@ class IrhpPermitTest extends RepositoryTestCase
                     $licenceId
                 ],
                 [
-                    Connection::PARAM_STR_ARRAY,
+                    ArrayParameterType::STRING,
                     PDO::PARAM_INT
                 ]
             )
-            ->once()
-            ->andReturn($statement);
+            ->andReturn($dbalResult);
 
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
 

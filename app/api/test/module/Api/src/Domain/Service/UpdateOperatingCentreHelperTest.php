@@ -9,7 +9,7 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Entity\Application\ApplicationBuilder;
 use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
@@ -558,7 +558,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     public function setUpSut(): void
     {
         $this->sut = new UpdateOperatingCentreHelper();
-        $this->sut->createService($this->serviceManager());
+        $this->sut->__invoke($this->serviceManager(), null);
     }
 
     protected function setUpDefaultServices(): void

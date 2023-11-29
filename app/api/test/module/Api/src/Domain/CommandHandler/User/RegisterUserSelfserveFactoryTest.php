@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\LoginFactory;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserve;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserveFactory;
 use Dvsa\Olcs\Api\Domain\Repository\User;
@@ -16,7 +15,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Olcs\TestHelpers\MockeryTestCase;
 use Olcs\TestHelpers\Service\MocksServicesTrait;
-use ZfcRbac\Service\AuthorizationService;
+use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Class RegisterUserSelfserveFactoryTest
@@ -46,39 +45,6 @@ class RegisterUserSelfserveFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     */
-    public function createService_IsCallable(): void
-    {
-        // Setup
-        $this->setUpSut();
-
-        // Assert
-        $this->assertIsCallable([$this->sut, 'createService']);
-    }
-
-    /**
-     * @test
-     * @depends createService_IsCallable
-     * @depends __invoke_IsCallable
-     */
-    public function createService_CallsInvoke(): void
-    {
-        // Setup
-        $this->sut = m::mock(LoginFactory::class)->makePartial();
-
-        // Expectations
-        $this->sut->expects('__invoke')->withArgs(function ($serviceManager, $requestedName) {
-            $this->assertSame($this->serviceManager(), $serviceManager, 'Expected first argument to be the ServiceManager passed to createService');
-            $this->assertSame(null, $requestedName, 'Expected requestedName to be NULL');
-            return true;
-        });
-
-        // Execute
-        $this->sut->createService($this->serviceManager());
-    }
-
-    /**
-     * @test
      * @depends __invoke_IsCallable
      */
     public function __invoke_ReturnsWrappedRegisterUserSelfserveCommandHandler(): void
@@ -87,7 +53,7 @@ class RegisterUserSelfserveFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Execute
-        $result = $this->sut->__invoke($this->pluginManager(), null);
+        $result = $this->sut->__invoke($this->serviceManager, null);
 
         // Assert
         $this->assertInstanceOf(RegisterUserSelfserve::class, $result->getWrapped());

@@ -4,8 +4,7 @@ namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
 /**
@@ -37,18 +36,6 @@ class FeesHelperService implements FactoryInterface
      * @var \Dvsa\Olcs\Api\Domain\Repository\FeeType
      */
     protected $feeTypeRepo;
-
-    /**
-     * Create Service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service Manager
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, FeesHelperService::class);
-    }
 
     /**
      * Get fees pertaining to an application

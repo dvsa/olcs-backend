@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 
 /**
  * Contains methods to get difference between company house and olcs data from DB
@@ -11,66 +12,47 @@ use Doctrine\DBAL\Connection;
  */
 class CompaniesHouseVsOlcsDiffs
 {
-    /** @var Connection */
-    private $conn;
+    private Connection $conn;
 
-    /**
-     * constructor.
-     *
-     * @param Connection $conn DB connection
-     */
     public function __construct(Connection $conn)
     {
         $this->conn = $conn;
     }
 
-    /**
-     * Desctructor
-     */
     public function __destruct()
     {
-        if ($this->conn !== null) {
-            $this->conn->close();
-        }
+        $this->conn->close();
     }
 
     /**
-     * Fetch ogranisation officer (people) differences from db
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
+     * Fetch organisation officer (people) differences from db
      */
-    public function fetchOfficerDiffs()
+    public function fetchOfficerDiffs(): Result
     {
-        return $this->conn->query('CALL sp_ch_vs_olcs_diff_organisation_officer');
+        return $this->conn->executeQuery('CALL sp_ch_vs_olcs_diff_organisation_officer');
     }
 
     /**
-     * Fetch ogranisation address differences from db
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
+     * Fetch organisation address differences from db
      */
-    public function fetchAddressDiffs()
+    public function fetchAddressDiffs(): Result
     {
-        return $this->conn->query('CALL sp_ch_vs_olcs_diff_organisation_address');
+        return $this->conn->executeQuery('CALL sp_ch_vs_olcs_diff_organisation_address');
     }
 
     /**
-     * Fetch ogranisation name differences from db
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
+     * Fetch organisation name differences from db
      */
-    public function fetchNameDiffs()
+    public function fetchNameDiffs(): Result
     {
-        return $this->conn->query('CALL sp_ch_vs_olcs_diff_organisation_name');
+        return $this->conn->executeQuery('CALL sp_ch_vs_olcs_diff_organisation_name');
     }
 
     /**
-     * Fetch ogranisation with not active status in company house
-     *
-     * @return \Doctrine\DBAL\Driver\Statement
+     * Fetch organisation with not active status in company house
      */
-    public function fetchWithNotActiveStatus()
+    public function fetchWithNotActiveStatus(): Result
     {
-        return $this->conn->query('CALL sp_ch_vs_olcs_diff_organisation_not_active');
+        return $this->conn->executeQuery('CALL sp_ch_vs_olcs_diff_organisation_not_active');
     }
 }

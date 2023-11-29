@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class VariationFinancialEvidenceReviewServiceFactory implements FactoryInterface
 {
@@ -14,17 +13,5 @@ class VariationFinancialEvidenceReviewServiceFactory implements FactoryInterface
             $container->get(AbstractReviewServiceServices::class),
             $container->get('Review\ApplicationFinancialEvidence')
         );
-    }
-
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $services
-     *
-     * @return VariationFinancialEvidenceReviewService
-     */
-    public function createService(ServiceLocatorInterface $services)
-    {
-        return $this($services, VariationFinancialEvidenceReviewService::class);
     }
 }

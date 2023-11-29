@@ -4,7 +4,7 @@ return array(
     'router' => array(
         'routes' => array(
             'document' => array(
-                'type' => 'Laminas\Mvc\Router\Http\Literal',
+                'type' => 'literal',
                 'options' => array(
                     'route' => '/scanning/document',
                     'defaults' => array(
@@ -18,9 +18,9 @@ return array(
         'invokables' => array(),
     ),
     'controllers' => array(
-        'invokables' => array(
+        'factories' => array(
             Dvsa\Olcs\Scanning\Controller\DocumentController::class =>
-                Dvsa\Olcs\Scanning\Controller\DocumentController::class
+                Dvsa\Olcs\Scanning\Controller\DocumentControllerFactory::class
         ),
     ),
     'view_manager' => array(

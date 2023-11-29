@@ -4,8 +4,7 @@ namespace Dvsa\Olcs\AcquiredRights\Client;
 
 use GuzzleHttp\Client;
 use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\Logging\Log\Logger;
 
 class AcquiredRightsClientFactory implements FactoryInterface
@@ -26,9 +25,6 @@ class AcquiredRightsClientFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AcquiredRightsClient
     {
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
 
         $config = $container->get('Config');
 
@@ -36,17 +32,6 @@ class AcquiredRightsClientFactory implements FactoryInterface
         return new AcquiredRightsClient(
             $httpClient
         );
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return AcquiredRightsClient
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): AcquiredRightsClient
-    {
-        return $this->__invoke($serviceLocator, AcquiredRightsClient::class);
     }
 
     /**

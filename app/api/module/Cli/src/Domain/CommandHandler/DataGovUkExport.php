@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -129,9 +128,9 @@ final class DataGovUkExport extends AbstractDataExport
 
         /** @var Repository\Licence $repo */
         $repo = $this->getRepo('Licence');
-        $stmt = $repo->internationalGoodsReport();
+        $dbalResult = $repo->internationalGoodsReport();
 
-        $csvContent = $this->singleCsvFromStatement($stmt, 'international_goods');
+        $csvContent = $this->singleCsvFromDbalResult($dbalResult, 'international_goods');
 
         $document = $this->handleSideEffect(
             $this->generateInternationalGoodsDocumentCmd($csvContent)
@@ -207,9 +206,9 @@ final class DataGovUkExport extends AbstractDataExport
         );
 
         $this->result->addMessage('Fetching data from DB for Operator Licences');
-        $stmt = $this->dataGovUkRepo->fetchOperatorLicences($areas);
+        $dbalResult = $this->dataGovUkRepo->fetchOperatorLicences($areas);
 
-        $this->makeCsvsFromStatement($stmt, 'GeographicRegion', 'OLBSLicenceReport');
+        $this->makeCsvsFromDbalResult($dbalResult, 'GeographicRegion', 'OLBSLicenceReport');
     }
 
     /**
@@ -227,9 +226,9 @@ final class DataGovUkExport extends AbstractDataExport
         );
 
         $this->result->addMessage('Fetching data from DB for Bus Registered Only');
-        $stmt = $this->dataGovUkRepo->fetchBusRegisteredOnly($areas);
+        $dbalResult = $this->dataGovUkRepo->fetchBusRegisteredOnly($areas);
 
-        $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_RegisteredOnly');
+        $this->makeCsvsFromDbalResult($dbalResult, 'Current Traffic Area', 'Bus_RegisteredOnly');
     }
 
     /**
@@ -247,35 +246,18 @@ final class DataGovUkExport extends AbstractDataExport
         );
 
         $this->result->addMessage('Fetching data from DB for Bus Variation');
-        $stmt = $this->dataGovUkRepo->fetchBusVariation($areas);
+        $dbalResult = $this->dataGovUkRepo->fetchBusVariation($areas);
 
-        $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_Variation');
+        $this->makeCsvsFromDbalResult($dbalResult, 'Current Traffic Area', 'Bus_Variation');
     }
 
-    /**
-     * Create service
-     *
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $sm Service Manager
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, DataGovUkExport::class);
-    }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-        
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $config = $container->get('Config');
         $exportCfg = (!empty($config['data-gov-uk-export']) ? $config['data-gov-uk-export'] : []);
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

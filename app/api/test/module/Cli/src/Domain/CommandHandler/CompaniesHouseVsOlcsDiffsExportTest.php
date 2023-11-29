@@ -2,13 +2,12 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Driver\PDOStatement;
+use Doctrine\DBAL\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Cli\Domain\Command\CompaniesHouseVsOlcsDiffsExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CompaniesHouseVsOlcsDiffsExport;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
 
 /**
@@ -41,7 +40,7 @@ class CompaniesHouseVsOlcsDiffsExportTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testMakeCsvsFromStatement()
+    public function testMakeCsvsFromResult()
     {
         $cmd = Cmd::create(
             [
@@ -89,16 +88,15 @@ class CompaniesHouseVsOlcsDiffsExportTest extends CommandHandlerTestCase
             'col2' => 'val22',
         ];
 
-        $mockStmt = m::mock(PDOStatement::class)
-            ->shouldReceive('fetch')->once()->andReturn($row1)
-            ->shouldReceive('fetch')->once()->andReturn($row2)
-            ->shouldReceive('fetch')->andReturn(false)
-            ->getMock();
+        $mockDbalResult = m::mock(Result::class);
+        $mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row1);
+        $mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturn($row2);
+        $mockDbalResult->expects('fetchAssociative')->withNoArgs()->andReturnFalse();
 
         $this->repoMap['CompanyHouseVsOlcsDiffs']
             ->shouldReceive($repoMethod)
             ->once()
-            ->andReturn($mockStmt);
+            ->andReturn($mockDbalResult);
     }
 
     private function checkFileContent($fileName)
