@@ -18,7 +18,8 @@
             "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
             "only": [
                 "olcs/olcs-logging",
-                "olcs/olcs-utils"
+                "olcs/olcs-utils",
+                "olcs/olcs-xmltools"
             ]
         },
         {
@@ -48,12 +49,12 @@
         "guzzlehttp/guzzle": "^7.5",
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "1.0.10",
-        "olcs/olcs-laminas": "3.0.3",
         "olcs/olcs-cpms": "~4.206.0",
+        "olcs/olcs-laminas": "3.0.3",
         "olcs/olcs-logging": "^5.0.0",
         "olcs/olcs-transfer": "dev-project/3.0",
         "olcs/olcs-utils": "^5.0.0",
-        "olcs/olcs-xmltools": "~4.206.0",
+        "olcs/olcs-xmltools": "^5.0.0",
         "oro/doctrine-extensions": "^2",
         "phprtflite/phprtflite": "~1.3.3",
         "phpseclib/phpseclib": "^2.0.6",
