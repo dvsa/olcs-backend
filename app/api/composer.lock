@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ce10046072995bd609c565a1b9ff1bf5",
+    "content-hash": "e9efcd6aa1befe1d9fac67c044e8318c",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -6414,58 +6414,47 @@
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "4.206.16",
+            "version": "5.0.0.beta1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS/olcs/olcs-xmltools/4.206.16/olcs-olcs-xmltools-4.206.16.zip",
-                "reference": "df27b90dce784a44da507cf9101d6af9592f6a21",
-                "shasum": "df27b90dce784a44da507cf9101d6af9592f6a21"
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/olcs/olcs-xmltools/5.0.0.beta1/olcs-olcs-xmltools-5.0.0.beta1.zip",
+                "reference": "f000d1cabb03e9e491ddc0e0d7d43195577661e0",
+                "shasum": ""
             },
             "require": {
-                "elendev/composer-push": "^1.0.3",
-                "olcs/olcs-laminas": "~2.5.0 || ~3.0.0",
-                "php": ">=7.4"
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "laminas/laminas-filter": "^2.0",
+                "laminas/laminas-servicemanager": "^3.0",
+                "laminas/laminas-stdlib": "^3.0",
+                "laminas/laminas-validator": "^2.0",
+                "laminas/laminas-xml": "^1.2",
+                "php": "^7.4"
             },
             "require-dev": {
-                "olcs/olcs-devtools": "~4.206.0"
+                "bamarni/composer-bin-plugin": "^1.8",
+                "johnkary/phpunit-speedtrap": "^4.0",
+                "mikey179/vfsstream": "^1.6.11",
+                "mockery/mockery": "^1.6",
+                "phpunit/phpunit": "^9.6"
             },
             "type": "library",
             "extra": {
-                "nexus-push": {
-                    "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-xmltools",
-                    "ignore": [
-                        "test/",
-                        "sonar-project.properties"
-                    ]
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": true
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Olcs\\XmlTools\\": "src//"
+                    "Olcs\\XmlTools\\": "src/"
                 }
             },
-            "scripts": {
-                "ut": [
-                    "vendor/bin/phpunit -c test/phpunit.xml --stop-on-failure"
-                ],
-                "review": [
-                    "vendor/bin/review"
-                ],
-                "cs": [
-                    "vendor/bin/phpcs --severity=1 --standard=vendor/dvsa/coding-standards/src/Profiles/DVSA/CS/ruleset.xml"
-                ],
-                "coverage": [
-                    "vendor/bin/phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html"
-                ],
-                "sonar": [
-                    "vendor/bin/phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit"
-                ],
-                "update-syms": [
-                    "vendor/bin/composer-update-syms"
-                ]
+            "description": "XML tools for OLCS",
+            "support": {
+                "source": "https://github.com/dvsa/olcs-xmltools/tree/5.0.0.beta1"
             },
-            "description": "Xml tools for olcs",
-            "time": "2023-11-28T14:09:11+00:00"
+            "time": "2023-11-29T13:50:39+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
