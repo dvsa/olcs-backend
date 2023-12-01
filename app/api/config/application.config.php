@@ -19,6 +19,7 @@ return array(
         'Dvsa\Olcs\Snapshot',
         'Dvsa\Olcs\Email',
         'Dvsa\Olcs\CompaniesHouse',
+        'Dvsa\Olcs\Cpms',
         'Dvsa\Olcs\DocumentShare',
         'LmcRbacMvc',
         'Dvsa\Olcs\Transfer',
