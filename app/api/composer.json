@@ -49,7 +49,7 @@
         "guzzlehttp/guzzle": "^7.5",
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "1.0.10",
-        "olcs/olcs-cpms": "~4.206.0",
+        "monolog/monolog": "^2.9",
         "olcs/olcs-laminas": "3.0.3",
         "olcs/olcs-logging": "^5.0.0",
         "olcs/olcs-transfer": "dev-project/3.0",
@@ -89,13 +89,15 @@
             "Dvsa\\Olcs\\Queue\\": "module/Queue/src",
             "Dvsa\\Olcs\\AwsSdk\\": "module/AwsSdk/src",
             "Dvsa\\Olcs\\Auth\\": "module/Auth/src",
-            "Dvsa\\Olcs\\CompaniesHouse\\": "module/CompaniesHouse/src"
+            "Dvsa\\Olcs\\CompaniesHouse\\": "module/CompaniesHouse/src",
+            "Dvsa\\Olcs\\Cpms\\": "module/Cpms/src"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Dvsa\\Olcs\\Auth\\Test\\": "module/Auth/test",
-            "Dvsa\\Olcs\\CompaniesHouse\\Test\\": "module/CompaniesHouse/test"
+            "Dvsa\\Olcs\\CompaniesHouse\\Test\\": "module/CompaniesHouse/test",
+            "Dvsa\\Olcs\\Cpms\\Test\\": "module/Cpms/test"
         }
     },
     "minimum-stability": "dev",
