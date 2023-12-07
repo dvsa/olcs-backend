@@ -37,10 +37,10 @@ class ProcessInspectionRequestEmailTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['ImapService'] = m::mock(Imap::class);
 
-        \OlcsTest\Bootstrap::setupLogger();
-        $this->logWriter = Logger::getLogger()->getWriters()->toArray()[0];
-
         parent::setUp();
+
+        $this->logWriter = $logWriter = new \Laminas\Log\Writer\Mock();
+        Logger::getLogger()->addWriter($logWriter);
     }
 
     public function testHandleCommand()

@@ -16,7 +16,7 @@ use Doctrine\ORM\Query;
 use LmcRbacMvc\Service\AuthorizationService;
 use Mockery\MockInterface;
 use Dvsa\OlcsTest\MocksRepositoriesTrait;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\Repository\MocksLicenceRepositoryTrait;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicenceEntity;
 use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;

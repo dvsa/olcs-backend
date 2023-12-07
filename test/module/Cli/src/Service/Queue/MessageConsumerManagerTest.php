@@ -7,9 +7,10 @@
  */
 namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
+
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
@@ -22,7 +23,18 @@ class MessageConsumerManagerTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
+        $this->sm = $sm;
 
         $this->sut = new MessageConsumerManager();
     }

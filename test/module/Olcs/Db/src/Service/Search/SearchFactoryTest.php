@@ -12,7 +12,7 @@ use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Olcs\Db\Service\Search\Search;
 use Olcs\Db\Service\Search\SearchFactory;
-use Olcs\TestHelpers\MockeryTestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 
 class SearchFactoryTest extends MockeryTestCase

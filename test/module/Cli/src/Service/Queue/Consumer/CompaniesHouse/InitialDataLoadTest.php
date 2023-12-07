@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
+use Olcs\Logging\Log\Logger;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad
@@ -17,6 +18,17 @@ class InitialDataLoadTest extends AbstractConsumerTestCase
 
     /** @var InitialDataLoad */
     protected $sut;
+
+    public function setUp(): void
+    {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
+
+        parent::setUp();
+    }
 
     public function testProcessMessageSuccess()
     {

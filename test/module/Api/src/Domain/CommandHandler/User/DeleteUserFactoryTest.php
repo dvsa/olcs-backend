@@ -12,7 +12,7 @@ use Dvsa\OlcsTest\Api\Domain\Repository\MocksUserRepositoryTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**

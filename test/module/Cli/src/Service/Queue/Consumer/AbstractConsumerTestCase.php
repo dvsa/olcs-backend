@@ -8,6 +8,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Abstract Queue Consumer Test
@@ -37,6 +38,12 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
             ->andReturn($this->chm);
 
         $this->instantiate();
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
     }
 
     protected function instantiate()

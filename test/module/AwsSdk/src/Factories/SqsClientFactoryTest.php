@@ -4,8 +4,10 @@ namespace Dvsa\OlcsTest\AwsSdk\Factories;
 
 use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\AwsSdk\Factories\SqsClientFactory;
+use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
-use OlcsTest\Bootstrap;
+
+use Mockery as m;
 use Aws\Credentials\CredentialsInterface;
 
 class SqsClientFactoryTest extends TestCase
@@ -18,7 +20,18 @@ class SqsClientFactoryTest extends TestCase
     {
         $this->sut = new SqsClientFactory();
 
-        $this->sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
+        $this->sm = $sm;
     }
 
     /**

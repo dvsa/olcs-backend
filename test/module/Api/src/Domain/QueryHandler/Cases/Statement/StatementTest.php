@@ -58,11 +58,10 @@ class StatementTest extends QueryHandlerTestCase
         /** @var Result $result */
         $result = $this->sut->handleQuery($query);
 
-        Assert::assertArraySubset(
-            ['assignedCaseworker' => null],
-            $result->serialize(),
-            true
-        );
+        $arr = $result->serialize();
+
+        $this->assertArrayHasKey('assignedCaseworker', $arr);
+        $this->assertNull($arr['assignedCaseworker']);
     }
 
     public function testHandleQueryWhenAssignedCaseworker()

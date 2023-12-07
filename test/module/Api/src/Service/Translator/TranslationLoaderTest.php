@@ -10,6 +10,7 @@ use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\I18n\Translator\TextDomain;
+use Olcs\Logging\Log\Logger;
 
 /**
  * TranslationLoaderTest
@@ -18,6 +19,15 @@ use Laminas\I18n\Translator\TextDomain;
  */
 class TranslationLoaderTest extends MockeryTestCase
 {
+    public function setUp(): void
+    {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
+    }
+
     /**
      * test loading translations from the cache
      */

@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Olcs\Logging\Log\Logger;
 use org\bovigo\vfs\vfsStream;
 use Laminas\Http\Headers;
 use Laminas\Http\Response as HttpResponse;
@@ -29,6 +30,12 @@ class ResponseTest extends MockeryTestCase
 
         $this->sut = m::mock(Plugin\Response::class)->makePartial();
         $this->sut->shouldReceive('getController->getResponse')->andReturn($this->response);
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
 
         parent::setUp();
     }

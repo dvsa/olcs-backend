@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount as Qry;
 use Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount\MyAccount;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Olcs\Logging\Log\Logger;
 
 /**
  * @see MyAccount
@@ -32,6 +33,12 @@ class MyAccountTest extends QueryHandlerTestCase
         ];
 
         $this->mockRepo('SystemParameter', SysParamRepo::class);
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
 
         parent::setUp();
     }

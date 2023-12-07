@@ -10,8 +10,8 @@ use Dvsa\Olcs\Api\Rbac\JWTIdentityProviderFactory;
 use Laminas\Http\Request;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
-use Olcs\TestHelpers\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\OlcsTest\MocksServicesTrait;
 
 /**
  * Class JWTIdentityProviderFactoryTest

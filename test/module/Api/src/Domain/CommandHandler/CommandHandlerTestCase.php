@@ -31,6 +31,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\Json\Json as LaminasJson;
 use LmcRbacMvc\Service\AuthorizationService;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Command Handler Test Case
@@ -139,6 +140,12 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
         $this->sideEffects = [];
         $this->commands = [];
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
 
         $this->initReferences();
     }

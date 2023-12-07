@@ -13,9 +13,10 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
+
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
@@ -62,7 +63,18 @@ class GeneratorTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
+        $this->sm = $sm;
 
         $this->niTranslation = m::mock(NiTextTranslation::class);
 

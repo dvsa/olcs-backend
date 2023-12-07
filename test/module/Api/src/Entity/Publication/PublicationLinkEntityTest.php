@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TmEntity;
 use Mockery as m;
+use Olcs\Logging\Log\Logger;
 
 /**
  * PublicationLink Entity Unit Tests
@@ -33,6 +34,15 @@ class PublicationLinkEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function setUp(): void
+    {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
+    }
 
     /**
      * Tests updateText throws an exception if the corresponding publication isn't of status New

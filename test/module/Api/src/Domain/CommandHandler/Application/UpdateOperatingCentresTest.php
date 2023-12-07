@@ -22,7 +22,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateOperatingCentres as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use LmcRbacMvc\Service\AuthorizationService;
 use Hamcrest\Arrays\IsArrayContainingKeyValuePair;

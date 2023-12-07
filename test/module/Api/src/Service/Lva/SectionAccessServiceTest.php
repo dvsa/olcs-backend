@@ -9,9 +9,10 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Service\Lva\RestrictionService;
 use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
+
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
@@ -42,7 +43,18 @@ class SectionAccessServiceTest extends MockeryTestCase
         $this->sectionConfig = m::mock();
         $this->authService = m::mock(AuthorizationService::class);
 
-        $this->serviceLocator = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
+        $this->serviceLocator = $sm;
         $this->serviceLocator->setService('RestrictionService', $this->mockRestrictionHelper);
         $this->serviceLocator->setService('SectionConfig', $this->sectionConfig);
         $this->serviceLocator->setService(AuthorizationService::class, $this->authService);

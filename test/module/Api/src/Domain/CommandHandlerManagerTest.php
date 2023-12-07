@@ -13,6 +13,7 @@ use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Olcs\Logging\Log\Logger;
 
 class CommandHandlerManagerTest extends MockeryTestCase
 {
@@ -30,6 +31,12 @@ class CommandHandlerManagerTest extends MockeryTestCase
         $container->expects('get')->with('ValidationHandlerManager')->andReturn($this->vhm);
 
         $this->sut = new CommandHandlerManager($container, []);
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
     }
 
     public function testHandleCommand()

@@ -13,7 +13,7 @@ use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Authentication\Result;
 use Mockery as m;
 use Mockery\MockInterface;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use LmcRbacMvc\Identity\IdentityInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 

@@ -17,8 +17,8 @@ use Laminas\Http\Headers;
 use Laminas\Http\Request;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery\MockInterface;
-use Olcs\TestHelpers\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\OlcsTest\MocksServicesTrait;
 
 /**
  * Class JWTIdentityProviderTest

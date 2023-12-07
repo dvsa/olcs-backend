@@ -5,8 +5,9 @@ namespace OlcsTest\Queue\Factories;
 use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\Queue\Factories\QueueFactory;
 use Dvsa\Olcs\Queue\Service\Queue;
-use OlcsTest\Bootstrap;
+use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
+use Mockery as m;
 
 class QueueFactoryTest extends TestCase
 {
@@ -18,7 +19,18 @@ class QueueFactoryTest extends TestCase
     {
         $this->sut = new QueueFactory();
 
-        $this->sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
+        $this->sm = $sm;
     }
 
     public function testCreateService()

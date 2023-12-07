@@ -5,7 +5,9 @@ namespace Dvsa\OlcsTest\AwsSdk\Factories;
 use Aws\Credentials\CredentialsInterface;
 use Aws\S3\S3Client;
 use Dvsa\Olcs\AwsSdk\Factories\S3ClientFactory;
-use OlcsTest\Bootstrap;
+use Laminas\ServiceManager\ServiceManager;
+
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,7 +25,18 @@ class S3ClientFactoryTest extends TestCase
     {
         $this->sut = new S3ClientFactory();
 
-        $this->sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
+        $this->sm = $sm;
     }
 
     public function testInvoke()
