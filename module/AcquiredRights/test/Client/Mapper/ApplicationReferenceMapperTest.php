@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\AcquiredRights\Client;
 use Dvsa\Olcs\AcquiredRights\Client\Mapper\ApplicationReferenceMapper;
 use Dvsa\Olcs\AcquiredRights\Exception\MapperParseException;
 use Dvsa\Olcs\AcquiredRights\Model\ApplicationReference;
-use Olcs\TestHelpers\MockeryTestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class ApplicationReferenceMapperTest extends MockeryTestCase
 {

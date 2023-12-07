@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Result\Auth\ChangePasswordResult;
 use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
 use Laminas\Authentication\Result;
 use Mockery as m;
-use Olcs\TestHelpers\MockeryTestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class CognitoAdapterTest

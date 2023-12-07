@@ -1,38 +1,8 @@
 {
     "name": "olcs/backend",
     "description": "Back End Application for OLCS Project",
-    "repositories": [
-        {
-            "packagist": false
-        },
-        {
-            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-transfer.git",
-            "type": "vcs"
-        },
-        {
-            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-laminas.git",
-            "type": "vcs"
-        },
-        {
-            "type": "composer",
-            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
-            "only": [
-                "olcs/olcs-logging",
-                "olcs/olcs-utils",
-                "olcs/olcs-xmltools"
-            ]
-        },
-        {
-            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS",
-            "type": "composer"
-        },
-        {
-            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
-            "type": "composer"
-        }
-    ],
     "require": {
-        "php": ">=7.4",
+        "php": "^7.4",
         "ext-intl": "*",
         "ext-json": "*",
         "aws/aws-sdk-php": "^3.183",
@@ -50,7 +20,6 @@
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "1.0.10",
         "monolog/monolog": "^2.9",
-        "olcs/olcs-laminas": "3.0.3",
         "olcs/olcs-logging": "^5.0.0",
         "olcs/olcs-transfer": "dev-project/3.0",
         "olcs/olcs-utils": "^5.0.0",
@@ -66,10 +35,18 @@
         "symfony/filesystem": "^5",
         "symfony/finder": "^5",
         "symfony/lock": "^5",
-        "twig/twig": "^2.0"
-    },
-    "require-dev": {
-        "olcs/olcs-devtools": "~4.206.0"
+        "twig/twig": "^2.0",
+        "lm-commons/lmc-rbac-mvc": "^3.3",
+        "laminas/laminas-mail": "^2.16",
+        "laminas/laminas-mvc": "^3.3",
+        "laminas/laminas-mvc-console": "^1.3",
+        "laminas/laminas-mvc-i18n": "^1.4",
+        "laminas/laminas-servicemanager": "^3.17",
+        "laminas/laminas-http": "^2.16",
+        "laminas/laminas-view": "^2.23",
+        "laminas/laminas-i18n": "^2.17",
+        "laminas/laminas-serializer": "^2.13",
+        "laminas/laminas-eventmanager": "^3.5"
     },
     "autoload": {
         "classmap": [
@@ -97,42 +74,58 @@
         "psr-4": {
             "Dvsa\\Olcs\\Auth\\Test\\": "module/Auth/test",
             "Dvsa\\Olcs\\CompaniesHouse\\Test\\": "module/CompaniesHouse/test",
-            "Dvsa\\Olcs\\Cpms\\Test\\": "module/Cpms/test"
+            "Dvsa\\Olcs\\Cpms\\Test\\": "module/Cpms/test",
+            "OlcsTest\\Db\\": "test/module/Olcs/Db/src",
+            "Dvsa\\OlcsTest\\": "test/src",
+            "Dvsa\\OlcsTest\\Address\\": "test/module/Address/src",
+            "Dvsa\\OlcsTest\\Api\\": "test/module/Api/src",
+            "Dvsa\\OlcsTest\\Cli\\": "test/module/Cli/src",
+            "Dvsa\\OlcsTest\\DocumentShare\\": "test/module/DocumentShare/src",
+            "Dvsa\\OlcsTest\\Email\\": "test/module/Email/src",
+            "Dvsa\\OlcsTest\\Scanning\\": "test/module/Scanning/src",
+            "Dvsa\\OlcsTest\\Snapshot\\": "test/module/Snapshot/src",
+            "Dvsa\\OlcsTest\\AwsSdk\\": "test/module/AwsSdk/src",
+            "Dvsa\\OlcsTest\\Queue\\": "test/module/Queue/src"
         }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "process-timeout": 600,
-        "preferred-install": "dist",
-        "secure-http": false,
         "platform": {
             "php": "7.4.33"
         },
-        "sort-packages": true,
         "allow-plugins": {
-            "elendev/composer-push": true,
-            "phpstan/extension-installer": true,
-            "laminas/laminas-component-installer": true,
-            "laminas/laminas-dependency-plugin": true,
-            "composer/package-versions-deprecated": true
+            "bamarni/composer-bin-plugin": true
         }
     },
     "scripts": {
-        "ut": "phpunit -c test/phpunit.xml --stop-on-failure",
-        "review": "review",
-        "cs": "phpcs --severity=1 --standard=vendor/dvsa/coding-standards/src/Profiles/DVSA/CS/ruleset.xml",
-        "coverage": "phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html",
-        "sonar": "phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit",
-        "update-syms": "composer-update-syms"
+        "bin": "echo 'bin not installed'",
+        "post-install-cmd": [
+            "@composer bin all install"
+        ],
+        "test": "phpunit",
+        "phpcs": "phpcs",
+        "psalm": "psalm",
+        "phpstan": "phpstan",
+        "all": [
+            "@test",
+            "@phpcs",
+            "@psalm",
+            "@phpstan"
+        ]
     },
-    "extra": {
-        "nexus-push": {
-            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/olcs-backend",
-            "ignore": [
-                "test/",
-                "config/autoload/local.php"
-            ]
-        }
+    "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.8",
+        "phpunit/phpunit": "^9.6",
+        "mockery/mockery": "^1.6",
+        "johnkary/phpunit-speedtrap": "^4.0",
+        "mikey179/vfsstream": "^1.6",
+        "dms/phpunit-arraysubset-asserts": "^0.5.0"
+    },
+    "extra" : {
+      "bamarni-bin": {
+        "bin-links": true,
+        "forward-command": true
+      }
     }
 }

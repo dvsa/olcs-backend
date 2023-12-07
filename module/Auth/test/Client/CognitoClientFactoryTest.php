@@ -6,8 +6,8 @@ namespace Dvsa\Olcs\Auth\Test\Client;
 use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Olcs\Auth\Client\CognitoClientFactory;
 use Mockery as m;
-use Olcs\TestHelpers\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\OlcsTest\MocksServicesTrait;
 
 /**
  * Class CognitoClientFactoryTest

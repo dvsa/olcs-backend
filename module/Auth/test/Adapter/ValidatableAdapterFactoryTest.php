@@ -8,8 +8,8 @@ use Dvsa\Olcs\Auth\Adapter\ValidatableAdapterFactory;
 use InvalidArgumentException;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\ServiceManager;
-use Olcs\TestHelpers\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Mockery as m;
 use stdClass;
 

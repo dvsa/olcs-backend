@@ -7,7 +7,7 @@ use Dvsa\Olcs\AcquiredRights\Exception\AcquiredRightsException;
 use Dvsa\Olcs\AcquiredRights\Exception\MapperParseException;
 use Dvsa\Olcs\AcquiredRights\Model\ApplicationReference;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Olcs\TestHelpers\MockeryTestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class AcquiredRightsExceptionToValidationExceptionMapperTest extends MockeryTestCase
 {

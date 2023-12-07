@@ -13,7 +13,7 @@ use Dvsa\Olcs\AcquiredRights\Service\AcquiredRightsService;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Laminas\Log\LoggerInterface;
 use Mockery as m;
-use Olcs\TestHelpers\MockeryTestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class AcquiredRightsServiceTest extends MockeryTestCase
 {

@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Auth\Test\Service;
 
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Faker\Factory;
-use Olcs\TestHelpers\MockeryTestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class PasswordServiceTest extends MockeryTestCase
 {

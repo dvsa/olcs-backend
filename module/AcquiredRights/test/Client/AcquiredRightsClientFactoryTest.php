@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\AcquiredRights\Client;
 
 use Laminas\ServiceManager\ServiceManager;
-use Olcs\TestHelpers\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class AcquiredRightsClientFactoryTest extends MockeryTestCase
 {
