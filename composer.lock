@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c952a33a8b4366210652246b05f92c8a",
+    "content-hash": "d9a8de6eb662afcf3e88cb24487244f0",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -6086,12 +6086,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-transfer.git",
-                "reference": "c137fb49d7bc9cbf99373f05dfbc579e677118fa"
+                "reference": "10885b6119db0f6366e754d772d73af15dc82e63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/c137fb49d7bc9cbf99373f05dfbc579e677118fa",
-                "reference": "c137fb49d7bc9cbf99373f05dfbc579e677118fa",
+                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/10885b6119db0f6366e754d772d73af15dc82e63",
+                "reference": "10885b6119db0f6366e754d772d73af15dc82e63",
                 "shasum": ""
             },
             "require": {
@@ -6133,7 +6133,7 @@
             "support": {
                 "source": "https://github.com/dvsa/olcs-transfer/tree/project/3.0"
             },
-            "time": "2023-12-06T12:13:42+00:00"
+            "time": "2023-12-07T11:43:17+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -11495,7 +11495,7 @@
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.4.33"
+        "ext-redis": "4.3"
     },
     "plugin-api-version": "2.3.0"
 }
