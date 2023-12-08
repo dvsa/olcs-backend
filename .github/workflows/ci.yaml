@@ -19,5 +19,5 @@ jobs:
   tests:
     uses: dvsa/.github/.github/workflows/php-tests.yml@main
     with:
-      php-versions: 7.4
+      php-versions: "[\"7.4\"]"
       fail-fast: false
