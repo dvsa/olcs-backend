@@ -6,10 +6,6 @@
             "packagist": false
         },
         {
-            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-transfer.git",
-            "type": "vcs"
-        },
-        {
             "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-laminas.git",
             "type": "vcs"
         },
@@ -19,7 +15,8 @@
             "only": [
                 "olcs/olcs-logging",
                 "olcs/olcs-utils",
-                "olcs/olcs-xmltools"
+                "olcs/olcs-xmltools",
+                "olcs/olcs-transfer"
             ]
         },
         {
@@ -52,7 +49,7 @@
         "monolog/monolog": "^2.9",
         "olcs/olcs-laminas": "3.0.3",
         "olcs/olcs-logging": "^5.0.0",
-        "olcs/olcs-transfer": "dev-project/3.0",
+        "olcs/olcs-transfer": "^5.0.0",
         "olcs/olcs-utils": "^5.0.0",
         "olcs/olcs-xmltools": "^5.0.0",
         "oro/doctrine-extensions": "^2",
