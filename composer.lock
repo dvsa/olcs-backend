@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9a8de6eb662afcf3e88cb24487244f0",
+    "content-hash": "6d0e7eb2a9ce23340fc16f7205d82a57",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -6346,16 +6346,16 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-project/3.0",
+            "version": "5.0.0-beta.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-transfer.git",
-                "reference": "10885b6119db0f6366e754d772d73af15dc82e63"
+                "reference": "564fcf01080e72adcdf6a92314a44c918e48a799"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/10885b6119db0f6366e754d772d73af15dc82e63",
-                "reference": "10885b6119db0f6366e754d772d73af15dc82e63",
+                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/564fcf01080e72adcdf6a92314a44c918e48a799",
+                "reference": "564fcf01080e72adcdf6a92314a44c918e48a799",
                 "shasum": ""
             },
             "require": {
@@ -6395,9 +6395,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Transfer",
             "support": {
-                "source": "https://github.com/dvsa/olcs-transfer/tree/project/3.0"
+                "source": "https://github.com/dvsa/olcs-transfer/tree/5.0.0-beta.1"
             },
-            "time": "2023-12-07T11:43:17+00:00"
+            "time": "2023-12-08T12:45:17+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -11951,9 +11951,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "olcs/olcs-transfer": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
