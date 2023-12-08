@@ -8,6 +8,8 @@
   findUnusedCode="false"
 >
   <projectFiles>
-    <directory name="src"/>
+    <directory name="module"/>
+    <directory name="public"/>
+    <directory name="config"/>
   </projectFiles>
 </psalm>
