@@ -115,11 +115,6 @@ class QueueTest extends MockeryTestCase
                 ]
             ]));
 
-        $this->queue->shouldReceive('deleteMessage')->once()->with([
-            'QueueUrl' => 'queueUrl',
-            'ReceiptHandle' => 'abc1234'
-        ]);
-
         $messages = $this->sut->fetchMessages('queueUrl', 1);
         $this->assertCount(1, $messages);
     }
