@@ -6205,11 +6205,11 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "5.0.0-beta.2",
+            "version": "5.0.0-beta.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/olcs/olcs-transfer/5.0.0-beta.2/olcs-olcs-transfer-5.0.0-beta.2.zip",
-                "reference": "49ec220ab857b6832139b361fd17249f518bdf10",
+                "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy/olcs/olcs-transfer/5.0.0-beta.3/olcs-olcs-transfer-5.0.0-beta.3.zip",
+                "reference": "e152fef3f759a85abf3c7aa8d7e3df693f960815",
                 "shasum": ""
             },
             "require": {
@@ -6248,9 +6248,9 @@
             },
             "description": "OLCS Transfer",
             "support": {
-                "source": "https://github.com/dvsa/olcs-transfer/tree/5.0.0-beta.2"
+                "source": "https://github.com/dvsa/olcs-transfer/tree/5.0.0-beta.3"
             },
-            "time": "2023-12-11T13:11:05+00:00"
+            "time": "2023-12-11T16:04:27+00:00"
         },
         {
             "name": "olcs/olcs-utils",
