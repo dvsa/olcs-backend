@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -205,7 +206,7 @@ class FeeTypeTest extends RepositoryTestCase
         $expectedQuery = 'QUERY'
             . ' AND ft.isMiscellaneous = [[0]]'
             . ' AND ft.feeType IN ["IRFOGVPERMIT","IRFOPSVANN","IRFOPSVAPP","IRFOPSVCOPY"]'
-            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
+            . ' AND ft.effectiveFrom <= [[' . $expectedDate . ']]'
             . ' ORDER BY ftft.id ASC'
             . ' ORDER BY ft.effectiveFrom DESC';
 
@@ -253,7 +254,7 @@ class FeeTypeTest extends RepositoryTestCase
         $expectedQuery = 'QUERY'
             . ' AND ft.isMiscellaneous = [[0]]'
             . ' AND ft.feeType IN ["BUSAPP","BUSVAR"]'
-            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
+            . ' AND ft.effectiveFrom <= [[' . $expectedDate . ']]'
             . ' ORDER BY ftft.id ASC'
             . ' ORDER BY ft.effectiveFrom DESC';
 
@@ -293,7 +294,7 @@ class FeeTypeTest extends RepositoryTestCase
 
         $expectedQuery = 'QUERY'
             . ' AND ft.isMiscellaneous = [[1]]'
-            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
+            . ' AND ft.effectiveFrom <= [[' . $expectedDate . ']]'
             . ' ORDER BY ftft.id ASC'
             . ' ORDER BY ft.effectiveFrom DESC';
 

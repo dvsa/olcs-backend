@@ -45,7 +45,6 @@ final class UpdateSection26 extends AbstractCommandHandler implements Transactio
     {
         $fullContainer = $container;
 
-
         $this->searchService = $container->get('ElasticSearch\Search');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

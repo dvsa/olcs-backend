@@ -634,7 +634,8 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
             }
         }
 
-        if (($this->application->isPsvDowngrade() && $this->isUnchanged('operating_centres'))
+        if (
+            ($this->application->isPsvDowngrade() && $this->isUnchanged('operating_centres'))
             || ($this->application->isLicenceChangeWhichRequiresOperatingCentre()
                 && $this->application->getOperatingCentres()->isEmpty()
             )
@@ -980,7 +981,6 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
         $this->variationHelper = $container->get('VariationOperatingCentreHelper');

@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople;

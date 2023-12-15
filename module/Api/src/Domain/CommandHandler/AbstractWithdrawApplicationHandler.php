@@ -21,7 +21,8 @@ use Dvsa\Olcs\Transfer\Command\WithdrawApplicationInterface;
  */
 abstract class AbstractWithdrawApplicationHandler extends AbstractCommandHandler implements AuthAwareInterface
 {
-    use AuthAwareTrait, QueueAwareTrait;
+    use AuthAwareTrait;
+    use QueueAwareTrait;
 
     protected $repoServiceName = 'changeMe';
     protected $withdrawStatus = IrhpInterface::STATUS_WITHDRAWN; //override for non-permits entities

@@ -2,6 +2,7 @@
 
 /** PiHearingTest
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Doctrine\ORM\Query;

@@ -5,6 +5,7 @@
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea;

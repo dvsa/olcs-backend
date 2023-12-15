@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\System\Category;

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Olcs\Db\Exceptions;
-
 
 use Throwable;
 
@@ -13,7 +11,6 @@ use Throwable;
  */
 class SearchDateFilterParseException extends \Exception
 {
-
     private $dateField;
 
     /**

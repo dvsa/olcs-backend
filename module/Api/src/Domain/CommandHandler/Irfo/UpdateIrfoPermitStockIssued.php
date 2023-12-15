@@ -3,6 +3,7 @@
 /**
  * Update IRFO Permit Stock Issued
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -34,7 +35,7 @@ final class UpdateIrfoPermitStockIssued extends AbstractCommandHandler implement
 
         if (count($ids) > self::MAX_IDS_COUNT) {
             throw new Exception\ValidationException(
-                ['Number of selected records must be less than or equal to '.self::MAX_IDS_COUNT]
+                ['Number of selected records must be less than or equal to ' . self::MAX_IDS_COUNT]
             );
         }
 

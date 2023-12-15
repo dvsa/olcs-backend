@@ -54,7 +54,6 @@ class ApplicationStep extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->qaContextGenerator = $container->get('QaContextGenerator');
         $this->selfservePageGenerator = $container->get('QaSelfservePageGenerator');
         return parent::__invoke($fullContainer, $requestedName, $options);

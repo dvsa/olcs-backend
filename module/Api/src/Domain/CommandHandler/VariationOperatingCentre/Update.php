@@ -36,11 +36,9 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
         // If it's a delta, we can just edit it anytime
         if ($prefix === 'A') {
-
             $aoc = $this->getRepo('ApplicationOperatingCentre')->fetchById($id);
 
             if (in_array($aoc->getAction(), ['A', 'U'])) {
-
                 $data = $command->getArrayCopy();
                 $data['id'] = $id;
 

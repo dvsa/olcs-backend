@@ -634,7 +634,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
     public function getBilateralCabotageSelection()
     {
         $this->throwRuntimeExceptionIfNotBilateral(__FUNCTION__);
-    
+
         $cabotageOnlyAnswer = $this->getAnswerValueByQuestionId(Question::QUESTION_ID_BILATERAL_CABOTAGE_ONLY);
         if (!is_null($cabotageOnlyAnswer)) {
             return $cabotageOnlyAnswer;

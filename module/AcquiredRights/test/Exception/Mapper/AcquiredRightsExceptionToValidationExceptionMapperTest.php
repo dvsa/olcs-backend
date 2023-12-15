@@ -21,11 +21,12 @@ class AcquiredRightsExceptionToValidationExceptionMapperTest extends MockeryTest
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage(
-            var_export([
+            var_export(
+                [
                 self::INPUT_NAME => [
                     $key => $message
                 ]
-            ],
+                ],
                 true
             )
         );

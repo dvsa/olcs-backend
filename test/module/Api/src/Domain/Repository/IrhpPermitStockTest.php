@@ -44,12 +44,12 @@ class IrhpPermitStockTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitRanges ipr '
             . 'INNER JOIN ipr.irhpPermits ip '
             . 'AND ip.status IN [[['
-                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
-                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+                . '"' . IrhpPermitEntity::STATUS_PENDING . '",'
+                . '"' . IrhpPermitEntity::STATUS_AWAITING_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_ERROR . '"'
             . ']]] '
-            . 'AND ips.irhpPermitType = [['.IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT.']] '
+            . 'AND ips.irhpPermitType = [[' . IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT . ']] '
             . 'ORDER BY ips.validFrom DESC';
 
         $this->assertEquals($expectedQuery, $this->query);
@@ -77,12 +77,12 @@ class IrhpPermitStockTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitRanges ipr '
             . 'INNER JOIN ipr.irhpPermits ip '
             . 'AND ip.status IN [[['
-                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
-                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+                . '"' . IrhpPermitEntity::STATUS_PENDING . '",'
+                . '"' . IrhpPermitEntity::STATUS_AWAITING_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_ERROR . '"'
             . ']]] '
-            . 'AND ips.irhpPermitType = [['.IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND ips.irhpPermitType = [[' . IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
             . 'AND ips.country = [[DE]] '
             . 'ORDER BY ips.validFrom DESC';
 
@@ -142,13 +142,13 @@ class IrhpPermitStockTest extends RepositoryTestCase
 
         $iso8601String = $now->format(DateTime::W3C);
 
-        $expectedQuery = 'BLAH '.
-        'SELECT ips '.
-        'INNER JOIN ips.irhpPermitType ipt '.
-        'INNER JOIN ips.irhpPermitWindows ipw '.
-        'INNER JOIN ips.country c '.
-        "AND ips.country = [[$countryId]] ".
-        "AND ipw.startDate <= [[$iso8601String]] ".
+        $expectedQuery = 'BLAH ' .
+        'SELECT ips ' .
+        'INNER JOIN ips.irhpPermitType ipt ' .
+        'INNER JOIN ips.irhpPermitWindows ipw ' .
+        'INNER JOIN ips.country c ' .
+        "AND ips.country = [[$countryId]] " .
+        "AND ipw.startDate <= [[$iso8601String]] " .
         "AND ipw.endDate > [[$iso8601String]] AND ipt.id = [[4]]";
 
         $this->assertEquals($expectedQuery, $this->query);
@@ -194,14 +194,14 @@ class IrhpPermitStockTest extends RepositoryTestCase
 
         $iso8601String = $now->format(DateTime::W3C);
 
-        $expectedQuery = 'BLAH '.
-        'SELECT ips '.
-        'INNER JOIN ips.irhpPermitType ipt '.
-        'INNER JOIN ips.irhpPermitWindows ipw '.
-        'INNER JOIN ips.country c '.
-        'AND ips.country = [[MA]] '.
-        "AND ipw.startDate <= [[$iso8601String]] ".
-        "AND ipw.endDate > [[$iso8601String]] AND ipt.id = [[4]]".
+        $expectedQuery = 'BLAH ' .
+        'SELECT ips ' .
+        'INNER JOIN ips.irhpPermitType ipt ' .
+        'INNER JOIN ips.irhpPermitWindows ipw ' .
+        'INNER JOIN ips.country c ' .
+        'AND ips.country = [[MA]] ' .
+        "AND ipw.startDate <= [[$iso8601String]] " .
+        "AND ipw.endDate > [[$iso8601String]] AND ipt.id = [[4]]" .
         " INNER JOIN ips.permitCategory r ORDER BY r.displayOrder ASC ORDER BY ips.validTo ASC";
 
         $this->assertEquals($expectedQuery, $this->query);

@@ -34,10 +34,10 @@ final class Upload extends AbstractCommandHandler implements
 {
     const ERR_MIME = 'ERR_MIME';
 
-    use AuthAwareTrait,
-        NamingServiceAwareTrait,
-        QueueAwareTrait,
-        UploaderAwareTrait;
+    use AuthAwareTrait;
+    use NamingServiceAwareTrait;
+    use QueueAwareTrait;
+    use UploaderAwareTrait;
 
     protected $repoServiceName = 'Document';
 

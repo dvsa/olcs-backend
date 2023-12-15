@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;

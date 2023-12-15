@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Test\Service;

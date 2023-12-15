@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -40,7 +41,6 @@ final class UpdatePeople extends AbstractCommandHandler implements Transactioned
         $result->addId('person', $person->getId());
 
         if ($application->useDeltasInPeopleSection()) {
-
             try {
                 $appOrgPerson = $this->getRepo('ApplicationOrganisationPerson')
                     ->fetchForApplicationAndPerson($application->getId(), $command->getPerson());

@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -70,8 +71,10 @@ final class Restore extends AbstractCommandHandler implements TransactionedInter
         if (!$licence->hasCommunityLicenceOfficeCopy($ids)) {
             $officeCopy = $this->getRepo()->fetchOfficeCopy($licenceId);
             $status = $officeCopy->getStatus()->getId();
-            if ($status === CommunityLicEntity::STATUS_WITHDRAWN ||
-                $status === CommunityLicEntity::STATUS_SUSPENDED) {
+            if (
+                $status === CommunityLicEntity::STATUS_WITHDRAWN ||
+                $status === CommunityLicEntity::STATUS_SUSPENDED
+            ) {
                 throw new ValidationException(
                     [
                         'communityLicence' => [

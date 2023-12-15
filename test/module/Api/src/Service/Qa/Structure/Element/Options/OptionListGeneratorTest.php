@@ -33,7 +33,7 @@ class OptionListGeneratorTest extends MockeryTestCase
         $this->optionListFactory = m::mock(OptionListFactory::class);
 
         $this->optionFactory = m::mock(OptionFactory::class);
-        
+
         $this->optionListGenerator = new OptionListGenerator($this->optionListFactory, $this->optionFactory);
 
         $this->optionListGenerator->registerSource(

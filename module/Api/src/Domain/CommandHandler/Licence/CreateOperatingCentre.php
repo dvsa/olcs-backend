@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -100,7 +101,6 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->helper = $container->get('OperatingCentreHelper');
         return parent::__invoke($fullContainer, $requestedName, $options);

@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Fee\FeeType as QueryHandler;

@@ -76,7 +76,9 @@ class UpdateVehicleDeclarationTest extends CommandHandlerTestCase
             ->shouldReceive('save')->with($application)->once();
 
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCmd::class, ['id' => 423, 'section' => 'vehiclesDeclarations'], new Result()
+            UpdateApplicationCompletionCmd::class,
+            ['id' => 423, 'section' => 'vehiclesDeclarations'],
+            new Result()
         );
 
         $this->sut->handleCommand($command);

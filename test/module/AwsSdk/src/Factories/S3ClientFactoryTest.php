@@ -6,7 +6,6 @@ use Aws\Credentials\CredentialsInterface;
 use Aws\S3\S3Client;
 use Dvsa\Olcs\AwsSdk\Factories\S3ClientFactory;
 use Laminas\ServiceManager\ServiceManager;
-
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 

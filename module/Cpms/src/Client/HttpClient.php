@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Cpms\Client;
@@ -197,7 +198,7 @@ class HttpClient
         }
     }
 
-    protected function filterResponseBody(string $responseBody) : ?string
+    protected function filterResponseBody(string $responseBody): ?string
     {
         return preg_replace('/(access_token":")([\d|\w]*)/', '$1****', $responseBody);
     }

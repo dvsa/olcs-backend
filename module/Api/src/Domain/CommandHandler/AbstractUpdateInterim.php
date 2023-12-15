@@ -62,8 +62,10 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
 
         $currentStatusId = $application->getCurrentInterimStatus();
 
-        if ($currentStatusId !== ApplicationEntity::INTERIM_STATUS_INFORCE
-            && $command->getStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE) {
+        if (
+            $currentStatusId !== ApplicationEntity::INTERIM_STATUS_INFORCE
+            && $command->getStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE
+        ) {
             $this->specifyVehiclesAndCreateDiscs($application);
         }
 
@@ -97,12 +99,13 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
             return $this->result;
         }
 
-        if ($currentStatusId === ApplicationEntity::INTERIM_STATUS_ENDED
-            && $command->getStatus() !== ApplicationEntity::INTERIM_STATUS_ENDED) {
+        if (
+            $currentStatusId === ApplicationEntity::INTERIM_STATUS_ENDED
+            && $command->getStatus() !== ApplicationEntity::INTERIM_STATUS_ENDED
+        ) {
             $this->saveInterimData($application, $command, true);
             return $this->result;
         }
-
 
         return $this->result;
     }
@@ -251,7 +254,8 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
                 continue;
             }
             // No longer interim
-            if ($licenceVehicle->getInterimApplication() !== null
+            if (
+                $licenceVehicle->getInterimApplication() !== null
                 && !in_array($licenceVehicle->getId(), $interimVehicles)
             ) {
                 $licenceVehicle->setInterimApplication(null);
@@ -262,7 +266,8 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
                     // Cease active discs
                     $this->ceaseActiveDiscsForVehicle($licenceVehicle);
                 }
-            } elseif ($licenceVehicle->getInterimApplication() === null
+            } elseif (
+                $licenceVehicle->getInterimApplication() === null
                 && in_array($licenceVehicle->getId(), $interimVehicles)
             ) {
                 $licenceVehicle->setInterimApplication($application);

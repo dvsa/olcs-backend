@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Team;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\TeamPrinter\TeamPrinterExceptionsList as QueryHandler;

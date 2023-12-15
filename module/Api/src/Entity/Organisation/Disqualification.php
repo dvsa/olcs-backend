@@ -102,9 +102,10 @@ class Disqualification extends AbstractDisqualification
             }
 
             $now = new DateTime('now');
-            if ($now->getTimestamp() >= $startDate->getTimestamp() &&
+            if (
+                $now->getTimestamp() >= $startDate->getTimestamp() &&
                 $now->getTimestamp() <= $endDate->getTimestamp()
-                ) {
+            ) {
                 return self::STATUS_ACTIVE;
             }
         }
@@ -127,7 +128,7 @@ class Disqualification extends AbstractDisqualification
                 $startDate = new \DateTime($startDate);
             }
 
-            $endDate = $startDate->add(new \DateInterval('P'. (int) $this->getPeriod() .'M'));
+            $endDate = $startDate->add(new \DateInterval('P' . (int) $this->getPeriod() . 'M'));
         }
 
         return $endDate;

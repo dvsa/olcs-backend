@@ -35,8 +35,8 @@ class TmLinkedApplications extends DynamicBookmark
 
         if (!empty($this->data['tmApplications'])) {
             foreach ($this->data['tmApplications'] as $tmApp) {
-
-                if (isset($tmApp['application']['licence']['licNo'])
+                if (
+                    isset($tmApp['application']['licence']['licNo'])
                     && isset($tmApp['application']['id'])
                     && isset($tmApp['application']['licence']['organisation']['name'])
                 ) {

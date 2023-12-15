@@ -176,7 +176,8 @@ class OperatingCentreHelper implements FactoryInterface
 
         // if new application check not other application/licences in this traffic area
         if ($entity instanceof Application && $entity->isNew()) {
-            if ($trafficArea->getId() === TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+            if (
+                $trafficArea->getId() === TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
                 && $entity->getNiFlag() === 'N'
             ) {
                 $this->addMessage('postcode', self::ERR_OC_TA_NI_APP);

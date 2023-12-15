@@ -66,7 +66,6 @@ class SubmitApplicationPath extends AbstractCommandHandler
     {
         $fullContainer = $container;
 
-
         $this->qaContextFactory = $container->get('QaContextFactory');
         $this->supplementedApplicationStepsProvider = $container->get(
             'QaSupplementedApplicationStepsProvider'

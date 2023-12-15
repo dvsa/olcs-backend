@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;

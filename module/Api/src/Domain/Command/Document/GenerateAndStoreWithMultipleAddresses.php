@@ -6,7 +6,6 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 class GenerateAndStoreWithMultipleAddresses extends AbstractCommand
 {
-
     protected $generateCommandData = [];
 
     protected $addressBookmark;

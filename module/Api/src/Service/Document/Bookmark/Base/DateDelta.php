@@ -15,13 +15,13 @@ abstract class DateDelta extends StaticBookmark
     const DELTA  = "+0";
 
     /**
-     * Render 
-     * 
+     * Render
+     *
      * @return string
      */
     public function render()
     {
         $timestamp = strtotime(static::DELTA . " days");
-        return (new DateTime('@'.$timestamp))->format(self::FORMAT);
+        return (new DateTime('@' . $timestamp))->format(self::FORMAT);
     }
 }

@@ -47,7 +47,6 @@ class ByLicenceTest extends QueryHandlerTestCase
         $this->repoMap['PsvDisc']->shouldReceive('countForLicence')->with($query->getId())
             ->andReturn(7);
 
-
         $expected = new Result(
             $surrender,
             [

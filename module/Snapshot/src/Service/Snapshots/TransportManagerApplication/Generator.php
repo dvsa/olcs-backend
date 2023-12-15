@@ -116,7 +116,8 @@ class Generator extends AbstractGenerator
         $sections[] = $this->getPreviousLicenceDetailsReviewSection($tma);
 
         // add declaration/signature block if internal user or if TMA status is Op signed
-        if ($isInternalUser ||
+        if (
+            $isInternalUser ||
             $tma->getTmApplicationStatus()->getId() === TransportManagerApplication::STATUS_OPERATOR_SIGNED ||
             $tma->getTmApplicationStatus()->getId() === TransportManagerApplication::STATUS_RECEIVED
         ) {

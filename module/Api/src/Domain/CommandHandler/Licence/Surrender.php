@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -125,7 +126,8 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
             )
         );
 
-        if (!($licence->getStatus()->getId() === Licence::LICENCE_STATUS_TERMINATED &&
+        if (
+            !($licence->getStatus()->getId() === Licence::LICENCE_STATUS_TERMINATED &&
                 $licence->isPsv() &&
                 $licence->isSpecialRestricted())
         ) {

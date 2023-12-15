@@ -3,6 +3,7 @@
 /**
  * Delete a case
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractDeleteCommandHandler;

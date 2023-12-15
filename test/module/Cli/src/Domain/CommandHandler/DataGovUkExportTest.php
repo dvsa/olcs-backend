@@ -81,7 +81,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $this->mockedSmServices['FileUploader'] = $mockFileUploader;
         $this->mockedSmServices['DocumentNamingService'] = $mockDocumentNaming;
 
-        $this->sut = new DataGovUkExport;
+        $this->sut = new DataGovUkExport();
 
         parent::setUp();
 
@@ -190,7 +190,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $actual = $this->sut->handleCommand($cmd);
 
         $date = new DateTime('now');
-        $expectedFile = $this->tmpPath . '/' . $fileName. '_' .
+        $expectedFile = $this->tmpPath . '/' . $fileName . '_' .
             $date->format(DataGovUkExport::FILE_DATETIME_FORMAT) . '.csv';
 
         $expectMsg =
@@ -272,7 +272,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
                 ''
             );
         $contentStoreFile->shouldReceive('getResource')
-            ->andReturn($this->tmpPath . '/'. $fileName);
+            ->andReturn($this->tmpPath . '/' . $fileName);
         $contentStoreFile->shouldReceive('getMimeType')
             ->andReturn('text/csv');
         $contentStoreFile->shouldReceive('getSize')

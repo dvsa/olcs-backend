@@ -3,6 +3,7 @@
 /**
  * RefuseS4Test.php
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Schedule41;
 
 use Mockery as m;

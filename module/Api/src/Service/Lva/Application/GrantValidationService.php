@@ -69,7 +69,8 @@ class GrantValidationService implements FactoryInterface
         }
 
         // check enforcement area status
-        if ($this->shouldValidateEnforcementArea($application)
+        if (
+            $this->shouldValidateEnforcementArea($application)
             && !$this->enforcementAreaIsValid($application)
         ) {
             $errors['application-grant-error-enforcement-area'] = 'application-grant-error-enforcement-area';
@@ -216,14 +217,16 @@ class GrantValidationService implements FactoryInterface
         }
 
         // Display an additional error if the Out of opposition date is after the current date
-        if ($oood instanceof \DateTime && $oood > new \DateTime()
-            ) {
+        if (
+            $oood instanceof \DateTime && $oood > new \DateTime()
+        ) {
             $errors[self::ERROR_OOOD_NOT_PASSED] = 'The out of opposition period has not yet passed';
         }
 
         // Display an additional error if the Out of representation date is after the current date
-        if ($oord instanceof \DateTime && $oord > new \DateTime()
-            ) {
+        if (
+            $oord instanceof \DateTime && $oord > new \DateTime()
+        ) {
             $errors[self::ERROR_OORD_NOT_PASSED] = 'The out of representation date has not yet passed';
         }
 

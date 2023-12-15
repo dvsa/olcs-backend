@@ -36,10 +36,10 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
     OpenAmUserAwareInterface,
     ConfigAwareInterface
 {
-    use AuthAwareTrait,
-        CacheAwareTrait,
-        ConfigAwareTrait,
-        OpenAmUserAwareTrait;
+    use AuthAwareTrait;
+    use CacheAwareTrait;
+    use ConfigAwareTrait;
+    use OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 

@@ -3,6 +3,7 @@
 /**
  * Delete Bus
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

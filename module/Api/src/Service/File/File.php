@@ -155,10 +155,8 @@ class File
                 file_put_contents($tmpFile, $this->content);
 
                 $this->mimeType = (new \finfo(FILEINFO_MIME_TYPE))->file($tmpFile);
-
             } catch (\Exception $e) {
                 throw $e;
-
             } finally {
                 if (is_file($tmpFile)) {
                     unlink($tmpFile);

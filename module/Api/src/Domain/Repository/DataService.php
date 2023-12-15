@@ -29,7 +29,10 @@ class DataService extends AbstractRepository
             ->modifyQuery($qb);
 
         $qb->innerJoin(
-            Entity\Application\Application::class, 'a', Expr\Join::WITH, 'a.status = ' . $this->alias . '.id'
+            Entity\Application\Application::class,
+            'a',
+            Expr\Join::WITH,
+            'a.status = ' . $this->alias . '.id'
         );
 
         if (method_exists($query, 'getOrganisation') && (int)$query->getOrganisation() > 0) {

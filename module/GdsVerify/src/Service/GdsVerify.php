@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\GdsVerify\Service;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Log\LoggerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use \RobRichards\XMLSecLibs;
+use RobRichards\XMLSecLibs;
 use Dvsa\Olcs\GdsVerify\Data;
 use Interop\Container\ContainerInterface;
 
@@ -253,7 +253,8 @@ class GdsVerify implements FactoryInterface
      */
     public function getEncryptionKey($indexNumber = 0)
     {
-        if (isset($this->encryptionKeys[$indexNumber])
+        if (
+            isset($this->encryptionKeys[$indexNumber])
             && $this->encryptionKeys[$indexNumber] instanceof XMLSecLibs\XMLSecurityKey
         ) {
             return $this->encryptionKeys[$indexNumber];

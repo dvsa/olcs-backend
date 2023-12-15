@@ -5,6 +5,7 @@
  *
  * @author Craig R <uk@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Doctrine\ORM\Query;

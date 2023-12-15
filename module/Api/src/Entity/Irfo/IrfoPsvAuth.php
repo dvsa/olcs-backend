@@ -347,15 +347,17 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
      */
     private function isWithdrawableState()
     {
-        if (in_array(
-            $this->getStatus()->getId(),
-            [
+        if (
+            in_array(
+                $this->getStatus()->getId(),
+                [
                 self::STATUS_RENEW,
                 self::STATUS_PENDING,
                 self::STATUS_CNS,
                 self::STATUS_APPROVED
-            ]
-        )) {
+                ]
+            )
+        ) {
             return true;
         }
 
@@ -487,15 +489,17 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
      */
     private function isRenewableState()
     {
-        if (in_array(
-            $this->getStatus()->getId(),
-            [
+        if (
+            in_array(
+                $this->getStatus()->getId(),
+                [
                 self::STATUS_APPROVED,
                 self::STATUS_GRANTED,
                 self::STATUS_PENDING,
                 self::STATUS_RENEW,
-            ]
-        )) {
+                ]
+            )
+        ) {
             return true;
         }
 

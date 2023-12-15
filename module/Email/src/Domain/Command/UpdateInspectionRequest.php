@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Email\Domain\Command;
 
 use Dvsa\Olcs\Transfer\Util\Annotation as Transfer;

@@ -81,22 +81,22 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         $previousLicenceType = $this->getPreviousLicenceType()->getId();
         foreach ($this->requiredFields[$previousLicenceType] as $field) {
             switch ($field) {
-                case 'licNo' :
+                case 'licNo':
                     $this->setLicNo($licNo);
                     break;
-                case 'holderName' :
+                case 'holderName':
                     $this->setHolderName($holderName);
                     break;
-                case 'willSurrender' :
+                case 'willSurrender':
                     $this->setWillSurrender($willSurrender);
                     break;
-                case 'disqualificationDate' :
+                case 'disqualificationDate':
                     $this->setDisqualificationDate(new \DateTime($disqualificationDate));
                     break;
-                case 'disqualificationLength' :
+                case 'disqualificationLength':
                     $this->setDisqualificationLength($disqualificationLength);
                     break;
-                case 'purchaseDate' :
+                case 'purchaseDate':
                     $this->setPurchaseDate(new \DateTime($purchaseDate));
                     break;
                 default:

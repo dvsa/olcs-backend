@@ -3,6 +3,7 @@
 /**
  * Update AnnualTestHistory Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases;
 
 use Doctrine\ORM\Query;

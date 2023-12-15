@@ -40,7 +40,6 @@ class DeleteTest extends CommandHandlerTestCase
         $document = m::mock(DocumentEntity::class)->makePartial();
         $document->setIdentifier('DocIdentifier');
 
-
         /** @var DocTemplateEntity $docTemplate */
         $docTemplate = m::mock(DocTemplateEntity::class)->makePartial();
         $docTemplate->setDocument($document);
@@ -84,7 +83,6 @@ class DeleteTest extends CommandHandlerTestCase
         /** @var DocumentEntity $document */
         $document = m::mock(DocumentEntity::class)->makePartial();
         $document->setIdentifier(null);
-
 
         /** @var DocTemplateEntity $docTemplate */
         $docTemplate = m::mock(DocTemplateEntity::class)->makePartial();

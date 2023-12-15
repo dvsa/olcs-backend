@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Task;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

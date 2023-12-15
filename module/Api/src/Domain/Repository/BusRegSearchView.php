@@ -42,7 +42,7 @@ class BusRegSearchView extends AbstractRepository
     {
         $dqb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($dqb);
-        $dqb->where($dqb->expr()->eq($this->alias .'.regNo', ':regNo'))
+        $dqb->where($dqb->expr()->eq($this->alias . '.regNo', ':regNo'))
             ->setParameter('regNo', $regNo);
 
         $results = $dqb->getQuery()->getResult();
@@ -89,7 +89,7 @@ class BusRegSearchView extends AbstractRepository
 
         // OLCS-14215 - need to group by id
         // otherwise we can get multiple rows per id which dehydrates to one object
-        $qb->groupBy($this->alias .'.id');
+        $qb->groupBy($this->alias . '.id');
     }
 
     /**
@@ -110,9 +110,9 @@ class BusRegSearchView extends AbstractRepository
 
         $dqb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($dqb);
-        $dqb->where($dqb->expr()->eq($this->alias .'.licId', ':licence'))
+        $dqb->where($dqb->expr()->eq($this->alias . '.licId', ':licence'))
             ->setParameter('licence', $licence);
-        $dqb->andWhere($dqb->expr()->in($this->alias .'.busRegStatus', ':activeStatuses'))
+        $dqb->andWhere($dqb->expr()->in($this->alias . '.busRegStatus', ':activeStatuses'))
             ->setParameter('activeStatuses', $activeStatuses);
 
         return $dqb->getQuery()->getResult();
@@ -121,7 +121,7 @@ class BusRegSearchView extends AbstractRepository
     /**
      * Fetch a distinct list of record columns based on a context passed in query.
      * For example context = 'organisation' returns all unique organisation IDs and names
-     * 
+     *
      * @param   QueryInterface  $query
      * @param   null            $organisationId
      * @param   null            $localAuthorityId
@@ -145,8 +145,7 @@ class BusRegSearchView extends AbstractRepository
                 ->setParameter('localAuthorityId', $localAuthorityId);
         }
 
-        switch ($query->getContext())
-        {
+        switch ($query->getContext()) {
             case 'licence':
                 $qb->distinct()
                 ->select([$this->alias . '.licId', $this->alias . '.licNo']);

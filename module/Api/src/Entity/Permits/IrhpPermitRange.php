@@ -85,7 +85,7 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $journey,
         $cabotage
     ) {
-        $instance = new self;
+        $instance = new self();
 
         $instance->irhpPermitStock = $permitStock;
         $instance->emissionsCategory = $emissionsCategory;

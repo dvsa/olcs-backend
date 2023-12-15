@@ -4,6 +4,7 @@
  * Update Irhp Permit Application Window
  * @author Andy Newton <andy@vitri.ltd>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;

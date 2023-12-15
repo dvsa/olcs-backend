@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Operator;
 
 use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType;

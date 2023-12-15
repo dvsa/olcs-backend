@@ -132,7 +132,6 @@ final class Create extends AbstractCommandHandler
     {
         $fullContainer = $container;
 
-
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

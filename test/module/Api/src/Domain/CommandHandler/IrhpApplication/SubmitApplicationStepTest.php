@@ -3,6 +3,7 @@
 /**
  * Submit Application Step test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplicationStep as Sut;
@@ -94,7 +95,6 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
                 'postData' => $this->postData
             ]
         );
-
 
         parent::setUp();
     }

@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;

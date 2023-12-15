@@ -283,8 +283,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             ];
         }
 
-        if ($goodsOrPsv->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE
-            && $licenceType->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+        if (
+            $goodsOrPsv->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE
+            && $licenceType->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED
+        ) {
             $errors['licenceType'][] = [
                 self::ERROR_GV_NON_SR => 'GV operators cannot apply for special restricted licences'
             ];
@@ -309,7 +311,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                 'Vehicle type must be specified for all licences'
             ];
         } else {
-            if ($goodsOrPsv->getId() == Licence::LICENCE_CATEGORY_GOODS_VEHICLE &&
+            if (
+                $goodsOrPsv->getId() == Licence::LICENCE_CATEGORY_GOODS_VEHICLE &&
                 $licenceType->getId() == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
             ) {
                 $validVehicleTypes = [
@@ -333,7 +336,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                     Licence::LICENCE_CATEGORY_PSV => RefData::APP_VEHICLE_TYPE_PSV,
                 ];
 
-                if (!isset($mappings[$goodsOrPsv->getId()]) ||
+                if (
+                    !isset($mappings[$goodsOrPsv->getId()]) ||
                     $mappings[$goodsOrPsv->getId()] != $vehicleType->getId()
                 ) {
                     $errors['licenceType'][] = [
@@ -497,7 +501,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // If licence type has been changed from restricted to national or international.
-        if ($licenceTypeId === Licence::LICENCE_TYPE_RESTRICTED &&
+        if (
+            $licenceTypeId === Licence::LICENCE_TYPE_RESTRICTED &&
             (
                 $applicationLicenceTypeId === Licence::LICENCE_TYPE_STANDARD_NATIONAL ||
                 $applicationLicenceTypeId === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
@@ -507,7 +512,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // If licence is is updated from a standard national to an international.
-        if ($licenceTypeId === Licence::LICENCE_TYPE_STANDARD_NATIONAL &&
+        if (
+            $licenceTypeId === Licence::LICENCE_TYPE_STANDARD_NATIONAL &&
             (
                 $applicationLicenceTypeId === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
             )
@@ -570,13 +576,15 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         // foreach of the licence op centres.
         foreach (array_keys($licence) as $operatingCenterId) {
             // If a variation record doesnt exists or its a removal op centre.
-            if (!isset($variation[$operatingCenterId]) ||
+            if (
+                !isset($variation[$operatingCenterId]) ||
                 $variation[$operatingCenterId]->getAction() === ApplicationOperatingCentre::ACTION_DELETE
             ) {
                 continue;
             }
 
-            if (($variation[$operatingCenterId]->getNoOfVehiclesRequired() >
+            if (
+                ($variation[$operatingCenterId]->getNoOfVehiclesRequired() >
                     $licence[$operatingCenterId]->getNoOfVehiclesRequired()) ||
                 ($variation[$operatingCenterId]->getNoOfTrailersRequired() >
                     $licence[$operatingCenterId]->getNoOfTrailersRequired())
@@ -605,7 +613,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             return true;
         }
 
-        if ($this->hasHgvAuthorisationIncreased() ||
+        if (
+            $this->hasHgvAuthorisationIncreased() ||
             $this->hasLgvAuthorisationIncreased() ||
             $this->hasAuthTrailersIncrease() ||
             $this->hasUpgrade() ||
@@ -765,8 +774,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function canCreateCase()
     {
-        if ($this->getStatus()->getId() === self::APPLICATION_STATUS_NOT_SUBMITTED
-            || $this->getLicence()->getLicNo() === null) {
+        if (
+            $this->getStatus()->getId() === self::APPLICATION_STATUS_NOT_SUBMITTED
+            || $this->getLicence()->getLicNo() === null
+        ) {
             return false;
         }
 
@@ -780,7 +791,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function isVariation()
     {
-        return (boolean)$this->getIsVariation();
+        return (bool)$this->getIsVariation();
     }
 
     /**
@@ -1046,8 +1057,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // If we have upgraded from stand nat, to stand inter
-        if ($this->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_NATIONAL
-            && $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+        if (
+            $this->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_NATIONAL
+            && $this->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        ) {
             return true;
         }
 
@@ -1193,7 +1206,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         //  after submit App/Var on internal side, section "Review and declarations" at selfserve section
         //  stay unreachable and user can't change status, so it should be ignored
-        if ($section === ApplicationCompletion::SECTION_DECLARATION
+        if (
+            $section === ApplicationCompletion::SECTION_DECLARATION
             && $this->getStatus()->getId() !== Application::APPLICATION_STATUS_NOT_SUBMITTED
             && $this->getAuthSignature() === true
         ) {
@@ -1246,14 +1260,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function useDeltasInPeopleSection()
     {
         // if application/variation organisation is sole trader or partnership
-        if ($this->getLicence()->getOrganisation()->isSoleTrader() ||
+        if (
+            $this->getLicence()->getOrganisation()->isSoleTrader() ||
             $this->getLicence()->getOrganisation()->isPartnership()
         ) {
             return false;
         }
 
         // if is an application AND no current ApplicationOrganisationUsers AND no inforce licences
-        if (!$this->getIsVariation() &&
+        if (
+            !$this->getIsVariation() &&
             $this->getApplicationOrganisationPersons()->count() === 0 &&
             !$this->getLicence()->getOrganisation()->hasInforceLicences()
         ) {
@@ -1378,7 +1394,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                     continue;
                 }
 
-                if ($aoc->getNoOfVehiclesRequired() <= $licOc->getNoOfVehiclesRequired()
+                if (
+                    $aoc->getNoOfVehiclesRequired() <= $licOc->getNoOfVehiclesRequired()
                     && $aoc->getNoOfTrailersRequired() <= $licOc->getNoOfTrailersRequired()
                 ) {
                     return self::NOT_APPLICABLE;
@@ -1421,7 +1438,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             // It is a goods variation and 0 operating centres have been added; AND
             // It is a goods variation and 0 operating centres have been updated with an increase
             // of vehicles or trailers
-            if ($this->getOperatingCentresAdded()->count() === 0 &&
+            if (
+                $this->getOperatingCentresAdded()->count() === 0 &&
                 !$this->hasIncreaseInOperatingCentre() &&
                 !$this->isRealUpgrade() &&
                 !$this->hasHgvAuthorisationIncreased() &&
@@ -1524,7 +1542,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             /** @var PublicationEntity $latestPublication */
             if ($latestPublication === null) {
                 $latestPublication = $publicationLink->getPublication();
-            } elseif (new \DateTime($publicationLink->getPublication()->getPubDate()) >
+            } elseif (
+                new \DateTime($publicationLink->getPublication()->getPubDate()) >
                 new \DateTime($latestPublication->getPubDate())
             ) {
                 $latestPublication = $publicationLink->getPublication();
@@ -1879,14 +1898,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function allowFeePayments()
     {
-        if (in_array(
-            $this->getStatus()->getId(),
-            [
+        if (
+            in_array(
+                $this->getStatus()->getId(),
+                [
                 self::APPLICATION_STATUS_REFUSED,
                 self::APPLICATION_STATUS_WITHDRAWN,
                 self::APPLICATION_STATUS_NOT_TAKEN_UP,
-            ]
-        )) {
+                ]
+            )
+        ) {
             return false;
         }
 
@@ -2140,8 +2161,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         /** @var Entity\Fee\Fee $fee */
         foreach ($this->getFees()->matching($criteria) as $fee) {
-            if ($fee->isOutstanding()
-                && $fee->getFeeType()->getFeeType()->getId() === $feeTypeFeeTypeId) {
+            if (
+                $fee->isOutstanding()
+                && $fee->getFeeType()->getFeeType()->getId() === $feeTypeFeeTypeId
+            ) {
                 return $fee;
             }
         }
@@ -2161,8 +2184,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         /** @var Entity\Fee\Fee $fee */
         foreach ($this->getFees()->matching($criteria) as $fee) {
-            if ($fee->isOutstanding()
-                && $fee->getFeeType()->getFeeType()->getId() === FeeTypeEntity::FEE_TYPE_GRANTINT) {
+            if (
+                $fee->isOutstanding()
+                && $fee->getFeeType()->getFeeType()->getId() === FeeTypeEntity::FEE_TYPE_GRANTINT
+            ) {
                 return $fee;
             }
         }
@@ -2223,7 +2248,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         /** @var Entity\Fee\Fee $fee */
         foreach ($this->getFees() as $fee) {
-            if (($fee->isNewApplicationFee() || $fee->isVariationFee())
+            if (
+                ($fee->isNewApplicationFee() || $fee->isVariationFee())
                 && !$fee->isCancelled()
             ) {
                 return true;
@@ -2301,7 +2327,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         // The financial tracking section is NOT set to 'Accepted' or 'Not applicable'
         // (i.e. application_tracking.financial_evidence_status <> 1 or 3); AND
         $applicationTracking = $this->getApplicationTracking()->getFinancialEvidenceStatus();
-        if ($applicationTracking === ApplicationTracking::STATUS_ACCEPTED
+        if (
+            $applicationTracking === ApplicationTracking::STATUS_ACCEPTED
             || $applicationTracking === ApplicationTracking::STATUS_NOT_APPLICABLE
         ) {
             return false;
@@ -2309,7 +2336,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         // The financial evidence uploader is set to 'Upload later' or 'Send in the post'
         // (i.e application.financial_evidence_uploaded = 0 or 2); AND
-        if ($this->getFinancialEvidenceUploaded() !== Application::FINANCIAL_EVIDENCE_SEND_IN_POST
+        if (
+            $this->getFinancialEvidenceUploaded() !== Application::FINANCIAL_EVIDENCE_SEND_IN_POST
             && $this->getFinancialEvidenceUploaded() !== Application::FINANCIAL_EVIDENCE_UPLOAD_LATER
         ) {
             return false;
@@ -2322,7 +2350,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         // It is a new application OR it is a variation where the 'Financial evidence' section has been updated
         $applicationCompletion = $this->getApplicationCompletion()->getFinancialEvidenceStatus();
-        if ($this->isVariation()
+        if (
+            $this->isVariation()
             && $applicationCompletion !== ApplicationCompletion::STATUS_VARIATION_UPDATED
         ) {
             return false;
@@ -2344,7 +2373,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         // The operating centre tracking section is NOT set to 'Acceptable' or 'Not applicable'
         // (i.e. application_tracking.operating_centre_status <> 1 or 3); AND
         $applicationTracking = $this->getApplicationTracking()->getOperatingCentresStatus();
-        if ($applicationTracking === ApplicationTracking::STATUS_ACCEPTED
+        if (
+            $applicationTracking === ApplicationTracking::STATUS_ACCEPTED
             || $applicationTracking === ApplicationTracking::STATUS_NOT_APPLICABLE
         ) {
             return false;
@@ -2386,7 +2416,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         foreach ($applicationOperatingCentres as $aoc) {
             // There are operating centres in the application where the advert uploader is set to 'Upload later' or
             // 'Send in the post' (i.e application_operating_centre.ad_placed = 0 or 2); AND
-            if ($aoc->getAdPlaced() !== ApplicationOperatingCentre::AD_POST
+            if (
+                $aoc->getAdPlaced() !== ApplicationOperatingCentre::AD_POST
                 && $aoc->getAdPlaced() !== ApplicationOperatingCentre::AD_UPLOAD_LATER
             ) {
                 continue;
@@ -2400,7 +2431,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             // been an increase in vehicles or trailers
             if ($aoc->getAction() === ApplicationOperatingCentre::ACTION_UPDATE) {
                 $loc = $licenceOperatingCentres[$aoc->getOperatingCentre()->getId()];
-                if ($aoc->getNoOfVehiclesRequired() > $loc->getNoOfVehiclesRequired()
+                if (
+                    $aoc->getNoOfVehiclesRequired() > $loc->getNoOfVehiclesRequired()
                     || $aoc->getNoOfTrailersRequired() > $loc->getNoOfTrailersRequired()
                 ) {
                     $aocsEvidenceRequired[] = $aoc;

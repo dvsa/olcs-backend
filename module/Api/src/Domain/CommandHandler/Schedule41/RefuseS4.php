@@ -5,11 +5,11 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Schedule41;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-
 use Dvsa\Olcs\Api\Entity\Application\S4;
 
 /**

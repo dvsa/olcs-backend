@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\SystemParameter;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\SystemParameter\SystemParameterList as QueryHandler;
@@ -33,7 +34,7 @@ class SystemParameterListTest extends QueryHandlerTestCase
     {
         $query = Query::create(['id' => 1]);
 
-        $mockSystemParameter= m::mock();
+        $mockSystemParameter = m::mock();
         $mockSystemParameter->shouldReceive('serialize')->once()->andReturn('foo');
 
         $this->repoMap['SystemParameter']

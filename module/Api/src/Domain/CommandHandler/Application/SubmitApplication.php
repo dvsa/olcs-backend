@@ -29,7 +29,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class SubmitApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface, SlaCalculatorAwareInterface
 {
-    use AuthAwareTrait, SlaCalculatorAwareTrait;
+    use AuthAwareTrait;
+    use SlaCalculatorAwareTrait;
 
     protected $repoServiceName = 'Application';
     protected $extraRepos = ['TransportManagerApplication', 'Sla'];
@@ -213,7 +214,8 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
             //  If was not added, but was removed at least ONE transport manager
             $statByAction = $stat['action'];
-            if ((int)$statByAction[Entity\Tm\TransportManagerApplication::ACTION_ADD] === 0
+            if (
+                (int)$statByAction[Entity\Tm\TransportManagerApplication::ACTION_ADD] === 0
                 && $statByAction[Entity\Tm\TransportManagerApplication::ACTION_DELETE] > 0
             ) {
                 $taskData['subCategory'] = CategoryEntity::TASK_SUB_CATEGORY_APPLICATION_TM1_REMOVAL_VARIATION;

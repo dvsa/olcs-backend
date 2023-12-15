@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Service\Lva;
 
 /**
@@ -52,7 +53,6 @@ class RestrictionService
 
         // Check the restrictions
         foreach ($restrictions as $restriction) {
-
             // Check the individual restriction
             $satisfied = $this->checkRestriction($restriction, $accessKeys, !$strict, $reference);
 

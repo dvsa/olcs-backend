@@ -3,6 +3,7 @@
 /**
  * Create Partner
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

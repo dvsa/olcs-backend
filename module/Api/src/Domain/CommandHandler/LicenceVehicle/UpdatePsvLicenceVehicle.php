@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle;
 
 use Doctrine\ORM\Query;
@@ -66,7 +67,6 @@ final class UpdatePsvLicenceVehicle extends AbstractCommandHandler implements Tr
         }
 
         if ($this->isGranted(Permission::INTERNAL_USER)) {
-
             if ($command->getSpecifiedDate() !== null) {
                 $licenceVehicle->setSpecifiedDate(
                     $licenceVehicle->processDate($command->getSpecifiedDate(), \DateTime::ISO8601, false)

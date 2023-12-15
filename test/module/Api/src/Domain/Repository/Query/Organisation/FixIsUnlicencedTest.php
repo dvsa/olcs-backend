@@ -60,9 +60,9 @@ class FixIsUnlicencedTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'UPDATE organisation o '.
-            'SET o.is_unlicensed = 0, o.last_modified_on = NOW(), o.last_modified_by = :currentUserId '.
-            'WHERE o.is_unlicensed = 1 AND o.id NOT IN '.
+        return 'UPDATE organisation o ' .
+            'SET o.is_unlicensed = 0, o.last_modified_on = NOW(), o.last_modified_by = :currentUserId ' .
+            'WHERE o.is_unlicensed = 1 AND o.id NOT IN ' .
                 '( SELECT l.organisation_id FROM licence l WHERE l.status = \'lsts_unlicenced\' )';
     }
 }

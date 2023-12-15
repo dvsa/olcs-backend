@@ -3,6 +3,7 @@
 /**
  * Submit Application Path test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use DateTime;

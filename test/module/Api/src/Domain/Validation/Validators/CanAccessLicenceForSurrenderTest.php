@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessLicenceForSurrender;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\User\Permission;
-use \Mockery as m;
+use Mockery as m;
 
 class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
 {
@@ -57,7 +57,6 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
                 $this->setIsValid('isOwner', [$entity], $isOwner);
                 $entity->shouldReceive('getStatus->getId')->once()->andReturn($licenceState);
         }
-
 
         $repo = $this->mockRepo('Licence');
         $repo->shouldReceive('fetchById')->with($entityId)->andReturn($entity);

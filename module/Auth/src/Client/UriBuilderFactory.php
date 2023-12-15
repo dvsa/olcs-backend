@@ -28,7 +28,7 @@ class UriBuilderFactory implements FactoryInterface
     {
         $config = $container->get('Config');
 
-        if (empty($config['auth']['adapters']['openam']['urls']['internal']?? null)) {
+        if (empty($config['auth']['adapters']['openam']['urls']['internal'] ?? null)) {
             throw new ClientException(self::MSG_MISSING_INTERNAL_URL);
         }
 

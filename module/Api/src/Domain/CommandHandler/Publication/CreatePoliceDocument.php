@@ -3,6 +3,7 @@
 /**
  * Creates the police version of a publication
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

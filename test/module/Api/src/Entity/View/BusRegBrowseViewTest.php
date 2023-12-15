@@ -57,7 +57,7 @@ class BusRegBrowseViewTest extends \PHPUnit\Framework\TestCase
     public function testGetters()
     {
         foreach ($this->testData as $property => $value) {
-            $getter = ($property === 'isShortNotice') ? $property : 'get'.ucfirst($property);
+            $getter = ($property === 'isShortNotice') ? $property : 'get' . ucfirst($property);
             $this->assertEquals($value, $this->entity->$getter());
         }
     }

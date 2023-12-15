@@ -101,8 +101,8 @@ class DeleteListConditionUndertakingTest extends CommandHandlerTestCase
 
         $this->assertEquals(
             [
-                'ConditionUndertaking ID ' . self::CU_ID_1 .' deleted',
-                'ConditionUndertaking ID ' . self::CU_ID_2 .' deleted',
+                'ConditionUndertaking ID ' . self::CU_ID_1 . ' deleted',
+                'ConditionUndertaking ID ' . self::CU_ID_2 . ' deleted',
             ],
             $result->getMessages()
         );

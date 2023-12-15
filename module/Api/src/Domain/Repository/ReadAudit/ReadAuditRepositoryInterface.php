@@ -23,7 +23,7 @@ interface ReadAuditRepositoryInterface
      * @param $userId
      * @param $entityId
      * @param \DateTime $date
-     * 
+     *
      * @return mixed
      */
     public function fetchOneOrMore($userId, $entityId, \DateTime $date);

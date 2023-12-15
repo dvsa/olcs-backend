@@ -24,14 +24,14 @@ class QueryTemplate extends Query
     public function __construct($filename, $searchTerm, $filters = [], $dateRanges = [])
     {
         if (!file_exists($filename)) {
-            throw new \RuntimeException("Query template file '". $filename ."' is missing");
+            throw new \RuntimeException("Query template file '" . $filename . "' is missing");
         }
 
         $searchTermReplace = json_encode($searchTerm);
 
         if ($searchTermReplace === false) {
             throw new \RuntimeException(
-                "Search term '". $searchTerm ."' gives invalid json. Error: ".json_last_error_msg()
+                "Search term '" . $searchTerm . "' gives invalid json. Error: " . json_last_error_msg()
             );
         }
 
@@ -46,7 +46,7 @@ class QueryTemplate extends Query
 
         if (empty($this->_params)) {
             throw new \RuntimeException(
-                "Empty params for query template file '". $filename ."' and search term '". $searchTerm ."'"
+                "Empty params for query template file '" . $filename . "' and search term '" . $searchTerm . "'"
             );
         }
 
@@ -111,7 +111,6 @@ class QueryTemplate extends Query
                         $fieldName => $value
                     ]
                 ];
-
             } elseif (substr($lcFieldName, -4) === 'from') {
                 $criteria = [];
 

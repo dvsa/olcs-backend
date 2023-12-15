@@ -21,7 +21,7 @@ class PresidingTc extends AbstractPresidingTc implements DeletableInterface
      */
     public static function create(string $name, User $user)
     {
-        $instance = new self;
+        $instance = new self();
         $instance->name = $name;
         $instance->user = $user;
         return $instance;

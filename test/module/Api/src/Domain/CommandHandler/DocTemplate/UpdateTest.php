@@ -127,7 +127,6 @@ class UpdateTest extends CommandHandlerTestCase
         ];
         $this->expectedSideEffect(TransferCmd\Document\DeleteDocument::class, $data, $result);
 
-
         $docTemplate->shouldReceive('updateDocument')
             ->with(m::type(DocumentEntity::class))
             ->once();
@@ -223,7 +222,6 @@ class UpdateTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(DocTemplateEntity::class))
             ->andReturn($docTemplate);
-
 
         $this->sut->handleCommand($command);
     }

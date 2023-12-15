@@ -5,18 +5,16 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GracePeriod;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Domain\Repository\GracePeriod as GracePeriodRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GracePeriod\CreateGracePeriod;
-
 use Dvsa\Olcs\Api\Entity\Licence\GracePeriod;
-
 use Dvsa\Olcs\Transfer\Command\GracePeriod\CreateGracePeriod as Cmd;
 
 /**
@@ -71,6 +69,5 @@ class CreateGracePeriodTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-
     }
 }

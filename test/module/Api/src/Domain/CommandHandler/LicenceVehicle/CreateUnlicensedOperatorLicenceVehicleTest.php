@@ -143,7 +143,6 @@ class CreateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
                     $this->assertEquals('ABC1234', $licenceVehicle->getVehicle()->getVrm());
                     $licenceVehicle->setId($licenceVehicleId);
                     $licenceVehicle->getVehicle()->setId($vehicleId);
-
                 }
             );
 

@@ -3,6 +3,7 @@
 /**
  * Create TxcInbox
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;

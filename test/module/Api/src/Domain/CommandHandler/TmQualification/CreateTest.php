@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TmQualification;
 
 use Mockery as m;
@@ -92,7 +93,7 @@ class CreateTest extends CommandHandlerTestCase
 
         $this->assertEquals(
             [
-                'id'=> [
+                'id' => [
                     'TmQualification' => 111
                 ],
                 'messages' => [

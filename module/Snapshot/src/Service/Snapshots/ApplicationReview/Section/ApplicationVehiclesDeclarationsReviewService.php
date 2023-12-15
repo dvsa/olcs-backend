@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -47,7 +48,8 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
         }
 
         // All options relating to having small vehicles
-        if ($psvWhichVehicleSize === Application::PSV_VEHICLE_SIZE_SMALL ||
+        if (
+            $psvWhichVehicleSize === Application::PSV_VEHICLE_SIZE_SMALL ||
             $psvWhichVehicleSize === Application::PSV_VEHICLE_SIZE_BOTH
         ) {
             $multiItems = [];
@@ -93,7 +95,8 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
             ];
         }
 
-        if ($data['licenceType']['id'] === Licence::LICENCE_TYPE_RESTRICTED &&
+        if (
+            $data['licenceType']['id'] === Licence::LICENCE_TYPE_RESTRICTED &&
             $psvWhichVehicleSize !== Application::PSV_VEHICLE_SIZE_SMALL
         ) {
             $subSections[] = [

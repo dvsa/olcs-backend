@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Address\Service;
 
 use Dvsa\Olcs\Address\Service\Client;

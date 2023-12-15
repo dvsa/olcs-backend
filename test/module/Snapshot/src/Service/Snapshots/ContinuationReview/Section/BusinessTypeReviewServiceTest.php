@@ -21,7 +21,7 @@ class BusinessTypeReviewServiceTest extends MockeryTestCase
     public function setUp(): void
     {
         $mockTranslator = m::mock(TranslatorInterface::class);
-        
+
         $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
         $abstractReviewServiceServices->shouldReceive('getTranslator')
             ->withNoArgs()
@@ -54,7 +54,7 @@ class BusinessTypeReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuation-review-type-of-business'],
                 ['value' => 'Limited company', 'header' => true]

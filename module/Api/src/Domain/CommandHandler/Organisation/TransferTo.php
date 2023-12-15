@@ -117,7 +117,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     protected function transferLicences(Organisation $organisationFrom, Organisation $organisationTo)
     {
         $result = new Result();
-        $result->addMessage($organisationFrom->getLicences()->count() .' Licence(s) transferred');
+        $result->addMessage($organisationFrom->getLicences()->count() . ' Licence(s) transferred');
         // get licences for organisationFrom
         /* @var $licence \Dvsa\Olcs\Api\Entity\Licence\Licence */
         foreach ($organisationFrom->getLicences() as $licence) {
@@ -141,7 +141,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     {
         $result = new Result();
         $existingLicences = $organisationFrom->getLicences();
-        $result->addMessage(count($licenceIds) .' Licence(s) transferred');
+        $result->addMessage(count($licenceIds) . ' Licence(s) transferred');
         foreach ($existingLicences as $licence) {
             if (in_array($licence->getId(), $licenceIds)) {
                 $licence->setOrganisation($organisationTo);
@@ -189,7 +189,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
 
         //set note.irfo_organisation_id = <winning operator id>
         $notes = $this->getRepo('Note')->fetchByOrganisation($organisationFrom);
-        $result->addMessage(count($notes) .' Note(s) transferred');
+        $result->addMessage(count($notes) . ' Note(s) transferred');
         /* @var $note \Dvsa\Olcs\Api\Entity\Note\Note */
         foreach ($notes as $note) {
             $note->setOrganisation($organisationTo);
@@ -198,7 +198,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
 
         //set irfo_gv_permit.organisation_id = <winning operator id>
         $irfoGvPermits = $this->getRepo('IrfoGvPermit')->fetchByOrganisation($organisationFrom);
-        $result->addMessage(count($irfoGvPermits) .' IrfoGvPermit(s) transferred');
+        $result->addMessage(count($irfoGvPermits) . ' IrfoGvPermit(s) transferred');
         /* @var $irfoGvPermit \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit */
         foreach ($irfoGvPermits as $irfoGvPermit) {
             $irfoGvPermit->setOrganisation($organisationTo);
@@ -207,7 +207,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
 
         //set irfo_psv_auth.organisation_id = <winning operator id>
         $irfoPsvAuths = $this->getRepo('IrfoPsvAuth')->fetchByOrganisation($organisationFrom);
-        $result->addMessage(count($irfoPsvAuths) .' IrfoPsvAuth(s) transferred');
+        $result->addMessage(count($irfoPsvAuths) . ' IrfoPsvAuth(s) transferred');
         /* @var $irfoPsvAuth \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth */
         foreach ($irfoPsvAuths as $irfoPsvAuth) {
             $irfoPsvAuth->setOrganisation($organisationTo);
@@ -216,7 +216,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
 
         //set task.ifo_organisation_id = <winning operator id>
         $tasks = $this->getRepo('Task')->fetchByIrfoOrganisation($organisationFrom);
-        $result->addMessage(count($tasks) .' Task(s) transferred');
+        $result->addMessage(count($tasks) . ' Task(s) transferred');
         /* @var $task \Dvsa\Olcs\Api\Entity\Task\Task */
         foreach ($tasks as $task) {
             $task->setIrfoOrganisation($organisationTo);
@@ -240,7 +240,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     {
         $result = new Result();
 
-        $result->addMessage($organisationFrom->getDisqualifications()->count() .' Disqualifications(s) transferred');
+        $result->addMessage($organisationFrom->getDisqualifications()->count() . ' Disqualifications(s) transferred');
         /* @var $disqualification \Dvsa\Olcs\Api\Entity\Organisation\Disqualification */
         foreach ($organisationFrom->getDisqualifications() as $disqualification) {
             $disqualification->setOrganisation($organisationTo);
@@ -263,7 +263,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
         $result = new Result();
 
         $ebsrSubmissions = $this->getRepo('EbsrSubmission')->fetchByOrganisation($organisationFrom);
-        $result->addMessage(count($ebsrSubmissions) .' EbsrSubmission(s) transferred');
+        $result->addMessage(count($ebsrSubmissions) . ' EbsrSubmission(s) transferred');
         /* @var $ebsrSubmission \Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission */
         foreach ($ebsrSubmissions as $ebsrSubmission) {
             $ebsrSubmission->setOrganisation($organisationTo);
@@ -271,7 +271,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
         }
 
         $txcInboxs = $this->getRepo('TxcInbox')->fetchByOrganisation($organisationFrom);
-        $result->addMessage(count($txcInboxs) .' TxcInbox(s) transferred');
+        $result->addMessage(count($txcInboxs) . ' TxcInbox(s) transferred');
         /* @var $txcInbox \Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox */
         foreach ($txcInboxs as $txcInbox) {
             $txcInbox->setOrganisation($organisationTo);
@@ -294,7 +294,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
         $result = new Result();
 
         $eventHistorys = $this->getRepo('EventHistory')->fetchByOrganisation($organisationFrom);
-        $result->addMessage(count($eventHistorys) .' EventHistory(s) transferred');
+        $result->addMessage(count($eventHistorys) . ' EventHistory(s) transferred');
         /* @var $eventHistory \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory */
         foreach ($eventHistorys as $eventHistory) {
             $eventHistory->setOrganisation($organisationTo);
@@ -316,7 +316,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     {
         $result = new Result();
 
-        $result->addMessage($organisationFrom->getOrganisationUsers()->count() .' OrganisationUser(s) transferred');
+        $result->addMessage($organisationFrom->getOrganisationUsers()->count() . ' OrganisationUser(s) transferred');
         /* @var $organisationUser \Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser */
         foreach ($organisationFrom->getOrganisationUsers() as $organisationUser) {
             $organisationUser->setOrganisation($organisationTo);
@@ -339,7 +339,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
         $result = new Result();
 
         $organisationPersons = $organisationFrom->getOrganisationPersons();
-        $result->addMessage($organisationPersons->count() .' OrganisationPersons(s) transferred');
+        $result->addMessage($organisationPersons->count() . ' OrganisationPersons(s) transferred');
         /* @var $organisationPerson \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson */
         foreach ($organisationPersons as $organisationPerson) {
             $organisationPerson->setOrganisation($organisationTo);

@@ -58,20 +58,20 @@ class WithContactDetailsTest extends QueryPartialTestCase
     {
         return [
             [
-                'SELECT a, a_cd, a_cd_a, a_cd_a_cc, a_cd_pc FROM foo a LEFT JOIN a.contactDetails a_cd '.
-                    'LEFT JOIN a_cd.address a_cd_a LEFT JOIN a_cd_a.countryCode a_cd_a_cc '.
+                'SELECT a, a_cd, a_cd_a, a_cd_a_cc, a_cd_pc FROM foo a LEFT JOIN a.contactDetails a_cd ' .
+                    'LEFT JOIN a_cd.address a_cd_a LEFT JOIN a_cd_a.countryCode a_cd_a_cc ' .
                     'LEFT JOIN a_cd.phoneContacts a_cd_pc',
                 []
             ],
             [
-                'SELECT a, a_cd, a_cd_a, a_cd_a_cc, a_cd_pc FROM foo a LEFT JOIN a.PROP a_cd '.
-                    'LEFT JOIN a_cd.address a_cd_a LEFT JOIN a_cd_a.countryCode a_cd_a_cc '.
+                'SELECT a, a_cd, a_cd_a, a_cd_a_cc, a_cd_pc FROM foo a LEFT JOIN a.PROP a_cd ' .
+                    'LEFT JOIN a_cd.address a_cd_a LEFT JOIN a_cd_a.countryCode a_cd_a_cc ' .
                     'LEFT JOIN a_cd.phoneContacts a_cd_pc',
                 ['PROP'],
             ],
             [
-                'SELECT a, ALIAS, ALIAS_a, ALIAS_a_cc, ALIAS_pc FROM foo a LEFT JOIN a.PROP ALIAS '.
-                    'LEFT JOIN ALIAS.address ALIAS_a LEFT JOIN ALIAS_a.countryCode ALIAS_a_cc '.
+                'SELECT a, ALIAS, ALIAS_a, ALIAS_a_cc, ALIAS_pc FROM foo a LEFT JOIN a.PROP ALIAS ' .
+                    'LEFT JOIN ALIAS.address ALIAS_a LEFT JOIN ALIAS_a.countryCode ALIAS_a_cc ' .
                     'LEFT JOIN ALIAS.phoneContacts ALIAS_pc',
                 ['PROP', 'ALIAS']
             ],

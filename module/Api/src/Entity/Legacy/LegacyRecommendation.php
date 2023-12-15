@@ -21,5 +21,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LegacyRecommendation extends AbstractLegacyRecommendation
 {
-
 }

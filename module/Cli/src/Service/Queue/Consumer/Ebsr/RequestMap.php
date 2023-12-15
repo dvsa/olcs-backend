@@ -3,6 +3,7 @@
 /**
  * Request Map
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as Cmd;

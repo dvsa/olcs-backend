@@ -72,7 +72,6 @@ final class CreateSnapshot extends AbstractCommandHandler
     {
         $fullContainer = $container;
 
-
         $this->reviewSnapshotService = $container->get('ContinuationReview');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

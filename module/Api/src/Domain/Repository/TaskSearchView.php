@@ -27,12 +27,12 @@ class TaskSearchView extends AbstractRepository
     protected $fetchJoinCollection = false;
 
     /**
-     * Set query filters 
+     * Set query filters
      *
      * @param QueryBuilder              $qb    Query Builder
      * @param TransferQry\Task\TaskList $query Http Query
-     *                                                       
-     * @return void                                                      
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -105,42 +105,48 @@ class TaskSearchView extends AbstractRepository
 
         if ($query->getLicence() !== null) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.licenceId', ':licence'
+                'm.licenceId',
+                ':licence'
             );
             $qb->setParameter('licence', $query->getLicence());
         }
 
         if ($query->getTransportManager() !== null) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.transportManagerId', ':tm'
+                'm.transportManagerId',
+                ':tm'
             );
             $qb->setParameter('tm', $query->getTransportManager());
         }
 
         if ($query->getCase() !== null && !$isShowSelfOnly) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.caseId', ':case'
+                'm.caseId',
+                ':case'
             );
             $qb->setParameter('case', $query->getCase());
         }
 
         if ($query->getApplication() !== null && !$isShowSelfOnly) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.applicationId', ':application'
+                'm.applicationId',
+                ':application'
             );
             $qb->setParameter('application', $query->getApplication());
         }
 
         if ($query->getBusReg() !== null && !$isShowSelfOnly) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.busRegId', ':busReg'
+                'm.busRegId',
+                ':busReg'
             );
             $qb->setParameter('busReg', $query->getBusReg());
         }
 
         if ($query->getOrganisation() !== null) {
             $idExpressions[] = $qb->expr()->eq(
-                $this->alias . '.irfoOrganisationId', ':organisation'
+                $this->alias . '.irfoOrganisationId',
+                ':organisation'
             );
             $qb->setParameter('organisation', $query->getOrganisation());
         }

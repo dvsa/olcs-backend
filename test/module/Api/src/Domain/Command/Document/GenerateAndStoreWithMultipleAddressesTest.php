@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\Command\Document;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
@@ -13,7 +12,7 @@ class GenerateAndStoreWithMultipleAddressesTest extends MockeryTestCase
         $command = GenerateAndStoreWithMultipleAddresses::create(
             [
                 'GenerateCommandData' => [],
-                'addressBookmark'=>[],
+                'addressBookmark' => [],
                 'sendToAddresses' => [],
                 'bookmarkBundle' => []
             ]

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\Command\Email;
 
@@ -16,7 +18,7 @@ abstract class AbstractEmailOnlyCommand extends AbstractCommand
      * @var array
      */
     protected $docs = [];
-    
+
     public function getDocs(): array
     {
         return $this->docs;

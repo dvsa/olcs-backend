@@ -54,7 +54,7 @@ class DateWithThresholdGenerator
     public function generate(ElementGeneratorContext $context, $dateInterval)
     {
         $dateThreshold = $this->currentDateTimeFactory->create();
-        
+
         $dateThreshold->add(
             $this->dateIntervalFactory->create($dateInterval)
         );

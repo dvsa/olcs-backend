@@ -452,7 +452,6 @@ class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
             ->andReturn($mockOrgGBNoRegisteredUsers)
             ->getMock();
 
-
         $mockGBLicenceNoCorrespondenceEmail = m::mock(Licence::class)
             ->shouldReceive('isNi')
             ->andReturn(true)

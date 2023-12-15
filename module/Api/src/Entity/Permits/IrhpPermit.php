@@ -164,7 +164,7 @@ class IrhpPermit extends AbstractIrhpPermit
     {
         // Check status provided is correct for Ceased and set expiry date to now.
         if ($status->getId() !== self::STATUS_CEASED) {
-            throw new ForbiddenException('This method can only be called with refdata status id: '.self::STATUS_CEASED);
+            throw new ForbiddenException('This method can only be called with refdata status id: ' . self::STATUS_CEASED);
         }
         $this->status = $status;
         $this->expiryDate = new DateTime();

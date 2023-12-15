@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -172,13 +173,13 @@ class FeeType extends AbstractRepository
         // the query handler
 
         if (method_exists($query, 'getIsMiscellaneous') && !empty($query->getIsMiscellaneous())) {
-            $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
+            $qb->andWhere($this->alias . '.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', $query->getIsMiscellaneous() === 'Y' ? 1 : 0);
         }
 
         if (method_exists($query, 'getBusReg') && !empty($query->getBusReg())) {
             // is_miscellaneous = 0; AND
-            $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
+            $qb->andWhere($this->alias . '.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', 0);
 
             // fee type is one of 'BUSAPP', 'BUSVAR'; AND
@@ -189,7 +190,7 @@ class FeeType extends AbstractRepository
             $this->addFeeTypeClause($qb, $feeTypes);
         } elseif (method_exists($query, 'getOrganisation') && !empty($query->getOrganisation())) {
             // is_miscellaneous = 0; AND
-            $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
+            $qb->andWhere($this->alias . '.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', 0);
 
             // fee type one of 'IRFOGVPERMIT', 'IRFOPSVANN', 'IRFOPSVAPP', 'IRFOPSVCOPY';
@@ -212,7 +213,7 @@ class FeeType extends AbstractRepository
             $application = $this->getReference(ApplicationEntity::class, $query->getApplication());
 
             // is_miscellaneous = 0; AND
-            $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
+            $qb->andWhere($this->alias . '.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', 0);
 
             $feeTypes = [
@@ -224,7 +225,7 @@ class FeeType extends AbstractRepository
             $this->addFeeTypeClause($qb, $feeTypes);
 
             // fee_type.good_or_psv = <current operator type>; AND
-            $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'))
+            $qb->andWhere($qb->expr()->eq($this->alias . '.goodsOrPsv', ':goodsOrPsv'))
                 ->setParameter('goodsOrPsv', $application->getGoodsOrPsv());
 
             // fee_type.licence_type = <current application licence type>; AND
@@ -232,27 +233,27 @@ class FeeType extends AbstractRepository
         }
 
         if (method_exists($query, 'getGoodsOrPsv') && !empty($query->getGoodsOrPsv())) {
-            $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'))
+            $qb->andWhere($qb->expr()->eq($this->alias . '.goodsOrPsv', ':goodsOrPsv'))
                 ->setParameter('goodsOrPsv', $query->getGoodsOrPsv());
         }
 
         if (method_exists($query, 'getFeeType') && !empty($query->getFeeType())) {
-            $qb->andWhere($qb->expr()->eq($this->alias.'.feeType', ':feeType'))
+            $qb->andWhere($qb->expr()->eq($this->alias . '.feeType', ':feeType'))
                 ->setParameter('feeType', $query->getFeeType());
         }
 
         if (method_exists($query, 'getIsFeeRateAdmin')) {
             $qb->andWhere($qb->expr()->isNotNull('ft.goodsOrPsv'));
-            $qb->andWhere($this->alias.'.isVisibleInInternal = :isVisibleInInternal')
+            $qb->andWhere($this->alias . '.isVisibleInInternal = :isVisibleInInternal')
                 ->setParameter('isVisibleInInternal', 1);
             $qb->addOrderBy('ft.id', 'ASC');
         } else {
             $qb->andWhere(
-                $qb->expr()->lte($this->alias.'.effectiveFrom', ':effectiveFrom')
+                $qb->expr()->lte($this->alias . '.effectiveFrom', ':effectiveFrom')
             );
             $qb->setParameter('effectiveFrom', $date);
             $qb->addOrderBy('ftft.id', 'ASC'); // feeType.feeType.id
-            $qb->addOrderBy($this->alias.'.effectiveFrom', 'DESC');
+            $qb->addOrderBy($this->alias . '.effectiveFrom', 'DESC');
         }
     }
 
@@ -264,7 +265,7 @@ class FeeType extends AbstractRepository
      */
     private function addFeeTypeClause(QueryBuilder $qb, array $feeTypes)
     {
-        $qb->andWhere($qb->expr()->in($this->alias.'.feeType', $feeTypes));
+        $qb->andWhere($qb->expr()->in($this->alias . '.feeType', $feeTypes));
     }
 
     /**
@@ -276,7 +277,7 @@ class FeeType extends AbstractRepository
     private function addLicenceTypeClause(QueryBuilder $qb, RefDataEntity $licenceType)
     {
         // fee_type.licence_type = <current application licence type>; AND
-        $qb->andWhere($qb->expr()->eq($this->alias.'.licenceType', ':licenceType'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licenceType', ':licenceType'))
             ->setParameter('licenceType', $licenceType);
     }
 

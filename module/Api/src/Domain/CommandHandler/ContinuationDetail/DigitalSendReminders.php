@@ -44,7 +44,7 @@ final class DigitalSendReminders extends AbstractCommandHandler implements Trans
             $this->handleSideEffect($createCmd);
         }
 
-        $this->result->addMessage(count($continuationDetails) .' reminder queue jobs created');
+        $this->result->addMessage(count($continuationDetails) . ' reminder queue jobs created');
 
         return $this->result;
     }

@@ -5,6 +5,7 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

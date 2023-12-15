@@ -3,6 +3,7 @@
 /**
  * CancelIrfoGvPermitFeesTest
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCommand;

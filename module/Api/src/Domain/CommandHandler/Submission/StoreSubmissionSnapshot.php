@@ -74,7 +74,7 @@ final class StoreSubmissionSnapshot extends AbstractCommandHandler implements
             'subCategory' => Category::SUBMISSION_SUB_CATEGORY_OTHER,
             'isExternal' => false,
             'isScan' => false,
-            'filename' => $name .'.html',
+            'filename' => $name . '.html',
             'description' => $name,
         ];
 

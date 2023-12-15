@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Command\Queue;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;

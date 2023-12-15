@@ -26,7 +26,7 @@ class TransportManagerDeclarationReviewServiceTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->mockTranslator = m::mock(TranslatorInterface::class);
-        
+
         $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
         $abstractReviewServiceServices->shouldReceive('getTranslator')
             ->withNoArgs()

@@ -5,6 +5,7 @@
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Entity\Types;
 
 use Doctrine\DBAL\Types\Type;

@@ -66,7 +66,8 @@ final class GeneratePermitDocuments extends AbstractCommandHandler
         $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
         $irhpPermitType = $irhpPermitStock->getIrhpPermitType();
 
-        if ($irhpPermitType->isBilateral()
+        if (
+            $irhpPermitType->isBilateral()
             && in_array(
                 $irhpPermitStock->getCountry()->getId(),
                 [
@@ -85,7 +86,8 @@ final class GeneratePermitDocuments extends AbstractCommandHandler
             return;
         }
 
-        if ($irhpPermitType->isBilateral() || $irhpPermitType->isMultilateral() || $irhpPermitType->isEcmtShortTerm()
+        if (
+            $irhpPermitType->isBilateral() || $irhpPermitType->isMultilateral() || $irhpPermitType->isEcmtShortTerm()
             || $irhpPermitType->isEcmtRemoval()
         ) {
             $licenceId = $irhpPermitApplication->getIrhpApplication()->getLicence()->getId();

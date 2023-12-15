@@ -23,7 +23,8 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 final class CreateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface, AuthAwareInterface
 {
-    use AuthAwareTrait, CacheAwareTrait;
+    use AuthAwareTrait;
+    use CacheAwareTrait;
 
     protected $repoServiceName = 'Licence';
 

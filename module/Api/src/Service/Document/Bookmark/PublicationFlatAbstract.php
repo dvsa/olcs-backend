@@ -5,6 +5,7 @@
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\PublicationBundle as Qry;

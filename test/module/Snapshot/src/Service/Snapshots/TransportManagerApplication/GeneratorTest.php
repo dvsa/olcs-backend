@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;

@@ -14,7 +14,6 @@ use Mockery as m;
  */
 class DocumentSearchViewTest extends RepositoryTestCase
 {
-
     public function setUp(): void
     {
         $this->setUpSut(DocumentSearchViewRepo::class, true);
@@ -113,7 +112,7 @@ class DocumentSearchViewTest extends RepositoryTestCase
             ' AND m.caseId = [[unit_CaseId]]' .
             ' AND m.busRegId = [[unit_BusReg]]' .
             ' AND m.irhpApplicationId = [[unit_IrhpApplication]]' .
-            ' AND ('.
+            ' AND (' .
                 'm.irfoOrganisationId = :irfoOrganisation' .
             ')';
 

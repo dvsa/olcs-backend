@@ -3,6 +3,7 @@
 /**
  * Irfo Gv Permit
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

@@ -50,7 +50,6 @@ class SignatureReviewServiceTest extends MockeryTestCase
             ->with('markup-application_undertakings_signature')
             ->andReturn('markup-application_undertakings_signature-translated');
 
-
         $signatureType = m::mock(RefData::class);
         $signatureType->shouldReceive('getId')
             ->andReturn(RefData::SIG_PHYSICAL_SIGNATURE);
@@ -86,7 +85,6 @@ class SignatureReviewServiceTest extends MockeryTestCase
         $signatureType = m::mock(RefData::class);
         $signatureType->shouldReceive('getId')
             ->andReturn(RefData::SIG_DIGITAL_SIGNATURE);
-
 
         $markup = $this->sut->getConfigFromData([
             'signatureType' => $signatureType,

@@ -65,7 +65,6 @@ class DeclarationUndertakings extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->reviewService = $container->get('Review\ApplicationUndertakings');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

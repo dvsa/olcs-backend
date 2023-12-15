@@ -5,9 +5,10 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule;
 
-use \Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
  * @author Josh Curtis <josh.curtis@valtech.co.uk>

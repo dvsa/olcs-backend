@@ -19,8 +19,8 @@ use Dvsa\Olcs\Api\Domain\Command\BulkSend\ProcessEmail;
  */
 final class Email extends AbstractCommandHandler implements UploaderAwareInterface
 {
-    use EmailAwareTrait,
-        UploaderAwareTrait;
+    use EmailAwareTrait;
+    use UploaderAwareTrait;
 
     const EXPECTED_ITEMS_IN_ROW = 1;
 

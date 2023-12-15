@@ -130,7 +130,8 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
         /** @var \Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete $documentToDelete */
         $documentToDelete = $moreDocumentsToDelete[0];
 
-        if ($nextDocumentQueueItem !== null &&
+        if (
+            $nextDocumentQueueItem !== null &&
             ($nextDocumentQueueItem->getProcessAfterDate() === null ||
                 $nextDocumentQueueItem->getProcessAfterDate() < $documentToDelete->getProcessAfterDate())
         ) {
@@ -152,7 +153,6 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->setContentStoreService($container->get('FileUploader'));
         return parent::__invoke($fullContainer, $requestedName, $options);

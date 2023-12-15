@@ -8,7 +8,6 @@ use Laminas\Http\Response;
 
 interface DocumentStoreInterface
 {
-
     /**
      * Store file on remote storage
      *

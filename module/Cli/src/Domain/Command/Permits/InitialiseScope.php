@@ -4,6 +4,7 @@
  * Initialise scope
  *
  */
+
 namespace Dvsa\Olcs\Cli\Domain\Command\Permits;
 
 use Dvsa\Olcs\Transfer\Util\Annotation as Transfer;

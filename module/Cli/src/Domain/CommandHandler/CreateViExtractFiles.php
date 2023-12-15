@@ -83,8 +83,10 @@ final class CreateViExtractFiles extends AbstractCommandHandler
             $commandParam = $command->$method();
             $repo = $this->getRepo($settings['repo']);
             $fileName = $this->getFilename($settings['prefix']);
-            if (file_exists($fileName)
-                && rename($fileName, $this->getBackupFilename($settings['prefix'])) === false) {
+            if (
+                file_exists($fileName)
+                && rename($fileName, $this->getBackupFilename($settings['prefix'])) === false
+            ) {
                 throw new \Exception(
                     'Error renaming record(s) for ' . $settings['name'] . ', please check the target path'
                 );

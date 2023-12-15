@@ -14,7 +14,6 @@ use Laminas\Http\Client\Adapter\Curl;
 
 class InrClientFactoryTest extends TestCase
 {
-
     public function testCreateServiceNoConfig()
     {
         $this->expectException(\RuntimeException::class);

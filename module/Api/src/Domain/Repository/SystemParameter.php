@@ -116,7 +116,7 @@ class SystemParameter extends AbstractRepository
         $value = (int) $this->fetchValue(Entity::SYSTEM_DATA_RETENTION_USER);
         if ($value === 0) {
             throw new RuntimeException(
-                'System parameter "'. Entity::SYSTEM_DATA_RETENTION_USER .'" is not set'
+                'System parameter "' . Entity::SYSTEM_DATA_RETENTION_USER . '" is not set'
             );
         }
         return $value;

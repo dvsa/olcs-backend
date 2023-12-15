@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Cli\Domain\CommandHandler\RemoveReadAudit;

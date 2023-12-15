@@ -3,6 +3,7 @@
 /**
  * PVehicleRegistrationMark
  */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;

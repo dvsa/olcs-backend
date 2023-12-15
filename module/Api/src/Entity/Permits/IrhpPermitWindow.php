@@ -29,7 +29,7 @@ class IrhpPermitWindow extends AbstractIrhpPermitWindow
      */
     public static function create($irhpPermitStock, $startDate, $endDate)
     {
-        $instance = new self;
+        $instance = new self();
 
         $instance->irhpPermitStock = $irhpPermitStock;
         $instance->startDate = new DateTime($startDate);

@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;

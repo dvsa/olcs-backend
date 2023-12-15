@@ -3,6 +3,7 @@
 /**
  * BusReg Decision Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 
 use Mockery as m;

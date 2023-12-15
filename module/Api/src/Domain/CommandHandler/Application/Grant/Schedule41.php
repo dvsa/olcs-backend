@@ -51,7 +51,7 @@ final class Schedule41 extends AbstractCommandHandler implements AuthAwareInterf
         if ($createTaskForLicence) {
             $result->merge($this->createTask($createTaskForLicence));
         }
-        $result->addMessage($count .' S4 operating centres processed');
+        $result->addMessage($count . ' S4 operating centres processed');
 
         return $result;
     }
@@ -101,7 +101,7 @@ final class Schedule41 extends AbstractCommandHandler implements AuthAwareInterf
         $taskData = [
             'category' => Category::CATEGORY_LICENSING,
             'subCategory' => Category::TASK_SUB_CATEGORY_SUR_41_ASSISTED_DIGITAL,
-            'description' => 'Surrender a donor licence: '. $licence->getLicNo(),
+            'description' => 'Surrender a donor licence: ' . $licence->getLicNo(),
             'actionDate' => (new DateTime())->modify('+1 month')->format(\DateTime::W3C),
             'licence' => $licence->getId(),
             'assignedToUser' => $currentUser->getId(),

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
@@ -81,7 +82,7 @@ class LoginTest extends CommandHandlerTestCase
         );
 
         // Expectations
-        $openAMAdapter->expects('setRealm')->withArgs([$testRealm ='testRealm']);
+        $openAMAdapter->expects('setRealm')->withArgs([$testRealm = 'testRealm']);
 
         // Execute
         $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
@@ -233,7 +234,7 @@ class LoginTest extends CommandHandlerTestCase
         $this->assertEquals(\Laminas\Authentication\Result::FAILURE_CREDENTIAL_INVALID, $result->getFlag('code'));
         $this->assertEmpty($result->getFlag('identity'));
 
-        $userRealm = $isInternal ? 'internal': 'selfserve';
+        $userRealm = $isInternal ? 'internal' : 'selfserve';
         $expectedMessage = sprintf('User with login_id "%s" with realm "%s" is attempting to log in to realm "%s"', 'testUsername', $userRealm, $realm);
         $this->assertEquals([$expectedMessage], $result->getFlag('messages'));
     }

@@ -19,7 +19,7 @@ abstract class AbstractUpdateDefinedValueTest extends CommandHandlerTestCase
     {
         $this->mockRepo($this->repoServiceName, $this->repoClass);
         $this->sut = new $this->sutClass();
-     
+
         parent::setUp();
     }
 

@@ -59,11 +59,10 @@ class CreateTest extends CommandHandlerTestCase
         );
 
         $this->repoMap['TaskAllocationRule']->shouldReceive('save')->once()->andReturnUsing(
-            function(TaskAllocationRuleEntity $tar) {
+            function (TaskAllocationRuleEntity $tar) {
                 $this->assertSame(null, $tar->getUser());
             }
         );
-
 
         $result = $this->sut->handleCommand($command);
 

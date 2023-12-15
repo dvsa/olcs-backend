@@ -3,6 +3,7 @@
 /**
  * Create TxcInbox Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\CreateTxcInbox;

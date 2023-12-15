@@ -182,7 +182,8 @@ abstract class EntityTester extends MockeryTestCase
             if (substr($method->getName(), 0, 3) == 'set') {
                 $methodName = substr($method->getName(), 3);
 
-                if ((ltrim($method->getDeclaringClass()->getName(), "\\") == ltrim($classToTestName, "\\")) &&
+                if (
+                    (ltrim($method->getDeclaringClass()->getName(), "\\") == ltrim($classToTestName, "\\")) &&
                     $method->isPublic() &&
                     $reflection->hasProperty(lcfirst($methodName)) &&
                     $reflection->hasMethod('get' . $methodName)

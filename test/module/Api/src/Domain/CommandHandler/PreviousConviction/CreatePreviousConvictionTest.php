@@ -5,6 +5,7 @@
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PreviousConviction;
 
 use Doctrine\ORM\Query;
@@ -83,7 +84,9 @@ class CreatePreviousConvictionTest extends CommandHandlerTestCase
             );
 
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCommand::class, ['id' => 50, 'section' => 'convictionsPenalties'], new Result()
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 50, 'section' => 'convictionsPenalties'],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

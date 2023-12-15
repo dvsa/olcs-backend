@@ -128,7 +128,6 @@ class Impounding extends AbstractCommandHandler implements TransactionedInterfac
                 $publicationLink,
                 $this->extractImpoundingData($impounding)
             );
-
         }
 
         $allTrafficAreas = $this->getRepo('TrafficArea')->fetchAll();

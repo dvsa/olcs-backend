@@ -84,7 +84,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             self::TASK_CREATION_MESSAGE,
             'IRHP application submitted'
         ];
- 
+
         parent::setUp();
     }
 

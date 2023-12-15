@@ -13,7 +13,7 @@ class CompanyHouseVsOlcsDiffsExportTest extends MockeryTestCase
     public function test()
     {
         $params = [
-            'path'=> 'unit_Path',
+            'path' => 'unit_Path',
         ];
 
         $sut = CompaniesHouseVsOlcsDiffsExport::create($params);

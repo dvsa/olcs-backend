@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -22,7 +21,6 @@ class OpenCases extends AbstractQueryHandler implements ToggleRequiredInterface
          * @var \Dvsa\Olcs\Api\Domain\Repository\Cases
          */
         $cases = $this->getRepo()->fetchOpenCasesForSurrender($query);
-
 
             return [
                 'count' => count($cases),

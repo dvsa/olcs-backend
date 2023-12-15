@@ -3,6 +3,7 @@
 /**
  * FinancialStandingRate
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\System;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

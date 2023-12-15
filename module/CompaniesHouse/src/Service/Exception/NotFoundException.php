@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\CompaniesHouse\Service\Exception;
 
-
 /**
  * NotFound Exception
  *

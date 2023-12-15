@@ -3,6 +3,7 @@
 /**
  * AandDStoredPublicationNumber bookmark
  */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Doctrine\Common\Collections\Criteria;

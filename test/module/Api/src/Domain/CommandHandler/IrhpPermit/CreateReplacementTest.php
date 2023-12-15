@@ -90,7 +90,7 @@ class CreateReplacementTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => ['IrhpPermit' => 1],
-            'messages' => ['Permit '.$cmdData['permitNumber'].' Created']
+            'messages' => ['Permit ' . $cmdData['permitNumber'] . ' Created']
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -133,8 +133,6 @@ class CreateReplacementTest extends CommandHandlerTestCase
             ->shouldReceive('fetchById')
             ->with($cmdData['irhpPermitRange'])
             ->andReturn($newRange);
-
-
 
         $this->repoMap['IrhpPermit']
             ->shouldReceive('save')

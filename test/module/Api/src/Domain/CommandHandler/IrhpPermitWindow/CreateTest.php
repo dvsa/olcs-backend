@@ -26,8 +26,8 @@ class CreateTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);
 
         $this->today = (new DateTime())->format('Y-m-d');
-        $this->tomorrow = (new DateTime)->modify('+1 day')->format('Y-m-d');
-        $this->yesterday = (new DateTime)->modify('-1 day')->format('Y-m-d');
+        $this->tomorrow = (new DateTime())->modify('+1 day')->format('Y-m-d');
+        $this->yesterday = (new DateTime())->modify('-1 day')->format('Y-m-d');
 
         parent::setUp();
     }

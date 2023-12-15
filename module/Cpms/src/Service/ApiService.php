@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Cpms\Service;
@@ -176,10 +177,8 @@ class ApiService
                     $this->errorResponseBody->rewind();
                     $messageObj = json_decode($this->errorResponseBody->getContents());
                 }
-
             }
             $message = $messageObj->message ?? $e->getMessage();
-
         } catch (\Exception $e) {
             $message = $e->getMessage();
         }

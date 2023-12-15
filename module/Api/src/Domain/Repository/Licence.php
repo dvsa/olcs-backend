@@ -167,7 +167,7 @@ class Licence extends AbstractRepository
             ->with('ocs.operatingCentre', 'ocs_oc')
             ->with('ocs_oc.address', 'ocs_oc_a');
 
-        $dqb->where($dqb->expr()->eq($this->alias .'.licNo', ':licNo'))
+        $dqb->where($dqb->expr()->eq($this->alias . '.licNo', ':licNo'))
             ->setParameter('licNo', $licNo);
 
         $results = $dqb->getQuery()->getResult();
@@ -190,7 +190,7 @@ class Licence extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->where($qb->expr()->eq($this->alias .'.licNo', ':licNo'));
+        $qb->where($qb->expr()->eq($this->alias . '.licNo', ':licNo'));
         $qb->setParameter('licNo', $licNo);
         $qb->setMaxResults(1);
 
@@ -209,7 +209,7 @@ class Licence extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->where($qb->expr()->eq($this->alias .'.licNo', ':licNo'));
+        $qb->where($qb->expr()->eq($this->alias . '.licNo', ':licNo'));
         $qb->setParameter('licNo', $licNo);
 
         $result = $qb->getQuery()->getOneOrNullResult();
@@ -235,7 +235,8 @@ class Licence extends AbstractRepository
         $licence = $this->fetchByLicNo($licNo);
 
         // check if it has a correspondence address
-        if (!($licence->getCorrespondenceCd() instanceof ContactDetailsEntity)
+        if (
+            !($licence->getCorrespondenceCd() instanceof ContactDetailsEntity)
             || !($licence->getCorrespondenceCd()->getAddress() instanceof AddressEntity)
             || $licence->getCorrespondenceCd()->getAddress()->isEmpty()
         ) {
@@ -413,10 +414,10 @@ class Licence extends AbstractRepository
             // (i.e. it excludes restricted and standard PSV licences)
             ->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->eq($this->alias .'.goodsOrPsv', ':gv'),
+                    $qb->expr()->eq($this->alias . '.goodsOrPsv', ':gv'),
                     $qb->expr()->andX(
-                        $qb->expr()->eq($this->alias .'.goodsOrPsv', ':psv'),
-                        $qb->expr()->eq($this->alias .'.licenceType', ':sr')
+                        $qb->expr()->eq($this->alias . '.goodsOrPsv', ':psv'),
+                        $qb->expr()->eq($this->alias . '.licenceType', ':sr')
                     )
                 )
             )
@@ -479,8 +480,8 @@ class Licence extends AbstractRepository
 
         $qb
             ->andWhere($qb->expr()->lt($this->alias . '.expiryDate', ':now'))
-            ->andWhere($qb->expr()->eq($this->alias .'.goodsOrPsv', ':psv'))
-            ->andWhere($qb->expr()->in($this->alias .'.licenceType', ':licTypes'))
+            ->andWhere($qb->expr()->eq($this->alias . '.goodsOrPsv', ':psv'))
+            ->andWhere($qb->expr()->in($this->alias . '.licenceType', ':licTypes'))
             ->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
             ->setParameter('now', $now)
             ->setParameter('psv', Entity::LICENCE_CATEGORY_PSV)
@@ -519,12 +520,12 @@ class Licence extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if (is_numeric($query->getOrganisation())) {
-            $qb->andWhere($qb->expr()->eq($this->alias .'.organisation', ':organisation'))
+            $qb->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisation'))
                 ->setParameter('organisation', $query->getOrganisation());
         }
 
         if (!empty($query->getExcludeStatuses())) {
-            $qb->andWhere($qb->expr()->notIn($this->alias .'.status', ':excludeStatuses'))
+            $qb->andWhere($qb->expr()->notIn($this->alias . '.status', ':excludeStatuses'))
                 ->setParameter('excludeStatuses', $query->getExcludeStatuses());
         }
     }
@@ -648,7 +649,7 @@ class Licence extends AbstractRepository
         $qb->andWhere(
             $qb->expr()
                 ->in(
-                    $this->alias.'.goodsOrPsv',
+                    $this->alias . '.goodsOrPsv',
                     ':goodsOrPsv'
                 )
         );
@@ -658,7 +659,7 @@ class Licence extends AbstractRepository
         $qb->andWhere(
             $qb->expr()
                 ->in(
-                    $this->alias.'.status',
+                    $this->alias . '.status',
                     ':statuses'
                 )
         );
@@ -668,7 +669,7 @@ class Licence extends AbstractRepository
         $qb->andWhere(
             $qb->expr()
                 ->in(
-                    $this->alias.'.licenceType',
+                    $this->alias . '.licenceType',
                     ':licenceTypes'
                 )
         );
@@ -754,7 +755,6 @@ class Licence extends AbstractRepository
                     $tmlQb->getDQL()
                 )
         );
-
 
         $today = (new DateTime())
             ->setTime(0, 0, 0, 0)

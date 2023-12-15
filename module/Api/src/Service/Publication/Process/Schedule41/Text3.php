@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Publication\Process\Schedule41;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
-use \Dvsa\Olcs\Api\Service\Publication\Formatter;
+use Dvsa\Olcs\Api\Service\Publication\Formatter;
 
 /**
  * Schedule41True Text3
@@ -68,9 +68,9 @@ final class Text3 implements ProcessInterface
             /* @var $aoc \Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre */
             if (!empty($aoc->getS4())) {
                 $this->addText(
-                    'Operating Centre: '. Formatter\Address::format($aoc->getOperatingCentre()->getAddress())
+                    'Operating Centre: ' . Formatter\Address::format($aoc->getOperatingCentre()->getAddress())
                 );
-                $this->addText('Authorisation: '. Formatter\OcVehicleTrailer::format($aoc));
+                $this->addText('Authorisation: ' . Formatter\OcVehicleTrailer::format($aoc));
             }
         }
     }
@@ -129,7 +129,8 @@ final class Text3 implements ProcessInterface
      */
     private function addTransportManagersText(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
-        if ($publicationLink->getApplication()->isNew() ||
+        if (
+            $publicationLink->getApplication()->isNew() ||
             ($publicationLink->getApplication()->isVariation() && $publicationLink->getApplication()->isRealUpgrade())
         ) {
             if ($context->offsetExists('applicationTransportManagers')) {

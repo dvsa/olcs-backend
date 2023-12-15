@@ -5,6 +5,7 @@
  *
  * @author Craig R <uk@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Mockery as m;

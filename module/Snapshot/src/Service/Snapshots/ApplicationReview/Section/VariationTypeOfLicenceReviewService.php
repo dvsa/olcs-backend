@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -29,7 +30,8 @@ class VariationTypeOfLicenceReviewService extends AbstractReviewService
         $licenceLicenceType = $data['licence']['licenceType']['id'];
         $applicationLicenceType = $data['licenceType']['id'];
 
-        if ($licenceLicenceType == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL &&
+        if (
+            $licenceLicenceType == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL &&
             $applicationLicenceType == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
         ) {
             return $this->getStandardInternationalResponse($data);

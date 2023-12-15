@@ -90,7 +90,6 @@ class Schedule41Approve extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->feesHelper = $container->get('FeesHelperService');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

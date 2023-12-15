@@ -9,5 +9,4 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceNumber;
  */
 class LicenceNumberRepeat extends LicenceNumber
 {
-
 }

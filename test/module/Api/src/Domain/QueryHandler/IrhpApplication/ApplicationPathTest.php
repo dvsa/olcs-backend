@@ -48,7 +48,7 @@ class ApplicationPathTest extends QueryHandlerTestCase
             $applicationStepEntity2,
             $applicationStepEntity3,
         ];
- 
+
         $applicationPathEntity = m::mock(ApplicationPathEntity::class);
         $applicationPathEntity->shouldReceive('getApplicationSteps->getValues')
             ->andReturn($applicationStepEntities);

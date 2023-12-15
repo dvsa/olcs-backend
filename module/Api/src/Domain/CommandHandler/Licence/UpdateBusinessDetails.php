@@ -39,7 +39,8 @@ class UpdateBusinessDetails extends AbstractCommandHandler implements AuthAwareI
         );
         $this->result->merge($updateResult);
 
-        if (($updateResult->getFlag('tradingNamesChanged') === true)
+        if (
+            ($updateResult->getFlag('tradingNamesChanged') === true)
             && $this->isGranted(Permission::SELFSERVE_USER)
         ) {
             $taskData = [

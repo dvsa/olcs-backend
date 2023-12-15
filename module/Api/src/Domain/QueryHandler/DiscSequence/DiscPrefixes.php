@@ -3,6 +3,7 @@
 /**
  * Disc Sequence - get discs prefixes
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\DiscSequence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

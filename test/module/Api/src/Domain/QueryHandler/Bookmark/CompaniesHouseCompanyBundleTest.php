@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\CompaniesHouseCompanyBundle as Qry;

@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>, Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -36,19 +37,19 @@ class Country extends AbstractRepository
         if (method_exists($query, 'getIsEcmtState') && !empty($query->getIsEcmtState())) {
             $qb->andWhere($qb->expr()->in($this->alias . '.isEcmtState', ':isEcmtState'))
               ->setParameter('isEcmtState', $query->getIsEcmtState());
-            $qb->addOrderBy($this->alias.'.countryDesc', 'ASC');
+            $qb->addOrderBy($this->alias . '.countryDesc', 'ASC');
         }
 
         if (method_exists($query, 'getIsEeaState') && !empty($query->getIsEeaState())) {
             $qb->andWhere($qb->expr()->in($this->alias . '.isEeaState', ':isEeaState'))
                 ->setParameter('isEeaState', $query->getIsEeaState());
-            $qb->addOrderBy($this->alias.'.countryDesc', 'ASC');
+            $qb->addOrderBy($this->alias . '.countryDesc', 'ASC');
         }
 
         if (method_exists($query, 'hasEcmtConstraints') && $query->hasEcmtConstraints()) {
             $this->getQueryBuilder()->with('constraints', 'c');
             $qb->andWhere($qb->expr()->isNotNull('c.id'));
-            $qb->addOrderBy($this->alias.'.countryDesc', 'ASC');
+            $qb->addOrderBy($this->alias . '.countryDesc', 'ASC');
         }
     }
 
@@ -81,7 +82,7 @@ class Country extends AbstractRepository
         $qb
             ->select($this->alias)
             ->distinct()
-            ->innerJoin($this->alias.'.irhpPermitStocks', 'ips')
+            ->innerJoin($this->alias . '.irhpPermitStocks', 'ips')
             ->innerJoin('ips.irhpPermitType', 'ipt')
             ->innerJoin('ips.irhpPermitWindows', 'ipw')
             ->where($qb->expr()->eq('ipt.id', ':type'))
@@ -89,7 +90,7 @@ class Country extends AbstractRepository
             ->andWhere($qb->expr()->gt('ipw.endDate', ':now'))
             ->setParameter('now', $now)
             ->setParameter('type', $type)
-            ->orderBy($this->alias.'.countryDesc', 'ASC');
+            ->orderBy($this->alias . '.countryDesc', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
@@ -108,14 +109,14 @@ class Country extends AbstractRepository
         $qb
             ->select($this->alias)
             ->distinct()
-            ->innerJoin($this->alias.'.irhpPermitStocks', 'ips')
+            ->innerJoin($this->alias . '.irhpPermitStocks', 'ips')
             ->innerJoin('ips.irhpPermitRanges', 'ipr')
             ->innerJoin('ipr.irhpPermits', 'ip')
             ->where($qb->expr()->in('ip.status', ':statuses'))
             ->andWhere('ips.irhpPermitType = :irhpPermitTypeId')
             ->setParameter('statuses', IrhpPermitEntity::$readyToPrintStatuses)
             ->setParameter('irhpPermitTypeId', $irhpPermitTypeId)
-            ->orderBy($this->alias.'.countryDesc', 'ASC');
+            ->orderBy($this->alias . '.countryDesc', 'ASC');
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }

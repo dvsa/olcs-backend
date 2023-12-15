@@ -545,7 +545,7 @@ class LicenceVehicleTest extends RepositoryTestCase
         $this->assertEquals(
             '{{QUERY}} INNER JOIN m.licence l'
             . ' AND l.status IN ["lsts_curtailed","lsts_valid","lsts_suspended"]'
-            . ' AND m.warningLetterSeedDate < [['.$expectedDate.']]'
+            . ' AND m.warningLetterSeedDate < [[' . $expectedDate . ']]'
             . ' AND m.warningLetterSentDate IS NULL'
             . ' AND m.removalDate IS NULL',
             $this->query

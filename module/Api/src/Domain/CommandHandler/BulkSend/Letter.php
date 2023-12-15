@@ -26,8 +26,8 @@ final class Letter extends AbstractCommandHandler implements
     UploaderAwareInterface,
     AuthAwareInterface
 {
-    use AuthAwareTrait,
-        UploaderAwareTrait;
+    use AuthAwareTrait;
+    use UploaderAwareTrait;
 
     const EXPECTED_ITEMS_IN_ROW = 1;
 

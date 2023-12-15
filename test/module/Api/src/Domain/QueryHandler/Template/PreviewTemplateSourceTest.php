@@ -75,7 +75,7 @@ class PreviewTemplateSourceTest extends QueryHandlerTestCase
         $this->mockedSmServices['TemplateTwigRenderer']->shouldReceive('renderString')
             ->with($source, $dataset1Values)
             ->andReturn($renderedDataset1Content);
-        
+
         $this->mockedSmServices['TemplateStrategySelectingViewRenderer']->shouldReceive('render')
             ->with($locale, $format, 'default', ['content' => $renderedDataset1Content])
             ->andReturn($renderedDataset1Full);

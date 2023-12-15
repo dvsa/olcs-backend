@@ -5,6 +5,7 @@
  *
  * @author Someone <someone@valtech.co.uk>
  */
+
 namespace Olcs\Db\Exceptions;
 
 /**
@@ -14,5 +15,4 @@ namespace Olcs\Db\Exceptions;
  */
 class RestResponseException extends \Exception
 {
-
 }

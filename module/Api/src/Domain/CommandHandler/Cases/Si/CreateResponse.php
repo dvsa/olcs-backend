@@ -117,7 +117,6 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
     {
         $fullContainer = $container;
 
-
         $this->msiResponseService = $container->get(MsiResponseService::class);
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Entity\Pi;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;

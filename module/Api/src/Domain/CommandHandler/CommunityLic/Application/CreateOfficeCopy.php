@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;

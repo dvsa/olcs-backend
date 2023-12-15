@@ -46,7 +46,7 @@ final class People extends AbstractSection
         }
 
         $data = [];
-        for ($i=0; $i<count($persons); $i++) {
+        for ($i = 0; $i < count($persons); $i++) {
             /** @var PersonEntity $personEntity */
             $personEntity = $persons->current()->getPerson();
 

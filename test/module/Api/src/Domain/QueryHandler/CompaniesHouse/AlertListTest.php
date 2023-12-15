@@ -31,9 +31,9 @@ class AlertListTest extends QueryHandlerTestCase
         $query = Qry::create([]);
         $mockOrganisation = m::mock(Organisation::class);
         $mockLicence = m::mock(Licence::class);
-        $mockLicence->shouldReceive('serialize')->andReturn(['licNo'=>'test']);
+        $mockLicence->shouldReceive('serialize')->andReturn(['licNo' => 'test']);
         $mockOrganisation->shouldReceive('getLicences')->andReturn([$mockLicence])->getMock();
-        $mockOrganisation->shouldReceive('serialize')->andReturn(['name'=>'test']);
+        $mockOrganisation->shouldReceive('serialize')->andReturn(['name' => 'test']);
 
         $alert1 = m::mock()->shouldReceive('serialize')->andReturn(['id' => 1])->getMock();
         $alert2 = m::mock()->shouldReceive('serialize')->andReturn(['id' => 2])->getMock();
@@ -68,8 +68,8 @@ class AlertListTest extends QueryHandlerTestCase
 
         $expected = [
             'result' => [
-                ['id' => 1,'licence'=>['licNo'=>'test'], 'organisation'=>['name'=>'test']],
-                ['id' => 2, 'licence'=>['licNo'=>'test'], 'organisation'=>['name'=>'test']],
+                ['id' => 1,'licence' => ['licNo' => 'test'], 'organisation' => ['name' => 'test']],
+                ['id' => 2, 'licence' => ['licNo' => 'test'], 'organisation' => ['name' => 'test']],
             ],
             'count' => 2,
             'valueOptions' => [

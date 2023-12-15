@@ -13,7 +13,8 @@ use Mockery as m;
 
 class HttpClientTest extends TestCase
 {
-    use GuzzleTestTrait, ClientOptionsTestTrait;
+    use GuzzleTestTrait;
+    use ClientOptionsTestTrait;
 
     /**
      * @var HttpClient

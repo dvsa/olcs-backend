@@ -53,7 +53,8 @@ class DeclarationReviewService extends AbstractReviewService
                 'items' => $items
             ]
         ];
-        if ($continuationDetail->getSignatureType() !== null
+        if (
+            $continuationDetail->getSignatureType() !== null
             && $continuationDetail->getSignatureType()->getId() === RefData::SIG_PHYSICAL_SIGNATURE
         ) {
             $mainItems[] = [

@@ -3,6 +3,7 @@
 /**
  * Create Conviction Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Conviction;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

@@ -22,5 +22,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PrivateHireLicence extends AbstractPrivateHireLicence
 {
-
 }

@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Impounding;
 
 use Mockery as m;

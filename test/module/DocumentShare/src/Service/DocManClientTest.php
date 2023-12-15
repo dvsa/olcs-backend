@@ -134,7 +134,7 @@ class DocManClientTest extends MockeryTestCase
         $this->mockClient->expects(static::once())->method('setStream')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
-        $expectedLog = json_encode(["error" =>DocManClient::ERR_RESP_FAIL, "reason"=>$mockResponse->getStatusCode(), "path" => 'test']);
+        $expectedLog = json_encode(["error" => DocManClient::ERR_RESP_FAIL, "reason" => $mockResponse->getStatusCode(), "path" => 'test']);
         ;
         $this->logger
             ->shouldReceive('log')

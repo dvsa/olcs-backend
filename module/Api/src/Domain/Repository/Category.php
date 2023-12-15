@@ -58,7 +58,8 @@ class Category extends AbstractRepository
     {
         $expr = $qb->expr();
 
-        if (method_exists($this->query, 'getIsDocCategory')
+        if (
+            method_exists($this->query, 'getIsDocCategory')
             && $this->query->getIsDocCategory() === 'Y'
             && method_exists($this->query, 'getIsOnlyWithItems')
             && $this->query->getIsOnlyWithItems() === 'Y'

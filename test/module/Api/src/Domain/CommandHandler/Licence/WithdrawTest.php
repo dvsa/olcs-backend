@@ -4,6 +4,7 @@
  * WithdrawTest.php
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Mockery as m;

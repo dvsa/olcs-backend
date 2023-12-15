@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Test\Adapter;
@@ -90,7 +91,6 @@ class CognitoAdapterTest extends MockeryTestCase
         // Setup
         $previousException = m::mock(CognitoIdentityProviderException::class);
         $previousException->expects('getAwsErrorCode')->andReturn($awsErrorCode);
-
 
         $mockClient = m::mock(Client::class);
         $mockClient->shouldReceive('authenticate')->andThrow(new ClientException($awsErrorMessage, 0, $previousException));
@@ -619,7 +619,7 @@ class CognitoAdapterTest extends MockeryTestCase
         // Setup
         $mockClient = m::mock(Client::class);
         $mockClient->shouldReceive('getUserByIdentifier')->with($username)->once()->andReturn(
-            new class(['id' => $id]) extends AbstractResourceOwner implements ResourceOwnerInterface {
+            new class (['id' => $id]) extends AbstractResourceOwner implements ResourceOwnerInterface {
                 public function getId(): string
                 {
                     return $this->get('id');
@@ -702,7 +702,7 @@ class CognitoAdapterTest extends MockeryTestCase
 
         $mockClient = m::mock(Client::class);
         $mockClient->shouldReceive('getUserByIdentifier')->with($username)->once()->andReturn(
-            new class(['id' => 1001]) extends AbstractResourceOwner implements ResourceOwnerInterface {
+            new class (['id' => 1001]) extends AbstractResourceOwner implements ResourceOwnerInterface {
                 public function getId(): string
                 {
                     return $this->get('id');
@@ -722,7 +722,7 @@ class CognitoAdapterTest extends MockeryTestCase
     /**
      * @test
      */
-    public function doesUserExist_ReturnsFalse_WhenUserDoesNotExistInCognito():void
+    public function doesUserExist_ReturnsFalse_WhenUserDoesNotExistInCognito(): void
     {
         $username = 'user4574';
 

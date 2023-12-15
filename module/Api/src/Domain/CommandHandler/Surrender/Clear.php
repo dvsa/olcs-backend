@@ -7,7 +7,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 class Clear extends AbstractSurrenderCommandHandler
 {
-
     /**
      * @param CommandInterface $command
      * @return \Dvsa\Olcs\Api\Domain\Command\Result

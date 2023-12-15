@@ -93,7 +93,10 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $deltaIds = array_diff($allLicenceIds, $existingLicenceIds);
         if (count($deltaIds)) {
             $this->getRepo('ContinuationDetail')->createContinuationDetails(
-                $deltaIds, false, ContinuationDetailEntity::STATUS_PREPARED, $continuation->getId()
+                $deltaIds,
+                false,
+                ContinuationDetailEntity::STATUS_PREPARED,
+                $continuation->getId()
             );
         }
     }

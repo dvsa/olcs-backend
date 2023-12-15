@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition;
  */
 final class ProhibitionHistory extends AbstractSection
 {
-
     /**
      * Generate only the section data required.
      *

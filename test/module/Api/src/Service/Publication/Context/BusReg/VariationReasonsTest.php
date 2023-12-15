@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class VariationReasonsTest extends MockeryTestCase
 {
-
     /**
      * Tests bus reg variation reasons filter
      *

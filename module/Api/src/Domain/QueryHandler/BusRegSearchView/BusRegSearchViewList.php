@@ -5,6 +5,7 @@
  *
  * @author Craig R <uk@valtech.co.uk>, Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\BusRegSearchView;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -41,7 +42,7 @@ class BusRegSearchViewList extends AbstractQueryHandler
         // get data from transfer query
         $data = $query->getArrayCopy();
 
-        if ($this->isOperator() ) {
+        if ($this->isOperator()) {
             // fetch for Organisation
             $data['organisationId'] = $this->getCurrentOrganisation()->getId();
         } elseif ($this->isLocalAuthority()) {

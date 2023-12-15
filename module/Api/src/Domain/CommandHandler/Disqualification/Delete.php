@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Disqualification;
-
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractDeleteCommandHandler;
 

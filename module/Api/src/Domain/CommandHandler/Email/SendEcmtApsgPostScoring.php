@@ -67,7 +67,6 @@ class SendEcmtApsgPostScoring extends AbstractEcmtShortTermEmailHandler
     {
         $fullContainer = $container;
 
-
         $this->translator = $container->get('translator');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

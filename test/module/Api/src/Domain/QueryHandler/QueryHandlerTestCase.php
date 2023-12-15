@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -117,7 +118,8 @@ class QueryHandlerTestCase extends MockeryTestCase
          * If the handler is toggle aware, provide this for free. For more more complex testing use
          * $this->mockedSmServices in the extending class
          */
-        if ($this->sut instanceof ToggleRequiredInterface || $this->sut instanceof ToggleAwareInterface
+        if (
+            $this->sut instanceof ToggleRequiredInterface || $this->sut instanceof ToggleAwareInterface
             && !array_key_exists(ToggleService::class, $this->mockedSmServices)
         ) {
             $toggleService = m::mock(ToggleService::class);

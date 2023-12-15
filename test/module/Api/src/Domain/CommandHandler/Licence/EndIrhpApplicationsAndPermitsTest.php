@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;

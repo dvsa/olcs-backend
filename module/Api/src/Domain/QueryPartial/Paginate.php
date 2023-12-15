@@ -22,7 +22,7 @@ final class Paginate implements QueryPartialInterface
         list($page, $limit) = array_map('intval', $arguments);
 
         if ($limit > 0) {
-            $qb->setFirstResult(max($page -1, 0) * $limit);
+            $qb->setFirstResult(max($page - 1, 0) * $limit);
             $qb->setMaxResults($limit);
         }
     }

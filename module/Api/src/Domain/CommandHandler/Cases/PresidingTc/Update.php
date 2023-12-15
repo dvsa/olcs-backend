@@ -3,6 +3,7 @@
 /**
  * Update Presidng TC
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\PresidingTc;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -42,7 +43,6 @@ final class Update extends AbstractCommandHandler
 
         $this->result->addId('PresidingTc', $presidingTc->getId());
         $this->result->addMessage("PresidingTc '{$presidingTc->getId()}' updated");
-
 
         return $this->result;
     }

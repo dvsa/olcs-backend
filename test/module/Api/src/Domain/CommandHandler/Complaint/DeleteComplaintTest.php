@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Complaint;
 
 use Doctrine\ORM\Query;

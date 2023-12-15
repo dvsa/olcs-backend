@@ -10,7 +10,6 @@ use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
  */
 class AddressTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      * @dataProvider provider
      */

@@ -232,7 +232,7 @@ class Cases extends AbstractRepository
             ->with('application', 'a');
         $expr = $qb->expr();
 
-        $qb->Where($expr->eq(self::$aliasApp.'.id', ':byApplication'))
+        $qb->Where($expr->eq(self::$aliasApp . '.id', ':byApplication'))
             ->setParameter('byApplication', $id);
         $qb->andWhere(
             $expr->isNull($this->alias . '.closedDate')

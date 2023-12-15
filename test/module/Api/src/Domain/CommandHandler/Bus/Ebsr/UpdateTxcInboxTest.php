@@ -3,6 +3,7 @@
 /**
  * Update TxcInbox Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\ORM\Query;
@@ -101,6 +102,5 @@ class UpdateTxcInboxTest extends CommandHandlerTestCase
         $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
 
         $this->sut->handleCommand($command);
-
     }
 }

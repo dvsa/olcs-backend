@@ -5,12 +5,12 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;

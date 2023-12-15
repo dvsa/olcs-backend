@@ -25,5 +25,4 @@ class WithIrhpApplicationFactory implements FactoryInterface
             $container->get('QueryPartialServiceManager')->get('with')
         );
     }
-
 }

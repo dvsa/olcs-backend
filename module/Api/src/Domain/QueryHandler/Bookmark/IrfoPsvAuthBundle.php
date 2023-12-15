@@ -3,6 +3,7 @@
 /**
  * IrfoPsvAuth Bundle
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
 /**

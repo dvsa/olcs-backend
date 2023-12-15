@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
@@ -38,7 +39,6 @@ final class DeleteForResponsibilities extends AbstractDeleteCommandHandler imple
 
         /** @var Application $application */
         foreach ($applications as $application) {
-
             $completionData = ['id' => $application->getId(), 'section' => 'transportManagers'];
             $result->merge($this->handleSideEffect(UpdateApplicationCompletion::create($completionData)));
         }

@@ -30,7 +30,7 @@ final class RefuseInterim extends AbstractCommandHandler implements Transactione
     {
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
-        
+
         $status = $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_REFUSED);
         $application->setInterimStatus($status);
         $application->setInterimEnd(new DateTime());

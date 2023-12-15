@@ -34,7 +34,7 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
 
     public function testHandleCommandNewApplicationTaFromCommand()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'trafficArea' => 'TA',
         ];
@@ -82,7 +82,7 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
 
     public function testHandleCommandValidationError()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'trafficArea' => 'TA',
         ];
@@ -106,7 +106,7 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
 
     public function testHandleCommandValidationErrorTaFromApplication()
     {
-        $params =[
+        $params = [
             'id' => 323,
         ];
         $command = Command::create($params);

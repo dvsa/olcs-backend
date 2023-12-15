@@ -5,13 +5,14 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Transfer\Query\Reason\ReasonList;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\QueryBuilder;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Reason as Repo;
 
 /**

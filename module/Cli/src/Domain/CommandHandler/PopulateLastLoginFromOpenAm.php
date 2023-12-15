@@ -177,7 +177,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
      * @return int
      * @throws RuntimeException
      */
-    protected function getNumberOfUsersToProcess(CommandInterface $command) : int
+    protected function getNumberOfUsersToProcess(CommandInterface $command): int
     {
         $numberOfUsersToProcess = $this->getRepo()->fetchUsersCountWithoutLastLoginTime();
         $limit = $command->getLimit();

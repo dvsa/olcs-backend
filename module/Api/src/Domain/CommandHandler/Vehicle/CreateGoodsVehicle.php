@@ -279,7 +279,8 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         /** @var LicenceVehicle $licenceVehicle */
         foreach ($currentLicenceVehicles as $licenceVehicle) {
             $application = $licenceVehicle->getApplication();
-            if ($licenceVehicle->getVehicle()->getVrm() === $vrm
+            if (
+                $licenceVehicle->getVehicle()->getVrm() === $vrm
                 && (
                     ($application !== null && $application->getId() === $applicationId)
                     || $licenceVehicle->getSpecifiedDate() !== null

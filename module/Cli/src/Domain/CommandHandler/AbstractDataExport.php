@@ -95,7 +95,6 @@ abstract class AbstractDataExport extends AbstractCommandHandler
     {
         //  add rows
         while (($row = $dbalResult->fetchAssociative()) !== false) {
-
             $key = $row[$keyFld];
 
             if (!isset($this->csvPool[$key])) {

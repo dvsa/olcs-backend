@@ -52,7 +52,6 @@ class IrhpPermitWindowTraitTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->andReturn($isBilateralStandardAndCabotage);
 
-
         $irhpPermitStock = m::mock(IrhpPermitStock::class);
         $irhpPermitStock->shouldReceive('getIrhpPermitType->isBilateral')
             ->withNoArgs()

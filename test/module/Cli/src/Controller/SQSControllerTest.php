@@ -14,7 +14,6 @@ use Exception;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 use Hamcrest\Core\IsEqual;

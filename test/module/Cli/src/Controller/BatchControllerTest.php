@@ -874,7 +874,6 @@ class BatchControllerTest extends MockeryTestCase
             ->shouldReceive('writeLine')->once()->with(m::pattern('/' . addslashes(CliCommand\ImportUsersFromCsv::class) . '$/'))
             ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
 
-
         $this->sut->importUsersFromCsvAction();
     }
 

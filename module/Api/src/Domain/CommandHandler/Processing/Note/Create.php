@@ -10,14 +10,12 @@ use Dvsa\Olcs\Transfer\Command\Processing\Note\Create as CreateCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Exception;
 use Doctrine\ORM\Query;
-
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Create a Note
  */
-final class Create extends CreateUpdateAbstract
-    implements TransactionedInterface
+final class Create extends CreateUpdateAbstract implements TransactionedInterface
 {
     /**
      * @param CreateCommand $command

@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
 use Doctrine\ORM\Query;
@@ -39,7 +40,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface
 {
-    use AuthAwareTrait, DerivedTypeOfLicenceParamsTrait;
+    use AuthAwareTrait;
+    use DerivedTypeOfLicenceParamsTrait;
 
     protected $repoServiceName = 'Application';
 
@@ -63,7 +65,8 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
             throw new ForbiddenException('You do not have permission to update type of licence');
         }
 
-        if (!$licence->canBecomeSpecialRestricted()
+        if (
+            !$licence->canBecomeSpecialRestricted()
             && $command->getLicenceType() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED
         ) {
             throw new ValidationException(
@@ -104,7 +107,8 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
         $updateOperatingCentresSection = $application->hasAuthChanged();
 
         // check if the new type of licence requires OCs to be removed
-        if (!$application->canHaveOperatingCentre()
+        if (
+            !$application->canHaveOperatingCentre()
             && (!$application->getOperatingCentres()->isEmpty() || !$licence->getOperatingCentres()->isEmpty())
         ) {
             // can't have OCs, remove them
@@ -160,7 +164,8 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
             return true;
         }
 
-        if ($applicationLicenceType == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL &&
+        if (
+            $applicationLicenceType == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL &&
             $applicationVehicleType != $commandVehicleType
         ) {
             return true;

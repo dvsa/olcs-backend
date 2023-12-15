@@ -3,6 +3,7 @@
 /**
  * Generate permits
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits;
 
 use Dvsa\Olcs\Cli\Domain\Command\Permits\GeneratePermits as Cmd;

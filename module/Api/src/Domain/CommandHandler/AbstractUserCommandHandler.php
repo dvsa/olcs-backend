@@ -3,6 +3,7 @@
 /**
  * User Abstract
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;

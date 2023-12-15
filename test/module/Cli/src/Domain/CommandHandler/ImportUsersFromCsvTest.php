@@ -62,7 +62,7 @@ class ImportUsersFromCsvTest extends CommandHandlerTestCase
 
     public function setUp(): void
     {
-        $this->sut = new ImportUsersFromCsv;
+        $this->sut = new ImportUsersFromCsv();
 
         //  mock repos
         $this->mockUserRepo = $this->mockRepo('User', Repository\User::class);
@@ -186,7 +186,7 @@ class ImportUsersFromCsvTest extends CommandHandlerTestCase
         $resPath = $resFile->url();
 
         //  prepare expected csv content
-        $lines  =[
+        $lines  = [
             ['Titles', 'loginId', 'password', 'status'],
             $this->lineParts + ['status' => ImportUsersFromCsv::CSV_ERR_INVALID_ROW],
 
@@ -418,7 +418,7 @@ class ImportUsersFromCsvTest extends CommandHandlerTestCase
             )
         );
 
-        $lines  =[
+        $lines  = [
             ['Titles', 'loginId', 'password', 'status'],
             $lineParts + $expectParts
         ];

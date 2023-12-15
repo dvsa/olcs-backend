@@ -35,7 +35,8 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     public function handleCommand(CommandInterface $command)
     {
-        if ($command->getShouldCreateInspectionRequest() === 'Y'
+        if (
+            $command->getShouldCreateInspectionRequest() === 'Y'
             && $command->getDueDate() === null
         ) {
             throw new ValidationException(
@@ -184,7 +185,6 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->grantValidationService = $container->get('ApplicationGrantValidationService');
         return parent::__invoke($fullContainer, $requestedName, $options);

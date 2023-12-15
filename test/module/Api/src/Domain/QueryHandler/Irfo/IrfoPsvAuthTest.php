@@ -3,6 +3,7 @@
 /**
  * IrfoPsvAuth Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Irfo\IrfoPsvAuth;

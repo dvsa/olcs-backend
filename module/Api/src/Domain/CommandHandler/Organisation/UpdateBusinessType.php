@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;

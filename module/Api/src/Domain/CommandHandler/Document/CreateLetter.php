@@ -114,10 +114,12 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
      */
     protected function handleFollowUpTaskForApplicationOrVariationFirstLetter(DocTemplate $template, CreateLetterCommand $command)
     {
-        if (! in_array(
-            $this->resolveTemplateIdentifier($template->getDocument()->getIdentifier()),
-            static::DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FIRST
-        )) {
+        if (
+            ! in_array(
+                $this->resolveTemplateIdentifier($template->getDocument()->getIdentifier()),
+                static::DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FIRST
+            )
+        ) {
             return;
         }
 
@@ -158,10 +160,12 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
      */
     protected function handleFollowUpTaskForApplicationFinalLetter(DocTemplate $template, CreateLetterCommand $command)
     {
-        if (! in_array(
-            $this->resolveTemplateIdentifier($template->getDocument()->getIdentifier()),
-            static::DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FINAL
-        )) {
+        if (
+            ! in_array(
+                $this->resolveTemplateIdentifier($template->getDocument()->getIdentifier()),
+                static::DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FINAL
+            )
+        ) {
             return;
         }
 

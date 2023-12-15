@@ -7,7 +7,6 @@ use Interop\Container\ContainerInterface;
 
 class S3FileOptionsFactory implements FactoryInterface
 {
-
     /**
      * @param array $config
      *

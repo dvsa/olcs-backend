@@ -3,6 +3,7 @@
 /**
  * Grant IrfoPsvAuth Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;

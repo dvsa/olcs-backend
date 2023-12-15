@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Olcs\Api\Domain\Exception;
 
 use Exception as BasePHPException;

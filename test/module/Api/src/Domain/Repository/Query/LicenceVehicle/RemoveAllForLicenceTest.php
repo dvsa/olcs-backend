@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\LicenceVehicle;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\LicenceVehicle\RemoveAllForLicence;
@@ -69,6 +70,6 @@ class RemoveAllForLicenceTest extends AbstractDbQueryTestCase
             . 'lv.last_modified_on = NOW(), '
             . 'lv.last_modified_by = :currentUserId '
         . 'WHERE lv.licence_id = :licence'
-            .' AND lv.removal_date IS NULL';
+            . ' AND lv.removal_date IS NULL';
     }
 }

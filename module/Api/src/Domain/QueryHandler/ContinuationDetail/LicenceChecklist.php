@@ -165,7 +165,6 @@ class LicenceChecklist extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->sectionAccessService = $container->get('SectionAccessService');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

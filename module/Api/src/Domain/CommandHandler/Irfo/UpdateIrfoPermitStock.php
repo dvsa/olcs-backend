@@ -3,6 +3,7 @@
 /**
  * Update IrfoPermitStock
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -33,7 +34,7 @@ final class UpdateIrfoPermitStock extends AbstractCommandHandler implements Tran
 
         if (count($ids) > self::MAX_IDS_COUNT) {
             throw new Exception\ValidationException(
-                ['Number of selected records must be less than or equal to '.self::MAX_IDS_COUNT]
+                ['Number of selected records must be less than or equal to ' . self::MAX_IDS_COUNT]
             );
         }
 

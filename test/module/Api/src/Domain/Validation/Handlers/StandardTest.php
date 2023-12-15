@@ -5,13 +5,13 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
-
 
 /**
  * Standard Test

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cache;
 
@@ -16,7 +16,7 @@ class Single extends AbstractQueryHandler implements CacheAwareInterface
 
     public function handleQuery(QueryInterface $query)
     {
-        assert ($query instanceof Qry);
+        assert($query instanceof Qry);
 
         $queryData = ['id' => $query->getUniqueId()];
         $queryDto = $this->cacheService->getQueryFromCustomIdentifier($query->getId());

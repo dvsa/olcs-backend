@@ -30,7 +30,7 @@ class DeleteTaxiPhvTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'ids' => [472, 123, 186],
             'licence' => 1,

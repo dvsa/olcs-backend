@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -16,7 +17,6 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureRevi
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
@@ -335,7 +335,6 @@ class GeneratorTest extends MockeryTestCase
             ->once()
             ->andReturn($expectedData);
 
-
         $this->mockSignatureSection();
 
         $sections = [
@@ -409,7 +408,7 @@ class GeneratorTest extends MockeryTestCase
             ->with([
                 'signatureType' => $signatureType,
                 'digitalSignature' => null,
-                'organisation'=> $organisation,
+                'organisation' => $organisation,
                 'isNi' => true
             ])
             ->andReturn(['signature' => 'foo']);

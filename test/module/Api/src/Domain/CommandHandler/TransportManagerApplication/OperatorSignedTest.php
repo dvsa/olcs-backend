@@ -101,7 +101,6 @@ class OperatorSignedTest extends CommandHandlerTestCase
         $result = new Result();
         $this->expectedSideEffect(Snapshot::class, $data, $result);
 
-
         $this->assertEmailSent($tma);
         $this->sut->handleCommand($command);
     }

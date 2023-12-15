@@ -52,7 +52,7 @@ class Loader
             $client->setUri($pathOrUrl);
             $response = $this->getHttpClient()->send();
             if (!$response->isOk()) {
-                throw new \Dvsa\Olcs\GdsVerify\Exception('Error getting metadata document '. $pathOrUrl);
+                throw new \Dvsa\Olcs\GdsVerify\Exception('Error getting metadata document ' . $pathOrUrl);
             }
             $xml = $response->getBody();
         }

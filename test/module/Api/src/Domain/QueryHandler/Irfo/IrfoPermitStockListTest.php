@@ -3,6 +3,7 @@
 /**
  * IrfoPermitStockList Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Irfo;
 
 use Doctrine\ORM\Query as DoctrineQuery;

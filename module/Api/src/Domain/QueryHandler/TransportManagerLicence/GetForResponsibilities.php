@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerLicence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -33,6 +34,5 @@ class GetForResponsibilities extends AbstractQueryHandler
                 'operatingCentres'
             ]
         );
-
     }
 }

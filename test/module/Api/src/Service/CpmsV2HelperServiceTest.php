@@ -1617,7 +1617,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $txn->shouldReceive('getCpmsSchema')
             ->andReturn('client_id');
 
-
         $ft = m::mock(FeeTransactionEntity::class);
         $ft
             ->shouldReceive('getTransaction')

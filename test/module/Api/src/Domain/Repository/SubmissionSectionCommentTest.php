@@ -42,8 +42,8 @@ class SubmissionSectionCommentTest extends RepositoryTestCase
 
         //  check query
         $expect = 'QUERY ' .
-            'AND m.submission = [['. self::SUBMISSION_ID .']] ' .
-            'AND m.submissionSection = [['. self::SUBMISSION_SECTION .']] ' .
+            'AND m.submission = [[' . self::SUBMISSION_ID . ']] ' .
+            'AND m.submissionSection = [[' . self::SUBMISSION_SECTION . ']] ' .
             'LIMIT 1';
 
         static::assertEquals($expect, $this->query);

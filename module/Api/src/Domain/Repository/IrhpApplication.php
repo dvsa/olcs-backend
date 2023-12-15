@@ -3,6 +3,7 @@
 /**
  * IrhpApplication
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpApplications as ExpireIrhpApplicationsQuery;
@@ -42,10 +43,10 @@ class IrhpApplication extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $qb
-            ->innerJoin($this->alias.'.irhpPermitApplications', 'ipa')
+            ->innerJoin($this->alias . '.irhpPermitApplications', 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
             ->where('ipw.id = :windowId')
-            ->andWhere($qb->expr()->in($this->alias.'.status', ':appStatuses'))
+            ->andWhere($qb->expr()->in($this->alias . '.status', ':appStatuses'))
             ->setParameter('windowId', $windowId)
             ->setParameter('appStatuses', $appStatuses);
 

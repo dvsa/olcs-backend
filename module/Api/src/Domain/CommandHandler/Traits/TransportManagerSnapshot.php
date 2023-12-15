@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Traits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -16,7 +15,7 @@ trait TransportManagerSnapshot
      *
      * @return Result
      */
-    protected function createSnapshot($tmaId, $user) : Result
+    protected function createSnapshot($tmaId, $user): Result
     {
         $data = [
             'id' => $tmaId,

@@ -43,7 +43,6 @@ class PsvDiscPage extends AbstractDiscList
         }
 
         foreach ($this->data as $key => $disc) {
-
             $licence = $disc['licence'];
             $organisation = $licence['organisation'];
 
@@ -73,7 +72,6 @@ class PsvDiscPage extends AbstractDiscList
          * fill the rest up with placeholders
          */
         while (($length = count($discs) % self::PER_PAGE) !== 0) {
-
             $prefix = $this->getPrefix($length);
             $discs[] = [
                 $prefix . 'TITLE'       => self::PLACEHOLDER,

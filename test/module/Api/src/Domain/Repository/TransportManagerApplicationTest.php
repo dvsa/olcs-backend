@@ -307,10 +307,10 @@ class TransportManagerApplicationTest extends RepositoryTestCase
                 ]
             );
 
-        $expectQry = '{QUERY}'.
+        $expectQry = '{QUERY}' .
             ' SELECT tma.id' .
             ' GROUP BY tma.application' .
-            ' AND tma.application = [[' . self::APP_ID. ']]' .
+            ' AND tma.application = [[' . self::APP_ID . ']]' .
             ' SELECT SUM(CASE WHEN tma.action = \'A\' THEN 1 ELSE 0 END) AS A' .
             ' SELECT SUM(CASE WHEN tma.action = \'U\' THEN 1 ELSE 0 END) AS U' .
             ' SELECT SUM(CASE WHEN tma.action = \'D\' THEN 1 ELSE 0 END) AS D';

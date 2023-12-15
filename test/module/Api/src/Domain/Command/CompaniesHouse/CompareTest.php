@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Command\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\Compare;

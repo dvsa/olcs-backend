@@ -40,7 +40,6 @@ class DeleteTest extends AbstractHandlerTestCase
         $this->validatorManager->setService('canDeleteSurrender', $canDeleteSurrender);
         $canDeleteSurrender->shouldReceive('isValid')->andReturn($canDelete);
 
-
         $this->assertSame($expected, $this->sut->isValid($dto));
     }
 

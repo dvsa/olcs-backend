@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
@@ -164,8 +165,8 @@ class ApplicationOrganisationPersonTest extends RepositoryTestCase
 
         $this->sut->deleteForPerson($person);
 
-        $expectedQuery = '[DELETE] '.
-            'AND m.person = [[Dvsa\Olcs\Api\Entity\Person\Person]] '.
+        $expectedQuery = '[DELETE] ' .
+            'AND m.person = [[Dvsa\Olcs\Api\Entity\Person\Person]] ' .
             'OR m.originalPerson = [[Dvsa\Olcs\Api\Entity\Person\Person]]';
         $this->assertEquals($expectedQuery, $this->query);
     }

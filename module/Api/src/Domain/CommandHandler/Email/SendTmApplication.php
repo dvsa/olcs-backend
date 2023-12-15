@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\AbstractSendTmEmail;

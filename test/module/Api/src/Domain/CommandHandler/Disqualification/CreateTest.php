@@ -60,7 +60,8 @@ class CreateTest extends CommandHandlerTestCase
             function (Disqualification $saveDisqualification) use ($data) {
                 $saveDisqualification->setId(154);
                 $this->assertSame(
-                    $this->references[Organisation::class][154], $saveDisqualification->getOrganisation()
+                    $this->references[Organisation::class][154],
+                    $saveDisqualification->getOrganisation()
                 );
                 $this->assertSame($data['notes'], $saveDisqualification->getNotes());
                 $this->assertEquals(new \DateTime($data['startDate']), $saveDisqualification->getStartDate());

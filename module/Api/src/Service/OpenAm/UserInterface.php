@@ -3,6 +3,7 @@
 /**
  * User Interface
  */
+
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 /**

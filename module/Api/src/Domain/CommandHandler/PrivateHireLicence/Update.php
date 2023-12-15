@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -72,8 +73,10 @@ final class Update extends AbstractCommandHandler implements
         $this->result->addId('privateHireLicence', $phl->getId());
         $this->result->addMessage("PrivateHireLicence ID {$phl->getId()} updated");
 
-        if ($this->isGranted(Permission::SELFSERVE_USER) &&
-            ($command->getLva() === 'licence')) {
+        if (
+            $this->isGranted(Permission::SELFSERVE_USER) &&
+            ($command->getLva() === 'licence')
+        ) {
             $data = [
                 'licence' => $command->getLicence(),
                 'category' => CategoryEntity::CATEGORY_APPLICATION,
@@ -104,7 +107,8 @@ final class Update extends AbstractCommandHandler implements
 
         if ($postCodeTrafficArea) {
             // if TA not set or only one PrivateHireLicence is on the licence
-            if ($phl->getLicence()->getTrafficArea() === null ||
+            if (
+                $phl->getLicence()->getTrafficArea() === null ||
                 $phl->getLicence()->getPrivateHireLicences()->count() <= 1
             ) {
                 // update the licence TA

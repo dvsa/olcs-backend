@@ -255,7 +255,7 @@ class Application extends AbstractRepository
             ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->eq($this->alias . '.isVariation', ':isVariation'),
-                    $qb->expr()->neq('COALESCE(IDENTITY('.$this->alias . '.variationType), \'\')', ':variationType')
+                    $qb->expr()->neq('COALESCE(IDENTITY(' . $this->alias . '.variationType), \'\')', ':variationType')
                 )
             )
             ->setParameter('isVariation', false)
@@ -345,7 +345,7 @@ class Application extends AbstractRepository
      */
     public function fetchOpenApplicationsWhereInterimInForceAndInterimEndDateIsPast(): array
     {
-        $interimEndCutoff = (new DateTime())->setTime(0,0,0,0);
+        $interimEndCutoff = (new DateTime())->setTime(0, 0, 0, 0);
 
         $qb = $this->createQueryBuilder();
 

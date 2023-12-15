@@ -60,7 +60,6 @@ class Grant extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->grantValidationService = $container->get('ApplicationGrantValidationService');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

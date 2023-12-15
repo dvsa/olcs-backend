@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Email\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

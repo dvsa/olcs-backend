@@ -3,6 +3,7 @@
 /**
  * Reopen a submission
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Doctrine\ORM\Query;

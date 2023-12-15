@@ -107,13 +107,15 @@ class AcquiredRightsService
      */
     protected function checkApplicationApproved(ApplicationReference $applicationReference): void
     {
-        if (!in_array(
-            $applicationReference->getStatus(),
-            [
+        if (
+            !in_array(
+                $applicationReference->getStatus(),
+                [
                 ApplicationReference::APPLICATION_STATUS_APPROVED,
                 ApplicationReference::APPLICATION_STATUS_APPROVED_AFTER_APPEAL,
-            ]
-        )) {
+                ]
+            )
+        ) {
             throw new AcquiredRightsNotApprovedException(
                 sprintf(
                     'The acquired rights application referenced (%s) has not been approved (%s).',

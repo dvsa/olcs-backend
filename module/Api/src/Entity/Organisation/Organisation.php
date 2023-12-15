@@ -91,8 +91,10 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         foreach ($adminUsers as $orgUser) {
             try {
                 $user = $orgUser->getUser();
-                if ($user instanceof UserEntity
-                    && $user->getAccountDisabled() !== 'Y') {
+                if (
+                    $user instanceof UserEntity
+                    && $user->getAccountDisabled() !== 'Y'
+                ) {
                     $enabledOrgUsers->add($orgUser);
                 }
             } catch (EntityNotFoundException $ex) {
@@ -133,14 +135,16 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function hasAdminEmailAddresses()
     {
-        $emailValidator = new \Laminas\Validator\EmailAddress;
+        $emailValidator = new \Laminas\Validator\EmailAddress();
 
         /** @var OrganisationUser $orgUser */
         foreach ($this->getAdminOrganisationUsers() as $orgUser) {
             $email = $orgUser->getUser()->getContactDetails()->getEmailAddress();
 
-            if (!empty($email)
-                && $emailValidator->isValid($email)) {
+            if (
+                !empty($email)
+                && $emailValidator->isValid($email)
+            ) {
                 return true;
             }
         }
@@ -252,7 +256,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function isUnlicensed()
     {
-        return (boolean)$this->getIsUnlicensed();
+        return (bool)$this->getIsUnlicensed();
     }
 
     /**
@@ -569,7 +573,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             $licences = $this->getLicences();
             /** @var LicenceEntity $licence */
             foreach ($licences as $licence) {
-                if ($licence->getStatus() &&
+                if (
+                    $licence->getStatus() &&
                     ($licence->getStatus()->getId() === LicenceEntity::LICENCE_STATUS_CANCELLED ||
                         $licence->getStatus()->getId() === LicenceEntity::LICENCE_STATUS_WITHDRAWN)
                 ) {

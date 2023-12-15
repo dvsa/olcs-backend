@@ -3,6 +3,7 @@
 /**
  * SubmissionSectionComment Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Submission;
 
 use Mockery as m;

@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\CommunityLic;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
@@ -13,7 +14,8 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\User;
 
 class ValidatingReprintCaller extends AbstractCommand
 {
-    use Licence, User;
+    use Licence;
+    use User;
 
     /**
      * @Transfer\ArrayInput

@@ -80,7 +80,6 @@ class GetListByIrhpApplication extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->restrictedCountriesProvider
             = $container->get('PermitsCommonRangeBasedRestrictedCountriesProvider');
         return parent::__invoke($fullContainer, $requestedName, $options);

@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\GracePeriod;
 
 use Doctrine\ORM\Query;
-
 use Dvsa\Olcs\Api\Domain\QueryHandler\GracePeriod\GracePeriods;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\GracePeriod\GracePeriods as GracePeriodsQuery;

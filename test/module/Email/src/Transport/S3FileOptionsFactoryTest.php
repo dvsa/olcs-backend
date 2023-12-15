@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Email\Transport;
 
 use Aws\Credentials\CredentialsInterface;
@@ -18,7 +17,6 @@ use Mockery as m;
  */
 class S3FileOptionsFactoryTest extends MockeryTestCase
 {
-
     protected $sm;
 
     protected $sut;

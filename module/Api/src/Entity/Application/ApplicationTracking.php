@@ -98,9 +98,9 @@ class ApplicationTracking extends AbstractApplicationTracking
     public function exchangeStatusArray(array $data)
     {
         foreach ($this->sections as $section) {
-            $key = lcfirst($section).'Status';
+            $key = lcfirst($section) . 'Status';
             if (isset($data[$key])) {
-                $method = 'set'.$section.'Status';
+                $method = 'set' . $section . 'Status';
                 $this->$method($data[$key]);
             }
         }

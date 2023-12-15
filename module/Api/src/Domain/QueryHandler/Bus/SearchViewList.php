@@ -5,6 +5,7 @@
  *
  * @author Craig R <uk@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -33,7 +34,8 @@ class SearchViewList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)),
+                $repo->fetchList($query, DoctrineQuery::HYDRATE_OBJECT)
+            ),
             'count' => $repo->fetchCount($query)
         ];
     }

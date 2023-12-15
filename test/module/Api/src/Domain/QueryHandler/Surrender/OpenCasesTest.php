@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Surrender\OpenCases as QryHandler;
@@ -31,7 +30,6 @@ class OpenCasesTest extends QueryHandlerTestCase
         $this->repoMap['Cases']->shouldReceive(
             'fetchOpenCasesForSurrender'
         )->andReturn($expected);
-
 
         $this->assertEquals([
             'count' => 1,

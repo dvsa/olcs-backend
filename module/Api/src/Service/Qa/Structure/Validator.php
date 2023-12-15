@@ -54,7 +54,7 @@ class Validator
     public function setParameter($name, $value)
     {
         if (!isset($this->params[$name])) {
-            throw new RuntimeException('Parameter ' . $name. ' not found in validator');
+            throw new RuntimeException('Parameter ' . $name . ' not found in validator');
         }
 
         $this->params[$name] = $value;

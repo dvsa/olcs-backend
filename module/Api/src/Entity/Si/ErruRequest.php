@@ -37,7 +37,7 @@ class ErruRequest extends AbstractErruRequest
 
     /**
      * ErruRequest constructor.
-     * 
+     *
      * @param CaseEntity $case
      * @param RefData $msiType
      * @param CountryEntity $memberStateCode

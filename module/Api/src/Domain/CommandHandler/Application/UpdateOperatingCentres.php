@@ -119,7 +119,8 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
     protected function validate(Application $application, Cmd $command)
     {
         // Check if we are missing the traffic area value, when it is applicable
-        if ($application->isNew()
+        if (
+            $application->isNew()
             && $command->getPartial()
             && $command->getPartialAction() == 'add'
             && $application->getLicence()->getTrafficArea() === null
@@ -162,7 +163,8 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
                 $this->updateHelper->validateTotalAuthLgvVehicles($application, $command);
             }
 
-            if ($application->canHaveCommunityLicences()
+            if (
+                $application->canHaveCommunityLicences()
                 && $command->getTotCommunityLicences() > ($command->getTotAuthHgvVehicles() + $command->getTotAuthLgvVehicles())
             ) {
                 $this->updateHelper->addMessage('totCommunityLicences', self::ERR_OC_CL_1);
@@ -208,8 +210,10 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
         $this->totals['maxTrailerAuth'] = 0;
 
         foreach ($aocs as $aoc) {
-            if ($application->isVariation()
-                && in_array($aoc['action'], ['D', 'C'])) {
+            if (
+                $application->isVariation()
+                && in_array($aoc['action'], ['D', 'C'])
+            ) {
                 continue;
             }
 

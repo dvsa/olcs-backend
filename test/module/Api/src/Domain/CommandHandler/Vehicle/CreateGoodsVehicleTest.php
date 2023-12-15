@@ -260,7 +260,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationInternalIdentifyDuplicates()
     {
-        $this->expectException(RequiresConfirmationException::class, '["OB12345678","APP-'.self::LIC_ID.'"]');
+        $this->expectException(RequiresConfirmationException::class, '["OB12345678","APP-' . self::LIC_ID . '"]');
 
         $data = [
             'licence' => self::LIC_ID,

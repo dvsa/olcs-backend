@@ -3,6 +3,7 @@
 /**
  * Send email to notify that EBSR map has been requested
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;

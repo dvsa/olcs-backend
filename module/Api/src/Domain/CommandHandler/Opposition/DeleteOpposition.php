@@ -3,6 +3,7 @@
 /**
  * Delete Opposition
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Opposition;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractDeleteCommandHandler;

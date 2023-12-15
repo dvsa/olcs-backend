@@ -100,7 +100,6 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
     {
         $fullContainer = $container;
 
-
         $this->inrClient = $container->get(InrClientInterface::class);
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

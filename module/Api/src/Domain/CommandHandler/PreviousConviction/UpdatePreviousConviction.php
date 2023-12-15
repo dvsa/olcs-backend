@@ -5,6 +5,7 @@
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PreviousConviction;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;

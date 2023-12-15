@@ -56,7 +56,7 @@ class TypeBasedPermitTypeConfigProviderTest extends MockeryTestCase
         $expectedRestrictedCountriesQuestionKey
     ) {
         $permitTypeConfig = $this->typeBasedPermitTypeConfigProvider->getPermitTypeConfig($irhpPermitTypeId, $excludedRestrictedCountryIds);
-    
+
         $this->assertEquals(
             $expectedRestrictedCountriesQuestionKey,
             $permitTypeConfig->getRestrictedCountriesQuestionKey()

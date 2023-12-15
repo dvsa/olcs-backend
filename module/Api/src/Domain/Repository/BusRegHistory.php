@@ -3,6 +3,7 @@
 /**
  * BusRegHistory view repo
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\View\BusRegHistoryView as Entity;

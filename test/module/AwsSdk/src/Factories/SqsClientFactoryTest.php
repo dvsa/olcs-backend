@@ -6,7 +6,6 @@ use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\AwsSdk\Factories\SqsClientFactory;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
-
 use Mockery as m;
 use Aws\Credentials\CredentialsInterface;
 
@@ -51,7 +50,6 @@ class SqsClientFactoryTest extends TestCase
         $provider = \Mockery::mock(CredentialsInterface::class);
         // Mocks
         $this->sm->setService('Config', $config);
-
 
         /**
          * @var SqsClient $sqsClient

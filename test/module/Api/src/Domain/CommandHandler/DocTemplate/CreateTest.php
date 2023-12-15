@@ -21,7 +21,7 @@ use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
-use \Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\DocTemplate\Create

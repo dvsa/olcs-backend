@@ -139,7 +139,6 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $result2->addMessage('CancelAllInterimFees');
         $this->expectedSideEffectAsSystemUser(CancelAllInterimFees::class, ['id' => 111], $result2);
 
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -175,7 +174,6 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $application->setId(111);
         $application->setLicence($licence);
         $application->shouldReceive('getCurrentInterimStatus')->once()->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED);
-
 
         $feeEntity = m::mock(Fee::class);
         $feeEntity->shouldReceive('getFeeType')->andReturn(

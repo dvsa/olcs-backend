@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Email\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -74,10 +75,10 @@ class ProcessInspectionRequestEmailTest extends CommandHandlerTestCase
             ->andReturn($email2);
 
         $result = new Result();
-        $data = ['id' => '23456', 'status'=> 'S'];
+        $data = ['id' => '23456', 'status' => 'S'];
         $this->expectedSideEffect(UpdateInspectionRequest::class, $data, $result);
 
-        $data = ['id' => '23457', 'status'=> 'U'];
+        $data = ['id' => '23457', 'status' => 'U'];
         $this->expectedSideEffectThrowsException(UpdateInspectionRequest::class, $data, new \RuntimeException());
 
         // should only delete on success
@@ -158,14 +159,14 @@ class ProcessInspectionRequestEmailTest extends CommandHandlerTestCase
             ->with(4355)
             ->andReturn($email1);
 
-        $data = ['id' => '23456', 'status'=> 'S'];
+        $data = ['id' => '23456', 'status' => 'S'];
         $this->expectedSideEffectThrowsException(UpdateInspectionRequest::class, $data, new NotFoundException());
 
         $this->sut->handleCommand(Cmd::create([]));
 
         // assertions
         $expectedLogMessage = '==Unable to find the inspection request from the email subject line: '
-            .'[ Maintenance Inspection ] REQUEST=23456,STATUS=S';
+            . '[ Maintenance Inspection ] REQUEST=23456,STATUS=S';
 
         $this->assertEquals($expectedLogMessage, $this->logWriter->events[0]['message']);
     }

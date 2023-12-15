@@ -3,6 +3,7 @@
 /**
  * Update User Selfserve
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
@@ -35,9 +36,9 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
     OpenAmUserAwareInterface,
     ConfigAwareInterface
 {
-    use CacheAwareTrait,
-        ConfigAwareTrait,
-        OpenAmUserAwareTrait;
+    use CacheAwareTrait;
+    use ConfigAwareTrait;
+    use OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -139,7 +140,7 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
     private function checkEmailUpdate(User $user, CommandInterface $command)
     {
         if ($user->getContactDetails()->getEmailAddress() != $command->getContactDetails()['emailAddress']) {
-            $this->eventHistoryCreator->create($user, EventHistoryTypeEntity::USER_EMAIL_ADDRESS_UPDATED, 'Old:'.$user->getContactDetails()->getEmailAddress().' New:'.$command->getContactDetails()['emailAddress']);
+            $this->eventHistoryCreator->create($user, EventHistoryTypeEntity::USER_EMAIL_ADDRESS_UPDATED, 'Old:' . $user->getContactDetails()->getEmailAddress() . ' New:' . $command->getContactDetails()['emailAddress']);
         }
     }
 }

@@ -68,7 +68,7 @@ class OptionListTest extends MockeryTestCase
 
         $this->option1->shouldReceive('getRepresentation')
             ->andReturn($option1Representation);
-        
+
         $this->option2->shouldReceive('getRepresentation')
             ->andReturn($option2Representation);
 

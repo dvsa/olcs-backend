@@ -3,6 +3,7 @@
 /**
  * Process Si Compliance Episode
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -611,7 +612,6 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->xmlStructureInput = $container->get('ComplianceXmlStructure');
         $this->complianceEpisodeInput = $container->get('ComplianceEpisodeInput');

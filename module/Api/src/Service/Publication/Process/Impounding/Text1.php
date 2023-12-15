@@ -4,8 +4,8 @@ namespace Dvsa\Olcs\Api\Service\Publication\Process\Impounding;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
-use \Dvsa\Olcs\Api\Service\Publication\Process\AbstractText;
-use \Dvsa\Olcs\Api\Service\Publication\Formatter;
+use Dvsa\Olcs\Api\Service\Publication\Process\AbstractText;
+use Dvsa\Olcs\Api\Service\Publication\Formatter;
 
 /**
  * Class Impounding Text1

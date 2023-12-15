@@ -8,8 +8,8 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Merge as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Tm\Merge as Cmd;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use \Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 
 /**
  * Class MergeTest

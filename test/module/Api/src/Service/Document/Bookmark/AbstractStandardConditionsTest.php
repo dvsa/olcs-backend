@@ -31,7 +31,7 @@ class AbstractStandardConditionsTest extends MockeryTestCase
 
         /** @var AbstractStandardConditionsStub $sut */
         $class = '\\test\\' . $service . '\\TestClass';
-        $sut = new $class;
+        $sut = new $class();
         /** @var IdentityInterface $actual */
         $actual = $sut->getQuery(['data_key' => 9999]);
 

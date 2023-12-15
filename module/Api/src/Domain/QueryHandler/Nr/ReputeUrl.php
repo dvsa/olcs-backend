@@ -3,6 +3,7 @@
 /**
  * Repute Url
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Nr;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

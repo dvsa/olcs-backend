@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;

@@ -46,7 +46,8 @@ class UpdateOperatingCentreHelper implements FactoryInterface
     {
         $ea = $command->getEnforcementArea();
 
-        if ($this->authService->isGranted(Permission::INTERNAL_USER)
+        if (
+            $this->authService->isGranted(Permission::INTERNAL_USER)
             && $entity->getTrafficArea() !== null
             && empty($ea)
         ) {

@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Doctrine\Common\Collections\ArrayCollection;

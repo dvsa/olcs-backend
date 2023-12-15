@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GoodsDisc;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -129,7 +130,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
             'startNumber' => $startNumber,
             'discSequence' => $discSequence,
             'user' => 1,
-            'maxPages' =>$maxPages
+            'maxPages' => $maxPages
         ];
         $command = Cmd::create($data);
 

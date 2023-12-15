@@ -3,6 +3,7 @@
 /**
  * FormatAddressTest
  */
+
 namespace Dvsa\OlcsTest\Api\Service\Helper;
 
 use Mockery as m;

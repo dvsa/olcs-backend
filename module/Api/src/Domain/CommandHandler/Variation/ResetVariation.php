@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
 use DateTime;

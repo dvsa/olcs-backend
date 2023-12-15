@@ -3,6 +3,7 @@
 /**
  * EbsrSubmission List
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

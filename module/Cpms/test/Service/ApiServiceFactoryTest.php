@@ -28,7 +28,6 @@ class ApiServiceFactoryTest extends TestCase
                             'Accept' => 'application/json',
                         ],
 
-
                     ],
                 ],
             ],
@@ -127,7 +126,6 @@ class ApiServiceFactoryTest extends TestCase
                                 'Accept' => 'application/json',
                             ],
 
-
                         ],
                     ]
                 ],
@@ -152,7 +150,6 @@ class ApiServiceFactoryTest extends TestCase
                                 'Accept' => 'application/json',
                             ],
 
-
                         ],
                     ]
                 ],
@@ -176,7 +173,6 @@ class ApiServiceFactoryTest extends TestCase
                             'headers' => [
                                 'Accept' => 'application/json',
                             ],
-
 
                         ],
                     ]

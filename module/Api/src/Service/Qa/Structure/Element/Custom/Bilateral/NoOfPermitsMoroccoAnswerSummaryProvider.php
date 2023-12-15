@@ -11,7 +11,8 @@ use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
 class NoOfPermitsMoroccoAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
-    use AlwaysIncludeSlugTrait, IrhpPermitApplicationOnlyTrait;
+    use AlwaysIncludeSlugTrait;
+    use IrhpPermitApplicationOnlyTrait;
 
     /**
      * {@inheritdoc}

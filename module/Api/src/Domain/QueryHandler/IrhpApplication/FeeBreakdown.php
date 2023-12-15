@@ -65,7 +65,6 @@ class FeeBreakdown extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->registerGenerator(
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
             $container->get('PermitsBilateralFeeBreakdownGenerator')

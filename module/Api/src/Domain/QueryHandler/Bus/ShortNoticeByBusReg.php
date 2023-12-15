@@ -3,6 +3,7 @@
 /**
  * Short notice by bus reg
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

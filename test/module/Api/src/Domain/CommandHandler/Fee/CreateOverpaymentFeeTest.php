@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
 use Doctrine\ORM\Query;
@@ -28,7 +29,6 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class CreateOverpaymentFeeTest extends CommandHandlerTestCase
 {
-
     protected $mockFeesHelperService;
 
     public function setUp(): void

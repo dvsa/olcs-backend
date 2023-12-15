@@ -51,11 +51,13 @@ class StockAlignmentReport extends AbstractQueryHandler
             $emissionsCategory = $candidatePermit->getRequestedEmissionsCategory();
             $restrictedCountries = $candidatePermit->getIrhpPermitApplication()->getIrhpApplication()->getCountrys();
 
-            if (!$restrictedCountries->exists(
-                function ($key, $element) use ($hungary) {
-                    return $hungary->getId() === $element->getId();
-                }
-            )) {
+            if (
+                !$restrictedCountries->exists(
+                    function ($key, $element) use ($hungary) {
+                        return $hungary->getId() === $element->getId();
+                    }
+                )
+            ) {
                 // all permits allow travel to Hungary so record the candidate as requiring a permit for Hungary
                 // regardless whether Hungary was requested in the application
                 $restrictedCountries->add($hungary);
@@ -120,7 +122,8 @@ class StockAlignmentReport extends AbstractQueryHandler
     {
         $emissionsCategoryId = $emissionsCategory->getId();
 
-        if (empty($this->remainingStock[$emissionsCategoryId]['total'])
+        if (
+            empty($this->remainingStock[$emissionsCategoryId]['total'])
             && $emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO6_REF
         ) {
             // if there are no permits available for that Emissions Standard and the requested Emissions Standard is Euro6
@@ -153,7 +156,8 @@ class StockAlignmentReport extends AbstractQueryHandler
 
                     // reduce the number of available permits for the Restricted Country / Emissions Standard requested by 1
                     $this->remainingStock[$emissionsCategoryId][$countryId]--;
-                } elseif ($emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO6_REF
+                } elseif (
+                    $emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO6_REF
                      && !empty($this->remainingStock[RefData::EMISSIONS_CATEGORY_EURO5_REF][$countryId])
                 ) {
                     // no more Euro6 permits left for the restricted country

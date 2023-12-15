@@ -21,7 +21,6 @@ class CurrentDiscsReviewService extends AbstractReviewService
                 'value' => $surrender->getDiscDestroyed() === null ? 0 : $surrender->getDiscDestroyed()
             ];
 
-
         $items[] =
             [
                 'label' => 'surrender-review-current-discs-lost',

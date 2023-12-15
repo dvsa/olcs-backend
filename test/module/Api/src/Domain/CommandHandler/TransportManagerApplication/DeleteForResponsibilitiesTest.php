@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;

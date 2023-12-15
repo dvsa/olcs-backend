@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Printer;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -23,7 +24,7 @@ final class CreatePrinter extends AbstractCommandHandler
 
     /**
      * Handle command
-     * 
+     *
      * @param CommandInterface $command command
      *
      * @return Result

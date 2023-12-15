@@ -23,7 +23,6 @@ use Mockery as m;
 
 class UpdatePeriodTest extends CommandHandlerTestCase
 {
-
     public $command;
 
     public $data = [
@@ -106,7 +105,6 @@ class UpdatePeriodTest extends CommandHandlerTestCase
         $cmdResult = new Result();
         $cmdResult->addId('irhpPermitApplication', 333);
         $cmdResult->addMessage('IrhpPermitApplication Created');
-
 
         $this->expectedSideEffect(
             CreateForIrhpApplication::class,

@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TaskAlphaSplit;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\TaskAlphaSplit\Get as QueryHandler;

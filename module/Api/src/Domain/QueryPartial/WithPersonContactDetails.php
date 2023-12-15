@@ -3,6 +3,7 @@
 /**
  * With Person Contact details. Returns Contact details + address, person and phone contact information
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
 use Doctrine\ORM\EntityManagerInterface;

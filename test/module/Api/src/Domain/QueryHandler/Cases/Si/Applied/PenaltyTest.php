@@ -3,6 +3,7 @@
 /**
  * Penalty Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Si\Applied;
 
 use Mockery as m;

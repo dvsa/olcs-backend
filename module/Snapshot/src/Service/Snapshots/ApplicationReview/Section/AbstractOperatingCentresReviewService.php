@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\System\RefData;

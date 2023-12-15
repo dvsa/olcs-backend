@@ -290,7 +290,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
     {
         $result = [];
 
-        for ($i=1; $i<=$count; $i++) {
+        for ($i = 1; $i <= $count; $i++) {
             $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
             $mockUser->shouldReceive('getPid')
                 ->andReturn('pid-' . $i);
@@ -351,7 +351,7 @@ class PopulateLastLoginFromOpenAmTest extends CommandHandlerTestCase
      * @param int $batchSize
      * @return void
      */
-    protected function mockUserRepoWithUsers(int $totalNumberOfUsers) : void
+    protected function mockUserRepoWithUsers(int $totalNumberOfUsers): void
     {
         $this->repoMap['User']->shouldReceive('fetchUsersCountWithoutLastLoginTime')
             ->andReturn($totalNumberOfUsers);

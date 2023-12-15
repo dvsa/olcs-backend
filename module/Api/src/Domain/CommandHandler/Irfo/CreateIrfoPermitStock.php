@@ -3,6 +3,7 @@
 /**
  * Create IrfoPermitStock
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -45,7 +46,7 @@ final class CreateIrfoPermitStock extends AbstractCommandHandler implements Tran
             throw new Exception\ValidationException(
                 [
                     self::ERROR_MAX_DIFF_EXCEEDED
-                        => 'Difference between Serial No - Start and End must be less than or equal to '.self::MAX_DIFF
+                        => 'Difference between Serial No - Start and End must be less than or equal to ' . self::MAX_DIFF
                 ]
             );
         }
@@ -56,7 +57,6 @@ final class CreateIrfoPermitStock extends AbstractCommandHandler implements Tran
         $status = $this->getRepo()->getRefdataReference($command->getStatus());
 
         for ($i = $command->getSerialNoStart(); $i <= $command->getSerialNoEnd(); $i++) {
-
             if (isset($results[$i])) {
                 // update existing record
                 $irfoPermitStock = $results[$i];

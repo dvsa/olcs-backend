@@ -12,5 +12,4 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class ProcessDuplicateVehicleRemoval extends AbstractCommand
 {
-
 }

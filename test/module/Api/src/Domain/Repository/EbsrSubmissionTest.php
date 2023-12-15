@@ -40,7 +40,8 @@ class EbsrSubmissionTest extends RepositoryTestCase
         $this->assertEquals(
             [
                 'RESULTS'
-            ], $this->sut->fetchByOrganisation(
+            ],
+            $this->sut->fetchByOrganisation(
                 'ORG1',
                 'submission_type',
                 'submission_status'

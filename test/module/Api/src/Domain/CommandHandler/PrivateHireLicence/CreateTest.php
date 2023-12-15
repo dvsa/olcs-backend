@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence\Create as CommandHandler;
@@ -58,7 +59,7 @@ class CreateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $params =[
+        $params = [
             'licence' => 323,
             'privateHireLicenceNo' => 'TOPDOG 1',
             'councilName' => 'Leeds',
@@ -100,7 +101,6 @@ class CreateTest extends CommandHandlerTestCase
                 $this->assertSame($params['privateHireLicenceNo'], $phl->getPrivateHireLicenceNo());
                 $this->assertSame($this->references[Licence::class][323], $phl->getLicence());
                 $this->assertSame(648, $phl->getContactDetails()->getId());
-
             }
         );
 
@@ -135,7 +135,7 @@ class CreateTest extends CommandHandlerTestCase
 
     public function testHandleCommandUpdateTrafficArea()
     {
-        $params =[
+        $params = [
             'licence' => 323,
             'privateHireLicenceNo' => 'TOPDOG 1',
             'councilName' => 'Leeds',
@@ -180,7 +180,7 @@ class CreateTest extends CommandHandlerTestCase
 
     public function testHandleCommandUpdateTrafficAreaValidationError()
     {
-        $params =[
+        $params = [
             'licence' => 323,
             'privateHireLicenceNo' => 'TOPDOG 1',
             'councilName' => 'Leeds',

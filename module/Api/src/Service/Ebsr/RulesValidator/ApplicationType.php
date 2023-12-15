@@ -39,15 +39,19 @@ class ApplicationType extends AbstractValidator
     public function isValid($value, $context = [])
     {
         //data refresh must be nonChargeableChange
-        if ($context['submissionType'] === EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE &&
-            $value['txcAppType'] !== 'nonChargeableChange') {
+        if (
+            $context['submissionType'] === EbsrSubmission::DATA_REFRESH_SUBMISSION_TYPE &&
+            $value['txcAppType'] !== 'nonChargeableChange'
+        ) {
             $this->error(self::REFRESH_SUBMISSION_ERROR);
             return false;
         }
 
         //new application must not be nonChargeableChange
-        if ($context['submissionType'] === EbsrSubmission::NEW_SUBMISSION_TYPE &&
-            $value['txcAppType'] === 'nonChargeableChange') {
+        if (
+            $context['submissionType'] === EbsrSubmission::NEW_SUBMISSION_TYPE &&
+            $value['txcAppType'] === 'nonChargeableChange'
+        ) {
             $this->error(self::NEW_SUBMISSION_ERROR);
             return false;
         }

@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 /**
  * @NOTE All Case related queries and commands have been moved here and assigned the isInternalUser handler
  */
+
 return [
     //  commands
     CommandHandler\Cases\CloseCase::class                                   => IsInternalUser::class,

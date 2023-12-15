@@ -51,7 +51,8 @@ class Stlstandardlicparagraph extends DynamicBookmark
     public function render()
     {
         $licenceType = $this->getLicenceType();
-        if ($licenceType === Licence::LICENCE_TYPE_STANDARD_NATIONAL
+        if (
+            $licenceType === Licence::LICENCE_TYPE_STANDARD_NATIONAL
             || $licenceType === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
         ) {
             return $this->getSnippet('Stlstandardlicparagraph/standard');

@@ -66,7 +66,7 @@ class FormFragmentGeneratorTest extends MockeryTestCase
         $formFragmentFactory->shouldReceive('create')
             ->withNoArgs()
             ->andReturn($formFragment);
-       
+
         $formFragmentGenerator = new FormFragmentGenerator(
             $formFragmentFactory,
             $applicationStepGenerator,

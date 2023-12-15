@@ -90,7 +90,7 @@ class ForCpWithCountriesAndMultipleMatchingRangesProviderTest extends MockeryTes
         $this->withFewestNonRequestedCountriesProvider->shouldReceive('getRanges')
             ->with($this->applicationCountryIds, $this->ranges)
             ->andReturn($matchingRanges);
-    
+
         $this->assertEquals(
             $this->range2,
             $this->rangesProvider->selectRange($this->result, $this->ranges, $this->applicationCountryIds)

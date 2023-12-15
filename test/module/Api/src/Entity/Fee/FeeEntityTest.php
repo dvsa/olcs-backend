@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Entity\Fee;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -910,7 +909,7 @@ class FeeEntityTest extends EntityTester
                     'addressLine3' => 'Foo3',
                     'addressLine4' => 'Foo4',
                     'town' => 'FooTown',
-                    'postcode' =>'FooPostcode',
+                    'postcode' => 'FooPostcode',
                     'countryCode' => 'FooCountry',
                 ]
             )
@@ -937,7 +936,7 @@ class FeeEntityTest extends EntityTester
                     'addressLine3' => 'Foo3',
                     'addressLine4' => 'Foo4',
                     'town' => 'FooTown',
-                    'postcode' =>'FooPostcode',
+                    'postcode' => 'FooPostcode',
                     'countryCode' => 'FooCountry',
                 ],
             ],
@@ -951,7 +950,7 @@ class FeeEntityTest extends EntityTester
                     'addressLine3' => 'Foo3',
                     'addressLine4' => 'Foo4',
                     'town' => 'FooTown',
-                    'postcode' =>'FooPostcode',
+                    'postcode' => 'FooPostcode',
                     'countryCode' => 'FooCountry',
                 ],
             ],
@@ -965,7 +964,7 @@ class FeeEntityTest extends EntityTester
                     'addressLine3' => 'Foo3',
                     'addressLine4' => 'Foo4',
                     'town' => 'FooTown',
-                    'postcode' =>'FooPostcode',
+                    'postcode' => 'FooPostcode',
                     'countryCode' => 'FooCountry',
                 ],
             ],

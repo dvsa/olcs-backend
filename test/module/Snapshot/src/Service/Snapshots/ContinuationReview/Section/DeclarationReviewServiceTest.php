@@ -41,7 +41,8 @@ class DeclarationReviewServiceTest extends MockeryTestCase
 
         $mockTranslator = m::mock(TranslatorInterface::class)->shouldReceive('translate')->andReturnUsing(
             function ($message) {
-                if ($message == 'markup-continuation-declaration-goods-gb' ||
+                if (
+                    $message == 'markup-continuation-declaration-goods-gb' ||
                     $message == 'markup-continuation-declaration-goods-ni'
                 ) {
                     return $message . '_translated(%s,%s)';
@@ -121,7 +122,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
         return [
             [
                 'markup-continuation-declaration-goods-gb_translated'
-                    .'(markup-continuation-declaration-goods-gb-operating-centres-not-lgv_translated(%s),)',
+                    . '(markup-continuation-declaration-goods-gb-operating-centres-not-lgv_translated(%s),)',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_RESTRICTED,
                 false,
@@ -129,7 +130,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-goods-ni_translated'
-                    .'(markup-continuation-declaration-goods-ni-operating-centres-not-lgv_translated(%s),)',
+                    . '(markup-continuation-declaration-goods-ni-operating-centres-not-lgv_translated(%s),)',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_RESTRICTED,
                 true,
@@ -137,7 +138,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-goods-gb_translated'
-                    .'(markup-continuation-declaration-goods-gb-operating-centres-not-lgv_translated(%s),)',
+                    . '(markup-continuation-declaration-goods-gb-operating-centres-not-lgv_translated(%s),)',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
                 false,
@@ -145,7 +146,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-goods-ni_translated'
-                    .'(markup-continuation-declaration-goods-ni-operating-centres-not-lgv_translated(%s),)',
+                    . '(markup-continuation-declaration-goods-ni-operating-centres-not-lgv_translated(%s),)',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
                 true,
@@ -153,8 +154,8 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-goods-gb_translated'
-                    .'(markup-continuation-declaration-goods-gb-operating-centres-not-lgv_translated(%s),'
-                    .'markup-continuation-declaration-goods-gb-standard_translated(%s))',
+                    . '(markup-continuation-declaration-goods-gb-operating-centres-not-lgv_translated(%s),'
+                    . 'markup-continuation-declaration-goods-gb-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                 false,
@@ -162,8 +163,8 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-goods-ni_translated'
-                    .'(markup-continuation-declaration-goods-ni-operating-centres-not-lgv_translated(%s),'
-                    .'markup-continuation-declaration-goods-ni-standard_translated(%s))',
+                    . '(markup-continuation-declaration-goods-ni-operating-centres-not-lgv_translated(%s),'
+                    . 'markup-continuation-declaration-goods-ni-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                 true,
@@ -171,8 +172,8 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-goods-gb_translated'
-                    .'(markup-continuation-declaration-goods-gb-operating-centres-not-lgv_translated(%s)'
-                    .',markup-continuation-declaration-goods-gb-standard_translated(%s))',
+                    . '(markup-continuation-declaration-goods-gb-operating-centres-not-lgv_translated(%s)'
+                    . ',markup-continuation-declaration-goods-gb-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                 false,
@@ -180,8 +181,8 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-goods-ni_translated'
-                    .'(markup-continuation-declaration-goods-ni-operating-centres-not-lgv_translated(%s),'
-                    .'markup-continuation-declaration-goods-ni-standard_translated(%s))',
+                    . '(markup-continuation-declaration-goods-ni-operating-centres-not-lgv_translated(%s),'
+                    . 'markup-continuation-declaration-goods-ni-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                 true,
@@ -189,8 +190,8 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-goods-gb_translated'
-                    .'(markup-continuation-declaration-goods-operating-centres-lgv_translated(%s),'
-                    .'markup-continuation-declaration-goods-gb-standard_translated(%s))',
+                    . '(markup-continuation-declaration-goods-operating-centres-lgv_translated(%s),'
+                    . 'markup-continuation-declaration-goods-gb-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                 false,
@@ -198,8 +199,8 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-goods-ni_translated'
-                    .'(markup-continuation-declaration-goods-operating-centres-lgv_translated(%s),'
-                    .'markup-continuation-declaration-goods-ni-standard_translated(%s))',
+                    . '(markup-continuation-declaration-goods-operating-centres-lgv_translated(%s),'
+                    . 'markup-continuation-declaration-goods-ni-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                 true,
@@ -235,7 +236,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-psv_translated'
-                    .'(markup-continuation-declaration-psv-standard_translated(%s))',
+                    . '(markup-continuation-declaration-psv-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_PSV,
                 Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                 false,
@@ -243,7 +244,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-psv_translated'
-                    .'(markup-continuation-declaration-psv-standard_translated(%s))',
+                    . '(markup-continuation-declaration-psv-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_PSV,
                 Licence::LICENCE_TYPE_STANDARD_NATIONAL,
                 true,
@@ -251,7 +252,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-psv_translated'
-                    .'(markup-continuation-declaration-psv-standard_translated(%s))',
+                    . '(markup-continuation-declaration-psv-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_PSV,
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                 false,
@@ -259,7 +260,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
             ],
             [
                 'markup-continuation-declaration-psv_translated'
-                    .'(markup-continuation-declaration-psv-standard_translated(%s))',
+                    . '(markup-continuation-declaration-psv-standard_translated(%s))',
                 Licence::LICENCE_CATEGORY_PSV,
                 Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                 true,

@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Licence;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
@@ -23,5 +24,7 @@ final class EndIrhpApplicationsAndPermits extends AbstractCommand
     const CONTEXT_REVOKE = 'context_revoke';
     const CONTEXT_CNS = 'context_cns';
 
-    use Identity, PermitAppWithdrawReason, EndIrhpApplicationsAndPermitsContext;
+    use Identity;
+    use PermitAppWithdrawReason;
+    use EndIrhpApplicationsAndPermitsContext;
 }

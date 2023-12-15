@@ -3,6 +3,7 @@
 /**
  * Update SubmissionSectionComment
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

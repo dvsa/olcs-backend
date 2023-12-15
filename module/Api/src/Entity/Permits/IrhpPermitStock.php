@@ -50,7 +50,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     const CANDIDATE_MODE_APSG = 'candidate_mode_apsg';
     const CANDIDATE_MODE_APGG = 'candidate_mode_apgg';
     const CANDIDATE_MODE_NONE = 'candidate_mode_none';
-    
+
     const APGG_SHORT_TERM_NO_CANDIDATES_YEAR = 2019;
 
     /**
@@ -84,7 +84,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     ) {
         static::validateCountry($type, $country, $permitCategory);
 
-        $instance = new self;
+        $instance = new self();
 
         $instance->irhpPermitType = $type;
         $instance->country = $country;

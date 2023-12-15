@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Tm;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -69,7 +70,6 @@ class DocumentsTest extends QueryHandlerTestCase
     public function testHandleQueryReadOnlyUser()
     {
         $query = Query::create(['id' => 1]);
-
 
         $mockedRole = m::mock(Role::class);
         $mockedRole->shouldReceive('getRole')->andReturn(Role::ROLE_INTERNAL_LIMITED_READ_ONLY);

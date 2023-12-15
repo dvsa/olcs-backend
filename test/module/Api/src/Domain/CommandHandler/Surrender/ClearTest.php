@@ -43,7 +43,6 @@ class ClearTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($surrenderEntity);
 
-
         $this->repoMap['Surrender']
             ->shouldReceive('save')
             ->with($surrenderEntity)

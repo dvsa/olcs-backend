@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Service\GovUkAccount\Data\Attributes;
 
-
 /**
  * DigitalSignature Entity
  *

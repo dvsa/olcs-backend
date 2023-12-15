@@ -3,6 +3,7 @@
 /**
  * Create Bus Fee
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Bus;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
@@ -12,5 +13,4 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class CreateBusFee extends AbstractIdOnlyCommand
 {
-
 }

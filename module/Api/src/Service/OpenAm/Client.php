@@ -131,7 +131,7 @@ class Client implements ClientInterface
     {
         $query = $this->createPidQuery($pids);
 
-        $request = $this->createRequest('/users?_queryFilter='. $query, Request::METHOD_GET);
+        $request = $this->createRequest('/users?_queryFilter=' . $query, Request::METHOD_GET);
 
         $response = $this->httpClient->send($request);
 
@@ -176,7 +176,7 @@ class Client implements ClientInterface
         $queryArray = [];
 
         foreach ($pids as $pid) {
-            $queryArray[] = 'pid eq "'.$pid.'"';
+            $queryArray[] = 'pid eq "' . $pid . '"';
         }
 
         return urlencode(implode(" or ", $queryArray));

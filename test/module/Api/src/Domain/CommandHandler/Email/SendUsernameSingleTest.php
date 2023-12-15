@@ -3,6 +3,7 @@
 /**
  * Send Username Single Email Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

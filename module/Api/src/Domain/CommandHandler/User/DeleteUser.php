@@ -30,8 +30,8 @@ final class DeleteUser extends AbstractCommandHandler implements
     TransactionedInterface,
     CacheAwareInterface
 {
-    use AuthAwareTrait,
-        CacheAwareTrait;
+    use AuthAwareTrait;
+    use CacheAwareTrait;
 
     protected $repoServiceName = 'User';
 

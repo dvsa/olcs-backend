@@ -3,6 +3,7 @@
 /**
  * Update User
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Doctrine\ORM\AbstractQuery;
@@ -51,9 +52,9 @@ final class UpdateUser extends AbstractUserCommandHandler implements
     OpenAmUserAwareInterface,
     TransactionedInterface
 {
-    use CacheAwareTrait,
-        ConfigAwareTrait,
-        OpenAmUserAwareTrait;
+    use CacheAwareTrait;
+    use ConfigAwareTrait;
+    use OpenAmUserAwareTrait;
 
     public const RESET_PASSWORD_BY_POST = 'post';
     public const RESET_PASSWORD_BY_EMAIL = 'email';
@@ -346,7 +347,6 @@ final class UpdateUser extends AbstractUserCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->authAdapter = $container->get(ValidatableAdapterInterface::class);
         $this->passwordService = $container->get(PasswordService::class);

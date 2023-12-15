@@ -26,7 +26,7 @@ class TransportManagerApplication extends AbstractRepository
     {
         $dqb = $this->createQueryBuilder();
 
-        $dqb->leftJoin($this->alias .'.transportManager', 'tm')
+        $dqb->leftJoin($this->alias . '.transportManager', 'tm')
             ->leftJoin($this->alias . '.tmApplicationStatus', 'tmas')
             ->leftJoin('tm.homeCd', 'hcd')
             ->leftJoin('hcd.person', 'hp')
@@ -37,7 +37,7 @@ class TransportManagerApplication extends AbstractRepository
             ->addSelect('hcd.emailAddress')
             ->addSelect('hp.birthDate, hp.forename, hp.familyName');
 
-        $dqb->andWhere($dqb->expr()->eq($this->alias .'.application', ':applicationId'))
+        $dqb->andWhere($dqb->expr()->eq($this->alias . '.application', ':applicationId'))
             ->setParameter('applicationId', $applicationId);
 
         return $dqb->getQuery()->getResult(Query::HYDRATE_ARRAY);
@@ -57,8 +57,8 @@ class TransportManagerApplication extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($dqb)
             ->withRefdata()
-            ->with($this->alias .'.application', 'a')
-            ->with($this->alias .'.otherLicences', 'ol')
+            ->with($this->alias . '.application', 'a')
+            ->with($this->alias . '.otherLicences', 'ol')
             ->with('ol.role')
             ->with('a.goodsOrPsv', 'gop')
             ->with('a.licence')
@@ -83,7 +83,7 @@ class TransportManagerApplication extends AbstractRepository
      */
     protected function joinTmContactDetails()
     {
-        $this->getQueryBuilder()->with($this->alias .'.transportManager', 'tm')
+        $this->getQueryBuilder()->with($this->alias . '.transportManager', 'tm')
             ->with('tm.homeCd', 'hcd')
             ->with('hcd.address', 'hadd')
             ->with('hadd.countryCode')
@@ -200,12 +200,12 @@ class TransportManagerApplication extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':tmId'))
             ->setParameter('tmId', $tmId);
-        $qb->andWhere($qb->expr()->eq($this->alias .'.application', ':applicationId'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.application', ':applicationId'))
             ->setParameter('applicationId', $applicationId);
         if ($ignoreDeleted) {
-            $qb->andWhere($qb->expr()->neq($this->alias .'.action', ':action'))
+            $qb->andWhere($qb->expr()->neq($this->alias . '.action', ':action'))
                 ->setParameter('action', 'D');
         }
 
@@ -251,9 +251,9 @@ class TransportManagerApplication extends AbstractRepository
 
         $dqb
             ->select($this->alias . '.id')
-            ->groupBy($this->alias .'.application')
+            ->groupBy($this->alias . '.application')
             ->andWhere(
-                $dqb->expr()->eq($this->alias .'.application', ':applicationId')
+                $dqb->expr()->eq($this->alias . '.application', ':applicationId')
             )
             ->setParameter('applicationId', $appId);
 
@@ -267,11 +267,11 @@ class TransportManagerApplication extends AbstractRepository
             $dqb->addSelect(
                 'SUM(' .
                     'CASE' .
-                        ' WHEN ' . $this->alias . '.action = \'' . $action . '\''.
+                        ' WHEN ' . $this->alias . '.action = \'' . $action . '\'' .
                         ' THEN 1' .
                         ' ELSE 0' .
                     ' END' .
-                ') AS '. $action
+                ') AS ' . $action
             );
         }
 

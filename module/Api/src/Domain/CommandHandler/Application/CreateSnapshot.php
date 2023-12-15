@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -128,29 +129,29 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
             case (string)Cmd::ON_GRANT:
                 return [
                     'filename' => $descriptionPrefix . 'Grant.html',
-                    'description' => $descriptionPrefix .'(at grant/valid)',
+                    'description' => $descriptionPrefix . '(at grant/valid)',
                 ];
             case (string)Cmd::ON_SUBMIT:
                 return [
                     'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
                     'filename' => $descriptionPrefix . 'Submit.html',
-                    'description' => $descriptionPrefix .'(at submission)',
+                    'description' => $descriptionPrefix . '(at submission)',
                     'isExternal' => true,
                 ];
             case (string)Cmd::ON_REFUSE:
                 return [
                     'filename' => $descriptionPrefix . 'Refuse.html',
-                    'description' => $descriptionPrefix .'(at refuse)',
+                    'description' => $descriptionPrefix . '(at refuse)',
                 ];
             case (string)Cmd::ON_WITHDRAW:
                 return [
                     'filename' => $descriptionPrefix . 'Withdraw.html',
-                    'description' => $descriptionPrefix .'(at withdraw)',
+                    'description' => $descriptionPrefix . '(at withdraw)',
                 ];
             case (string)Cmd::ON_NTU:
                 return [
                     'filename' => $descriptionPrefix . 'NTU.html',
-                    'description' => $descriptionPrefix .'(at NTU)',
+                    'description' => $descriptionPrefix . '(at NTU)',
                 ];
             default:
                 throw new ValidationException(['Unexpected event']);
@@ -159,7 +160,6 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->reviewSnapshotService = $container->get('ReviewSnapshot');
         return parent::__invoke($fullContainer, $requestedName, $options);

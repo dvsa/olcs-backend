@@ -23,7 +23,7 @@ class EmissionsCategoriesGrantabilityCheckerTest extends MockeryTestCase
     public function testIsGrantable($requiredEuro5, $availableEuro5, $requiredEuro6, $availableEuro6, $isGrantable)
     {
         $irhpPermitStockId = 57;
-    
+
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getId')
             ->andReturn($irhpPermitStockId);

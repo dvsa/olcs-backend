@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs as CreateGoodsDiscsCmd;
@@ -31,7 +32,6 @@ final class ReprintDisc extends AbstractCommandHandler implements TransactionedI
 
         /** @var LicenceVehicle $licenceVehicle */
         foreach ($licenceVehicles as $licenceVehicle) {
-
             $activeDisc = $licenceVehicle->getActiveDisc();
 
             if ($activeDisc !== null && $activeDisc->getDiscNo() !== null) {

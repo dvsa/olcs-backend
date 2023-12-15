@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Workshop\Application;
 
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;

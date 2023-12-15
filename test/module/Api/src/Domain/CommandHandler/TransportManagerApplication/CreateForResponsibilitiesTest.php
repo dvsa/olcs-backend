@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
@@ -146,7 +147,7 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
         $res = $this->sut->handleCommand($command);
         $this->assertEquals(
             [
-                'id'=> [
+                'id' => [
                     'transportManagerApplication' => 111
                 ],
                 'messages' => [

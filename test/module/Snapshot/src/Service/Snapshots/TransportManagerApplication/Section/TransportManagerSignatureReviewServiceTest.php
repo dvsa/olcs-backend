@@ -61,7 +61,6 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
             );
         }
 
-
         $tma = m::mock(TransportManagerApplication::class);
         $tma->shouldReceive('getTmDigitalSignature')->andReturn($data['TmDigitalSignature']);
 
@@ -229,7 +228,6 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
         $tmSignatureDateFormatted = $tmSignatureDate->format('d-m-Y H:i:s');
         $tmDigitalSignature->shouldReceive('getCreatedOn')->with(true)->andReturn($tmSignatureDate);
 
-
         return [
 
             "Operator and TM" => [
@@ -238,27 +236,27 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
                     'isOwner' => 'N',
                     'tmSignature' => $tmDigitalSignature,
                     "markup" => TransportManagerSignatureReviewService::SIGNATURE_DIGITAL_BOTH,
-                    "tmTimes" =>2,
-                    "opTimes" =>2
+                    "tmTimes" => 2,
+                    "opTimes" => 2
                 ],
                 [
                     'label' => 'owners-signature',
                     'markup' => 'TmName_TmDob_' . $tmSignatureDateFormatted . '_owners-signaturetranslated_OpName_OpDob_' . $opSignatureDateFormatted,
-                    'replacements'=>'%s_%s_%s_%s_%s_%s_%s',
+                    'replacements' => '%s_%s_%s_%s_%s_%s_%s',
                 ]
             ],
             "as TM only" => [
                 [
-                    'OpSignature' =>null,
+                    'OpSignature' => null,
                     'isOwner' => 'N',
                     'tmSignature' => $tmDigitalSignature,
                     "markup" => TransportManagerSignatureReviewService::SIGNATURE_DIGITAL,
-                    "tmTimes" =>2,
-                    "opTimes" =>2
+                    "tmTimes" => 2,
+                    "opTimes" => 2
                 ],
                 [
                     'label' => 'owners-signature',
-                    'replacements'=>'%s_%s_%s_%s_%s',
+                    'replacements' => '%s_%s_%s_%s_%s',
                     'markup' => 'TmName_TmDob_' . $tmSignatureDateFormatted . '_owners-signaturetranslated_ADDRESS'
                 ]
             ],
@@ -268,13 +266,13 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
                     'isOwner' => 'Y',
                     'tmSignature' => $tmDigitalSignature,
                     "markup" => TransportManagerSignatureReviewService::SIGNATURE_DIGITAL_OPERATOR_TM,
-                    "tmTimes" =>2,
-                    "opTimes" =>2
+                    "tmTimes" => 2,
+                    "opTimes" => 2
                 ],
                 [
                     'label' => 'owners-signature',
                     'markup' => 'OpName_OpDob_' . $opSignatureDateFormatted,
-                    'replacements'=>'%s_%s_%s',
+                    'replacements' => '%s_%s_%s',
                 ]
             ],
 

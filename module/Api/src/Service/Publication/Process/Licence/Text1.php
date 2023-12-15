@@ -21,10 +21,11 @@ final class Text1 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
         $this->clear();
 
         $this->addTextLine(
-            $publicationLink->getLicence()->getLicNo() .' '. $publicationLink->getLicence()->getLicenceTypeShortCode()
+            $publicationLink->getLicence()->getLicNo() . ' ' . $publicationLink->getLicence()->getLicenceTypeShortCode()
         );
 
-        if ($publicationLink->getLicence()->isGoods() &&
+        if (
+            $publicationLink->getLicence()->isGoods() &&
             $context->offsetExists('previousPublication')
         ) {
             $this->addTextLine(sprintf('(%s)', $context->offsetGet('previousPublication')));

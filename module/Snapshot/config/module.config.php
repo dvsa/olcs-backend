@@ -96,7 +96,7 @@ return [
             SurrenderReview\OperatorLicenceReviewService::class => SurrenderReview\GenericFactory::class,
             SurrenderReview\DeclarationReviewService::class => SurrenderReview\GenericFactory::class,
             SurrenderReview\SignatureReviewService::class => SurrenderReview\GenericFactory::class,
-            SurrenderReview\CommunityLicenceReviewService::class=> SurrenderReview\GenericFactory::class,
+            SurrenderReview\CommunityLicenceReviewService::class => SurrenderReview\GenericFactory::class,
         ],
         'aliases' => [
             'ContinuationReview\TypeOfLicence' => ContinuationReview\TypeOfLicenceReviewService::class,

@@ -23,7 +23,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
      */
     public function testQueryTemplate($query, $filters, $dates, $expected)
     {
-        $sut = new QueryTemplate(__DIR__ .'/mock-query-template.json', $query, $filters, $dates);
+        $sut = new QueryTemplate(__DIR__ . '/mock-query-template.json', $query, $filters, $dates);
         $this->assertEquals($expected, $sut->getParam('query'));
     }
 

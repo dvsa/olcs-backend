@@ -7,7 +7,6 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender;
 use Doctrine\ORM\QueryBuilder;
 
-
 class SurrenderTest extends RepositoryTestCase
 {
     /** @var Surrender */

@@ -3,6 +3,7 @@
 /**
  * Short notice repo test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query\Expr;

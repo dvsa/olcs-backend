@@ -75,11 +75,11 @@ class OperatingCentresTest extends MockeryTestCase
                 false,
                 [
                     'operatingCentres' => [
-                        "New operating centre: ADDRESS43_FORMATTED\n".
+                        "New operating centre: ADDRESS43_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
-                        "New operating centre: ADDRESS82_FORMATTED\n".
+                        "New operating centre: ADDRESS82_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 2 trailer(s)",
-                        "New operating centre: ADDRESS653_FORMATTED\n".
+                        "New operating centre: ADDRESS653_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 4234 vehicle(s)",
                     ]
                 ],
@@ -88,11 +88,11 @@ class OperatingCentresTest extends MockeryTestCase
                 true,
                 [
                     'operatingCentres' => [
-                        "New operating centre: ADDRESS43_FORMATTED\n".
+                        "New operating centre: ADDRESS43_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 12 Heavy goods vehicle(s), 3 trailer(s)",
-                        "New operating centre: ADDRESS82_FORMATTED\n".
+                        "New operating centre: ADDRESS82_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 2 trailer(s)",
-                        "New operating centre: ADDRESS653_FORMATTED\n".
+                        "New operating centre: ADDRESS653_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 4234 Heavy goods vehicle(s)",
                     ]
                 ],
@@ -142,9 +142,9 @@ class OperatingCentresTest extends MockeryTestCase
                 false,
                 [
                     'operatingCentres' => [
-                        "New operating centre: ADDRESS43_FORMATTED\n".
+                        "New operating centre: ADDRESS43_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
-                        "New operating centre: ADDRESS653_FORMATTED\n".
+                        "New operating centre: ADDRESS653_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 4234 vehicle(s)",
                     ]
                 ],
@@ -153,9 +153,9 @@ class OperatingCentresTest extends MockeryTestCase
                 true,
                 [
                     'operatingCentres' => [
-                        "New operating centre: ADDRESS43_FORMATTED\n".
+                        "New operating centre: ADDRESS43_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 12 Heavy goods vehicle(s), 3 trailer(s)",
-                        "New operating centre: ADDRESS653_FORMATTED\n".
+                        "New operating centre: ADDRESS653_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 4234 Heavy goods vehicle(s)",
                     ]
                 ],
@@ -209,11 +209,11 @@ class OperatingCentresTest extends MockeryTestCase
                 false,
                 [
                     'operatingCentres' => [
-                        "Increase at existing operating centre: ADDRESS43_FORMATTED\n".
+                        "Increase at existing operating centre: ADDRESS43_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 12 vehicle(s), 3 trailer(s)",
-                        "Decrease at existing operating centre: ADDRESS82_FORMATTED\n".
+                        "Decrease at existing operating centre: ADDRESS82_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 10 vehicle(s), 2 trailer(s)",
-                        "Increase at existing operating centre: ADDRESS653_FORMATTED\n".
+                        "Increase at existing operating centre: ADDRESS653_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 4234 vehicle(s)",
                     ]
                 ],
@@ -222,11 +222,11 @@ class OperatingCentresTest extends MockeryTestCase
                 true,
                 [
                     'operatingCentres' => [
-                        "Increase at existing operating centre: ADDRESS43_FORMATTED\n".
+                        "Increase at existing operating centre: ADDRESS43_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 12 Heavy goods vehicle(s), 3 trailer(s)",
-                        "Decrease at existing operating centre: ADDRESS82_FORMATTED\n".
+                        "Decrease at existing operating centre: ADDRESS82_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 10 Heavy goods vehicle(s), 2 trailer(s)",
-                        "Increase at existing operating centre: ADDRESS653_FORMATTED\n".
+                        "Increase at existing operating centre: ADDRESS653_FORMATTED\n" .
                             "New authorisation at this operating centre will be: 4234 Heavy goods vehicle(s)",
                     ]
                 ],

@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Olcs\Api\Service\Publication\Process;
 
 use Laminas\Mvc\Service\AbstractPluginManagerFactory;

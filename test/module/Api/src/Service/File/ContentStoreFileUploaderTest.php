@@ -10,7 +10,6 @@ use Dvsa\Olcs\DocumentShare\Service\WebDavClient as ContentStoreClient;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-
 use Laminas\Http\Response;
 
 /**

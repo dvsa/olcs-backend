@@ -13,6 +13,7 @@ use Laminas\Log\LoggerInterface;
 class AcquiredRightsServiceFactoryTest extends MockeryTestCase
 {
     use MocksServicesTrait;
+
     protected AcquiredRightsServiceFactory $sut;
 
     /**

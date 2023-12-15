@@ -193,7 +193,6 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
         $amount = 0;
 
         if ($this->shouldCreateFee($licence)) {
-
             $now = new DateTime();
 
             $feeType = $this->getRepo('FeeType')->fetchLatest(

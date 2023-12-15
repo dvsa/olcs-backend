@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 trait LicenceStatusAwareTrait
 {
-
     private function isLicenceStatusSurrenderable(Licence $licence): bool
     {
         return $this->isLicenceStatusStrictlyActive($licence);
@@ -22,7 +21,7 @@ trait LicenceStatusAwareTrait
         return in_array($licence->getStatus()->getId(), $this->getLicenceStatusesActive());
     }
 
-    public function notBeenSurrendered(Licence $licence) : bool
+    public function notBeenSurrendered(Licence $licence): bool
     {
         return  $licence->getStatus()->getId() !== Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION;
     }

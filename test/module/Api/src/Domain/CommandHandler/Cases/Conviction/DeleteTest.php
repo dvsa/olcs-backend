@@ -3,6 +3,7 @@
 /**
  * Create Conviction Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Conviction;
 
 use Doctrine\ORM\Query;
@@ -13,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Conviction;
 use Dvsa\Olcs\Api\Entity\Cases\Conviction as ConvictionEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Entity;
 
 /**

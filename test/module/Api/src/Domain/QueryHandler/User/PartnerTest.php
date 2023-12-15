@@ -3,6 +3,7 @@
 /**
  * Partner Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\User;
 
 use Mockery as m;

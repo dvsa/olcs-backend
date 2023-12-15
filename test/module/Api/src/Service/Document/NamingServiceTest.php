@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -16,7 +17,6 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-
 
 /**
  * Naming Service Test

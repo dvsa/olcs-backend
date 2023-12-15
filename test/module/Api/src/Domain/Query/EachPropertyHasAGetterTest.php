@@ -15,7 +15,7 @@ class EachPropertyHasAGetterTest extends \PHPUnit\Framework\TestCase
         $reflectionClass = new \ReflectionClass($bookmarkClass);
 
         foreach ($reflectionClass->getProperties() as $property) {
-            $getMethod = 'get'. $property->getName();
+            $getMethod = 'get' . $property->getName();
             $this->assertTrue(method_exists($bookmarkClass, $getMethod));
         }
     }

@@ -428,7 +428,7 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
             );
         }
 
-        return self::CURRENCY_SYMBOL. $this->getTotalAmount(true);
+        return self::CURRENCY_SYMBOL . $this->getTotalAmount(true);
     }
 
     /**
@@ -489,7 +489,8 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
      */
     public function isMigrated()
     {
-        if ($this->getPaymentMethod() !== null
+        if (
+            $this->getPaymentMethod() !== null
             && in_array($this->getPaymentMethod()->getId(), [Fee::METHOD_RECEIPT, Fee::METHOD_MIGRATED], true)
         ) {
             return true;

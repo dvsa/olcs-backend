@@ -3,6 +3,7 @@
 /**
  * GetByCase Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TmCaseDecision;
 
 use Mockery as m;

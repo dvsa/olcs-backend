@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Vehicle;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;

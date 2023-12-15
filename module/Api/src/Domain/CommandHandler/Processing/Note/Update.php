@@ -9,14 +9,12 @@ use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\ORM\Query;
-
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Update a Note
  */
-final class Update extends CreateUpdateAbstract
-    implements TransactionedInterface
+final class Update extends CreateUpdateAbstract implements TransactionedInterface
 {
     /**
      * @param UpdateCommand $command

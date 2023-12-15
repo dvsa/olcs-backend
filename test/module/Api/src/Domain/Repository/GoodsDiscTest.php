@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\NoResultException;
@@ -399,7 +400,6 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $qb = $this->createMockQb();
         $exception = new NoResultException();
-
 
         $qb->shouldReceive('getQuery')
             ->once()

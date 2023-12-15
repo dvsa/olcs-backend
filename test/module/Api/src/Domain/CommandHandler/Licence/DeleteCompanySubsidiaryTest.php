@@ -88,7 +88,6 @@ class DeleteCompanySubsidiaryTest extends CommandHandlerTestCase
                         ->addId('task', self::TASK_ID)
                         ->addMessage('Unit Task created')
                 );
-
         } else {
             $this->repoMap['CompanySubsidiary']
                 ->shouldReceive('fetchByIds')->never();

@@ -34,7 +34,7 @@ class DateType extends DoctrineDateType
             return $value->format('Y-m-d');
         }
 
-        $val = \DateTime::createFromFormat('!'.$platform->getDateFormatString(), $value);
+        $val = \DateTime::createFromFormat('!' . $platform->getDateFormatString(), $value);
         if ($val instanceof \DateTime) {
             return $val->format('Y-m-d');
         }

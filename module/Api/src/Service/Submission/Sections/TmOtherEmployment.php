@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
  */
 final class TmOtherEmployment extends AbstractSection
 {
-
     /**
      * Generate LeadTcArea section of submission
      *
@@ -26,7 +25,6 @@ final class TmOtherEmployment extends AbstractSection
         $data = [];
 
         if (!empty($case->getTransportManager()->getEmployments())) {
-
             $tmEmployments = $case->getTransportManager()->getEmployments();
 
             /** @var TmEmployment $entity */

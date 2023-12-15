@@ -133,7 +133,6 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     {
         $fullContainer = $container;
 
-
         $this->grantabilityChecker = $container->get('PermitsGrantabilityChecker');
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');
         return parent::__invoke($fullContainer, $requestedName, $options);

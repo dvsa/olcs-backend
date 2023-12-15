@@ -9,5 +9,4 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class SendResponse extends AbstractIdOnlyCommand
 {
-
 }

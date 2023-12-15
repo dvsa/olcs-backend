@@ -3,6 +3,7 @@
 /**
  * ShortNoticeByBusReg Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;

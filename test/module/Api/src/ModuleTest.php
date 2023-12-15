@@ -145,7 +145,7 @@ class ModuleTest extends MockeryTestCase
         $this->assertCount(1, $logWriter->events);
         $this->assertSame(\Laminas\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
         $this->assertSame('API Response Sent', $logWriter->events[0]['message']);
-        $this->assertSame(str_repeat('X', 1000) .'...', $logWriter->events[0]['extra']['content']);
+        $this->assertSame(str_repeat('X', 1000) . '...', $logWriter->events[0]['extra']['content']);
     }
 
     public function testInitDoctrineEncrypterType()

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Client;
@@ -73,12 +74,14 @@ class CognitoClientFactory implements FactoryInterface
             throw new RuntimeException(static::EXCEPTION_MESSAGE_NAMESPACE_MISSING);
         }
 
-        if (!array_key_exists(static::CONFIG_CLIENT_ID, $config)
+        if (
+            !array_key_exists(static::CONFIG_CLIENT_ID, $config)
             || !array_key_exists(static::CONFIG_CLIENT_SECRET, $config)
             || !array_key_exists(static::CONFIG_POOL_ID, $config)
             || !array_key_exists(static::CONFIG_NBF_LEEWAY, $config)
             || !array_key_exists(static::CONFIG_REGION, $config)
-            || !array_key_exists(static::CONFIG_HTTP, $config)) {
+            || !array_key_exists(static::CONFIG_HTTP, $config)
+        ) {
             throw new RuntimeException(static::EXCEPTION_MESSAGE_OPTION_MISSING);
         }
 

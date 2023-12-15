@@ -3,6 +3,7 @@
 /**
  * Financial Standing Rate
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate as Entity;
@@ -31,9 +32,9 @@ class FinancialStandingRate extends AbstractRepository
         $this->getQueryBuilder()->withRefdata();
 
         $qb
-            ->andWhere($qb->expr()->isNull($this->alias.'.deletedDate'))
-            ->andWhere($qb->expr()->lte($this->alias.'.effectiveFrom', ':effectiveFrom'))
-            ->addOrderBy($this->alias.'.effectiveFrom', 'DESC')
+            ->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'))
+            ->andWhere($qb->expr()->lte($this->alias . '.effectiveFrom', ':effectiveFrom'))
+            ->addOrderBy($this->alias . '.effectiveFrom', 'DESC')
             ->setParameter('effectiveFrom', $date);
 
         $results = $qb->getQuery()->execute();
@@ -57,10 +58,10 @@ class FinancialStandingRate extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'));
-        $qb->andWhere($qb->expr()->eq($this->alias.'.licenceType', ':licenceType'));
-        $qb->andWhere($qb->expr()->eq($this->alias.'.vehicleType', ':vehicleType'));
-        $qb->andWhere($qb->expr()->eq($this->alias.'.effectiveFrom', ':date'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.goodsOrPsv', ':goodsOrPsv'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licenceType', ':licenceType'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.vehicleType', ':vehicleType'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.effectiveFrom', ':date'));
 
         $qb->setParameter('goodsOrPsv', $goodsOrPsv);
         $qb->setParameter('licenceType', $licenceType);

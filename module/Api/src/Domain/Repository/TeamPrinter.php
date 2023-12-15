@@ -5,12 +5,13 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter as Entity;
 use Doctrine\ORM\Query;
-use \Doctrine\ORM\QueryBuilder;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * TeamPrinter
@@ -28,7 +29,7 @@ class TeamPrinter extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query->getTeam()) {
-            $qb->andWhere($qb->expr()->eq($this->alias .'.team', ':team'))
+            $qb->andWhere($qb->expr()->eq($this->alias . '.team', ':team'))
                 ->setParameter('team', $query->getTeam());
         }
         $qb->andWhere(
@@ -91,6 +92,5 @@ class TeamPrinter extends AbstractRepository
             ->setParameter('team', $command->getTeam());
 
         return $qb->getQuery()->getResult();
-
     }
 }

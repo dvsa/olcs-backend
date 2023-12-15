@@ -3,6 +3,7 @@
 /**
  * Previous hearing query handler
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -26,7 +27,8 @@ class PreviousHearing extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         $previousHearing = $this->getRepo()->fetchPreviousHearing(
-            $query->getPi(), new \DateTime($query->getHearingDate())
+            $query->getPi(),
+            new \DateTime($query->getHearingDate())
         );
         return $previousHearing === null ? null : $this->result($previousHearing);
     }

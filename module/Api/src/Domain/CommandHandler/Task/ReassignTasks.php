@@ -24,7 +24,7 @@ final class ReassignTasks extends AbstractCommandHandler implements Transactione
 
     /**
      * Command Handler
-     * 
+     *
      * @param TransferCmd\Task\ReassignTasks $command Command
      *
      * @return Result

@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -91,7 +92,7 @@ class ChangeBusinessType extends AbstractCommandHandler implements Transactioned
     protected function processTransitions(array $transitions, Organisation $organisation)
     {
         foreach ($transitions as $transition) {
-            switch($transition) {
+            switch ($transition) {
                 case self::REG_TO_ST:
                     $organisation->setCompanyOrLlpNo(null);
                     $organisation->setContactDetails(null);

@@ -27,7 +27,6 @@ use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke;
  */
 class SlaTargetDate extends AbstractSlaTargetDate
 {
-
     /**
      * SlaTargetDate constructor.
      *

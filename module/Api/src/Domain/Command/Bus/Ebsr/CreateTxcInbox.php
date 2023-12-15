@@ -3,6 +3,7 @@
 /**
  * Create Txc Inbox
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
@@ -12,5 +13,4 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class CreateTxcInbox extends AbstractIdOnlyCommand
 {
-
 }

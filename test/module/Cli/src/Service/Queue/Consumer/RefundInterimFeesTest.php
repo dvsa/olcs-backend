@@ -101,7 +101,6 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
             false
         );
 
-
         $result = $this->sut->processMessage($this->item);
 
         $this->assertEquals(
@@ -204,7 +203,6 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
             new Result(),
             false
         );
-
 
         $this->expectCommand(
             UpdateFeeStatus::class,

@@ -13,7 +13,6 @@ use Dvsa\Olcs\Transfer\Command\IrhpCandidatePermit\Create as CreateCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
-
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -46,7 +45,7 @@ class CreateTest extends CommandHandlerTestCase
         $command = CreateCmd::create($cmdData);
 
         $irhpPermitRange = m::mock(IrhpPermitRangeEntity::class);
-        $irhpPermitApplication= m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
 
         $irhpPermitRange->shouldReceive('getEmissionsCategory')
             ->withNoArgs()

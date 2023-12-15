@@ -3,6 +3,7 @@
 /**
  * Is External User
  */
+
 namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;

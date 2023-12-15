@@ -52,7 +52,6 @@ class DiscList extends AbstractDiscList
         }
 
         foreach ($this->data as $key => $disc) {
-
             $licence = $disc['licenceVehicle']['licence'];
             $vehicle = $disc['licenceVehicle']['vehicle'];
             $organisation = $licence['organisation'];
@@ -99,7 +98,6 @@ class DiscList extends AbstractDiscList
          * fill the rest up with placeholders
          */
         while (($length = count($discs) % self::PER_PAGE) !== 0) {
-
             $prefix = $this->getPrefix($length);
             $discs[] = [
                 $prefix . 'TITLE'       => self::PLACEHOLDER,
@@ -117,10 +115,10 @@ class DiscList extends AbstractDiscList
 
         // bit ugly, but now we have to chunk the discs into N per row
         $discGroups = [];
-        for ($i = 0; $i < count($discs); $i+= self::PER_ROW) {
+        for ($i = 0; $i < count($discs); $i += self::PER_ROW) {
             $discGroups[] = array_merge(
                 $discs[$i],
-                $discs[$i+1],
+                $discs[$i + 1],
                 [
                     'ROW_HEIGHT' => $this->getRowHeight($i)
                 ]
@@ -155,6 +153,6 @@ class DiscList extends AbstractDiscList
         $index /= self::PER_ROW;
         $max = self::PER_PAGE / self::PER_ROW;
 
-        return ($index % $max === $max-1) ? self::LAST_ROW_HEIGHT : self::ROW_HEIGHT;
+        return ($index % $max === $max - 1) ? self::LAST_ROW_HEIGHT : self::ROW_HEIGHT;
     }
 }

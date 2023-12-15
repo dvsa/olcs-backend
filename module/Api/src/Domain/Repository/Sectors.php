@@ -3,11 +3,12 @@
 /**
  * Sectors
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\Sectors as Entity;
-use \Doctrine\ORM\QueryBuilder;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Sectors

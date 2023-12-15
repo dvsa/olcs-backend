@@ -20,15 +20,15 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\PrintOptional;
  */
 class GenerateAndStore extends AbstractCommand
 {
-    use ApplicationOptional,
-        LicenceOptional,
-        BusRegOptional,
-        CasesOptional,
-        IrfoOrganisationOptional,
-        IrhpApplicationOptional,
-        TransportManagerOptional,
-        TrafficAreasOptional,
-        PrintOptional;
+    use ApplicationOptional;
+    use LicenceOptional;
+    use BusRegOptional;
+    use CasesOptional;
+    use IrfoOrganisationOptional;
+    use IrhpApplicationOptional;
+    use TransportManagerOptional;
+    use TrafficAreasOptional;
+    use PrintOptional;
 
     protected $template;
 

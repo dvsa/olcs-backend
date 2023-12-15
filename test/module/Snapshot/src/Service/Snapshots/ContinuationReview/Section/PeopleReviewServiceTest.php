@@ -118,7 +118,7 @@ class PeopleReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuations.people-section.table.name', 'header' => true],
                 ['value' => 'continuations.people-section.table.date-of-birth', 'header' => true]

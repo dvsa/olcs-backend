@@ -3,6 +3,7 @@
 /**
  * Clean up abandoned variations Test
  */
+
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CleanUpAbandonedVariations as CommandHandler;

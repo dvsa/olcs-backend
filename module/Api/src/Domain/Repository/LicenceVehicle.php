@@ -430,8 +430,8 @@ class LicenceVehicle extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->with($this->alias .'.vehicle', 'v')
-            ->with($this->alias .'.licence', 'l');
+            ->with($this->alias . '.vehicle', 'v')
+            ->with($this->alias . '.licence', 'l');
 
         $qb->where($qb->expr()->eq($this->alias . '.vehicle', ':vehicle'))
             ->setParameter('vehicle', $vehicleId)

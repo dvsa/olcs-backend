@@ -149,7 +149,6 @@ class Get extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->financialStandingHelper = $container->get('FinancialStandingHelperService');
         $this->reviewService = $container->get('ContinuationReview\Declaration');
         return parent::__invoke($fullContainer, $requestedName, $options);

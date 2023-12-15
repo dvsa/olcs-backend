@@ -39,14 +39,12 @@ class S3FileTest extends MockeryTestCase
         vfsStream::newFile('example')->at($this->path)->withContent('~');
         $mockMessage = m::mock(Message::class);
         $mockMessage->shouldReceive('getSubject')->with()->once()->andReturn('__-TEST %$£%SUBJECT*&&^');
-        $file = $this->path->url()."/example";
+        $file = $this->path->url() . "/example";
         $mockFileTransport = m::mock(File::class);
         $mockFileTransport->shouldReceive('send')->with($mockMessage)->once();
         $mockFileTransport->shouldReceive('getLastFile')->with()->once()->andReturn(
             $file
         );
-
-
 
         $mockS3Client = m::mock(S3Client::class);
         $mockS3Client->shouldReceive('putObject')->once()->with([
@@ -65,7 +63,6 @@ class S3FileTest extends MockeryTestCase
 
         $sut->shouldReceive('deleteFile')->with($file)->once();
 
-
         $sut->send($mockMessage);
     }
 
@@ -74,13 +71,12 @@ class S3FileTest extends MockeryTestCase
         vfsStream::newFile('example')->at($this->path)->withContent('~');
         $mockMessage = m::mock(Message::class);
         $mockMessage->shouldReceive('getSubject')->with()->once()->andReturn('__-TEST %$£%SUBJECT*&&^');
-        $file = $this->path->url()."/example";
+        $file = $this->path->url() . "/example";
         $mockFileTransport = m::mock(File::class);
         $mockFileTransport->shouldReceive('send')->with($mockMessage)->once();
         $mockFileTransport->shouldReceive('getLastFile')->with()->once()->andReturn(
             $file
         );
-
 
         $mockS3Client = m::mock(S3Client::class);
         $mockS3Client->shouldReceive('putObject')->once()->with(
@@ -98,10 +94,8 @@ class S3FileTest extends MockeryTestCase
         $mockOptions->shouldReceive('getS3Key')->andReturn('testKey');
         $mockOptions->shouldReceive('getAwsOptions')->andReturn(['region' => 'test', "version" => 'latest']);
 
-
         $sut = m::mock(S3File::class, [$mockFileTransport])->makePartial()->shouldAllowMockingProtectedMethods();
         $sut->setOptions($mockOptions);
-
 
         $sut->shouldReceive('deleteFile')->with($file)->once();
 

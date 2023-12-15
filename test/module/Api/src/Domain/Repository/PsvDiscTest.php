@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\NoResultException;
@@ -268,7 +269,7 @@ class PsvDiscTest extends RepositoryTestCase
 
         $this->sut->countForLicence($licenceId);
 
-        $expectedQuery = '{QUERY} SELECT count(psv) AND psv.licence = [['. $licenceId . ']] AND psv.ceasedDate IS NULL GROUP BY psv.licence LIMIT 1';
+        $expectedQuery = '{QUERY} SELECT count(psv) AND psv.licence = [[' . $licenceId . ']] AND psv.ceasedDate IS NULL GROUP BY psv.licence LIMIT 1';
 
         self::assertEquals($expectedQuery, $this->query);
     }
@@ -279,7 +280,6 @@ class PsvDiscTest extends RepositoryTestCase
 
         $qb = $this->createMockQb();
         $exception = new NoResultException();
-
 
         $qb->shouldReceive('getQuery')
             ->once()

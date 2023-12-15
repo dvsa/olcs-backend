@@ -136,7 +136,7 @@ class DocManClient implements DocumentStoreInterface
                 ->send();
 
             if (!$response->isSuccess()) {
-                $message = json_encode(["error" =>self::ERR_RESP_FAIL, "reason"=>$response->getStatusCode(), "path" => $path]);
+                $message = json_encode(["error" => self::ERR_RESP_FAIL, "reason" => $response->getStatusCode(), "path" => $path]);
                 Logger::logResponse($response->getStatusCode(), $message);
                 return null;
             }

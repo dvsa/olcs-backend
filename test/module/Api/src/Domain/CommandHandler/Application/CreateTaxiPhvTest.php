@@ -31,7 +31,7 @@ class CreateTaxiPhvTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'privateHireLicenceNo' => 'TOPDOG 1',
             'councilName' => 'Leeds',
@@ -87,7 +87,7 @@ class CreateTaxiPhvTest extends CommandHandlerTestCase
 
     public function testHandleCommandValidation()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'privateHireLicenceNo' => 'TOPDOG 1',
             'councilName' => 'Leeds',

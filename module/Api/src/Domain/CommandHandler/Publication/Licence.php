@@ -35,7 +35,7 @@ class Licence extends AbstractCommandHandler implements TransactionedInterface, 
     {
         /* @var $licence LicenceEntity */
         $licence = $this->getRepo('Licence')->fetchUsingId($command);
-        $pubType = $licence->isGoods() ?'A&D' : 'N&P';
+        $pubType = $licence->isGoods() ? 'A&D' : 'N&P';
         $publication = $this->getPublication($licence->getTrafficArea()->getId(), $pubType);
 
         $pubSection = $command->getPublicationSection();

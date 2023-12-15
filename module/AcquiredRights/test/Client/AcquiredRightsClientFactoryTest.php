@@ -9,6 +9,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 class AcquiredRightsClientFactoryTest extends MockeryTestCase
 {
     use MocksServicesTrait;
+
     protected AcquiredRightsClientFactory $sut;
 
     /**

@@ -87,7 +87,7 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
      * Gets the correct snippets based on the class name
      *
      * @param string $className Class FQCN
-     *                          
+     *
      * @return array
      */
     public function getBookmarkSnippetsByClass($className)

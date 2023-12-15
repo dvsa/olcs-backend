@@ -9,5 +9,4 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class TransxchangeException extends \Exception
 {
-
 }

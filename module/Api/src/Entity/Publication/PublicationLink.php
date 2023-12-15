@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Entity\Publication;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\AddDays;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\AddWorkingDays;

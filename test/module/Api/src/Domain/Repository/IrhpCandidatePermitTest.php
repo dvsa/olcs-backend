@@ -49,8 +49,8 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH '
             . 'AND m.successful = [[true]] '
-            . 'AND ia.status = [['.RefData::PERMIT_APP_STATUS_AWAITING_FEE.']] '
-            . 'AND ipa.irhpApplication = [['.self::IRHP_APPLICATION_ID.']]';
+            . 'AND ia.status = [[' . RefData::PERMIT_APP_STATUS_AWAITING_FEE . ']] '
+            . 'AND ipa.irhpApplication = [[' . self::IRHP_APPLICATION_ID . ']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -93,8 +93,8 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH '
             . 'AND m.successful = [[true]] '
-            . 'AND ia.status = [['.RefData::PERMIT_APP_STATUS_AWAITING_FEE.']] '
-            . 'AND ipa.irhpApplication = [['.self::IRHP_APPLICATION_ID.']] '
+            . 'AND ia.status = [[' . RefData::PERMIT_APP_STATUS_AWAITING_FEE . ']] '
+            . 'AND ipa.irhpApplication = [[' . self::IRHP_APPLICATION_ID . ']] '
             . 'AND m.wanted = [[true]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -138,8 +138,8 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
         $expectedQuery = 'BLAH '
-            . 'AND ia.status IN [[["'.RefData::PERMIT_APP_STATUS_UNDER_CONSIDERATION.'"]]] '
-            . 'AND ipa.irhpApplication = [['.self::IRHP_APPLICATION_ID.']]';
+            . 'AND ia.status IN [[["' . RefData::PERMIT_APP_STATUS_UNDER_CONSIDERATION . '"]]] '
+            . 'AND ipa.irhpApplication = [[' . self::IRHP_APPLICATION_ID . ']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 

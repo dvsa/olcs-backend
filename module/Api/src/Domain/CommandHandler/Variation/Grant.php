@@ -92,7 +92,8 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $result->merge($this->proxyCommandAsSystemUser($command, ProcessApplicationOperatingCentres::class));
         $result->merge($this->proxyCommandAsSystemUser($command, CommonGrant::class));
 
-        if ($application->isGoods() && $application->isVariation() &&
+        if (
+            $application->isGoods() && $application->isVariation() &&
             $application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE
         ) {
             $result->merge($this->handleSideEffectAsSystemUser(EndInterimCmd::create(['id' => $application->getId()])));

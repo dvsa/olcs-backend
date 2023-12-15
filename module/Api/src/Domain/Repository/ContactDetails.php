@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as Entity;
@@ -29,7 +30,8 @@ class ContactDetails extends AbstractRepository
     {
         if (!empty($contactParams['address']['countryCode'])) {
             $contactParams['address']['countryCode'] = $this->getReference(
-                CountryEntity::class, $contactParams['address']['countryCode']
+                CountryEntity::class,
+                $contactParams['address']['countryCode']
             );
         }
 
@@ -58,7 +60,7 @@ class ContactDetails extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query->getContactType()) {
-            $qb->andWhere($qb->expr()->eq($this->alias .'.contactType', ':contactType'))
+            $qb->andWhere($qb->expr()->eq($this->alias . '.contactType', ':contactType'))
                 ->setParameter('contactType', $query->getContactType());
         }
     }

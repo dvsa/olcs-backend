@@ -3,6 +3,7 @@
 /**
  * Expire IRHP Application
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\IrhpApplication;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

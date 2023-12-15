@@ -3,6 +3,7 @@
 /**
  * Generate SlaTargetDate
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\System;
 
 use Doctrine\ORM\Query;
@@ -166,7 +167,6 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         parent::__invoke($fullContainer, $requestedName, $options);
         $this->slaService = $container->get(SlaCalculatorInterface::class);

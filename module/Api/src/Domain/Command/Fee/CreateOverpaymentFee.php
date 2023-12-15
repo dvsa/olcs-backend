@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Fee;
 
 use Dvsa\Olcs\Api\Entity\Fee\Fee;

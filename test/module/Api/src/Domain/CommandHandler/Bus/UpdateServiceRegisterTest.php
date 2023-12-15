@@ -3,6 +3,7 @@
 /**
  * Update Service Register Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;

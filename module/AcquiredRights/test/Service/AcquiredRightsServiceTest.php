@@ -34,7 +34,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
                 '6fcf9551-ade4-4b48-b078-6db59559a182',
                 'ABC1234',
                 ApplicationReference::APPLICATION_STATUS_APPROVED,
-                \DateTimeImmutable::createFromMutable((new \DateTime)->sub(new \DateInterval('P10D'))),
+                \DateTimeImmutable::createFromMutable((new \DateTime())->sub(new \DateInterval('P10D'))),
                 \DateTimeImmutable::createFromFormat('j-M-Y', '01-Feb-2000')
             ))
             ->byDefault();
@@ -48,7 +48,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
         $this->sut = new AcquiredRightsService(
             $this->loggerInterfaceMock,
             $this->acquiredRightsClientMock,
-            \DateTimeImmutable::createFromMutable((new \DateTime)->add(new \DateInterval('P10D'))),
+            \DateTimeImmutable::createFromMutable((new \DateTime())->add(new \DateInterval('P10D'))),
             true
         );
 
@@ -68,7 +68,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
         $this->sut = new AcquiredRightsService(
             $this->loggerInterfaceMock,
             $this->acquiredRightsClientMock,
-            \DateTimeImmutable::createFromMutable((new \DateTime)->sub(new \DateInterval('P10D'))),
+            \DateTimeImmutable::createFromMutable((new \DateTime())->sub(new \DateInterval('P10D'))),
             true
         );
 
@@ -86,7 +86,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
         $this->sut = new AcquiredRightsService(
             $this->loggerInterfaceMock,
             $this->acquiredRightsClientMock,
-            \DateTimeImmutable::createFromMutable((new \DateTime)->add(new \DateInterval('P10D'))),
+            \DateTimeImmutable::createFromMutable((new \DateTime())->add(new \DateInterval('P10D'))),
             true
         );
 
@@ -108,14 +108,14 @@ class AcquiredRightsServiceTest extends MockeryTestCase
             '6fcf9551-ade4-4b48-b078-6db59559a182',
             'ABC1234',
             $status,
-            \DateTimeImmutable::createFromMutable((new \DateTime)->sub(new \DateInterval('P10D'))),
+            \DateTimeImmutable::createFromMutable((new \DateTime())->sub(new \DateInterval('P10D'))),
             \DateTimeImmutable::createFromFormat('j-M-Y', '01-Feb-2000')
         ));
 
         $this->sut = new AcquiredRightsService(
             $this->loggerInterfaceMock,
             $this->acquiredRightsClientMock,
-            \DateTimeImmutable::createFromMutable((new \DateTime)->add(new \DateInterval('P10D'))),
+            \DateTimeImmutable::createFromMutable((new \DateTime())->add(new \DateInterval('P10D'))),
             true
         );
 
@@ -158,7 +158,8 @@ class AcquiredRightsServiceTest extends MockeryTestCase
      */
     public function verifyAcquiredRightsByReference_Throws_SoftExceptionAreLoggedAsInfo_AndRethrown()
     {
-        $exception = new class() extends AcquiredRightsException implements SoftExceptionInterface {};
+        $exception = new class () extends AcquiredRightsException implements SoftExceptionInterface {
+        };
         $this->acquiredRightsClientMock->expects('fetchByReference')->with('ABC1234')->once()->andThrow($exception);
 
         $this->expectExceptionObject($exception);
@@ -168,7 +169,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
         $this->sut = new AcquiredRightsService(
             $this->loggerInterfaceMock,
             $this->acquiredRightsClientMock,
-            \DateTimeImmutable::createFromMutable((new \DateTime)->add(new \DateInterval('P10D'))),
+            \DateTimeImmutable::createFromMutable((new \DateTime())->add(new \DateInterval('P10D'))),
             true
         );
 
@@ -181,7 +182,8 @@ class AcquiredRightsServiceTest extends MockeryTestCase
      */
     public function verifyAcquiredRightsByReference_Throws_OtherExceptionsAreLoggedAsErr_AndRethrown()
     {
-        $exception = new class() extends AcquiredRightsException {};
+        $exception = new class () extends AcquiredRightsException {
+        };
         $this->acquiredRightsClientMock->expects('fetchByReference')->with('ABC1234')->once()->andThrow($exception);
 
         $this->expectExceptionObject($exception);
@@ -191,7 +193,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
         $this->sut = new AcquiredRightsService(
             $this->loggerInterfaceMock,
             $this->acquiredRightsClientMock,
-            \DateTimeImmutable::createFromMutable((new \DateTime)->add(new \DateInterval('P10D'))),
+            \DateTimeImmutable::createFromMutable((new \DateTime())->add(new \DateInterval('P10D'))),
             true
         );
 
@@ -212,7 +214,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
         $this->sut = new AcquiredRightsService(
             $this->loggerInterfaceMock,
             $this->acquiredRightsClientMock,
-            \DateTimeImmutable::createFromMutable((new \DateTime)->add(new \DateInterval('P10D'))),
+            \DateTimeImmutable::createFromMutable((new \DateTime())->add(new \DateInterval('P10D'))),
             true
         );
 

@@ -3,6 +3,7 @@
 /**
  * Deletes a queue item
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Queue;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;

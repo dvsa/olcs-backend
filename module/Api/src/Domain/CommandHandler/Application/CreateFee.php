@@ -6,6 +6,7 @@
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;

@@ -3,6 +3,7 @@
 /**
  * Create NoFurtherAction Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TmCaseDecision;
 
 use Mockery as m;

@@ -46,8 +46,10 @@ class TxcInbox extends AbstractTxcInbox implements OrganisationProviderInterface
         }
 
         //check we have one of organisation or local authority (and not both)
-        if (($localAuthority === null && $organisation === null)
-            || ($localAuthority !== null && $organisation !== null)) {
+        if (
+            ($localAuthority === null && $organisation === null)
+            || ($localAuthority !== null && $organisation !== null)
+        ) {
             throw new ValidationException(['Txc Inbox requires either a Local Authority or Organisation (not both)']);
         }
 

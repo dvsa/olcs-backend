@@ -1,7 +1,9 @@
 <?php
+
 /**
  * IrfoGvEndDate
  */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrfoGvPermitBundle as Qry;

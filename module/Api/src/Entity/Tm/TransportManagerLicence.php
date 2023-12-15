@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Tm;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use \Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**

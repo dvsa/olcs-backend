@@ -79,7 +79,7 @@ final class GeneratePermits extends AbstractCommandHandler
             $this->transMngr->commit();
 
             throw new RuntimeException(
-                'Permits generation failed with error: '.$exc->getMessage(),
+                'Permits generation failed with error: ' . $exc->getMessage(),
                 $exc->getCode(),
                 $exc
             );

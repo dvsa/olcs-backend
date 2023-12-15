@@ -76,7 +76,6 @@ class PersonEntityTest extends EntityTester
         $person->setFamilyName('Bar');
 
         $this->assertSame('Foo Bar', $person->getFullName());
-
     }
 
     public function testGetDisqualificationNull()

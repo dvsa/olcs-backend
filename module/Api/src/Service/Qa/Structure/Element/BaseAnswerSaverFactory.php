@@ -17,7 +17,7 @@ class BaseAnswerSaverFactory implements FactoryInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-public function __invoke(ContainerInterface $container, $requestedName, array $options = null): BaseAnswerSaver
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): BaseAnswerSaver
     {
         return new BaseAnswerSaver(
             $container->get('QaGenericAnswerWriter'),

@@ -308,7 +308,8 @@ class PiEntityTest extends EntityTester
                 $this->fail('ValidationException should NOT have been thrown');
             }
             $this->assertSame(
-                ['DECISION_DATE_BEFORE_HEARING_DATE' => $hearingDate->format('Y-m-d')], $e->getMessages()
+                ['DECISION_DATE_BEFORE_HEARING_DATE' => $hearingDate->format('Y-m-d')],
+                $e->getMessages()
             );
         }
     }

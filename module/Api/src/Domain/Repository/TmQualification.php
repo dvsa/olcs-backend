@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov  <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
@@ -23,7 +24,7 @@ class TmQualification extends AbstractRepository
 
     /**
      * Add list filters
-     * 
+     *
      * @param QueryBuilder $qb
      * @param TmQualificationsListDTO $query
      */

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Cpms\Authenticate;
@@ -88,7 +89,7 @@ class CpmsIdentityProvider implements IdentityProviderInterface
     /**
      * @return null|string
      */
-    public function getCustomerReference() : ?string
+    public function getCustomerReference(): ?string
     {
         return $this->customerReference;
     }

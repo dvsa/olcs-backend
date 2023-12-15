@@ -82,7 +82,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
     CheckableApplicationInterface,
     QaEntityInterface
 {
-    use SectionTrait, CandidatePermitCreationTrait, FetchPermitAppSubmissionTaskTrait, TieredProductReference;
+    use SectionTrait;
+    use CandidatePermitCreationTrait;
+    use FetchPermitAppSubmissionTaskTrait;
+    use TieredProductReference;
 
     use PermitAppReviveFromWithdrawnTrait {
         canBeRevivedFromWithdrawn as baseCanBeRevivedFromWithdrawn;
@@ -1831,7 +1834,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         foreach ($this->countrys as $country) {
             $countryIds[] = $country->getId();
         }
-    
+
         return $countryIds;
     }
 
@@ -2373,7 +2376,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function proceedToUnsuccessful(RefData $unsuccessfulStatus)
     {
         if (!$this->isUnderConsideration()) {
-            throw new ForbiddenException('This application is not in the correct state to proceed to unsuccessful ('.$this->status->getId().')');
+            throw new ForbiddenException('This application is not in the correct state to proceed to unsuccessful (' . $this->status->getId() . ')');
         }
 
         $this->status = $unsuccessfulStatus;
@@ -2389,7 +2392,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function proceedToAwaitingFee(RefData $awaitingFeeStatus)
     {
         if (!$this->isUnderConsideration()) {
-            throw new ForbiddenException('This application is not in the correct state to proceed to awaiting fee ('.$this->status->getId().')');
+            throw new ForbiddenException('This application is not in the correct state to proceed to awaiting fee (' . $this->status->getId() . ')');
         }
 
         $this->status = $awaitingFeeStatus;
@@ -2407,7 +2410,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         if (!$this->isUnderConsideration() && !$this->isAwaitingFee()) {
             throw new ForbiddenException(
-                'This application is not in the correct state to return permits awarded ('.$this->status->getId().')'
+                'This application is not in the correct state to return permits awarded (' . $this->status->getId() . ')'
             );
         }
 
@@ -2673,7 +2676,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $matchingDocuments = new ArrayCollection();
 
         foreach ($this->documents as $document) {
-            if ($document->getCategory()->getId() == $categoryId &&
+            if (
+                $document->getCategory()->getId() == $categoryId &&
                 is_object($document->getSubCategory()) &&
                 $document->getSubCategory()->getId() == $subCategoryId
             ) {

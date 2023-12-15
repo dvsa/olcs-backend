@@ -3,6 +3,7 @@
 /**
  * IrfoPermitStock
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock as Entity;

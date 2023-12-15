@@ -45,7 +45,7 @@ class SuccessfulCandidatePermitsGenerator
             $stockId,
             Refdata::EMISSIONS_CATEGORY_EURO6_REF
         );
- 
+
         $successfulCandidatePermits = [];
 
         foreach ($candidatePermits as $candidatePermit) {

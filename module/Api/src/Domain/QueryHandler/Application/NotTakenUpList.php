@@ -49,7 +49,6 @@ class NotTakenUpList extends AbstractQueryHandler
             $dateProvider = new PublicHolidayDateProvider($this->getRepo('PublicHoliday'), $trafficArea);
             $dateTimeProcessors[$trafficArea->getId()] =
                 new AddDaysExcludingDates($dateTimeWorkingDaysProcessor, $dateProvider);
-
         }
         $applicationsForNtu = [];
 

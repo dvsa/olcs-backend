@@ -98,7 +98,6 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
     {
         $fullContainer = $container;
 
-
         $this->helper = $container->get('OperatingCentreHelper');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

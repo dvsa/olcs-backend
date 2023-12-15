@@ -163,7 +163,7 @@ class RunScoringTest extends CommandHandlerTestCase
             $uploadScoringResultResult
         );
 
-        $logContent = "InitialiseScope output\r\n".
+        $logContent = "InitialiseScope output\r\n" .
             "MarkSuccessfulSector output\r\n" .
             "MarkSuccessfulDa output\r\n" .
             "MarkSuccessfulRemaining output\r\n" .
@@ -427,7 +427,7 @@ class RunScoringTest extends CommandHandlerTestCase
             $uploadScoringResultResult
         );
 
-        $logContent = "InitialiseScope output\r\n".
+        $logContent = "InitialiseScope output\r\n" .
             "MarkSuccessfulSector output\r\n" .
             "MarkSuccessfulDa output\r\n" .
             "MarkSuccessfulRemaining output\r\n" .
@@ -596,7 +596,7 @@ class RunScoringTest extends CommandHandlerTestCase
             $uploadScoringResultResult
         );
 
-        $logContent = "InitialiseScope output\r\n".
+        $logContent = "InitialiseScope output\r\n" .
             "MarkSuccessfulSector output\r\n" .
             "MarkSuccessfulDa output\r\n" .
             "MarkSuccessfulRemaining output\r\n" .

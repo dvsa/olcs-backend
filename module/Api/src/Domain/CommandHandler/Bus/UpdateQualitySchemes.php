@@ -3,6 +3,7 @@
 /**
  * Update Quality Schemes
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

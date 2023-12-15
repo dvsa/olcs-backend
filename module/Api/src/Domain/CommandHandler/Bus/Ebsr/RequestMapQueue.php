@@ -3,6 +3,7 @@
 /**
  * Request new Ebsr map
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;

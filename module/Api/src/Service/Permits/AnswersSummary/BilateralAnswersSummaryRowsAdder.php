@@ -85,7 +85,7 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
             self::TEMPLATE_DIRECTORY . 'bilateral-country-names',
             $templateVariables
         );
- 
+
         return $this->answersSummaryRowFactory->create(
             $isSnapshot
                 ? 'permits.irhp.application.question.countries-snapshot'

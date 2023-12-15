@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmission as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
-use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as SectionCommentCommand;
+use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as SectionCommentCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;

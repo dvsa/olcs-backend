@@ -11,7 +11,8 @@ use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
 class StandardAndCabotageAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
-    use AlwaysIncludeSlugTrait, IrhpPermitApplicationOnlyTrait;
+    use AlwaysIncludeSlugTrait;
+    use IrhpPermitApplicationOnlyTrait;
 
     const TEMPLATE_VARIABLES_LOOKUP = [
         Answer::BILATERAL_CABOTAGE_ONLY => [

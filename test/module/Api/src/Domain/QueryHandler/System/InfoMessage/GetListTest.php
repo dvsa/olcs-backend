@@ -48,7 +48,7 @@ class GetListTest extends QueryHandlerTestCase
 
         static::assertSame(
             [
-                'result'=> ['unit_Result', 'unit_Result'],
+                'result' => ['unit_Result', 'unit_Result'],
                 'count' => 2,
             ],
             $actual

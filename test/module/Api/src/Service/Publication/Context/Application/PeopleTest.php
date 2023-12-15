@@ -39,7 +39,7 @@ class PeopleTest extends MockeryTestCase
         $person12 = $this->getPerson(12, 'Maggy', 'Smith');
         $person12Updated = $this->getPerson(12, 'Maggy_UP', 'Smith_UP');
         $person64 = $this->getPerson(64, 'John', 'Sheriden');
-        $person72= $this->getPerson(72, 'Carlton', 'Palmer');
+        $person72 = $this->getPerson(72, 'Carlton', 'Palmer');
 
         // not changed
         $this->addOrganisationPerson($publicationLink, $person432);

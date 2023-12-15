@@ -3,6 +3,7 @@
 /**
  * Create Prohibition
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

@@ -21,10 +21,11 @@ final class Text1 implements ProcessInterface
      */
     public function process(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
-        $text = $publicationLink->getLicence()->getLicNo() .' '.
+        $text = $publicationLink->getLicence()->getLicNo() . ' ' .
             $publicationLink->getApplication()->getLicenceTypeShortCode();
 
-        if ($publicationLink->getApplication()->isGoods() &&
+        if (
+            $publicationLink->getApplication()->isGoods() &&
             $context->offsetExists('previousPublication')
         ) {
             $text .= "\n" . sprintf($this->previousPublication, $context->offsetGet('previousPublication'));

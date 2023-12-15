@@ -11,7 +11,8 @@ use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 
 class DateAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
-    use AlwaysIncludeSlugTrait, AnyTrait;
+    use AlwaysIncludeSlugTrait;
+    use AnyTrait;
 
     const DATE_FORMAT = 'd/m/Y';
 

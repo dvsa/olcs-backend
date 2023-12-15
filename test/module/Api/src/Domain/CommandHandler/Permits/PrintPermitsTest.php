@@ -42,7 +42,7 @@ class PrintPermitsTest extends CommandHandlerTestCase
         $this->expectExceptionMessage('ERR_PERMIT_PRINTING_MAX_BATCH_SIZE_REACHED');
 
         $cmdData = [
-            'ids' => range(1, PrintPermitsHandler::MAX_BATCH_SIZE+1),
+            'ids' => range(1, PrintPermitsHandler::MAX_BATCH_SIZE + 1),
         ];
 
         $command = PrintPermitsCmd::create($cmdData);
@@ -64,7 +64,7 @@ class PrintPermitsTest extends CommandHandlerTestCase
         );
 
         $cmdData = [
-            'ids' => range(1, $maxBatchSize+1),
+            'ids' => range(1, $maxBatchSize + 1),
         ];
 
         $command = PrintPermitsCmd::create($cmdData);

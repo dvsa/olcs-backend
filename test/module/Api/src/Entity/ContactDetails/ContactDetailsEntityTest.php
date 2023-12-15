@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Entity\ContactDetails;
 
@@ -230,7 +230,7 @@ class ContactDetailsEntityTest extends EntityTester
         $sut->setAddress((new Address())->setId(self::DEF_ADDRESS_ID));
         $sut->setPerson((new Person())->setId(self::DEF_PERSON_ID));
 
-        $mockPhoneCollection = new ArrayCollection;
+        $mockPhoneCollection = new ArrayCollection();
         $mockPhoneCollection->offsetSet(
             self::DEF_PHONE_ID,
             (new PhoneContact(new RefData(self::DEF_PHONE_TYPE)))
@@ -724,7 +724,7 @@ class ContactDetailsEntityTest extends EntityTester
     {
         $sut = new ContactDetails(m::mock(RefData::class));
 
-        $mockPhoneCollection = new ArrayCollection;
+        $mockPhoneCollection = new ArrayCollection();
         $mockPhoneCollection->offsetSet(
             self::DEF_PHONE_ID,
             (new PhoneContact(new RefData(self::DEF_PHONE_TYPE)))
@@ -740,7 +740,7 @@ class ContactDetailsEntityTest extends EntityTester
     {
         $sut = new ContactDetails(m::mock(RefData::class));
 
-        $mockPhoneCollection = new ArrayCollection;
+        $mockPhoneCollection = new ArrayCollection();
         $sut->setPhoneContacts($mockPhoneCollection);
 
         $this->assertNull($sut->getPhoneContactNumber('foo'));

@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -35,7 +36,8 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation as Cmd;
  */
 final class CreateVariation extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface, SlaCalculatorAwareInterface
 {
-    use AuthAwareTrait, SlaCalculatorAwareTrait;
+    use AuthAwareTrait;
+    use SlaCalculatorAwareTrait;
 
     protected $repoServiceName = 'Licence';
 

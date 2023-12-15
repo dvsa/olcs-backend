@@ -5,6 +5,7 @@
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

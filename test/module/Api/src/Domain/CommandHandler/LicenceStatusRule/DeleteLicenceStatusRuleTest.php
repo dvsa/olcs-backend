@@ -5,6 +5,7 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -79,6 +80,5 @@ class DeleteLicenceStatusRuleTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-
     }
 }

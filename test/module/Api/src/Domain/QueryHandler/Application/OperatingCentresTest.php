@@ -89,7 +89,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity')->once()->andReturn($mockedId);
 
-
         $this->repoMap['TrafficArea']->shouldReceive('getValueOptions')
             ->with('DUMMY_ALLOWED_OPERATOR_LOCATION')
             ->andReturn(['foo' => 'bar']);
@@ -274,7 +273,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         )->getMock();
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity')->once()->andReturn($mockedId);
-
 
         $this->repoMap['TrafficArea']->shouldReceive('getValueOptions')
             ->with('DUMMY_ALLOWED_OPERATOR_LOCATION')
@@ -492,7 +490,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
     {
 
         $query = Qry::create(['id' => 111]);
-
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::SELFSERVE_USER, null)

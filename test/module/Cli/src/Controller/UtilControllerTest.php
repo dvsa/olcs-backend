@@ -10,7 +10,6 @@ use Dvsa\Olcs\Cli\Controller\UtilController;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;

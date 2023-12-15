@@ -616,7 +616,7 @@ class ApplicationEntityTest extends EntityTester
             ],
             [
                 'flags' => ['Y'],
-                'text' => $a50 . PHP_EOL . ' ' . $b50 . PHP_EOL . ' '. PHP_EOL . $c45,
+                'text' => $a50 . PHP_EOL . ' ' . $b50 . PHP_EOL . ' ' . PHP_EOL . $c45,
                 'expect' => false,
             ],
             [
@@ -4746,7 +4746,6 @@ class ApplicationEntityTest extends EntityTester
         $expectedApplicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(
             $expectedApplicationOrganisationPersonsActions
         );
-
 
         /* @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();

@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -84,7 +85,7 @@ class UpdateFinancialHistoryTest extends CommandHandlerTestCase
             'administration' => 'Y',
             'disqualified' => 'Y',
             'insolvencyDetails' => str_repeat('X', 200),
-            'insolvencyConfirmation'=> '1'
+            'insolvencyConfirmation' => '1'
         ];
 
         return Cmd::create($data);

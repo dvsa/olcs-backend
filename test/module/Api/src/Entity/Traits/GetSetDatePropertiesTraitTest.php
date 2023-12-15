@@ -17,8 +17,8 @@ class GetSetDatePropertiesTraitTest extends MockeryTestCase
         $dateProperties = ['createdOn', 'lastModifiedOn', 'deletedDate'];
         foreach ($dateProperties as $property) {
             $entity = new StubGetSetDatePropertiesTrait();
-            $setMethod = 'set'. $property;
-            $getMethod = 'get'. $property;
+            $setMethod = 'set' . $property;
+            $getMethod = 'get' . $property;
             $entity->$setMethod($dateTime);
             $this->assertEquals($expected, $entity->$getMethod(true));
         }

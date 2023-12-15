@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms;
 
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
@@ -73,7 +74,7 @@ class ReportDownload extends AbstractConsumer
             [$reference, $result['token'], $result['extension']]
         );
 
-        $extension = $result['extension'] ? ('.'.$result['extension']) : '';
+        $extension = $result['extension'] ? ('.' . $result['extension']) : '';
         $filename = $options['name'] . $extension;
         $command = DownloadReportCmd::create(
             [

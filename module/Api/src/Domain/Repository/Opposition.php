@@ -6,6 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as Entity;

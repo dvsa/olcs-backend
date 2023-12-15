@@ -19,7 +19,7 @@ class GoodsVehiclesExport extends AbstractGoodsVehiclesExport
 
     /**
      * Get vehicle data for export
-     * 
+     *
      * @param \Dvsa\Olcs\Transfer\Query\Licence\GoodsVehiclesExport $query Query
      *
      * @return array

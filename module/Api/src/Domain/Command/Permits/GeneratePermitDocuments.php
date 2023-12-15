@@ -5,6 +5,7 @@
  *
  * @author Henry White <henry.white@capgemini.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Permits;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

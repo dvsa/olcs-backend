@@ -21,7 +21,7 @@ class TypeOfLicenceReviewServiceTest extends MockeryTestCase
     public function setUp(): void
     {
         $mockTranslator = m::mock(TranslatorInterface::class);
-        
+
         $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
         $abstractReviewServiceServices->shouldReceive('getTranslator')
             ->withNoArgs()
@@ -57,7 +57,7 @@ class TypeOfLicenceReviewServiceTest extends MockeryTestCase
 
         $gbContinuationDetail->setLicence($mockLicenceGb);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuation-review-operator-location'],
                 ['value' => 'Great Britain', 'header' => true]

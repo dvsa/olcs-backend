@@ -158,7 +158,7 @@ class EventHistory extends AbstractRepository
         }
 
         if ($sort !== null) {
-            $doctrineQb->orderBy($this->alias . '.' .$sort, $order);
+            $doctrineQb->orderBy($this->alias . '.' . $sort, $order);
         }
 
         if ($limit !== null) {

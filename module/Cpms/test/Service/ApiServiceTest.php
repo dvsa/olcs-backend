@@ -17,7 +17,8 @@ use Mockery as m;
 
 class ApiServiceTest extends TestCase
 {
-    use ClientOptionsTestTrait, GuzzleTestTrait;
+    use ClientOptionsTestTrait;
+    use GuzzleTestTrait;
 
     /**
      * @var Logger
@@ -246,13 +247,13 @@ class ApiServiceTest extends TestCase
         ];
 
         $response = $this->sut->get('/get/payment-status', 'CARD', $params);
-        $this->assertStringContainsString("503 Service Unavailable",$response);
+        $this->assertStringContainsString("503 Service Unavailable", $response);
     }
 
     public function testEmptyResponse()
     {
          $this->appendToHandler(200, [], $this->accessTokenResponse);
-         $this->appendToHandler(200, [],'');
+         $this->appendToHandler(200, [], '');
 
         $params = [
             'batch_number' => 'abc123',

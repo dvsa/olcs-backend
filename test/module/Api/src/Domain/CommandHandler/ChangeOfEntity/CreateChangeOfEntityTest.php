@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ChangeOfEntity;
 
 use Mockery as m;

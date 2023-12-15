@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot;
 
 use Dvsa\Olcs\Utils\Translation\MissingTranslationProcessor;

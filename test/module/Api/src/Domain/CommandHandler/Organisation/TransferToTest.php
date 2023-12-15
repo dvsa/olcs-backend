@@ -152,9 +152,9 @@ class TransferToTest extends CommandHandlerTestCase
         $toOrganisation->setId(13);
         $this->expectedOrganisationCacheClearSideEffect(13);
 
-        $licence1= new Licence($fromOrganisation, new RefData());
+        $licence1 = new Licence($fromOrganisation, new RefData());
         $fromOrganisation->addLicences($licence1);
-        $licence2= new Licence($fromOrganisation, new RefData());
+        $licence2 = new Licence($fromOrganisation, new RefData());
         $fromOrganisation->addLicences($licence2);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
@@ -227,9 +227,9 @@ class TransferToTest extends CommandHandlerTestCase
         $toOrganisation->setId(13);
         $this->expectedOrganisationCacheClearSideEffect(13);
 
-        $note1= new \Dvsa\Olcs\Api\Entity\Note\Note();
+        $note1 = new \Dvsa\Olcs\Api\Entity\Note\Note();
         $note1->setOrganisation($fromOrganisation);
-        $note2= new \Dvsa\Olcs\Api\Entity\Note\Note();
+        $note2 = new \Dvsa\Olcs\Api\Entity\Note\Note();
         $note2->setOrganisation($fromOrganisation);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
@@ -302,12 +302,12 @@ class TransferToTest extends CommandHandlerTestCase
         $toOrganisation->setId(13);
         $this->expectedOrganisationCacheClearSideEffect(13);
 
-        $irfoGvPermit1= new \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit(
+        $irfoGvPermit1 = new \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit(
             $fromOrganisation,
             new \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType(),
             new RefData()
         );
-        $irfoGvPermit2= new \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit(
+        $irfoGvPermit2 = new \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit(
             $fromOrganisation,
             new \Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType(),
             new RefData()
@@ -383,12 +383,12 @@ class TransferToTest extends CommandHandlerTestCase
         $toOrganisation->setId(13);
         $this->expectedOrganisationCacheClearSideEffect(13);
 
-        $irfoPsvAuth1= new \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth(
+        $irfoPsvAuth1 = new \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth(
             $fromOrganisation,
             new \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType(),
             new RefData()
         );
-        $irfoPsvAuth2= new \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth(
+        $irfoPsvAuth2 = new \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth(
             $fromOrganisation,
             new \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType(),
             new RefData()
@@ -996,11 +996,11 @@ class TransferToTest extends CommandHandlerTestCase
         $toOrganisation->setId(13);
         $this->expectedOrganisationCacheClearSideEffect(13);
 
-        $licence1= new Licence($fromOrganisation, new RefData());
+        $licence1 = new Licence($fromOrganisation, new RefData());
         $licence1->setId(1);
         $licence1->setLicNo('UA123');
         $fromOrganisation->addLicences($licence1);
-        $licence2= new Licence($fromOrganisation, new RefData());
+        $licence2 = new Licence($fromOrganisation, new RefData());
         $licence2->setId(2);
         $fromOrganisation->addLicences($licence2);
 
@@ -1045,7 +1045,7 @@ class TransferToTest extends CommandHandlerTestCase
         $fromOrganisation = new Organisation();
         $toOrganisation = new Organisation();
 
-        $licence1= new Licence($fromOrganisation, new RefData());
+        $licence1 = new Licence($fromOrganisation, new RefData());
         $fromOrganisation->addLicences($licence1);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
@@ -1069,7 +1069,7 @@ class TransferToTest extends CommandHandlerTestCase
 
         $fromOrganisation = new Organisation();
 
-        $licence1= new Licence($fromOrganisation, new RefData());
+        $licence1 = new Licence($fromOrganisation, new RefData());
         $fromOrganisation->addLicences($licence1);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()

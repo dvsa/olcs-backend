@@ -54,7 +54,7 @@ class RestrictedCountriesGenerator implements QuestionTextGeneratorInterface
         $excludedRestrictedCountryIds = $associatedStock->getExcludedRestrictedCountryIds();
 
         if (!empty($excludedRestrictedCountryIds)) {
-            $suffix = '.without.'.implode('.', $excludedRestrictedCountryIds);
+            $suffix = '.without.' . implode('.', $excludedRestrictedCountryIds);
             $questionKey .= $suffix;
             $questionSummaryKey .= $suffix;
         }

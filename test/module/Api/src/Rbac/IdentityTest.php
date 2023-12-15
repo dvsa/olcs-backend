@@ -3,6 +3,7 @@
 /**
  * Identity Test
  */
+
 namespace Dvsa\OlcsTest\Api\Rbac;
 
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;

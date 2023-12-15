@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
-
 class NysiisRestClientFactoryTest extends MockeryTestCase
 {
     /**

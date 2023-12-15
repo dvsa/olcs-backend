@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Email\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -128,7 +129,7 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
      */
     protected function deleteEmail($id)
     {
-        $this->outputLine('==Deleting email '.$id);
+        $this->outputLine('==Deleting email ' . $id);
         return $this->getMailbox()->removeMessage($id);
     }
 

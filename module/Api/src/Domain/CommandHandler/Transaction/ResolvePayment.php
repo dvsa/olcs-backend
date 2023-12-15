@@ -30,7 +30,8 @@ final class ResolvePayment extends AbstractCommandHandler implements
     AuthAwareInterface,
     CpmsAwareInterface
 {
-    use AuthAwareTrait, CpmsAwareTrait;
+    use AuthAwareTrait;
+    use CpmsAwareTrait;
 
     protected $repoServiceName = 'Transaction';
 

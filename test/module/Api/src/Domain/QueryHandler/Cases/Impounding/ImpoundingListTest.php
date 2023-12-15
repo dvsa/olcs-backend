@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Impounding;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Impounding\ImpoundingList;

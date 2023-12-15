@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Cli\Service\Utils;
 
 /**
  * Class helper for creation file
- * 
+ *
  * @author Dmitry Golubev <dmitrij.golubev@valtech.co.uk>
  */
 class ExportToCsv

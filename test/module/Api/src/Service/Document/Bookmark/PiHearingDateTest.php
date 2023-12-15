@@ -5,6 +5,7 @@
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 /**

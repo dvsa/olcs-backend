@@ -3,6 +3,7 @@
 /**
  * Request new Ebsr map
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -338,7 +339,6 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->templateBuilder = $container->get(TemplateBuilder::class);
         return parent::__invoke($fullContainer, $requestedName, $options);

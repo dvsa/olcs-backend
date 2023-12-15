@@ -3,6 +3,7 @@
 /**
  * PiHearing Repo test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
@@ -65,7 +66,7 @@ class PiHearingTest extends RepositoryTestCase
         $query = HearingListQry::create(['pi' => $piId]);
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
-        $expectedQuery = 'BLAH AND m.pi = [['.$piId.']]';
+        $expectedQuery = 'BLAH AND m.pi = [[' . $piId . ']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 

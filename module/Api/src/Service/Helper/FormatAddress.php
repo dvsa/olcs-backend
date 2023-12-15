@@ -3,6 +3,7 @@
 /**
  * Takes an address entity and produces a formatted address
  */
+
 namespace Dvsa\Olcs\Api\Service\Helper;
 
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
