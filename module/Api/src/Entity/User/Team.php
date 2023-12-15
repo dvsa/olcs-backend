@@ -23,12 +23,12 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
  */
 class Team extends AbstractTeam
 {
-    const ERROR_TEAM_EXISTS = 'err_team_exists';
-    const ERROR_TEAM_LINKED_TO_USERS = 'err_team_linked_to_users';
-    const ERROR_TEAM_LINKED_TO_PRINTER_SETTINGS = 'err_team_linked_to_printer_settings';
-    const ERROR_TEAM_LINKED_TO_TASK_ALLOCATION_RULES = 'err_team_linked_to_task_allocation_rules';
-    const IRFO_TEAM_IDS = [1004];
-    const ALL_ELASTICSEARCH_INDEXES = [
+    public const ERROR_TEAM_EXISTS = 'err_team_exists';
+    public const ERROR_TEAM_LINKED_TO_USERS = 'err_team_linked_to_users';
+    public const ERROR_TEAM_LINKED_TO_PRINTER_SETTINGS = 'err_team_linked_to_printer_settings';
+    public const ERROR_TEAM_LINKED_TO_TASK_ALLOCATION_RULES = 'err_team_linked_to_task_allocation_rules';
+    public const IRFO_TEAM_IDS = [1004];
+    public const ALL_ELASTICSEARCH_INDEXES = [
         'licence'     => 'licence',
         'application' => 'search-result-section-applications',
         'case'        => 'internal-navigation-operator-cases',
@@ -41,7 +41,7 @@ class Team extends AbstractTeam
         'publication' => 'search.result.publication',
         'irfo'        => 'internal-navigation-operator-irfo'
     ];
-    const NI_SEARCH_INDEXES = [
+    public const NI_SEARCH_INDEXES = [
         'licence'     => 'licence',
         'application' => 'search-result-section-applications',
         'case'        => 'internal-navigation-operator-cases',

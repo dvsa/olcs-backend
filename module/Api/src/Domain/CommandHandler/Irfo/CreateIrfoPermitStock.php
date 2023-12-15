@@ -19,9 +19,9 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoCountry;
  */
 final class CreateIrfoPermitStock extends AbstractCommandHandler implements TransactionedInterface
 {
-    const MAX_DIFF = 100;
-    const ERROR_INVALID_START_END = 'IRFO-PS-1';
-    const ERROR_MAX_DIFF_EXCEEDED = 'IRFO-PS-2';
+    public const MAX_DIFF = 100;
+    public const ERROR_INVALID_START_END = 'IRFO-PS-1';
+    public const ERROR_MAX_DIFF_EXCEEDED = 'IRFO-PS-2';
 
     protected $repoServiceName = 'IrfoPermitStock';
 

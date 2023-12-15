@@ -7,5 +7,5 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class TrailerMakeModel extends AbstractIrhpAppQuestionAnswerData
 {
-    const FIELD = 'trailer-make-and-model';
+    public const FIELD = 'trailer-make-and-model';
 }

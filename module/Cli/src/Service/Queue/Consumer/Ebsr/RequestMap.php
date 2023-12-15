@@ -18,7 +18,7 @@ use Laminas\Serializer\Adapter\Json as LaminasJson;
  */
 class RequestMap extends AbstractCommandConsumer
 {
-    const TASK_FAIL_DESC = 'Route map generation for: %s failed';
+    public const TASK_FAIL_DESC = 'Route map generation for: %s failed';
 
     /**
      * @var string the command class

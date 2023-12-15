@@ -36,17 +36,17 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 {
     use LicenceStatusAwareTrait;
 
-    const ORG_TYPE_PARTNERSHIP = 'org_t_p';
-    const ORG_TYPE_OTHER = 'org_t_pa';
-    const ORG_TYPE_REGISTERED_COMPANY = 'org_t_rc';
-    const ORG_TYPE_LLP = 'org_t_llp';
-    const ORG_TYPE_SOLE_TRADER = 'org_t_st';
-    const ORG_TYPE_IRFO = 'org_t_ir';
+    public const ORG_TYPE_PARTNERSHIP = 'org_t_p';
+    public const ORG_TYPE_OTHER = 'org_t_pa';
+    public const ORG_TYPE_REGISTERED_COMPANY = 'org_t_rc';
+    public const ORG_TYPE_LLP = 'org_t_llp';
+    public const ORG_TYPE_SOLE_TRADER = 'org_t_st';
+    public const ORG_TYPE_IRFO = 'org_t_ir';
 
-    const OPERATOR_CPID_ALL = 'op_cpid_all';
+    public const OPERATOR_CPID_ALL = 'op_cpid_all';
 
-    const ALLOWED_OPERATOR_LOCATION_NI = 'NI';
-    const ALLOWED_OPERATOR_LOCATION_GB = 'GB';
+    public const ALLOWED_OPERATOR_LOCATION_NI = 'NI';
+    public const ALLOWED_OPERATOR_LOCATION_GB = 'GB';
 
     protected $hasInforceLicences;
 

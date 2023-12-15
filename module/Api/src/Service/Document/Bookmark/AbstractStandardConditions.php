@@ -20,11 +20,11 @@ abstract class AbstractStandardConditions extends DynamicBookmark
      * Let the parser know we've already formatted our content by the
      * time it has been rendered
      */
-    const PREFORMATTED = true;
+    public const PREFORMATTED = true;
 
-    const SERVICE = 'licence';
+    public const SERVICE = 'licence';
 
-    const DATA_KEY = 'licence';
+    public const DATA_KEY = 'licence';
 
     protected $prefix = '';
 

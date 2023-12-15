@@ -23,24 +23,24 @@ use Doctrine\Common\Collections\Criteria;
  */
 class CommunityLic extends AbstractCommunityLic
 {
-    const STATUS_PENDING = 'cl_sts_pending';
-    const STATUS_ACTIVE = 'cl_sts_active';
-    const STATUS_EXPIRED = 'cl_sts_expired';
-    const STATUS_WITHDRAWN = 'cl_sts_withdrawn';
-    const STATUS_SUSPENDED = 'cl_sts_suspended';
-    const STATUS_ANNUL = 'cl_sts_annulled';
-    const STATUS_RETURNDED = 'cl_sts_returned';
+    public const STATUS_PENDING = 'cl_sts_pending';
+    public const STATUS_ACTIVE = 'cl_sts_active';
+    public const STATUS_EXPIRED = 'cl_sts_expired';
+    public const STATUS_WITHDRAWN = 'cl_sts_withdrawn';
+    public const STATUS_SUSPENDED = 'cl_sts_suspended';
+    public const STATUS_ANNUL = 'cl_sts_annulled';
+    public const STATUS_RETURNDED = 'cl_sts_returned';
 
-    const PREFIX_GB = 'UKGB';
-    const PREFIX_NI = 'UKNI';
+    public const PREFIX_GB = 'UKGB';
+    public const PREFIX_NI = 'UKNI';
 
-    const ERROR_OFFICE_COPY_EXISTS = 'CL_OC_EXISTS';
-    const ERROR_CANT_ANNUL = 'CL_CANT_ANNUL';
-    const ERROR_CANT_RESTORE = 'CL_CANT_RESTORE';
-    const ERROR_CANT_REPRINT = 'CL_CANT_REPRINT';
-    const ERROR_CANT_STOP = 'CL_CANT_STOP';
-    const ERROR_START_DATE_EMPTY = 'CL_START_DATE_EMPTY';
-    const ERROR_END_DATE_WRONG = 'CL_END_DATE_WRONG';
+    public const ERROR_OFFICE_COPY_EXISTS = 'CL_OC_EXISTS';
+    public const ERROR_CANT_ANNUL = 'CL_CANT_ANNUL';
+    public const ERROR_CANT_RESTORE = 'CL_CANT_RESTORE';
+    public const ERROR_CANT_REPRINT = 'CL_CANT_REPRINT';
+    public const ERROR_CANT_STOP = 'CL_CANT_STOP';
+    public const ERROR_START_DATE_EMPTY = 'CL_START_DATE_EMPTY';
+    public const ERROR_END_DATE_WRONG = 'CL_END_DATE_WRONG';
 
     /**
      * Update community licence

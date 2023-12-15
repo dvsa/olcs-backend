@@ -20,8 +20,8 @@ use Dvsa\Olcs\Api\Entity\Tm\HistoricTm as HistoricTmEntity;
  */
 class HistoricTm extends AbstractQueryHandler
 {
-    const LICENCE_FLAG = 'L';
-    const APPLICATION_FLAG = 'A';
+    public const LICENCE_FLAG = 'L';
+    public const APPLICATION_FLAG = 'A';
 
     protected $repoServiceName = 'HistoricTm';
 

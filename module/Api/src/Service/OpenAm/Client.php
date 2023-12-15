@@ -12,8 +12,8 @@ use Laminas\Uri\Http as Uri;
  */
 class Client implements ClientInterface
 {
-    const REALM_INTERNAL = 'internal';
-    const REALM_SELFSERVE = 'selfserve';
+    public const REALM_INTERNAL = 'internal';
+    public const REALM_SELFSERVE = 'selfserve';
 
     /**
      * @var HttpClient

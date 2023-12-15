@@ -15,8 +15,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 class GenerateName extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_ORG_TYPE_INVALID = 'Can only generate Organisation name for a sole trader or partnership';
-    const ERR_ONLY_NEW_APP = 'Can only generate Organisation name for a new application';
+    public const ERR_ORG_TYPE_INVALID = 'Can only generate Organisation name for a sole trader or partnership';
+    public const ERR_ONLY_NEW_APP = 'Can only generate Organisation name for a new application';
 
     protected $repoServiceName = 'Organisation';
     protected $extraRepos = ['Application'];

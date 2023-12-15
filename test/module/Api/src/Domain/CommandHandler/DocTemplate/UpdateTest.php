@@ -27,9 +27,9 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    const BODY = 'expect_body';
-    const IDENTIFIER = 'templates/fileName.rtf';
-    const USER_ID = 291;
+    public const BODY = 'expect_body';
+    public const IDENTIFIER = 'templates/fileName.rtf';
+    public const USER_ID = 291;
 
     protected $sut;
 

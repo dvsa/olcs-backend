@@ -10,8 +10,8 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class UriBuilderFactory implements FactoryInterface
 {
-    const MSG_MISSING_INTERNAL_URL = 'openam/urls/internal is required but missing from config';
-    const MSG_MISSING_SELFSERVE_URL = 'openam/urls/selfserve is required but missing from config';
+    public const MSG_MISSING_INTERNAL_URL = 'openam/urls/internal is required but missing from config';
+    public const MSG_MISSING_SELFSERVE_URL = 'openam/urls/selfserve is required but missing from config';
 
     /**
      * invoke method

@@ -13,18 +13,18 @@ use RuntimeException;
 
 class CognitoClientFactory implements FactoryInterface
 {
-    const CONFIG_NAMESPACE = 'auth';
-    const CONFIG_ADAPTERS = 'adapters';
-    const CONFIG_ADAPTER = 'cognito';
-    const CONFIG_REGION = 'region';
-    const CONFIG_CLIENT_ID = 'clientId';
-    const CONFIG_CLIENT_SECRET = 'clientSecret';
-    const CONFIG_POOL_ID = 'poolId';
-    const CONFIG_NBF_LEEWAY = 'nbfLeeway';
-    const CONFIG_HTTP = 'http';
+    public const CONFIG_NAMESPACE = 'auth';
+    public const CONFIG_ADAPTERS = 'adapters';
+    public const CONFIG_ADAPTER = 'cognito';
+    public const CONFIG_REGION = 'region';
+    public const CONFIG_CLIENT_ID = 'clientId';
+    public const CONFIG_CLIENT_SECRET = 'clientSecret';
+    public const CONFIG_POOL_ID = 'poolId';
+    public const CONFIG_NBF_LEEWAY = 'nbfLeeway';
+    public const CONFIG_HTTP = 'http';
 
-    const EXCEPTION_MESSAGE_NAMESPACE_MISSING = 'Cognito config missing from awsOptions';
-    const EXCEPTION_MESSAGE_OPTION_MISSING = 'Cognito config requires: clientId, clientSecret, poolId, region and http';
+    public const EXCEPTION_MESSAGE_NAMESPACE_MISSING = 'Cognito config missing from awsOptions';
+    public const EXCEPTION_MESSAGE_OPTION_MISSING = 'Cognito config requires: clientId, clientSecret, poolId, region and http';
 
     /**
      * invoke method

@@ -18,7 +18,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
 {
     use MocksServicesTrait;
 
-    const CONFIG_WITH_WITH_VALID_SETTINGS = [
+    public const CONFIG_WITH_WITH_VALID_SETTINGS = [
         CognitoClientFactory::CONFIG_CLIENT_ID => 'client_id',
         CognitoClientFactory::CONFIG_CLIENT_SECRET => 'client_secret',
         CognitoClientFactory::CONFIG_POOL_ID => 'pool_id',

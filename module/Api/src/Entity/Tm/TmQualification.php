@@ -29,17 +29,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class TmQualification extends AbstractTmQualification
 {
-    const ERROR_ISSUED_DATE_IN_FUTURE = 'TQ-ID-1';
+    public const ERROR_ISSUED_DATE_IN_FUTURE = 'TQ-ID-1';
 
     // TM Qualification types
-    const QUALIFICATION_TYPE_AR = 'tm_qt_ar';
-    const QUALIFICATION_TYPE_CPCSI = 'tm_qt_cpcsi';
-    const QUALIFICATION_TYPE_EXSI = 'tm_qt_exsi';
-    const QUALIFICATION_TYPE_NIAR = 'tm_qt_niar';
-    const QUALIFICATION_TYPE_NICPCSI = 'tm_qt_nicpcsi';
-    const QUALIFICATION_TYPE_NIEXSI = 'tm_qt_niexsi';
-    const QUALIFICATION_TYPE_LGVAR = 'tm_qt_lgvar';
-    const QUALIFICATION_TYPE_NILGVAR = 'tm_qt_nilgvar';
+    public const QUALIFICATION_TYPE_AR = 'tm_qt_ar';
+    public const QUALIFICATION_TYPE_CPCSI = 'tm_qt_cpcsi';
+    public const QUALIFICATION_TYPE_EXSI = 'tm_qt_exsi';
+    public const QUALIFICATION_TYPE_NIAR = 'tm_qt_niar';
+    public const QUALIFICATION_TYPE_NICPCSI = 'tm_qt_nicpcsi';
+    public const QUALIFICATION_TYPE_NIEXSI = 'tm_qt_niexsi';
+    public const QUALIFICATION_TYPE_LGVAR = 'tm_qt_lgvar';
+    public const QUALIFICATION_TYPE_NILGVAR = 'tm_qt_nilgvar';
 
     /**
      * Create TmQualification object

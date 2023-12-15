@@ -18,6 +18,6 @@ use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
  */
 class FormControlServiceManagerFactory extends AbstractServiceManagerFactory
 {
-    const CONFIG_KEY = 'form_control_services';
+    public const CONFIG_KEY = 'form_control_services';
     public const PLUGIN_MANAGER_CLASS =  FormControlServiceManager::class;
 }

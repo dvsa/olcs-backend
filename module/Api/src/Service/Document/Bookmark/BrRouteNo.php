@@ -17,9 +17,9 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  */
 class BrRouteNo extends SingleValueAbstract
 {
-    const FORMATTER = null;
-    const FIELD  = 'routeNo';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'busRegId';
-    const QUERY_CLASS = Qry::Class;
+    public const FORMATTER = null;
+    public const FIELD  = 'routeNo';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'busRegId';
+    public const QUERY_CLASS = Qry::Class;
 }

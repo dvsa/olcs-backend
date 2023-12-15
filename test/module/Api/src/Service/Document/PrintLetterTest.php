@@ -14,7 +14,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class PrintLetterTest extends MockeryTestCase
 {
-    const TEMPLATE_ID = 7777;
+    public const TEMPLATE_ID = 7777;
 
     /** @var  PrintLetter */
     private $sut;

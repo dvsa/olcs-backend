@@ -23,7 +23,7 @@ class RoadworthinessReport extends AbstractCommandHandler implements TranslatorA
 {
     use TranslatorAwareTrait;
 
-    const MSG_USER_MISSING = 'User details missing';
+    public const MSG_USER_MISSING = 'User details missing';
 
     protected $repoServiceName = 'IrhpApplication';
 

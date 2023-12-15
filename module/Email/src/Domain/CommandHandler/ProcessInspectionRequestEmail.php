@@ -23,8 +23,8 @@ use Dvsa\Olcs\Email\Service\Imap as Mailbox;
  */
 final class ProcessInspectionRequestEmail extends AbstractCommandHandler
 {
-    const SUBJECT_REGEX = '/\[ Maintenance Inspection \] REQUEST=([\d]+),STATUS=([SU]?)$/';
-    const MAILBOX_ID = 'inspection_request';
+    public const SUBJECT_REGEX = '/\[ Maintenance Inspection \] REQUEST=([\d]+),STATUS=([SU]?)$/';
+    public const MAILBOX_ID = 'inspection_request';
 
     /**
      * @var Mailbox

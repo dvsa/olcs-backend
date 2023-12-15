@@ -11,7 +11,7 @@ abstract class AbstractConsumer extends AbstractCommandHandler implements QueueI
 {
     use QueueServiceTrait;
 
-    const NOTHING_TO_PROCESS_MESSAGE = 'No messages to process';
+    public const NOTHING_TO_PROCESS_MESSAGE = 'No messages to process';
 
     protected function fetchMessages(int $number, int $visibilityTimeout = 1): ?array
     {

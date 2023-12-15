@@ -12,7 +12,7 @@ use phpseclib\Crypt\Base;
  */
 class EncryptedStringType extends StringType
 {
-    const TYPE = 'encrypted_string';
+    public const TYPE = 'encrypted_string';
 
     /**
      * @var Crypt\Base

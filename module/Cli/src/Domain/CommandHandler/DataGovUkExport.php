@@ -24,16 +24,16 @@ final class DataGovUkExport extends AbstractDataExport
 {
     use QueueAwareTrait;
 
-    const ERR_INVALID_REPORT = 'Invalid report name';
-    const ERR_NO_TRAFFIC_AREAS = 'Traffic areas is empty';
+    public const ERR_INVALID_REPORT = 'Invalid report name';
+    public const ERR_NO_TRAFFIC_AREAS = 'Traffic areas is empty';
 
-    const OPERATOR_LICENCE = 'operator-licence';
-    const BUS_REGISTERED_ONLY = 'bus-registered-only';
-    const BUS_VARIATION = 'bus-variation';
-    const PSV_OPERATOR_LIST = 'psv-operator-list';
-    const INTERNATIONAL_GOODS = 'international-goods';
+    public const OPERATOR_LICENCE = 'operator-licence';
+    public const BUS_REGISTERED_ONLY = 'bus-registered-only';
+    public const BUS_VARIATION = 'bus-variation';
+    public const PSV_OPERATOR_LIST = 'psv-operator-list';
+    public const INTERNATIONAL_GOODS = 'international-goods';
 
-    const FILE_DATETIME_FORMAT = 'Ymd_His';
+    public const FILE_DATETIME_FORMAT = 'Ymd_His';
 
     /**
      * @var string

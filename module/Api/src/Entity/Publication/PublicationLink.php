@@ -42,8 +42,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 class PublicationLink extends AbstractPublicationLink
 {
-    const ADD_ENTRY_ERROR = 'Can only create publication entries for publications with status new';
-    const EDIT_ENTRY_ERROR = 'Only publications with status of New may be edited';
+    public const ADD_ENTRY_ERROR = 'Can only create publication entries for publications with status new';
+    public const EDIT_ENTRY_ERROR = 'Only publications with status of New may be edited';
 
     /**
      * Creates Application publication entry

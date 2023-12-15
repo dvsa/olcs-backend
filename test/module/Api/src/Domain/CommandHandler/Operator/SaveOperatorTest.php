@@ -33,7 +33,7 @@ use Mockery as m;
  */
 class SaveOperatorTest extends CommandHandlerTestCase
 {
-    const NATURE_OF_BUSINESS = 'testnob';
+    public const NATURE_OF_BUSINESS = 'testnob';
 
     public function setUp(): void
     {

@@ -11,8 +11,8 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 abstract class DateDelta extends StaticBookmark
 {
-    const FORMAT = "d/m/Y";
-    const DELTA  = "+0";
+    public const FORMAT = "d/m/Y";
+    public const DELTA  = "+0";
 
     /**
      * Render

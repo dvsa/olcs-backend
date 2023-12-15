@@ -6,6 +6,6 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
 
 class QueryPartialServiceManagerFactory extends AbstractServiceManagerFactory
 {
-    const CONFIG_KEY = 'query_partial_services';
+    public const CONFIG_KEY = 'query_partial_services';
     public const PLUGIN_MANAGER_CLASS = QueryPartialServiceManager::class;
 }

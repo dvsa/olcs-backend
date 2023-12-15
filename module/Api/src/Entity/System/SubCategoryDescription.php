@@ -19,5 +19,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SubCategoryDescription extends AbstractSubCategoryDescription
 {
-    const CONTINUATIONS_AND_RENEWALS_LICENCE_CHECKLIST = 112;
+    public const CONTINUATIONS_AND_RENEWALS_LICENCE_CHECKLIST = 112;
 }

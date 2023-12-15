@@ -17,7 +17,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 
 final class Grant extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERROR_IR_DUE_DATE = 'APP-GRA-IR-DD-1';
+    public const ERROR_IR_DUE_DATE = 'APP-GRA-IR-DD-1';
 
     protected $repoServiceName = 'Application';
 

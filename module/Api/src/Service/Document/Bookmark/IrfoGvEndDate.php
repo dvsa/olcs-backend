@@ -13,9 +13,9 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrfoGvPermitBundle as Qry;
  */
 class IrfoGvEndDate extends SingleValueAbstract
 {
-    const FORMATTER = 'Date';
-    const FIELD  = 'expiryDate';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'irfoGvPermit';
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = 'Date';
+    public const FIELD  = 'expiryDate';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'irfoGvPermit';
+    public const QUERY_CLASS = Qry::class;
 }

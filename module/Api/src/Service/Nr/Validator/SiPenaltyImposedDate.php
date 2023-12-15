@@ -12,9 +12,9 @@ use Laminas\Validator\AbstractValidator as LaminasAbstractValidator;
  */
 class SiPenaltyImposedDate extends LaminasAbstractValidator
 {
-    const IMPOSED_PENALTY_INCORRECT_DECISION_START_DATE = 'imposed-penalty-incorrect-decision-start-date';
-    const IMPOSED_PENALTY_INCORRECT_DECISION_END_DATE = 'imposed-penalty-incorrect-decision-end-date';
-    const IMPOSED_PENALTY_INCORRECT_START_DATE = 'imposed-penalty-incorrect-start-date';
+    public const IMPOSED_PENALTY_INCORRECT_DECISION_START_DATE = 'imposed-penalty-incorrect-decision-start-date';
+    public const IMPOSED_PENALTY_INCORRECT_DECISION_END_DATE = 'imposed-penalty-incorrect-decision-end-date';
+    public const IMPOSED_PENALTY_INCORRECT_START_DATE = 'imposed-penalty-incorrect-start-date';
 
     /**
      * @var array

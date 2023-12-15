@@ -15,7 +15,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class StockAlignmentReport extends AbstractQueryHandler
 {
-    const WITHOUT_RESTRICTED_COUNTRIES = 'without restricted countries';
+    public const WITHOUT_RESTRICTED_COUNTRIES = 'without restricted countries';
 
     protected $repoServiceName = 'IrhpApplication';
 

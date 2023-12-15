@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 abstract class AbstractReadAudit extends AbstractCommandHandler implements AuthAwareInterface
 {
-    const INTEGRITY_CONSTRAINT_VIOLATION_CODE = 23000;
+    public const INTEGRITY_CONSTRAINT_VIOLATION_CODE = 23000;
 
     use AuthAwareTrait;
 

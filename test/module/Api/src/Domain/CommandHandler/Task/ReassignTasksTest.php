@@ -16,13 +16,13 @@ use Mockery as m;
  */
 class ReassignTasksTest extends CommandHandlerTestCase
 {
-    const TASK_ID_1 = 9990;
-    const TASK_ID_2 = 9991;
+    public const TASK_ID_1 = 9990;
+    public const TASK_ID_2 = 9991;
 
-    const TEAM_ID_1 = 7001;
-    const TEAM_ID_2 = 7002;
+    public const TEAM_ID_1 = 7001;
+    public const TEAM_ID_2 = 7002;
 
-    const USER_ID = 6001;
+    public const USER_ID = 6001;
 
     /** @var ReassignTasks */
     protected $sut;

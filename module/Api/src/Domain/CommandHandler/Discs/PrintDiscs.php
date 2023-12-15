@@ -29,7 +29,7 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
 {
     use ConfigAwareTrait;
 
-    const BATCH_SIZE = 30;
+    public const BATCH_SIZE = 30;
 
     protected $repoServiceName = 'GoodsDisc';
     protected $extraRepos = ['PsvDisc'];

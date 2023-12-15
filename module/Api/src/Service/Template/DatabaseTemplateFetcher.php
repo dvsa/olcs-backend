@@ -8,9 +8,9 @@ use Dvsa\Olcs\Api\Entity\Template\Template;
 
 class DatabaseTemplateFetcher
 {
-    const COMPONENT_OFFSET_LOCALE = 0;
-    const COMPONENT_OFFSET_FORMAT = 1;
-    const COMPONENT_OFFSET_NAME = 2;
+    public const COMPONENT_OFFSET_LOCALE = 0;
+    public const COMPONENT_OFFSET_FORMAT = 1;
+    public const COMPONENT_OFFSET_NAME = 2;
 
     /** @var TemplateRepo */
     private $repo;

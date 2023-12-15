@@ -25,9 +25,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TmCaseDecision extends AbstractTmCaseDecision
 {
-    const DECISION_DECLARE_UNFIT = 'tm_decision_rl';
-    const DECISION_NO_FURTHER_ACTION = 'tm_decision_noa';
-    const DECISION_REPUTE_NOT_LOST = 'tm_decision_rnl';
+    public const DECISION_DECLARE_UNFIT = 'tm_decision_rl';
+    public const DECISION_NO_FURTHER_ACTION = 'tm_decision_noa';
+    public const DECISION_REPUTE_NOT_LOST = 'tm_decision_rnl';
 
     public function __construct(CasesEntity $case, RefData $decision)
     {

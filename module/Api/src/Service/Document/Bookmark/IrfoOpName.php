@@ -9,8 +9,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\OrganisationBundle as Qry;
  */
 class IrfoOpName extends SingleValueAbstract
 {
-    const FIELD  = 'name';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'organisation';
-    const QUERY_CLASS = Qry::class;
+    public const FIELD  = 'name';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'organisation';
+    public const QUERY_CLASS = Qry::class;
 }

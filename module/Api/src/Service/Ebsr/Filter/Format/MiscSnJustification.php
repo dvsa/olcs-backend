@@ -11,7 +11,7 @@ use Laminas\Filter\AbstractFilter;
  */
 class MiscSnJustification extends AbstractFilter
 {
-    const MISC_JUSTIFICATION = 'Miscellaneous justification: %s';
+    public const MISC_JUSTIFICATION = 'Miscellaneous justification: %s';
 
     /**
      * Appends the miscellaneous justification field to the unforseen detail field

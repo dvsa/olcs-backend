@@ -33,16 +33,16 @@ use Interop\Container\ContainerInterface;
  */
 class OperatingCentreHelper implements FactoryInterface
 {
-    const ERR_OC_AD_IN_1 = 'ERR_OC_AD_IN_1';
-    const ERR_OC_AD_DT_1 = 'ERR_OC_AD_DT_1';
-    const ERR_OC_AD_FI_1 = 'ERR_OC_AD_FI_1';
-    const ERR_OC_VR_1A = 'ERR_OC_VR_1A'; // with trailers
-    const ERR_OC_VR_1B = 'ERR_OC_VR_1B'; // without trailers
-    const ERR_OR_R_TOO_MANY = 'ERR_OR_R_TOO_MANY';
-    const ERR_OC_PC_TA_NI = 'ERR_OC_PC_TA_NI';
-    const ERR_OC_PC_TA_GB = 'ERR_OC_PC_TA_GB';
-    const ERR_OC_PERMISSION = 'ERR_OC_PERMISSION';
-    const ERR_OC_TA_NI_APP = 'ERR_OC_TA_NI_APP';
+    public const ERR_OC_AD_IN_1 = 'ERR_OC_AD_IN_1';
+    public const ERR_OC_AD_DT_1 = 'ERR_OC_AD_DT_1';
+    public const ERR_OC_AD_FI_1 = 'ERR_OC_AD_FI_1';
+    public const ERR_OC_VR_1A = 'ERR_OC_VR_1A'; // with trailers
+    public const ERR_OC_VR_1B = 'ERR_OC_VR_1B'; // without trailers
+    public const ERR_OR_R_TOO_MANY = 'ERR_OR_R_TOO_MANY';
+    public const ERR_OC_PC_TA_NI = 'ERR_OC_PC_TA_NI';
+    public const ERR_OC_PC_TA_GB = 'ERR_OC_PC_TA_GB';
+    public const ERR_OC_PERMISSION = 'ERR_OC_PERMISSION';
+    public const ERR_OC_TA_NI_APP = 'ERR_OC_TA_NI_APP';
 
     /**
      * @var array

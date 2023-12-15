@@ -16,8 +16,8 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
-    const EXTENSIONS_KEY_EXTERNAL = 'external';
-    const EXTENSIONS_KEY_INTERNAL = 'internal';
+    public const EXTENSIONS_KEY_EXTERNAL = 'external';
+    public const EXTENSIONS_KEY_INTERNAL = 'internal';
 
     /**
      * @var bool

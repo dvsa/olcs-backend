@@ -20,9 +20,9 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler impleme
 {
     use AuthAwareTrait;
 
-    const ERR_USERNAME_EXISTS = 'ERR_USERNAME_EXISTS';
-    const ERR_ROLES_PERMISSION = 'ERR_ROLES_PERMISSION';
-    const ERR_ROLES_PERMISSION_LAST_USER = 'ERR_ROLES_PERMISSION_LAST_USER';
+    public const ERR_USERNAME_EXISTS = 'ERR_USERNAME_EXISTS';
+    public const ERR_ROLES_PERMISSION = 'ERR_ROLES_PERMISSION';
+    public const ERR_ROLES_PERMISSION_LAST_USER = 'ERR_ROLES_PERMISSION_LAST_USER';
 
     protected $repoServiceName = 'User';
 

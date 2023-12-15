@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  */
 class RoleTest extends RepositoryTestCase
 {
-    const ROLE = 'unit_role';
+    public const ROLE = 'unit_role';
 
     /** @var  Repository\Role */
     protected $sut;

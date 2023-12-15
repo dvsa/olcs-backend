@@ -17,8 +17,8 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
 {
     use AddressFormatterAwareTrait;
 
-    const INCREASE = 'Increase';
-    const DECREASE = 'Decrease';
+    public const INCREASE = 'Increase';
+    public const DECREASE = 'Decrease';
 
     /**
      * @param PublicationLink $publicationLink

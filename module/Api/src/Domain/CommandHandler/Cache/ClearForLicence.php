@@ -19,7 +19,7 @@ class ClearForLicence extends AbstractCommandHandler implements CacheAwareInterf
 {
     use CacheAwareTrait;
 
-    const UPDATE_MSG = 'Cache cleared for Lic No %s, ID %d';
+    public const UPDATE_MSG = 'Cache cleared for Lic No %s, ID %d';
 
     protected $repoServiceName = 'Licence';
 

@@ -19,29 +19,29 @@ use Dvsa\Olcs\Utils\Helper\ValueHelper;
  */
 class VariationUndertakingsReviewService extends AbstractReviewService
 {
-    const GV81 = 'markup-application_undertakings_GV81';
-    const GV81_STANDARD = 'markup-application_undertakings_GV81-Standard';
-    const GV81_DECLARE = 'markup-application_undertakings_GV81-declare';
+    public const GV81 = 'markup-application_undertakings_GV81';
+    public const GV81_STANDARD = 'markup-application_undertakings_GV81-Standard';
+    public const GV81_DECLARE = 'markup-application_undertakings_GV81-declare';
 
-    const GV81NI = 'markup-application_undertakings_GV81-NI';
-    const GV81NI_STANDARD = 'markup-application_undertakings_GV81-NI-Standard';
-    const GV81NI_DECLARE = 'markup-application_undertakings_GV81-NI-declare';
+    public const GV81NI = 'markup-application_undertakings_GV81-NI';
+    public const GV81NI_STANDARD = 'markup-application_undertakings_GV81-NI-Standard';
+    public const GV81NI_DECLARE = 'markup-application_undertakings_GV81-NI-declare';
 
-    const GV81_AUTH_LGV = 'markup-application_undertakings_GV81-auth-lgv';
-    const GV81_AUTH_OTHER = 'markup-application_undertakings_GV81-auth-other';
-    const GV81NI_AUTH_OTHER = 'markup-application_undertakings_GV81-NI-auth-other';
+    public const GV81_AUTH_LGV = 'markup-application_undertakings_GV81-auth-lgv';
+    public const GV81_AUTH_OTHER = 'markup-application_undertakings_GV81-auth-other';
+    public const GV81NI_AUTH_OTHER = 'markup-application_undertakings_GV81-NI-auth-other';
 
-    const GV80A = 'markup-application_undertakings_GV80A';
-    const GV80A_DECLARE = 'markup-application_undertakings_GV80A-declare';
+    public const GV80A = 'markup-application_undertakings_GV80A';
+    public const GV80A_DECLARE = 'markup-application_undertakings_GV80A-declare';
 
-    const GV80ANI = 'markup-application_undertakings_GV80A-NI';
-    const GV80ANI_DECALRE = 'markup-application_undertakings_GV80A-NI-declare';
+    public const GV80ANI = 'markup-application_undertakings_GV80A-NI';
+    public const GV80ANI_DECALRE = 'markup-application_undertakings_GV80A-NI-declare';
 
-    const PSV430 = 'markup-application_undertakings_PSV430';
-    const PSV430_STANDARD = 'markup-application_undertakings_PSV430-Standard';
-    const PSV430_DECLARE = 'markup-application_undertakings_PSV430-declare';
+    public const PSV430 = 'markup-application_undertakings_PSV430';
+    public const PSV430_STANDARD = 'markup-application_undertakings_PSV430-Standard';
+    public const PSV430_DECLARE = 'markup-application_undertakings_PSV430-declare';
 
-    const SIGNATURE = 'markup-application_undertakings_signature';
+    public const SIGNATURE = 'markup-application_undertakings_signature';
 
     private $standardOptions = [
         Licence::LICENCE_TYPE_STANDARD_NATIONAL,

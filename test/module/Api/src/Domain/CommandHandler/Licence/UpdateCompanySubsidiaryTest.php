@@ -19,9 +19,9 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
 {
-    const LICENCE_ID = 1111;
-    const TASK_ID = 877;
-    const VERSION = 99;
+    public const LICENCE_ID = 1111;
+    public const TASK_ID = 877;
+    public const VERSION = 99;
 
     /** @var  UpdateCompanySubsidiary|m\MockInterface */
     protected $sut;

@@ -34,7 +34,7 @@ use Mockery as m;
  */
 class EndIrhpPermitsTest extends CommandHandlerTestCase
 {
-    const LICENCE_ID = 52;
+    public const LICENCE_ID = 52;
 
     private $licence;
 

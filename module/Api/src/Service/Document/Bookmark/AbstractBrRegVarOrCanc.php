@@ -11,10 +11,10 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
  */
 abstract class AbstractBrRegVarOrCanc extends SingleValueAbstract
 {
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
-    const BUNDLE = ['status'];
-    const QUERY_CLASS = Qry::class;
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
+    public const BUNDLE = ['status'];
+    public const QUERY_CLASS = Qry::class;
 
     protected $renderNew;
     protected $renderVar;

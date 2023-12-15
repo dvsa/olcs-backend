@@ -23,10 +23,10 @@ use Laminas\Stdlib\Glob;
  */
 class PrintJob extends AbstractCommandHandler
 {
-    const DEF_PRINT_COPIES_CNT = 1;
+    public const DEF_PRINT_COPIES_CNT = 1;
 
-    const TEMP_DIR = '/tmp/';
-    const TEMP_FILE_PREFIX = 'PrintJob';
+    public const TEMP_DIR = '/tmp/';
+    public const TEMP_FILE_PREFIX = 'PrintJob';
 
     protected $repoServiceName = 'Document';
 

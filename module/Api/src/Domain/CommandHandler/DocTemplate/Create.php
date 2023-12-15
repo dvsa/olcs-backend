@@ -32,8 +32,8 @@ class Create extends AbstractCommandHandler implements
     NamingServiceAwareInterface,
     AuthAwareInterface
 {
-    const ERR_MIME = 'ERR_MIME';
-    const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
+    public const ERR_MIME = 'ERR_MIME';
+    public const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
 
     use UploaderAwareTrait;
     use NamingServiceAwareTrait;

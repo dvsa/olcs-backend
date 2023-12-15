@@ -39,9 +39,9 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  */
 class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 {
-    const STATUS_REGISTERED = 'pi_s_reg';
-    const MSG_UPDATE_CLOSED = 'Can\'t update a closed Pi';
-    const MSG_DECISION_DATE_BEFORE_HEARING_DATE = 'DECISION_DATE_BEFORE_HEARING_DATE';
+    public const STATUS_REGISTERED = 'pi_s_reg';
+    public const MSG_UPDATE_CLOSED = 'Can\'t update a closed Pi';
+    public const MSG_DECISION_DATE_BEFORE_HEARING_DATE = 'DECISION_DATE_BEFORE_HEARING_DATE';
 
     /**
      * @param CasesEntity     $case                  Case

@@ -15,7 +15,7 @@ use Mockery as m;
  */
 class CorrespondencesTest extends QueryHandlerTestCase
 {
-    const ORG_ID = 9999;
+    public const ORG_ID = 9999;
 
     public function setUp(): void
     {

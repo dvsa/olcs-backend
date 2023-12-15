@@ -11,7 +11,7 @@ class MotExpiryDateGenerator implements ElementGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    const DATE_THRESHOLD = 'P14M';
+    public const DATE_THRESHOLD = 'P14M';
 
     /** @var MotExpiryDateFactory */
     private $motExpiryDateFactory;

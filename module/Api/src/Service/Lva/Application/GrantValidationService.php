@@ -17,11 +17,11 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
  */
 class GrantValidationService implements FactoryInterface
 {
-    const ERROR_S4_EMPTY = 'APP-GRA-S4-EMPTY';
-    const ERROR_OOOD_UNKNOWN = 'APP-GRA-OOOD-UNKNOWN';
-    const ERROR_OORD_UNKNOWN = 'APP-GRA-OORD-UNKNOWN';
-    const ERROR_OOOD_NOT_PASSED = 'APP-GRA-OOOD-NOT-PASSED';
-    const ERROR_OORD_NOT_PASSED = 'APP-GRA-OORD-NOT-PASSED';
+    public const ERROR_S4_EMPTY = 'APP-GRA-S4-EMPTY';
+    public const ERROR_OOOD_UNKNOWN = 'APP-GRA-OOOD-UNKNOWN';
+    public const ERROR_OORD_UNKNOWN = 'APP-GRA-OORD-UNKNOWN';
+    public const ERROR_OOOD_NOT_PASSED = 'APP-GRA-OOOD-NOT-PASSED';
+    public const ERROR_OORD_NOT_PASSED = 'APP-GRA-OORD-NOT-PASSED';
 
     /**
      * @var SectionAccessService

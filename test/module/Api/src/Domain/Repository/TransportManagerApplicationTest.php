@@ -12,7 +12,7 @@ use Mockery as m;
  */
 class TransportManagerApplicationTest extends RepositoryTestCase
 {
-    const APP_ID = 9001;
+    public const APP_ID = 9001;
 
     /** @var  Repository\TransportManagerApplication | m\MockInterface */
     protected $sut;

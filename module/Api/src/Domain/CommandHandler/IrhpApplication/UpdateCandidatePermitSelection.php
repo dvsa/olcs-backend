@@ -20,9 +20,9 @@ class UpdateCandidatePermitSelection extends AbstractCommandHandler implements T
 {
     use AcceptScoringFeeCreationTrait;
 
-    const ERR_CANT_SELECT_CANDIDATE_PERMITS = 'canSelectCandidatePermits is not true';
+    public const ERR_CANT_SELECT_CANDIDATE_PERMITS = 'canSelectCandidatePermits is not true';
 
-    const ERR_NO_PERMITS_WANTED = 'No permits specified as wanted from available candidate permits';
+    public const ERR_NO_PERMITS_WANTED = 'No permits specified as wanted from available candidate permits';
 
     protected $repoServiceName = 'IrhpApplication';
 

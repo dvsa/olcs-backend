@@ -12,8 +12,8 @@ use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
  */
 class ApplicationType extends AbstractValidator
 {
-    const REFRESH_SUBMISSION_ERROR = 'app-type-refresh-submission-error';
-    const NEW_SUBMISSION_ERROR = 'app-type-new-submission-error';
+    public const REFRESH_SUBMISSION_ERROR = 'app-type-refresh-submission-error';
+    public const NEW_SUBMISSION_ERROR = 'app-type-new-submission-error';
 
     /**
      * @var array

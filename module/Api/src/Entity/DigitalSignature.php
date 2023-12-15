@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Service\GovUkAccount\Data\Attributes;
  */
 class DigitalSignature extends AbstractDigitalSignature
 {
-    const ERR_INVALID_SIG = 'Signature attributes missing name or birth date information';
+    public const ERR_INVALID_SIG = 'Signature attributes missing name or birth date information';
 
     public function addSignatureInfo(Attributes $attributes, string $response)
     {

@@ -23,22 +23,22 @@ class TrafficAreaEntityTest extends EntityTester
      */
     protected $entityClass = Entity::class;
 
-    const PUB_RECIPIENT_NAME1 = 'name 1';
-    const PUB_RECIPIENT_NAME2 = 'name 2';
-    const PUB_RECIPIENT_NAME3 = 'name 3';
-    const PUB_RECIPIENT_NAME4 = 'name 4';
-    const PUB_RECIPIENT_NAME5 = 'name 5';
-    const PUB_RECIPIENT_NAME6 = 'name 6';
-    const PUB_RECIPIENT_NAME7 = 'name 7';
-    const PUB_RECIPIENT_NAME8 = 'name 8';
-    const PUB_RECIPIENT_EMAIL1 = 'email1@foo.bar';
-    const PUB_RECIPIENT_EMAIL2 = 'email2@foo.bar';
-    const PUB_RECIPIENT_EMAIL3 = 'email3@foo.bar';
-    const PUB_RECIPIENT_EMAIL4 = 'email4@foo.bar';
-    const PUB_RECIPIENT_EMAIL5 = 'email5@foo.bar';
-    const PUB_RECIPIENT_EMAIL6 = 'email6@foo.bar';
-    const PUB_RECIPIENT_EMAIL7 = 'email7@foo.bar';
-    const PUB_RECIPIENT_EMAIL8 = 'email8@foo.bar';
+    public const PUB_RECIPIENT_NAME1 = 'name 1';
+    public const PUB_RECIPIENT_NAME2 = 'name 2';
+    public const PUB_RECIPIENT_NAME3 = 'name 3';
+    public const PUB_RECIPIENT_NAME4 = 'name 4';
+    public const PUB_RECIPIENT_NAME5 = 'name 5';
+    public const PUB_RECIPIENT_NAME6 = 'name 6';
+    public const PUB_RECIPIENT_NAME7 = 'name 7';
+    public const PUB_RECIPIENT_NAME8 = 'name 8';
+    public const PUB_RECIPIENT_EMAIL1 = 'email1@foo.bar';
+    public const PUB_RECIPIENT_EMAIL2 = 'email2@foo.bar';
+    public const PUB_RECIPIENT_EMAIL3 = 'email3@foo.bar';
+    public const PUB_RECIPIENT_EMAIL4 = 'email4@foo.bar';
+    public const PUB_RECIPIENT_EMAIL5 = 'email5@foo.bar';
+    public const PUB_RECIPIENT_EMAIL6 = 'email6@foo.bar';
+    public const PUB_RECIPIENT_EMAIL7 = 'email7@foo.bar';
+    public const PUB_RECIPIENT_EMAIL8 = 'email8@foo.bar';
 
     /**
      * Test getPublicationRecipients

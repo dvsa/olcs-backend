@@ -17,10 +17,10 @@ use Mockery as m;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    const ORG_ID = 9001;
-    const PERSON_ID = 8001;
-    const ORG_PERSON_ID = 7001;
-    const VERSION = 666;
+    public const ORG_ID = 9001;
+    public const PERSON_ID = 8001;
+    public const ORG_PERSON_ID = 7001;
+    public const VERSION = 666;
 
     /** @var  CommandHandler\OrganisationPerson\Create */
     protected $sut;

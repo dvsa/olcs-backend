@@ -19,7 +19,7 @@ final class GenerateCache extends AbstractCommandHandler implements TranslatorAw
 {
     use TranslatorAwareTrait;
 
-    const UPDATE_MSG = 'Translation key cache updated for %s';
+    public const UPDATE_MSG = 'Translation key cache updated for %s';
 
     public function handleCommand(CommandInterface $command)
     {

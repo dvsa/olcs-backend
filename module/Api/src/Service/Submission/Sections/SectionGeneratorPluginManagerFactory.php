@@ -10,5 +10,5 @@ use Laminas\Mvc\Service\AbstractPluginManagerFactory;
  */
 class SectionGeneratorPluginManagerFactory extends AbstractPluginManagerFactory
 {
-    const PLUGIN_MANAGER_CLASS = SectionGeneratorPluginManager::class;
+    public const PLUGIN_MANAGER_CLASS = SectionGeneratorPluginManager::class;
 }

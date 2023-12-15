@@ -28,7 +28,7 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
     use AuthAwareTrait;
     use QueueAwareTrait;
 
-    const RESPONSE_DOCUMENT_DESCRIPTION = 'ERRU MSI response for business case ID: %s';
+    public const RESPONSE_DOCUMENT_DESCRIPTION = 'ERRU MSI response for business case ID: %s';
 
     protected $repoServiceName = 'Cases';
 

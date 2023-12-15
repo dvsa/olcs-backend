@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class InsNoVhls extends SingleValueAbstract
 {
-    const SRCH_VAL_KEY = 'licence';
-    const FIELD = 'safetyInsVehicles';
-    const QUERY_CLASS = Qry::class;
+    public const SRCH_VAL_KEY = 'licence';
+    public const FIELD = 'safetyInsVehicles';
+    public const QUERY_CLASS = Qry::class;
 }

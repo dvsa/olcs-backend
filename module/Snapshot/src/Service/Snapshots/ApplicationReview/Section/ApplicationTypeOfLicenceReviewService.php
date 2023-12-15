@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class ApplicationTypeOfLicenceReviewService extends AbstractReviewService
 {
-    const GOODS_SI_VEHICLE_TYPE_MAPPINGS = [
+    public const GOODS_SI_VEHICLE_TYPE_MAPPINGS = [
         RefData::APP_VEHICLE_TYPE_LGV => 'Yes',
         RefData::APP_VEHICLE_TYPE_MIXED => 'No',
     ];

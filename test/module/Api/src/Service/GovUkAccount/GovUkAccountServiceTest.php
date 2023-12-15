@@ -10,7 +10,7 @@ use Mockery as m;
 
 class GovUkAccountServiceTest extends MockeryTestCase
 {
-    const CONFIG = [
+    public const CONFIG = [
         'redirect_uri' => [
             'logged_in' => 'logged_in_uri',
         ],

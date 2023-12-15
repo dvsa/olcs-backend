@@ -45,8 +45,8 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     use OpenAmUserAwareTrait;
     use QueueAwareTrait;
 
-    const ERR_EMAIL_REQUIRED = 'ERR_EMAIL_REQUIRED';
-    const ERR_USERNAME_REQUIRED = 'ERR_USERNAME_REQUIRED';
+    public const ERR_EMAIL_REQUIRED = 'ERR_EMAIL_REQUIRED';
+    public const ERR_USERNAME_REQUIRED = 'ERR_USERNAME_REQUIRED';
 
     protected $extraRepos = [
         'Application',

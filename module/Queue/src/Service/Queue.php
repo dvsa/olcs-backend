@@ -13,10 +13,10 @@ class Queue
      */
     protected $sqsClient;
 
-    const SEND_ACTION = 'send';
-    const FETCH_ACTION = 'fetch';
-    const DELETE_ACTION = 'delete';
-    const SET_VISIBILITY_TIMEOUT_ACTION = 'set visibility timeout';
+    public const SEND_ACTION = 'send';
+    public const FETCH_ACTION = 'fetch';
+    public const DELETE_ACTION = 'delete';
+    public const SET_VISIBILITY_TIMEOUT_ACTION = 'set visibility timeout';
 
     public function __construct(SqsClient $sqsClient)
     {

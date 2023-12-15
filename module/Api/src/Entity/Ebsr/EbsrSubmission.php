@@ -29,20 +29,20 @@ use Laminas\Json\Exception\RuntimeException as JsonException;
  */
 class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProviderInterface
 {
-    const UPLOADED_STATUS = 'ebsrs_uploaded';
-    const SUBMITTED_STATUS = 'ebsrs_submitted';
-    const VALIDATING_STATUS = 'ebsrs_validating';
-    const PROCESSED_STATUS = 'ebsrs_processed';
-    const PROCESSING_STATUS = 'ebsrs_processing';
-    const FAILED_STATUS = 'ebsrs_failed';
+    public const UPLOADED_STATUS = 'ebsrs_uploaded';
+    public const SUBMITTED_STATUS = 'ebsrs_submitted';
+    public const VALIDATING_STATUS = 'ebsrs_validating';
+    public const PROCESSED_STATUS = 'ebsrs_processed';
+    public const PROCESSING_STATUS = 'ebsrs_processing';
+    public const FAILED_STATUS = 'ebsrs_failed';
 
-    const DATA_REFRESH_SUBMISSION_TYPE = 'ebsrt_refresh';
-    const NEW_SUBMISSION_TYPE = 'ebsrt_new';
-    const UNKNOWN_SUBMISSION_TYPE = 'ebsrt_unknown';
+    public const DATA_REFRESH_SUBMISSION_TYPE = 'ebsrt_refresh';
+    public const NEW_SUBMISSION_TYPE = 'ebsrt_new';
+    public const UNKNOWN_SUBMISSION_TYPE = 'ebsrt_unknown';
 
-    const PROCESSING_DISPLAY_TYPE = 'ebsrd_processing';
-    const PROCESSED_DISPLAY_TYPE = 'ebsrd_processed';
-    const FAILED_DISPLAY_TYPE = 'ebsrd_failed';
+    public const PROCESSING_DISPLAY_TYPE = 'ebsrd_processing';
+    public const PROCESSED_DISPLAY_TYPE = 'ebsrd_processed';
+    public const FAILED_DISPLAY_TYPE = 'ebsrd_failed';
 
     /**
      * A map of system ebsr statuses against the status that is displayed to the user

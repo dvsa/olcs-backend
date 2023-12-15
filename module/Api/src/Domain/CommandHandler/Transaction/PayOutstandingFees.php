@@ -48,11 +48,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     use CpmsAwareTrait;
     use ConfigAwareTrait;
 
-    const ERR_WAIT = 'ERR_WAIT';
+    public const ERR_WAIT = 'ERR_WAIT';
 
-    const ERR_NO_FEES = 'ERR_NO_FEES';
+    public const ERR_NO_FEES = 'ERR_NO_FEES';
 
-    const DEFAULT_PENDING_PAYMENTS_TIMEOUT = 3600;
+    public const DEFAULT_PENDING_PAYMENTS_TIMEOUT = 3600;
 
     /**
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService

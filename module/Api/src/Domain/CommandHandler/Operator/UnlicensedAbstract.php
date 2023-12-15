@@ -17,9 +17,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
  */
 abstract class UnlicensedAbstract extends AbstractCommandHandler
 {
-    const LICENCE_NUMBER_PREFIX = 'U';
+    public const LICENCE_NUMBER_PREFIX = 'U';
 
-    const EXEMPT_LICENCE_NUMBER_PREFIX = 'E';
+    public const EXEMPT_LICENCE_NUMBER_PREFIX = 'E';
 
     /**
      * Get a licence number for an unlicensed operator

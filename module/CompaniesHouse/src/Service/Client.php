@@ -12,14 +12,14 @@ use Laminas\Http\Client as HttpClient;
  */
 class Client
 {
-    const WAIT_SEC_BETWEEN_REQUESTS = 0.5;   //  half second
+    public const WAIT_SEC_BETWEEN_REQUESTS = 0.5;   //  half second
 
-    const ERR_KEY_COMPANY_PROFILE_NOT_FOUND = 'company-profile-not-found';
+    public const ERR_KEY_COMPANY_PROFILE_NOT_FOUND = 'company-profile-not-found';
 
-    const ERR_INVALID_JSON = 'Invalid JSON';
-    const ERR_SERVICE_NOT_RESPOND = 'Service not respond';
-    const ERR_COMPANY_PROFILE_NOT_FOUND = 'Company not found';
-    const ERR_RATE_LIMIT_EXCEED = 'Rate limit exceeded';
+    public const ERR_INVALID_JSON = 'Invalid JSON';
+    public const ERR_SERVICE_NOT_RESPOND = 'Service not respond';
+    public const ERR_COMPANY_PROFILE_NOT_FOUND = 'Company not found';
+    public const ERR_RATE_LIMIT_EXCEED = 'Rate limit exceeded';
 
     private static $lastCall = 0;
 

@@ -18,9 +18,9 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\StatementBundle as Qry;
  */
 abstract class StatementFlatAbstract extends SingleValueAbstract
 {
-    const CLASS_NAMESPACE = __NAMESPACE__;
-    const FORMATTER = null;
-    const FIELD = null;
-    const SRCH_VAL_KEY = 'statement';
-    const QUERY_CLASS = Qry::class;
+    public const CLASS_NAMESPACE = __NAMESPACE__;
+    public const FORMATTER = null;
+    public const FIELD = null;
+    public const SRCH_VAL_KEY = 'statement';
+    public const QUERY_CLASS = Qry::class;
 }

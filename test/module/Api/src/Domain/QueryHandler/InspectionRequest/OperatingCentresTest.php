@@ -18,7 +18,7 @@ use Mockery as m;
  */
 class OperatingCentresTest extends QueryHandlerTestCase
 {
-    const ID = 9999;
+    public const ID = 9999;
 
     public function setUp(): void
     {

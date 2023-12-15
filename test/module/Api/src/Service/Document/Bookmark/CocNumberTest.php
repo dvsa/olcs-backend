@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\CocNumber;
  */
 class CocNumberTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = CocNumber::class;
+    public const SUT_CLASS_NAME = CocNumber::class;
 }

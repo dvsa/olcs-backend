@@ -25,9 +25,9 @@ use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
  */
 class Impounding extends AbstractImpounding
 {
-    const VENUE_OTHER = 'other';
-    const TYPE_PAPERWORK = 'impt_paper';
-    const TYPE_HEARING = 'impt_hearing';
+    public const VENUE_OTHER = 'other';
+    public const TYPE_PAPERWORK = 'impt_paper';
+    public const TYPE_HEARING = 'impt_hearing';
 
     /**
      * Impounding constructor.

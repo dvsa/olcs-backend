@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 final class CaseSummary extends AbstractSection
 {
-    const AUTH_PROPERTY_TO_TEMPLATE_ENTRY_MAPPINGS = [
+    public const AUTH_PROPERTY_TO_TEMPLATE_ENTRY_MAPPINGS = [
         'totAuthVehicles' => [
             [
                 'templateKey' => 'totAuthorisedVehicles',

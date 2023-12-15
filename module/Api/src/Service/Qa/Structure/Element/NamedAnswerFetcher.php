@@ -7,9 +7,9 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 class NamedAnswerFetcher
 {
-    const QA_FIELDSET_NAME = 'qa';
+    public const QA_FIELDSET_NAME = 'qa';
 
-    const ERR_NO_ANSWER = 'No answer data found';
+    public const ERR_NO_ANSWER = 'No answer data found';
 
     /**
      * Retrieve an answer from the appropriate location within the post data

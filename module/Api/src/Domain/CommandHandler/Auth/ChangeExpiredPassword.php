@@ -24,10 +24,10 @@ class ChangeExpiredPassword extends AbstractCommandHandler
     public const ERROR_USER_NOT_FOUND = 'Updating lastLoginAt failed: loginId is not found in User table';
 
     //seems sensible to use the same keys as the regular change password
-    const MSG_GENERIC_FAIL = 'auth.change-password.fail';
-    const MSG_GENERIC_SUCCESS = 'auth.change-password.success';
-    const MSG_NOT_AUTHORIZED = 'auth.change-password.not-authorized';
-    const MSG_INVALID = 'auth.change-password.invalid';
+    public const MSG_GENERIC_FAIL = 'auth.change-password.fail';
+    public const MSG_GENERIC_SUCCESS = 'auth.change-password.success';
+    public const MSG_NOT_AUTHORIZED = 'auth.change-password.not-authorized';
+    public const MSG_INVALID = 'auth.change-password.invalid';
 
     /**
      * @var ValidatableAdapterInterface|OpenAm|CognitoAdapter

@@ -30,9 +30,9 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
 {
     use AuthAwareTrait;
 
-    const STATUS_UNCHANGED = Application::VARIATION_STATUS_UNCHANGED;
-    const STATUS_UPDATED = Application::VARIATION_STATUS_UPDATED;
-    const STATUS_REQUIRES_ATTENTION = Application::VARIATION_STATUS_REQUIRES_ATTENTION;
+    public const STATUS_UNCHANGED = Application::VARIATION_STATUS_UNCHANGED;
+    public const STATUS_UPDATED = Application::VARIATION_STATUS_UPDATED;
+    public const STATUS_REQUIRES_ATTENTION = Application::VARIATION_STATUS_REQUIRES_ATTENTION;
 
     protected $repoServiceName = 'Application';
 

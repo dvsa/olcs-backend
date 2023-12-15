@@ -28,14 +28,14 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
 {
     use AuthAwareTrait;
 
-    const CODE_GV_APP             = 'GV79';
-    const CODE_GV_VAR_UPGRADE     = 'GV80A';
-    const CODE_GV_VAR_NO_UPGRADE  = 'GV81';
+    public const CODE_GV_APP             = 'GV79';
+    public const CODE_GV_VAR_UPGRADE     = 'GV80A';
+    public const CODE_GV_VAR_NO_UPGRADE  = 'GV81';
 
-    const CODE_PSV_APP = 'PSV421';
-    const CODE_PSV_APP_SR = 'PSV356';
-    const CODE_PSV_VAR_UPGRADE    = 'PSV431A';
-    const CODE_PSV_VAR_NO_UPGRADE = 'PSV431';
+    public const CODE_PSV_APP = 'PSV421';
+    public const CODE_PSV_APP_SR = 'PSV356';
+    public const CODE_PSV_VAR_UPGRADE    = 'PSV431A';
+    public const CODE_PSV_VAR_NO_UPGRADE = 'PSV431';
 
     protected $repoServiceName = 'Application';
 

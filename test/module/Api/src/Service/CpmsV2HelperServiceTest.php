@@ -30,7 +30,7 @@ use Olcs\Logging\Log\Logger;
  */
 class CpmsV2HelperServiceTest extends MockeryTestCase
 {
-    const CHEQUE_NR = 100001;
+    public const CHEQUE_NR = 100001;
 
     /** @var CpmsV2HelperService */
     protected $sut;

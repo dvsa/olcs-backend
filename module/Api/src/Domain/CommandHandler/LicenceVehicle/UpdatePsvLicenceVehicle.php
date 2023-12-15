@@ -31,7 +31,7 @@ final class UpdatePsvLicenceVehicle extends AbstractCommandHandler implements Tr
 {
     use AuthAwareTrait;
 
-    const ERR_PSV_VE_REMOVED_1 = 'ERR_PSV_VE_REMOVED_1';
+    public const ERR_PSV_VE_REMOVED_1 = 'ERR_PSV_VE_REMOVED_1';
 
     protected $repoServiceName = 'LicenceVehicle';
 

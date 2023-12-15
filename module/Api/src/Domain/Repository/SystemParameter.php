@@ -13,7 +13,7 @@ class SystemParameter extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    const DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT = 21;
+    public const DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT = 21;
 
     /**
      * Fetch a system parameter value, return null if not found

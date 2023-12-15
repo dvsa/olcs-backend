@@ -27,18 +27,18 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
  */
 class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity\OrganisationProviderInterface
 {
-    const TYPE_CURRENT = 'prev_has_licence';
-    const TYPE_APPLIED = 'prev_had_licence';
-    const TYPE_REFUSED = 'prev_been_refused';
-    const TYPE_REVOKED = 'prev_been_revoked';
-    const TYPE_PUBLIC_INQUIRY = 'prev_been_at_pi';
-    const TYPE_DISQUALIFIED = 'prev_been_disqualified_tc';
-    const TYPE_HELD = 'prev_purchased_assets';
+    public const TYPE_CURRENT = 'prev_has_licence';
+    public const TYPE_APPLIED = 'prev_had_licence';
+    public const TYPE_REFUSED = 'prev_been_refused';
+    public const TYPE_REVOKED = 'prev_been_revoked';
+    public const TYPE_PUBLIC_INQUIRY = 'prev_been_at_pi';
+    public const TYPE_DISQUALIFIED = 'prev_been_disqualified_tc';
+    public const TYPE_HELD = 'prev_purchased_assets';
 
-    const ERROR_TYPE_NOT_IMPLEMENTED = 'AP-LH-OL-1';
-    const ERROR_FIELD_IS_REQUIRED = 'AP-LH-OL-2';
-    const ERROR_DATE_IN_FUTURE = 'AP-LH-OL-3';
-    const ERROR_TYPE_IS_EMPTY = 'AP-LH-OL-4';
+    public const ERROR_TYPE_NOT_IMPLEMENTED = 'AP-LH-OL-1';
+    public const ERROR_FIELD_IS_REQUIRED = 'AP-LH-OL-2';
+    public const ERROR_DATE_IN_FUTURE = 'AP-LH-OL-3';
+    public const ERROR_TYPE_IS_EMPTY = 'AP-LH-OL-4';
 
     protected $requiredFields = [
         self::TYPE_CURRENT => ['licNo', 'holderName', 'willSurrender'],

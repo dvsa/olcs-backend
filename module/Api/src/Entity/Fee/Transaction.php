@@ -28,20 +28,20 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class Transaction extends AbstractTransaction implements OrganisationProviderInterface
 {
-    const STATUS_OUTSTANDING = 'pay_s_os';
-    const STATUS_CANCELLED = 'pay_s_cn';
-    const STATUS_FAILED = 'pay_s_fail';
+    public const STATUS_OUTSTANDING = 'pay_s_os';
+    public const STATUS_CANCELLED = 'pay_s_cn';
+    public const STATUS_FAILED = 'pay_s_fail';
     // 'paid' and 'complete' are synonymous
-    const STATUS_PAID = 'pay_s_pd';
-    const STATUS_COMPLETE = 'pay_s_pd';
+    public const STATUS_PAID = 'pay_s_pd';
+    public const STATUS_COMPLETE = 'pay_s_pd';
 
-    const TYPE_WAIVE = 'trt_waive';
-    const TYPE_PAYMENT = 'trt_payment';
-    const TYPE_REFUND = 'trt_refund';
-    const TYPE_REVERSAL = 'trt_reversal';
-    const TYPE_ADJUSTMENT = 'trt_other';
+    public const TYPE_WAIVE = 'trt_waive';
+    public const TYPE_PAYMENT = 'trt_payment';
+    public const TYPE_REFUND = 'trt_refund';
+    public const TYPE_REVERSAL = 'trt_reversal';
+    public const TYPE_ADJUSTMENT = 'trt_other';
 
-    const CURRENCY_SYMBOL = '£';
+    public const CURRENCY_SYMBOL = '£';
 
     /**
      * Is Outstanding

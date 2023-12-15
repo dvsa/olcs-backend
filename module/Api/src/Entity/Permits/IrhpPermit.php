@@ -26,16 +26,16 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class IrhpPermit extends AbstractIrhpPermit
 {
-    const STATUS_PENDING            = 'irhp_permit_pending';
-    const STATUS_AWAITING_PRINTING  = 'irhp_permit_awaiting_printing';
-    const STATUS_PRINTING           = 'irhp_permit_printing';
-    const STATUS_PRINTED            = 'irhp_permit_printed';
-    const STATUS_ERROR              = 'irhp_permit_error';
-    const STATUS_CEASED             = 'irhp_permit_ceased';
-    const STATUS_TERMINATED         = 'irhp_permit_terminated';
-    const STATUS_EXPIRED            = 'irhp_permit_expired';
+    public const STATUS_PENDING            = 'irhp_permit_pending';
+    public const STATUS_AWAITING_PRINTING  = 'irhp_permit_awaiting_printing';
+    public const STATUS_PRINTING           = 'irhp_permit_printing';
+    public const STATUS_PRINTED            = 'irhp_permit_printed';
+    public const STATUS_ERROR              = 'irhp_permit_error';
+    public const STATUS_CEASED             = 'irhp_permit_ceased';
+    public const STATUS_TERMINATED         = 'irhp_permit_terminated';
+    public const STATUS_EXPIRED            = 'irhp_permit_expired';
 
-    const ALL_STATUSES = [
+    public const ALL_STATUSES = [
         self::STATUS_PENDING,
         self::STATUS_AWAITING_PRINTING,
         self::STATUS_PRINTING,

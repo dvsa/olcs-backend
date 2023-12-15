@@ -17,9 +17,9 @@ use Mockery as m;
  */
 class DeleteListConditionUndertakingTest extends CommandHandlerTestCase
 {
-    const APP_ID = 65;
-    const CU_ID_1 = 9001;
-    const CU_ID_2 = 9002;
+    public const APP_ID = 65;
+    public const CU_ID_1 = 9001;
+    public const CU_ID_2 = 9002;
 
     public function setUp(): void
     {

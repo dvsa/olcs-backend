@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class ApplicationGoodsOcTotalAuthReviewService extends AbstractReviewService
 {
-    const OTHER_ROW_DEFINITIONS = [
+    public const OTHER_ROW_DEFINITIONS = [
         [
             'label' => 'review-operating-centres-authorisation-trailers',
             'sourceKey' => 'totAuthTrailers',

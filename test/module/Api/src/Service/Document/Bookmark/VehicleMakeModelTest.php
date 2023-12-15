@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\VehicleMakeModel;
  */
 class VehicleMakeModelTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = VehicleMakeModel::class;
+    public const SUT_CLASS_NAME = VehicleMakeModel::class;
 }

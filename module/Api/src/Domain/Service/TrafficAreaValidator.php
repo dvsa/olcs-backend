@@ -15,11 +15,11 @@ use Interop\Container\ContainerInterface;
  */
 class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
-    const ERR_TA_GOODS = 'ERR_TA_GOODS';   // Operator already has Goods licence/application in same Traffic Area
-    const ERR_TA_PSV = 'ERR_TA_PSV';       // Operator already has PSV licence/application in same Traffic Area
-    const ERR_TA_PSV_SR = 'ERR_TA_PSV_SR'; // Operator already has PSV SR licence/application in same Traffic Area
-    const ERR_TA_PSV_RES = 'ERR_TA_PSV_RES'; // Operator already has PSV Restricted licence/application in same Traffic Area
-    const ERR_TA_NI_APP = 'ERR_TA_NI_APP'; // GB application with NI traffic area
+    public const ERR_TA_GOODS = 'ERR_TA_GOODS';   // Operator already has Goods licence/application in same Traffic Area
+    public const ERR_TA_PSV = 'ERR_TA_PSV';       // Operator already has PSV licence/application in same Traffic Area
+    public const ERR_TA_PSV_SR = 'ERR_TA_PSV_SR'; // Operator already has PSV SR licence/application in same Traffic Area
+    public const ERR_TA_PSV_RES = 'ERR_TA_PSV_RES'; // Operator already has PSV Restricted licence/application in same Traffic Area
+    public const ERR_TA_NI_APP = 'ERR_TA_NI_APP'; // GB application with NI traffic area
 
     protected $messages = [];
 

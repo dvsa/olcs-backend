@@ -16,8 +16,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  */
 final class TransferTo extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_INVALID_ID = 'ERR_INVALID_ID';
-    const ERR_NO_LICENCES = 'ERR_NO_LICENCES';
+    public const ERR_INVALID_ID = 'ERR_INVALID_ID';
+    public const ERR_NO_LICENCES = 'ERR_NO_LICENCES';
 
     protected $repoServiceName = 'Organisation';
     protected $extraRepos = [

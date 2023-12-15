@@ -23,9 +23,9 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class Disqualification extends AbstractDisqualification
 {
-    const STATUS_NONE = 'None';
-    const STATUS_ACTIVE = 'Active';
-    const STATUS_INACTIVE = 'Inactive';
+    public const STATUS_NONE = 'None';
+    public const STATUS_ACTIVE = 'Active';
+    public const STATUS_INACTIVE = 'Inactive';
 
     /**
      * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation

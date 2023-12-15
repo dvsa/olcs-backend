@@ -10,9 +10,9 @@ use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
  */
 class IsExecuted extends LaminasAbstractFilter
 {
-    const YES_EXECUTED_KEY = 'pen_erru_imposed_executed_yes';
-    const NO_EXECUTED_KEY = 'pen_erru_imposed_executed_no';
-    const UNKNOWN_EXECUTED_KEY = 'pen_erru_imposed_executed_un';
+    public const YES_EXECUTED_KEY = 'pen_erru_imposed_executed_yes';
+    public const NO_EXECUTED_KEY = 'pen_erru_imposed_executed_no';
+    public const UNKNOWN_EXECUTED_KEY = 'pen_erru_imposed_executed_un';
 
     /**
      * Returns the result of filtering $value

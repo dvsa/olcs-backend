@@ -14,7 +14,7 @@ class DateAnswerSummaryProvider implements AnswerSummaryProviderInterface
     use AlwaysIncludeSlugTrait;
     use AnyTrait;
 
-    const DATE_FORMAT = 'd/m/Y';
+    public const DATE_FORMAT = 'd/m/Y';
 
     /**
      * {@inheritdoc}

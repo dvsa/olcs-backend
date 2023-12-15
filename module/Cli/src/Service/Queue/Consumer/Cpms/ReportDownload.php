@@ -24,7 +24,7 @@ use Dvsa\Olcs\Transfer\Query\Cpms\ReportStatus as ReportStatusQry;
  */
 class ReportDownload extends AbstractConsumer
 {
-    const MAX_ATTEMPTS = 10;
+    public const MAX_ATTEMPTS = 10;
 
     /** @var QueryHandlerManager */
     protected $queryHandlerManager;

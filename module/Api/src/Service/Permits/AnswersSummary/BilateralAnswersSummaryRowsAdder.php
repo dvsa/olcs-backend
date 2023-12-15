@@ -8,7 +8,7 @@ use Laminas\View\Renderer\RendererInterface;
 
 class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
 {
-    const TEMPLATE_DIRECTORY = 'answers-summary/';
+    public const TEMPLATE_DIRECTORY = 'answers-summary/';
 
     /** @var AnswersSummaryRowFactory */
     private $answersSummaryRowFactory;

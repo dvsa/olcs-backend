@@ -17,7 +17,7 @@ use Interop\Container\ContainerInterface;
  */
 final class CreateSnapshot extends AbstractCommandHandler
 {
-    const SNAPSHOT_DESCRIPTION = 'Digital continuation snapshot';
+    public const SNAPSHOT_DESCRIPTION = 'Digital continuation snapshot';
 
     protected $repoServiceName = 'ContinuationDetail';
 

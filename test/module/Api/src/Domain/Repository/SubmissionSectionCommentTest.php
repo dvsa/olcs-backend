@@ -11,8 +11,8 @@ use Mockery as m;
  */
 class SubmissionSectionCommentTest extends RepositoryTestCase
 {
-    const SUBMISSION_ID = 8888;
-    const SUBMISSION_SECTION = 'submission_section';
+    public const SUBMISSION_ID = 8888;
+    public const SUBMISSION_SECTION = 'submission_section';
 
     /** @var SubmissionSectionComment  */
     protected $sut;

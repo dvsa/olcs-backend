@@ -19,7 +19,7 @@ use Mockery as m;
  */
 class IrhpCandidatePermitTest extends RepositoryTestCase
 {
-    const IRHP_APPLICATION_ID = 10;
+    public const IRHP_APPLICATION_ID = 10;
 
     public function setUp(): void
     {

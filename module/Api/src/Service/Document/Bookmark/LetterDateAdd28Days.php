@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DateDelta;
  */
 class LetterDateAdd28Days extends DateDelta
 {
-    const DELTA = "+28";
+    public const DELTA = "+28";
 }

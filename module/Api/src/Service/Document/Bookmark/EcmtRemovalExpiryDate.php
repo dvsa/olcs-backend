@@ -9,9 +9,9 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrhpPermitBundle as Qry;
  */
 class EcmtRemovalExpiryDate extends SingleValueAbstract
 {
-    const FORMATTER = 'DateDayMonthYear';
-    const FIELD  = 'expiryDate';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'irhpPermit';
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = 'DateDayMonthYear';
+    public const FIELD  = 'expiryDate';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'irhpPermit';
+    public const QUERY_CLASS = Qry::class;
 }

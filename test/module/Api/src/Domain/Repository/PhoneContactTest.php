@@ -13,7 +13,7 @@ use Mockery as m;
  */
 class PhoneContactTest extends RepositoryTestCase
 {
-    const CONTACT_DETAILS_ID = 9999;
+    public const CONTACT_DETAILS_ID = 9999;
 
     /** @var  m\MockInterface */
     protected $sut;

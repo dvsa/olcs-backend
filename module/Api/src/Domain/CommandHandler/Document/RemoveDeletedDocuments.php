@@ -18,7 +18,7 @@ use Interop\Container\ContainerInterface;
  */
 final class RemoveDeletedDocuments extends AbstractCommandHandler implements TransactionedInterface
 {
-    const NUMBER_DOCS_TO_REMOVE = 100;
+    public const NUMBER_DOCS_TO_REMOVE = 100;
 
     protected $repoServiceName = 'DocumentToDelete';
 

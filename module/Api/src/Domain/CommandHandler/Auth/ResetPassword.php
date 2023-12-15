@@ -24,13 +24,13 @@ class ResetPassword extends AbstractCommandHandler
     private EventHistoryCreator $eventHistoryCreator;
     protected $repoServiceName = 'UserPasswordReset';
 
-    const MSG_EXPIRED_LINK = 'auth.forgot-password-expired';
-    const MSG_GENERIC_FAIL = 'auth.reset-password.fail';
-    const MSG_GENERIC_SUCCESS = 'auth.reset-password.success';
-    const MSG_FAIL_MISSING_CONFIRMATION = '%s failed to reset password, confirmation id not found: %s';
-    const MSG_FAIL_NOT_VALID = '%s failed to reset password, reset was not valid';
-    const MSG_FAIL_DEBUG_LOG = '%s failed to reset password using cognito';
-    const MSG_FAIL_COGNITO_EXCEPTION = '%s failed to reset password due to cognito exception: %s';
+    public const MSG_EXPIRED_LINK = 'auth.forgot-password-expired';
+    public const MSG_GENERIC_FAIL = 'auth.reset-password.fail';
+    public const MSG_GENERIC_SUCCESS = 'auth.reset-password.success';
+    public const MSG_FAIL_MISSING_CONFIRMATION = '%s failed to reset password, confirmation id not found: %s';
+    public const MSG_FAIL_NOT_VALID = '%s failed to reset password, reset was not valid';
+    public const MSG_FAIL_DEBUG_LOG = '%s failed to reset password using cognito';
+    public const MSG_FAIL_COGNITO_EXCEPTION = '%s failed to reset password due to cognito exception: %s';
 
     public function __construct(ValidatableAdapterInterface $adapter, EventHistoryCreator $eventHistoryCreator)
     {

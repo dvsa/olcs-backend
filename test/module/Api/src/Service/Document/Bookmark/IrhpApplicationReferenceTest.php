@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrhpApplicationReference;
  */
 class IrhpApplicationReferenceTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = IrhpApplicationReference::class;
+    public const SUT_CLASS_NAME = IrhpApplicationReference::class;
 }

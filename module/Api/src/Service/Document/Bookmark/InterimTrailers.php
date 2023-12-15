@@ -11,8 +11,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle as Qry;
  */
 class InterimTrailers extends SingleValueAbstract
 {
-    const SRCH_VAL_KEY = 'application';
-    const FIELD = 'interimAuthTrailers';
-    const DEFAULT_VALUE = 0;
-    const QUERY_CLASS = Qry::class;
+    public const SRCH_VAL_KEY = 'application';
+    public const FIELD = 'interimAuthTrailers';
+    public const DEFAULT_VALUE = 0;
+    public const QUERY_CLASS = Qry::class;
 }

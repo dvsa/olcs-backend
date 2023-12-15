@@ -8,7 +8,7 @@ use Interop\Container\ContainerInterface;
 abstract class AbstractEcmtPermitUsageRefDataSourceFactory implements FactoryInterface
 {
     // override in inheriting classes
-    const TRANSFORMATIONS = [];
+    public const TRANSFORMATIONS = [];
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

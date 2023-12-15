@@ -29,7 +29,7 @@ use Dvsa\Olcs\Transfer\Command\CommunityLic\Stop as Cmd;
  */
 final class Stop extends AbstractCommandHandler implements TransactionedInterface
 {
-    const STOP_TYPE_WITHDRAWN = 'withdrawal';
+    public const STOP_TYPE_WITHDRAWN = 'withdrawal';
 
     protected $repoServiceName = 'CommunityLic';
 

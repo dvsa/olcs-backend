@@ -27,12 +27,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Note extends AbstractNote
 {
-    const NOTE_TYPE_APPLICATION = 'note_t_app';
-    const NOTE_TYPE_BUS = 'note_t_bus';
-    const NOTE_TYPE_CASE = 'note_t_case';
-    const NOTE_TYPE_LICENCE = 'note_t_lic';
-    const NOTE_TYPE_ORGANISATION = 'note_t_org';
-    const NOTE_TYPE_PERMIT = 'note_t_permit';
-    const NOTE_TYPE_PERSON = 'note_t_person';
-    const NOTE_TYPE_TRANSPORT_MANAGER = 'note_t_tm';
+    public const NOTE_TYPE_APPLICATION = 'note_t_app';
+    public const NOTE_TYPE_BUS = 'note_t_bus';
+    public const NOTE_TYPE_CASE = 'note_t_case';
+    public const NOTE_TYPE_LICENCE = 'note_t_lic';
+    public const NOTE_TYPE_ORGANISATION = 'note_t_org';
+    public const NOTE_TYPE_PERMIT = 'note_t_permit';
+    public const NOTE_TYPE_PERSON = 'note_t_person';
+    public const NOTE_TYPE_TRANSPORT_MANAGER = 'note_t_tm';
 }

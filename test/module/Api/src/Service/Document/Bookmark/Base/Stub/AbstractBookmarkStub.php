@@ -6,8 +6,8 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\AbstractBookmark;
 
 class AbstractBookmarkStub extends AbstractBookmark
 {
-    const PREFORMATTED = 'unit_Preformatted';
-    const TYPE = 'static';
+    public const PREFORMATTED = 'unit_Preformatted';
+    public const TYPE = 'static';
 
     public function getToken()
     {

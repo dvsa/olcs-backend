@@ -95,25 +95,25 @@ class IrhpApplication extends AbstractIrhpApplication implements
         canBeRevivedFromUnsuccessful as baseCanBeRevivedFromUnsuccessful;
     }
 
-    const NON_SCALAR_ANSWER_PRESENT = 'Answer is present but has non-scalar representation';
+    public const NON_SCALAR_ANSWER_PRESENT = 'Answer is present but has non-scalar representation';
 
-    const ERR_CANT_CANCEL = 'Unable to cancel this application';
-    const ERR_CANT_TERMINATE = 'Unable to terminate this application';
-    const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
-    const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
-    const ERR_CANT_SUBMIT = 'This application cannot be submitted';
-    const ERR_CANT_ISSUE = 'This application cannot be issued';
-    const ERR_CANT_GRANT = 'Unable to grant this application';
+    public const ERR_CANT_CANCEL = 'Unable to cancel this application';
+    public const ERR_CANT_TERMINATE = 'Unable to terminate this application';
+    public const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
+    public const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
+    public const ERR_CANT_SUBMIT = 'This application cannot be submitted';
+    public const ERR_CANT_ISSUE = 'This application cannot be issued';
+    public const ERR_CANT_GRANT = 'Unable to grant this application';
 
-    const ERR_ROADWORTHINESS_ONLY = 'This method is only for roadworthiness certificates';
-    const ERR_ROADWORTHINESS_MOT_EXPIRY = 'The MOT has not yet expired on this record';
+    public const ERR_ROADWORTHINESS_ONLY = 'This method is only for roadworthiness certificates';
+    public const ERR_ROADWORTHINESS_MOT_EXPIRY = 'The MOT has not yet expired on this record';
 
-    const COUNTRY_PROPERTY_CODE = 'code';
-    const COUNTRY_PROPERTY_NAME = 'name';
-    const COUNTRY_PROPERTY_STATUS = 'status';
-    const COUNTRY_PROPERTY_IPA_ID = 'irhpPermitApplication';
+    public const COUNTRY_PROPERTY_CODE = 'code';
+    public const COUNTRY_PROPERTY_NAME = 'name';
+    public const COUNTRY_PROPERTY_STATUS = 'status';
+    public const COUNTRY_PROPERTY_IPA_ID = 'irhpPermitApplication';
 
-    const SECTIONS = [
+    public const SECTIONS = [
         IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => [
             'countries' => [
                 'validator' => 'areBilateralCountriesCompleted',
@@ -150,7 +150,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ],
     ];
 
-    const ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
+    public const ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
         'Jan' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
         'Feb' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
         'Mar' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,

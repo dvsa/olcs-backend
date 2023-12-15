@@ -15,8 +15,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class UnlinkedTm extends DynamicBookmark
 {
-    const TM_NA = 'N/A';
-    const TM_BE_NOMINATED = 'To be nominated.';
+    public const TM_NA = 'N/A';
+    public const TM_BE_NOMINATED = 'To be nominated.';
 
     /**
      * Get the query, this query returns the licences transport managers contact

@@ -20,9 +20,9 @@ use Laminas\View\Renderer\RendererInterface;
  */
 class HeaderAnswersSummaryRowsAdderTest extends MockeryTestCase
 {
-    const LIC_NO = 'AB1234567';
+    public const LIC_NO = 'AB1234567';
 
-    const TRAFFIC_AREA_NAME = 'Wales';
+    public const TRAFFIC_AREA_NAME = 'Wales';
 
     private $licence;
 

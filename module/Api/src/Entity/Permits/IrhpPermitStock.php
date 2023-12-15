@@ -28,30 +28,30 @@ use RuntimeException;
  */
 class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterface
 {
-    const STATUS_SCORING_NEVER_RUN = 'stock_scoring_never_run';
-    const STATUS_SCORING_PENDING = 'stock_scoring_pending';
-    const STATUS_SCORING_IN_PROGRESS = 'stock_scoring_in_progress';
-    const STATUS_SCORING_SUCCESSFUL = 'stock_scoring_successful';
-    const STATUS_SCORING_PREREQUISITE_FAIL = 'stock_scoring_prereq_fail';
-    const STATUS_SCORING_UNEXPECTED_FAIL = 'stock_scoring_unexpected_fail';
-    const STATUS_ACCEPT_PENDING = 'stock_accept_pending';
-    const STATUS_ACCEPT_IN_PROGRESS = 'stock_accept_in_progress';
-    const STATUS_ACCEPT_SUCCESSFUL = 'stock_accept_successful';
-    const STATUS_ACCEPT_PREREQUISITE_FAIL = 'stock_accept_prereq_fail';
-    const STATUS_ACCEPT_UNEXPECTED_FAIL = 'stock_accept_unexpected_fail';
+    public const STATUS_SCORING_NEVER_RUN = 'stock_scoring_never_run';
+    public const STATUS_SCORING_PENDING = 'stock_scoring_pending';
+    public const STATUS_SCORING_IN_PROGRESS = 'stock_scoring_in_progress';
+    public const STATUS_SCORING_SUCCESSFUL = 'stock_scoring_successful';
+    public const STATUS_SCORING_PREREQUISITE_FAIL = 'stock_scoring_prereq_fail';
+    public const STATUS_SCORING_UNEXPECTED_FAIL = 'stock_scoring_unexpected_fail';
+    public const STATUS_ACCEPT_PENDING = 'stock_accept_pending';
+    public const STATUS_ACCEPT_IN_PROGRESS = 'stock_accept_in_progress';
+    public const STATUS_ACCEPT_SUCCESSFUL = 'stock_accept_successful';
+    public const STATUS_ACCEPT_PREREQUISITE_FAIL = 'stock_accept_prereq_fail';
+    public const STATUS_ACCEPT_UNEXPECTED_FAIL = 'stock_accept_unexpected_fail';
 
-    const ALLOCATION_MODE_STANDARD = 'allocation_mode_standard';
-    const ALLOCATION_MODE_EMISSIONS_CATEGORIES = 'allocation_mode_emissions_categories';
-    const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
-    const ALLOCATION_MODE_CANDIDATE_PERMITS = 'allocation_mode_candidate_permits';
-    const ALLOCATION_MODE_BILATERAL = 'allocation_mode_bilateral';
-    const ALLOCATION_MODE_NONE = 'allocation_mode_none';
+    public const ALLOCATION_MODE_STANDARD = 'allocation_mode_standard';
+    public const ALLOCATION_MODE_EMISSIONS_CATEGORIES = 'allocation_mode_emissions_categories';
+    public const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
+    public const ALLOCATION_MODE_CANDIDATE_PERMITS = 'allocation_mode_candidate_permits';
+    public const ALLOCATION_MODE_BILATERAL = 'allocation_mode_bilateral';
+    public const ALLOCATION_MODE_NONE = 'allocation_mode_none';
 
-    const CANDIDATE_MODE_APSG = 'candidate_mode_apsg';
-    const CANDIDATE_MODE_APGG = 'candidate_mode_apgg';
-    const CANDIDATE_MODE_NONE = 'candidate_mode_none';
+    public const CANDIDATE_MODE_APSG = 'candidate_mode_apsg';
+    public const CANDIDATE_MODE_APGG = 'candidate_mode_apgg';
+    public const CANDIDATE_MODE_NONE = 'candidate_mode_none';
 
-    const APGG_SHORT_TERM_NO_CANDIDATES_YEAR = 2019;
+    public const APGG_SHORT_TERM_NO_CANDIDATES_YEAR = 2019;
 
     /**
      * @param IrhpPermitType $type

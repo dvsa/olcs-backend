@@ -18,6 +18,6 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
  */
 class RepositoryServiceManagerFactory extends AbstractServiceManagerFactory
 {
-    const CONFIG_KEY = 'repository_services';
+    public const CONFIG_KEY = 'repository_services';
     public const PLUGIN_MANAGER_CLASS = RepositoryServiceManager::class;
 }

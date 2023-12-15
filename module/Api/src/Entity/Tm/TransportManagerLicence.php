@@ -26,17 +26,17 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class TransportManagerLicence extends AbstractTransportManagerLicence implements OrganisationProviderInterface
 {
-    const ERROR_MON = 'err_mon';
-    const ERROR_TUE = 'err_tue';
-    const ERROR_WED = 'err_wed';
-    const ERROR_THU = 'err_thu';
-    const ERROR_FRI = 'err_fri';
-    const ERROR_SAT = 'err_sat';
-    const ERROR_SUN = 'err_sun';
+    public const ERROR_MON = 'err_mon';
+    public const ERROR_TUE = 'err_tue';
+    public const ERROR_WED = 'err_wed';
+    public const ERROR_THU = 'err_thu';
+    public const ERROR_FRI = 'err_fri';
+    public const ERROR_SAT = 'err_sat';
+    public const ERROR_SUN = 'err_sun';
 
-    const DESC_TM_REMOVED = 'Transport manager removed';
-    const DESC_TM_REMOVED_LAST = 'Last transport manager removed';
-    const DESC_TM_REMOVED_LAST_RESPONSE = "Response received about last TM?";
+    public const DESC_TM_REMOVED = 'Transport manager removed';
+    public const DESC_TM_REMOVED_LAST = 'Last transport manager removed';
+    public const DESC_TM_REMOVED_LAST_RESPONSE = "Response received about last TM?";
 
     /**
      * TransportManagerLicence constructor.

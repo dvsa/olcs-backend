@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class User extends AbstractRepository
 {
-    const USERNAME_GEN_TRY_COUNT = 100;
+    public const USERNAME_GEN_TRY_COUNT = 100;
 
     protected $entity = Entity::class;
     protected $alias = 'u';

@@ -21,9 +21,9 @@ use Laminas\ServiceManager\Config;
  */
 class ImplementationTest extends MockeryTestCase
 {
-    const COMMAND_KEY = \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY;
-    const QUERY_KEY = \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY;
-    const VALIDATION_KEY = \Dvsa\Olcs\Api\Domain\ValidationHandlerManagerFactory::CONFIG_KEY;
+    public const COMMAND_KEY = \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY;
+    public const QUERY_KEY = \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY;
+    public const VALIDATION_KEY = \Dvsa\Olcs\Api\Domain\ValidationHandlerManagerFactory::CONFIG_KEY;
 
     private $handlers = [];
 

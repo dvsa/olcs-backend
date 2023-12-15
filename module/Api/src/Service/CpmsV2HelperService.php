@@ -30,15 +30,15 @@ use Interop\Container\ContainerInterface;
 class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 {
     // CPMS' preferred date format (note: this changed around 03/2015)
-    const DATE_FORMAT = 'Y-m-d';
+    public const DATE_FORMAT = 'Y-m-d';
 
-    const DATETIME_FORMAT = 'Y-m-d H:i:s';
+    public const DATETIME_FORMAT = 'Y-m-d H:i:s';
 
-    const REFUND_REASON = 'Refund';
+    public const REFUND_REASON = 'Refund';
 
-    const PARAM_CUSTOMER_NAME_LIMIT = 100;
-    const PARAM_CUSTOMER_MANAGER_NAME_LIMIT = 100;
-    const PARAM_RECEIVER_NAME_LIMIT = 150;
+    public const PARAM_CUSTOMER_NAME_LIMIT = 100;
+    public const PARAM_CUSTOMER_MANAGER_NAME_LIMIT = 100;
+    public const PARAM_RECEIVER_NAME_LIMIT = 150;
 
     /**
      * @var ApiService

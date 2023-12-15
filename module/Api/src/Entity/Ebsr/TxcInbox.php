@@ -30,9 +30,9 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class TxcInbox extends AbstractTxcInbox implements OrganisationProviderInterface
 {
-    const SUBCATEGORY_EBSR = 36; // to-do sub category is 'EBSR' TBC
-    const SUBCATEGORY_TRANSXCHANGE_FILE = 107;
-    const SUBCATEGORY_TRANSXCHANGE_PDF = 108;
+    public const SUBCATEGORY_EBSR = 36; // to-do sub category is 'EBSR' TBC
+    public const SUBCATEGORY_TRANSXCHANGE_FILE = 107;
+    public const SUBCATEGORY_TRANSXCHANGE_PDF = 108;
 
     public function __construct(
         BusReg $busReg,

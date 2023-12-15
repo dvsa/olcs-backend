@@ -32,15 +32,15 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 abstract class AbstractUpdateInterim extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_REQUIRED = 'Value is required and can\'t be empty';
-    const ERR_VALUE_BELOW_ONE = 'A value greater than 0 must be entered';
-    const ERR_VEHICLE_AUTHORITY_EXCEEDED = "The interim vehicle authority cannot exceed the total vehicle authority";
-    const ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Heavy goods vehicle authority cannot exceed the total Heavy goods vehicle authority';
-    const ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Light goods vehicle authority cannot exceed the total Light goods vehicle authority';
-    const ERR_TRAILER_AUTHORITY_EXCEEDED = "The interim trailer authority cannot exceed the total trailer authority";
+    public const ERR_REQUIRED = 'Value is required and can\'t be empty';
+    public const ERR_VALUE_BELOW_ONE = 'A value greater than 0 must be entered';
+    public const ERR_VEHICLE_AUTHORITY_EXCEEDED = "The interim vehicle authority cannot exceed the total vehicle authority";
+    public const ERR_HGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Heavy goods vehicle authority cannot exceed the total Heavy goods vehicle authority';
+    public const ERR_LGV_VEHICLE_AUTHORITY_EXCEEDED = 'The interim Light goods vehicle authority cannot exceed the total Light goods vehicle authority';
+    public const ERR_TRAILER_AUTHORITY_EXCEEDED = "The interim trailer authority cannot exceed the total trailer authority";
 
-    const ERR_INTERIMSTARTDATE_EMPTY = "The interim start date is required";
-    const ERR_INTERIMENDDATE_EMPTY = "The interim end date is required";
+    public const ERR_INTERIMSTARTDATE_EMPTY = "The interim start date is required";
+    public const ERR_INTERIMENDDATE_EMPTY = "The interim end date is required";
 
     protected $repoServiceName = 'Application';
 

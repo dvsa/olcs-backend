@@ -32,7 +32,7 @@ final class Upload extends AbstractCommandHandler implements
     TransactionedInterface,
     UploaderAwareInterface
 {
-    const ERR_MIME = 'ERR_MIME';
+    public const ERR_MIME = 'ERR_MIME';
 
     use AuthAwareTrait;
     use NamingServiceAwareTrait;

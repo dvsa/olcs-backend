@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrhpVrm;
  */
 class IrhpVrmTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = IrhpVrm::class;
+    public const SUT_CLASS_NAME = IrhpVrm::class;
 }

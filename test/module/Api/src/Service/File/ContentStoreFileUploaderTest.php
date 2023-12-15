@@ -17,7 +17,7 @@ use Laminas\Http\Response;
  */
 class ContentStoreFileUploaderTest extends MockeryTestCase
 {
-    const IDENTIFIER = 'unit_Identifier';
+    public const IDENTIFIER = 'unit_Identifier';
 
     /** @var ContentStoreFileUploader */
     protected $sut;

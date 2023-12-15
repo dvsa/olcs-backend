@@ -11,11 +11,11 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrhpPermitBundle as Qry;
  */
 class IrhpExpiryDate extends SingleValueAbstract
 {
-    const FORMATTER = 'DateDayMonthYear';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'irhpPermit';
-    const QUERY_CLASS = Qry::class;
-    const BUNDLE = [
+    public const FORMATTER = 'DateDayMonthYear';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'irhpPermit';
+    public const QUERY_CLASS = Qry::class;
+    public const BUNDLE = [
         'irhpPermitRange' => [
             'irhpPermitStock' => [
                 'validTo'

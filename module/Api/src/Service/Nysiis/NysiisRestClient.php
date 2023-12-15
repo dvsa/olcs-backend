@@ -14,8 +14,8 @@ use Olcs\Logging\Log\Logger;
  */
 class NysiisRestClient
 {
-    const NYSIIS_FAILURE = 'Nysiis REST service failure: %s';
-    const NYSIIS_RESPONSE_INCORRECT = 'Nysiis REST service returned incorrect response';
+    public const NYSIIS_FAILURE = 'Nysiis REST service failure: %s';
+    public const NYSIIS_RESPONSE_INCORRECT = 'Nysiis REST service returned incorrect response';
 
     /**
      * @var RestClient

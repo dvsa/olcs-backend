@@ -23,8 +23,8 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
     use EmailAwareTrait;
     use AuthAwareTrait;
 
-    const SUBJECT_LINE = "[ Maintenance Inspection ] REQUEST=%s,STATUS=";
-    const SUBJECT_LINE_W = '[ Archwiliad Cynnal a Chadw] CAIS=%s,STATWS=';
+    public const SUBJECT_LINE = "[ Maintenance Inspection ] REQUEST=%s,STATUS=";
+    public const SUBJECT_LINE_W = '[ Archwiliad Cynnal a Chadw] CAIS=%s,STATWS=';
 
     protected $repoServiceName = 'InspectionRequest';
 

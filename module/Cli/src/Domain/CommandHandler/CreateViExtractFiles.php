@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 final class CreateViExtractFiles extends AbstractCommandHandler
 {
-    const PHP_EOL_WIN = "\r\n";
+    public const PHP_EOL_WIN = "\r\n";
 
     protected $extraRepos = [
         'ViOcView',

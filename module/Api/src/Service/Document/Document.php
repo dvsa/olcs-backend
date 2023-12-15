@@ -17,7 +17,7 @@ use Laminas\I18n\Translator\TranslatorInterface;
  */
 class Document
 {
-    const DOCUMENT_TIMESTAMP_FORMAT = 'YmdHi';
+    public const DOCUMENT_TIMESTAMP_FORMAT = 'YmdHi';
 
     /** @var DateService */
     private $dateSrvHlpr;

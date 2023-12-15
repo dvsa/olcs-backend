@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrhpStartDate;
  */
 class IrhpStartDateTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = IrhpStartDate::class;
+    public const SUT_CLASS_NAME = IrhpStartDate::class;
 
     public function testRender()
     {

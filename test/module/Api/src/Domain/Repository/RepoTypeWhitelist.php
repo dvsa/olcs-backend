@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 
 class RepoTypeWhitelist
 {
-    const TYPES = [
+    public const TYPES = [
         CompaniesHouseVsOlcsDiffs::class,
         DataDvaNi::class,
         DataGovUk::class,

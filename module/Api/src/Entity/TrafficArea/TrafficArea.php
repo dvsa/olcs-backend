@@ -20,17 +20,17 @@ use Doctrine\Common\Collections\Criteria;
  */
 class TrafficArea extends AbstractTrafficArea
 {
-    const NORTH_EASTERN_TRAFFIC_AREA_CODE    = 'B';
-    const NORTH_WESTERN_TRAFFIC_AREA_CODE    = 'C';
-    const WEST_MIDLANDS_TRAFFIC_AREA_CODE    = 'D';
-    const EASTERN_TRAFFIC_AREA_CODE          = 'F';
-    const WELSH_TRAFFIC_AREA_CODE            = 'G';
-    const WESTERN_TRAFFIC_AREA_CODE          = 'H';
-    const SE_MET_TRAFFIC_AREA_CODE           = 'K';
-    const SCOTTISH_TRAFFIC_AREA_CODE         = 'M';
-    const NORTHERN_IRELAND_TRAFFIC_AREA_CODE = 'N';
+    public const NORTH_EASTERN_TRAFFIC_AREA_CODE    = 'B';
+    public const NORTH_WESTERN_TRAFFIC_AREA_CODE    = 'C';
+    public const WEST_MIDLANDS_TRAFFIC_AREA_CODE    = 'D';
+    public const EASTERN_TRAFFIC_AREA_CODE          = 'F';
+    public const WELSH_TRAFFIC_AREA_CODE            = 'G';
+    public const WESTERN_TRAFFIC_AREA_CODE          = 'H';
+    public const SE_MET_TRAFFIC_AREA_CODE           = 'K';
+    public const SCOTTISH_TRAFFIC_AREA_CODE         = 'M';
+    public const NORTHERN_IRELAND_TRAFFIC_AREA_CODE = 'N';
 
-    const GB_TA_IDS = [
+    public const GB_TA_IDS = [
         self::NORTH_EASTERN_TRAFFIC_AREA_CODE,
         self::NORTH_WESTERN_TRAFFIC_AREA_CODE,
         self::WEST_MIDLANDS_TRAFFIC_AREA_CODE,
@@ -41,7 +41,7 @@ class TrafficArea extends AbstractTrafficArea
         self::SCOTTISH_TRAFFIC_AREA_CODE
     ];
 
-    const NI_TA_IDS = [
+    public const NI_TA_IDS = [
         self::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
     ];
 

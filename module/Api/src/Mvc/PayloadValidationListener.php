@@ -16,10 +16,10 @@ class PayloadValidationListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
 
-    const JSON_NOT_VALID_CODE = Response::STATUS_CODE_422;
-    const XML_NOT_VALID_CODE = Response::STATUS_CODE_400;
+    public const JSON_NOT_VALID_CODE = Response::STATUS_CODE_422;
+    public const XML_NOT_VALID_CODE = Response::STATUS_CODE_400;
 
-    const JSON_MEDIA_TYPE = 'application/json';
+    public const JSON_MEDIA_TYPE = 'application/json';
 
     protected $xmlMediaTypes = ['text/xml', 'application/xml'];
 

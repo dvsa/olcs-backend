@@ -15,24 +15,24 @@ class DiscList extends AbstractDiscList
     /**
      * Discs per row in a page
      */
-    const PER_ROW = 2;
+    public const PER_ROW = 2;
 
     /**
      * Typical row spacer. Magic number gleaned from old codebase
      */
-    const ROW_HEIGHT = 2526;
+    public const ROW_HEIGHT = 2526;
 
     /**
      * Last row spacer. Magic number gleaned from old codebase
      */
-    const LAST_ROW_HEIGHT = 359;
+    public const LAST_ROW_HEIGHT = 359;
 
     /**
      * Bookmark variable prefix
      */
-    const BOOKMARK_PREFIX = 'DISC';
+    public const BOOKMARK_PREFIX = 'DISC';
 
-    const QUERY_CLASS = Qry::class;
+    public const QUERY_CLASS = Qry::class;
 
     protected $discBundle = [
         'licenceVehicle' => [

@@ -12,7 +12,7 @@ use Mockery as m;
  */
 class DataServiceTest extends RepositoryTestCase
 {
-    const ORG_ID = 9001;
+    public const ORG_ID = 9001;
 
     /** @var Repository\DataService | m\MockInterface  */
     protected $sut;

@@ -6,6 +6,6 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
 
 class CommandHandlerManagerFactory extends AbstractServiceManagerFactory
 {
-    const CONFIG_KEY = 'command_handlers';
+    public const CONFIG_KEY = 'command_handlers';
     public const PLUGIN_MANAGER_CLASS = CommandHandlerManager::class;
 }

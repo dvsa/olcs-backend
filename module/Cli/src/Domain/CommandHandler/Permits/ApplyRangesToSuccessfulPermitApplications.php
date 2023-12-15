@@ -20,10 +20,10 @@ use RuntimeException;
  */
 class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler implements TransactionedInterface
 {
-    const ENTITY_KEY = 'entity';
-    const COUNTRY_IDS_KEY = 'countryIds';
-    const EMISSIONS_CATEGORY_KEY = 'emissionsCategory';
-    const PERMITS_REMAINING_KEY = 'permitsRemaining';
+    public const ENTITY_KEY = 'entity';
+    public const COUNTRY_IDS_KEY = 'countryIds';
+    public const EMISSIONS_CATEGORY_KEY = 'emissionsCategory';
+    public const PERMITS_REMAINING_KEY = 'permitsRemaining';
 
     protected $repoServiceName = 'IrhpCandidatePermit';
 

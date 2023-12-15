@@ -18,8 +18,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class ReportingBulkReprint extends AbstractCommandHandler implements UploaderAwareInterface
 {
-    const UPLOAD_PATH = 'documents/Report/';
-    const FILENAME_EXTENSION = 'log';
+    public const UPLOAD_PATH = 'documents/Report/';
+    public const FILENAME_EXTENSION = 'log';
 
     use UploaderAwareTrait;
 

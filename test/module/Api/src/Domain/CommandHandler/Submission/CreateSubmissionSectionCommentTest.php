@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
 {
-    const COMMENT_ID = 9999;
+    public const COMMENT_ID = 9999;
 
     /** @var CreateSubmissionSectionComment */
     protected $sut;

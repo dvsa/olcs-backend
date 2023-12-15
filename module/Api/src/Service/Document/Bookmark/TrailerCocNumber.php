@@ -7,5 +7,5 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class TrailerCocNumber extends AbstractIrhpAppQuestionAnswerData
 {
-    const FIELD = 'trailer-cert-of-compliance-number';
+    public const FIELD = 'trailer-cert-of-compliance-number';
 }

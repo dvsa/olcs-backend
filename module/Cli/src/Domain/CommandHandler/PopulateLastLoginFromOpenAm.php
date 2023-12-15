@@ -18,7 +18,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
     use OpenAmUserAwareTrait;
     use AuthAwareTrait;
 
-    const DEFAULT_BATCH_SIZE = 50;
+    public const DEFAULT_BATCH_SIZE = 50;
 
     protected $repoServiceName = 'User';
 

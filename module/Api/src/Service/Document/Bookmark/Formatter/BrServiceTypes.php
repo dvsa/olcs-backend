@@ -9,6 +9,6 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter;
  */
 class BrServiceTypes extends AbstractArrayList
 {
-    const FORMAT = '%s';
-    const COLUMN = 'description';
+    public const FORMAT = '%s';
+    public const COLUMN = 'description';
 }

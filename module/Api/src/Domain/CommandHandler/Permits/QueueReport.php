@@ -16,8 +16,8 @@ class QueueReport extends AbstractCommandHandler
 {
     use QueueAwareTrait;
 
-    const SUCCESS_MSG = 'Queued permit report of type %s';
-    const MISSING_REPORT_EXCEPTION = 'Requested report does not have an associated command';
+    public const SUCCESS_MSG = 'Queued permit report of type %s';
+    public const MISSING_REPORT_EXCEPTION = 'Requested report does not have an associated command';
 
     /**
      * Handle command

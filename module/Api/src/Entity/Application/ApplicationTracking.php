@@ -22,10 +22,10 @@ use Laminas\Filter\Word\UnderscoreToCamelCase;
  */
 class ApplicationTracking extends AbstractApplicationTracking
 {
-    const STATUS_NOT_SET        = 0;
-    const STATUS_ACCEPTED       = 1;
-    const STATUS_NOT_ACCEPTED   = 2;
-    const STATUS_NOT_APPLICABLE = 3;
+    public const STATUS_NOT_SET        = 0;
+    public const STATUS_ACCEPTED       = 1;
+    public const STATUS_NOT_ACCEPTED   = 2;
+    public const STATUS_NOT_APPLICABLE = 3;
 
     protected $sections =  [
         'Addresses',

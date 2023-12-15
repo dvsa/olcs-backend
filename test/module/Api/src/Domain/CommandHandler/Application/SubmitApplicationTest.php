@@ -31,11 +31,11 @@ use Mockery as m;
  */
 class SubmitApplicationTest extends CommandHandlerTestCase
 {
-    const APP_ID = 9001;
-    const LIC_ID = 8001;
-    const TASK_ID = 6001;
-    const VERSION = 10;
-    const TRAFFIC_AREA = 'TA';
+    public const APP_ID = 9001;
+    public const LIC_ID = 8001;
+    public const TASK_ID = 6001;
+    public const VERSION = 10;
+    public const TRAFFIC_AREA = 'TA';
 
     /** @var SubmitApplication  */
     protected $sut;

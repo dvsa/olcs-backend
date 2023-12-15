@@ -7,8 +7,8 @@ use RuntimeException;
 
 class SuccessfulCandidatePermitsGenerator
 {
-    const ID_KEY = 'id';
-    const EMISSIONS_CATEGORY_KEY = 'emissions_category';
+    public const ID_KEY = 'id';
+    public const EMISSIONS_CATEGORY_KEY = 'emissions_category';
 
     /** @var EmissionsCategoryAvailabilityCounter */
     private $emissionsCategoryAvailabilityCounter;

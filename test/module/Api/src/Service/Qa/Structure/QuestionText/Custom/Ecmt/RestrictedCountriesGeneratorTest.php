@@ -22,7 +22,7 @@ use RuntimeException;
  */
 class RestrictedCountriesGeneratorTest extends MockeryTestCase
 {
-    const ECMT_ANNUAL_APP_PATH_GROUP_ID = 8;
+    public const ECMT_ANNUAL_APP_PATH_GROUP_ID = 8;
 
     private $irhpApplicationEntity;
 

@@ -17,8 +17,8 @@ use org\bovigo\vfs\vfsStream;
  */
 class ImportUsersFromCsvTest extends CommandHandlerTestCase
 {
-    const PASSWORD = 'unit_pass';
-    const PID = 'unit_pid';
+    public const PASSWORD = 'unit_pass';
+    public const PID = 'unit_pid';
 
     /** @var ImportUsersFromCsv */
     protected $sut;

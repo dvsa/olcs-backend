@@ -14,7 +14,7 @@ class StandardAndCabotageAnswerSummaryProvider implements AnswerSummaryProviderI
     use AlwaysIncludeSlugTrait;
     use IrhpPermitApplicationOnlyTrait;
 
-    const TEMPLATE_VARIABLES_LOOKUP = [
+    public const TEMPLATE_VARIABLES_LOOKUP = [
         Answer::BILATERAL_CABOTAGE_ONLY => [
             'yesNo' => 'qanda.bilaterals.cabotage.yes-answer',
             'additionalInfo' => Answer::BILATERAL_CABOTAGE_ONLY,

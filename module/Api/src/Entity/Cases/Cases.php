@@ -40,11 +40,11 @@ class Cases extends AbstractCases implements
     ContextProviderInterface,
     OrganisationProviderInterface
 {
-    const LICENCE_CASE_TYPE = 'case_t_lic';
-    const IMPOUNDING_CASE_TYPE = 'case_t_imp';
-    const APP_CASE_TYPE = 'case_t_app';
-    const TM_CASE_TYPE = 'case_t_tm';
-    const ERRU_DEFAULT_CASE_CATEGORY = 'case_cat_compl_erru_msi';
+    public const LICENCE_CASE_TYPE = 'case_t_lic';
+    public const IMPOUNDING_CASE_TYPE = 'case_t_imp';
+    public const APP_CASE_TYPE = 'case_t_app';
+    public const TM_CASE_TYPE = 'case_t_tm';
+    public const ERRU_DEFAULT_CASE_CATEGORY = 'case_cat_compl_erru_msi';
 
     /**
      * Creates a new case entity and sets the open date

@@ -17,5 +17,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SiCategory extends AbstractSiCategory
 {
-    const ERRU_DEFAULT_CATEGORY = 'MSI';
+    public const ERRU_DEFAULT_CATEGORY = 'MSI';
 }

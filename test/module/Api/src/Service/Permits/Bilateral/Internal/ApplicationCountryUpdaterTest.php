@@ -17,11 +17,11 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class ApplicationCountryUpdaterTest extends MockeryTestCase
 {
-    const COUNTRY_ID = 'DE';
+    public const COUNTRY_ID = 'DE';
 
-    const STOCK_ID = 44;
+    public const STOCK_ID = 44;
 
-    const REQUIRED_PERMITS = [
+    public const REQUIRED_PERMITS = [
         'key1' => 'value1',
         'key2' => 'value2',
     ];

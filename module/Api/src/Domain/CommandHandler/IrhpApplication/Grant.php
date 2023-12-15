@@ -34,8 +34,8 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
     protected $extraRepos = ['FeeType'];
 
-    const ERR_IRHP_GRANT_CANNOT_GRANT = 'ERR_IRHP_GRANT_CANNOT_GRANT';
-    const ERR_IRHP_GRANT_TOO_MANY_PERMITS = 'ERR_IRHP_GRANT_TOO_MANY_PERMITS';
+    public const ERR_IRHP_GRANT_CANNOT_GRANT = 'ERR_IRHP_GRANT_CANNOT_GRANT';
+    public const ERR_IRHP_GRANT_TOO_MANY_PERMITS = 'ERR_IRHP_GRANT_TOO_MANY_PERMITS';
 
     /** @var GrantabilityChecker */
     private $grantabilityChecker;

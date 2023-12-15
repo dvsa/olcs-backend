@@ -17,7 +17,7 @@ use Mockery as m;
 
 class RefundInterimFeesTest extends AbstractConsumerTestCase
 {
-    const QUEUE_ITEM_ENTITY_ID = 17;
+    public const QUEUE_ITEM_ENTITY_ID = 17;
 
     /**
      * @var QueueEntity

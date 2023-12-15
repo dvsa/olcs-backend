@@ -18,20 +18,20 @@ use Rbac\Role\RoleInterface;
  */
 class Role extends AbstractRole implements RoleInterface
 {
-    const ROLE_SYSTEM_ADMIN = 'system-admin';
-    const ROLE_INTERNAL_LIMITED_READ_ONLY = 'internal-limited-read-only';
-    const ROLE_INTERNAL_READ_ONLY = 'internal-read-only';
-    const ROLE_INTERNAL_CASE_WORKER = 'internal-case-worker';
-    const ROLE_INTERNAL_ADMIN = 'internal-admin';
-    const ROLE_INTERNAL_IRHP_ADMIN = 'internal-irhp-admin';
-    const ROLE_OPERATOR_ADMIN = 'operator-admin';
-    const ROLE_OPERATOR_USER = 'operator-user';
-    const ROLE_OPERATOR_TM = 'operator-tm';
-    const ROLE_PARTNER_ADMIN = 'partner-admin';
-    const ROLE_PARTNER_USER = 'partner-user';
-    const ROLE_LOCAL_AUTHORITY_ADMIN = 'local-authority-admin';
-    const ROLE_LOCAL_AUTHORITY_USER = 'local-authority-user';
-    const ROLE_ANON = 'anon';
+    public const ROLE_SYSTEM_ADMIN = 'system-admin';
+    public const ROLE_INTERNAL_LIMITED_READ_ONLY = 'internal-limited-read-only';
+    public const ROLE_INTERNAL_READ_ONLY = 'internal-read-only';
+    public const ROLE_INTERNAL_CASE_WORKER = 'internal-case-worker';
+    public const ROLE_INTERNAL_ADMIN = 'internal-admin';
+    public const ROLE_INTERNAL_IRHP_ADMIN = 'internal-irhp-admin';
+    public const ROLE_OPERATOR_ADMIN = 'operator-admin';
+    public const ROLE_OPERATOR_USER = 'operator-user';
+    public const ROLE_OPERATOR_TM = 'operator-tm';
+    public const ROLE_PARTNER_ADMIN = 'partner-admin';
+    public const ROLE_PARTNER_USER = 'partner-user';
+    public const ROLE_LOCAL_AUTHORITY_ADMIN = 'local-authority-admin';
+    public const ROLE_LOCAL_AUTHORITY_USER = 'local-authority-user';
+    public const ROLE_ANON = 'anon';
 
     /**
      * List of roles and the roles they are allowed to update a user from/to

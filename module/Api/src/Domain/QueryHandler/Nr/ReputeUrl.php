@@ -24,10 +24,10 @@ class ReputeUrl extends AbstractQueryHandler implements NationalRegisterAwareInt
 
     protected $repoServiceName = 'TransportManager';
 
-    const DATE_FORMAT = 'd/m/Y';
-    const FIELD_CA = 'Traffic Commissioner';
-    const FIELD_TARGET = 'ZZ';
-    const FIELD_QUAL_UNKNOWN = 'Unknown';
+    public const DATE_FORMAT = 'd/m/Y';
+    public const FIELD_CA = 'Traffic Commissioner';
+    public const FIELD_TARGET = 'ZZ';
+    public const FIELD_QUAL_UNKNOWN = 'Unknown';
 
     public function handleQuery(QueryInterface $query)
     {

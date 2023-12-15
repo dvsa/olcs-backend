@@ -13,9 +13,9 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class DocumentToDelete extends AbstractDocumentToDelete
 {
-    const MAX_ATTEMPTS = 3;
+    public const MAX_ATTEMPTS = 3;
 
-    const PROCESS_AFTER_MINUTES = 2;
+    public const PROCESS_AFTER_MINUTES = 2;
 
     public function markAsFailed()
     {

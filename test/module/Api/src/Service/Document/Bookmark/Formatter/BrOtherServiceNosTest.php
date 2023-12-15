@@ -9,6 +9,6 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\BrOtherServiceNos;
  */
 class BrOtherServiceNosTest extends AbstractArrayList
 {
-    const SUT_CLASS_NAME = BrOtherServiceNos::class;
-    const ARRAY_FIELD = 'serviceNo';
+    public const SUT_CLASS_NAME = BrOtherServiceNos::class;
+    public const ARRAY_FIELD = 'serviceNo';
 }

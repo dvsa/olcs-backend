@@ -25,15 +25,15 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  */
 class Conviction extends AbstractConviction
 {
-    const DEFENDANT_TYPE_DIRECTOR     = 'def_t_dir';
-    const DEFENDANT_TYPE_DRIVER       = 'def_t_driver';
-    const DEFENDANT_TYPE_ORGANISATION = 'def_t_op';
-    const DEFENDANT_TYPE_OTHER        = 'def_t_other';
-    const DEFENDANT_TYPE_OWNER        = 'def_t_owner';
-    const DEFENDANT_TYPE_PARTNER      = 'def_t_part';
-    const DEFENDANT_TYPE_TM           = 'def_t_tm';
+    public const DEFENDANT_TYPE_DIRECTOR     = 'def_t_dir';
+    public const DEFENDANT_TYPE_DRIVER       = 'def_t_driver';
+    public const DEFENDANT_TYPE_ORGANISATION = 'def_t_op';
+    public const DEFENDANT_TYPE_OTHER        = 'def_t_other';
+    public const DEFENDANT_TYPE_OWNER        = 'def_t_owner';
+    public const DEFENDANT_TYPE_PARTNER      = 'def_t_part';
+    public const DEFENDANT_TYPE_TM           = 'def_t_tm';
 
-    const ERROR_CON_CAT = 'con-cat';
+    public const ERROR_CON_CAT = 'con-cat';
 
     public function updateConvictionCategory($type, $description)
     {

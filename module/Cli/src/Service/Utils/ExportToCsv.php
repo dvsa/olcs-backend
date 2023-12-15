@@ -9,8 +9,8 @@ namespace Dvsa\Olcs\Cli\Service\Utils;
  */
 class ExportToCsv
 {
-    const ERR_CANT_CREATE_DIR = 'Can\'t create directory to file: ';
-    const ERR_CANT_CREATE_FILE = 'Can\'t create file ';
+    public const ERR_CANT_CREATE_DIR = 'Can\'t create directory to file: ';
+    public const ERR_CANT_CREATE_FILE = 'Can\'t create file ';
 
     /**
      * Create file for writing

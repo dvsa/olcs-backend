@@ -11,10 +11,10 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  */
 class VariationNumber extends AbstractValidator
 {
-    const CANCELLATION_VARIATION_NUMBER_ERROR = 'cancellation-variation-number-error';
-    const VARIATION_VARIATION_NUMBER_ERROR = 'variation-variation-number-error';
-    const NEW_VARIATION_NUMBER_ERROR = 'new-variation-number-error';
-    const EXPECTED_VARIATION_MSG = 'The expected variation number was %d';
+    public const CANCELLATION_VARIATION_NUMBER_ERROR = 'cancellation-variation-number-error';
+    public const VARIATION_VARIATION_NUMBER_ERROR = 'variation-variation-number-error';
+    public const NEW_VARIATION_NUMBER_ERROR = 'new-variation-number-error';
+    public const EXPECTED_VARIATION_MSG = 'The expected variation number was %d';
 
     /**
      * @var array

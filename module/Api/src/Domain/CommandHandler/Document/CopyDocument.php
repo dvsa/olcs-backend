@@ -31,14 +31,14 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
 {
     use UploaderAwareTrait;
 
-    const APP = 'application';
-    const LIC = 'licence';
-    const BUSREG = 'busReg';
-    const CASES = 'case';
-    const IRFO = 'irfoOrganisation';
-    const IRHP_APP = 'irhpApplication';
-    const TM = 'transportManager';
-    const PUBLICATION = 'publication';
+    public const APP = 'application';
+    public const LIC = 'licence';
+    public const BUSREG = 'busReg';
+    public const CASES = 'case';
+    public const IRFO = 'irfoOrganisation';
+    public const IRHP_APP = 'irhpApplication';
+    public const TM = 'transportManager';
+    public const PUBLICATION = 'publication';
 
     protected $repoServiceName = 'Document';
 

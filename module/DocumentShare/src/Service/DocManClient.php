@@ -10,9 +10,9 @@ use Laminas\Http\Response;
 
 class DocManClient implements DocumentStoreInterface
 {
-    const ERR_RESP_FAIL = 'Document store returns invalid response';
+    public const ERR_RESP_FAIL = 'Document store returns invalid response';
 
-    const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
+    public const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
 
     /** @var HttpClient */
     protected $httpClient;

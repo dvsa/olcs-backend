@@ -22,7 +22,7 @@ use Mockery as m;
 
 class MaxPermittedReachedByTypeAndOrganisationTest extends QueryHandlerTestCase
 {
-    const ORGANISATION_ID = 5;
+    public const ORGANISATION_ID = 5;
 
     public function setUp(): void
     {

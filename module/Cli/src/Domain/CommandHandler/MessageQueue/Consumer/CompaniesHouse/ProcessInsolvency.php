@@ -31,8 +31,8 @@ class ProcessInsolvency extends AbstractConsumer
 {
     use QueueAwareTrait;
 
-    const GB_TEAMLEADER_TASK = 'GB insolvency team leader';
-    const NI_TEAMLEADER_TASK = 'NI insolvency team leader';
+    public const GB_TEAMLEADER_TASK = 'GB insolvency team leader';
+    public const NI_TEAMLEADER_TASK = 'NI insolvency team leader';
 
 
     protected $extraRepos = [
@@ -41,32 +41,32 @@ class ProcessInsolvency extends AbstractConsumer
         'Team'
     ];
 
-    const GB_GV_STANDARD_TEMPLATE = [
+    public const GB_GV_STANDARD_TEMPLATE = [
         'identifier' => 'Reg_31_Standard_licence',
         'description' => 'Liquidation/receivership/administration letter for standard GV licence'
     ];
 
-    const GB_GV_RESTRICTED_TEMPLATE = [
+    public const GB_GV_RESTRICTED_TEMPLATE = [
         'identifier' => 'Reg_31_Restricted_licence',
         'description' => 'Liquidation/receivership/administration letter for restricted GV licence'
     ];
 
-    const GB_PSV_STANDARD_TEMPLATE = [
+    public const GB_PSV_STANDARD_TEMPLATE = [
         'identifier' => 'Section57Standard',
         'description' => 'Liquidation/receivership/administration letter for standard PSV licence'
     ];
 
-    const GB_PSV_RESTRICTED_TEMPLATE = [
+    public const GB_PSV_RESTRICTED_TEMPLATE = [
         'identifier' => 'Section57Restricted',
         'description' => 'Liquidation/receivership/administration letter for restricted PSV licence'
     ];
 
-    const NI_GV_STANDARD_TEMPLATE = [
+    public const NI_GV_STANDARD_TEMPLATE = [
         'identifier' => 'GV_Reg_29_NIStandardlicence',
         'description' => 'Liquidation/receivership/administration letter for standard NI GV licence'
     ];
 
-    const NI_GV_RESTRICTED_TEMPLATE = [
+    public const NI_GV_RESTRICTED_TEMPLATE = [
         'identifier' => 'GV_Reg_29_NIRestrictedlicence',
         'description' => 'Liquidation/receivership/administration letter for restricted NI GV licence'
     ];

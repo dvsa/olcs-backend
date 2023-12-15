@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TrailerVin;
  */
 class TrailerVinTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = TrailerVin::class;
+    public const SUT_CLASS_NAME = TrailerVin::class;
 }

@@ -22,8 +22,8 @@ class JWTIdentityProvider implements IdentityProviderInterface
 {
     use IdentityProviderTrait;
 
-    const HEADER_NAME = 'Authorization';
-    const MESSAGE_MALFORMED_BEARER = 'Malformed Bearer token';
+    public const HEADER_NAME = 'Authorization';
+    public const MESSAGE_MALFORMED_BEARER = 'Malformed Bearer token';
 
     /**
      * @var UserRepository

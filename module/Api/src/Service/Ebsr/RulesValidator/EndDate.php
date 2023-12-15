@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  */
 class EndDate extends AbstractValidator
 {
-    const END_DATE_CANCELLATION_ERROR = 'end-date-cancellation-error';
+    public const END_DATE_CANCELLATION_ERROR = 'end-date-cancellation-error';
 
     /**
      * @var array

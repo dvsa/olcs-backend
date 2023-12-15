@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class S43AuthorisedDecision extends StatementFlatAbstract
 {
-    const FORMATTER = null;
-    const FIELD  = 'authorisersDecision';
-    const SRCH_VAL_KEY = 'statement';
+    public const FORMATTER = null;
+    public const FIELD  = 'authorisersDecision';
+    public const SRCH_VAL_KEY = 'statement';
 }

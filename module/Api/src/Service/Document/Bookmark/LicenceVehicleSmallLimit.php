@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class LicenceVehicleSmallLimit extends DynamicBookmark
 {
-    const EMPTY_AUTH = 'Total number (if any)';
+    public const EMPTY_AUTH = 'Total number (if any)';
 
     public function getQuery(array $data)
     {

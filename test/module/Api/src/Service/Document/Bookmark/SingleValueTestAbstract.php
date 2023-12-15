@@ -20,7 +20,7 @@ abstract class SingleValueTestAbstract extends \PHPUnit\Framework\TestCase
     /**
      * Implement this in the child class
      */
-    const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\BOOKMARK_CLASS_NAME';
+    public const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\BOOKMARK_CLASS_NAME';
 
     public function testGetQuery()
     {

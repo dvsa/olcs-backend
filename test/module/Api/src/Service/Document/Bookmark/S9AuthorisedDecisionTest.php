@@ -18,5 +18,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\StatementFlatAbstract;
  */
 class S9AuthorisedDecisionTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\S9AuthorisedDecision';
+    public const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\S9AuthorisedDecision';
 }

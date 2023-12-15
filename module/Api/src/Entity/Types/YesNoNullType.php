@@ -18,7 +18,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
  */
 class YesNoNullType extends Type
 {
-    const YESNONULL = 'yesnonull';
+    public const YESNONULL = 'yesnonull';
 
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {

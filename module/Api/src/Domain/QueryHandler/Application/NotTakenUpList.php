@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class NotTakenUpList extends AbstractQueryHandler
 {
-    const NTU_WORKING_DAYS = 15;
+    public const NTU_WORKING_DAYS = 15;
 
     protected $repoServiceName = 'Application';
 

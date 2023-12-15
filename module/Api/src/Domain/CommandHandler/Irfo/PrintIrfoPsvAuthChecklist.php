@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements TransactionedInterface
 {
-    const MAX_IDS_COUNT = 100;
+    public const MAX_IDS_COUNT = 100;
 
     protected $repoServiceName = 'IrfoPsvAuth';
 

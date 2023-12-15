@@ -26,9 +26,9 @@ use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType as Cmd;
  */
 class ChangeBusinessType extends AbstractCommandHandler implements TransactionedInterface
 {
-    const REG_TO_ST = 'REG_TO_ST';
-    const ANY_TO_ST = 'ANY_TO_ST';
-    const BUS_TYP_REQ_CONF = 'BUS_TYP_REQ_CONF';
+    public const REG_TO_ST = 'REG_TO_ST';
+    public const ANY_TO_ST = 'ANY_TO_ST';
+    public const BUS_TYP_REQ_CONF = 'BUS_TYP_REQ_CONF';
 
     protected $repoServiceName = 'Organisation';
 

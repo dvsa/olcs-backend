@@ -23,11 +23,11 @@ use Mockery as m;
  */
 class SubmitApplicationStepTest extends CommandHandlerTestCase
 {
-    const IRHP_APPLICATION_ID = 23;
-    const IRHP_PERMIT_APPLICATION_ID = 457;
-    const SLUG = 'removals-eligibility';
-    const REPOSITORY_NAME = 'IrhpApplication';
-    const DESTINATION_NAME = 'DESTINATION_NAME';
+    public const IRHP_APPLICATION_ID = 23;
+    public const IRHP_PERMIT_APPLICATION_ID = 457;
+    public const SLUG = 'removals-eligibility';
+    public const REPOSITORY_NAME = 'IrhpApplication';
+    public const DESTINATION_NAME = 'DESTINATION_NAME';
 
     private $applicationStepEntity;
 

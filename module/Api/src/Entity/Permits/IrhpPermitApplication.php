@@ -43,27 +43,27 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
 {
     use TieredProductReference;
 
-    const BILATERAL_STANDARD_REQUIRED = 'standard';
-    const BILATERAL_CABOTAGE_REQUIRED = 'cabotage';
-    const BILATERAL_MOROCCO_REQUIRED = 'morocco';
+    public const BILATERAL_STANDARD_REQUIRED = 'standard';
+    public const BILATERAL_CABOTAGE_REQUIRED = 'cabotage';
+    public const BILATERAL_MOROCCO_REQUIRED = 'morocco';
 
-    const DEFAULT_BILATERAL_REQUIRED = [
+    public const DEFAULT_BILATERAL_REQUIRED = [
         self::BILATERAL_STANDARD_REQUIRED => null,
         self::BILATERAL_CABOTAGE_REQUIRED => null,
         self::BILATERAL_MOROCCO_REQUIRED => null,
     ];
 
-    const BILATERAL_FEE_PRODUCT_REFS_TYPE_1 = [
+    public const BILATERAL_FEE_PRODUCT_REFS_TYPE_1 = [
         FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
         FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF,
     ];
 
-    const BILATERAL_FEE_PRODUCT_REFS_TYPE_2 = [
+    public const BILATERAL_FEE_PRODUCT_REFS_TYPE_2 = [
         FeeType::FEE_TYPE_IRHP_APP_BILATERAL_SINGLE_PRODUCT_REF,
         FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF,
     ];
 
-    const DEFAULT_BILATERAL_FEE_PRODUCT_REFS = [
+    public const DEFAULT_BILATERAL_FEE_PRODUCT_REFS = [
         RefData::JOURNEY_SINGLE => [
             self::BILATERAL_STANDARD_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
             self::BILATERAL_CABOTAGE_REQUIRED => self::BILATERAL_FEE_PRODUCT_REFS_TYPE_2,
@@ -74,7 +74,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         ],
     ];
 
-    const BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD = [
+    public const BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD = [
         RefData::JOURNEY_SINGLE => [
             self::BILATERAL_STANDARD_REQUIRED => [
                 FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_SINGLE_PRODUCT_REF_NON_EU,
@@ -82,7 +82,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         ]
     ];
 
-    const CUSTOM_BILATERAL_FEE_PRODUCT_REFS = [
+    public const CUSTOM_BILATERAL_FEE_PRODUCT_REFS = [
         Country::ID_BELARUS => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
         Country::ID_GEORGIA => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
         Country::ID_RUSSIA => self::BILATERAL_FEE_COUNTRY_CONFIG_NON_EU_STANDARD,
@@ -96,7 +96,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         ]
     ];
 
-    const MOROCCO_BILATERAL_FEE_PRODUCT_REFS = [
+    public const MOROCCO_BILATERAL_FEE_PRODUCT_REFS = [
         RefData::PERMIT_CAT_STANDARD_MULTIPLE_15 => [
             FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_MULTI_MOROCCO_PRODUCT_REF
         ],
@@ -111,7 +111,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         ],
     ];
 
-    const MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
+    public const MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
         'Jan' => FeeType::FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF,
         'Feb' => FeeType::FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF,
         'Mar' => FeeType::FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF,
@@ -126,10 +126,10 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         'Dec' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_25_PRODUCT_REF,
     ];
 
-    const REQUESTED_PERMITS_KEY = 'requestedPermits';
-    const RANGE_ENTITY_KEY = 'rangeEntity';
+    public const REQUESTED_PERMITS_KEY = 'requestedPermits';
+    public const RANGE_ENTITY_KEY = 'rangeEntity';
 
-    const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers.';
+    public const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers.';
 
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,

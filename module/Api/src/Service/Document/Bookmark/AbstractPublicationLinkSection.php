@@ -14,15 +14,15 @@ use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
  */
 abstract class AbstractPublicationLinkSection extends DynamicBookmark
 {
-    const CLASS_NAMESPACE = __NAMESPACE__; // do not change/override this.
-    const PUBLICATION_SECTION = null; // example
+    public const CLASS_NAMESPACE = __NAMESPACE__; // do not change/override this.
+    public const PUBLICATION_SECTION = null; // example
 
-    const PUB_CONTENT_LINE = 'PubContentLine';
-    const TABLE_ROW_1 = 'TanTableRow1';
-    const TABLE_ROW_2 = 'TanTableRow2';
-    const TABLE_ROW_3 = 'TanTableRow3';
+    public const PUB_CONTENT_LINE = 'PubContentLine';
+    public const TABLE_ROW_1 = 'TanTableRow1';
+    public const TABLE_ROW_2 = 'TanTableRow2';
+    public const TABLE_ROW_3 = 'TanTableRow3';
 
-    const PUB_SECTION_18 = 18;
+    public const PUB_SECTION_18 = 18;
 
     /** @var array */
     protected $pubTypeSection = [];

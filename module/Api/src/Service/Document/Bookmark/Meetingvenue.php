@@ -9,10 +9,10 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\HearingBundle as Qry;
  */
 class Meetingvenue extends SingleValueAbstract
 {
-    const SRCH_FLD_KEY = 'case';
-    const SRCH_VAL_KEY = 'case';
-    const QUERY_CLASS = Qry::class;
-    const BUNDLE = ['venue'];
+    public const SRCH_FLD_KEY = 'case';
+    public const SRCH_VAL_KEY = 'case';
+    public const QUERY_CLASS = Qry::class;
+    public const BUNDLE = ['venue'];
 
     /**
      * Render the bookmark

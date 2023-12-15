@@ -9,5 +9,5 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Base;
  */
 abstract class StaticBookmark extends AbstractBookmark
 {
-    const TYPE = 'static';
+    public const TYPE = 'static';
 }

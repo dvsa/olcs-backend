@@ -23,9 +23,9 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class CreateGoodsVehicleTest extends CommandHandlerTestCase
 {
-    const LIC_ID = 9001;
-    const APP_ID = 8001;
-    const VRM = 'UNIT VRM';
+    public const LIC_ID = 9001;
+    public const APP_ID = 8001;
+    public const VRM = 'UNIT VRM';
 
     /** @var CreateGoodsVehicle  */
     protected $sut;

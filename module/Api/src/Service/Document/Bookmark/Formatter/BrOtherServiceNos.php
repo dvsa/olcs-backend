@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter;
  */
 class BrOtherServiceNos extends AbstractArrayList
 {
-    const FORMAT = '(%s)';
-    const SEPARATOR = ', ';
-    const COLUMN = 'serviceNo';
+    public const FORMAT = '(%s)';
+    public const SEPARATOR = ', ';
+    public const COLUMN = 'serviceNo';
 }

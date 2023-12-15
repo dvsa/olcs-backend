@@ -15,22 +15,22 @@ use Psr\Log\LoggerInterface as Logger;
 
 class ApiService
 {
-    const SCOPE_CARD = 'CARD';
-    const SCOPE_CNP = 'CNP';
-    const SCOPE_DIRECT_DEBIT = 'DIRECT_DEBIT';
-    const SCOPE_CHEQUE = 'CHEQUE';
-    const SCOPE_REFUND = 'REFUND';
-    const SCOPE_QUERY_TXN = 'QUERY_TXN';
-    const SCOPE_STORED_CARD = 'STORED_CARD';
-    const SCOPE_CHARGE_BACK = 'CHARGE_BACK';
-    const SCOPE_CASH = 'CASH';
-    const SCOPE_POSTAL_ORDER = 'POSTAL_ORDER';
-    const SCOPE_CHIP_PIN = 'CHIP_PIN';
-    const SCOPE_ADJUSTMENT = 'ADJUSTMENT';
-    const SCOPE_REPORT = 'REPORT';
-    const CHEQUE_RD = 'CHEQUE_RD'; // refer to drawer
-    const DIRECT_DEBIT_IC = 'DIRECT_DEBIT_IC'; // indemnity claim
-    const REALLOCATE_PAYMENT = 'REALLOCATE'; // Reallocate payments by switch customer reference
+    public const SCOPE_CARD = 'CARD';
+    public const SCOPE_CNP = 'CNP';
+    public const SCOPE_DIRECT_DEBIT = 'DIRECT_DEBIT';
+    public const SCOPE_CHEQUE = 'CHEQUE';
+    public const SCOPE_REFUND = 'REFUND';
+    public const SCOPE_QUERY_TXN = 'QUERY_TXN';
+    public const SCOPE_STORED_CARD = 'STORED_CARD';
+    public const SCOPE_CHARGE_BACK = 'CHARGE_BACK';
+    public const SCOPE_CASH = 'CASH';
+    public const SCOPE_POSTAL_ORDER = 'POSTAL_ORDER';
+    public const SCOPE_CHIP_PIN = 'CHIP_PIN';
+    public const SCOPE_ADJUSTMENT = 'ADJUSTMENT';
+    public const SCOPE_REPORT = 'REPORT';
+    public const CHEQUE_RD = 'CHEQUE_RD'; // refer to drawer
+    public const DIRECT_DEBIT_IC = 'DIRECT_DEBIT_IC'; // indemnity claim
+    public const REALLOCATE_PAYMENT = 'REALLOCATE'; // Reallocate payments by switch customer reference
 
     /**
      * @var Logger

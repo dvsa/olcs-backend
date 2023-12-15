@@ -18,8 +18,8 @@ use Mockery as m;
  */
 class CreateSeparatorSheetTest extends CommandHandlerTestCase
 {
-    const SUB_CAT_ID = 8001;
-    const SCAN_ID = 9999;
+    public const SUB_CAT_ID = 8001;
+    public const SCAN_ID = 9999;
 
     /** @var  m\MockInterface | Category */
     private $mockCat;

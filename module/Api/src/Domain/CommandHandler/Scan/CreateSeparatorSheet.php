@@ -24,9 +24,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 class CreateSeparatorSheet extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_NO_ENTITY_FOR_CATEGORY = 'ERR_NO_ENTITY_FOR_CATEGORY';
-    const ERR_ENTITY_NAME_NOT_SETUP = 'ERR_ENTITY_NAME_NOT_SETUP';
-    const ERR_NO_DESCRIPTION = 'ERR_NO_DESCRIPTION';
+    public const ERR_NO_ENTITY_FOR_CATEGORY = 'ERR_NO_ENTITY_FOR_CATEGORY';
+    public const ERR_ENTITY_NAME_NOT_SETUP = 'ERR_ENTITY_NAME_NOT_SETUP';
+    public const ERR_NO_DESCRIPTION = 'ERR_NO_DESCRIPTION';
 
     private static $formatDescNr = '%s (%d)';
 

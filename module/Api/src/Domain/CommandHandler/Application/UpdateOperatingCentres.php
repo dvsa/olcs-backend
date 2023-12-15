@@ -25,8 +25,8 @@ use Interop\Container\ContainerInterface;
  */
 final class UpdateOperatingCentres extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_OC_TA_1 = 'ERR_OC_TA_1'; // select-traffic-area-error
-    const ERR_OC_CL_1 = 'ERR_OC_CL_1'; //community-licences-too-many
+    public const ERR_OC_TA_1 = 'ERR_OC_TA_1'; // select-traffic-area-error
+    public const ERR_OC_CL_1 = 'ERR_OC_CL_1'; //community-licences-too-many
 
     protected $repoServiceName = 'Application';
 

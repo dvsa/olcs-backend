@@ -16,7 +16,7 @@ class GetScoredPermitList extends AbstractQueryHandler
 {
     use CandidatePermitCreationTrait;
 
-    const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = [
+    public const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = [
         TrafficArea::SCOTTISH_TRAFFIC_AREA_CODE,
         TrafficArea::WELSH_TRAFFIC_AREA_CODE,
         TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE

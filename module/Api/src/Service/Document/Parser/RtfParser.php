@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Parser;
  */
 class RtfParser implements ParserInterface
 {
-    const PIXELS_TO_TWIPS = 15;
+    public const PIXELS_TO_TWIPS = 15;
 
     /**
      * Returns the file extension (rtf)

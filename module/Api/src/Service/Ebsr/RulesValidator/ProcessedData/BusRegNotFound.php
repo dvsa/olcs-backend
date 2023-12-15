@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  */
 class BusRegNotFound extends AbstractValidator
 {
-    const BUS_REG_NOT_FOUND_ERROR = 'bus-reg-not-found-error';
+    public const BUS_REG_NOT_FOUND_ERROR = 'bus-reg-not-found-error';
 
     /**
      * @var array

@@ -16,8 +16,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 abstract class AbstractLicenceType extends DynamicBookmark
 {
-    const QUERY_CLASS  = Qry::class;
-    const DATA_KEY = 'licence';
+    public const QUERY_CLASS  = Qry::class;
+    public const DATA_KEY = 'licence';
 
     /**
      * Returns the bundle query to be used in the REST call to the backend.

@@ -11,12 +11,12 @@ use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
 class NoOfPermitsGenerator implements ElementGeneratorInterface
 {
-    const PERMIT_USAGE_KEY_LOOKUP = [
+    public const PERMIT_USAGE_KEY_LOOKUP = [
         RefData::JOURNEY_SINGLE => 'single',
         RefData::JOURNEY_MULTIPLE => 'multiple'
     ];
 
-    const STANDARD_OR_CABOTAGE_KEY_LOOKUP = [
+    public const STANDARD_OR_CABOTAGE_KEY_LOOKUP = [
         IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => 'standard',
         IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => 'cabotage'
     ];

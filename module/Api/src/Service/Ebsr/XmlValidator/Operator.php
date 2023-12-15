@@ -11,7 +11,7 @@ use Laminas\Validator\Exception;
  */
 class Operator extends AbstractValidator
 {
-    const STRUCTURE_ERROR = 'operator-structure-error';
+    public const STRUCTURE_ERROR = 'operator-structure-error';
 
     /**
      * @var array

@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
 class EmissionsStandardsAnswerSaver implements AnswerSaverInterface
 {
-    const EURO3_OR_EURO4_ANSWER = 'qanda.bilaterals.emissions-standards.euro3-or-euro4';
+    public const EURO3_OR_EURO4_ANSWER = 'qanda.bilaterals.emissions-standards.euro3-or-euro4';
 
     use IrhpPermitApplicationOnlyTrait;
 

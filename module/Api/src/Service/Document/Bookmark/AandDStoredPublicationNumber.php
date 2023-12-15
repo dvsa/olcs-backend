@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\Criteria;
  */
 class AandDStoredPublicationNumber extends AbstractAandDStoredPublication
 {
-    const APP_NO_PUBLISHED = '[Application Not Published - No Date]';
+    public const APP_NO_PUBLISHED = '[Application Not Published - No Date]';
 
     /**
      * Render the bookmark

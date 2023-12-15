@@ -7,5 +7,5 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class EngineType extends AbstractIrhpAppQuestionAnswerData
 {
-    const FIELD = 'vehicle-engine-type';
+    public const FIELD = 'vehicle-engine-type';
 }

@@ -16,8 +16,8 @@ use Laminas\Http\Request;
  */
 class DocManClientTest extends MockeryTestCase
 {
-    const BASE_URI = 'http://testing';
-    const WORKSPACE = 'unit_Workspace';
+    public const BASE_URI = 'http://testing';
+    public const WORKSPACE = 'unit_Workspace';
 
     /** @var  DocManClient */
     protected $sut;
