@@ -623,7 +623,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Is there an overdue issue fee for this application?
-     * @todo save overhead here by skipping these checks once we can easily identify which permit types have issue fees
      *
      * @param int $days
      *
@@ -1900,9 +1899,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 'Unexpected emissionsCategoryId parameter for getPermitIntensityOfUse: ' . $emissionsCategoryId
             );
         }
-
-        // TODO: once scoring is used by more than one Q&A type, we'll need a more general method than using the
-        // question slug to derive the answer to the annual trips abroad question
 
         return $this->calculatePermitIntensityOfUse(
             $this->getAnswerValueByQuestionId(Question::QUESTION_ID_ECMT_ANNUAL_TRIPS_ABROAD),

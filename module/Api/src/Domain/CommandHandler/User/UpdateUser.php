@@ -140,7 +140,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
 
         $this->getRepo()->save($user);
 
-        //TODO: VOL-2661 Remove instance check
+        // VOL-2661 Remove instance check
         if ($this->provider === JWTIdentityProvider::class) {
             $this->authAdapter->registerIfNotPresent($user->getLoginId(), $this->passwordService->generatePassword(), $user->getContactDetails()->getEmailAddress());
         }
@@ -198,7 +198,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
 
         $password = $this->passwordService->generatePassword();
 
-        //TODO: VOL-2661 - Remove check and pull code out from `resetPasswordCognito`
+        //VOL-2661 - Remove check and pull code out from `resetPasswordCognito`
         if ($this->provider === JWTIdentityProvider::class) {
             $this->authAdapter->resetPassword($user->getLoginId(), $password, false);
         } else {
@@ -323,7 +323,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
      */
     private function updateAuthService(User $newUser, ?string $previousEmailAddress, bool $previouslyDisabled): void
     {
-        // TODO: VOL-2661 - Remove logic and OpenAM calls
+        // VOL-2661 - Remove logic and OpenAM calls
         $provider = $this->getConfig()['auth']['identity_provider'];
         if ($provider === JWTIdentityProvider::class) {
             if ($newUser->getContactDetails()->getEmailAddress() !== $previousEmailAddress) {

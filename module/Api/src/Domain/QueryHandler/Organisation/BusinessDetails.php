@@ -4,7 +4,6 @@
  * Business Details
  *
  * @author Rob Caiger <rob@clocal.co.uk>
- * @todo it seems that this query handler not in use and can be removed
  */
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Organisation;

@@ -9,8 +9,6 @@ use Laminas\View\Helper\AbstractHelper;
  * Format data passed in q&a format
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
- *
- * TODO: this class will become redundant once ECMT migrates over to unified IRHP snapshot/check answers mechanism
  */
 class AnswerFormatter extends AbstractHelper
 {

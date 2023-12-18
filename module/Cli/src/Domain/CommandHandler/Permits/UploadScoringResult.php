@@ -23,8 +23,6 @@ final class UploadScoringResult extends ScoringCommandHandler
     * @param CommandInterface $command command
     *
     * @return Result
-    *
-    * @todo: The description needs to be made dynamic as it may vary.
     */
     public function handleCommand(CommandInterface $command)
     {

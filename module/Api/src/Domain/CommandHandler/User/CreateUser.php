@@ -77,7 +77,6 @@ final class CreateUser extends AbstractUserCommandHandler implements
     {
         assert($command instanceof CreateUserCommand);
 
-        //TODO: Remove once OpenAM is removed.
         if (is_null($this->adapter)) {
             $this->adapter = $this->getOpenAmUser();
         }
@@ -181,7 +180,6 @@ final class CreateUser extends AbstractUserCommandHandler implements
     /**
      * @param string $loginId
      * @return string
-     * @todo: Remove once OpenAM removed
      */
     private function generatePid(string $loginId)
     {
@@ -194,7 +192,6 @@ final class CreateUser extends AbstractUserCommandHandler implements
     /**
      * @throws FailedRequestException
      * @throws ClientException
-     * @todo: Call directly from handle() once OpenAM removed
      */
     private function storeUserInAuthService(CreateUserCommand $command, string &$password, string $realm)
     {

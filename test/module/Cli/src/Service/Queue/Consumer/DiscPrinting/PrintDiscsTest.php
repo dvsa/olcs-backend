@@ -17,7 +17,7 @@ use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class PrintDiscsListTest extends AbstractConsumerTestCase
+class PrintDiscsTest extends AbstractConsumerTestCase
 {
     protected $consumerClass = Sut::class;
 

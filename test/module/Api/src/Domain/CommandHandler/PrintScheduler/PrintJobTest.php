@@ -209,7 +209,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->expectException(NotReadyException::class,);
+        $this->expectException(NotReadyException::class);
         $this->expectExceptionMessage('Error generating the PDF TEMP_FILE.rtf : Timeout');
         $this->sut->handleCommand($command);
     }

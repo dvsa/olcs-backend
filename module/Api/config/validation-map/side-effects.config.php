@@ -1,15 +1,15 @@
 <?php
 
-use Dvsa\Olcs\Api\Domain\CommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
-
 /**
  * @NOTE This is the home of all commands that are only ever called as side-effects. The calling commands should
  * already have validation, and if the user has the ability to run the calling command, then all side-effects should be
  * runnable
  */
+
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 
 return [
     CommandHandler\Application\GrantGoods::class                                      => IsSideEffect::class,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\OlcsTest\Api\Logger;
+namespace Dvsa\OlcsTest\Api\Domain\Logger;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
@@ -59,7 +59,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
     /**
      * @test
      */
-    public function logAccessToEntity_IsCallable()
+    public function logAccessToEntityIsCallable()
     {
         // Setup
         $this->setUpSut();
@@ -72,7 +72,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
      * @test
      * @depends logAccessToEntity_IsCallable
      */
-    public function logAccessToEntity_DoesNotLogAnything_WhenUserDoesNotHaveRequiredPermissions_AndReturnsFalse()
+    public function logAccessToEntityDoesNotLogAnythingWhenUserDoesNotHaveRequiredPermissionsAndReturnsFalse()
     {
         // Setup
         $this->setUpSut();
@@ -108,7 +108,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
      * @depends logAccessToEntity_IsCallable
      * @dataProvider entitiesThatAreLoggedForUsersWithTheInternalUserPermissionDataProvider
      */
-    public function logAccessToEntity_LogsEntry_WhenUserHasInternalUserPermission_AndEntityIsEnabledForLogging_AndReturnsTrue(object $entity)
+    public function logAccessToEntityLogsEntryWhenUserHasInternalUserPermissionAndEntityIsEnabledForLoggingAndReturnsTrue(object $entity)
     {
         // Setup
         $this->setUpSut();
@@ -127,7 +127,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
      * @test
      * @depends logAccessToEntity_IsCallable
      */
-    public function logAccessToEntity_ThrowsException_WhenUserHasInternalUserPermission_AndEntityIsNotEnabledForLogging()
+    public function logAccessToEntityThrowsExceptionWhenUserHasInternalUserPermissionAndEntityIsNotEnabledForLogging()
     {
         // Setup
         $this->setUpSut();
@@ -146,7 +146,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
      * @test
      * @depends logAccessToEntity_IsCallable
      */
-    public function logAccessToEntity_DoesNotLogAnything_WhenUserIsAnonymous_AndHasInternalUserPermission_AndEntityIsEnabledForLogging_AndReturnsFalse()
+    public function logAccessToEntityDoesNotLogAnythingWhenUserIsAnonymousAndHasInternalUserPermissionAndEntityIsEnabledForLoggingAndReturnsFalse()
     {
         // Setup
         $entity = array_values($this->entitiesThatAreLoggedForUsersWithTheInternalUserPermissionDataProvider())[0];
@@ -166,7 +166,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
      * @test
      * @depends logAccessToEntity_IsCallable
      */
-    public function logAccessToEntity_DoesNotLogAnything_WhenIdentityIsNotSet_AndHasInternalUserPermission_AndEntityIsEnabledForLogging_AndReturnsFalse()
+    public function logAccessToEntityDoesNotLogAnythingWhenIdentityIsNotSetAndHasInternalUserPermissionAndEntityIsEnabledForLoggingAndReturnsFalse()
     {
         // Setup
         $entity = array_values($this->entitiesThatAreLoggedForUsersWithTheInternalUserPermissionDataProvider())[0];
@@ -198,7 +198,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
      * @depends logAccessToEntity_IsCallable
      * @dataProvider entitiesThatAreLoggedForUsersWithThePartnerUserPermissionDataProvider
      */
-    public function logAccessToEntity_LogsEntry_WhenUserHasPartnerUserPermission_AndEntityIsEnabledForLogging_AndReturnsTrue(object $entity)
+    public function logAccessToEntityLogsEntryWhenUserHasPartnerUserPermissionAndEntityIsEnabledForLoggingAndReturnsTrue(object $entity)
     {
         // Setup
         $this->setUpSut();
@@ -233,7 +233,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
      * @depends logAccessToEntity_IsCallable
      * @dataProvider entitiesThatHaveNotBeenEnabledForUsersThatHavePartnerUserPermissionDataProvider
      */
-    public function logAccessToEntity_ThrowsException_WhenUserHasPartnerUserPermission_AndEntityIsNotEnabledForLogging(object $entity)
+    public function logAccessToEntityThrowsExceptionWhenUserHasPartnerUserPermissionAndEntityIsNotEnabledForLogging(object $entity)
     {
         // Setup
         $this->setUpSut();
@@ -264,7 +264,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
      * @depends logAccessToEntity_IsCallable
      * @dataProvider entitiesThatAreLoggedForUsersWithThePartnerAdminPermissionDataProvider
      */
-    public function logAccessToEntity_LogsEntry_WhenUserHasPartnerAdminPermission_AndEntityIsEnabledForLogging_AndReturnsTrue(object $entity)
+    public function logAccessToEntityLogsEntryWhenUserHasPartnerAdminPermissionAndEntityIsEnabledForLoggingAndReturnsTrue(object $entity)
     {
         // Setup
         $this->setUpSut();
@@ -299,7 +299,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
      * @depends logAccessToEntity_IsCallable
      * @dataProvider entitiesThatHaveNotBeenEnabledForUsersThatHavePartnerAdminPermissionDataProvider
      */
-    public function logAccessToEntity_ThrowsException_WhenUserHasPartnerAdminPermission_AndEntityIsNotEnabledForLogging(object $entity)
+    public function logAccessToEntityThrowsExceptionWhenUserHasPartnerAdminPermissionAndEntityIsNotEnabledForLogging(object $entity)
     {
         // Setup
         $this->setUpSut();

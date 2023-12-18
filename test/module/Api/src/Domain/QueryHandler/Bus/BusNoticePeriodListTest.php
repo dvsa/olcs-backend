@@ -20,7 +20,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class BusNoticePeriodTest extends QueryHandlerTestCase
+class BusNoticePeriodListTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {

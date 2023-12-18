@@ -38,7 +38,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
     /**
      * @test
      */
-    public function getIdentity_ThrowsBadRequestException_WhenHeaderIncorrect()
+    public function getIdentityThrowsBadRequestExceptionWhenHeaderIncorrect()
     {
         // Setup
         $this->setUpSut();
@@ -60,7 +60,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
     /**
      * @test
      */
-    public function getIdentity_ThrowsInvalidTokenException_WhenTokenIncorrect()
+    public function getIdentityThrowsInvalidTokenExceptionWhenTokenIncorrect()
     {
         // Setup
         $this->setUpSut();
@@ -86,7 +86,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
     /**
      * @test
      */
-    public function getIdentity_ReturnsAnonUser_WhenTokenExpired()
+    public function getIdentityReturnsAnonUserWhenTokenExpired()
     {
         // Setup
         $this->setUpSut();
@@ -110,7 +110,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
     /**
      * @test
      */
-    public function getIdentity_ReturnsAnonUser_WhenHeaderMissing()
+    public function getIdentityReturnsAnonUserWhenHeaderMissing()
     {
         // Setup
         $this->setUpSut();
@@ -125,7 +125,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
     /**
      * @test
      */
-    public function getIdentity_ReturnsAnonUser_WhenNoUserFound()
+    public function getIdentityReturnsAnonUserWhenNoUserFound()
     {
         // Setup
         $this->setUpSut();
@@ -150,7 +150,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
     /**
      * @test
      */
-    public function getIdentity_ReturnsExpectedUser_WhenUserExists()
+    public function getIdentityReturnsExpectedUserWhenUserExists()
     {
         // Setup
         $this->setUpSut();
@@ -179,7 +179,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
     /**
      * @test
      */
-    public function getIdentity_ReturnsSystemUser_WhenConsoleRequest()
+    public function getIdentityReturnsSystemUserWhenConsoleRequest()
     {
         // Setup
         $sut = new JWTIdentityProvider($this->userRepository(), new ConsoleRequest(), $this->client());

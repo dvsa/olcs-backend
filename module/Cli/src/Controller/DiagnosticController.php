@@ -324,8 +324,6 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function nysiisSection()
     {
-        // @todo: need to test and fix if needed on different envinronments, unable to test locally
-
         $host = $this->getValueFromConfig('NYSIIS');
         if ($host === false) {
             return;
@@ -404,8 +402,6 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function sendEmailSection()
     {
-        // @todo: need to test and fix if needed on different envinronments, unable to test locally
-
         $ss = $this->getValueFromConfig('EMAIL_CLIENT_SS');
         $int = $this->getValueFromConfig('EMAIL_CLIENT_INT');
         if ($ss === false || $int === false) {
@@ -447,8 +443,6 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function checkMailboxSection()
     {
-        // @todo: need to test and fix if needed on different envinronments, unable to test locally
-
         $host = $this->getValueFromConfig('IR_MAILBOX_HOST');
         $port = $this->getValueFromConfig('IR_MAILBOX_PORT');
         if ($host === false || $port === false) {
@@ -474,8 +468,6 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function nrSection()
     {
-        // @todo: need to test and fix if needed on different envinronments, unable to test locally
-
         $nrUri = $this->getValueFromConfig('NR_URI');
         $nrReputeUri = $this->getValueFromConfig('NR_REPUTE_URI');
 

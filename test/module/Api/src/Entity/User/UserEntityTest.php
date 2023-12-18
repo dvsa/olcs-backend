@@ -1330,14 +1330,14 @@ class UserEntityTest extends EntityTester
         ];
     }
 
-    public function testHasOrganisationSubmittedLicenceApplication_WithNoOrgAssumesNoExistingLicences()
+    public function testHasOrganisationSubmittedLicenceApplicationWithNoOrgAssumesNoExistingLicences()
     {
         $user = new Entity('pid', Entity::USER_TYPE_OPERATOR);
 
         $this->assertFalse($user->hasOrganisationSubmittedLicenceApplication());
     }
 
-    public function testHasOrganisationSubmittedLicenceApplication_WithOrgCallsHasNeverHadLicenceDecisionOnOrgEntity()
+    public function testHasOrganisationSubmittedLicenceApplicationWithOrgCallsHasNeverHadLicenceDecisionOnOrgEntity()
     {
         $user = new Entity('pid', Entity::USER_TYPE_OPERATOR);
 

@@ -128,9 +128,6 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
 
         /** @var CommunityLic $communityLicence */
         foreach ($communityLicences as $communityLicence) {
-            /**
-             * @todo have preserved the existing check, but could also do with checking status of the parent licence
-             */
             if (!$communityLicence->isActive()) {
                 throw new ValidationException(
                     [

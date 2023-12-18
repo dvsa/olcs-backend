@@ -1,12 +1,12 @@
 <?php
 
-use Dvsa\Olcs\Api\Domain\QueryHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
-
 /**
  * @NOTE This is the home of all bookmark queries, bookmarks queries are called during doc generation, so it the
  * user has access to create the doc, then they need access to the bookmark
  */
+
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 
 return [
     QueryHandler\Bookmark\ApplicationBundle::class                  => NoValidationRequired::class,

@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTeamPrinterTest extends CommandHandlerTestCase
 {
     public function setUp(): void
     {

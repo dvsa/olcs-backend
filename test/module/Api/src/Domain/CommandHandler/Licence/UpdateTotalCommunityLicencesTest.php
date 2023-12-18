@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UpdateTotalCommunitylicencesTest extends CommandHandlerTestCase
+class UpdateTotalCommunityLicencesTest extends CommandHandlerTestCase
 {
     public function setUp(): void
     {

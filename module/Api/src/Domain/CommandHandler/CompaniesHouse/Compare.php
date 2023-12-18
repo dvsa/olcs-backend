@@ -57,7 +57,6 @@ final class Compare extends AbstractCommandHandler
         $data = $this->normaliseProfileData($apiResult);
 
         try {
-            // @todo watch for caching problems here if long-running queue process
             $stored = $this->getRepo()->getLatestByCompanyNumber($companyNumber);
         } catch (NotFoundException $e) {
             // Company not previously stored, save new data and return

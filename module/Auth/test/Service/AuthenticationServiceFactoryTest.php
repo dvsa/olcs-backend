@@ -26,7 +26,7 @@ class AuthenticationServiceFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -39,7 +39,7 @@ class AuthenticationServiceFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfAuthenticationService()
+    public function invokeReturnsAnInstanceOfAuthenticationService()
     {
         // Setup
         $this->setUpSut();

@@ -28,7 +28,6 @@ class People
             Organisation::ORG_TYPE_REGISTERED_COMPANY => 'Director(s): ',
             Organisation::ORG_TYPE_PARTNERSHIP => 'Partner(s): ',
             Organisation::ORG_TYPE_LLP => 'Partner(s): ',
-            // @todo Need to find out what this should be
             Organisation::ORG_TYPE_OTHER => '',
         ];
         $text = (isset($personPrefixes[$organisation->getType()->getId()])) ?

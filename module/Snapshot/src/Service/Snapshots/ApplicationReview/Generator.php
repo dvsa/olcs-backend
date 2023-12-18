@@ -237,7 +237,6 @@ class Generator extends AbstractGenerator
     /**
      * Create service instance
      *
-     * TODO - refactor such that the buildReadonlyConfigForSections method is not dependent upon the service
      * container being passed into the constructor
      *
      * @param AbstractGeneratorServices $abstractGeneratorServices

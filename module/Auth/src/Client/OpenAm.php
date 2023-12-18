@@ -17,7 +17,7 @@ use Dvsa\Olcs\Auth\Service\OpenAm\Callback\Request as AuthRequest;
 use Olcs\Logging\Log\Logger;
 
 /**
- * @todo this has been copied and adapted from the old olcs-auth package for backward compatibility with OpenAm
+ * this has been copied and adapted from the old olcs-auth package for backward compatibility with OpenAm
  * This code can be removed once migration to Cognito is complete
  */
 class OpenAm

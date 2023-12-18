@@ -107,7 +107,6 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
             $this->savePhoneContacts($cmdContactDetails['phoneContacts'], $contactDetails);
         }
 
-        // TODO: VOL-2661 - Remove logic and OpenAM calls
         $provider = $this->getConfig()['auth']['identity_provider'];
         if ($provider === JWTIdentityProvider::class) {
             $this->adapter->changeAttribute($user->getLoginId(), 'email', $cmdContactDetails['emailAddress']);

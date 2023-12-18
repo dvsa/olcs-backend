@@ -32,7 +32,7 @@ class UpdateTest extends CommandHandlerTestCase
     /**
      * @test
      */
-    public function handleCommand_IsCallable()
+    public function handleCommandIsCallable()
     {
         $this->assertIsCallable([$this->sut, 'handleCommand']);
     }
@@ -198,7 +198,7 @@ class UpdateTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_UpdatesHomeAddress()
+    public function handleCommandUpdatesHomeAddress()
     {
         // Setup
         $serviceLocator = $this->setUpServiceLocator();
@@ -218,7 +218,7 @@ class UpdateTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_CreatesHomeAddress()
+    public function handleCommandCreatesHomeAddress()
     {
         // Setup
         $this->setUpServiceLocator();
@@ -239,7 +239,7 @@ class UpdateTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_UpdatesHomeAddress_WhenHomeAddressIdProvided()
+    public function handleCommandUpdatesHomeAddressWhenHomeAddressIdProvided()
     {
         // Setup
         $this->setUpServiceManager();
@@ -261,7 +261,7 @@ class UpdateTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_DoesNotCreateHomeContactDetails()
+    public function handleCommandDoesNotCreateHomeContactDetails()
     {
         // Setup
         $this->setUpServiceLocator();
@@ -281,7 +281,7 @@ class UpdateTest extends CommandHandlerTestCase
      * @test
      * depends handleCommand_CreatesHomeAddress
      */
-    public function handleCommand_CreatesHomeAddress_WhenNoHomeAddressIdProvided()
+    public function handleCommandCreatesHomeAddressWhenNoHomeAddressIdProvided()
     {
         // Setup
         $this->setUpServiceLocator();
@@ -309,7 +309,7 @@ class UpdateTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_UpdatesHomeAddress
      */
-    public function handleCommand_ReportsNoUpdatesToHomeAddress_WhenNoChangeRequired()
+    public function handleCommandReportsNoUpdatesToHomeAddressWhenNoChangeRequired()
     {
         // Setup
         $this->setUpServiceLocator();
@@ -332,7 +332,7 @@ class UpdateTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_CreatesHomeAddress
      */
-    public function handleCommand_ReportsNoUpdatesToHomeContactDetails_WhenVersionIsUnchanged()
+    public function handleCommandReportsNoUpdatesToHomeContactDetailsWhenVersionIsUnchanged()
     {
         // Setup
         $this->setUpServiceManager();

@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class DiscPrefixesTest extends QueryHandlerTestCase
+class GetListTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {

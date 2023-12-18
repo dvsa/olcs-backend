@@ -48,7 +48,7 @@ class RefreshTokenTest extends CommandHandlerTestCase
     /**
      * @test
      */
-    public function handleCommand_IsCallable()
+    public function handleCommandIsCallable()
     {
         // Setup
         $this->setUpSut();
@@ -61,7 +61,7 @@ class RefreshTokenTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_ReturnsExpectedResult()
+    public function handleCommandReturnsExpectedResult()
     {
         // Setup
         $this->setUpSut();

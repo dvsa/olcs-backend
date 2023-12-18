@@ -161,7 +161,6 @@ abstract class EntityTester extends MockeryTestCase
 
     /**
      * @return array
-     * @TODO abstract special cases, provide api to ignore certain fields
      */
     public function getGettersAndSetters()
     {

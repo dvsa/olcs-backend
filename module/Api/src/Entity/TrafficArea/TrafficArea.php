@@ -55,7 +55,7 @@ class TrafficArea extends AbstractTrafficArea
      */
     public function getPublicationRecipients($isPolice, $pubType)
     {
-        /* @todo the commented code can't currently be used due to a bug with Doctrine Criteria when used with
+        /* the commented code can't currently be used due to a bug with Doctrine Criteria when used with
          * many-to-many collections. The links below describe the issue. Once this has been fixed in our version of
          * Doctrine, uncommenting this code and removing the if ($recipient->getIsPolice() === $isPolice) check found
          * below, should improve performance on lists with a large number of recipients

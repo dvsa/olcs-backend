@@ -27,11 +27,11 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
  */
 final class Create extends AbstractCommandHandler implements TransactionedInterface
 {
+    use QueueAwareTrait;
+
     protected $repoServiceName = 'TransportManager';
 
     protected $extraRepos = ['ContactDetails'];
-
-    use QueueAwareTrait;
 
     /**
      * handle command

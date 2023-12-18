@@ -19,7 +19,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -32,7 +32,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfAcquiredRightsClient(): void
+    public function invokeReturnsAnInstanceOfAcquiredRightsClient(): void
     {
         // Setup
         $this->setUpSut();
@@ -48,7 +48,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function config_missingExpiry_ThrowsInvalidArgumentException(): void
+    public function configmissingExpiryThrowsInvalidArgumentException(): void
     {
         // Setup
         $this->setUpSut();
@@ -72,7 +72,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function config_expiryNotInstanceOfDateTimeImmutable_ThrowsInvalidArgumentException(): void
+    public function configexpiryNotInstanceOfDateTimeImmutableThrowsInvalidArgumentException(): void
     {
         // Setup
         $this->setUpSut();
@@ -96,7 +96,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function config_missingCheckEnabled_ThrowsInvalidArgumentException(): void
+    public function configmissingCheckEnabledThrowsInvalidArgumentException(): void
     {
         // Setup
         $this->setUpSut();
@@ -120,7 +120,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function config_checkEnabledNotInstanceOfBool_ThrowsInvalidArgumentException(): void
+    public function configcheckEnabledNotInstanceOfBoolThrowsInvalidArgumentException(): void
     {
         // Setup
         $this->setUpSut();

@@ -29,8 +29,6 @@ use Dvsa\Olcs\Email\Data\Message;
  * Send Ebsr Cancelled Email Test
  *
  * @author Craig R <uk@valtech.co.uk>
- * @todo this has become too generic as various email contents have diverged over time.
- * Need improved coverage of things like individual subject variables and message contents
  */
 abstract class SendEbsrEmailTestAbstract extends CommandHandlerTestCase
 {

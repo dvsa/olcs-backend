@@ -17,9 +17,9 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
  */
 final class Venue extends AbstractContext implements AddressFormatterAwareInterface
 {
-    private static $bundle = [];
-
     use AddressFormatterAwareTrait;
+
+    private static $bundle = [];
 
     /**
      * Provide

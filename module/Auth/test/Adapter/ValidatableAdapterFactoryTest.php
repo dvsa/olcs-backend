@@ -58,7 +58,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -71,7 +71,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfValidatableAdapterInterfaceWhenAdapterDefinedAsInstancedClass()
+    public function invokeReturnsAnInstanceOfValidatableAdapterInterfaceWhenAdapterDefinedAsInstancedClass()
     {
         // Setup
         $this->setUpSut();
@@ -88,7 +88,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfValidatableAdapterInterfaceWhenAdapterDefinedAsClassReferenceStringAndExistsInServiceManager()
+    public function invokeReturnsAnInstanceOfValidatableAdapterInterfaceWhenAdapterDefinedAsClassReferenceStringAndExistsInServiceManager()
     {
         // Setup
         $this->setUpSut();
@@ -106,7 +106,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfValidatableAdapterInterfaceDefinedAsClassReferenceStringAndDoesNotExistInServiceManagerAndInstantiates()
+    public function invokeReturnsAnInstanceOfValidatableAdapterInterfaceDefinedAsClassReferenceStringAndDoesNotExistInServiceManagerAndInstantiates()
     {
         // Setup
         $this->setUpSut();
@@ -123,7 +123,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ThrowsExceptionWhen_ConfigAuthNamespaceNotDefined(): void
+    public function invokeThrowsExceptionWhenConfigAuthNamespaceNotDefined(): void
     {
         // Setup
         $this->setUpSut();
@@ -141,7 +141,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_ThrowsExceptionWhen_ConfigAuthNamespaceNotDefined
      */
-    public function __invoke_ThrowsExceptionWhen_ConfigAuthDefaultAdapterNotDefined(): void
+    public function invokeThrowsExceptionWhenConfigAuthDefaultAdapterNotDefined(): void
     {
         // Setup
         $this->setUpSut();
@@ -159,7 +159,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_ThrowsExceptionWhen_ConfigAuthDefaultAdapterNotDefined
      */
-    public function __invoke_ThrowsExceptionWhen_ConfigAuthAdapterNotDefined(): void
+    public function invokeThrowsExceptionWhenConfigAuthAdapterNotDefined(): void
     {
         // Setup
         $this->setUpSut();
@@ -177,7 +177,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_ThrowsExceptionWhen_ConfigAuthAdapterNotDefined
      */
-    public function __invoke_ThrowsExceptionWhen_ConfigAuthAdapterDefinedAndAdapterConfigAdapterNotDefined(): void
+    public function invokeThrowsExceptionWhenConfigAuthAdapterDefinedAndAdapterConfigAdapterNotDefined(): void
     {
         // Setup
         $this->setUpSut();
@@ -195,7 +195,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_ThrowsExceptionWhen_ConfigAuthAdapterDefinedAndAdapterConfigAdapterNotDefined
      */
-    public function __invoke_ThrowsExceptionWhen_ConfigAuthAdapterNotInstanceOfValidatableAdapterInterface(): void
+    public function invokeThrowsExceptionWhenConfigAuthAdapterNotInstanceOfValidatableAdapterInterface(): void
     {
         // Setup
         $this->setUpSut();

@@ -76,7 +76,7 @@ class NysiisRestClient
      *
      * @param string $text text being cleaned
      *
-     * @todo we need to sort this problem properly, either at source (java service) or here with a more detailed fix
+     * we need to sort this problem properly, either at source (java service) or here with a more detailed fix
      *
      * @return string
      */

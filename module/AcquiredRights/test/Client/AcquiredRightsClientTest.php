@@ -29,7 +29,7 @@ class AcquiredRightsClientTest extends MockeryTestCase
     /**
      * @test
      */
-    public function fetchByReference_ValidData_ReturnsApplicationReferenceModel()
+    public function fetchByReferenceValidDataReturnsApplicationReferenceModel()
     {
         $this->httpClient->shouldReceive('get')->andReturn($this->generateResponse(200, [
             'id' => '6fcf9551-ade4-4b48-b078-6db59559a182',
@@ -47,7 +47,7 @@ class AcquiredRightsClientTest extends MockeryTestCase
     /**
      * @test
      */
-    public function fetchByReference_NotFound_ReturnsNotFoundException()
+    public function fetchByReferenceNotFoundReturnsNotFoundException()
     {
         $this->expectException(ReferenceNotFoundException::class);
 
@@ -64,7 +64,7 @@ class AcquiredRightsClientTest extends MockeryTestCase
     /**
      * @test
      */
-    public function fetchByReference_ConnectException_ReturnsServiceException()
+    public function fetchByReferenceConnectExceptionReturnsServiceException()
     {
         $this->expectException(ServiceException::class);
 
@@ -81,7 +81,7 @@ class AcquiredRightsClientTest extends MockeryTestCase
     /**
      * @test
      */
-    public function fetchByReference_RequestException_ReturnsServiceException()
+    public function fetchByReferenceRequestExceptionReturnsServiceException()
     {
         $this->expectException(ServiceException::class);
 
@@ -97,7 +97,7 @@ class AcquiredRightsClientTest extends MockeryTestCase
     /**
      * @test
      */
-    public function fetchByReference_InvalidJson_ReturnsServiceException()
+    public function fetchByReferenceInvalidJsonReturnsServiceException()
     {
         $this->expectException(ServiceException::class);
 
@@ -111,7 +111,7 @@ class AcquiredRightsClientTest extends MockeryTestCase
     /**
      * @test
      */
-    public function fetchByReference_MapperParseException_ReturnsMapperParseException()
+    public function fetchByReferenceMapperParseExceptionReturnsMapperParseException()
     {
         $this->expectException(MapperParseException::class);
 
